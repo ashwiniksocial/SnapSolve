@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { getTodaysChallenge } from "@/data/challenges";
+import { getTodaysChallenge, CATEGORY_STYLES } from "@/data/challenges";
 import { useStreak } from "@/hooks/useStreak";
+import { useCountdown } from "@/hooks/useCountdown";
 
 export default function Challenge() {
   const challenge = getTodaysChallenge();
+  const style = CATEGORY_STYLES[challenge.category];
   const { streak, isTodayCompleted, completeToday } = useStreak();
+  const countdown = useCountdown();
 
   const [found, setFound] = useState<boolean[]>(() =>
     Array(challenge.items.length).fill(isTodayCompleted)
@@ -34,22 +37,24 @@ export default function Challenge() {
       className="min-h-screen flex flex-col items-center px-6 py-10"
       style={{ background: "linear-gradient(135deg, #fff7e6 0%, #ffe4e1 50%, #e6f3ff 100%)" }}
     >
-      <div className="pop-in w-full max-w-sm flex flex-col gap-6">
+      <div className="pop-in w-full max-w-sm flex flex-col gap-5">
 
         <div className="text-center">
           <div className="text-6xl mb-2 wiggle inline-block">{challenge.emoji}</div>
-          <div className="mb-1">
+          <div className="mb-2">
             <span
-              className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full text-white"
-              style={{ background: challenge.color }}
+              className={`text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full border-2 ${style.bg} ${style.text} ${style.border}`}
             >
               {challenge.category}
             </span>
           </div>
-          <h1 className="text-4xl font-black mt-2" style={{ color: challenge.color, textShadow: `2px 2px 0px ${challenge.shadowColor}` }}>
+          <h1
+            className="text-4xl font-black mt-1"
+            style={{ color: style.color, textShadow: `2px 2px 0px ${style.shadow}` }}
+          >
             {challenge.title}
           </h1>
-          <div className="mt-1 inline-block bg-orange-100 text-orange-600 font-bold px-4 py-1 rounded-full text-sm border-2 border-orange-300">
+          <div className="mt-2 inline-block bg-orange-100 text-orange-600 font-bold px-4 py-1 rounded-full text-sm border-2 border-orange-300">
             Today's Challenge
           </div>
         </div>
@@ -63,10 +68,10 @@ export default function Challenge() {
 
         <div
           className="bg-white rounded-3xl border-4 p-6 text-center shadow-lg"
-          style={{ borderColor: challenge.shadowColor, boxShadow: `0 6px 0 ${challenge.shadowColor}` }}
+          style={{ borderColor: style.shadow, boxShadow: `0 6px 0 ${style.shadow}` }}
         >
           <div className="text-5xl mb-3">{challenge.emoji}</div>
-          <p className="text-xl font-black leading-snug" style={{ color: challenge.color }}>
+          <p className="text-xl font-black leading-snug" style={{ color: style.color }}>
             {challenge.description}
           </p>
         </div>
@@ -81,7 +86,7 @@ export default function Challenge() {
 
         {!done && (
           <div className="bg-white rounded-3xl border-4 border-yellow-300 p-4 shadow-md">
-            <p className="text-center font-black text-yellow-700 mb-3 text-base">Tap each one when you find it!</p>
+            <p className="text-center font-black text-yellow-700 mb-3 text-base">Tap each one when you do it!</p>
             <div className="flex flex-col gap-2">
               {challenge.items.map((label, i) => (
                 <button
@@ -132,13 +137,18 @@ export default function Challenge() {
               boxShadow: allFound ? "0 5px 0 #15803d" : "0 5px 0 #7c3aed",
             }}
           >
-            {allFound ? "✅ Mark as Done!" : "🌟 I Found Them All!"}
+            {allFound ? "✅ Mark as Done!" : "🌟 I Did It All!"}
           </button>
         )}
 
-        <div className="flex justify-center gap-2 text-2xl">
-          {["⭐", "🎯", "💪", "🌈"].map((e, i) => <span key={i}>{e}</span>)}
+        <div className="bg-white rounded-2xl border-2 border-indigo-200 px-4 py-3 flex items-center justify-between shadow-sm">
+          <div>
+            <p className="text-xs font-black text-indigo-400 uppercase tracking-wide">Tomorrow's challenge unlocks in</p>
+            <p className="text-2xl font-black text-indigo-600 tracking-widest">{countdown}</p>
+          </div>
+          <span className="text-3xl">⏰</span>
         </div>
+
       </div>
     </div>
   );

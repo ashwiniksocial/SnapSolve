@@ -1,16 +1,19 @@
 import { Link } from "wouter";
-import { getTodaysChallenge } from "@/data/challenges";
+import { getTodaysChallenge, CATEGORY_STYLES } from "@/data/challenges";
 import { useStreak } from "@/hooks/useStreak";
+import { useCountdown } from "@/hooks/useCountdown";
 
 export default function Home() {
   const challenge = getTodaysChallenge();
+  const style = CATEGORY_STYLES[challenge.category];
   const { streak, isTodayCompleted } = useStreak();
+  const countdown = useCountdown();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10"
       style={{ background: "linear-gradient(135deg, #fdf4ff 0%, #ffe8f7 40%, #e8f4ff 100%)" }}>
 
-      <div className="pop-in flex flex-col items-center gap-6 max-w-sm w-full">
+      <div className="pop-in flex flex-col items-center gap-5 max-w-sm w-full">
 
         <div className="bounce-slow text-8xl select-none">🦸</div>
 
@@ -38,18 +41,22 @@ export default function Home() {
         )}
 
         <div className="w-full bg-white rounded-3xl shadow-lg border-4 border-yellow-300 p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">{challenge.emoji}</span>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-3xl">{challenge.emoji}</span>
             <div>
-              <p className="font-black text-purple-700 text-base leading-tight">{challenge.title}</p>
-              <span className="text-xs font-bold text-purple-400 bg-purple-100 px-2 py-0.5 rounded-full">
+              <p className="font-black text-gray-800 text-base leading-tight">{challenge.title}</p>
+              <span
+                className={`text-xs font-black px-2 py-0.5 rounded-full border ${style.bg} ${style.text} ${style.border}`}
+              >
                 {challenge.category}
               </span>
             </div>
           </div>
-          <p className="text-purple-600 font-bold text-sm mt-1">{challenge.description}</p>
+          <p className="font-bold text-sm leading-snug" style={{ color: style.color }}>
+            {challenge.description}
+          </p>
           {isTodayCompleted && (
-            <div className="mt-2 flex items-center gap-1 text-green-600 font-black text-sm">
+            <div className="mt-3 flex items-center gap-1 text-green-600 font-black text-sm">
               <span>✅</span><span>Completed today!</span>
             </div>
           )}
@@ -92,11 +99,14 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex gap-3 mt-2">
-          {["🌟", "🏅", "🎯", "💡", "🎉"].map((emoji, i) => (
-            <span key={i} className="text-2xl">{emoji}</span>
-          ))}
+        <div className="w-full bg-white rounded-2xl border-2 border-indigo-200 px-4 py-3 flex items-center justify-between shadow-sm">
+          <div>
+            <p className="text-xs font-black text-indigo-400 uppercase tracking-wide">Tomorrow's challenge unlocks in</p>
+            <p className="text-xl font-black text-indigo-600 tracking-widest">{countdown}</p>
+          </div>
+          <span className="text-2xl">⏰</span>
         </div>
+
       </div>
     </div>
   );
