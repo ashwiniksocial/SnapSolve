@@ -111,13 +111,13 @@ export default function Progress() {
                   </div>
                   {stats.totalSolved > 0 && (
                     <div className="mt-3 flex flex-wrap gap-1.5">
-                      {stats.topics.slice(0, 4).map(([topic, data]) => (
+                      {stats.topicStats.slice(0, 4).map((t) => (
                         <span
-                          key={topic}
+                          key={t.topic}
                           className="text-xs px-2.5 py-1 rounded-full font-medium"
                           style={{ backgroundColor: cfg.light, color: cfg.color }}
                         >
-                          {topic} · {data.solved}
+                          {t.topic} · {t.solved}
                         </span>
                       ))}
                     </div>

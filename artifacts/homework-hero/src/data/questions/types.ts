@@ -1,0 +1,50 @@
+/**
+ * Core data types for the StudyAI question bank.
+ * Hierarchy: Class → Subject → Chapter → Topic → Question
+ *
+ * Designed to be forward-compatible with Firebase/Firestore:
+ * - Every entity has a string `id` field.
+ * - No circular references.
+ * - All arrays are flat (no nested arrays).
+ */
+
+export type Difficulty = "Easy" | "Medium" | "Hard";
+
+export interface SolutionStep {
+  stepNumber: number;
+  title: string;
+  explanation: string;
+  formula?: string;
+  result?: string;
+}
+
+export interface Question {
+  id: string;                // e.g. "c9-math-ch1-t1-q01"
+  classNum: number;          // 9
+  subject: string;           // "Mathematics"
+  chapterId: string;         // "ch1"
+  chapterName: string;       // "Number Systems"
+  topicId: string;           // "t1"
+  topicName: string;         // "Real Numbers and Their Types"
+  difficulty: Difficulty;
+  question: string;
+  hint: string;
+  answer: string;
+  steps: SolutionStep[];
+  keyConcepts: string[];
+}
+
+/** Metadata-only view — useful for nav rendering without loading full questions */
+export interface TopicMeta {
+  id: string;
+  name: string;
+  questionCount: number;
+}
+
+export interface ChapterMeta {
+  id: string;
+  name: string;
+  classNum: number;
+  subject: string;
+  topics: TopicMeta[];
+}
