@@ -1,18 +1,26 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { getTodaysChallenge } from "@/data/challenges";
 
 export default function Challenge() {
+  const challenge = getTodaysChallenge();
+
   const [done, setDone] = useState(false);
-  const [found, setFound] = useState<boolean[]>([false, false, false]);
+  const [found, setFound] = useState<boolean[]>(() => Array(challenge.items.length).fill(false));
 
   const toggleItem = (i: number) => {
+    if (done) return;
     const next = [...found];
     next[i] = !next[i];
     setFound(next);
-    if (next.every(Boolean)) setDone(true);
   };
 
   const allFound = found.every(Boolean);
+
+  const handleMarkDone = () => {
+    setFound(Array(challenge.items.length).fill(true));
+    setDone(true);
+  };
 
   return (
     <div
@@ -22,29 +30,37 @@ export default function Challenge() {
       <div className="pop-in w-full max-w-sm flex flex-col gap-6">
 
         <div className="text-center">
-          <div className="text-6xl mb-2 wiggle inline-block">🔍</div>
-          <h1 className="text-4xl font-black" style={{ color: "#e05d10", textShadow: "2px 2px 0px #ffd6b0" }}>
-            Today's Challenge
+          <div className="text-6xl mb-2 wiggle inline-block">{challenge.emoji}</div>
+          <div className="mb-1">
+            <span
+              className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full text-white"
+              style={{ background: challenge.color }}
+            >
+              {challenge.category}
+            </span>
+          </div>
+          <h1 className="text-4xl font-black mt-2" style={{ color: challenge.color, textShadow: `2px 2px 0px ${challenge.shadowColor}` }}>
+            {challenge.title}
           </h1>
           <div className="mt-1 inline-block bg-orange-100 text-orange-600 font-bold px-4 py-1 rounded-full text-sm border-2 border-orange-300">
-            Wednesday · Day 3
+            Today's Challenge
           </div>
         </div>
 
         <div
-          className="bg-white rounded-3xl border-4 border-orange-300 p-6 text-center shadow-lg"
-          style={{ boxShadow: "0 6px 0 #fb923c" }}
+          className="bg-white rounded-3xl border-4 p-6 text-center shadow-lg"
+          style={{ borderColor: challenge.shadowColor, boxShadow: `0 6px 0 ${challenge.shadowColor}` }}
         >
-          <div className="text-5xl mb-3">⭕</div>
-          <p className="text-xl font-black text-orange-700 leading-snug">
-            Find 3 objects in your room shaped like circles.
+          <div className="text-5xl mb-3">{challenge.emoji}</div>
+          <p className="text-xl font-black leading-snug" style={{ color: challenge.color }}>
+            {challenge.description}
           </p>
         </div>
 
         <div className="bg-white rounded-3xl border-4 border-yellow-300 p-4 shadow-md">
           <p className="text-center font-black text-yellow-700 mb-3 text-base">Tap each one when you find it!</p>
           <div className="flex flex-col gap-2">
-            {["Circle object 1", "Circle object 2", "Circle object 3"].map((label, i) => (
+            {challenge.items.map((label, i) => (
               <button
                 key={i}
                 onClick={() => toggleItem(i)}
@@ -53,19 +69,12 @@ export default function Challenge() {
                     ? "bg-green-100 border-green-400 text-green-700"
                     : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-yellow-50 hover:border-yellow-300"}`}
               >
-                <span className="text-2xl">{found[i] ? "✅" : "⭕"}</span>
+                <span className="text-2xl">{found[i] ? "✅" : challenge.emoji}</span>
                 <span>{label}</span>
               </button>
             ))}
           </div>
         </div>
-
-        {allFound && !done && (
-          <div className="pop-in bg-green-100 rounded-3xl border-4 border-green-400 p-4 text-center">
-            <div className="text-4xl mb-1">🎉</div>
-            <p className="font-black text-green-700 text-lg">All found! Great job!</p>
-          </div>
-        )}
 
         {done && (
           <div
@@ -88,7 +97,7 @@ export default function Challenge() {
 
         {!done && (
           <button
-            onClick={() => { setFound([true, true, true]); setDone(true); }}
+            onClick={handleMarkDone}
             className="w-full py-4 rounded-3xl font-black text-white text-lg active:scale-95 transition-all"
             style={{
               background: allFound

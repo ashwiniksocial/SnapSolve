@@ -1,6 +1,9 @@
 import { Link } from "wouter";
+import { getTodaysChallenge } from "@/data/challenges";
 
 export default function Home() {
+  const challenge = getTodaysChallenge();
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10"
       style={{ background: "linear-gradient(135deg, #fdf4ff 0%, #ffe8f7 40%, #e8f4ff 100%)" }}>
@@ -17,11 +20,17 @@ export default function Home() {
           <p className="mt-2 text-lg font-bold text-purple-400">Your daily learning adventure!</p>
         </div>
 
-        <div className="w-full bg-white rounded-3xl shadow-lg border-4 border-yellow-300 p-5 text-center">
-          <div className="text-3xl mb-2">✨</div>
-          <p className="text-purple-700 font-bold text-base">
-            A new fun challenge awaits you every day. Are you ready, hero?
-          </p>
+        <div className="w-full bg-white rounded-3xl shadow-lg border-4 border-yellow-300 p-5">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-2xl">{challenge.emoji}</span>
+            <div>
+              <p className="font-black text-purple-700 text-base leading-tight">{challenge.title}</p>
+              <span className="text-xs font-bold text-purple-400 bg-purple-100 px-2 py-0.5 rounded-full">
+                {challenge.category}
+              </span>
+            </div>
+          </div>
+          <p className="text-purple-600 font-bold text-sm mt-1">{challenge.description}</p>
         </div>
 
         <Link href="/challenge" className="w-full">
