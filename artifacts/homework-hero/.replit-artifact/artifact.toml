@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Homework Hero"
+version = "1.0.0"
+id = "artifacts/homework-hero"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22801
+
+[services.development]
+run = "pnpm --filter @workspace/homework-hero run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/homework-hero", "run", "build" ]
+publicDir = "artifacts/homework-hero/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22801"
+BASE_PATH = "/"
