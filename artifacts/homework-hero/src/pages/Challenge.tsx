@@ -3,17 +3,21 @@ import { Link } from "wouter";
 import { getTodaysChallenge, CATEGORY_STYLES } from "@/data/challenges";
 import { useStreak } from "@/hooks/useStreak";
 import { useCountdown } from "@/hooks/useCountdown";
+import { useCelebration } from "@/hooks/useCelebration";
+import StarBurst from "@/components/StarBurst";
 
 export default function Challenge() {
   const challenge = getTodaysChallenge();
   const style = CATEGORY_STYLES[challenge.category];
   const { streak, isTodayCompleted, completeToday } = useStreak();
   const countdown = useCountdown();
+  const celebrate = useCelebration();
 
   const [found, setFound] = useState<boolean[]>(() =>
     Array(challenge.items.length).fill(isTodayCompleted)
   );
   const [justCompleted, setJustCompleted] = useState(false);
+  const [burstActive, setBurstActive] = useState(false);
 
   const done = isTodayCompleted || justCompleted;
 
@@ -30,6 +34,9 @@ export default function Challenge() {
     setFound(Array(challenge.items.length).fill(true));
     completeToday();
     setJustCompleted(true);
+    celebrate();
+    setBurstActive(true);
+    setTimeout(() => setBurstActive(false), 2600);
   };
 
   return (
@@ -37,6 +44,8 @@ export default function Challenge() {
       className="min-h-screen flex flex-col items-center px-6 py-10"
       style={{ background: "linear-gradient(135deg, #fff7e6 0%, #ffe4e1 50%, #e6f3ff 100%)" }}
     >
+      <StarBurst active={burstActive} />
+
       <div className="pop-in w-full max-w-sm flex flex-col gap-5">
 
         <div className="text-center">
@@ -110,7 +119,7 @@ export default function Challenge() {
             className="pop-in text-center rounded-3xl p-6 border-4 border-purple-400"
             style={{ background: "linear-gradient(135deg, #f0e6ff, #ffe6f9)" }}
           >
-            <div className="text-5xl mb-2">🏆</div>
+            <div className="text-5xl mb-2 bounce-slow inline-block">🏆</div>
             <p className="font-black text-purple-700 text-xl">Challenge Complete!</p>
             <p className="text-purple-500 font-bold mt-1">
               🔥 Streak: {streak} {streak === 1 ? "day" : "days"}! +10 XP earned!
