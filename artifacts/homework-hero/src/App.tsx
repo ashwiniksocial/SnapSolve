@@ -4,12 +4,14 @@ import Scan from "@/pages/Scan";
 import Solution from "@/pages/Solution";
 import Practice from "@/pages/Practice";
 import Progress from "@/pages/Progress";
+import QuestionWorkspace from "@/pages/Challenge";
 
 const NAV = [
-  { to: "/",         icon: "⊞",  label: "Home"     },
-  { to: "/scan",     icon: "⊕",  label: "Scan"     },
-  { to: "/practice", icon: "✎",  label: "Practice" },
-  { to: "/progress", icon: "◈",  label: "Progress" },
+  { to: "/",           icon: "⊞",  label: "Home"      },
+  { to: "/scan",       icon: "⊕",  label: "Scan"      },
+  { to: "/challenge",  icon: "✦",  label: "Workspace" },
+  { to: "/practice",   icon: "✎",  label: "Practice"  },
+  { to: "/progress",   icon: "◈",  label: "Progress"  },
 ];
 
 function BottomNav() {
@@ -19,16 +21,16 @@ function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-sm">
-      <div className="max-w-lg mx-auto flex justify-around py-2">
+      <div className="max-w-lg mx-auto flex justify-around py-1.5">
         {NAV.map(({ to, icon, label }) => (
           <Link key={to} href={to}>
             <button
-              className={`flex flex-col items-center gap-0.5 px-5 py-2 rounded-xl text-xs font-semibold transition-all
+              className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl text-[10px] font-semibold transition-all
                 ${active(to)
                   ? "text-indigo-600"
                   : "text-slate-400 hover:text-slate-600"}`}
             >
-              <span className={`text-xl leading-none mb-0.5 ${active(to) ? "scale-110" : ""} transition-transform`}>
+              <span className={`text-lg leading-none mb-0.5 ${active(to) ? "scale-110" : ""} transition-transform`}>
                 {icon}
               </span>
               {label}
@@ -48,6 +50,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/scan" component={Scan} />
           <Route path="/solution" component={Solution} />
+          <Route path="/challenge" component={QuestionWorkspace} />
           <Route path="/practice" component={Practice} />
           <Route path="/progress" component={Progress} />
         </Switch>
