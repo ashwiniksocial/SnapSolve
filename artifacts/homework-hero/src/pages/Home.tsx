@@ -1,112 +1,131 @@
 import { Link } from "wouter";
-import { getTodaysChallenge, CATEGORY_STYLES } from "@/data/challenges";
+import { SUBJECTS, type Subject } from "@/data/subjects";
+import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
-import { useCountdown } from "@/hooks/useCountdown";
+import { useProgress } from "@/hooks/useProgress";
+
+const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
 
 export default function Home() {
-  const challenge = getTodaysChallenge();
-  const style = CATEGORY_STYLES[challenge.category];
+  const { session, update } = useSession();
   const { streak, isTodayCompleted } = useStreak();
-  const countdown = useCountdown();
+  const { totalSolved } = useProgress();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10"
-      style={{ background: "linear-gradient(135deg, #fdf4ff 0%, #ffe8f7 40%, #e8f4ff 100%)" }}>
-
-      <div className="pop-in flex flex-col items-center gap-5 max-w-sm w-full">
-
-        <div className="bounce-slow text-8xl select-none">🦸</div>
-
-        <div className="text-center">
-          <h1 className="text-5xl font-black tracking-tight"
-            style={{ color: "#8b2fdc", textShadow: "3px 3px 0px #e0b0ff" }}>
-            Snap Solve
-          </h1>
-          <p className="mt-2 text-lg font-bold text-purple-400">Your daily learning adventure!</p>
-        </div>
-
-        {streak > 0 && (
-          <div
-            className="w-full flex items-center justify-center gap-3 rounded-2xl py-3 px-5 border-4 border-amber-300 shadow-md"
-            style={{ background: "linear-gradient(135deg, #fff7ed, #fef3c7)" }}
-          >
-            <span className="text-3xl">🔥</span>
-            <div className="text-left">
-              <p className="font-black text-amber-700 text-lg leading-tight">{streak} day streak!</p>
-              <p className="text-amber-500 font-bold text-xs">
-                {isTodayCompleted ? "Today's done — see you tomorrow!" : "Don't break the chain!"}
-              </p>
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-5">
+        <div className="max-w-lg mx-auto flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">StudyAI</h1>
+            <p className="text-sm text-slate-500 mt-0.5">Physics · Chemistry · Mathematics</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {streak > 0 && (
+              <div className="flex items-center gap-1.5 bg-orange-50 border border-orange-200 rounded-full px-3 py-1.5">
+                <span className="text-base">🔥</span>
+                <span className="text-sm font-bold text-orange-600">{streak}</span>
+              </div>
+            )}
+            <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
+              S
             </div>
           </div>
-        )}
+        </div>
+      </div>
 
-        <div className="w-full bg-white rounded-3xl shadow-lg border-4 border-yellow-300 p-5">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-3xl">{challenge.emoji}</span>
-            <div>
-              <p className="font-black text-gray-800 text-base leading-tight">{challenge.title}</p>
-              <span
-                className={`text-xs font-black px-2 py-0.5 rounded-full border ${style.bg} ${style.text} ${style.border}`}
-              >
-                {challenge.category}
-              </span>
+      <div className="max-w-lg mx-auto px-5 py-6 space-y-6">
+
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: "Day Streak", value: streak, unit: "🔥", color: "text-orange-600" },
+            { label: "Problems", value: totalSolved, unit: "✓", color: "text-indigo-600" },
+            { label: "Today", value: isTodayCompleted ? "Done" : "0/1", unit: "", color: "text-emerald-600" },
+          ].map(({ label, value, unit, color }) => (
+            <div key={label} className="bg-white rounded-2xl border border-slate-200 p-4 text-center shadow-sm">
+              <p className={`text-xl font-bold ${color}`}>{value}{unit}</p>
+              <p className="text-xs text-slate-500 mt-1 font-medium">{label}</p>
             </div>
-          </div>
-          <p className="font-bold text-sm leading-snug" style={{ color: style.color }}>
-            {challenge.description}
-          </p>
-          {isTodayCompleted && (
-            <div className="mt-3 flex items-center gap-1 text-green-600 font-black text-sm">
-              <span>✅</span><span>Completed today!</span>
-            </div>
-          )}
+          ))}
         </div>
 
-        <Link href="/challenge" className="w-full">
+        {/* Subject selector */}
+        <div>
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Select Subject</h2>
+          <div className="space-y-3">
+            {subjects.map((subj) => {
+              const cfg = SUBJECTS[subj];
+              const isActive = session.subject === subj;
+              return (
+                <button
+                  key={subj}
+                  onClick={() => update({ subject: subj })}
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all
+                    ${isActive
+                      ? "border-current shadow-sm"
+                      : "border-slate-200 bg-white hover:border-slate-300"}`}
+                  style={isActive ? { borderColor: cfg.color, backgroundColor: cfg.light } : {}}
+                >
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+                    style={{ backgroundColor: cfg.color + "20" }}
+                  >
+                    {cfg.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-slate-900">{subj}</p>
+                    <p className="text-xs text-slate-500 mt-0.5 truncate">
+                      {cfg.topics.slice(0, 4).join(" · ")}
+                    </p>
+                  </div>
+                  {isActive && (
+                    <div
+                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: cfg.color }}
+                    >
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Primary CTA */}
+        <Link href="/scan">
           <button
-            className="w-full py-5 rounded-3xl text-xl font-black text-white shadow-lg active:scale-95 transition-all duration-150"
-            style={{
-              background: isTodayCompleted
-                ? "linear-gradient(135deg, #22c55e, #16a34a)"
-                : "linear-gradient(135deg, #a855f7, #ec4899)",
-              boxShadow: isTodayCompleted ? "0 6px 0 #15803d" : "0 6px 0 #7c3aed",
-            }}
+            className="w-full py-4 rounded-2xl font-semibold text-white text-base shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
+            style={{ background: `linear-gradient(135deg, ${SUBJECTS[session.subject].color}, ${SUBJECTS[session.subject].color}cc)` }}
           >
-            {isTodayCompleted ? "✅ Challenge Done!" : "🚀 Start Today's Challenge"}
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Scan a Question · {session.subject}
           </button>
         </Link>
 
-        <div className="flex gap-4 w-full">
-          <Link href="/progress" className="flex-1">
-            <button
-              className="w-full py-3 rounded-2xl text-base font-black text-white shadow-md active:scale-95 transition-all duration-150"
-              style={{
-                background: "linear-gradient(135deg, #f97316, #facc15)",
-                boxShadow: "0 4px 0 #c2410c",
-              }}
-            >
-              🔥 My Streak
-            </button>
+        {/* Quick links */}
+        <div className="grid grid-cols-2 gap-3">
+          <Link href="/practice">
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-indigo-200 transition-colors cursor-pointer shadow-sm">
+              <div className="text-2xl mb-2">✎</div>
+              <p className="font-semibold text-slate-800 text-sm">Practice</p>
+              <p className="text-xs text-slate-500 mt-0.5">Topic-wise questions</p>
+            </div>
           </Link>
-          <div
-            className="flex-1 py-3 rounded-2xl text-base font-black text-white shadow-md text-center"
-            style={{
-              background: "linear-gradient(135deg, #22d3ee, #6366f1)",
-              boxShadow: "0 4px 0 #0e7490",
-            }}
-          >
-            ⭐ Level 3
-          </div>
+          <Link href="/progress">
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-indigo-200 transition-colors cursor-pointer shadow-sm">
+              <div className="text-2xl mb-2">◈</div>
+              <p className="font-semibold text-slate-800 text-sm">Progress</p>
+              <p className="text-xs text-slate-500 mt-0.5">Weakness analysis</p>
+            </div>
+          </Link>
         </div>
-
-        <div className="w-full bg-white rounded-2xl border-2 border-indigo-200 px-4 py-3 flex items-center justify-between shadow-sm">
-          <div>
-            <p className="text-xs font-black text-indigo-400 uppercase tracking-wide">Tomorrow's challenge unlocks in</p>
-            <p className="text-xl font-black text-indigo-600 tracking-widest">{countdown}</p>
-          </div>
-          <span className="text-2xl">⏰</span>
-        </div>
-
       </div>
     </div>
   );

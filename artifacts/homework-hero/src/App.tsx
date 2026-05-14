@@ -1,28 +1,36 @@
 import { Switch, Route, Router as WouterRouter, Link, useLocation } from "wouter";
 import Home from "@/pages/Home";
-import Challenge from "@/pages/Challenge";
+import Scan from "@/pages/Scan";
+import Solution from "@/pages/Solution";
+import Practice from "@/pages/Practice";
 import Progress from "@/pages/Progress";
 
-function Nav() {
-  const [location] = useLocation();
+const NAV = [
+  { to: "/",         icon: "⊞",  label: "Home"     },
+  { to: "/scan",     icon: "⊕",  label: "Scan"     },
+  { to: "/practice", icon: "✎",  label: "Practice" },
+  { to: "/progress", icon: "◈",  label: "Progress" },
+];
 
-  const links = [
-    { to: "/", label: "🏠 Home" },
-    { to: "/challenge", label: "⭐ Challenge" },
-    { to: "/progress", label: "🔥 Progress" },
-  ];
+function BottomNav() {
+  const [location] = useLocation();
+  const active = (path: string) =>
+    path === "/" ? location === "/" : location.startsWith(path);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t-4 border-purple-300 shadow-lg">
-      <div className="max-w-md mx-auto flex justify-around py-2">
-        {links.map(({ to, label }) => (
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-sm">
+      <div className="max-w-lg mx-auto flex justify-around py-2">
+        {NAV.map(({ to, icon, label }) => (
           <Link key={to} href={to}>
             <button
-              className={`flex flex-col items-center px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200
-                ${location === to
-                  ? "bg-purple-500 text-white scale-105 shadow-md"
-                  : "text-purple-400 hover:bg-purple-100"}`}
+              className={`flex flex-col items-center gap-0.5 px-5 py-2 rounded-xl text-xs font-semibold transition-all
+                ${active(to)
+                  ? "text-indigo-600"
+                  : "text-slate-400 hover:text-slate-600"}`}
             >
+              <span className={`text-xl leading-none mb-0.5 ${active(to) ? "scale-110" : ""} transition-transform`}>
+                {icon}
+              </span>
               {label}
             </button>
           </Link>
@@ -35,24 +43,24 @@ function Nav() {
 function Router() {
   return (
     <>
-      <div className="pb-20">
+      <div className="pb-20 min-h-screen">
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/challenge" component={Challenge} />
+          <Route path="/scan" component={Scan} />
+          <Route path="/solution" component={Solution} />
+          <Route path="/practice" component={Practice} />
           <Route path="/progress" component={Progress} />
         </Switch>
       </div>
-      <Nav />
+      <BottomNav />
     </>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
       <Router />
     </WouterRouter>
   );
 }
-
-export default App;

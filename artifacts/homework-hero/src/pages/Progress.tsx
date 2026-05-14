@@ -1,4 +1,8 @@
+import { SUBJECTS, type Subject } from "@/data/subjects";
 import { useStreak } from "@/hooks/useStreak";
+import { useProgress } from "@/hooks/useProgress";
+
+const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
 
 function getLast7Days(): string[] {
   return Array.from({ length: 7 }, (_, i) => {
@@ -7,142 +11,119 @@ function getLast7Days(): string[] {
     return d.toISOString().slice(0, 10);
   });
 }
-
-const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-const badges = [
-  { emoji: "🔍", label: "Explorer", minStreak: 1 },
-  { emoji: "🌟", label: "Star", minStreak: 2 },
-  { emoji: "🎯", label: "Sharp Eye", minStreak: 3 },
-  { emoji: "🏆", label: "Champion", minStreak: 5 },
-  { emoji: "🚀", label: "Rocket", minStreak: 7 },
-  { emoji: "🦸", label: "Hero", minStreak: 14 },
-];
+const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
 export default function Progress() {
   const { streak, completedDates } = useStreak();
-  const totalXP = completedDates.length * 10;
+  const { getSubjectStats, totalSolved } = useProgress();
   const last7 = getLast7Days();
 
+  const allWeakTopics = subjects.flatMap((s) => {
+    const stats = getSubjectStats(s);
+    return stats.weakTopics.map((t) => ({ topic: t, subject: s }));
+  });
+
   return (
-    <div
-      className="min-h-screen flex flex-col items-center px-6 py-10"
-      style={{ background: "linear-gradient(135deg, #fff0f9 0%, #f0f4ff 60%, #fffde6 100%)" }}
-    >
-      <div className="pop-in w-full max-w-sm flex flex-col gap-6">
-
-        <div className="text-center">
-          <div className="text-6xl mb-2 bounce-slow inline-block">🔥</div>
-          <h1 className="text-4xl font-black" style={{ color: "#d97706", textShadow: "2px 2px 0px #fde68a" }}>
-            My Progress
-          </h1>
-          <p className="text-amber-500 font-bold mt-1">Keep it up, hero!</p>
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-5">
+        <div className="max-w-lg mx-auto">
+          <h1 className="text-xl font-bold text-slate-900">Progress</h1>
+          <p className="text-sm text-slate-500 mt-0.5">Track your learning across all subjects</p>
         </div>
+      </div>
 
-        <div
-          className="bg-white rounded-3xl border-4 border-amber-300 p-6 text-center shadow-lg"
-          style={{ boxShadow: "0 6px 0 #f59e0b" }}
-        >
-          <p className="text-lg font-black text-amber-600 uppercase tracking-wide mb-1">Current Streak</p>
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-7xl font-black" style={{ color: "#ef4444" }}>{streak}</span>
-            <div className="text-left">
-              <div className="text-4xl leading-none">🔥</div>
-              <div className="font-black text-amber-500 text-lg">days</div>
+      <div className="max-w-lg mx-auto px-5 py-6 space-y-6">
+
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: "Day Streak", value: streak, suffix: "🔥", color: "text-orange-600" },
+            { label: "Problems", value: totalSolved, suffix: "", color: "text-indigo-600" },
+            { label: "XP Earned", value: totalSolved * 10, suffix: "", color: "text-emerald-600" },
+          ].map(({ label, value, suffix, color }) => (
+            <div key={label} className="bg-white rounded-2xl border border-slate-200 p-4 text-center shadow-sm">
+              <p className={`text-xl font-bold ${color}`}>{value}{suffix}</p>
+              <p className="text-xs text-slate-500 mt-1 font-medium">{label}</p>
             </div>
-          </div>
-          <div className="mt-3 flex justify-center gap-1">
-            {Array.from({ length: 7 }, (_, i) => (
-              <div
-                key={i}
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-base transition-all
-                  ${i < streak ? "bg-orange-400 text-white shadow-md scale-105" : "bg-gray-100 text-gray-300"}`}
-              >
-                {i < streak ? "🔥" : "○"}
-              </div>
-            ))}
-          </div>
-          {streak === 0 && (
-            <p className="mt-2 text-sm text-amber-400 font-bold">Complete today's challenge to start your streak!</p>
-          )}
-          {streak > 0 && streak < 7 && (
-            <p className="mt-2 text-sm text-amber-400 font-bold">{7 - streak} more days to unlock the Rocket badge!</p>
-          )}
-          {streak >= 7 && (
-            <p className="mt-2 text-sm text-amber-400 font-bold">🚀 You're on fire! Keep going!</p>
-          )}
+          ))}
         </div>
 
-        <div
-          className="bg-white rounded-3xl border-4 border-purple-300 p-5 shadow-lg"
-          style={{ boxShadow: "0 6px 0 #a855f7" }}
-        >
-          <p className="text-center font-black text-purple-600 text-lg mb-3">This Week</p>
+        {/* Activity streak calendar */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">7-Day Activity</p>
           <div className="flex justify-between gap-1">
-            {last7.map((dateStr) => {
+            {last7.map((dateStr, i) => {
               const done = completedDates.includes(dateStr);
               const dayLabel = DAY_LABELS[new Date(dateStr + "T12:00:00").getDay()];
               return (
-                <div key={dateStr} className="flex flex-col items-center gap-1">
+                <div key={dateStr} className="flex flex-col items-center gap-2 flex-1">
                   <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold border-2 transition-all
-                      ${done
-                        ? "bg-green-400 border-green-500 text-white shadow-md"
-                        : "bg-gray-100 border-gray-200 text-gray-400"}`}
+                    className={`w-full aspect-square rounded-lg flex items-center justify-center text-xs font-bold transition-all ${
+                      done ? "text-white shadow-sm" : "bg-slate-100 text-slate-400"
+                    }`}
+                    style={done ? { backgroundColor: "#4f46e5" } : {}}
                   >
-                    {done ? "✓" : "·"}
+                    {done ? "✓" : ""}
                   </div>
-                  <span className="text-xs font-bold text-gray-400">{dayLabel}</span>
+                  <span className="text-xs text-slate-400 font-medium">{dayLabel}</span>
                 </div>
               );
             })}
           </div>
         </div>
 
-        <div
-          className="bg-white rounded-3xl border-4 border-blue-300 p-5 shadow-lg"
-          style={{ boxShadow: "0 6px 0 #3b82f6" }}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <p className="font-black text-blue-600 text-lg">Total XP</p>
-            <span className="font-black text-blue-500 text-2xl">{totalXP} ⚡</span>
-          </div>
-          <div className="w-full bg-blue-100 rounded-full h-4 border-2 border-blue-200 overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-700"
-              style={{
-                width: `${Math.min((totalXP / 200) * 100, 100)}%`,
-                background: "linear-gradient(90deg, #60a5fa, #a855f7)",
-              }}
-            />
-          </div>
-          <p className="text-xs font-bold text-blue-400 mt-1 text-right">
-            {totalXP}/200 XP to Level 4
-          </p>
-        </div>
-
-        <div
-          className="bg-white rounded-3xl border-4 border-pink-300 p-5 shadow-lg"
-          style={{ boxShadow: "0 6px 0 #ec4899" }}
-        >
-          <p className="text-center font-black text-pink-600 text-lg mb-3">My Badges</p>
-          <div className="grid grid-cols-3 gap-3">
-            {badges.map(({ emoji, label, minStreak }) => {
-              const earned = streak >= minStreak || completedDates.length >= minStreak;
+        {/* Subject-wise progress */}
+        <div>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Subject Progress</p>
+          <div className="space-y-3">
+            {subjects.map((subj) => {
+              const cfg = SUBJECTS[subj];
+              const stats = getSubjectStats(subj);
+              const pct = stats.accuracy;
               return (
-                <div
-                  key={label}
-                  className={`flex flex-col items-center gap-1 p-3 rounded-2xl border-2 transition-all
-                    ${earned
-                      ? "bg-gradient-to-b from-yellow-50 to-orange-50 border-yellow-300 shadow-md"
-                      : "bg-gray-50 border-gray-200 opacity-40"}`}
-                >
-                  <span className={`text-3xl ${!earned ? "grayscale" : ""}`}>{emoji}</span>
-                  <span className={`text-xs font-black ${earned ? "text-amber-600" : "text-gray-400"}`}>
-                    {label}
-                  </span>
-                  {!earned && (
-                    <span className="text-xs text-gray-400">{minStreak}🔥</span>
+                <div key={subj} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-xl"
+                        style={{ backgroundColor: cfg.light }}
+                      >
+                        {cfg.icon}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-slate-800 text-sm">{subj}</p>
+                        <p className="text-xs text-slate-500">{stats.totalSolved} solved</p>
+                      </div>
+                    </div>
+                    <p className="text-sm font-bold" style={{ color: cfg.color }}>
+                      {stats.totalSolved > 0 ? `${pct}%` : "—"}
+                    </p>
+                  </div>
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${pct}%`,
+                        backgroundColor: cfg.color,
+                      }}
+                    />
+                  </div>
+                  {stats.totalSolved > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {stats.topics.slice(0, 4).map(([topic, data]) => (
+                        <span
+                          key={topic}
+                          className="text-xs px-2.5 py-1 rounded-full font-medium"
+                          style={{ backgroundColor: cfg.light, color: cfg.color }}
+                        >
+                          {topic} · {data.solved}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {stats.totalSolved === 0 && (
+                    <p className="text-xs text-slate-400 mt-1">No activity yet — start solving!</p>
                   )}
                 </div>
               );
@@ -150,15 +131,52 @@ export default function Progress() {
           </div>
         </div>
 
-        <div className="text-center">
-          <p className="text-2xl font-black text-purple-400">
-            {completedDates.length === 0
-              ? "Start your first challenge! 🌈"
-              : completedDates.length === 1
-              ? "Great start, hero! 🌈"
-              : `${completedDates.length} challenges crushed! 🌈`}
-          </p>
+        {/* Weakness analysis */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Weakness Analysis</p>
+          <p className="text-xs text-slate-400 mb-4">Topics where accuracy is below 60%</p>
+          {allWeakTopics.length === 0 ? (
+            <div className="text-center py-6">
+              <p className="text-3xl mb-2">✦</p>
+              <p className="text-sm font-semibold text-slate-600">No weak topics detected yet</p>
+              <p className="text-xs text-slate-400 mt-1">Solve more questions to see your analysis</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {allWeakTopics.map(({ topic, subject }) => {
+                const cfg = SUBJECTS[subject];
+                return (
+                  <div key={`${subject}-${topic}`} className="flex items-center gap-3 p-3 rounded-xl bg-red-50 border border-red-100">
+                    <div
+                      className="w-7 h-7 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+                      style={{ backgroundColor: cfg.light }}
+                    >
+                      {cfg.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-slate-800">{topic}</p>
+                      <p className="text-xs text-slate-500">{subject}</p>
+                    </div>
+                    <span className="text-xs font-bold text-red-500 bg-red-100 px-2 py-1 rounded-full">
+                      Needs Work
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
+
+        {/* Streak motivator */}
+        {streak > 0 && (
+          <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-center">
+            <p className="text-3xl mb-2">🔥</p>
+            <p className="font-bold text-indigo-800 text-base">{streak}-day study streak!</p>
+            <p className="text-sm text-indigo-600 mt-1">
+              {streak < 7 ? `${7 - streak} more days to a 1-week streak` : "You're on a great roll — keep it up!"}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
