@@ -1,24 +1,28 @@
-export default function Progress() {
-  const streak = 3;
-  const totalXP = 130;
-  const badges = [
-    { emoji: "🔍", label: "Explorer", earned: true },
-    { emoji: "🌟", label: "Star", earned: true },
-    { emoji: "🎯", label: "Sharp Eye", earned: true },
-    { emoji: "🏆", label: "Champion", earned: false },
-    { emoji: "🚀", label: "Rocket", earned: false },
-    { emoji: "🦸", label: "Hero", earned: false },
-  ];
+import { useStreak } from "@/hooks/useStreak";
 
-  const history = [
-    { day: "Mon", done: true },
-    { day: "Tue", done: true },
-    { day: "Wed", done: true },
-    { day: "Thu", done: false },
-    { day: "Fri", done: false },
-    { day: "Sat", done: false },
-    { day: "Sun", done: false },
-  ];
+function getLast7Days(): string[] {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d.toISOString().slice(0, 10);
+  });
+}
+
+const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const badges = [
+  { emoji: "🔍", label: "Explorer", minStreak: 1 },
+  { emoji: "🌟", label: "Star", minStreak: 2 },
+  { emoji: "🎯", label: "Sharp Eye", minStreak: 3 },
+  { emoji: "🏆", label: "Champion", minStreak: 5 },
+  { emoji: "🚀", label: "Rocket", minStreak: 7 },
+  { emoji: "🦸", label: "Hero", minStreak: 14 },
+];
+
+export default function Progress() {
+  const { streak, completedDates } = useStreak();
+  const totalXP = completedDates.length * 10;
+  const last7 = getLast7Days();
 
   return (
     <div
@@ -48,7 +52,7 @@ export default function Progress() {
             </div>
           </div>
           <div className="mt-3 flex justify-center gap-1">
-            {[...Array(7)].map((_, i) => (
+            {Array.from({ length: 7 }, (_, i) => (
               <div
                 key={i}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-base transition-all
@@ -58,7 +62,15 @@ export default function Progress() {
               </div>
             ))}
           </div>
-          <p className="mt-2 text-sm text-amber-400 font-bold">4 more days to unlock a badge!</p>
+          {streak === 0 && (
+            <p className="mt-2 text-sm text-amber-400 font-bold">Complete today's challenge to start your streak!</p>
+          )}
+          {streak > 0 && streak < 7 && (
+            <p className="mt-2 text-sm text-amber-400 font-bold">{7 - streak} more days to unlock the Rocket badge!</p>
+          )}
+          {streak >= 7 && (
+            <p className="mt-2 text-sm text-amber-400 font-bold">🚀 You're on fire! Keep going!</p>
+          )}
         </div>
 
         <div
@@ -67,19 +79,23 @@ export default function Progress() {
         >
           <p className="text-center font-black text-purple-600 text-lg mb-3">This Week</p>
           <div className="flex justify-between gap-1">
-            {history.map(({ day, done }) => (
-              <div key={day} className="flex flex-col items-center gap-1">
-                <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold border-2 transition-all
-                    ${done
-                      ? "bg-green-400 border-green-500 text-white shadow-md"
-                      : "bg-gray-100 border-gray-200 text-gray-400"}`}
-                >
-                  {done ? "✓" : "·"}
+            {last7.map((dateStr) => {
+              const done = completedDates.includes(dateStr);
+              const dayLabel = DAY_LABELS[new Date(dateStr + "T12:00:00").getDay()];
+              return (
+                <div key={dateStr} className="flex flex-col items-center gap-1">
+                  <div
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold border-2 transition-all
+                      ${done
+                        ? "bg-green-400 border-green-500 text-white shadow-md"
+                        : "bg-gray-100 border-gray-200 text-gray-400"}`}
+                  >
+                    {done ? "✓" : "·"}
+                  </div>
+                  <span className="text-xs font-bold text-gray-400">{dayLabel}</span>
                 </div>
-                <span className="text-xs font-bold text-gray-400">{day}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -95,12 +111,14 @@ export default function Progress() {
             <div
               className="h-full rounded-full transition-all duration-700"
               style={{
-                width: `${(totalXP / 200) * 100}%`,
+                width: `${Math.min((totalXP / 200) * 100, 100)}%`,
                 background: "linear-gradient(90deg, #60a5fa, #a855f7)",
               }}
             />
           </div>
-          <p className="text-xs font-bold text-blue-400 mt-1 text-right">{totalXP}/200 XP to Level 4</p>
+          <p className="text-xs font-bold text-blue-400 mt-1 text-right">
+            {totalXP}/200 XP to Level 4
+          </p>
         </div>
 
         <div
@@ -109,25 +127,37 @@ export default function Progress() {
         >
           <p className="text-center font-black text-pink-600 text-lg mb-3">My Badges</p>
           <div className="grid grid-cols-3 gap-3">
-            {badges.map(({ emoji, label, earned }) => (
-              <div
-                key={label}
-                className={`flex flex-col items-center gap-1 p-3 rounded-2xl border-2 transition-all
-                  ${earned
-                    ? "bg-gradient-to-b from-yellow-50 to-orange-50 border-yellow-300 shadow-md"
-                    : "bg-gray-50 border-gray-200 opacity-40"}`}
-              >
-                <span className={`text-3xl ${!earned ? "grayscale" : ""}`}>{emoji}</span>
-                <span className={`text-xs font-black ${earned ? "text-amber-600" : "text-gray-400"}`}>
-                  {label}
-                </span>
-              </div>
-            ))}
+            {badges.map(({ emoji, label, minStreak }) => {
+              const earned = streak >= minStreak || completedDates.length >= minStreak;
+              return (
+                <div
+                  key={label}
+                  className={`flex flex-col items-center gap-1 p-3 rounded-2xl border-2 transition-all
+                    ${earned
+                      ? "bg-gradient-to-b from-yellow-50 to-orange-50 border-yellow-300 shadow-md"
+                      : "bg-gray-50 border-gray-200 opacity-40"}`}
+                >
+                  <span className={`text-3xl ${!earned ? "grayscale" : ""}`}>{emoji}</span>
+                  <span className={`text-xs font-black ${earned ? "text-amber-600" : "text-gray-400"}`}>
+                    {label}
+                  </span>
+                  {!earned && (
+                    <span className="text-xs text-gray-400">{minStreak}🔥</span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
         <div className="text-center">
-          <p className="text-2xl font-black text-purple-400">You're amazing! 🌈</p>
+          <p className="text-2xl font-black text-purple-400">
+            {completedDates.length === 0
+              ? "Start your first challenge! 🌈"
+              : completedDates.length === 1
+              ? "Great start, hero! 🌈"
+              : `${completedDates.length} challenges crushed! 🌈`}
+          </p>
         </div>
       </div>
     </div>

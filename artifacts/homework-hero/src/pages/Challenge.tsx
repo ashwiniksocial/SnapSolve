@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { getTodaysChallenge } from "@/data/challenges";
+import { useStreak } from "@/hooks/useStreak";
 
 export default function Challenge() {
   const challenge = getTodaysChallenge();
+  const { streak, isTodayCompleted, completeToday } = useStreak();
 
-  const [done, setDone] = useState(false);
-  const [found, setFound] = useState<boolean[]>(() => Array(challenge.items.length).fill(false));
+  const [found, setFound] = useState<boolean[]>(() =>
+    Array(challenge.items.length).fill(isTodayCompleted)
+  );
+  const [justCompleted, setJustCompleted] = useState(false);
+
+  const done = isTodayCompleted || justCompleted;
 
   const toggleItem = (i: number) => {
     if (done) return;
@@ -19,7 +25,8 @@ export default function Challenge() {
 
   const handleMarkDone = () => {
     setFound(Array(challenge.items.length).fill(true));
-    setDone(true);
+    completeToday();
+    setJustCompleted(true);
   };
 
   return (
@@ -47,6 +54,13 @@ export default function Challenge() {
           </div>
         </div>
 
+        {streak > 0 && (
+          <div className="flex items-center justify-center gap-2 bg-white rounded-2xl border-2 border-amber-300 px-4 py-2 shadow-sm">
+            <span className="text-2xl">🔥</span>
+            <span className="font-black text-amber-600">{streak} day streak!</span>
+          </div>
+        )}
+
         <div
           className="bg-white rounded-3xl border-4 p-6 text-center shadow-lg"
           style={{ borderColor: challenge.shadowColor, boxShadow: `0 6px 0 ${challenge.shadowColor}` }}
@@ -57,33 +71,45 @@ export default function Challenge() {
           </p>
         </div>
 
-        <div className="bg-white rounded-3xl border-4 border-yellow-300 p-4 shadow-md">
-          <p className="text-center font-black text-yellow-700 mb-3 text-base">Tap each one when you find it!</p>
-          <div className="flex flex-col gap-2">
-            {challenge.items.map((label, i) => (
-              <button
-                key={i}
-                onClick={() => toggleItem(i)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-left text-base transition-all duration-200 active:scale-95 border-2
-                  ${found[i]
-                    ? "bg-green-100 border-green-400 text-green-700"
-                    : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-yellow-50 hover:border-yellow-300"}`}
-              >
-                <span className="text-2xl">{found[i] ? "✅" : challenge.emoji}</span>
-                <span>{label}</span>
-              </button>
-            ))}
+        {done && !justCompleted && (
+          <div className="bg-green-100 rounded-3xl border-4 border-green-400 p-4 text-center">
+            <div className="text-3xl mb-1">✅</div>
+            <p className="font-black text-green-700 text-lg">Already done today!</p>
+            <p className="text-green-600 font-bold text-sm mt-1">Come back tomorrow for a new challenge.</p>
           </div>
-        </div>
+        )}
 
-        {done && (
+        {!done && (
+          <div className="bg-white rounded-3xl border-4 border-yellow-300 p-4 shadow-md">
+            <p className="text-center font-black text-yellow-700 mb-3 text-base">Tap each one when you find it!</p>
+            <div className="flex flex-col gap-2">
+              {challenge.items.map((label, i) => (
+                <button
+                  key={i}
+                  onClick={() => toggleItem(i)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-left text-base transition-all duration-200 active:scale-95 border-2
+                    ${found[i]
+                      ? "bg-green-100 border-green-400 text-green-700"
+                      : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-yellow-50 hover:border-yellow-300"}`}
+                >
+                  <span className="text-2xl">{found[i] ? "✅" : challenge.emoji}</span>
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {justCompleted && (
           <div
             className="pop-in text-center rounded-3xl p-6 border-4 border-purple-400"
             style={{ background: "linear-gradient(135deg, #f0e6ff, #ffe6f9)" }}
           >
             <div className="text-5xl mb-2">🏆</div>
             <p className="font-black text-purple-700 text-xl">Challenge Complete!</p>
-            <p className="text-purple-500 font-bold mt-1">You earned +10 XP!</p>
+            <p className="text-purple-500 font-bold mt-1">
+              🔥 Streak: {streak} {streak === 1 ? "day" : "days"}! +10 XP earned!
+            </p>
             <Link href="/progress">
               <button
                 className="mt-4 px-6 py-3 rounded-2xl font-black text-white text-base active:scale-95 transition-all"

@@ -1,8 +1,10 @@
 import { Link } from "wouter";
 import { getTodaysChallenge } from "@/data/challenges";
+import { useStreak } from "@/hooks/useStreak";
 
 export default function Home() {
   const challenge = getTodaysChallenge();
+  const { streak, isTodayCompleted } = useStreak();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10"
@@ -20,6 +22,21 @@ export default function Home() {
           <p className="mt-2 text-lg font-bold text-purple-400">Your daily learning adventure!</p>
         </div>
 
+        {streak > 0 && (
+          <div
+            className="w-full flex items-center justify-center gap-3 rounded-2xl py-3 px-5 border-4 border-amber-300 shadow-md"
+            style={{ background: "linear-gradient(135deg, #fff7ed, #fef3c7)" }}
+          >
+            <span className="text-3xl">🔥</span>
+            <div className="text-left">
+              <p className="font-black text-amber-700 text-lg leading-tight">{streak} day streak!</p>
+              <p className="text-amber-500 font-bold text-xs">
+                {isTodayCompleted ? "Today's done — see you tomorrow!" : "Don't break the chain!"}
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="w-full bg-white rounded-3xl shadow-lg border-4 border-yellow-300 p-5">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-2xl">{challenge.emoji}</span>
@@ -31,17 +48,24 @@ export default function Home() {
             </div>
           </div>
           <p className="text-purple-600 font-bold text-sm mt-1">{challenge.description}</p>
+          {isTodayCompleted && (
+            <div className="mt-2 flex items-center gap-1 text-green-600 font-black text-sm">
+              <span>✅</span><span>Completed today!</span>
+            </div>
+          )}
         </div>
 
         <Link href="/challenge" className="w-full">
           <button
             className="w-full py-5 rounded-3xl text-xl font-black text-white shadow-lg active:scale-95 transition-all duration-150"
             style={{
-              background: "linear-gradient(135deg, #a855f7, #ec4899)",
-              boxShadow: "0 6px 0 #7c3aed",
+              background: isTodayCompleted
+                ? "linear-gradient(135deg, #22c55e, #16a34a)"
+                : "linear-gradient(135deg, #a855f7, #ec4899)",
+              boxShadow: isTodayCompleted ? "0 6px 0 #15803d" : "0 6px 0 #7c3aed",
             }}
           >
-            🚀 Start Today's Challenge
+            {isTodayCompleted ? "✅ Challenge Done!" : "🚀 Start Today's Challenge"}
           </button>
         </Link>
 
@@ -70,9 +94,7 @@ export default function Home() {
 
         <div className="flex gap-3 mt-2">
           {["🌟", "🏅", "🎯", "💡", "🎉"].map((emoji, i) => (
-            <span key={i} className="text-2xl" style={{ animationDelay: `${i * 0.3}s` }}>
-              {emoji}
-            </span>
+            <span key={i} className="text-2xl">{emoji}</span>
           ))}
         </div>
       </div>
