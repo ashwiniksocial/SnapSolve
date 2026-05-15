@@ -5,6 +5,7 @@ import Solution from "@/pages/Solution";
 import Practice from "@/pages/Practice";
 import Progress from "@/pages/Progress";
 import QuestionWorkspace from "@/pages/Challenge";
+import History from "@/pages/History";
 
 const NAV = [
   { to: "/",           icon: "⊞",  label: "Home"      },
@@ -53,6 +54,7 @@ function Router() {
           <Route path="/challenge" component={QuestionWorkspace} />
           <Route path="/practice" component={Practice} />
           <Route path="/progress" component={Progress} />
+          <Route path="/history" component={History} />
         </Switch>
       </div>
       <BottomNav />
