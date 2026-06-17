@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { SUBJECTS, type SubjectConfig } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useProgress } from "@/hooks/useProgress";
+import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import {
   getChapters,
   getTopics,
@@ -170,6 +171,7 @@ function QuestionCard({
 export default function Practice() {
   const { session, update } = useSession();
   const { getSubjectStats, recordSolve } = useProgress();
+  const { recordMistake, recordResolution } = useMistakeJournal();
 
   const cfg = SUBJECTS[session.subject];
 
@@ -219,6 +221,11 @@ export default function Practice() {
 
   const handleAttempt = (q: Question, correct: boolean) => {
     recordSolve(session.subject, q.topicName, correct, q.id);
+    if (!correct) {
+      recordMistake(session.subject, q.topicName, q.chapterName, q.id, q.question);
+    } else {
+      recordResolution(q.id);
+    }
   };
 
   const subjectNames = ["Physics", "Chemistry", "Mathematics"] as const;

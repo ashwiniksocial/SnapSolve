@@ -6,6 +6,7 @@ import Practice from "@/pages/Practice";
 import Progress from "@/pages/Progress";
 import QuestionWorkspace from "@/pages/Challenge";
 import History from "@/pages/History";
+import Journal from "@/pages/Journal";
 
 const NAV = [
   { to: "/",           icon: "⊞",  label: "Home"      },
@@ -13,6 +14,7 @@ const NAV = [
   { to: "/challenge",  icon: "✦",  label: "Workspace" },
   { to: "/practice",   icon: "✎",  label: "Practice"  },
   { to: "/progress",   icon: "◈",  label: "Progress"  },
+  { to: "/journal",    icon: "✗",  label: "Journal"   },
 ];
 
 function BottomNav() {
@@ -26,7 +28,7 @@ function BottomNav() {
         {NAV.map(({ to, icon, label }) => (
           <Link key={to} href={to}>
             <button
-              className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl text-[10px] font-semibold transition-all
+              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-[10px] font-semibold transition-all
                 ${active(to)
                   ? "text-indigo-600"
                   : "text-slate-400 hover:text-slate-600"}`}
@@ -55,6 +57,7 @@ function Router() {
           <Route path="/practice" component={Practice} />
           <Route path="/progress" component={Progress} />
           <Route path="/history" component={History} />
+          <Route path="/journal" component={Journal} />
         </Switch>
       </div>
       <BottomNav />
