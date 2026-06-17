@@ -14,11 +14,26 @@ const diffBadge: Record<string, string> = {
 
 export default function SolutionCard({ solution }: Props) {
   const cfg = SUBJECTS[solution.subject as Subject];
+  const isAI = solution.source === "openai";
 
   return (
     <div className="space-y-5">
 
-      {/* Topic + difficulty header */}
+      {/* ── AI Generated badge (OpenAI solutions only) ── */}
+      {isAI && (
+        <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl border bg-gradient-to-r from-indigo-50 to-violet-50 border-indigo-200">
+          <span className="text-base">✦</span>
+          <div>
+            <p className="text-xs font-bold text-indigo-700 leading-none">AI Generated Solution</p>
+            <p className="text-[10px] text-indigo-500 mt-0.5 leading-none">Powered by OpenAI · gpt-4o-mini</p>
+          </div>
+          <span className="ml-auto text-[10px] font-semibold text-indigo-400 bg-indigo-100 px-2 py-0.5 rounded-full border border-indigo-200">
+            AI
+          </span>
+        </div>
+      )}
+
+      {/* ── Topic + difficulty ── */}
       <div className="flex items-center gap-2 flex-wrap">
         <span
           className="text-xs font-semibold px-2.5 py-1 rounded-full border"
@@ -29,9 +44,20 @@ export default function SolutionCard({ solution }: Props) {
         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${diffBadge[solution.difficulty]}`}>
           {solution.difficulty}
         </span>
+        {/* Subtle "Bank" indicator for transparency */}
+        {solution.source === "bank" && (
+          <span className="text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+            Question Bank
+          </span>
+        )}
+        {solution.source === "fallback" && (
+          <span className="text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+            General Guide
+          </span>
+        )}
       </div>
 
-      {/* Detected question */}
+      {/* ── Detected question ── */}
       {solution.detectedQuestion && (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -41,7 +67,7 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       )}
 
-      {/* Steps */}
+      {/* ── Steps ── */}
       <div>
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
           Step-by-Step Solution
@@ -87,7 +113,7 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       </div>
 
-      {/* Final answer */}
+      {/* ── Final answer ── */}
       <div
         className="rounded-2xl border p-4 shadow-sm"
         style={{ backgroundColor: cfg.light, borderColor: cfg.border }}
@@ -103,7 +129,7 @@ export default function SolutionCard({ solution }: Props) {
         </p>
       </div>
 
-      {/* Key concepts */}
+      {/* ── Key concepts ── */}
       <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
           Key Concepts
@@ -119,6 +145,25 @@ export default function SolutionCard({ solution }: Props) {
           ))}
         </div>
       </div>
+
+      {/* ── Common mistakes (OpenAI-only) ── */}
+      {solution.commonMistakes && solution.commonMistakes.length > 0 && (
+        <div className="bg-white rounded-2xl border border-red-100 p-4 shadow-sm">
+          <p className="text-xs font-semibold text-red-500 uppercase tracking-wider mb-3">
+            ⚠ Common Mistakes to Avoid
+          </p>
+          <ul className="space-y-2">
+            {solution.commonMistakes.map((m, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700">
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[10px] font-bold text-red-500 mt-0.5">
+                  {i + 1}
+                </span>
+                <span className="leading-relaxed">{m}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

@@ -16,3 +16,11 @@ export { detectBestTopic, detectTopics, cleanOcrText } from "./topicMatcher";
 export type { TopicMatch }                              from "./topicMatcher";
 
 export { generateSolution, generateSolutionFromText } from "./solutionEngine";
+
+export {
+  isOpenAIAvailable,
+  solveWithOpenAI,
+  getCachedSolution,
+  clearAICache,
+  describeError,
+} from "./openaiSolver";

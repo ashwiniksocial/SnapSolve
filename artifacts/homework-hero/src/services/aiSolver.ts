@@ -1,96 +1,114 @@
 /**
- * AI Solver Service
+ * AI Solver — orchestrates the bank → OpenAI → fallback pipeline.
  *
- * Currently uses the local mock engine (solutionBank + keyword matcher).
- * To integrate OpenAI / Gemini: implement `callLLM` below and toggle MOCK_MODE.
+ * Resolution order:
+ *  1. Question bank keyword match (score > 0)  → source: "bank"   (instant)
+ *  2. OpenAI Chat Completions (if key present)  → source: "openai" (3–10 s)
+ *  3. Question bank subject default             → source: "fallback"
  *
- * The AIResponse interface is designed to be identical whether the data comes
- * from the mock engine or a live LLM, so the UI components never need changes.
+ * Switching to a different LLM: replace `solveWithOpenAI` import only.
+ * The AIResponse shape and all downstream UI stay unchanged.
  */
 
-import { matchSolution, type AIResponse } from "@/data/solutionBank";
+import { matchSolutionWithScore, type AIResponse } from "@/data/solutionBank";
+import { solveWithOpenAI, isOpenAIAvailable }      from "@/services/ai/openaiSolver";
 import type { Subject } from "@/data/subjects";
 
 export type { AIResponse, SolutionStep, SimilarQuestion } from "@/data/solutionBank";
 
-const MOCK_MODE = true; // Flip to false when a real LLM endpoint is ready
+// ─── Loading phases (used by LoadingSpinner dot count) ────────────────────────
 
-// ─── MOCK ENGINE ───────────────────────────────────────────────────────────────
-
-function mockSolve(subject: Subject, question: string): AIResponse {
-  const base = matchSolution(subject, question);
-  return {
-    ...base,
-    detectedQuestion: question.trim() || base.detectedQuestion,
-  };
-}
-
-// ─── FUTURE: REAL LLM INTEGRATION ─────────────────────────────────────────────
-//
-// async function callLLM(
-//   subject: Subject,
-//   question: string,
-//   imageBase64?: string
-// ): Promise<AIResponse> {
-//   const messages = [
-//     {
-//       role: "system",
-//       content: `You are an expert ${subject} tutor for Class 6–12 students.
-//         Return a JSON object matching the AIResponse interface:
-//         { id, subject, topic, difficulty, detectedQuestion, steps[], finalAnswer, keyConcepts[], similarQuestions[] }.
-//         Each step: { stepNumber, title, explanation, formula?, result? }.
-//         Each similarQuestion: { id, question, hint, answer, difficulty }.
-//         Generate exactly 5 similarQuestions.`,
-//     },
-//     {
-//       role: "user",
-//       content: imageBase64
-//         ? [
-//             { type: "text",      text: `Subject: ${subject}\n${question}` },
-//             { type: "image_url", image_url: { url: `data:image/jpeg;base64,${imageBase64}` } },
-//           ]
-//         : `Subject: ${subject}\n${question}`,
-//     },
-//   ];
-//   const res = await fetch("/api/solve", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ messages }),
-//   });
-//   return res.json() as Promise<AIResponse>;
-// }
-
-// ─── PUBLIC API ────────────────────────────────────────────────────────────────
-
-const LOADING_PHASES: string[] = [
+const PHASES_BANK: string[] = [
   "Reading your question…",
-  "Identifying topic & difficulty…",
+  "Checking question bank…",
   "Building step-by-step solution…",
   "Generating similar problems…",
   "Finalising answer…",
 ];
 
+const PHASES_AI: string[] = [
+  "Reading your question…",
+  "Checking question bank…",
+  "AI is solving your question…",
+  "Building step-by-step solution…",
+  "Finalising answer…",
+];
+
 export function getLoadingPhases(): string[] {
-  return LOADING_PHASES;
+  // Always return 5 phases so the dot count is stable
+  return PHASES_BANK;
 }
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+// ─── Public API ───────────────────────────────────────────────────────────────
 
 export async function solve(
   subject: Subject,
   question: string,
-  _imageBase64?: string, // reserved for LLM integration
+  _imageBase64?: string,
   onPhase?: (msg: string, index: number) => void
 ): Promise<AIResponse> {
-  const totalMs = 2000 + Math.random() * 800;
-  const phaseMs = totalMs / LOADING_PHASES.length;
 
-  for (let i = 0; i < LOADING_PHASES.length; i++) {
-    onPhase?.(LOADING_PHASES[i], i);
-    await new Promise((r) => setTimeout(r, phaseMs));
+  // Phase 0 — reading
+  onPhase?.(PHASES_BANK[0], 0);
+  await delay(280);
+
+  // Phase 1 — check bank
+  onPhase?.(PHASES_BANK[1], 1);
+  await delay(280);
+
+  const { response: bankResp, score } = matchSolutionWithScore(subject, question);
+  const detectedQ = question.trim() || bankResp.detectedQuestion;
+
+  // ── Path A: strong bank match ─────────────────────────────────────────────
+  if (score > 0) {
+    onPhase?.(PHASES_BANK[2], 2);
+    await delay(500);
+    onPhase?.(PHASES_BANK[3], 3);
+    await delay(380);
+    onPhase?.(PHASES_BANK[4], 4);
+    await delay(240);
+
+    return {
+      ...bankResp,
+      detectedQuestion: detectedQ,
+      source:           "bank",
+    };
   }
 
-  if (MOCK_MODE) return mockSolve(subject, question);
+  // ── Path B: OpenAI ────────────────────────────────────────────────────────
+  if (isOpenAIAvailable()) {
+    onPhase?.(PHASES_AI[2], 2); // "AI is solving your question…"
 
-  // Uncomment when real endpoint is ready:
-  // return callLLM(subject, question, _imageBase64);
-  return mockSolve(subject, question);
+    try {
+      const aiResp = await solveWithOpenAI(subject, question);
+
+      onPhase?.(PHASES_AI[3], 3);
+      await delay(280);
+      onPhase?.(PHASES_AI[4], 4);
+      await delay(200);
+
+      return aiResp;
+
+    } catch {
+      // OpenAI failed — drop through to fallback
+    }
+  }
+
+  // ── Path C: fallback (no key / OpenAI error / bank default) ──────────────
+  onPhase?.(PHASES_BANK[2], 2);
+  await delay(480);
+  onPhase?.(PHASES_BANK[3], 3);
+  await delay(360);
+  onPhase?.(PHASES_BANK[4], 4);
+  await delay(220);
+
+  return {
+    ...bankResp,
+    detectedQuestion: detectedQ,
+    source:           "fallback",
+  };
 }

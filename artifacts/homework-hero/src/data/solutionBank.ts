@@ -26,6 +26,12 @@ export interface AIResponse {
   finalAnswer: string;
   keyConcepts: string[];
   similarQuestions: SimilarQuestion[];
+  /** Origin of the solution — for badge display and analytics */
+  source?: "bank" | "openai" | "fallback";
+  /** Common mistakes to avoid — populated by OpenAI solutions */
+  commonMistakes?: string[];
+  /** 0–1 match confidence from the question bank scorer */
+  confidence?: number;
 }
 
 // ─── ALGEBRA: QUADRATIC EQUATIONS ──────────────────────────────────────────────
@@ -438,26 +444,38 @@ const MATCH_RULES: MatchRule[] = [
   { entry: stoichiometryEntry, keywords: ["mole", "stoichiometry", "molar mass", "gram", "yield", "limiting", "avogadro"], weight: 10 },
 ];
 
-export function matchSolution(subject: string, question: string): AIResponse {
+/** Returns the best matching solution and the raw keyword score (0 = no match). */
+export function matchSolutionWithScore(
+  subject: string,
+  question: string
+): { response: AIResponse; score: number } {
   const q = question.toLowerCase();
   let bestMatch: AIResponse | null = null;
   let bestScore = 0;
 
   for (const rule of MATCH_RULES) {
     if (rule.entry.subject !== subject) continue;
-    const score = rule.keywords.reduce((s, kw) => s + (q.includes(kw.toLowerCase()) ? rule.weight : 0), 0);
+    const score = rule.keywords.reduce(
+      (s, kw) => s + (q.includes(kw.toLowerCase()) ? rule.weight : 0),
+      0
+    );
     if (score > bestScore) {
       bestScore = score;
       bestMatch = rule.entry;
     }
   }
 
-  if (bestMatch) return bestMatch;
+  if (bestMatch) return { response: bestMatch, score: bestScore };
 
   const subjectDefaults: Record<string, AIResponse> = {
     Mathematics: quadraticEntry,
-    Physics: kinematicsEntry,
-    Chemistry: balancingEntry,
+    Physics:     kinematicsEntry,
+    Chemistry:   balancingEntry,
   };
-  return subjectDefaults[subject] ?? quadraticEntry;
+  return { response: subjectDefaults[subject] ?? quadraticEntry, score: 0 };
+}
+
+/** Convenience wrapper — returns the response only (backward-compatible). */
+export function matchSolution(subject: string, question: string): AIResponse {
+  return matchSolutionWithScore(subject, question).response;
 }
