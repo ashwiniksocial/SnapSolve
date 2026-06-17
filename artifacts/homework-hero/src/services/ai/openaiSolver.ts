@@ -1,37 +1,36 @@
 /**
- * OpenAI Solver — calls the Chat Completions API to generate a full AIResponse.
+ * OpenAI Solver — client-side (browser-safe, key-free).
  *
- * Architecture:
- *  1. Check cache first (localStorage, 7-day TTL).
- *  2. Build a subject-specific system prompt.
- *  3. Call gpt-4o-mini with a 15-second timeout.
- *  4. Parse and validate the JSON response.
- *  5. On any failure (timeout / rate-limit / parse error), propagate the error
- *     so the caller can fall back gracefully.
+ * All OpenAI calls are proxied through the backend route POST /api/solveQuestion.
+ * No API key is stored or transmitted from the browser.
  *
- * Model upgrade: change MODEL constant only.
- * Provider swap: replace `callOpenAI` body — types stay identical.
+ * Two-layer caching:
+ *  1. Client-side localStorage (7-day TTL) — avoids backend round-trips for
+ *     questions the student has seen before.
+ *  2. Server-side in-memory cache — avoids OpenAI charges for repeated questions
+ *     across students.
+ *
+ * Migration:
+ *  - Change model / provider: update `artifacts/api-server/src/routes/solveQuestion.ts` only.
+ *  - This file does NOT need to change for model upgrades.
  */
 
-import type { Subject } from "@/data/subjects";
+import type { Subject }               from "@/data/subjects";
 import type { AIResponse, SolutionStep } from "@/data/solutionBank";
 
-// ─── Config ──────────────────────────────────────────────────────────────────
+// ─── Availability check ───────────────────────────────────────────────────────
 
-const API_URL    = "https://api.openai.com/v1/chat/completions";
-const MODEL      = "gpt-4o-mini";
-const TIMEOUT_MS = 15_000;
-
-// Vite exposes VITE_-prefixed env vars to the browser
-function apiKey(): string {
-  return (import.meta.env.VITE_OPENAI_API_KEY as string | undefined) ?? "";
-}
-
+/**
+ * The backend always exists; availability is determined server-side.
+ * Returns true so the orchestrator (aiSolver.ts) always tries the backend
+ * for questions with no bank match. The server returns a clean 503 if
+ * OPENAI_API_KEY is not configured.
+ */
 export function isOpenAIAvailable(): boolean {
-  return apiKey().startsWith("sk-");
+  return true;
 }
 
-// ─── Cache ────────────────────────────────────────────────────────────────────
+// ─── Client-side localStorage cache ──────────────────────────────────────────
 
 const CACHE_STORE_KEY = "studyai-ai-cache";
 const CACHE_TTL_MS    = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -44,9 +43,7 @@ interface CacheEntry {
 function hashKey(subject: string, question: string): string {
   const raw = `${subject}::${question.trim().toLowerCase()}`;
   let h = 0;
-  for (let i = 0; i < raw.length; i++) {
-    h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
-  }
+  for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
 }
 
@@ -73,8 +70,8 @@ export function getCachedSolution(subject: string, question: string): AIResponse
 
 function cacheSolution(subject: string, question: string, response: AIResponse): void {
   const store = readCache();
-  // Evict stale entries while we're here
-  const now = Date.now();
+  const now   = Date.now();
+  // Evict stale entries
   for (const k of Object.keys(store)) {
     if (now - store[k].timestamp > CACHE_TTL_MS) delete store[k];
   }
@@ -86,193 +83,131 @@ export function clearAICache(): void {
   localStorage.removeItem(CACHE_STORE_KEY);
 }
 
-// ─── System prompts ───────────────────────────────────────────────────────────
+// ─── Backend response shape ───────────────────────────────────────────────────
 
-const JSON_SCHEMA_NOTE = `
-Respond ONLY with a valid JSON object — no markdown fences, no extra text.
-Schema:
-{
-  "topic": string,
-  "difficulty": "Easy" | "Medium" | "Hard",
-  "steps": [
-    {
-      "stepNumber": number,
-      "title": string,
-      "explanation": string,
-      "formula": string | null,
-      "result": string | null
-    }
-  ],
-  "finalAnswer": string,
-  "keyConcepts": string[],
-  "commonMistakes": string[],
-  "confidence": number
-}
-Rules:
-- steps: 3–6 items. Each explanation is 2–4 sentences, student-friendly.
-- finalAnswer: specific and complete (include numerical value + units if applicable).
-- keyConcepts: 3–5 short phrases.
-- commonMistakes: 2–4 mistakes students often make on this type of question.
-- confidence: 0–1 (how well the topic matches the question).
-- All text must be clear for a Class 6–12 student.`.trim();
-
-const SYSTEM_PROMPTS: Record<Subject, string> = {
-  Mathematics: `You are an expert Class 6–12 Mathematics tutor. Your goal is to help students truly understand problems, not just get the answer. When solving:
-- Show every algebraic step explicitly.
-- Mention the rule or formula being applied at each step.
-- Use simple language; avoid jargon without explanation.
-- For geometry, mention which theorem is used.
-- Always verify the answer at the end.
-${JSON_SCHEMA_NOTE}`,
-
-  Physics: `You are an expert Class 6–12 Physics tutor. Your goal is to build physical intuition alongside mathematical skill. When solving:
-- Always start by identifying the given quantities and the quantity to find.
-- State the relevant law or equation before applying it.
-- Include SI units at every step.
-- Explain WHY a formula applies, not just HOW to use it.
-- Sanity-check the answer (order of magnitude, direction, sign).
-${JSON_SCHEMA_NOTE}`,
-
-  Chemistry: `You are an expert Class 6–12 Chemistry tutor. When solving:
-- For equations, balance atoms and charges systematically.
-- For stoichiometry, show mole-ratio reasoning clearly.
-- Explain the underlying chemistry, not just the arithmetic.
-- Include state symbols when writing equations.
-- Confirm conservation of mass/charge in the final step.
-${JSON_SCHEMA_NOTE}`,
-};
-
-// ─── API call ─────────────────────────────────────────────────────────────────
-
-interface RawStep {
-  stepNumber?: number;
-  title?: string;
-  explanation?: string;
-  formula?: string | null;
-  result?: string | null;
+interface BackendSolveResponse {
+  topic:          string;
+  difficulty:     "Easy" | "Medium" | "Hard";
+  steps: Array<{
+    stepNumber:  number;
+    title:       string;
+    explanation: string;
+    formula?:    string;
+    result?:     string;
+  }>;
+  finalAnswer:    string;
+  keyConcepts:    string[];
+  commonMistakes: string[];
+  confidence:     number;
+  cached?:        boolean;
 }
 
-interface RawLLMResponse {
-  topic?: string;
-  difficulty?: string;
-  steps?: RawStep[];
-  finalAnswer?: string;
-  keyConcepts?: string[];
-  commonMistakes?: string[];
-  confidence?: number;
+interface BackendErrorResponse {
+  error:    string;
+  message?: string;
+  retryAfter?: number;
 }
 
-function parseSteps(raw: RawStep[]): SolutionStep[] {
-  return (raw ?? []).map((s, i) => ({
+// ─── Backend call ─────────────────────────────────────────────────────────────
+
+const FRONTEND_TIMEOUT_MS = 22_000; // slightly longer than backend's 15 s
+
+async function callBackend(subject: Subject, question: string): Promise<BackendSolveResponse> {
+  const controller = new AbortController();
+  const timer      = setTimeout(() => controller.abort(), FRONTEND_TIMEOUT_MS);
+
+  let res: Response;
+  try {
+    res = await fetch("/api/solveQuestion", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      signal:  controller.signal,
+      body:    JSON.stringify({ subject, question: question.trim() }),
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!res.ok) {
+    let errBody: BackendErrorResponse = { error: `http_${res.status}` };
+    try { errBody = (await res.json()) as BackendErrorResponse; } catch {}
+
+    // Map known error codes to thrown error messages the orchestrator understands
+    const code = errBody.error ?? "";
+    if (res.status === 429 || code.includes("rate_limit")) throw new Error("rate_limit");
+    if (res.status === 503 || code === "no_key")           throw new Error("no_key");
+    if (res.status === 503 || code === "invalid_key")      throw new Error("invalid_key");
+    if (res.status === 504 || code === "timeout")          throw new Error("aborted");
+    throw new Error(`backend_${res.status}`);
+  }
+
+  return res.json() as Promise<BackendSolveResponse>;
+}
+
+// ─── Parse backend → AIResponse ───────────────────────────────────────────────
+
+function toAIResponse(data: BackendSolveResponse, subject: Subject, question: string): AIResponse {
+  const steps: SolutionStep[] = (data.steps ?? []).map((s, i) => ({
     stepNumber:  s.stepNumber ?? i + 1,
     title:       s.title?.trim()       || `Step ${i + 1}`,
     explanation: s.explanation?.trim() || "",
     ...(s.formula ? { formula: s.formula.trim() } : {}),
     ...(s.result  ? { result:  s.result.trim()  } : {}),
   }));
-}
 
-function parseLLMResponse(
-  json: RawLLMResponse,
-  subject: Subject,
-  question: string
-): AIResponse {
   return {
     id:               `ai-${Date.now()}`,
     subject,
-    topic:            json.topic?.trim()       || "General",
-    difficulty:       (["Easy", "Medium", "Hard"].includes(json.difficulty ?? "")
-                        ? json.difficulty as "Easy" | "Medium" | "Hard"
-                        : "Medium"),
+    topic:            data.topic            || "General",
+    difficulty:       data.difficulty       || "Medium",
     detectedQuestion: question,
-    steps:            parseSteps(json.steps ?? []),
-    finalAnswer:      json.finalAnswer?.trim() || "See steps above.",
-    keyConcepts:      (json.keyConcepts   ?? []).filter(Boolean),
-    commonMistakes:   (json.commonMistakes ?? []).filter(Boolean),
+    steps,
+    finalAnswer:      data.finalAnswer      || "See steps above.",
+    keyConcepts:      (data.keyConcepts     ?? []).filter(Boolean),
+    commonMistakes:   (data.commonMistakes  ?? []).filter(Boolean),
     similarQuestions: [],
     source:           "openai",
-    confidence:       typeof json.confidence === "number" ? json.confidence : 0.8,
+    confidence:       data.confidence       ?? 0.8,
   };
-}
-
-async function callOpenAI(subject: Subject, question: string): Promise<RawLLMResponse> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  let res: Response;
-  try {
-    res = await fetch(API_URL, {
-      method:  "POST",
-      headers: {
-        "Content-Type":  "application/json",
-        "Authorization": `Bearer ${apiKey()}`,
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model:           MODEL,
-        temperature:     0.3,
-        max_tokens:      1200,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPTS[subject] },
-          {
-            role: "user",
-            content: `Subject: ${subject}\n\nQuestion:\n${question.trim()}`,
-          },
-        ],
-      }),
-    });
-  } finally {
-    clearTimeout(timer);
-  }
-
-  if (res.status === 429) throw new Error("rate_limit");
-  if (res.status === 401) throw new Error("invalid_key");
-  if (!res.ok) throw new Error(`openai_error_${res.status}`);
-
-  const data = (await res.json()) as { choices?: [{ message?: { content?: string } }] };
-  const content = data?.choices?.[0]?.message?.content ?? "";
-  return JSON.parse(content) as RawLLMResponse;
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-/** Minimum meaningful question length (chars) — reject garbled OCR output. */
 const MIN_QUESTION_CHARS = 10;
 
-/** Returns a human-readable error message for known error codes. */
+/** Human-readable error descriptions for the loading screen. */
 export function describeError(err: unknown): string {
   const msg = err instanceof Error ? err.message : String(err);
-  if (msg.includes("rate_limit"))  return "OpenAI rate limit reached — showing cached solution.";
-  if (msg.includes("invalid_key")) return "OpenAI API key is invalid — check VITE_OPENAI_API_KEY.";
-  if (msg.includes("aborted") || msg.includes("abort"))
-    return "AI request timed out (15 s) — showing question bank solution.";
-  return `AI unavailable (${msg}) — showing question bank solution.`;
+  if (msg.includes("rate_limit"))       return "Rate limit reached — try again later.";
+  if (msg.includes("no_key"))           return "OpenAI API key not configured on server.";
+  if (msg.includes("invalid_key"))      return "OpenAI API key is invalid — contact support.";
+  if (msg.includes("aborted") || msg.includes("timeout"))
+                                        return "AI request timed out — showing question bank solution.";
+  if (msg.includes("question_too_short")) return "Question too short for AI solving.";
+  return "AI unavailable — showing question bank solution.";
 }
 
 /**
- * Main entry point.
- * Throws on all recoverable errors so the caller can decide the fallback.
+ * Solve a question via the backend AI proxy.
+ * Throws on all error cases so the orchestrator in `aiSolver.ts` can fall back.
  */
 export async function solveWithOpenAI(
   subject: Subject,
   question: string
 ): Promise<AIResponse> {
-  if (!isOpenAIAvailable()) throw new Error("no_key");
-
   if (question.trim().length < MIN_QUESTION_CHARS) {
     throw new Error("question_too_short");
   }
 
-  // Check cache first
+  // 1. Client-side cache hit → instant, no network
   const cached = getCachedSolution(subject, question);
   if (cached) return { ...cached, detectedQuestion: question };
 
-  // Call API
-  const raw    = await callOpenAI(subject, question);
-  const result = parseLLMResponse(raw, subject, question);
+  // 2. Backend call
+  const data   = await callBackend(subject, question);
+  const result = toAIResponse(data, subject, question);
 
-  // Store in cache
+  // 3. Store in client-side cache
   cacheSolution(subject, question, result);
 
   return result;

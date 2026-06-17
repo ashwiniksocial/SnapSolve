@@ -1,15 +1,15 @@
-# [Project name]
+# StudyAI
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+AI-powered homework and practice platform for Class 6–12 students covering Physics, Chemistry, and Mathematics.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
+- `pnpm --filter @workspace/homework-hero run dev` — run the frontend (port 22801)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string
+- Required env: `OPENAI_API_KEY` — server-side secret for AI solutions (optional; app falls back to question bank if absent)
 
 ## Stack
 
@@ -22,15 +22,27 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/homework-hero/src/` — React+Vite frontend (mobile-first)
+- `artifacts/api-server/src/routes/solveQuestion.ts` — AI proxy route (OpenAI key lives here only)
+- `artifacts/homework-hero/src/services/ai/` — client AI layer (OCR, topic matching, backend client)
+- `artifacts/homework-hero/src/data/questions/` — 150-question structured bank (Class 9 Maths)
+- `artifacts/homework-hero/src/data/solutionBank.ts` — AIResponse type + keyword matcher
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- OpenAI API key is server-side only (`OPENAI_API_KEY` secret) — never exposed to the browser.
+- Frontend calls `POST /api/solveQuestion`; backend handles rate limiting (20 req/IP/hr), server-side caching (7-day), and OpenAI timeouts (15 s).
+- Two-layer cache: client localStorage (avoids backend round-trips) + server in-memory Map (avoids OpenAI charges for repeated questions).
+- Resolution order: question bank keyword match → OpenAI via backend → fallback structured guide.
+- `AIResponse.source` field (`"bank" | "openai" | "fallback"`) drives the "AI Generated Solution" badge in `SolutionCard`.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Scan & Solve**: photograph or type a homework question → Tesseract.js OCR → AI step-by-step solution
+- **Practice**: 150-question bank (Class 9 Maths) with chapter/topic/difficulty filters and live accuracy tracking
+- **Progress**: per-subject analytics, weak topic detection, and study recommendations
+- **Question Workspace**: deep-dive workspace for any question with hints, steps, and revision saving
+- **Scan History**: last 10 scans with thumbnails, stored in localStorage, revisitable
 
 ## User preferences
 
