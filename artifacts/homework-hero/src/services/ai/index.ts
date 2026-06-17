@@ -9,8 +9,8 @@
  *  - Types:    AIResponse / TopicMatch stay identical; UI never changes
  */
 
-export { safeRecognize, recognizeImage } from "./ocrService";
-export type { OcrProgress }              from "./ocrService";
+export { safeRecognize, recognizeImage, safeRecognizeWithConfidence } from "./ocrService";
+export type { OcrProgress, OcrResult }                                from "./ocrService";
 
 export { detectBestTopic, detectTopics, cleanOcrText } from "./topicMatcher";
 export type { TopicMatch }                              from "./topicMatcher";

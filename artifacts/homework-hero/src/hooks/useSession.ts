@@ -2,9 +2,11 @@ import { useState, useCallback } from "react";
 import type { Subject } from "@/data/subjects";
 
 interface SessionData {
-  subject: Subject;
-  question: string;
-  practiceTopic: string;
+  subject:        Subject;
+  question:       string;
+  practiceTopic:  string;
+  /** Tesseract OCR confidence (0–1). Undefined / missing = 1.0 (typed question). */
+  ocrConfidence?: number;
 }
 
 const KEY = "studyai-session";

@@ -1,5 +1,22 @@
 import type { Subject } from "./subjects";
 
+/**
+ * Per-answer confidence breakdown computed by the confidence engine.
+ * All values are 0–100 integers.
+ */
+export interface ConfidenceBreakdown {
+  /** 0–100 — Tesseract OCR confidence (100 for typed questions) */
+  ocr:       number;
+  /** 0–100 — Topic-detection pattern match strength */
+  topic:     number;
+  /** 0–100 — Keyword-density score against the question bank */
+  bankMatch: number;
+  /** 0–100 — Model-reported answer confidence (100 for bank solutions) */
+  ai:        number;
+  /** 0–100 — Composite score used for tier display */
+  composite: number;
+}
+
 export interface SolutionStep {
   stepNumber: number;
   title: string;
@@ -32,6 +49,8 @@ export interface AIResponse {
   commonMistakes?: string[];
   /** 0–1 match confidence from the question bank scorer */
   confidence?: number;
+  /** Full confidence breakdown (attached by the confidence engine after solving) */
+  confidenceBreakdown?: ConfidenceBreakdown;
 }
 
 // ─── ALGEBRA: QUADRATIC EQUATIONS ──────────────────────────────────────────────

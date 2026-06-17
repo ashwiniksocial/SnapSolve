@@ -3,7 +3,7 @@ import { useLocation, Link }                         from "wouter";
 import { SUBJECTS, type Subject }                    from "@/data/subjects";
 import { useSession }                                from "@/hooks/useSession";
 import { useScanHistory, compressImageToThumbnail, resizeForOCR, relativeTime } from "@/hooks/useScanHistory";
-import { safeRecognize }   from "@/services/ai/ocrService";
+import { safeRecognizeWithConfidence } from "@/services/ai/ocrService";
 import { cleanOcrText, detectBestTopic } from "@/services/ai/topicMatcher";
 import { generateSolution, generateSolutionFromText } from "@/services/ai/solutionEngine";
 import type { OcrProgress } from "@/services/ai/ocrService";
@@ -151,8 +151,10 @@ export default function Scan() {
       const resized = await resizeForOCR(imageFile);
       setOcrProgress({ phase: "Scanning image…", percent: 15 });
 
-      // Step 2 — Tesseract OCR
-      const rawText = await safeRecognize(resized, (p) => setOcrProgress(p));
+      // Step 2 — Tesseract OCR (captures confidence for the answer engine)
+      const ocrResult = await safeRecognizeWithConfidence(resized, (p) => setOcrProgress(p));
+      const rawText = ocrResult.text;
+      update({ ocrConfidence: ocrResult.confidence });
       setOcrProgress({ phase: "Cleaning text…", percent: 92 });
 
       const cleaned = cleanOcrText(rawText);
@@ -211,7 +213,7 @@ export default function Scan() {
   const handleTypedSolve = useCallback(() => {
     if (typedQ.trim().length < 5) return;
     setPhase("solving");
-    update({ question: typedQ, practiceTopic: "" });
+    update({ question: typedQ, practiceTopic: "", ocrConfidence: 1 });
     addRecord({
       subject:       session.subject,
       topic:         detectBestTopic(typedQ, session.subject)?.topic ?? "General",
@@ -224,7 +226,7 @@ export default function Scan() {
 
   // ── Revisit history ──
   const revisitRecord = useCallback((record: ReturnType<typeof useScanHistory>["history"][number]) => {
-    update({ subject: record.subject, question: record.questionText, practiceTopic: record.topic });
+    update({ subject: record.subject, question: record.questionText, practiceTopic: record.topic, ocrConfidence: 1 });
     navigate("/solution");
   }, []);
 

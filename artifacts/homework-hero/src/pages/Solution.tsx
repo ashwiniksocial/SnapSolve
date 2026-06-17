@@ -36,7 +36,7 @@ export default function Solution() {
     const result = await solve(
       session.subject,
       session.question,
-      undefined,
+      session.ocrConfidence ?? 1,
       (msg, idx) => { setPhaseMsg(msg); setPhaseIdx(idx); }
     );
 

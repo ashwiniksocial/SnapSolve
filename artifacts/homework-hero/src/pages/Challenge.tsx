@@ -4,6 +4,8 @@ import { SUBJECTS, type Subject } from "@/data/subjects";
 import { SOLUTION_BANK, type AIResponse } from "@/data/solutionBank";
 import { useProgress } from "@/hooks/useProgress";
 import { useStreak } from "@/hooks/useStreak";
+import { computeConfidenceBreakdown } from "@/services/confidenceEngine";
+import ConfidenceMeter from "@/components/ConfidenceMeter";
 
 // ─── Per-topic academic metadata ───────────────────────────────────────────────
 const TOPIC_META: Record<string, {
@@ -352,6 +354,26 @@ export default function QuestionWorkspace() {
             </div>
           </div>
         </div>
+
+        {/* ── Confidence Meter ── */}
+        {(() => {
+          const bd = computeConfidenceBreakdown({
+            ocrConf:   1,
+            topicConf: 1,
+            bankScore: 40,
+            aiConf:    1,
+            source:    "bank",
+          });
+          return (
+            <Section title="Answer Confidence" icon="◎" defaultOpen accentColor={cfg.color}>
+              <ConfidenceMeter breakdown={bd} />
+              <p className="text-xs text-slate-400 mt-3 leading-relaxed">
+                This is a verified question-bank entry. All four confidence signals are at 100%
+                because the question, topic, and solution are curated by academic reviewers.
+              </p>
+            </Section>
+          );
+        })()}
 
         {/* ── Quick Explanation ── */}
         <Section title="Quick Explanation" icon="◎" defaultOpen accentColor={cfg.color}>

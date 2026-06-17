@@ -1,6 +1,7 @@
 import type { AIResponse } from "@/services/aiSolver";
 import type { Subject } from "@/data/subjects";
 import { SUBJECTS } from "@/data/subjects";
+import ConfidenceMeter from "@/components/ConfidenceMeter";
 
 interface Props {
   solution: AIResponse;
@@ -31,6 +32,11 @@ export default function SolutionCard({ solution }: Props) {
             AI
           </span>
         </div>
+      )}
+
+      {/* ── Confidence Meter ── */}
+      {solution.confidenceBreakdown && (
+        <ConfidenceMeter breakdown={solution.confidenceBreakdown} />
       )}
 
       {/* ── Topic + difficulty ── */}

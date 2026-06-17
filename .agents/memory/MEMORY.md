@@ -1,0 +1,1 @@
+- [Confidence Engine design](confidence-engine.md) — source-adaptive formula; OCR confidence threads from Scan.tsx through session into aiSolver.ts.
