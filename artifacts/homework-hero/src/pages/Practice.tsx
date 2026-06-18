@@ -5,6 +5,7 @@ import { useSession } from "@/hooks/useSession";
 import { useProgress } from "@/hooks/useProgress";
 import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
+import { useAdaptiveLearning } from "@/hooks/useAdaptiveLearning";
 import {
   getChapters,
   getTopics,
@@ -14,6 +15,13 @@ import type { Question, Difficulty, ChapterMeta } from "@/services/questionServi
 
 // ─── Difficulty filter options ────────────────────────────────────────────────
 const DIFFICULTIES: (Difficulty | "All")[] = ["All", "Easy", "Medium", "Hard"];
+
+const ADAPTIVE_TIER_STYLE: Record<string, string> = {
+  Easy:      "bg-emerald-50 text-emerald-700 border-emerald-200",
+  Medium:    "bg-amber-50   text-amber-700   border-amber-200",
+  Hard:      "bg-red-50     text-red-700     border-red-200",
+  Challenge: "bg-purple-50  text-purple-700  border-purple-200",
+};
 
 const diffStyle: Record<string, string> = {
   Easy:   "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -175,8 +183,11 @@ export default function Practice() {
   const { getSubjectStats, recordSolve } = useProgress();
   const { recordMistake, recordResolution } = useMistakeJournal();
   const { recordAttempt: scheduleRevision } = useRevisionPlanner();
+  const { getSubjectTier, getSubjectMastery } = useAdaptiveLearning();
 
-  const cfg = SUBJECTS[session.subject];
+  const cfg             = SUBJECTS[session.subject];
+  const adaptiveTier    = getSubjectTier(session.subject);
+  const adaptiveMastery = getSubjectMastery(session.subject);
 
   // Chapter / topic / difficulty filters
   const chapters = useMemo(
@@ -271,6 +282,26 @@ export default function Practice() {
               );
             })}
           </div>
+
+          {/* ── AI adaptive difficulty recommendation ── */}
+          {adaptiveMastery > 0 && (
+            <div className="flex items-center gap-2 mt-3 flex-wrap">
+              <span className="text-[11px] text-slate-400">✦ AI Recommends:</span>
+              <button
+                onClick={() =>
+                  setSelectedDiff(adaptiveTier === "Challenge" ? "Hard" : adaptiveTier)
+                }
+                className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${ADAPTIVE_TIER_STYLE[adaptiveTier]}`}
+              >
+                {adaptiveTier === "Challenge"
+                  ? "⚡ Challenge (Hard)"
+                  : `${adaptiveTier} questions`}
+              </button>
+              <span className="text-[11px] text-slate-400">
+                {adaptiveMastery}% avg mastery
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { SUBJECTS, type Subject } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
+import DailyFocus from "@/components/DailyFocus";
 
 const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
 
@@ -49,6 +50,9 @@ export default function Home() {
             </div>
           ))}
         </div>
+
+        {/* ── Today's Focus (AI recommendations) ── */}
+        <DailyFocus />
 
         {/* Subject selector */}
         <div>
