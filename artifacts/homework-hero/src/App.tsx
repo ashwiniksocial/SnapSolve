@@ -7,14 +7,15 @@ import Progress from "@/pages/Progress";
 import QuestionWorkspace from "@/pages/Challenge";
 import History from "@/pages/History";
 import Journal from "@/pages/Journal";
+import Revision from "@/pages/Revision";
 
 const NAV = [
-  { to: "/",           icon: "⊞",  label: "Home"      },
-  { to: "/scan",       icon: "⊕",  label: "Scan"      },
-  { to: "/challenge",  icon: "✦",  label: "Workspace" },
-  { to: "/practice",   icon: "✎",  label: "Practice"  },
-  { to: "/progress",   icon: "◈",  label: "Progress"  },
-  { to: "/journal",    icon: "✗",  label: "Journal"   },
+  { to: "/",          icon: "⊞",  label: "Home"     },
+  { to: "/scan",      icon: "⊕",  label: "Scan"     },
+  { to: "/revision",  icon: "↺",  label: "Revision" },
+  { to: "/practice",  icon: "✎",  label: "Practice" },
+  { to: "/progress",  icon: "◈",  label: "Progress" },
+  { to: "/journal",   icon: "✗",  label: "Journal"  },
 ];
 
 function BottomNav() {
@@ -58,6 +59,7 @@ function Router() {
           <Route path="/progress" component={Progress} />
           <Route path="/history" component={History} />
           <Route path="/journal" component={Journal} />
+          <Route path="/revision" component={Revision} />
         </Switch>
       </div>
       <BottomNav />

@@ -1,8 +1,10 @@
 import { useState, useMemo } from "react";
+import { Link } from "wouter";
 import { SUBJECTS, type SubjectConfig } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useProgress } from "@/hooks/useProgress";
 import { useMistakeJournal } from "@/hooks/useMistakeJournal";
+import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import {
   getChapters,
   getTopics,
@@ -172,6 +174,7 @@ export default function Practice() {
   const { session, update } = useSession();
   const { getSubjectStats, recordSolve } = useProgress();
   const { recordMistake, recordResolution } = useMistakeJournal();
+  const { recordAttempt: scheduleRevision } = useRevisionPlanner();
 
   const cfg = SUBJECTS[session.subject];
 
@@ -226,6 +229,7 @@ export default function Practice() {
     } else {
       recordResolution(q.id);
     }
+    scheduleRevision(q.id, q.question, session.subject, q.topicName, q.chapterName, q.difficulty, correct);
   };
 
   const subjectNames = ["Physics", "Chemistry", "Mathematics"] as const;
@@ -236,8 +240,17 @@ export default function Practice() {
       {/* ── Header ── */}
       <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-4">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-xl font-bold text-slate-900">Practice</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Class 9 · Structured question bank</p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">Practice</h1>
+              <p className="text-sm text-slate-500 mt-0.5">Class 9 · Structured question bank</p>
+            </div>
+            <Link href="/challenge">
+              <button className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-all flex-shrink-0 mt-1">
+                ✦ Workspace
+              </button>
+            </Link>
+          </div>
 
           {/* Subject tabs */}
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1">
