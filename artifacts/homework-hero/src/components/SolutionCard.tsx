@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { AIResponse } from "@/services/aiSolver";
 import type { Subject } from "@/data/subjects";
 import { SUBJECTS } from "@/data/subjects";
@@ -6,12 +6,19 @@ import ConfidenceMeter    from "@/components/ConfidenceMeter";
 import VerificationBadge  from "@/components/VerificationBadge";
 import TeacherReviewPanel from "@/components/TeacherReviewPanel";
 import TeachingLayout     from "@/components/teaching/TeachingLayout";
+import TutorInsightBanner from "@/components/tutor/TutorInsightBanner";
 import {
   getStoredLevel,
   setStoredLevel,
   LEVEL_META,
 } from "@/services/explanation/readingModeEngine";
 import type { ReadingLevel } from "@/services/explanation/readingModeEngine";
+import {
+  recordQuestionAnswered,
+  recordTopicVisit,
+  recordMistakesFromResponse,
+  recordSession,
+} from "@/services/studentModel";
 
 interface Props { solution: AIResponse }
 
@@ -27,6 +34,54 @@ export default function SolutionCard({ solution }: Props) {
   const cfg  = SUBJECTS[solution.subject as Subject];
   const isAI = solution.source === "openai";
 
+  // ── Student model: session tracking ──────────────────────────────────────
+  const sessionStart = useRef<number>(Date.now());
+  const sessionId    = useRef<string>(`s-${Date.now().toString(36)}`);
+  const sectionsOpened = useRef<string[]>([]);
+  const levelRef = useRef<ReadingLevel>(level);
+  levelRef.current = level;
+
+  // Record topic visit + mistakes on mount (once per solution render)
+  useEffect(() => {
+    sessionStart.current = Date.now();
+    recordTopicVisit(solution.subject, solution.topic, 0, levelRef.current);
+    if (solution.commonMistakes?.length) {
+      recordMistakesFromResponse(
+        solution.subject,
+        solution.topic,
+        solution.commonMistakes,
+        solution.examTrap,
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [solution.id]);
+
+  // Record full session on unmount
+  useEffect(() => {
+    return () => {
+      const durationMs = Date.now() - sessionStart.current;
+      if (durationMs < 3000) return; // ignore accidental mounts < 3 s
+      recordQuestionAnswered(durationMs, levelRef.current);
+      recordSession({
+        sessionId:         sessionId.current,
+        topic:             solution.topic,
+        subject:           solution.subject,
+        startTime:         sessionStart.current,
+        endTime:           Date.now(),
+        durationMs,
+        depthUsed:         levelRef.current,
+        sectionsOpened:    sectionsOpened.current,
+        learningLoopDone:  false,
+        conceptualCorrect: 0,
+        conceptualTotal:   0,
+        confidenceBefore:  3,
+        confidenceAfter:   3,
+        source:            solution.source ?? "fallback",
+      });
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [solution.id]);
+
   function changeLevel(l: ReadingLevel) {
     setLevel(l);
     setStoredLevel(l);
@@ -34,6 +89,9 @@ export default function SolutionCard({ solution }: Props) {
 
   return (
     <div className="space-y-3">
+
+      {/* ── Personalised tutor insight ───────────────────────────────────── */}
+      <TutorInsightBanner topic={solution.topic} subject={solution.subject} />
 
       {/* ── Reading depth selector ──────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm">

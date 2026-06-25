@@ -1,3 +1,5 @@
 - [Confidence Engine design](confidence-engine.md) — source-adaptive formula; OCR confidence threads from Scan.tsx through session into aiSolver.ts.
 - [Adaptive Engine design](adaptive-engine.md) — reads 3 localStorage keys directly; never call other hooks from within useAdaptiveLearning.
 - [Clerk Auth wiring](clerk-auth-wiring.md) — publishableKeyFromHost must come from @clerk/react/internal (not @clerk/shared/keys) in the frontend; proxy/key setup verbatim.
+- [Student Model Architecture](student-model-arch.md) — 7-service localStorage-first system under src/services/studentModel/; Firestore-ready data shapes; cache bypassed when studentContext present.
+- [AI Personalization Flow](ai-personalization-flow.md) — studentContext built client-side, sent to backend in body, injected into user message only; server never caches personalised responses.

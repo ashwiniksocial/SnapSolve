@@ -17,6 +17,7 @@
 
 import type { Subject }               from "@/data/subjects";
 import type { AIResponse, SolutionStep } from "@/data/solutionBank";
+import { buildStudentContext }         from "@/services/studentModel";
 
 // ─── Availability check ───────────────────────────────────────────────────────
 
@@ -141,7 +142,7 @@ interface BackendErrorResponse {
 
 const FRONTEND_TIMEOUT_MS = 35_000; // slightly longer than backend's 30 s (V3.0)
 
-async function callBackend(subject: Subject, question: string): Promise<BackendSolveResponse> {
+async function callBackend(subject: Subject, question: string, studentContext?: string): Promise<BackendSolveResponse> {
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), FRONTEND_TIMEOUT_MS);
 
@@ -151,7 +152,7 @@ async function callBackend(subject: Subject, question: string): Promise<BackendS
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       signal:  controller.signal,
-      body:    JSON.stringify({ subject, question: question.trim() }),
+      body:    JSON.stringify({ subject, question: question.trim(), studentContext }),
     });
   } finally {
     clearTimeout(timer);
@@ -266,8 +267,11 @@ export async function solveWithOpenAI(
   const cached = getCachedSolution(subject, question);
   if (cached) return { ...cached, detectedQuestion: question };
 
-  // 2. Backend call
-  const data   = await callBackend(subject, question);
+  // 2. Build student context for personalised AI response (no sensitive data, just learning style)
+  const studentContext = buildStudentContext(subject);
+
+  // 3. Backend call
+  const data   = await callBackend(subject, question, studentContext || undefined);
   const result = toAIResponse(data, subject, question);
 
   // 3. Store in client-side cache

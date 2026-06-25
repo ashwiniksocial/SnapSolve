@@ -434,7 +434,7 @@ function parseStep(s: any, i: number): SolveStep {
   };
 }
 
-async function callOpenAI(subject: Subject, question: string): Promise<SolveResponse> {
+async function callOpenAI(subject: Subject, question: string, studentContext?: string): Promise<SolveResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
@@ -457,7 +457,12 @@ async function callOpenAI(subject: Subject, question: string): Promise<SolveResp
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPTS[subject] },
-          { role: "user",   content: `Subject: ${subject}\n\nQuestion:\n${question.trim()}` },
+          {
+            role: "user",
+            content: studentContext
+              ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
+              : `Subject: ${subject}\n\nQuestion:\n${question.trim()}`,
+          },
         ],
       }),
     });
@@ -541,7 +546,11 @@ router.post("/solveQuestion", async (req, res) => {
   }
 
   // 2. Validate input
-  const { question, subject } = req.body as { question?: unknown; subject?: unknown };
+  const { question, subject, studentContext } = req.body as {
+    question?: unknown;
+    subject?: unknown;
+    studentContext?: unknown;
+  };
 
   if (typeof question !== "string" || question.trim().length < 5) {
     res.status(400).json({ error: "invalid_question", message: "question must be at least 5 characters" });
@@ -558,19 +567,25 @@ router.post("/solveQuestion", async (req, res) => {
 
   const subj = subject as Subject;
   const q    = question.trim();
+  // Only pass studentContext if it's a non-empty string (sanitised)
+  const ctx  = typeof studentContext === "string" && studentContext.length > 0
+    ? studentContext.slice(0, 2000) // guard against oversized payloads
+    : undefined;
 
-  // 3. Server-side cache
-  const cached = getCached(subj, q);
-  if (cached) {
-    req.log.info({ subject: subj, cached: true }, "solveQuestion: cache hit");
-    res.json(cached);
-    return;
+  // 3. Server-side cache — skip when student context is present (personalised response must not be cached globally)
+  if (!ctx) {
+    const cached = getCached(subj, q);
+    if (cached) {
+      req.log.info({ subject: subj, cached: true }, "solveQuestion: cache hit");
+      res.json(cached);
+      return;
+    }
   }
 
   // 4. Call OpenAI
   try {
-    const result = await callOpenAI(subj, q);
-    setCached(subj, q, result);
+    const result = await callOpenAI(subj, q, ctx);
+    if (!ctx) setCached(subj, q, result); // only cache non-personalised responses
     req.log.info({ subject: subj, topic: result.topic }, "solveQuestion: AI solution generated");
     res.json(result);
 
