@@ -86,10 +86,12 @@ export function clearAICache(): void {
 // ─── Backend response shape ───────────────────────────────────────────────────
 
 interface BackendSolveResponse {
-  topic:                string;
-  difficulty:           "Easy" | "Medium" | "Hard";
-  prerequisites?:       string[];
-  conceptExplanation?:  string;
+  topic:                  string;
+  difficulty:             "Easy" | "Medium" | "Hard";
+  prerequisites?:         string[];
+  conceptExplanation?:    string;
+  questionUnderstanding?: string;
+  wordToMath?:            string;
   steps: Array<{
     stepNumber:   number;
     title:        string;
@@ -99,11 +101,19 @@ interface BackendSolveResponse {
     result?:      string;
   }>;
   finalAnswer:          string;
+  verification?:        string;
   confusionPoint?:      string;
   examTrap?:            string;
   examTip?:             string;
+  memoryShortcut?:      string[];
   similarExample?:      { problem: string; solution: string };
   checkUnderstanding?:  { question: string; answer: string };
+  confidenceCheck?:     {
+    question:     string;
+    options:      string[];
+    correctIndex: number;
+    explanation:  string;
+  };
   keyConcepts:          string[];
   commonMistakes:       string[];
   deeperExplanation?:   string;
@@ -120,7 +130,7 @@ interface BackendErrorResponse {
 
 // ─── Backend call ─────────────────────────────────────────────────────────────
 
-const FRONTEND_TIMEOUT_MS = 22_000; // slightly longer than backend's 15 s
+const FRONTEND_TIMEOUT_MS = 35_000; // slightly longer than backend's 30 s (V3.0)
 
 async function callBackend(subject: Subject, question: string): Promise<BackendSolveResponse> {
   const controller = new AbortController();
@@ -166,32 +176,41 @@ function toAIResponse(data: BackendSolveResponse, subject: Subject, question: st
     ...(s.result      ? { result:      s.result.trim()      } : {}),
   }));
 
+  const cc = data.confidenceCheck;
+
   return {
-    id:                 `ai-${Date.now()}`,
+    id:                    `ai-${Date.now()}`,
     subject,
-    topic:              data.topic              || "General",
-    difficulty:         data.difficulty         || "Medium",
-    detectedQuestion:   question,
+    topic:                 data.topic     || "General",
+    difficulty:            data.difficulty || "Medium",
+    detectedQuestion:      question,
     steps,
-    finalAnswer:        data.finalAnswer        || "See steps above.",
-    prerequisites:      (data.prerequisites     ?? []).filter(Boolean),
-    conceptExplanation: data.conceptExplanation?.trim()  || undefined,
-    confusionPoint:     data.confusionPoint?.trim()      || undefined,
-    examTrap:           data.examTrap?.trim()            || undefined,
-    examTip:            data.examTip?.trim()             || undefined,
-    similarExample:     data.similarExample?.problem
-                          ? { problem: data.similarExample.problem.trim(), solution: (data.similarExample.solution ?? "").trim() }
-                          : undefined,
-    checkUnderstanding: data.checkUnderstanding?.question
-                          ? { question: data.checkUnderstanding.question.trim(), answer: (data.checkUnderstanding.answer ?? "").trim() }
-                          : undefined,
-    deeperExplanation:  data.deeperExplanation?.trim()   || undefined,
-    additionalExamples: (data.additionalExamples ?? []).filter(Boolean),
-    keyConcepts:        (data.keyConcepts        ?? []).filter(Boolean),
-    commonMistakes:     (data.commonMistakes     ?? []).filter(Boolean),
-    similarQuestions:   [],
-    source:             "openai",
-    confidence:         data.confidence         ?? 0.8,
+    finalAnswer:           data.finalAnswer || "See steps above.",
+    prerequisites:         (data.prerequisites     ?? []).filter(Boolean),
+    conceptExplanation:    data.conceptExplanation?.trim()    || undefined,
+    questionUnderstanding: data.questionUnderstanding?.trim() || undefined,
+    wordToMath:            data.wordToMath?.trim()            || undefined,
+    verification:          data.verification?.trim()          || undefined,
+    confusionPoint:        data.confusionPoint?.trim()        || undefined,
+    examTrap:              data.examTrap?.trim()              || undefined,
+    examTip:               data.examTip?.trim()               || undefined,
+    memoryShortcut:        (data.memoryShortcut ?? []).filter(Boolean),
+    similarExample:        data.similarExample?.problem
+                             ? { problem: data.similarExample.problem.trim(), solution: (data.similarExample.solution ?? "").trim() }
+                             : undefined,
+    checkUnderstanding:    data.checkUnderstanding?.question
+                             ? { question: data.checkUnderstanding.question.trim(), answer: (data.checkUnderstanding.answer ?? "").trim() }
+                             : undefined,
+    confidenceCheck:       cc?.question && Array.isArray(cc.options) && cc.options.length === 4
+                             ? { question: cc.question.trim(), options: cc.options, correctIndex: cc.correctIndex ?? 0, explanation: (cc.explanation ?? "").trim() }
+                             : undefined,
+    deeperExplanation:     data.deeperExplanation?.trim()    || undefined,
+    additionalExamples:    (data.additionalExamples ?? []).filter(Boolean),
+    keyConcepts:           (data.keyConcepts        ?? []).filter(Boolean),
+    commonMistakes:        (data.commonMistakes     ?? []).filter(Boolean),
+    similarQuestions:      [],
+    source:                "openai",
+    confidence:            data.confidence ?? 0.8,
   };
 }
 

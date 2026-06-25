@@ -75,6 +75,23 @@ export interface AIResponse {
   /** Common mistakes to avoid — shown in Explain More */
   commonMistakes?: string[];
 
+  // ── Explanation Quality V3.0 fields ──────────────────────────────────────
+  /** V3 — rewrite question in plain English: what's given, what to find, which chapter */
+  questionUnderstanding?: string;
+  /** V3 — translate every phrase in the question to a math expression using → arrows */
+  wordToMath?: string;
+  /** V3 — substitute final answer back and confirm both sides match */
+  verification?: string;
+  /** V3 — 1–3 ultra-short memory hooks usable in an exam instantly */
+  memoryShortcut?: string[];
+  /** V3 — MCQ testing conceptual understanding of WHY a step was taken */
+  confidenceCheck?: {
+    question:     string;
+    options:      string[];  // exactly 4
+    correctIndex: number;    // 0-based
+    explanation:  string;
+  };
+
   /** 0–1 match confidence from the question bank scorer */
   confidence?: number;
   /** Full confidence breakdown (attached by the confidence engine after solving) */

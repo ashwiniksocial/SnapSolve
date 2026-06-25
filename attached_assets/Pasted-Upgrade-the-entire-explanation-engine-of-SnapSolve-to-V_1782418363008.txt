@@ -1,0 +1,385 @@
+Upgrade the entire explanation engine of SnapSolve to Version 3.0.
+
+OBJECTIVE
+
+SnapSolve must not merely provide answers. It must teach students in a way that even the weakest student in the class can independently solve similar questions in future.
+
+Assume the student has weak fundamentals and is studying without a tutor.
+
+Every solution should be written as if an experienced CBSE/ICSE teacher is personally teaching one student.
+
+--------------------------------------------------
+NEW SOLUTION STRUCTURE
+--------------------------------------------------
+
+For every Maths, Physics and Chemistry question, generate explanations in the following order.
+
+==============================
+1. BEFORE WE START
+==============================
+
+Show a card titled:
+
+"What You Need To Know First"
+
+Explain the prerequisite concept using extremely simple language.
+
+Assume the student has forgotten the chapter.
+
+Use everyday language.
+
+Examples:
+
+Complementary angles always add up to 90°.
+
+Ratio means comparing quantities.
+
+A rational number can always be written as p/q.
+
+Newton's Second Law tells us that force depends on mass and acceleration.
+
+Keep this section between 2 and 6 sentences.
+
+Never use difficult words.
+
+--------------------------------------------------
+
+==============================
+2. UNDERSTANDING THE QUESTION
+==============================
+
+Show another card.
+
+Explain:
+
+"What is the question actually asking?"
+
+Rewrite the question in simple English.
+
+Highlight:
+
+• What information is given.
+
+• What needs to be found.
+
+• Which chapter/topic is being used.
+
+This section should remove fear before solving.
+
+--------------------------------------------------
+
+==============================
+3. TRANSLATE WORDS INTO MATHEMATICS
+==============================
+
+This is mandatory.
+
+Show how every sentence in the question becomes mathematics.
+
+Example:
+
+"The angle is four times its complement."
+
+↓
+
+Let angle = x
+
+Complement = 90 − x
+
+Given:
+
+Angle = 4 × Complement
+
+Therefore
+
+x = 4(90 − x)
+
+Never jump directly to equations.
+
+Always explain why each equation is formed.
+
+--------------------------------------------------
+
+==============================
+4. STEP-BY-STEP SOLUTION
+==============================
+
+For EVERY step provide:
+
+Step number
+
+What to do
+
+WHY we are doing it
+
+Example:
+
+Step 1
+
+Let the unknown angle be x.
+
+WHY?
+
+Whenever the value is unknown, we represent it using a variable.
+
+----------------------------------
+
+Step 2
+
+Its complement becomes 90 − x.
+
+WHY?
+
+Complementary angles always add up to 90°.
+
+----------------------------------
+
+Step 3
+
+Form the equation.
+
+WHY?
+
+The question says the angle is four times its complement.
+
+Therefore
+
+x = 4(90 − x)
+
+Every mathematical step must include a WHY explanation.
+
+Never skip algebra.
+
+Never combine multiple operations into one line.
+
+Show every intermediate step.
+
+--------------------------------------------------
+
+==============================
+5. COMMON MISTAKES
+==============================
+
+Show a red warning card.
+
+Title:
+
+"Students Often Make These Mistakes"
+
+List 3 common mistakes related to this concept.
+
+Example:
+
+❌ Confusing complementary with supplementary angles.
+
+❌ Forgetting to distribute the multiplication.
+
+❌ Writing 90 + x instead of 90 − x.
+
+--------------------------------------------------
+
+==============================
+6. LET'S VERIFY THE ANSWER
+==============================
+
+Every solution MUST verify itself.
+
+Substitute the answer back into the original question.
+
+Show why the answer satisfies the question.
+
+Never end a solution without verification.
+
+--------------------------------------------------
+
+==============================
+7. REMEMBER THIS
+==============================
+
+Provide a small memory shortcut.
+
+Examples:
+
+Complementary → 90°
+
+Supplementary → 180°
+
+Perfect square roots are rational.
+
+Current = Voltage ÷ Resistance
+
+These should be easy to remember during exams.
+
+--------------------------------------------------
+
+==============================
+8. ONE SIMILAR EXAMPLE
+==============================
+
+Generate one solved example using different numbers.
+
+Explain it briefly.
+
+Purpose:
+
+Reinforce the concept.
+
+--------------------------------------------------
+
+==============================
+9. CHECK YOUR UNDERSTANDING
+==============================
+
+Generate one new question.
+
+Do NOT reveal the answer immediately.
+
+Show:
+
+"Try solving this yourself."
+
+Provide a button:
+
+Reveal Solution
+
+Only after clicking should the full solution appear.
+
+--------------------------------------------------
+
+==============================
+10. CONFIDENCE CHECK
+==============================
+
+Ask one conceptual question.
+
+Example:
+
+Why did we subtract x from 90?
+
+○ Because complementary angles add to 90°
+
+○ Because every triangle has 90°
+
+○ Because x is always negative
+
+Provide immediate feedback after selection.
+
+--------------------------------------------------
+
+==============================
+11. DIFFICULTY MODES
+==============================
+
+Basic
+
+Assume zero prior knowledge.
+
+Explain every tiny step.
+
+Use analogies.
+
+Reading level:
+
+11–12 years.
+
+----------------------------------
+
+Standard
+
+Normal school explanation.
+
+----------------------------------
+
+Advanced
+
+Short.
+
+Exam-oriented.
+
+Minimal explanation.
+
+--------------------------------------------------
+
+==============================
+12. TEACHING STYLE
+==============================
+
+Always encourage.
+
+Never say:
+
+"This is easy."
+
+Never assume understanding.
+
+Instead use:
+
+"Let's solve it together."
+
+"Take it one step at a time."
+
+"This step is important because..."
+
+"Don't worry if this looks difficult."
+
+--------------------------------------------------
+
+==============================
+13. EXPLANATION QUALITY CHECK
+==============================
+
+Before returning every solution, verify:
+
+✓ No logical jumps.
+
+✓ Every formula explained.
+
+✓ Every algebra step shown.
+
+✓ Every new term defined.
+
+✓ Every answer verified.
+
+✓ Weak student can follow independently.
+
+If any check fails, automatically regenerate the explanation.
+
+--------------------------------------------------
+
+==============================
+14. UI IMPROVEMENTS
+==============================
+
+Use collapsible academic cards:
+
+1. What You Need To Know First
+
+2. Understanding The Question
+
+3. Build The Equation
+
+4. Step-by-Step Solution
+
+5. Common Mistakes
+
+6. Verify The Answer
+
+7. Remember This
+
+8. Similar Example
+
+9. Check Your Understanding
+
+10. Reveal Solution
+
+11. Confidence Check
+
+Progressively reveal sections to avoid overwhelming students.
+
+--------------------------------------------------
+
+Maintain the existing visual design and architecture.
+
+Only improve the teaching quality, reasoning depth, and educational value.
+
+The objective is that a weak CBSE/ICSE student should be able to solve a similar question independently after reading the explanation once.
