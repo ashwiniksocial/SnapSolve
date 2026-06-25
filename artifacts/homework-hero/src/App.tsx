@@ -14,6 +14,7 @@ import Revision        from "@/pages/Revision";
 import Improvement     from "@/pages/Improvement";
 import Admin             from "@/pages/Admin";
 import TeacherDashboard  from "@/pages/TeacherDashboard";
+import ExamMode          from "@/pages/ExamMode";
 import SignInPage        from "@/pages/SignIn";
 import SignUpPage        from "@/pages/SignUp";
 import OnboardingPage    from "@/pages/Onboarding";
@@ -105,6 +106,7 @@ const NAV = [
   { to: "/revision", icon: "↺",  label: "Revision" },
   { to: "/practice", icon: "✎",  label: "Practice" },
   { to: "/progress", icon: "◈",  label: "Progress" },
+  { to: "/exam",     icon: "🎯", label: "Exam"     },
   { to: "/journal",  icon: "✗",  label: "Journal"  },
 ];
 
@@ -115,16 +117,16 @@ function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-sm">
-      <div className="max-w-lg mx-auto flex justify-around py-1.5">
+      <div className="max-w-lg mx-auto flex justify-around py-1">
         {NAV.map(({ to, icon, label }) => (
           <Link key={to} href={to}>
             <button
-              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-[10px] font-semibold transition-all
+              className={`flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl text-[9px] font-semibold transition-all
                 ${active(to)
                   ? "text-indigo-600"
                   : "text-slate-400 hover:text-slate-600"}`}
             >
-              <span className={`text-lg leading-none mb-0.5 ${active(to) ? "scale-110" : ""} transition-transform`}>
+              <span className={`text-base leading-none mb-0.5 ${active(to) ? "scale-110" : ""} transition-transform`}>
                 {icon}
               </span>
               {label}
@@ -167,6 +169,7 @@ function Router() {
           <Route path="/profile"     component={ProfilePage} />
           <Route path="/admin"       component={Admin} />
           <Route path="/teacher"     component={TeacherDashboard} />
+          <Route path="/exam"        component={ExamMode} />
         </Switch>
       </div>
       {!hideNav && <BottomNav />}
