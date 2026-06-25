@@ -22,7 +22,8 @@
 
 import { Router }             from "express";
 import { parseLessonResponse, type LessonResponse } from "../lib/lessonTypes";
-import { runQualityPipeline } from "../services/teachingQuality";
+import { runQualityPipeline }    from "../services/teachingQuality";
+import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
 
 const router = Router();
 
@@ -545,15 +546,29 @@ const MODEL          = "gpt-4o-mini";
 const OPENAI_TIMEOUT = 30_000;
 
 async function generateDraft(
-  subject: Subject,
-  question: string,
+  subject:        Subject,
+  question:       string,
   studentContext?: string,
+  blueprint?:     BlueprintInjection,
 ): Promise<LessonResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), OPENAI_TIMEOUT);
+
+  // Inject the teaching blueprint into the system and user messages when available
+  const systemContent = blueprint?.systemSuffix
+    ? SYSTEM_PROMPTS[subject] + blueprint.systemSuffix
+    : SYSTEM_PROMPTS[subject];
+
+  const baseUserContent = studentContext
+    ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
+    : `Subject: ${subject}\n\nQuestion:\n${question.trim()}`;
+
+  const userContent = blueprint?.userPrefix
+    ? blueprint.userPrefix + baseUserContent
+    : baseUserContent;
 
   let res: Response;
   try {
@@ -570,13 +585,8 @@ async function generateDraft(
         max_tokens:      5000,
         response_format: { type: "json_object" },
         messages: [
-          { role: "system", content: SYSTEM_PROMPTS[subject] },
-          {
-            role: "user",
-            content: studentContext
-              ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
-              : `Subject: ${subject}\n\nQuestion:\n${question.trim()}`,
-          },
+          { role: "system", content: systemContent },
+          { role: "user",   content: userContent },
         ],
       }),
     });
@@ -645,10 +655,26 @@ router.post("/solveQuestion", async (req, res) => {
     }
   }
 
-  // 4. Generate draft lesson
+  // 4. Build teaching blueprint (lesson planning before generation)
+  const apiKey = process.env.OPENAI_API_KEY ?? "";
+  let blueprint: BlueprintInjection | undefined;
+  if (apiKey) {
+    try {
+      blueprint = await buildTeachingBlueprint(subj, q, apiKey);
+      req.log.info({
+        subject:      subj,
+        concepts:     blueprint.conceptCount,
+        planningUsed: blueprint.planningUsed,
+      }, "solveQuestion: teaching blueprint built");
+    } catch {
+      req.log.warn("solveQuestion: blueprint build failed — proceeding without plan");
+    }
+  }
+
+  // 5. Generate draft lesson (with blueprint injected into the prompt)
   let draft: LessonResponse;
   try {
-    draft = await generateDraft(subj, q, ctx);
+    draft = await generateDraft(subj, q, ctx, blueprint);
     req.log.info({ subject: subj, topic: draft.topic }, "solveQuestion: draft generated");
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
@@ -662,8 +688,7 @@ router.post("/solveQuestion", async (req, res) => {
     return;
   }
 
-  // 5. Teaching Quality Pipeline — review → improve → repeat (max 3 cycles)
-  const apiKey = process.env.OPENAI_API_KEY!;
+  // 6. Teaching Quality Pipeline — review → improve → repeat (max 3 cycles)
   let finalLesson = draft;
 
   try {

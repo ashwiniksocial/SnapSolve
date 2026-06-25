@@ -1,0 +1,409 @@
+We are NOT building another AI feature.
+
+We are NOT building another analytics engine.
+
+We are NOT building another dashboard.
+
+We are NOT building another recommendation engine.
+
+We are perfecting the teacher.
+
+===================================================================
+
+NEW OBJECTIVE
+
+===================================================================
+
+The Teaching Quality Pipeline already exists.
+
+Now we must improve HOW the lesson is taught.
+
+SnapSolve should no longer behave like ChatGPT.
+
+It should behave exactly like the best teacher in a classroom who has spent 30 years teaching weak students.
+
+The teacher never thinks
+
+"How do I solve this?"
+
+The teacher thinks
+
+"Where will this child become confused?"
+
+Everything else follows from that.
+
+===================================================================
+
+IMPLEMENT MASTER TEACHER ENGINE
+
+Create
+
+src/services/masterTeacher/
+
+teacherMindset.ts
+
+lessonPlanner.ts
+
+confusionPredictor.ts
+
+microTeachingEngine.ts
+
+scaffoldingEngine.ts
+
+studentCheckpointEngine.ts
+
+lessonPacingEngine.ts
+
+analogySelector.ts
+
+teacherDialogueEngine.ts
+
+index.ts
+
+These are INTERNAL teaching modules.
+
+NO UI changes.
+
+===================================================================
+
+CHANGE THE WAY EVERY LESSON IS GENERATED
+
+Instead of
+
+Question
+
+↓
+
+Generate Lesson
+
+↓
+
+Quality Review
+
+↓
+
+Return
+
+The new flow becomes
+
+Question
+
+↓
+
+Analyse Question
+
+↓
+
+Plan Lesson
+
+↓
+
+Predict Student Confusion
+
+↓
+
+Teach Small Idea
+
+↓
+
+Check Understanding
+
+↓
+
+Teach Next Idea
+
+↓
+
+Check Understanding
+
+↓
+
+Continue
+
+↓
+
+Generate Full Lesson
+
+↓
+
+Teaching Quality Review
+
+↓
+
+Improve Lesson
+
+↓
+
+Return
+
+The lesson should be planned before it is written.
+
+===================================================================
+
+1. LESSON PLANNER
+
+Before writing,
+
+AI must silently answer
+
+What does the student already know?
+
+What are the prerequisites?
+
+Which ideas must be taught first?
+
+Which ideas can wait?
+
+What is the simplest teaching order?
+
+Build the lesson around dependency order.
+
+Never around textbook order.
+
+===================================================================
+
+2. CONFUSION PREDICTOR
+
+For EVERY paragraph,
+
+predict
+
+"What question will the weakest student ask now?"
+
+Generate every likely confusion.
+
+Examples
+
+What does numerator mean?
+
+Why is denominator not zero?
+
+Why can we square both sides?
+
+Why is p even?
+
+Where did this equation come from?
+
+What is contradiction?
+
+Immediately answer every confusion.
+
+Never allow confusion to survive into the next paragraph.
+
+===================================================================
+
+3. MICRO TEACHING
+
+Never explain more than ONE new idea at once.
+
+Each paragraph should introduce only ONE concept.
+
+After every concept,
+
+pause.
+
+Confirm understanding.
+
+Then continue.
+
+No paragraph should teach multiple unfamiliar ideas.
+
+===================================================================
+
+4. SCAFFOLDING
+
+Teach exactly like a human teacher.
+
+Move through these stages
+
+Observe
+
+↓
+
+Recall previous knowledge
+
+↓
+
+Teach one idea
+
+↓
+
+Example
+
+↓
+
+Student thinks
+
+↓
+
+Next idea
+
+↓
+
+Example
+
+↓
+
+Student thinks
+
+↓
+
+Continue
+
+Never jump ahead.
+
+Never assume learning.
+
+===================================================================
+
+5. CHECKPOINTS
+
+After every major concept,
+
+ask a tiny question.
+
+Examples
+
+Which number is irrational?
+
+Why did we square both sides?
+
+What are we trying to prove?
+
+These are not tests.
+
+They are teaching checkpoints.
+
+If the answer is wrong,
+
+the lesson should automatically reteach the previous concept before continuing.
+
+===================================================================
+
+6. LESSON PACING
+
+Estimate cognitive load continuously.
+
+If too many new concepts appear together,
+
+split them.
+
+If a paragraph exceeds comfortable reading length,
+
+split it.
+
+Avoid overwhelming weak students.
+
+The goal is understanding,
+
+not information density.
+
+===================================================================
+
+7. ANALOGY ENGINE
+
+Every abstract concept should be checked.
+
+If it is difficult,
+
+find a real-life analogy.
+
+Only use analogies that genuinely improve understanding.
+
+Never force them.
+
+===================================================================
+
+8. TEACHER DIALOGUE
+
+Rewrite all explanations.
+
+Every paragraph should sound like
+
+"I am sitting beside you."
+
+Avoid textbook language.
+
+Avoid lecture style.
+
+Use conversational teaching.
+
+Example
+
+Instead of
+
+"Applying the distributive property..."
+
+Say
+
+"Let's open the brackets one step at a time. Think of it as giving every number inside the bracket its turn to be multiplied."
+
+The student should feel guided,
+
+not instructed.
+
+===================================================================
+
+9. LESSON QUALITY RULES
+
+Every lesson must satisfy
+
+One idea per paragraph
+
+No unexplained terminology
+
+No unexplained symbols
+
+No unexplained formulas
+
+No logical jumps
+
+No skipped arithmetic
+
+No skipped algebra
+
+Every step has WHY
+
+Every difficult concept has an analogy or intuition where helpful
+
+Every major concept has a checkpoint
+
+Every lesson ends with
+
+"I can now..."
+
+===================================================================
+
+10. DO NOT ADD FEATURES
+
+No new pages
+
+No dashboards
+
+No analytics
+
+No widgets
+
+No animations
+
+No gamification
+
+Improve only the teaching.
+
+===================================================================
+
+SUCCESS CRITERIA
+
+A student who normally scores 20/100 should be able to
+
+Read ONE lesson.
+
+Understand every step.
+
+Answer the follow-up question independently.
+
+Explain the concept to another student in simple language.
+
+Only then is the lesson considered successful.
+
+This Master Teacher Engine becomes the brain that plans HOW to teach before the AI writes the lesson.
