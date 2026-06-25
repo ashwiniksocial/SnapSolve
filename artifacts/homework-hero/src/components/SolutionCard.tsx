@@ -28,6 +28,8 @@ const SECTION_VIS: Record<string, Record<Level, Vis>> = {
   prereq:    { basic: "open",   standard: "closed", advanced: "closed" },
   understand:{ basic: "open",   standard: "open",   advanced: "hidden" },
   wordMath:  { basic: "open",   standard: "closed", advanced: "hidden" },
+  visual:    { basic: "open",   standard: "closed", advanced: "hidden" },
+  thinking:  { basic: "open",   standard: "closed", advanced: "hidden" },
   steps:     { basic: "open",   standard: "open",   advanced: "open"   },
   mistakes:  { basic: "closed", standard: "closed", advanced: "closed" },
   verify:    { basic: "closed", standard: "closed", advanced: "hidden" },
@@ -299,7 +301,7 @@ export default function SolutionCard({ solution }: Props) {
 
   // Section numbering — only count sections that aren't hidden
   const sections = [
-    "prereq", "understand", "wordMath", "steps",
+    "prereq", "understand", "wordMath", "visual", "thinking", "steps",
     "mistakes", "verify", "remember", "similar",
     "check", "mcq", "deeper",
   ];
@@ -492,7 +494,67 @@ export default function SolutionCard({ solution }: Props) {
       )}
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 4 — Step-by-Step Solution (always visible)                */}
+      {/* SECTION 4 — See It Visually  (Stage 7)                            */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {solution.visualThinking && solution.visualThinking.trim() && (
+        <AccordionCard
+          id={`visual-${level}`}
+          num={numOf("visual")}
+          icon="🎨"
+          title="See It Visually"
+          headerBg="#fff7ed"
+          headerText="#c2410c"
+          borderColor="#fed7aa"
+          bodyBg="#fff7ed"
+          vis={vis("visual")}
+          badge={
+            <span className="text-[9px] font-bold bg-orange-200 text-orange-800 px-2 py-0.5 rounded-full">
+              Mental picture
+            </span>
+          }
+        >
+          <p className="text-xs text-orange-700 mb-3 italic">
+            Close your eyes and picture this. Visualising the problem makes it much easier to solve.
+          </p>
+          <div className="bg-white border border-orange-200 rounded-xl px-4 py-3.5">
+            <p className="text-sm text-slate-700 leading-relaxed">{solution.visualThinking}</p>
+          </div>
+        </AccordionCard>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* SECTION 5 — How Should You Think?  (Stage 5)                      */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {solution.thinkingProcess && (
+        <AccordionCard
+          id={`thinking-${level}`}
+          num={numOf("thinking")}
+          icon="💭"
+          title="How Should You Think?"
+          headerBg="#fdf4ff"
+          headerText="#7e22ce"
+          borderColor="#e9d5ff"
+          bodyBg="#fdf4ff"
+          vis={vis("thinking")}
+          badge={
+            <span className="text-[9px] font-bold bg-purple-200 text-purple-800 px-2 py-0.5 rounded-full">
+              Before you write anything
+            </span>
+          }
+        >
+          <p className="text-xs text-purple-700 mb-3 italic">
+            Before touching a pen — this is what should be going on in your mind.
+          </p>
+          <div className="bg-white border border-purple-200 rounded-xl px-4 py-3.5 space-y-2">
+            {solution.thinkingProcess.split("\n").filter(Boolean).map((line, i) => (
+              <p key={i} className="text-sm text-slate-700 leading-relaxed">{line}</p>
+            ))}
+          </div>
+        </AccordionCard>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════════ */}
+      {/* SECTION 6 (was 4) — Step-by-Step Solution (always visible)        */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <AccordionCard
         id={`steps-${level}`}

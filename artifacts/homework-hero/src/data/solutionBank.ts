@@ -80,6 +80,10 @@ export interface AIResponse {
   questionUnderstanding?: string;
   /** V3 — translate every phrase in the question to a math expression using → arrows */
   wordToMath?: string;
+  /** V3 — Stage 5: what should go on inside the student's mind before writing anything */
+  thinkingProcess?: string;
+  /** V3 — Stage 7: mental picture / visual scene (empty if not applicable) */
+  visualThinking?: string;
   /** V3 — substitute final answer back and confirm both sides match */
   verification?: string;
   /** V3 — 1–3 ultra-short memory hooks usable in an exam instantly */

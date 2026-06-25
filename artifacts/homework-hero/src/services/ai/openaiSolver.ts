@@ -92,6 +92,8 @@ interface BackendSolveResponse {
   conceptExplanation?:    string;
   questionUnderstanding?: string;
   wordToMath?:            string;
+  thinkingProcess?:       string;
+  visualThinking?:        string;
   steps: Array<{
     stepNumber:   number;
     title:        string;
@@ -190,6 +192,8 @@ function toAIResponse(data: BackendSolveResponse, subject: Subject, question: st
     conceptExplanation:    data.conceptExplanation?.trim()    || undefined,
     questionUnderstanding: data.questionUnderstanding?.trim() || undefined,
     wordToMath:            data.wordToMath?.trim()            || undefined,
+    thinkingProcess:       data.thinkingProcess?.trim()       || undefined,
+    visualThinking:        data.visualThinking?.trim()        || undefined,
     verification:          data.verification?.trim()          || undefined,
     confusionPoint:        data.confusionPoint?.trim()        || undefined,
     examTrap:              data.examTrap?.trim()              || undefined,
