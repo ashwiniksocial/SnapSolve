@@ -5,6 +5,7 @@ import { useStreak }      from "@/hooks/useStreak";
 import { useProgress }    from "@/hooks/useProgress";
 import { useStudyScore }  from "@/hooks/useStudyScore";
 import StudentProfileView from "@/components/tutor/StudentProfileView";
+import TutorDashboard    from "@/components/socratic/TutorDashboard";
 
 const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
 
@@ -17,7 +18,7 @@ function getLast7Days(): string[] {
 }
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
-type Tab = "analytics" | "tutor";
+type Tab = "analytics" | "tutor" | "socratic";
 
 export default function Progress() {
   const { streak, completedDates } = useStreak();
@@ -41,17 +42,21 @@ export default function Progress() {
 
           {/* ── Tab switcher ──────────────────────────────────────────────── */}
           <div className="flex gap-1 bg-slate-100 rounded-xl p-1">
-            {(["analytics", "tutor"] as Tab[]).map((tab) => (
+            {([
+              ["analytics", "📊 Analytics"],
+              ["tutor",     "🎓 AI Profile"],
+              ["socratic",  "✦ Tutor Sessions"],
+            ] as [Tab, string][]).map(([tab, label]) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 py-2 text-[10px] font-bold rounded-lg transition-all leading-tight ${
                   activeTab === tab
                     ? "bg-white text-indigo-600 shadow-sm"
                     : "text-slate-500 hover:text-slate-700"
                 }`}
               >
-                {tab === "analytics" ? "📊 Analytics" : "🎓 AI Tutor Profile"}
+                {label}
               </button>
             ))}
           </div>
@@ -60,7 +65,9 @@ export default function Progress() {
 
       <div className="max-w-lg mx-auto px-5 py-6 space-y-6">
 
-        {activeTab === "tutor" ? (
+        {activeTab === "socratic" ? (
+          <TutorDashboard />
+        ) : activeTab === "tutor" ? (
           <StudentProfileView />
         ) : (
           <>

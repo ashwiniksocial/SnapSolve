@@ -10,6 +10,8 @@ import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
 import StarBurst from "@/components/StarBurst";
+import SocraticTutor from "@/components/socratic/SocraticTutor";
+import { getMasteryEntry } from "@/services/studentModel";
 
 type PageState = "loading" | "done";
 
@@ -20,13 +22,14 @@ export default function Solution() {
   const celebrate = useCelebration();
   const cfg = SUBJECTS[session.subject];
 
-  const [pageState, setPageState] = useState<PageState>("loading");
-  const [solution, setSolution]   = useState<AIResponse | null>(null);
-  const [phaseMsg, setPhaseMsg]   = useState("");
-  const [phaseIdx, setPhaseIdx]   = useState(0);
-  const [marked,   setMarked]     = useState(false);
-  const [burst,    setBurst]      = useState(false);
+  const [pageState, setPageState]   = useState<PageState>("loading");
+  const [solution, setSolution]     = useState<AIResponse | null>(null);
+  const [phaseMsg, setPhaseMsg]     = useState("");
+  const [phaseIdx, setPhaseIdx]     = useState(0);
+  const [marked,   setMarked]       = useState(false);
+  const [burst,    setBurst]        = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
+  const [showTutor,   setShowTutor]   = useState(false);
 
   const runSolver = useCallback(async () => {
     setPageState("loading");
@@ -97,6 +100,26 @@ export default function Solution() {
           <div className="space-y-5 fade-up">
 
             <SolutionCard solution={solution} />
+
+            {/* ── Talk to Tutor ─────────────────────────────────────────── */}
+            {!showTutor && (
+              <button
+                onClick={() => setShowTutor(true)}
+                className="w-full py-3.5 rounded-2xl font-bold text-sm text-white shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all bg-gradient-to-r from-indigo-600 to-violet-600 hover:opacity-95"
+              >
+                🎓 Talk to Tutor — Test My Understanding
+              </button>
+            )}
+
+            {/* ── Socratic Tutor Panel ──────────────────────────────────── */}
+            {showTutor && solution && (
+              <SocraticTutor
+                topic={solution.topic}
+                subject={session.subject}
+                initialMastery={getMasteryEntry(solution.topic, session.subject)?.masteryScore ?? 40}
+                onClose={() => setShowTutor(false)}
+              />
+            )}
 
             {/* Action buttons */}
             <div className="grid grid-cols-2 gap-3">

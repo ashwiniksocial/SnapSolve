@@ -1,0 +1,273 @@
+Implement **SnapSolve Socratic Tutor Engine V1**.
+
+We are changing SnapSolve from an AI explanation system into an interactive AI tutor.
+
+The tutor must behave like an excellent human teacher.
+
+A human tutor never explains something once and assumes the student has understood.
+
+Instead, they continuously check understanding, identify misconceptions, adapt their explanation, and only move on once the student demonstrates mastery.
+
+This behaviour must now become the foundation of SnapSolve.
+
+---
+
+## Create a new teaching engine
+
+Create:
+
+```
+src/services/socratic/
+
+socraticEngine.ts
+
+misconceptionEngine.ts
+
+conceptQuestionEngine.ts
+
+masteryAssessment.ts
+
+guidedHintEngine.ts
+
+dialogueEngine.ts
+```
+
+All engines must be modular and Firestore-ready.
+
+---
+
+## Replace passive explanations with guided teaching
+
+After every explanation, the AI must immediately enter Tutor Mode.
+
+The tutor should never ask:
+
+"Did you understand?"
+
+Instead, it must ask a carefully chosen conceptual question.
+
+Example:
+
+Instead of
+
+"What is the answer?"
+
+Ask
+
+"Why did we choose this formula instead of another one?"
+
+or
+
+"What does 'at least one' actually mean?"
+
+or
+
+"If this value became larger, what would happen?"
+
+Questions should test understanding, not memory.
+
+---
+
+## Student Response Analysis
+
+Every student answer must be analysed.
+
+Classify it as:
+
+Correct understanding
+
+Partial understanding
+
+Misconception
+
+Guess
+
+Copied
+
+No response
+
+Store the classification.
+
+Update the student profile.
+
+---
+
+## Misconception Engine
+
+When a misconception is detected:
+
+Do NOT simply reveal the answer.
+
+Identify the exact misunderstanding.
+
+Example:
+
+Student confused favourable outcomes with total outcomes.
+
+Student forgot complementary angles sum to 90°.
+
+Student used the wrong sign.
+
+Student confused velocity with speed.
+
+Student forgot balancing rules.
+
+The tutor must reteach only that concept.
+
+Avoid repeating the entire explanation.
+
+---
+
+## Guided Hint Engine
+
+Never reveal the answer immediately.
+
+Hints should appear in levels.
+
+Hint 1
+
+Very small clue.
+
+Hint 2
+
+Direct the student's attention.
+
+Hint 3
+
+Show the next step.
+
+Hint 4
+
+Reveal the reasoning.
+
+Hint 5
+
+Reveal the full solution.
+
+Track:
+
+Hints requested
+
+Highest hint level used
+
+Time before requesting hint
+
+Persistence before requesting hint
+
+---
+
+## Adaptive Questioning
+
+Generate follow-up questions.
+
+Difficulty depends on mastery.
+
+Mastery below 40%
+
+Very simple conceptual questions.
+
+40-70%
+
+Basic application.
+
+70-90%
+
+Mixed questions.
+
+Above 90%
+
+Challenge questions.
+
+---
+
+## Mastery Validation
+
+Never mark a topic understood after reading.
+
+Mastery must be demonstrated.
+
+Require:
+
+Three consecutive conceptual answers correct.
+
+OR
+
+Two conceptual answers plus one application question.
+
+Only then update mastery.
+
+---
+
+## Tutor Memory
+
+Remember:
+
+Questions the student answered incorrectly.
+
+Concepts repeatedly misunderstood.
+
+Favourite hint level.
+
+Preferred explanation depth.
+
+Concepts mastered without hints.
+
+Concepts requiring multiple sessions.
+
+This memory should influence future teaching.
+
+---
+
+## Reflection
+
+After every tutoring session generate:
+
+Today you understood...
+
+Today you struggled with...
+
+One thing to revise tomorrow...
+
+Estimated mastery improvement...
+
+One encouraging personalised message.
+
+---
+
+## Tutor Dashboard
+
+Add a new "Tutor" tab.
+
+Show:
+
+Current tutoring session.
+
+Concept being taught.
+
+Mastery progress.
+
+Questions answered.
+
+Hints used.
+
+Misconceptions corrected.
+
+Estimated understanding.
+
+Learning streak.
+
+---
+
+## Design Goal
+
+The student should feel they are having a one-to-one conversation with an expert private tutor.
+
+The tutor should ask more questions than it answers.
+
+The tutor should guide rather than solve.
+
+The tutor should never allow the student to become dependent on SnapSolve.
+
+Every interaction should move the student toward solving future questions independently.
+
+This feature becomes the central learning experience of SnapSolve.
