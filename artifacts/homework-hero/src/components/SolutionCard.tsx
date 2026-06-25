@@ -4,6 +4,7 @@ import type { Subject } from "@/data/subjects";
 import { SUBJECTS } from "@/data/subjects";
 import ConfidenceMeter from "@/components/ConfidenceMeter";
 import VerificationBadge from "@/components/VerificationBadge";
+import TeacherReviewPanel from "@/components/TeacherReviewPanel";
 
 interface Props {
   solution: AIResponse;
@@ -377,6 +378,9 @@ export default function SolutionCard({ solution }: Props) {
           )}
         </div>
       )}
+
+      {/* ══ Teacher Review Panel ══════════════════════════════════════════════ */}
+      <TeacherReviewPanel solution={solution} />
 
       {/* ══ Explain More ══════════════════════════════════════════════════════ */}
       {hasMore && (

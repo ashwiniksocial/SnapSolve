@@ -12,11 +12,12 @@ import History         from "@/pages/History";
 import Journal         from "@/pages/Journal";
 import Revision        from "@/pages/Revision";
 import Improvement     from "@/pages/Improvement";
-import Admin           from "@/pages/Admin";
-import SignInPage      from "@/pages/SignIn";
-import SignUpPage      from "@/pages/SignUp";
-import OnboardingPage  from "@/pages/Onboarding";
-import ProfilePage     from "@/pages/Profile";
+import Admin             from "@/pages/Admin";
+import TeacherDashboard  from "@/pages/TeacherDashboard";
+import SignInPage        from "@/pages/SignIn";
+import SignUpPage        from "@/pages/SignUp";
+import OnboardingPage    from "@/pages/Onboarding";
+import ProfilePage       from "@/pages/Profile";
 
 // ─── Clerk wiring (copy verbatim — same code runs in dev and prod) ────────────
 
@@ -165,6 +166,7 @@ function Router() {
           <Route path="/improvement" component={Improvement} />
           <Route path="/profile"     component={ProfilePage} />
           <Route path="/admin"       component={Admin} />
+          <Route path="/teacher"     component={TeacherDashboard} />
         </Switch>
       </div>
       {!hideNav && <BottomNav />}
