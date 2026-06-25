@@ -1,0 +1,201 @@
+Implement **SnapSolve Knowledge Graph Engine V1**.
+
+We are moving from topic-based learning to concept-based learning.
+
+Every chapter, topic and question in SnapSolve must become part of one connected knowledge graph.
+
+---
+
+Create
+
+src/services/knowledgeGraph/
+
+knowledgeGraphEngine.ts
+
+conceptGraph.ts
+
+dependencyEngine.ts
+
+conceptMasteryEngine.ts
+
+prerequisiteInference.ts
+
+learningPathEngine.ts
+
+remediationEngine.ts
+
+conceptSearch.ts
+
+---
+
+## Concept Graph
+
+Represent every concept as a node.
+
+Each node contains
+
+id
+
+subject
+
+board
+
+class
+
+chapter
+
+topic
+
+concept
+
+difficulty
+
+importance
+
+estimated learning time
+
+common misconceptions
+
+prerequisites
+
+successors
+
+related concepts
+
+exam frequency
+
+NCERT references
+
+question ids
+
+revision priority
+
+---
+
+## Dependency Engine
+
+Every concept should know
+
+what it depends on
+
+and
+
+what depends on it.
+
+Examples
+
+Fractions
+
+↓
+
+Integers
+
+↓
+
+Algebra
+
+↓
+
+Linear Equations
+
+↓
+
+Polynomials
+
+↓
+
+Quadratic Equations
+
+---
+
+## Concept Mastery
+
+Track mastery per concept instead of only per chapter.
+
+Mastery should automatically propagate.
+
+If Algebra mastery drops,
+
+Linear Equations and Polynomials should also be affected.
+
+---
+
+## Prerequisite Inference
+
+When a student repeatedly fails,
+
+walk backwards through the graph.
+
+Identify the first missing prerequisite.
+
+Recommend repairing only that concept.
+
+---
+
+## Learning Path
+
+Instead of recommending topics,
+
+recommend concepts.
+
+Generate the shortest learning path from
+
+Current Mastery
+
+to
+
+Target Exam Score.
+
+---
+
+## Remediation
+
+Automatically build a personalised recovery plan.
+
+Teach prerequisite
+
+↓
+
+Practice prerequisite
+
+↓
+
+Verify prerequisite
+
+↓
+
+Return to original topic
+
+---
+
+## Concept Search
+
+Allow AI to search by concept rather than chapter.
+
+Example
+
+Student asks
+
+"Why do we divide here?"
+
+Search
+
+Ratio
+
+Fraction
+
+Probability
+
+instead of chapter names.
+
+---
+
+## Teacher Goal
+
+The tutor should understand
+
+HOW all concepts connect.
+
+Not simply which chapter they belong to.
+
+This engine becomes the foundation for every recommendation, explanation and revision plan.
