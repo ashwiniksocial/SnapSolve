@@ -8,9 +8,9 @@
  */
 
 import { ALL_CHAPTERS, ALL_QUESTIONS } from "@/data/questions";
-import type { Question, ChapterMeta, TopicMeta, Difficulty } from "@/data/questions";
+import type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType } from "@/data/questions";
 
-export type { Question, ChapterMeta, TopicMeta, Difficulty };
+export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType };
 
 // ─── Chapter / topic navigation ───────────────────────────────────────────────
 
@@ -35,6 +35,7 @@ export interface QuestionFilter {
   topicId?: string;
   topicName?: string;
   difficulty?: Difficulty | "All";
+  questionType?: QuestionType | "All";
 }
 
 /**
@@ -43,12 +44,13 @@ export interface QuestionFilter {
  */
 export function getQuestions(filter: QuestionFilter = {}): Question[] {
   return ALL_QUESTIONS.filter((q) => {
-    if (filter.classNum  !== undefined && q.classNum    !== filter.classNum)   return false;
-    if (filter.subject   !== undefined && q.subject     !== filter.subject)    return false;
-    if (filter.chapterId !== undefined && q.chapterId   !== filter.chapterId)  return false;
-    if (filter.topicId   !== undefined && q.topicId     !== filter.topicId)    return false;
-    if (filter.topicName !== undefined && q.topicName   !== filter.topicName)  return false;
+    if (filter.classNum  !== undefined && q.classNum  !== filter.classNum)  return false;
+    if (filter.subject   !== undefined && q.subject   !== filter.subject)   return false;
+    if (filter.chapterId !== undefined && q.chapterId !== filter.chapterId) return false;
+    if (filter.topicId   !== undefined && q.topicId   !== filter.topicId)   return false;
+    if (filter.topicName !== undefined && q.topicName !== filter.topicName) return false;
     if (filter.difficulty && filter.difficulty !== "All" && q.difficulty !== filter.difficulty) return false;
+    if (filter.questionType && filter.questionType !== "All" && q.questionType !== filter.questionType) return false;
     return true;
   });
 }
@@ -82,6 +84,39 @@ export function getDifficultyBreakdown(filter: QuestionFilter): DifficultyCount 
     Hard:   qs.filter((q) => q.difficulty === "Hard").length,
     total:  qs.length,
   };
+}
+
+// ─── Chapter stats ────────────────────────────────────────────────────────────
+
+export interface ChapterStats {
+  chapterId: string;
+  chapterName: string;
+  chapterNumber: number;
+  totalQuestions: number;
+  byDifficulty: DifficultyCount;
+  byType: Record<QuestionType, number>;
+}
+
+/** Get stats for all chapters of a given class + subject. */
+export function getAllChapterStats(classNum: number, subject: string): ChapterStats[] {
+  const chapters = getChapters(classNum, subject);
+  return chapters.map((ch) => {
+    const qs = getQuestions({ classNum, subject, chapterId: ch.id });
+    const byType: Record<QuestionType, number> = {
+      MCQ: 0, ShortAnswer: 0, LongAnswer: 0, HOTS: 0, PYQ: 0,
+    };
+    for (const q of qs) {
+      if (q.questionType) byType[q.questionType]++;
+    }
+    return {
+      chapterId: ch.id,
+      chapterName: ch.name,
+      chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
+      totalQuestions: qs.length,
+      byDifficulty: getDifficultyBreakdown({ classNum, subject, chapterId: ch.id }),
+      byType,
+    };
+  });
 }
 
 // ─── Analytics helpers ────────────────────────────────────────────────────────

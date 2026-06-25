@@ -6,15 +6,21 @@ import { useProgress } from "@/hooks/useProgress";
 import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { useAdaptiveLearning } from "@/hooks/useAdaptiveLearning";
+import { useChapterStats } from "@/hooks/useChapterStats";
 import {
   getChapters,
   getTopics,
   getQuestions,
 } from "@/services/questionService";
-import type { Question, Difficulty, ChapterMeta } from "@/services/questionService";
+import type { Question, Difficulty, ChapterMeta, QuestionType } from "@/services/questionService";
 
-// ─── Difficulty filter options ────────────────────────────────────────────────
+// ─── Filter options ────────────────────────────────────────────────────────────
 const DIFFICULTIES: (Difficulty | "All")[] = ["All", "Easy", "Medium", "Hard"];
+const QUESTION_TYPES: (QuestionType | "All")[] = ["All", "MCQ", "ShortAnswer", "LongAnswer", "HOTS", "PYQ"];
+
+const TYPE_LABELS: Record<string, string> = {
+  All: "All Types", MCQ: "MCQ", ShortAnswer: "Short", LongAnswer: "Long", HOTS: "HOTS", PYQ: "PYQ",
+};
 
 const ADAPTIVE_TIER_STYLE: Record<string, string> = {
   Easy:      "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -27,6 +33,14 @@ const diffStyle: Record<string, string> = {
   Easy:   "bg-emerald-50 text-emerald-700 border-emerald-200",
   Medium: "bg-amber-50   text-amber-700   border-amber-200",
   Hard:   "bg-red-50     text-red-700     border-red-200",
+};
+
+const typeStyle: Record<string, string> = {
+  MCQ:         "bg-blue-50  text-blue-700  border-blue-200",
+  ShortAnswer: "bg-teal-50  text-teal-700  border-teal-200",
+  LongAnswer:  "bg-violet-50 text-violet-700 border-violet-200",
+  HOTS:        "bg-orange-50 text-orange-700 border-orange-200",
+  PYQ:         "bg-rose-50  text-rose-700  border-rose-200",
 };
 
 // ─── Single question card ─────────────────────────────────────────────────────
@@ -64,10 +78,15 @@ function QuestionCard({
             {result === "correct" ? "✓" : result === "incorrect" ? "✗" : "?"}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1.5">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[q.difficulty]}`}>
                 {q.difficulty}
               </span>
+              {q.questionType && (
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${typeStyle[q.questionType] ?? "bg-slate-50 text-slate-600 border-slate-200"}`}>
+                  {TYPE_LABELS[q.questionType] ?? q.questionType}
+                </span>
+              )}
             </div>
             <p className="text-sm font-medium text-slate-800 leading-relaxed">{q.question}</p>
           </div>
@@ -177,6 +196,59 @@ function QuestionCard({
   );
 }
 
+// ─── Chapter selector row with completion bar ─────────────────────────────────
+function ChapterButton({
+  ch,
+  active,
+  completionPct,
+  cfg,
+  onClick,
+}: {
+  ch: ChapterMeta;
+  active: boolean;
+  completionPct: number;
+  cfg: SubjectConfig;
+  onClick: () => void;
+}) {
+  const chNum = ch.id.replace("ch", "");
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full text-left px-4 py-3 rounded-2xl border text-sm font-semibold transition-all ${
+        active
+          ? "text-white border-transparent shadow-sm"
+          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
+      }`}
+      style={active ? { backgroundColor: cfg.color } : {}}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <span className="opacity-60 mr-1.5">Ch {chNum}.</span>
+          <span className="truncate">{ch.name}</span>
+        </div>
+        {completionPct > 0 && (
+          <span className={`text-[10px] font-bold flex-shrink-0 ${active ? "text-white/80" : ""}`}
+            style={!active ? { color: cfg.color } : {}}>
+            {completionPct}%
+          </span>
+        )}
+      </div>
+      {/* Completion bar */}
+      {completionPct > 0 && (
+        <div className={`mt-2 h-1 rounded-full overflow-hidden ${active ? "bg-white/30" : "bg-slate-100"}`}>
+          <div
+            className="h-full rounded-full transition-all"
+            style={{
+              width: `${completionPct}%`,
+              backgroundColor: active ? "rgba(255,255,255,0.8)" : cfg.color,
+            }}
+          />
+        </div>
+      )}
+    </button>
+  );
+}
+
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function Practice() {
   const { session, update } = useSession();
@@ -189,7 +261,9 @@ export default function Practice() {
   const adaptiveTier    = getSubjectTier(session.subject);
   const adaptiveMastery = getSubjectMastery(session.subject);
 
-  // Chapter / topic / difficulty filters
+  const chapterStats = useChapterStats(session.subject);
+
+  // Chapter / topic / difficulty / type filters
   const chapters = useMemo(
     () => getChapters(9, session.subject),
     [session.subject]
@@ -200,6 +274,7 @@ export default function Practice() {
   );
   const [selectedTopicId, setSelectedTopicId] = useState<string>("all");
   const [selectedDiff,    setSelectedDiff]    = useState<Difficulty | "All">("All");
+  const [selectedType,    setSelectedType]    = useState<QuestionType | "All">("All");
 
   const topics = useMemo(() => getTopics(selectedChapterId), [selectedChapterId]);
 
@@ -207,13 +282,14 @@ export default function Practice() {
   const questions = useMemo(
     () =>
       getQuestions({
-        classNum:   9,
-        subject:    session.subject,
-        chapterId:  selectedChapterId,
+        classNum:     9,
+        subject:      session.subject,
+        chapterId:    selectedChapterId,
         ...(selectedTopicId !== "all" ? { topicId: selectedTopicId } : {}),
-        difficulty: selectedDiff,
+        difficulty:   selectedDiff,
+        questionType: selectedType,
       }),
-    [session.subject, selectedChapterId, selectedTopicId, selectedDiff]
+    [session.subject, selectedChapterId, selectedTopicId, selectedDiff, selectedType]
   );
 
   // Analytics
@@ -226,6 +302,7 @@ export default function Practice() {
     setSelectedChapterId(newChapters[0]?.id ?? "");
     setSelectedTopicId("all");
     setSelectedDiff("All");
+    setSelectedType("All");
   };
 
   const handleChapterChange = (id: string) => {
@@ -245,6 +322,9 @@ export default function Practice() {
 
   const subjectNames = ["Physics", "Chemistry", "Mathematics"] as const;
 
+  // Current chapter completion
+  const currentChapterCompletion = chapterStats.find((cs) => cs.chapterId === selectedChapterId);
+
   return (
     <div className="min-h-screen bg-slate-50">
 
@@ -254,7 +334,7 @@ export default function Practice() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-xl font-bold text-slate-900">Practice</h1>
-              <p className="text-sm text-slate-500 mt-0.5">Class 9 · Structured question bank</p>
+              <p className="text-sm text-slate-500 mt-0.5">Class 9 · All 15 CBSE chapters</p>
             </div>
             <Link href="/challenge">
               <button className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-all flex-shrink-0 mt-1">
@@ -354,25 +434,47 @@ export default function Practice() {
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Chapter</p>
               <div className="flex flex-col gap-2">
                 {chapters.map((ch: ChapterMeta) => {
-                  const active = selectedChapterId === ch.id;
+                  const chStat = chapterStats.find((cs) => cs.chapterId === ch.id);
                   return (
-                    <button
+                    <ChapterButton
                       key={ch.id}
+                      ch={ch}
+                      active={selectedChapterId === ch.id}
+                      completionPct={chStat?.completionPct ?? 0}
+                      cfg={cfg}
                       onClick={() => handleChapterChange(ch.id)}
-                      className={`w-full text-left px-4 py-3 rounded-2xl border text-sm font-semibold transition-all ${
-                        active
-                          ? "text-white border-transparent shadow-sm"
-                          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
-                      }`}
-                      style={active ? { backgroundColor: cfg.color } : {}}
-                    >
-                      <span className="opacity-60 mr-2">Ch {ch.id.replace("ch", "")}.</span>
-                      {ch.name}
-                    </button>
+                    />
                   );
                 })}
               </div>
             </div>
+
+            {/* ── Chapter stats bar ── */}
+            {currentChapterCompletion && currentChapterCompletion.totalQuestions > 0 && (
+              <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-semibold text-slate-700">Chapter Progress</p>
+                  <p className="text-xs font-bold" style={{ color: cfg.color }}>
+                    {currentChapterCompletion.attempted}/{currentChapterCompletion.totalQuestions} questions
+                  </p>
+                </div>
+                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${currentChapterCompletion.completionPct}%`, backgroundColor: cfg.color }}
+                  />
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-[11px] text-slate-500">
+                    {currentChapterCompletion.completionPct}% complete
+                    {currentChapterCompletion.solved > 0 && ` · ${currentChapterCompletion.accuracy}% accuracy`}
+                  </p>
+                  <p className="text-[11px] font-semibold" style={{ color: cfg.color }}>
+                    {currentChapterCompletion.totalQuestions} total
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* ── Topic filter ── */}
             <div>
@@ -393,6 +495,8 @@ export default function Practice() {
                   const active = selectedTopicId === t.id;
                   const stat   = stats.topicStats.find((s) => s.topic === t.name);
                   const isWeak = stats.weakTopics.includes(t.name);
+                  // Chapter stats for this topic
+                  const topicCompletion = currentChapterCompletion?.topics.find((tc) => tc.topicId === t.id);
                   return (
                     <button
                       key={t.id}
@@ -409,6 +513,37 @@ export default function Practice() {
                       {stat && !active && (
                         <span className="text-[10px] opacity-70 ml-0.5">{stat.accuracy}%</span>
                       )}
+                      {topicCompletion && topicCompletion.completionPct > 0 && !active && (
+                        <span className="text-[10px] opacity-60">({topicCompletion.completionPct}%)</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* ── Question Type filter ── */}
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                Question Type
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                {QUESTION_TYPES.map((qt) => {
+                  const active = selectedType === qt;
+                  return (
+                    <button
+                      key={qt}
+                      onClick={() => setSelectedType(qt)}
+                      className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                        active
+                          ? qt === "All"
+                            ? "text-white border-transparent"
+                            : (typeStyle[qt] ?? "") + " border-2"
+                          : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                      }`}
+                      style={active && qt === "All" ? { backgroundColor: cfg.color, borderColor: cfg.color } : {}}
+                    >
+                      {TYPE_LABELS[qt]}
                     </button>
                   );
                 })}
@@ -443,7 +578,7 @@ export default function Practice() {
               </div>
             </div>
 
-            {/* ── Question count ── */}
+            {/* ── Question count + topic mastery ── */}
             <div className="flex items-center justify-between py-1">
               <p className="text-sm font-semibold text-slate-700">
                 {questions.length} question{questions.length !== 1 ? "s" : ""}
@@ -483,7 +618,7 @@ export default function Practice() {
               <div className="text-center py-12">
                 <p className="text-4xl mb-3">📭</p>
                 <p className="font-semibold text-slate-700">No questions match this filter</p>
-                <p className="text-sm text-slate-500 mt-1">Try changing the topic or difficulty.</p>
+                <p className="text-sm text-slate-500 mt-1">Try changing the topic, type, or difficulty.</p>
               </div>
             )}
           </>

@@ -1,0 +1,193 @@
+import type { Question, ChapterMeta } from "./types";
+
+export const CHAPTER_META: ChapterMeta = {
+  id: "ch11", name: "Constructions",
+  classNum: 9, subject: "Mathematics",
+  topics: [
+    { id: "t1", name: "Basic Constructions",              questionCount: 10 },
+    { id: "t2", name: "Constructing Specific Angles",    questionCount: 8 },
+    { id: "t3", name: "Constructing Triangles",          questionCount: 8 },
+  ],
+};
+
+export const QUESTIONS: Question[] = [
+
+  // ── Topic 1: Basic Constructions ──────────────────────────────────────────
+  {
+    id: "c9-m-ch11-t1-q01", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t1", topicName: "Basic Constructions",
+    difficulty: "Easy", questionType: "MCQ",
+    question: "To bisect a line segment AB, we use:\n(a) A ruler only  (b) A protractor  (c) A compass and ruler  (d) Only compass",
+    hint: "Bisecting requires drawing arcs from both ends.",
+    answer: "(c) A compass and ruler",
+    steps: [{ stepNumber: 1, title: "Method", explanation: "Draw arcs from A and B with radius > AB/2. The arcs intersect at two points. Join those points to find the perpendicular bisector.", result: "(c) Compass and ruler" }],
+    keyConcepts: ["Bisector", "Compass", "Construction"],
+  },
+  {
+    id: "c9-m-ch11-t1-q02", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t1", topicName: "Basic Constructions",
+    difficulty: "Easy", questionType: "ShortAnswer",
+    question: "Describe the steps to construct the perpendicular bisector of a line segment PQ.",
+    hint: "Draw equal arcs from P and Q, then join intersection points.",
+    answer: "1) Draw PQ. 2) With P as center and radius > PQ/2, draw arcs above and below PQ. 3) Same radius, center Q, draw arcs intersecting at A and B. 4) Join AB — this is the perpendicular bisector, meeting PQ at M (midpoint).",
+    steps: [
+      { stepNumber: 1, title: "Draw arcs from P", explanation: "Center P, radius > half PQ. Arcs above and below PQ." },
+      { stepNumber: 2, title: "Draw arcs from Q", explanation: "Same radius, center Q. Arcs intersect first set at A and B." },
+      { stepNumber: 3, title: "Join AB", explanation: "AB is perpendicular bisector of PQ. M = midpoint of PQ.", result: "Perpendicular bisector construction complete" },
+    ],
+    keyConcepts: ["Perpendicular bisector", "Midpoint", "Construction steps"],
+  },
+  {
+    id: "c9-m-ch11-t1-q03", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t1", topicName: "Basic Constructions",
+    difficulty: "Medium", questionType: "ShortAnswer",
+    question: "Describe the construction of the bisector of a given angle ∠ABC.",
+    hint: "Draw an arc centered at B, then from the two points on the sides, draw equal arcs.",
+    answer: "1) Draw arc centered at B intersecting BA at P and BC at Q. 2) Draw equal arcs centered at P and Q intersecting at R. 3) Join BR — this is the bisector of ∠ABC.",
+    steps: [
+      { stepNumber: 1, title: "Arc from B", explanation: "Center B, any radius. Mark P on BA and Q on BC." },
+      { stepNumber: 2, title: "Arcs from P and Q", explanation: "Equal radii, arcs from P and Q intersect at R." },
+      { stepNumber: 3, title: "Draw BR", explanation: "BR bisects ∠ABC. ∠ABR = ∠RBC.", result: "Angle bisector construction complete" },
+    ],
+    keyConcepts: ["Angle bisector", "Construction", "Equal arcs"],
+  },
+  {
+    id: "c9-m-ch11-t1-q04", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t1", topicName: "Basic Constructions",
+    difficulty: "Medium", questionType: "LongAnswer",
+    question: "Why is it important that both arcs in a perpendicular bisector construction have the same radius? What goes wrong if they don't?",
+    hint: "The two arcs must be equidistant from both endpoints to find the midpoint.",
+    answer: "If radii differ, the intersection points A and B will not be equidistant from P and Q. The line AB will not be equidistant from P and Q, so it won't pass through the midpoint of PQ. It also won't be perpendicular to PQ. Equal radii ensure symmetry — both intersection points are equidistant from P and Q, guaranteeing the bisector property.",
+    steps: [
+      { stepNumber: 1, title: "Symmetry required", explanation: "Equal radius → both arc centers (P and Q) contribute equally → intersection is equidistant from both." },
+      { stepNumber: 2, title: "If unequal", explanation: "Intersection shifts toward one endpoint → AB is not a bisector or perpendicular.", result: "Equal radii ensure perpendicular bisector property" },
+    ],
+    keyConcepts: ["Equal radii", "Symmetry", "Perpendicular bisector", "HOTS reasoning"],
+  },
+  {
+    id: "c9-m-ch11-t1-q05", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t1", topicName: "Basic Constructions",
+    difficulty: "Hard", questionType: "HOTS",
+    question: "How can you use only a compass (no ruler for measuring) to draw a line segment equal to a given segment AB on a given ray?",
+    hint: "Open the compass to span AB, then transfer that length.",
+    answer: "1) Open the compass to span AB exactly. 2) Place the compass point at the start of the ray. 3) Draw an arc that crosses the ray. The arc marks the point C such that AC = AB.",
+    steps: [
+      { stepNumber: 1, title: "Measure AB", explanation: "Set compass width = AB (place one tip at A, other at B)." },
+      { stepNumber: 2, title: "Transfer to ray", explanation: "Place compass tip at start of ray, draw arc on ray. Point where arc crosses ray is C, with AC = AB.", result: "Equal segment transferred using only compass" },
+    ],
+    keyConcepts: ["Compass transfer", "Equal length", "Construction"],
+  },
+
+  // ── Topic 2: Constructing Specific Angles ─────────────────────────────────
+  {
+    id: "c9-m-ch11-t2-q01", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t2", topicName: "Constructing Specific Angles",
+    difficulty: "Easy", questionType: "MCQ",
+    question: "To construct an angle of 60°, we start by:\n(a) Drawing a 90° angle then bisecting  (b) Drawing an arc and marking equal arcs on it  (c) Using a protractor  (d) Bisecting a 120° angle",
+    hint: "60° is constructed using the property of equilateral triangles.",
+    answer: "(b) Drawing an arc and marking equal arcs on it",
+    steps: [
+      { stepNumber: 1, title: "Construction of 60°", explanation: "Draw a ray, draw an arc from its endpoint. With the same radius, mark another arc on the first arc. The angle between is 60° (equilateral triangle property).", result: "(b)" },
+    ],
+    keyConcepts: ["60° construction", "Equilateral triangle", "Arcs"],
+  },
+  {
+    id: "c9-m-ch11-t2-q02", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t2", topicName: "Constructing Specific Angles",
+    difficulty: "Medium", questionType: "ShortAnswer",
+    question: "Describe the steps to construct an angle of 90° at point P on line AB.",
+    hint: "Construct a perpendicular at a point on a line.",
+    answer: "1) Draw arc from P intersecting AB at M and N. 2) From M and N, draw equal arcs above AB — intersect at Q. 3) Join PQ — this makes 90° with AB.",
+    steps: [
+      { stepNumber: 1, title: "Arc from P", explanation: "Center P, draw arc cutting AB at M and N." },
+      { stepNumber: 2, title: "Arcs from M and N", explanation: "Equal radius from M and N, arcs intersect at Q above AB." },
+      { stepNumber: 3, title: "PQ = 90°", explanation: "PQ ⊥ AB, so ∠QPB = ∠QPA = 90°.", result: "90° angle constructed" },
+    ],
+    keyConcepts: ["90° construction", "Perpendicular", "Construction at a point"],
+  },
+  {
+    id: "c9-m-ch11-t2-q03", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t2", topicName: "Constructing Specific Angles",
+    difficulty: "Medium", questionType: "LongAnswer",
+    question: "How would you construct an angle of 45°? Describe the steps.",
+    hint: "Construct 90° then bisect it.",
+    answer: "1) Construct a 90° angle at P. 2) Bisect the 90° angle using the angle bisector construction. 3) The bisector makes 45° with the original line.",
+    steps: [
+      { stepNumber: 1, title: "Construct 90°", explanation: "Follow the 90° construction at point P on a line." },
+      { stepNumber: 2, title: "Bisect the 90°", explanation: "Apply angle bisector construction to the 90° angle." },
+      { stepNumber: 3, title: "Result", explanation: "The bisector divides 90° into two 45° angles.", result: "45° angle constructed" },
+    ],
+    keyConcepts: ["45°", "Bisecting 90°", "Construction"],
+  },
+  {
+    id: "c9-m-ch11-t2-q04", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t2", topicName: "Constructing Specific Angles",
+    difficulty: "Hard", questionType: "PYQ",
+    question: "Construct an angle of 30° without using a protractor. Describe the method. [Board Style]",
+    hint: "Construct 60° then bisect.",
+    answer: "1) Construct a 60° angle at P. 2) Bisect the 60° angle. 3) The bisector gives 30°.",
+    steps: [
+      { stepNumber: 1, title: "Construct 60°", explanation: "Draw ray PQ. Arc from P, mark B on arc with same radius. ∠BPQ = 60°." },
+      { stepNumber: 2, title: "Bisect 60°", explanation: "Apply angle bisector to ∠BPQ." },
+      { stepNumber: 3, title: "Result", explanation: "Bisector divides 60° into two 30° angles. ∎", result: "30° angle constructed ∎" },
+    ],
+    keyConcepts: ["30° construction", "Bisecting 60°", "PYQ"],
+  },
+
+  // ── Topic 3: Constructing Triangles ───────────────────────────────────────
+  {
+    id: "c9-m-ch11-t3-q01", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t3", topicName: "Constructing Triangles",
+    difficulty: "Medium", questionType: "LongAnswer",
+    question: "Construct a triangle ABC with BC = 6 cm, ∠B = 60°, and AB = 4.5 cm.",
+    hint: "Draw BC first, then construct ∠B = 60°, then mark AB along the ray.",
+    answer: "Steps: 1) Draw BC = 6 cm. 2) Construct ∠B = 60° at B. 3) Mark A on the ray at 4.5 cm from B. 4) Join AC. △ABC is complete.",
+    steps: [
+      { stepNumber: 1, title: "Draw BC", explanation: "Draw BC = 6 cm." },
+      { stepNumber: 2, title: "Construct ∠B = 60°", explanation: "At B, construct 60° using compass method." },
+      { stepNumber: 3, title: "Mark A", explanation: "On the 60° ray, mark A at 4.5 cm from B." },
+      { stepNumber: 4, title: "Join AC", explanation: "Join AC to complete △ABC.", result: "△ABC constructed with BC=6, ∠B=60°, AB=4.5" },
+    ],
+    keyConcepts: ["Triangle construction", "SAS", "Given angle"],
+  },
+  {
+    id: "c9-m-ch11-t3-q02", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t3", topicName: "Constructing Triangles",
+    difficulty: "Hard", questionType: "PYQ",
+    question: "Construct a right triangle with hypotenuse 10 cm and one side 6 cm. [Board Style]",
+    hint: "Use the fact that angle in semicircle = 90°. Draw diameter = hypotenuse, then mark the side.",
+    answer: "1) Draw BC = 10 cm (hypotenuse). 2) Find midpoint M of BC — draw semicircle with diameter BC. 3) Draw arc of radius 6 cm from B intersecting semicircle at A. 4) Join AB and AC. △ABC has ∠A = 90°, hypotenuse BC = 10, AB = 6.",
+    steps: [
+      { stepNumber: 1, title: "Draw BC = 10 cm", explanation: "This is the hypotenuse." },
+      { stepNumber: 2, title: "Semicircle on BC", explanation: "Find M = midpoint of BC. Draw semicircle with radius MC = 5 cm." },
+      { stepNumber: 3, title: "Arc from B", explanation: "With radius 6 cm from B, draw arc intersecting semicircle at A." },
+      { stepNumber: 4, title: "Join", explanation: "Join AB = 6 and AC. ∠A = 90° (angle in semicircle).", result: "Right triangle with hyp=10, one leg=6 constructed" },
+    ],
+    keyConcepts: ["Right triangle", "Hypotenuse", "Semicircle", "Angle in semicircle", "PYQ"],
+  },
+  {
+    id: "c9-m-ch11-t3-q03", classNum: 9, subject: "Mathematics",
+    chapterId: "ch11", chapterName: "Constructions",
+    topicId: "t3", topicName: "Constructing Triangles",
+    difficulty: "Hard", questionType: "HOTS",
+    question: "Why can't a triangle be constructed with sides 3 cm, 4 cm, and 8 cm? Explain using the triangle inequality.",
+    hint: "Check if sum of any two sides > third side.",
+    answer: "Triangle inequality requires: sum of any two sides > third side. Check: 3 + 4 = 7 < 8. This fails for the third side. So the triangle is geometrically impossible. The compass arcs would not intersect when attempting the construction.",
+    steps: [
+      { stepNumber: 1, title: "Check inequality", explanation: "3 + 4 = 7. Is 7 > 8? No. Condition fails." },
+      { stepNumber: 2, title: "Geometric meaning", explanation: "Drawing 3 cm and 4 cm from ends of 8 cm base: the arcs don't reach each other (7 < 8).", result: "Triangle impossible: 3 + 4 < 8" },
+    ],
+    keyConcepts: ["Triangle inequality", "Impossible triangle", "Construction failure", "HOTS"],
+  },
+];

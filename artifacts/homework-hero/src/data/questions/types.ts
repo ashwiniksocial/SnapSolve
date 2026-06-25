@@ -10,6 +10,9 @@
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
+/** Type of question — used for filtering in Practice page */
+export type QuestionType = "MCQ" | "ShortAnswer" | "LongAnswer" | "HOTS" | "PYQ";
+
 export interface SolutionStep {
   stepNumber: number;
   title: string;
@@ -19,14 +22,15 @@ export interface SolutionStep {
 }
 
 export interface Question {
-  id: string;                // e.g. "c9-math-ch1-t1-q01"
-  classNum: number;          // 9
-  subject: string;           // "Mathematics"
-  chapterId: string;         // "ch1"
-  chapterName: string;       // "Number Systems"
-  topicId: string;           // "t1"
-  topicName: string;         // "Real Numbers and Their Types"
+  id: string;                     // e.g. "c9-math-ch1-t1-q01"
+  classNum: number;               // 9
+  subject: string;                // "Mathematics"
+  chapterId: string;              // "ch1"
+  chapterName: string;            // "Number Systems"
+  topicId: string;                // "t1"
+  topicName: string;              // "Real Numbers and Their Types"
   difficulty: Difficulty;
+  questionType?: QuestionType;    // optional for backward-compat with ch1–ch3
   question: string;
   hint: string;
   answer: string;
