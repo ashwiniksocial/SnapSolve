@@ -18,11 +18,13 @@ export interface ConfidenceBreakdown {
 }
 
 export interface SolutionStep {
-  stepNumber: number;
-  title: string;
-  explanation: string;
-  formula?: string;
-  result?: string;
+  stepNumber:   number;
+  title:        string;
+  explanation:  string;
+  /** WHY this step is taken — Level 2 step-by-step reasoning */
+  whyThisStep?: string;
+  formula?:     string;
+  result?:      string;
 }
 
 export interface SimilarQuestion {
@@ -45,8 +47,19 @@ export interface AIResponse {
   similarQuestions: SimilarQuestion[];
   /** Origin of the solution — for badge display and analytics */
   source?: "bank" | "openai" | "fallback";
-  /** Common mistakes to avoid — populated by OpenAI solutions */
+
+  // ── 4-level teaching format fields (OpenAI solutions) ──────────────────────
+  /** Level 1 — Concept Explanation: define the concept in simple language */
+  conceptExplanation?: string;
+  /** Level 4 — Remember This: exam tip or shortcut */
+  examTip?: string;
+  /** Explain More — deeper theory beyond the steps */
+  deeperExplanation?: string;
+  /** Explain More — 2-3 varied example strings */
+  additionalExamples?: string[];
+  /** Common mistakes to avoid — shown in Explain More */
   commonMistakes?: string[];
+
   /** 0–1 match confidence from the question bank scorer */
   confidence?: number;
   /** Full confidence breakdown (attached by the confidence engine after solving) */

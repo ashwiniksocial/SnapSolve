@@ -86,20 +86,25 @@ export function clearAICache(): void {
 // ─── Backend response shape ───────────────────────────────────────────────────
 
 interface BackendSolveResponse {
-  topic:          string;
-  difficulty:     "Easy" | "Medium" | "Hard";
+  topic:               string;
+  difficulty:          "Easy" | "Medium" | "Hard";
+  conceptExplanation?: string;
   steps: Array<{
-    stepNumber:  number;
-    title:       string;
-    explanation: string;
-    formula?:    string;
-    result?:     string;
+    stepNumber:   number;
+    title:        string;
+    explanation:  string;
+    whyThisStep?: string;
+    formula?:     string;
+    result?:      string;
   }>;
-  finalAnswer:    string;
-  keyConcepts:    string[];
-  commonMistakes: string[];
-  confidence:     number;
-  cached?:        boolean;
+  finalAnswer:         string;
+  examTip?:            string;
+  keyConcepts:         string[];
+  commonMistakes:      string[];
+  deeperExplanation?:  string;
+  additionalExamples?: string[];
+  confidence:          number;
+  cached?:             boolean;
 }
 
 interface BackendErrorResponse {
@@ -151,23 +156,28 @@ function toAIResponse(data: BackendSolveResponse, subject: Subject, question: st
     stepNumber:  s.stepNumber ?? i + 1,
     title:       s.title?.trim()       || `Step ${i + 1}`,
     explanation: s.explanation?.trim() || "",
-    ...(s.formula ? { formula: s.formula.trim() } : {}),
-    ...(s.result  ? { result:  s.result.trim()  } : {}),
+    ...(s.whyThisStep ? { whyThisStep: s.whyThisStep.trim() } : {}),
+    ...(s.formula     ? { formula:     s.formula.trim()     } : {}),
+    ...(s.result      ? { result:      s.result.trim()      } : {}),
   }));
 
   return {
-    id:               `ai-${Date.now()}`,
+    id:                 `ai-${Date.now()}`,
     subject,
-    topic:            data.topic            || "General",
-    difficulty:       data.difficulty       || "Medium",
-    detectedQuestion: question,
+    topic:              data.topic              || "General",
+    difficulty:         data.difficulty         || "Medium",
+    detectedQuestion:   question,
     steps,
-    finalAnswer:      data.finalAnswer      || "See steps above.",
-    keyConcepts:      (data.keyConcepts     ?? []).filter(Boolean),
-    commonMistakes:   (data.commonMistakes  ?? []).filter(Boolean),
-    similarQuestions: [],
-    source:           "openai",
-    confidence:       data.confidence       ?? 0.8,
+    finalAnswer:        data.finalAnswer        || "See steps above.",
+    conceptExplanation: data.conceptExplanation?.trim() || undefined,
+    examTip:            data.examTip?.trim()            || undefined,
+    deeperExplanation:  data.deeperExplanation?.trim()  || undefined,
+    additionalExamples: (data.additionalExamples ?? []).filter(Boolean),
+    keyConcepts:        (data.keyConcepts        ?? []).filter(Boolean),
+    commonMistakes:     (data.commonMistakes     ?? []).filter(Boolean),
+    similarQuestions:   [],
+    source:             "openai",
+    confidence:         data.confidence         ?? 0.8,
   };
 }
 

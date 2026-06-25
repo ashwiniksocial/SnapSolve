@@ -83,22 +83,27 @@ setInterval(() => {
 // ─── Response types ───────────────────────────────────────────────────────────
 
 interface SolveStep {
-  stepNumber:  number;
-  title:       string;
-  explanation: string;
-  formula?:    string;
-  result?:     string;
+  stepNumber:   number;
+  title:        string;
+  explanation:  string;
+  whyThisStep?: string;   // WHY this step is taken (Level 2 reasoning)
+  formula?:     string;
+  result?:      string;
 }
 
 interface SolveResponse {
-  topic:          string;
-  difficulty:     "Easy" | "Medium" | "Hard";
-  steps:          SolveStep[];
-  finalAnswer:    string;
-  keyConcepts:    string[];
-  commonMistakes: string[];
-  confidence:     number;
-  cached?:        boolean;
+  topic:               string;
+  difficulty:          "Easy" | "Medium" | "Hard";
+  conceptExplanation:  string;   // Level 1 — define concept simply
+  steps:               SolveStep[];
+  finalAnswer:         string;
+  examTip:             string;   // Level 4 — Remember This
+  keyConcepts:         string[];
+  commonMistakes:      string[];
+  deeperExplanation:   string;   // Explain More — deeper theory
+  additionalExamples:  string[]; // Explain More — varied examples
+  confidence:          number;
+  cached?:             boolean;
 }
 
 // ─── Subject-specific system prompts ─────────────────────────────────────────
@@ -109,50 +114,80 @@ Schema:
 {
   "topic": string,
   "difficulty": "Easy" | "Medium" | "Hard",
+  "conceptExplanation": string,
   "steps": [
     {
       "stepNumber": number,
       "title": string,
       "explanation": string,
+      "whyThisStep": string,
       "formula": string | null,
       "result": string | null
     }
   ],
   "finalAnswer": string,
+  "examTip": string,
   "keyConcepts": string[],
   "commonMistakes": string[],
+  "deeperExplanation": string,
+  "additionalExamples": string[],
   "confidence": number
 }
 Rules:
-- steps: 3–6 items. Each explanation is 2–4 clear sentences at Class 6–12 level.
-- finalAnswer: specific and complete — include value + units where relevant.
+- conceptExplanation: 1–3 sentences in plain language. Define the concept as if explaining to someone who has never seen it. Use an everyday analogy for Easy questions.
+- steps: 3–7 items. explanation = WHAT to compute (the method). whyThisStep = WHY this step is needed (the reasoning behind the choice). Both must always be non-empty.
+- Verbosity by difficulty — Easy: very detailed, assume weak student, define every term; Medium: moderate detail; Hard: concise but complete, may use technical terms.
+- finalAnswer: specific and complete — include value, units, and sign where relevant. Write it as a full sentence.
+- examTip: 1–2 sentences — one practical shortcut, memory trick, or CBSE/ICSE exam trap to watch for. Directly actionable.
+- deeperExplanation: 2–4 sentences. Go beyond the steps — underlying theory, derivation hint, or why the formula was developed. Aimed at Class 11–12 students.
+- additionalExamples: 2–3 strings, each formatted as "Example N: [brief problem] → [answer with units]".
 - keyConcepts: 3–5 short phrases.
-- commonMistakes: 2–4 mistakes students commonly make on this type of problem.
-- confidence: 0–1 reflecting how well the topic label matches the question.`.trim();
+- commonMistakes: 2–4 mistakes students commonly make on this exact type of problem.
+- confidence: 0–1 reflecting how well the topic label matches the question.
+Language: Clear English suitable for CBSE/ICSE students aged 11–18. No unexplained jargon.`.trim();
 
 const SYSTEM_PROMPTS: Record<Subject, string> = {
-  Mathematics: `You are an expert Class 6–12 Mathematics tutor helping students understand problems deeply.
-- Show every algebraic step explicitly.
-- State the rule or formula at each step before using it.
-- Use plain language; explain any jargon on first use.
-- For geometry, name the theorem applied.
+  Mathematics: `You are an expert Class 6–12 Mathematics tutor who teaches using a structured four-level format.
+Level 1 — Concept: Define the mathematical idea in simple, relatable terms before solving.
+Level 2 — Steps: For every step, give explanation (WHAT to compute) and whyThisStep (WHY that step is the right move).
+Level 3 — Answer: State the final answer precisely with all required components.
+Level 4 — Exam Tip: Give one practical CBSE/ICSE exam shortcut, trick, or warning.
+Plus: deeperExplanation (underlying theory) and additionalExamples (2–3 varied instances).
+
+Subject rules:
+- Show every algebraic manipulation explicitly.
+- State the rule or formula before applying it.
+- For geometry, name the theorem used.
 - Verify the answer at the final step.
+- Explain any jargon on first use.
 ${JSON_SCHEMA}`,
 
-  Physics: `You are an expert Class 6–12 Physics tutor focused on physical intuition alongside calculation.
-- Start by listing all given quantities and the target quantity.
+  Physics: `You are an expert Class 6–12 Physics tutor who teaches using a structured four-level format.
+Level 1 — Concept: Explain the physical phenomenon in everyday language before solving.
+Level 2 — Steps: For every step, give explanation (WHAT to compute/apply) and whyThisStep (WHY this law/formula applies here).
+Level 3 — Answer: State the final answer with correct SI units, magnitude, direction, and sign.
+Level 4 — Exam Tip: Give one practical CBSE/ICSE exam shortcut, trick, or warning.
+Plus: deeperExplanation (underlying principle or derivation hint) and additionalExamples (2–3 varied instances).
+
+Subject rules:
+- List all given quantities and the target quantity first.
 - State the relevant law or equation before substituting values.
-- Include SI units at every step.
-- Explain WHY a formula applies, not only HOW to use it.
-- Sanity-check the answer for correct magnitude, direction, and sign.
+- Include SI units at every calculation step.
+- Sanity-check magnitude, direction, and sign in the final step.
 ${JSON_SCHEMA}`,
 
-  Chemistry: `You are an expert Class 6–12 Chemistry tutor.
-- For chemical equations, balance atoms and charges methodically, element by element.
-- For stoichiometry, show the mole-ratio reasoning explicitly.
-- Explain the underlying chemistry, not just the arithmetic.
-- Include state symbols (s), (l), (g), (aq) when writing equations.
-- Confirm conservation of mass or charge in the final step.
+  Chemistry: `You are an expert Class 6–12 Chemistry tutor who teaches using a structured four-level format.
+Level 1 — Concept: Explain the chemical principle in plain language before solving.
+Level 2 — Steps: For every step, give explanation (WHAT to do) and whyThisStep (WHY this procedure is correct chemically).
+Level 3 — Answer: State the final answer — balanced equation, value + units, or complete sentence.
+Level 4 — Exam Tip: Give one practical CBSE/ICSE exam shortcut, trick, or warning.
+Plus: deeperExplanation (underlying chemistry or theory) and additionalExamples (2–3 varied instances).
+
+Subject rules:
+- Balance atoms and charges element by element.
+- For stoichiometry, show mole-ratio reasoning explicitly.
+- Include state symbols (s), (l), (g), (aq) in equations.
+- Confirm conservation of mass or charge at the final step.
 ${JSON_SCHEMA}`,
 };
 
@@ -165,11 +200,12 @@ const OPENAI_TIMEOUT = 15_000; // ms
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseStep(s: any, i: number): SolveStep {
   return {
-    stepNumber:  typeof s.stepNumber === "number" ? s.stepNumber : i + 1,
+    stepNumber:  typeof s.stepNumber  === "number" ? s.stepNumber : i + 1,
     title:       typeof s.title       === "string" ? s.title.trim()       : `Step ${i + 1}`,
     explanation: typeof s.explanation === "string" ? s.explanation.trim() : "",
-    ...(s.formula && typeof s.formula === "string" ? { formula: s.formula.trim() } : {}),
-    ...(s.result  && typeof s.result  === "string" ? { result:  s.result.trim()  } : {}),
+    ...(s.whyThisStep && typeof s.whyThisStep === "string" ? { whyThisStep: s.whyThisStep.trim() } : {}),
+    ...(s.formula     && typeof s.formula     === "string" ? { formula:     s.formula.trim()     } : {}),
+    ...(s.result      && typeof s.result      === "string" ? { result:      s.result.trim()      } : {}),
   };
 }
 
@@ -192,7 +228,7 @@ async function callOpenAI(subject: Subject, question: string): Promise<SolveResp
       body: JSON.stringify({
         model:           MODEL,
         temperature:     0.3,
-        max_tokens:      1200,
+        max_tokens:      2500,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPTS[subject] },
@@ -220,13 +256,17 @@ async function callOpenAI(subject: Subject, question: string): Promise<SolveResp
     difficulties.includes(parsed.difficulty) ? parsed.difficulty : "Medium";
 
   return {
-    topic:          typeof parsed.topic       === "string" ? parsed.topic.trim() : "General",
+    topic:               typeof parsed.topic               === "string" ? parsed.topic.trim()               : "General",
     difficulty,
-    steps:          Array.isArray(parsed.steps)          ? parsed.steps.map(parseStep)             : [],
-    finalAnswer:    typeof parsed.finalAnswer === "string" ? parsed.finalAnswer.trim() : "See steps above.",
-    keyConcepts:    Array.isArray(parsed.keyConcepts)    ? parsed.keyConcepts.filter(Boolean)    : [],
-    commonMistakes: Array.isArray(parsed.commonMistakes) ? parsed.commonMistakes.filter(Boolean) : [],
-    confidence:     typeof parsed.confidence  === "number" ? parsed.confidence : 0.8,
+    conceptExplanation:  typeof parsed.conceptExplanation  === "string" ? parsed.conceptExplanation.trim()  : "",
+    steps:               Array.isArray(parsed.steps)       ? parsed.steps.map(parseStep)                    : [],
+    finalAnswer:         typeof parsed.finalAnswer         === "string" ? parsed.finalAnswer.trim()         : "See steps above.",
+    examTip:             typeof parsed.examTip             === "string" ? parsed.examTip.trim()             : "",
+    keyConcepts:         Array.isArray(parsed.keyConcepts)    ? parsed.keyConcepts.filter(Boolean)          : [],
+    commonMistakes:      Array.isArray(parsed.commonMistakes) ? parsed.commonMistakes.filter(Boolean)       : [],
+    deeperExplanation:   typeof parsed.deeperExplanation   === "string" ? parsed.deeperExplanation.trim()   : "",
+    additionalExamples:  Array.isArray(parsed.additionalExamples) ? parsed.additionalExamples.filter(Boolean) : [],
+    confidence:          typeof parsed.confidence          === "number" ? parsed.confidence                 : 0.8,
   };
 }
 
