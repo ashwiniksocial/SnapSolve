@@ -612,12 +612,16 @@ async function generateDraft(
 router.post("/solveQuestion", async (req, res) => {
   const ip = req.ip ?? (req.socket.remoteAddress ?? "unknown");
 
+  req.log.info({ ip }, "[PIPELINE:1] route entry — POST /api/solveQuestion");
+
   // 1. Rate limit
   const rl = checkRateLimit(ip);
   if (!rl.allowed) {
+    req.log.warn({ ip, retryAfter: rl.retryAfter }, "[PIPELINE:1] BLOCKED — rate limit exceeded");
     res.status(429).json({ error: "rate_limit", retryAfter: rl.retryAfter });
     return;
   }
+  req.log.info({ ip }, "[PIPELINE:1] PASS — rate limit ok");
 
   // 2. Validate input
   const { question, subject, studentContext } = req.body as {
@@ -645,37 +649,54 @@ router.post("/solveQuestion", async (req, res) => {
     ? studentContext.slice(0, 2000)
     : undefined;
 
+  req.log.info({ subject: subj, questionLen: q.length, hasStudentCtx: !!ctx },
+    "[PIPELINE:2] input validated");
+
   // 3. Server-side cache — skip for personalised responses
   if (!ctx) {
     const cached = getCached(subj, q);
     if (cached) {
-      req.log.info({ subject: subj, cached: true }, "solveQuestion: cache hit");
+      req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
       res.json(cached);
       return;
     }
+    req.log.info({ subject: subj }, "[PIPELINE:3] MISS — server cache empty for this question");
+  } else {
+    req.log.info({ subject: subj }, "[PIPELINE:3] SKIP — personalised request bypasses server cache");
   }
 
   // 4. Build teaching blueprint (lesson planning before generation)
   const apiKey = process.env.OPENAI_API_KEY ?? "";
   let blueprint: BlueprintInjection | undefined;
-  if (apiKey) {
+  if (!apiKey) {
+    req.log.warn("[PIPELINE:4] SKIP — no OPENAI_API_KEY; blueprint and generation both unavailable");
+  } else {
+    req.log.info({ subject: subj }, "[PIPELINE:4] START — calling Master Teacher Engine (lesson planner)");
     try {
       blueprint = await buildTeachingBlueprint(subj, q, apiKey);
       req.log.info({
         subject:      subj,
         concepts:     blueprint.conceptCount,
         planningUsed: blueprint.planningUsed,
-      }, "solveQuestion: teaching blueprint built");
-    } catch {
-      req.log.warn("solveQuestion: blueprint build failed — proceeding without plan");
+        systemSuffixLen: blueprint.systemSuffix.length,
+        userPrefixLen:   blueprint.userPrefix.length,
+      }, "[PIPELINE:4] DONE — teaching blueprint built");
+    } catch (err) {
+      req.log.warn({ err: String(err) }, "[PIPELINE:4] FAIL — blueprint build errored; proceeding without plan");
     }
   }
 
   // 5. Generate draft lesson (with blueprint injected into the prompt)
+  req.log.info({
+    subject:      subj,
+    blueprintUsed: !!blueprint?.planningUsed,
+    blueprintConcepts: blueprint?.conceptCount ?? 0,
+  }, "[PIPELINE:5] START — calling OpenAI for draft lesson generation");
   let draft: LessonResponse;
   try {
     draft = await generateDraft(subj, q, ctx, blueprint);
-    req.log.info({ subject: subj, topic: draft.topic }, "solveQuestion: draft generated");
+    req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
+      "[PIPELINE:5] DONE — draft lesson generated");
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     req.log.warn({ err: msg }, "solveQuestion: draft generation failed");
@@ -689,6 +710,7 @@ router.post("/solveQuestion", async (req, res) => {
   }
 
   // 6. Teaching Quality Pipeline — review → improve → repeat (max 3 cycles)
+  req.log.info({ subject: subj, topic: draft.topic }, "[PIPELINE:6] START — Teaching Quality Pipeline (review + improve)");
   let finalLesson = draft;
 
   try {
@@ -696,7 +718,6 @@ router.post("/solveQuestion", async (req, res) => {
 
     finalLesson = pipelineResult.lesson;
 
-    // Log quality metrics server-side (not sent to client)
     req.log.info({
       subject:    subj,
       topic:      draft.topic,
@@ -705,7 +726,7 @@ router.post("/solveQuestion", async (req, res) => {
       overall:    pipelineResult.finalScore.overall,
       rubric:     pipelineResult.qualityLog.at(-1)?.scores,
       weakScore:  pipelineResult.finalScore.weakStudentUnderstanding,
-    }, "solveQuestion: quality pipeline complete");
+    }, "[PIPELINE:6] DONE — quality pipeline complete");
 
     // Detailed per-cycle log for future model improvement
     for (const cycle of pipelineResult.qualityLog) {
@@ -723,9 +744,14 @@ router.post("/solveQuestion", async (req, res) => {
     req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
   }
 
-  // 6. Cache the reviewed lesson (not the draft)
-  if (!ctx) setCached(subj, q, finalLesson);
+  // 7. Cache the reviewed lesson (not the draft)
+  if (!ctx) {
+    setCached(subj, q, finalLesson);
+    req.log.info({ subject: subj }, "[PIPELINE:7] lesson cached on server");
+  }
 
+  req.log.info({ subject: subj, topic: finalLesson.topic },
+    "[PIPELINE:7] RESPONSE — sending final lesson to client");
   res.json(finalLesson);
 });
 

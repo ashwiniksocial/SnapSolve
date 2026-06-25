@@ -374,19 +374,31 @@ export async function solveWithOpenAI(
     throw new Error("question_too_short");
   }
 
+  console.log(`[PIPELINE:B1] solveWithOpenAI() — subject="${subject}" q="${question.slice(0, 60)}…"`);
+
   // Client-side cache hit → instant, no network
   const cached = getCachedSolution(subject, question);
-  if (cached) return { ...cached, detectedQuestion: question };
+  if (cached) {
+    console.log("[PIPELINE:B2] HIT — localStorage cache → returning cached AIResponse, no backend call");
+    return { ...cached, detectedQuestion: question };
+  }
+  console.log("[PIPELINE:B2] MISS — localStorage cache empty → calling backend POST /api/solveQuestion");
 
   // Build student context for personalised AI response
   const studentContext = buildStudentContext(subject);
+  console.log(`[PIPELINE:B3] studentContext built — length=${studentContext?.length ?? 0} chars`);
 
   // Backend call
+  console.log("[PIPELINE:B4] START — fetch POST /api/solveQuestion");
   const data   = await callBackend(subject, question, studentContext || undefined);
+  console.log(`[PIPELINE:B5] DONE — backend responded: topic="${data.topic}" guidedReasoning=${data.guidedReasoning?.length ?? 0} steps keyConcepts=${data.keyConcepts?.length ?? 0}`);
+
   const result = toAIResponse(data, subject, question);
+  console.log(`[PIPELINE:B6] mapped to AIResponse — source="${result.source}" lesson=${!!result.lesson} topic="${result.topic}"`);
 
   // Store in client-side cache
   cacheSolution(subject, question, result);
+  console.log("[PIPELINE:B7] response stored in localStorage cache");
 
   return result;
 }

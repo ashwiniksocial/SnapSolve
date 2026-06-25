@@ -1165,6 +1165,9 @@ export default function TeachingLayout({ solution, level }: Props) {
 
   // If the solution has a TeachingLesson, render the interactive lesson view
   if (solution.lesson) {
+    console.log(
+      `[PIPELINE:C1] RENDERER=LessonRenderer (new teaching pipeline) — source="${solution.source}" topic="${solution.lesson.topic}" keyConcepts=${solution.lesson.keyConcepts.length} guidedSteps=${solution.lesson.guidedReasoning.length}`
+    );
     return (
       <LessonRenderer
         lesson={solution.lesson}
@@ -1175,6 +1178,9 @@ export default function TeachingLayout({ solution, level }: Props) {
   }
 
   // Legacy fallback: bank / fallback entries still use the old steps[] renderer
+  console.log(
+    `[PIPELINE:C1] RENDERER=LegacyRenderer (legacy path) — source="${solution.source}" steps=${(solution as { steps?: unknown[] }).steps?.length ?? 0}`
+  );
   return (
     <LegacyRenderer solution={solution} level={level} cfg={cfg} />
   );
