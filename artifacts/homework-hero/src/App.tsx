@@ -9,6 +9,7 @@ import History from "@/pages/History";
 import Journal from "@/pages/Journal";
 import Revision     from "@/pages/Revision";
 import Improvement  from "@/pages/Improvement";
+import Admin        from "@/pages/Admin";
 
 const NAV = [
   { to: "/",          icon: "⊞",  label: "Home"     },
@@ -62,6 +63,7 @@ function Router() {
           <Route path="/journal" component={Journal} />
           <Route path="/revision"     component={Revision}    />
           <Route path="/improvement"  component={Improvement} />
+          <Route path="/admin"        component={Admin}       />
         </Switch>
       </div>
       <BottomNav />
