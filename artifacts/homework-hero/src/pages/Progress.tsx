@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { SUBJECTS, type Subject } from "@/data/subjects";
 import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
@@ -166,6 +167,17 @@ export default function Progress() {
             </div>
           )}
         </div>
+
+        {/* 30-Day Dashboard CTA */}
+        <Link href="/improvement">
+          <div className="flex items-center justify-between bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-5 shadow-md cursor-pointer hover:opacity-95 transition-opacity">
+            <div>
+              <p className="font-bold text-white text-sm">30-Day Improvement Dashboard</p>
+              <p className="text-indigo-200 text-xs mt-0.5">AI trend charts · topic predictions · confidence</p>
+            </div>
+            <div className="text-white text-xl">✦</div>
+          </div>
+        </Link>
 
         {/* Streak motivator */}
         {streak > 0 && (
