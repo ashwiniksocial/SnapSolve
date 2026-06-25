@@ -123,6 +123,14 @@ interface SolveResponse {
   additionalExamples:    string[];
   confidence:            number;
   cached?:               boolean;
+  // Teaching Engine Phase 2
+  conceptualQuestions:   string[];   // Section 12 — 3 conceptual "why" questions
+  learningSummary:       string[];   // Section 13 — max 6 learning bullets
+  rememberThis: {                    // Section 14 — structured memory package
+    examTips:     string[];
+    memoryTricks: string[];
+    observations: string[];
+  };
 }
 
 // ─── Subject-specific system prompts ─────────────────────────────────────────
@@ -167,7 +175,14 @@ Schema:
   "commonMistakes": string[],
   "deeperExplanation": string,
   "additionalExamples": string[],
-  "confidence": number
+  "confidence": number,
+  "conceptualQuestions": string[],
+  "learningSummary": string[],
+  "rememberThis": {
+    "examTips": string[],
+    "memoryTricks": string[],
+    "observations": string[]
+  }
 }
 
 ═══════════════════════════════════════════════════════
@@ -253,6 +268,22 @@ keyConcepts: 3–5 short noun phrases.
 deeperExplanation: 2–4 sentences of theory for Class 11–12 students. Can reference derivation, proof, or advanced application.
 additionalExamples: 2–3 strings: "Example N: [problem in one line] → [answer with one key step]".
 confidence: 0–1 reflecting topic-label match quality.
+
+SECTION 12 — conceptualQuestions
+Exactly 3 strings. These are reflection questions — NOT calculations. They test WHY and HOW the method works.
+Good examples: "Why did we subtract from 90° instead of 180°?" / "Why did we call the unknown angle x?" / "What would change if the question said supplementary instead of complementary?"
+Bad examples: "Solve x + 2 = 5" / "Calculate the angle" / "What is 90 − x?"
+Each question must make the student think about the logic, not compute a number.
+
+SECTION 13 — learningSummary
+Exactly 6 strings. Each bullet summarises one thing the student has learned.
+Start each with a past-tense action verb: "Learned that...", "Understood why...", "Can now...", "Identified...", "Practised...", "Remember that..."
+These 6 points must capture everything important in the explanation — concept, method, formula, trick, mistake to avoid, and real-world connection.
+
+SECTION 14 — rememberThis
+examTips: exactly 3 strings. Each is an exam-day tip that directly helps on CBSE/ICSE papers.
+memoryTricks: exactly 3 strings. Each is a mnemonic, rhyme, acronym, or analogy that makes the concept stick in memory.
+observations: exactly 3 strings. Each is a mathematical insight about this type of problem that separates strong students from weak ones.
 
 ═══════════════════════════════════════
 ABSOLUTE LANGUAGE RULES — No exceptions
@@ -480,11 +511,20 @@ async function callOpenAI(subject: Subject, question: string): Promise<SolveResp
     confidenceCheck:       cc && typeof cc.question === "string" && Array.isArray(cc.options)
                              ? { question: cc.question.trim(), options: cc.options.slice(0, 4), correctIndex: typeof cc.correctIndex === "number" ? cc.correctIndex : 0, explanation: safeStr(cc.explanation) }
                              : { question: "", options: [], correctIndex: 0, explanation: "" },
-    keyConcepts:           Array.isArray(parsed.keyConcepts)        ? parsed.keyConcepts.filter(Boolean)          : [],
-    commonMistakes:        Array.isArray(parsed.commonMistakes)     ? parsed.commonMistakes.filter(Boolean)       : [],
+    keyConcepts:           Array.isArray(parsed.keyConcepts)          ? parsed.keyConcepts.filter(Boolean)          : [],
+    commonMistakes:        Array.isArray(parsed.commonMistakes)       ? parsed.commonMistakes.filter(Boolean)       : [],
     deeperExplanation:     safeStr(parsed.deeperExplanation),
-    additionalExamples:    Array.isArray(parsed.additionalExamples) ? parsed.additionalExamples.filter(Boolean)   : [],
-    confidence:            typeof parsed.confidence === "number"    ? parsed.confidence : 0.8,
+    additionalExamples:    Array.isArray(parsed.additionalExamples)   ? parsed.additionalExamples.filter(Boolean)   : [],
+    confidence:            typeof parsed.confidence === "number"      ? parsed.confidence : 0.8,
+    conceptualQuestions:   Array.isArray(parsed.conceptualQuestions)  ? parsed.conceptualQuestions.filter(Boolean)  : [],
+    learningSummary:       Array.isArray(parsed.learningSummary)      ? parsed.learningSummary.filter(Boolean)      : [],
+    rememberThis: parsed.rememberThis && typeof parsed.rememberThis === "object"
+      ? {
+          examTips:     Array.isArray(parsed.rememberThis.examTips)     ? parsed.rememberThis.examTips.filter(Boolean)     : [],
+          memoryTricks: Array.isArray(parsed.rememberThis.memoryTricks) ? parsed.rememberThis.memoryTricks.filter(Boolean) : [],
+          observations: Array.isArray(parsed.rememberThis.observations) ? parsed.rememberThis.observations.filter(Boolean) : [],
+        }
+      : { examTips: [], memoryTricks: [], observations: [] },
   };
 }
 

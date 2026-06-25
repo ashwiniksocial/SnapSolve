@@ -96,6 +96,18 @@ export interface AIResponse {
     explanation:  string;
   };
 
+  // ── Teaching Engine Phase 2 fields ────────────────────────────────────────
+  /** Section 12 — 3 conceptual "why" questions (not calculations) */
+  conceptualQuestions?: string[];
+  /** Section 13 — max 6 bullet points summarising what was learned */
+  learningSummary?: string[];
+  /** Section 14 — structured memory package: 3 exam tips, 3 tricks, 3 observations */
+  rememberThis?: {
+    examTips:     string[];
+    memoryTricks: string[];
+    observations: string[];
+  };
+
   /** 0–1 match confidence from the question bank scorer */
   confidence?: number;
   /** Full confidence breakdown (attached by the confidence engine after solving) */

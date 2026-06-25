@@ -1,0 +1,517 @@
+We are fundamentally changing SnapSolve.
+
+STOP thinking of SnapSolve as an AI Homework Solver.
+
+We are now building the world's best AI Personal Tutor.
+
+The objective is NOT to answer questions.
+
+The objective is to make sure that the weakest student in the class (someone scoring around 20/100) understands the concept so thoroughly that they can solve a similar question independently immediately after reading the explanation.
+
+This objective overrides everything else.
+
+====================================================
+
+PHASE 1
+
+Replace the current explanation engine completely.
+
+The explanation engine must become a Teaching Engine.
+
+Do NOT simply expand text.
+
+Redesign the entire architecture.
+
+Create a modular Explanation Engine with reusable components.
+
+src/components/teaching/
+
+TeachingLayout.tsx
+
+TeachingSection.tsx
+
+ConceptCard.tsx
+
+ThinkingCard.tsx
+
+VisualCard.tsx
+
+StepReasoningCard.tsx
+
+MistakeCard.tsx
+
+ExamTipCard.tsx
+
+MemoryCard.tsx
+
+WorkedExampleCard.tsx
+
+PracticeQuestionCard.tsx
+
+UnderstandingCheck.tsx
+
+ReflectionCard.tsx
+
+LearningSummary.tsx
+
+Each section must be collapsible except Basic mode.
+
+====================================================
+
+PHASE 2
+
+Create a new ExplanationRenderer service.
+
+src/services/explanation/
+
+teachingEngine.ts
+
+difficultyEngine.ts
+
+readingModeEngine.ts
+
+qualityValidator.ts
+
+learningFlow.ts
+
+The renderer must build every solution using the same sequence.
+
+Never allow custom ordering.
+
+====================================================
+
+EXPLANATION FLOW
+
+Every solution must ALWAYS contain these sections.
+
+----------------------------------------------------
+
+1.
+
+QUESTION IN SIMPLE ENGLISH
+
+Rewrite the original question.
+
+Pretend you are explaining it to a student hearing it for the first time.
+
+Avoid textbook language.
+
+Highlight confusing words.
+
+Explain every important word.
+
+----------------------------------------------------
+
+2.
+
+WHAT IS THE EXAMINER ASKING?
+
+Explain
+
+What must be found?
+
+What information is given?
+
+What is NOT being asked?
+
+----------------------------------------------------
+
+3.
+
+WHAT SHOULD WE KNOW FIRST?
+
+Teach every prerequisite concept.
+
+Assume the student remembers nothing.
+
+If solving
+
+Probability
+
+teach probability.
+
+If solving
+
+Complementary Angles
+
+teach complementary angles.
+
+If solving
+
+Chemical Equation
+
+teach equations first.
+
+Never skip prerequisite teaching.
+
+----------------------------------------------------
+
+4.
+
+BUILD THE THINKING
+
+This is the most important section.
+
+Teach students HOW TO THINK.
+
+Not HOW TO SOLVE.
+
+Explain the mental process.
+
+Example
+
+"I notice the words 'at least one'.
+
+Whenever I see 'at least',
+
+I know I must include every case that satisfies the condition."
+
+Explain WHY every decision is made.
+
+----------------------------------------------------
+
+5.
+
+VISUALISE
+
+Whenever possible
+
+draw ASCII diagrams.
+
+Examples
+
+Dice
+
+Triangle
+
+Fraction
+
+Circle
+
+Number line
+
+Coordinate plane
+
+If diagrams aren't suitable,
+
+describe a mental picture.
+
+----------------------------------------------------
+
+6.
+
+STEP BY STEP SOLUTION
+
+Every step must contain
+
+Current Step
+
+Why are we doing this?
+
+What mathematical rule allows us to do this?
+
+What would happen if we didn't?
+
+Never skip algebra.
+
+Never skip arithmetic.
+
+Never combine calculations.
+
+Example
+
+18 + 22
+
+=
+
+40
+
+not
+
+18+22=40
+
+----------------------------------------------------
+
+7.
+
+SELF CHECK
+
+Verify the answer.
+
+Use substitution whenever possible.
+
+Teach how students can check answers during exams.
+
+----------------------------------------------------
+
+8.
+
+COMMON MISTAKES
+
+List three mistakes.
+
+Explain WHY students make them.
+
+Explain HOW to avoid them.
+
+----------------------------------------------------
+
+9.
+
+EXAM SHORTCUT
+
+Only after understanding.
+
+Never replace understanding.
+
+----------------------------------------------------
+
+10.
+
+ONE SIMPLER EXAMPLE
+
+Create an easier question.
+
+Solve it completely.
+
+----------------------------------------------------
+
+11.
+
+NOW YOU TRY
+
+Create another question.
+
+Hide the answer.
+
+Student must attempt.
+
+----------------------------------------------------
+
+12.
+
+CHECK YOUR UNDERSTANDING
+
+Ask three conceptual questions.
+
+NOT calculations.
+
+Example
+
+Why did we divide?
+
+Why didn't we multiply?
+
+What does "at least" mean?
+
+Why is this probability not zero?
+
+----------------------------------------------------
+
+13.
+
+LEARNING SUMMARY
+
+Summarise everything learned.
+
+Maximum six bullet points.
+
+----------------------------------------------------
+
+14.
+
+REMEMBER THIS
+
+Three exam tips.
+
+Three memory tricks.
+
+Three important observations.
+
+====================================================
+
+READING MODES
+
+Basic
+
+Standard
+
+Advanced
+
+====================================================
+
+Basic Mode
+
+Default.
+
+Target student
+
+Class 6-12
+
+20/100 student
+
+Assume zero confidence.
+
+Assume weak foundation.
+
+Explain every tiny idea.
+
+Maximum detail.
+
+Never use difficult words.
+
+Short sentences.
+
+Conversational English.
+
+Never skip reasoning.
+
+----------------------------------------------------
+
+Standard
+
+Moderate detail.
+
+----------------------------------------------------
+
+Advanced
+
+Concise.
+
+====================================================
+
+QUALITY VALIDATOR
+
+Before displaying ANY explanation,
+
+run an internal validation.
+
+If ANY answer below is NO,
+
+automatically expand the explanation.
+
+Checklist
+
+□ Every unfamiliar word explained
+
+□ Every concept defined
+
+□ Every formula explained
+
+□ Every substitution explained
+
+□ Every algebra step shown
+
+□ Every arithmetic calculation shown
+
+□ Every WHY explained
+
+□ Every HOW explained
+
+□ Every misconception addressed
+
+□ Common mistakes included
+
+□ Simpler example included
+
+□ Practice question generated
+
+□ Conceptual questions generated
+
+□ Student can solve similar question independently
+
+Only display explanation after every answer becomes YES.
+
+====================================================
+
+LEARNING LOOP
+
+After every explanation,
+
+DO NOT stop.
+
+Ask one conceptual question.
+
+Student answers.
+
+If correct,
+
+increase mastery score.
+
+If incorrect,
+
+identify misconception.
+
+Reteach ONLY the misunderstood concept.
+
+Then ask another conceptual question.
+
+Repeat until
+
+Mastery >=90%
+
+Only then mark topic understood.
+
+====================================================
+
+ANALYTICS
+
+Track
+
+Time spent understanding
+
+Concept mastery
+
+Misconceptions
+
+Retry count
+
+Hints used
+
+Explain More clicks
+
+Practice success
+
+Revision success
+
+Confidence before explanation
+
+Confidence after explanation
+
+====================================================
+
+IMPORTANT
+
+This architecture must be reusable.
+
+Practice
+
+Homework
+
+Workspace
+
+Revision
+
+Exam
+
+Scan
+
+must ALL use the exact same Teaching Engine.
+
+Never duplicate explanation logic.
+
+====================================================
+
+DESIGN GOAL
+
+SnapSolve should not feel like ChatGPT.
+
+SnapSolve should feel like sitting beside India's best private tutor who patiently teaches until the student genuinely understands.
+
+The student should repeatedly think:
+
+"I finally understand WHY."
+
+That feeling is the product.
+
+NOT the final answer.

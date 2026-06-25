@@ -122,6 +122,13 @@ interface BackendSolveResponse {
   additionalExamples?:  string[];
   confidence:           number;
   cached?:              boolean;
+  conceptualQuestions?: string[];
+  learningSummary?:     string[];
+  rememberThis?: {
+    examTips:     string[];
+    memoryTricks: string[];
+    observations: string[];
+  };
 }
 
 interface BackendErrorResponse {
@@ -212,6 +219,15 @@ function toAIResponse(data: BackendSolveResponse, subject: Subject, question: st
     additionalExamples:    (data.additionalExamples ?? []).filter(Boolean),
     keyConcepts:           (data.keyConcepts        ?? []).filter(Boolean),
     commonMistakes:        (data.commonMistakes     ?? []).filter(Boolean),
+    conceptualQuestions:   (data.conceptualQuestions ?? []).filter(Boolean),
+    learningSummary:       (data.learningSummary     ?? []).filter(Boolean),
+    rememberThis:          data.rememberThis?.examTips?.length
+                             ? {
+                                 examTips:     (data.rememberThis.examTips     ?? []).filter(Boolean),
+                                 memoryTricks: (data.rememberThis.memoryTricks ?? []).filter(Boolean),
+                                 observations: (data.rememberThis.observations ?? []).filter(Boolean),
+                               }
+                             : undefined,
     similarQuestions:      [],
     source:                "openai",
     confidence:            data.confidence ?? 0.8,
