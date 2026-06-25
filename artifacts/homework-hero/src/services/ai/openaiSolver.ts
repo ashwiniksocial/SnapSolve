@@ -86,9 +86,10 @@ export function clearAICache(): void {
 // ─── Backend response shape ───────────────────────────────────────────────────
 
 interface BackendSolveResponse {
-  topic:               string;
-  difficulty:          "Easy" | "Medium" | "Hard";
-  conceptExplanation?: string;
+  topic:                string;
+  difficulty:           "Easy" | "Medium" | "Hard";
+  prerequisites?:       string[];
+  conceptExplanation?:  string;
   steps: Array<{
     stepNumber:   number;
     title:        string;
@@ -97,14 +98,18 @@ interface BackendSolveResponse {
     formula?:     string;
     result?:      string;
   }>;
-  finalAnswer:         string;
-  examTip?:            string;
-  keyConcepts:         string[];
-  commonMistakes:      string[];
-  deeperExplanation?:  string;
-  additionalExamples?: string[];
-  confidence:          number;
-  cached?:             boolean;
+  finalAnswer:          string;
+  confusionPoint?:      string;
+  examTrap?:            string;
+  examTip?:             string;
+  similarExample?:      { problem: string; solution: string };
+  checkUnderstanding?:  { question: string; answer: string };
+  keyConcepts:          string[];
+  commonMistakes:       string[];
+  deeperExplanation?:   string;
+  additionalExamples?:  string[];
+  confidence:           number;
+  cached?:              boolean;
 }
 
 interface BackendErrorResponse {
@@ -169,9 +174,18 @@ function toAIResponse(data: BackendSolveResponse, subject: Subject, question: st
     detectedQuestion:   question,
     steps,
     finalAnswer:        data.finalAnswer        || "See steps above.",
-    conceptExplanation: data.conceptExplanation?.trim() || undefined,
-    examTip:            data.examTip?.trim()            || undefined,
-    deeperExplanation:  data.deeperExplanation?.trim()  || undefined,
+    prerequisites:      (data.prerequisites     ?? []).filter(Boolean),
+    conceptExplanation: data.conceptExplanation?.trim()  || undefined,
+    confusionPoint:     data.confusionPoint?.trim()      || undefined,
+    examTrap:           data.examTrap?.trim()            || undefined,
+    examTip:            data.examTip?.trim()             || undefined,
+    similarExample:     data.similarExample?.problem
+                          ? { problem: data.similarExample.problem.trim(), solution: (data.similarExample.solution ?? "").trim() }
+                          : undefined,
+    checkUnderstanding: data.checkUnderstanding?.question
+                          ? { question: data.checkUnderstanding.question.trim(), answer: (data.checkUnderstanding.answer ?? "").trim() }
+                          : undefined,
+    deeperExplanation:  data.deeperExplanation?.trim()   || undefined,
     additionalExamples: (data.additionalExamples ?? []).filter(Boolean),
     keyConcepts:        (data.keyConcepts        ?? []).filter(Boolean),
     commonMistakes:     (data.commonMistakes     ?? []).filter(Boolean),

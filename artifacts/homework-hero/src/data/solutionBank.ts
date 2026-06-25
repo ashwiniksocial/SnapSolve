@@ -48,11 +48,21 @@ export interface AIResponse {
   /** Origin of the solution — for badge display and analytics */
   source?: "bank" | "openai" | "fallback";
 
-  // ── 4-level teaching format fields (OpenAI solutions) ──────────────────────
+  // ── Explanation Quality V2 fields (OpenAI solutions) ──────────────────────
+  /** Prerequisites: what the student must know first — shown before solution */
+  prerequisites?: string[];
   /** Level 1 — Concept Explanation: define the concept in simple language */
   conceptExplanation?: string;
+  /** Why students typically get confused on this topic */
+  confusionPoint?: string;
+  /** A specific CBSE/ICSE exam trap to watch for */
+  examTrap?: string;
   /** Level 4 — Remember This: exam tip or shortcut */
   examTip?: string;
+  /** One similar example with reveal toggle */
+  similarExample?: { problem: string; solution: string };
+  /** Follow-up question to check understanding */
+  checkUnderstanding?: { question: string; answer: string };
   /** Explain More — deeper theory beyond the steps */
   deeperExplanation?: string;
   /** Explain More — 2-3 varied example strings */

@@ -8,6 +8,27 @@ interface Props {
   solution: AIResponse;
 }
 
+// ─── Reading level ─────────────────────────────────────────────────────────────
+
+type Level = "basic" | "standard" | "advanced";
+const LEVEL_KEY = "studyai-reading-level";
+
+function getStoredLevel(): Level {
+  try {
+    const v = localStorage.getItem(LEVEL_KEY);
+    if (v === "basic" || v === "standard" || v === "advanced") return v;
+  } catch {}
+  return "basic";
+}
+
+const LEVEL_CONFIG: Record<Level, { label: string; hint: string; active: string }> = {
+  basic:    { label: "Basic",    hint: "Explain everything", active: "bg-emerald-500 text-white border-emerald-500" },
+  standard: { label: "Standard", hint: "Key content",        active: "bg-blue-500 text-white border-blue-500"       },
+  advanced: { label: "Advanced", hint: "Direct solution",    active: "bg-violet-500 text-white border-violet-500"   },
+};
+
+// ─── Badge styles ──────────────────────────────────────────────────────────────
+
 const DIFF_BADGE: Record<string, string> = {
   Easy:   "bg-emerald-50 text-emerald-700 border-emerald-200",
   Medium: "bg-amber-50   text-amber-700   border-amber-200",
@@ -20,11 +41,21 @@ const DIFF_DETAIL: Record<string, string> = {
   Hard:   "Concise",
 };
 
-export default function SolutionCard({ solution }: Props) {
-  const [showMore, setShowMore] = useState(false);
+// ─── Component ────────────────────────────────────────────────────────────────
 
-  const cfg   = SUBJECTS[solution.subject as Subject];
-  const isAI  = solution.source === "openai";
+export default function SolutionCard({ solution }: Props) {
+  const [level, setLevel]           = useState<Level>(getStoredLevel);
+  const [showExSolution, setShowEx] = useState(false);
+  const [showCheckAnswer, setShowA] = useState(false);
+  const [showMore, setShowMore]     = useState(false);
+
+  const cfg  = SUBJECTS[solution.subject as Subject];
+  const isAI = solution.source === "openai";
+
+  function changeLevel(l: Level) {
+    setLevel(l);
+    try { localStorage.setItem(LEVEL_KEY, l); } catch {}
+  }
 
   const hasMore =
     !!solution.deeperExplanation ||
@@ -34,7 +65,32 @@ export default function SolutionCard({ solution }: Props) {
   return (
     <div className="space-y-5">
 
-      {/* ── AI Generated badge ── */}
+      {/* ── Reading level selector ─────────────────────────────────────────── */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm">
+        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
+          Reading Level
+        </p>
+        <div className="grid grid-cols-3 gap-1.5">
+          {(["basic", "standard", "advanced"] as Level[]).map((l) => (
+            <button
+              key={l}
+              onClick={() => changeLevel(l)}
+              className={`py-2 px-1 rounded-xl border text-xs font-semibold transition-all ${
+                level === l
+                  ? LEVEL_CONFIG[l].active
+                  : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+              }`}
+            >
+              <div>{LEVEL_CONFIG[l].label}</div>
+              <div className={`text-[9px] font-normal mt-0.5 leading-none ${level === l ? "opacity-80" : "opacity-50"}`}>
+                {LEVEL_CONFIG[l].hint}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── AI Generated badge ────────────────────────────────────────────── */}
       {isAI && (
         <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl border bg-gradient-to-r from-indigo-50 to-violet-50 border-indigo-200">
           <span className="text-base">✦</span>
@@ -48,12 +104,12 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       )}
 
-      {/* ── Confidence Meter ── */}
+      {/* ── Confidence Meter ──────────────────────────────────────────────── */}
       {solution.confidenceBreakdown && (
         <ConfidenceMeter breakdown={solution.confidenceBreakdown} />
       )}
 
-      {/* ── Topic + difficulty ── */}
+      {/* ── Topic + difficulty chips ──────────────────────────────────────── */}
       <div className="flex items-center gap-2 flex-wrap">
         <span
           className="text-xs font-semibold px-2.5 py-1 rounded-full border"
@@ -77,7 +133,7 @@ export default function SolutionCard({ solution }: Props) {
         )}
       </div>
 
-      {/* ── Detected question ── */}
+      {/* ── Detected question ─────────────────────────────────────────────── */}
       {solution.detectedQuestion && (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -87,8 +143,30 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       )}
 
-      {/* ══ LEVEL 1 — Concept Explanation ══════════════════════════════════════ */}
-      {solution.conceptExplanation && (
+      {/* ══ What You Need to Know First — Basic only ══════════════════════════ */}
+      {level === "basic" && solution.prerequisites && solution.prerequisites.length > 0 && (
+        <div className="bg-sky-50 border border-sky-200 rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-base">📋</span>
+            <p className="text-xs font-bold text-sky-700 uppercase tracking-wider">
+              What You Need to Know First
+            </p>
+          </div>
+          <ul className="space-y-2">
+            {solution.prerequisites.map((p, i) => (
+              <li key={i} className="flex items-start gap-2.5">
+                <span className="flex-shrink-0 w-4 h-4 rounded-full bg-sky-200 border border-sky-300 flex items-center justify-center text-[9px] font-bold text-sky-700 mt-0.5">
+                  {i + 1}
+                </span>
+                <span className="text-sm text-slate-700 leading-snug">{p}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* ══ Concept Explanation — Basic + Standard ════════════════════════════ */}
+      {level !== "advanced" && solution.conceptExplanation && (
         <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-base">💡</span>
@@ -98,7 +176,7 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       )}
 
-      {/* ══ LEVEL 2 — Step-by-Step Reasoning ═══════════════════════════════════ */}
+      {/* ══ Step-by-Step Reasoning — all levels ══════════════════════════════ */}
       <div>
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
           Step-by-Step Reasoning
@@ -120,8 +198,8 @@ export default function SolutionCard({ solution }: Props) {
                   <p className="font-semibold text-slate-800 text-sm">{step.title}</p>
                   <p className="text-sm text-slate-600 mt-1 leading-relaxed">{step.explanation}</p>
 
-                  {/* WHY this step */}
-                  {step.whyThisStep && (
+                  {/* WHY badge — hidden in Advanced mode */}
+                  {level !== "advanced" && step.whyThisStep && (
                     <div className="mt-2.5 flex items-start gap-2 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2">
                       <span className="text-[10px] font-bold text-indigo-500 flex-shrink-0 mt-0.5 tracking-wider">WHY</span>
                       <p className="text-xs text-indigo-700 leading-relaxed">{step.whyThisStep}</p>
@@ -152,7 +230,20 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       </div>
 
-      {/* ══ LEVEL 3 — Final Answer ══════════════════════════════════════════════ */}
+      {/* ══ Why Students Get Confused Here — Basic + Standard ════════════════ */}
+      {level !== "advanced" && solution.confusionPoint && (
+        <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-base">😕</span>
+            <p className="text-xs font-bold text-orange-700 uppercase tracking-wider">
+              Why Students Get Confused Here
+            </p>
+          </div>
+          <p className="text-sm text-orange-900 leading-relaxed">{solution.confusionPoint}</p>
+        </div>
+      )}
+
+      {/* ══ Final Answer — all levels ═════════════════════════════════════════ */}
       <div
         className="rounded-2xl border p-5 shadow-sm"
         style={{ backgroundColor: cfg.light, borderColor: cfg.border }}
@@ -168,8 +259,53 @@ export default function SolutionCard({ solution }: Props) {
         </p>
       </div>
 
-      {/* ══ LEVEL 4 — Remember This ═════════════════════════════════════════════ */}
-      {solution.examTip && (
+      {/* ══ Common Exam Trap — all levels ════════════════════════════════════ */}
+      {solution.examTrap && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-base">🪤</span>
+            <p className="text-xs font-bold text-red-700 uppercase tracking-wider">Common Exam Trap</p>
+          </div>
+          <p className="text-sm text-red-900 leading-relaxed">{solution.examTrap}</p>
+        </div>
+      )}
+
+      {/* ══ One Similar Example — Basic only ══════════════════════════════════ */}
+      {level === "basic" && solution.similarExample?.problem && (
+        <div className="bg-white rounded-2xl border border-teal-200 p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-base">📐</span>
+            <p className="text-xs font-bold text-teal-700 uppercase tracking-wider">One Similar Example</p>
+          </div>
+          <div className="bg-teal-50 border border-teal-100 rounded-xl p-3 mb-3">
+            <p className="text-sm text-slate-700 leading-relaxed">{solution.similarExample.problem}</p>
+          </div>
+          {solution.similarExample.solution && (
+            showExSolution ? (
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Solution</p>
+                <p className="text-sm text-slate-700 leading-relaxed">{solution.similarExample.solution}</p>
+                <button
+                  onClick={() => setShowEx(false)}
+                  className="mt-2.5 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  Hide ↑
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowEx(true)}
+                className="w-full py-2.5 rounded-xl border border-teal-200 text-xs font-semibold text-teal-700 hover:bg-teal-50 active:bg-teal-100 transition-colors"
+              >
+                See Solution ↓
+              </button>
+            )
+          )}
+        </div>
+      )}
+
+      {/* ══ Remember This — Basic + Standard ═════════════════════════════════ */}
+      {level !== "advanced" && solution.examTip && (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-1.5">
             <span className="text-base">⭐</span>
@@ -179,7 +315,7 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       )}
 
-      {/* ── Key Concepts ── */}
+      {/* ── Key Concepts — all levels ─────────────────────────────────────── */}
       {solution.keyConcepts.length > 0 && (
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
@@ -198,7 +334,45 @@ export default function SolutionCard({ solution }: Props) {
         </div>
       )}
 
-      {/* ══ Explain More button ══════════════════════════════════════════════════ */}
+      {/* ══ Check Your Understanding — all levels ════════════════════════════ */}
+      {solution.checkUnderstanding?.question && (
+        <div className="bg-white rounded-2xl border border-green-200 p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-base">✅</span>
+            <p className="text-xs font-bold text-green-700 uppercase tracking-wider">
+              Check Your Understanding
+            </p>
+          </div>
+          <div className="bg-green-50 border border-green-100 rounded-xl p-3 mb-3">
+            <p className="text-sm font-medium text-slate-800 leading-relaxed">
+              {solution.checkUnderstanding.question}
+            </p>
+          </div>
+          {solution.checkUnderstanding.answer && (
+            showCheckAnswer ? (
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Answer</p>
+                <p className="text-sm text-slate-700 leading-relaxed">{solution.checkUnderstanding.answer}</p>
+                <button
+                  onClick={() => setShowA(false)}
+                  className="mt-2.5 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  Hide ↑
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowA(true)}
+                className="w-full py-2.5 rounded-xl border border-green-200 text-xs font-semibold text-green-700 hover:bg-green-50 active:bg-green-100 transition-colors"
+              >
+                Reveal Answer ↓
+              </button>
+            )
+          )}
+        </div>
+      )}
+
+      {/* ══ Explain More ══════════════════════════════════════════════════════ */}
       {hasMore && (
         <>
           <button
@@ -212,7 +386,6 @@ export default function SolutionCard({ solution }: Props) {
           {showMore && (
             <div className="space-y-4">
 
-              {/* Deeper explanation */}
               {solution.deeperExplanation && (
                 <div className="bg-violet-50 border border-violet-200 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-2">
@@ -223,7 +396,6 @@ export default function SolutionCard({ solution }: Props) {
                 </div>
               )}
 
-              {/* Additional examples */}
               {solution.additionalExamples && solution.additionalExamples.length > 0 && (
                 <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
                   <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
@@ -231,10 +403,7 @@ export default function SolutionCard({ solution }: Props) {
                   </p>
                   <div className="space-y-2.5">
                     {solution.additionalExamples.map((ex, i) => (
-                      <div
-                        key={i}
-                        className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5"
-                      >
+                      <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5">
                         <p className="text-sm text-slate-700 leading-relaxed">{ex}</p>
                       </div>
                     ))}
@@ -242,7 +411,6 @@ export default function SolutionCard({ solution }: Props) {
                 </div>
               )}
 
-              {/* Common mistakes */}
               {solution.commonMistakes && solution.commonMistakes.length > 0 && (
                 <div className="bg-white rounded-2xl border border-red-100 p-4 shadow-sm">
                   <p className="text-xs font-semibold text-red-500 uppercase tracking-wider mb-3">

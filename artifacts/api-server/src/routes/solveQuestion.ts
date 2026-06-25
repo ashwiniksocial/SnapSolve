@@ -94,10 +94,15 @@ interface SolveStep {
 interface SolveResponse {
   topic:               string;
   difficulty:          "Easy" | "Medium" | "Hard";
-  conceptExplanation:  string;   // Level 1 — define concept simply
+  prerequisites:       string[];                               // What you need to know first
+  conceptExplanation:  string;                                // Level 1 — define concept simply
   steps:               SolveStep[];
   finalAnswer:         string;
-  examTip:             string;   // Level 4 — Remember This
+  confusionPoint:      string;                                // Why students get confused here
+  examTrap:            string;                                // Common exam trap (specific error)
+  examTip:             string;                                // Level 4 — Remember This (shortcut)
+  similarExample:      { problem: string; solution: string }; // One similar example
+  checkUnderstanding:  { question: string; answer: string };  // Follow-up question
   keyConcepts:         string[];
   commonMistakes:      string[];
   deeperExplanation:   string;   // Explain More — deeper theory
@@ -114,6 +119,7 @@ Schema:
 {
   "topic": string,
   "difficulty": "Easy" | "Medium" | "Hard",
+  "prerequisites": string[],
   "conceptExplanation": string,
   "steps": [
     {
@@ -126,7 +132,11 @@ Schema:
     }
   ],
   "finalAnswer": string,
+  "confusionPoint": string,
+  "examTrap": string,
   "examTip": string,
+  "similarExample": { "problem": string, "solution": string },
+  "checkUnderstanding": { "question": string, "answer": string },
   "keyConcepts": string[],
   "commonMistakes": string[],
   "deeperExplanation": string,
@@ -134,40 +144,59 @@ Schema:
   "confidence": number
 }
 Rules:
-- conceptExplanation: 1–3 sentences in plain language. Define the concept as if explaining to someone who has never seen it. Use an everyday analogy for Easy questions.
-- steps: 3–7 items. explanation = WHAT to compute (the method). whyThisStep = WHY this step is needed (the reasoning behind the choice). Both must always be non-empty.
-- Verbosity by difficulty — Easy: very detailed, assume weak student, define every term; Medium: moderate detail; Hard: concise but complete, may use technical terms.
-- finalAnswer: specific and complete — include value, units, and sign where relevant. Write it as a full sentence.
-- examTip: 1–2 sentences — one practical shortcut, memory trick, or CBSE/ICSE exam trap to watch for. Directly actionable.
-- deeperExplanation: 2–4 sentences. Go beyond the steps — underlying theory, derivation hint, or why the formula was developed. Aimed at Class 11–12 students.
-- additionalExamples: 2–3 strings, each formatted as "Example N: [brief problem] → [answer with units]".
+- prerequisites: 3–5 short plain-phrase items listing what the student MUST know before solving. Start from the most basic. Never assume any prior knowledge — list even basic arithmetic if it is needed.
+- conceptExplanation: 1–3 sentences in plain language. Define the concept from scratch. Use an everyday analogy for Easy questions. Assume the student has NEVER seen this concept.
+- steps: 3–7 items. explanation = WHAT to compute (the method). whyThisStep = WHY this step is the right move (the reasoning). Both must always be non-empty.
+- Verbosity by difficulty — Easy: very detailed, define every term, use analogies; Medium: moderate detail; Hard: concise but complete.
+- finalAnswer: specific and complete — include value, units, and sign. Write as a full sentence.
+- confusionPoint: 1–2 sentences on what most students misunderstand about this topic. Name the specific misconception.
+- examTrap: 1–2 sentences on a CBSE/ICSE-specific exam trap — sign error, unit mistake, or trick that directly costs marks.
+- examTip: 1–2 sentences — a practical shortcut or memory trick. Directly actionable.
+- similarExample: A different but parallel problem. problem = 1 clear sentence. solution = 2–4 sentence worked answer with key steps shown.
+- checkUnderstanding: 1 follow-up question to verify understanding. question = 1 sentence. answer = complete working shown in 1–3 sentences.
+- deeperExplanation: 2–4 sentences of underlying theory aimed at Class 11–12 students.
+- additionalExamples: 2–3 strings formatted as "Example N: [brief problem] → [answer with units]".
 - keyConcepts: 3–5 short phrases.
-- commonMistakes: 2–4 mistakes students commonly make on this exact type of problem.
-- confidence: 0–1 reflecting how well the topic label matches the question.
-Language: Clear English suitable for CBSE/ICSE students aged 11–18. No unexplained jargon.`.trim();
+- commonMistakes: 2–4 common mistakes on this exact type of problem.
+- confidence: 0–1 reflecting topic-label match quality.
+Core principle: Write as if the student knows NOTHING about this topic. Every term must be defined or explained. No prior knowledge is ever assumed.
+Language: Clear English for CBSE/ICSE students aged 11–18.`.trim();
 
 const SYSTEM_PROMPTS: Record<Subject, string> = {
-  Mathematics: `You are an expert Class 6–12 Mathematics tutor who teaches using a structured four-level format.
-Level 1 — Concept: Define the mathematical idea in simple, relatable terms before solving.
-Level 2 — Steps: For every step, give explanation (WHAT to compute) and whyThisStep (WHY that step is the right move).
-Level 3 — Answer: State the final answer precisely with all required components.
-Level 4 — Exam Tip: Give one practical CBSE/ICSE exam shortcut, trick, or warning.
-Plus: deeperExplanation (underlying theory) and additionalExamples (2–3 varied instances).
+  Mathematics: `You are an expert Class 6–12 Mathematics tutor using the Explanation Quality V2 format.
+CORE PRINCIPLE: NEVER assume any prior knowledge. Every concept, term, and symbol must be explained as if the student is encountering it for the very first time. A weak student who barely passed Class 8 must be able to follow every sentence.
+
+Fill every field in the schema:
+- prerequisites: list what the student must know first, starting from the absolute basics.
+- conceptExplanation: define the mathematical concept from scratch using an everyday analogy.
+- steps: each step has explanation (WHAT to compute) + whyThisStep (WHY this step is the right move).
+- confusionPoint: name the specific misconception most students have on this topic.
+- examTrap: identify a specific CBSE/ICSE exam trap — wrong sign, wrong formula, skipped step — that costs marks.
+- examTip: one practical shortcut or memory trick.
+- similarExample: a parallel problem (different numbers) with a worked solution.
+- checkUnderstanding: 1 follow-up question with a complete answer including key working.
+- deeperExplanation: underlying theory or derivation for curious Class 11–12 students.
 
 Subject rules:
 - Show every algebraic manipulation explicitly.
 - State the rule or formula before applying it.
 - For geometry, name the theorem used.
 - Verify the answer at the final step.
-- Explain any jargon on first use.
 ${JSON_SCHEMA}`,
 
-  Physics: `You are an expert Class 6–12 Physics tutor who teaches using a structured four-level format.
-Level 1 — Concept: Explain the physical phenomenon in everyday language before solving.
-Level 2 — Steps: For every step, give explanation (WHAT to compute/apply) and whyThisStep (WHY this law/formula applies here).
-Level 3 — Answer: State the final answer with correct SI units, magnitude, direction, and sign.
-Level 4 — Exam Tip: Give one practical CBSE/ICSE exam shortcut, trick, or warning.
-Plus: deeperExplanation (underlying principle or derivation hint) and additionalExamples (2–3 varied instances).
+  Physics: `You are an expert Class 6–12 Physics tutor using the Explanation Quality V2 format.
+CORE PRINCIPLE: NEVER assume any prior knowledge. Every concept, term, symbol, and SI unit must be explained as if the student is seeing it for the very first time. A student who has never studied Physics must be able to follow.
+
+Fill every field in the schema:
+- prerequisites: list the physics and maths concepts the student must know first.
+- conceptExplanation: explain the physical phenomenon in everyday language with a real-world analogy.
+- steps: each step has explanation (WHAT to compute/apply) + whyThisStep (WHY this law/formula applies here).
+- confusionPoint: name the specific misconception most students have on this topic.
+- examTrap: identify a CBSE/ICSE exam trap — unit confusion, direction sign, or formula mix-up that costs marks.
+- examTip: one practical shortcut or memory trick.
+- similarExample: a parallel problem with a worked solution.
+- checkUnderstanding: 1 follow-up question with a complete answer.
+- deeperExplanation: underlying principle or derivation for Class 11–12 students.
 
 Subject rules:
 - List all given quantities and the target quantity first.
@@ -176,12 +205,19 @@ Subject rules:
 - Sanity-check magnitude, direction, and sign in the final step.
 ${JSON_SCHEMA}`,
 
-  Chemistry: `You are an expert Class 6–12 Chemistry tutor who teaches using a structured four-level format.
-Level 1 — Concept: Explain the chemical principle in plain language before solving.
-Level 2 — Steps: For every step, give explanation (WHAT to do) and whyThisStep (WHY this procedure is correct chemically).
-Level 3 — Answer: State the final answer — balanced equation, value + units, or complete sentence.
-Level 4 — Exam Tip: Give one practical CBSE/ICSE exam shortcut, trick, or warning.
-Plus: deeperExplanation (underlying chemistry or theory) and additionalExamples (2–3 varied instances).
+  Chemistry: `You are an expert Class 6–12 Chemistry tutor using the Explanation Quality V2 format.
+CORE PRINCIPLE: NEVER assume any prior knowledge. Every chemical concept, symbol, equation, and unit must be explained as if the student is encountering it for the very first time. Even basic terms like "atom" or "mole" must be briefly defined if relevant.
+
+Fill every field in the schema:
+- prerequisites: list the chemistry and science concepts the student must know first (including what atoms and molecules are if relevant).
+- conceptExplanation: explain the chemical principle in plain language with a real-world analogy.
+- steps: each step has explanation (WHAT to do) + whyThisStep (WHY this procedure is chemically correct).
+- confusionPoint: name the specific misconception most students have on this topic.
+- examTrap: identify a CBSE/ICSE exam trap — balancing error, wrong stoichiometry, missing state symbol.
+- examTip: one practical shortcut or memory trick.
+- similarExample: a parallel problem with a worked solution.
+- checkUnderstanding: 1 follow-up question with a complete answer.
+- deeperExplanation: underlying chemistry theory for Class 11–12 students.
 
 Subject rules:
 - Balance atoms and charges element by element.
@@ -255,18 +291,30 @@ async function callOpenAI(subject: Subject, question: string): Promise<SolveResp
   const difficulty: SolveResponse["difficulty"] =
     difficulties.includes(parsed.difficulty) ? parsed.difficulty : "Medium";
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function safeStr(v: any): string { return typeof v === "string" ? v.trim() : ""; }
+
   return {
-    topic:               typeof parsed.topic               === "string" ? parsed.topic.trim()               : "General",
+    topic:               safeStr(parsed.topic)              || "General",
     difficulty,
-    conceptExplanation:  typeof parsed.conceptExplanation  === "string" ? parsed.conceptExplanation.trim()  : "",
-    steps:               Array.isArray(parsed.steps)       ? parsed.steps.map(parseStep)                    : [],
-    finalAnswer:         typeof parsed.finalAnswer         === "string" ? parsed.finalAnswer.trim()         : "See steps above.",
-    examTip:             typeof parsed.examTip             === "string" ? parsed.examTip.trim()             : "",
-    keyConcepts:         Array.isArray(parsed.keyConcepts)    ? parsed.keyConcepts.filter(Boolean)          : [],
-    commonMistakes:      Array.isArray(parsed.commonMistakes) ? parsed.commonMistakes.filter(Boolean)       : [],
-    deeperExplanation:   typeof parsed.deeperExplanation   === "string" ? parsed.deeperExplanation.trim()   : "",
+    prerequisites:       Array.isArray(parsed.prerequisites)   ? parsed.prerequisites.filter(Boolean)        : [],
+    conceptExplanation:  safeStr(parsed.conceptExplanation),
+    steps:               Array.isArray(parsed.steps)           ? parsed.steps.map(parseStep)                 : [],
+    finalAnswer:         safeStr(parsed.finalAnswer)           || "See steps above.",
+    confusionPoint:      safeStr(parsed.confusionPoint),
+    examTrap:            safeStr(parsed.examTrap),
+    examTip:             safeStr(parsed.examTip),
+    similarExample:      parsed.similarExample && typeof parsed.similarExample.problem === "string"
+                           ? { problem: parsed.similarExample.problem.trim(), solution: safeStr(parsed.similarExample.solution) }
+                           : { problem: "", solution: "" },
+    checkUnderstanding:  parsed.checkUnderstanding && typeof parsed.checkUnderstanding.question === "string"
+                           ? { question: parsed.checkUnderstanding.question.trim(), answer: safeStr(parsed.checkUnderstanding.answer) }
+                           : { question: "", answer: "" },
+    keyConcepts:         Array.isArray(parsed.keyConcepts)    ? parsed.keyConcepts.filter(Boolean)           : [],
+    commonMistakes:      Array.isArray(parsed.commonMistakes) ? parsed.commonMistakes.filter(Boolean)        : [],
+    deeperExplanation:   safeStr(parsed.deeperExplanation),
     additionalExamples:  Array.isArray(parsed.additionalExamples) ? parsed.additionalExamples.filter(Boolean) : [],
-    confidence:          typeof parsed.confidence          === "number" ? parsed.confidence                 : 0.8,
+    confidence:          typeof parsed.confidence === "number" ? parsed.confidence : 0.8,
   };
 }
 
