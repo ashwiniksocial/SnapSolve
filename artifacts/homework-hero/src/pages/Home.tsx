@@ -4,6 +4,7 @@ import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
 import DailyFocus       from "@/components/DailyFocus";
+import DailyMission     from "@/components/DailyMission";
 import StudyScoreCard   from "@/components/StudyScoreCard";
 
 const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
@@ -51,6 +52,9 @@ export default function Home() {
             </div>
           ))}
         </div>
+
+        {/* ── Today's Mission ── */}
+        <DailyMission />
 
         {/* ── Study Score ── */}
         <StudyScoreCard />
