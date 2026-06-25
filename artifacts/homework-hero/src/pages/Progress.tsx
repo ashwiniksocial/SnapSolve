@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { SUBJECTS, type Subject } from "@/data/subjects";
-import { useStreak } from "@/hooks/useStreak";
-import { useProgress } from "@/hooks/useProgress";
+import { useStreak }      from "@/hooks/useStreak";
+import { useProgress }    from "@/hooks/useProgress";
+import { useStudyScore }  from "@/hooks/useStudyScore";
 
 const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
 
@@ -17,6 +18,7 @@ const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 export default function Progress() {
   const { streak, completedDates } = useStreak();
   const { getSubjectStats, totalSolved } = useProgress();
+  const { score, color: scoreColor, grade } = useStudyScore();
   const last7 = getLast7Days();
 
   const allWeakTopics = subjects.flatMap((s) => {
@@ -38,16 +40,24 @@ export default function Progress() {
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-3">
-          {[
-            { label: "Day Streak", value: streak, suffix: "🔥", color: "text-orange-600" },
-            { label: "Problems", value: totalSolved, suffix: "", color: "text-indigo-600" },
-            { label: "XP Earned", value: totalSolved * 10, suffix: "", color: "text-emerald-600" },
-          ].map(({ label, value, suffix, color }) => (
-            <div key={label} className="bg-white rounded-2xl border border-slate-200 p-4 text-center shadow-sm">
-              <p className={`text-xl font-bold ${color}`}>{value}{suffix}</p>
-              <p className="text-xs text-slate-500 mt-1 font-medium">{label}</p>
+          {/* Study Score */}
+          <Link href="/improvement">
+            <div className="bg-white rounded-2xl border-2 p-4 text-center shadow-sm col-span-1 cursor-pointer transition-all hover:shadow-md"
+              style={{ borderColor: scoreColor }}>
+              <p className="text-xl font-black" style={{ color: scoreColor }}>{score}</p>
+              <p className="text-[10px] text-slate-500 mt-0.5 font-semibold leading-tight">{grade}</p>
             </div>
-          ))}
+          </Link>
+          {/* Problems */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 text-center shadow-sm">
+            <p className="text-xl font-bold text-indigo-600">{totalSolved}</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">Problems</p>
+          </div>
+          {/* Streak */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 text-center shadow-sm">
+            <p className="text-xl font-bold text-orange-600">{streak}🔥</p>
+            <p className="text-xs text-slate-500 mt-1 font-medium">Day Streak</p>
+          </div>
         </div>
 
         {/* Activity streak calendar */}
