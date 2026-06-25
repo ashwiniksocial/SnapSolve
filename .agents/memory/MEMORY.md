@@ -1,2 +1,3 @@
 - [Confidence Engine design](confidence-engine.md) — source-adaptive formula; OCR confidence threads from Scan.tsx through session into aiSolver.ts.
 - [Adaptive Engine design](adaptive-engine.md) — reads 3 localStorage keys directly; never call other hooks from within useAdaptiveLearning.
+- [Clerk Auth wiring](clerk-auth-wiring.md) — publishableKeyFromHost must come from @clerk/react/internal (not @clerk/shared/keys) in the frontend; proxy/key setup verbatim.

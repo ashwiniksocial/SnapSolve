@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { Show, useUser } from "@clerk/react";
 import { SUBJECTS, type Subject } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
@@ -6,6 +7,34 @@ import { useProgress } from "@/hooks/useProgress";
 import DailyFocus       from "@/components/DailyFocus";
 import DailyMission     from "@/components/DailyMission";
 import StudyScoreCard   from "@/components/StudyScoreCard";
+
+function HeaderAuth() {
+  const { user } = useUser();
+  const initial = (
+    user?.firstName?.[0] ??
+    user?.emailAddresses?.[0]?.emailAddress?.[0] ??
+    "U"
+  ).toUpperCase();
+
+  return (
+    <>
+      <Show when="signed-in">
+        <Link href="/profile">
+          <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm cursor-pointer hover:bg-indigo-700 transition-colors">
+            {initial}
+          </div>
+        </Link>
+      </Show>
+      <Show when="signed-out">
+        <Link href="/sign-in">
+          <button className="text-xs font-semibold text-indigo-600 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-50 transition-colors">
+            Sign In
+          </button>
+        </Link>
+      </Show>
+    </>
+  );
+}
 
 const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
 
@@ -30,9 +59,7 @@ export default function Home() {
                 <span className="text-sm font-bold text-orange-600">{streak}</span>
               </div>
             )}
-            <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
-              S
-            </div>
+            <HeaderAuth />
           </div>
         </div>
       </div>

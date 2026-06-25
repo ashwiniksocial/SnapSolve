@@ -1,0 +1,16 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="12" fill="#4f46e5"/>
+  <!-- Open book left page -->
+  <path d="M8 14a2 2 0 0 1 2-2h11v20H10a2 2 0 0 1-2-2V14z" fill="white" fill-opacity="0.95"/>
+  <!-- Open book right page -->
+  <path d="M40 14a2 2 0 0 0-2-2H27v20h11a2 2 0 0 0 2-2V14z" fill="white" fill-opacity="0.7"/>
+  <!-- Spine -->
+  <rect x="22.5" y="12" width="3" height="20" rx="1" fill="white"/>
+  <!-- Lines on left page -->
+  <rect x="11" y="17" width="8" height="1.5" rx="0.75" fill="#4f46e5" fill-opacity="0.35"/>
+  <rect x="11" y="21" width="8" height="1.5" rx="0.75" fill="#4f46e5" fill-opacity="0.35"/>
+  <rect x="11" y="25" width="5" height="1.5" rx="0.75" fill="#4f46e5" fill-opacity="0.35"/>
+  <!-- AI sparkle star top-right -->
+  <path d="M38 8l1 2.5L41.5 11.5 39 12.5 38 15 37 12.5 34.5 11.5 37 10.5z" fill="#fbbf24"/>
+  <circle cx="41" cy="7" r="1.2" fill="#fbbf24" opacity="0.8"/>
+</svg>
