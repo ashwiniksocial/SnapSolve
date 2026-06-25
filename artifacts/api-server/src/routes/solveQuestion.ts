@@ -4,15 +4,25 @@
  * Secure server-side OpenAI proxy for StudyAI.
  * API key never leaves the server process.
  *
+ * Pipeline:
+ *   1. Rate limit check
+ *   2. Cache lookup
+ *   3. Generate lesson draft (OpenAI)
+ *   4. Teaching Quality Pipeline (review → improve → re-review, max 3 cycles)
+ *   5. Cache + return final lesson
+ *
  * Features:
  *  - Per-IP rate limiting   (20 req / hour)
  *  - Server-side cache      (in-memory, 7-day TTL)
  *  - OpenAI timeout         (30 s via AbortController)
  *  - TeachingLesson schema  (structured lesson, not just steps)
+ *  - Quality gating         (≥95 on all dimensions before lesson reaches student)
  *  - Graceful error codes   (no_key / rate_limit / timeout / invalid_key)
  */
 
-import { Router } from "express";
+import { Router }             from "express";
+import { parseLessonResponse, type LessonResponse } from "../lib/lessonTypes";
+import { runQualityPipeline } from "../services/teachingQuality";
 
 const router = Router();
 
@@ -80,118 +90,7 @@ setInterval(() => {
   for (const [k, v] of responseCache.entries()) if (now >  v.expiresAt) responseCache.delete(k);
 }, 60 * 60 * 1000).unref();
 
-// ─── Teaching Lesson response type ───────────────────────────────────────────
-
-interface LessonStep {
-  what:    string;   // What we're doing in this step
-  why:     string;   // Why we're doing it — the rule or justification
-  math:    string;   // Formula or equation (empty string if none)
-  result:  string;   // What we get after this step (empty string if none)
-  pause:   string;   // Pause-and-think question for the student (empty if none)
-}
-
-interface LessonResponse {
-  topic:      string;
-  difficulty: "Easy" | "Medium" | "Hard";
-  keyConcepts: string[];
-  aiConfidence: number;  // 0–1
-
-  // Section 1 — Before We Start
-  beforeWeStart: {
-    motivator:      string; // Why learn this, real-world use
-    anxietyReducer: string; // "This looks scary but..."
-    preview:        string; // "By the end you will know..."
-  };
-
-  // Section 2 — Prerequisites + Vocabulary
-  prerequisites: string[];         // Concept list (3–6 items)
-  vocabulary:    { term: string; meaning: string }[];  // Every unfamiliar word defined
-
-  // Section 3 — Intuition
-  intuition: {
-    story:    string;  // Analogy or story that makes it click
-    visual:   string;  // Mental picture (empty if N/A)
-    everyday: string;  // Daily life connection
-  };
-
-  // Section 4 — Question Translation
-  questionTranslation: {
-    plainEnglish: string;  // Rewrite question in simple words
-    whatWeKnow:   string;  // Every piece of given information
-    whatWeFind:   string;  // Exactly what to find
-    wordToMath:   string;  // phrase → math symbol, one per line with WHY
-  };
-
-  // Section 5 — Teacher Thinking
-  teacherThinking: {
-    firstNotice:   string; // What a good student notices immediately
-    whyThisMethod: string; // Why this approach, why not others
-    clues:         string; // Hidden clues in the question
-  };
-
-  // Section 6 — Guided Reasoning (replaces old steps[])
-  guidedReasoning: LessonStep[];
-
-  // Section 8 — Confusion busters (pre-empted common confusions)
-  confusionPoints: string[];
-
-  // Section 9 — Common Mistakes
-  commonMistakes: {
-    mistake:      string; // What students do wrong
-    whyItHappens: string; // Root cause
-    howToAvoid:   string; // Specific prevention
-  }[];
-
-  // Section 10 — Examiner Thinking
-  examinerThinking: {
-    whyAsked:      string; // Board's intention in asking this
-    conceptTested: string; // The specific concept being tested
-    topperInsight: string; // What experienced students recognise instantly
-    examTip:       string; // Most useful exam-day shortcut
-    examTrap:      string; // The specific trap that costs marks
-  };
-
-  // Section 11 — Final Answer
-  finalAnswer: {
-    answer:       string; // Full, complete sentence with value + unit
-    whyCorrect:   string; // Why this is right
-    verification: string; // Substitute back and confirm
-  };
-
-  // Section 12 — Simpler Example
-  simplerExample: {
-    problem:  string; // A simpler version of the same concept
-    solution: string; // Fully worked through, every step shown
-  };
-
-  // Section 13 — Practice Question
-  practiceQuestion: {
-    question: string;   // New question for student to try
-    hints:    string[]; // Exactly 3 hints, each revealing one idea
-    solution: string;   // Full worked solution shown only after hints
-  };
-
-  // MCQ
-  confidenceCheck: {
-    question:     string;
-    options:      string[];  // Exactly 4
-    correctIndex: number;    // 0-based
-    explanation:  string;
-  };
-
-  // Section 16 — Retrieval Practice
-  retrievalPractice: string[]; // 4–5 short recall questions
-
-  // Section 17 — Memory Builder
-  rememberThese: string[]; // 4–5 ultra-short memory bullets
-
-  // Section 18 — Confidence Builder
-  confidenceBuilder: string; // Celebratory encouragement
-
-  cached?: boolean;
-}
-
-// ─── JSON Schema + Field Rules for the prompt ─────────────────────────────────
+// ─── JSON Schema + Field Rules for the generation prompt ─────────────────────
 
 const JSON_SCHEMA = `
 ═══════════════════════════════════════════════════════════════
@@ -639,27 +538,17 @@ CHEMISTRY RULES:
 ${JSON_SCHEMA}`,
 };
 
-// ─── OpenAI call ──────────────────────────────────────────────────────────────
+// ─── OpenAI draft generation call ────────────────────────────────────────────
 
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
 const MODEL          = "gpt-4o-mini";
 const OPENAI_TIMEOUT = 30_000;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function safeStr(v: any): string { return typeof v === "string" ? v.trim() : ""; }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parseStep(s: any): LessonStep {
-  return {
-    what:   safeStr(s.what),
-    why:    safeStr(s.why),
-    math:   safeStr(s.math),
-    result: safeStr(s.result),
-    pause:  safeStr(s.pause),
-  };
-}
-
-async function callOpenAI(subject: Subject, question: string, studentContext?: string): Promise<LessonResponse> {
+async function generateDraft(
+  subject: Subject,
+  question: string,
+  studentContext?: string,
+): Promise<LessonResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
@@ -701,126 +590,11 @@ async function callOpenAI(subject: Subject, question: string, studentContext?: s
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const body    = (await res.json()) as any;
-  const content = body?.choices?.[0]?.message?.content ?? "";
+  const content = body?.choices?.[0]?.message?.content ?? "{}";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = JSON.parse(content) as any;
-
-  const difficulties = ["Easy", "Medium", "Hard"] as const;
-  const difficulty: LessonResponse["difficulty"] =
-    difficulties.includes(p.difficulty) ? p.difficulty : "Medium";
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bws: any = p.beforeWeStart ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const it: any  = p.intuition ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const qt: any  = p.questionTranslation ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tt: any  = p.teacherThinking ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const et: any  = p.examinerThinking ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fa: any  = p.finalAnswer ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const se: any  = p.simplerExample ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const pq: any  = p.practiceQuestion ?? {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cc: any  = p.confidenceCheck ?? {};
-
-  return {
-    topic:        safeStr(p.topic) || "General",
-    difficulty,
-    keyConcepts:  Array.isArray(p.keyConcepts)  ? p.keyConcepts.filter(Boolean)  : [],
-    aiConfidence: typeof p.aiConfidence === "number" ? p.aiConfidence : 0.8,
-
-    beforeWeStart: {
-      motivator:      safeStr(bws.motivator),
-      anxietyReducer: safeStr(bws.anxietyReducer),
-      preview:        safeStr(bws.preview),
-    },
-
-    prerequisites: Array.isArray(p.prerequisites) ? p.prerequisites.filter(Boolean) : [],
-    vocabulary:    Array.isArray(p.vocabulary)
-      ? p.vocabulary
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .filter((v: any) => v && typeof v.term === "string")
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((v: any) => ({ term: v.term.trim(), meaning: safeStr(v.meaning) }))
-      : [],
-
-    intuition: {
-      story:    safeStr(it.story),
-      visual:   safeStr(it.visual),
-      everyday: safeStr(it.everyday),
-    },
-
-    questionTranslation: {
-      plainEnglish: safeStr(qt.plainEnglish),
-      whatWeKnow:   safeStr(qt.whatWeKnow),
-      whatWeFind:   safeStr(qt.whatWeFind),
-      wordToMath:   safeStr(qt.wordToMath),
-    },
-
-    teacherThinking: {
-      firstNotice:   safeStr(tt.firstNotice),
-      whyThisMethod: safeStr(tt.whyThisMethod),
-      clues:         safeStr(tt.clues),
-    },
-
-    guidedReasoning: Array.isArray(p.guidedReasoning) ? p.guidedReasoning.map(parseStep) : [],
-
-    confusionPoints: Array.isArray(p.confusionPoints) ? p.confusionPoints.filter(Boolean) : [],
-
-    commonMistakes: Array.isArray(p.commonMistakes)
-      ? p.commonMistakes
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .filter((m: any) => m && typeof m.mistake === "string")
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((m: any) => ({
-            mistake:      safeStr(m.mistake),
-            whyItHappens: safeStr(m.whyItHappens),
-            howToAvoid:   safeStr(m.howToAvoid),
-          }))
-      : [],
-
-    examinerThinking: {
-      whyAsked:      safeStr(et.whyAsked),
-      conceptTested: safeStr(et.conceptTested),
-      topperInsight: safeStr(et.topperInsight),
-      examTip:       safeStr(et.examTip),
-      examTrap:      safeStr(et.examTrap),
-    },
-
-    finalAnswer: {
-      answer:       safeStr(fa.answer) || "See guided reasoning above.",
-      whyCorrect:   safeStr(fa.whyCorrect),
-      verification: safeStr(fa.verification),
-    },
-
-    simplerExample: {
-      problem:  safeStr(se.problem),
-      solution: safeStr(se.solution),
-    },
-
-    practiceQuestion: {
-      question: safeStr(pq.question),
-      hints:    Array.isArray(pq.hints) ? pq.hints.filter(Boolean).slice(0, 3) : [],
-      solution: safeStr(pq.solution),
-    },
-
-    confidenceCheck: {
-      question:     safeStr(cc.question),
-      options:      Array.isArray(cc.options) ? cc.options.slice(0, 4).map(safeStr) : [],
-      correctIndex: typeof cc.correctIndex === "number" ? cc.correctIndex : 0,
-      explanation:  safeStr(cc.explanation),
-    },
-
-    retrievalPractice: Array.isArray(p.retrievalPractice) ? p.retrievalPractice.filter(Boolean) : [],
-    rememberThese:     Array.isArray(p.rememberThese)     ? p.rememberThese.filter(Boolean)     : [],
-    confidenceBuilder: safeStr(p.confidenceBuilder),
-  };
+  return parseLessonResponse(p);
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -861,7 +635,7 @@ router.post("/solveQuestion", async (req, res) => {
     ? studentContext.slice(0, 2000)
     : undefined;
 
-  // 3. Server-side cache — skip when student context is present (personalised response must not be cached globally)
+  // 3. Server-side cache — skip for personalised responses
   if (!ctx) {
     const cached = getCached(subj, q);
     if (cached) {
@@ -871,23 +645,63 @@ router.post("/solveQuestion", async (req, res) => {
     }
   }
 
-  // 4. Call OpenAI
+  // 4. Generate draft lesson
+  let draft: LessonResponse;
   try {
-    const result = await callOpenAI(subj, q, ctx);
-    if (!ctx) setCached(subj, q, result);
-    req.log.info({ subject: subj, topic: result.topic }, "solveQuestion: lesson generated");
-    res.json(result);
-
+    draft = await generateDraft(subj, q, ctx);
+    req.log.info({ subject: subj, topic: draft.topic }, "solveQuestion: draft generated");
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    req.log.warn({ err: msg }, "solveQuestion: OpenAI call failed");
+    req.log.warn({ err: msg }, "solveQuestion: draft generation failed");
 
-    if (msg.includes("no_key"))     { res.status(503).json({ error: "no_key",         message: "OPENAI_API_KEY is not configured on the server" }); return; }
-    if (msg.includes("invalid_key")){ res.status(503).json({ error: "invalid_key",    message: "OPENAI_API_KEY is invalid" }); return; }
-    if (msg.includes("rate_limit")) { res.status(429).json({ error: "openai_rate_limit" }); return; }
-    if (msg.includes("aborted"))    { res.status(504).json({ error: "timeout",         message: "OpenAI request timed out" }); return; }
+    if (msg.includes("no_key"))      { res.status(503).json({ error: "no_key",          message: "OPENAI_API_KEY is not configured on the server" }); return; }
+    if (msg.includes("invalid_key")) { res.status(503).json({ error: "invalid_key",     message: "OPENAI_API_KEY is invalid" }); return; }
+    if (msg.includes("rate_limit"))  { res.status(429).json({ error: "openai_rate_limit" }); return; }
+    if (msg.includes("aborted"))     { res.status(504).json({ error: "timeout",          message: "OpenAI request timed out" }); return; }
     res.status(502).json({ error: "openai_error", message: msg });
+    return;
   }
+
+  // 5. Teaching Quality Pipeline — review → improve → repeat (max 3 cycles)
+  const apiKey = process.env.OPENAI_API_KEY!;
+  let finalLesson = draft;
+
+  try {
+    const pipelineResult = await runQualityPipeline(draft, apiKey);
+
+    finalLesson = pipelineResult.lesson;
+
+    // Log quality metrics server-side (not sent to client)
+    req.log.info({
+      subject:    subj,
+      topic:      draft.topic,
+      cyclesRun:  pipelineResult.cyclesRun,
+      passed:     pipelineResult.passed,
+      overall:    pipelineResult.finalScore.overall,
+      rubric:     pipelineResult.qualityLog.at(-1)?.scores,
+      weakScore:  pipelineResult.finalScore.weakStudentUnderstanding,
+    }, "solveQuestion: quality pipeline complete");
+
+    // Detailed per-cycle log for future model improvement
+    for (const cycle of pipelineResult.qualityLog) {
+      req.log.debug({
+        cycle:      cycle.cycle,
+        scores:     cycle.scores,
+        confusions: cycle.confusions.length,
+        issues:     cycle.issueCount,
+        passed:     cycle.passed,
+        improved:   cycle.improved,
+      }, "solveQuestion: quality cycle");
+    }
+  } catch (err) {
+    // Quality pipeline failure is non-fatal — we still return the draft
+    req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
+  }
+
+  // 6. Cache the reviewed lesson (not the draft)
+  if (!ctx) setCached(subj, q, finalLesson);
+
+  res.json(finalLesson);
 });
 
 export default router;

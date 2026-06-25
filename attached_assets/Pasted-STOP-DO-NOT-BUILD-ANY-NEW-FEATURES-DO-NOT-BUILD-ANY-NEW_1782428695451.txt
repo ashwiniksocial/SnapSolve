@@ -1,0 +1,485 @@
+STOP.
+
+DO NOT BUILD ANY NEW FEATURES.
+
+DO NOT BUILD ANY NEW ANALYTICS.
+
+DO NOT BUILD ANY NEW DASHBOARDS.
+
+DO NOT BUILD ANY NEW ENGINES UNLESS THEY DIRECTLY IMPROVE THE QUALITY OF TEACHING.
+
+============================================================
+
+WE ARE NOW ENTERING THE QUALITY PHASE.
+
+The architecture is complete.
+
+The bottleneck is now TEACHING QUALITY.
+
+From this point onwards, every improvement must answer only one question:
+
+"Will this help the weakest student understand?"
+
+If the answer is NO,
+
+do not build it.
+
+============================================================
+
+NEW ARCHITECTURE
+
+Current pipeline
+
+Question
+
+↓
+
+OCR
+
+↓
+
+AI
+
+↓
+
+Teaching Lesson
+
+↓
+
+Student
+
+Replace with
+
+Question
+
+↓
+
+OCR
+
+↓
+
+AI generates Lesson Draft
+
+↓
+
+Teaching Quality Reviewer
+
+↓
+
+Teaching Critic
+
+↓
+
+Lesson Improvement Engine
+
+↓
+
+Weak Student Simulator
+
+↓
+
+Final Lesson
+
+↓
+
+Student
+
+The lesson MUST NEVER be shown directly after generation.
+
+Every lesson must first be reviewed.
+
+============================================================
+
+CREATE A NEW MODULE
+
+src/services/teachingQuality/
+
+Create the following files
+
+lessonReviewer.ts
+
+lessonCritic.ts
+
+lessonImprover.ts
+
+weakStudentSimulator.ts
+
+qualityScoreEngine.ts
+
+qualityChecklist.ts
+
+teachingRubric.ts
+
+lessonValidator.ts
+
+index.ts
+
+============================================================
+
+1. LESSON REVIEWER
+
+The reviewer should inspect the ENTIRE lesson.
+
+Check every section.
+
+Do NOT review grammar.
+
+Review TEACHING.
+
+============================================================
+
+2. QUALITY CHECKLIST
+
+Every lesson must be scored against ALL criteria.
+
+Vocabulary
+
+□ Did we explain every difficult word?
+
+Concepts
+
+□ Did we explain every concept before using it?
+
+Symbols
+
+□ Did we explain every mathematical symbol?
+
+Formula Selection
+
+□ Did we explain WHY this formula is chosen?
+
+Reasoning
+
+□ Did we explain WHY every step happens?
+
+Mathematics
+
+□ Did we show every algebra step?
+
+□ Did we show every arithmetic calculation?
+
+Assumptions
+
+□ Did we assume prior knowledge?
+
+Hidden Jumps
+
+□ Did we skip any logical step?
+
+Examples
+
+□ Did we include an easier example?
+
+Analogies
+
+□ Did we use an analogy where appropriate?
+
+Confusion
+
+□ Did we predict likely confusion?
+
+□ Did we answer it immediately?
+
+Exam
+
+□ Did we explain what examiner is testing?
+
+Memory
+
+□ Did we summarise key takeaways?
+
+Practice
+
+□ Did we generate a similar question?
+
+Confidence
+
+□ Did we encourage the student?
+
+Understanding
+
+□ Could a student scoring 20/100 understand everything?
+
+============================================================
+
+3. WEAK STUDENT SIMULATOR
+
+This is the most important module.
+
+Pretend to be a student scoring 20 out of 100.
+
+Read the lesson.
+
+After every paragraph ask
+
+"What am I confused about?"
+
+Generate ALL possible confusion.
+
+Examples
+
+"What is p?"
+
+"What is irrational?"
+
+"What is contradiction?"
+
+"What is coprime?"
+
+"Why square both sides?"
+
+"Why is p even?"
+
+"Where did that equation come from?"
+
+"What happened here?"
+
+The simulator should continuously search for confusion.
+
+If ANY confusion exists,
+
+mark lesson as FAILED.
+
+============================================================
+
+4. LESSON CRITIC
+
+The critic should identify
+
+Too short explanations
+
+Hidden assumptions
+
+Skipped mathematics
+
+Skipped calculations
+
+Missing intuition
+
+Missing motivation
+
+Weak analogies
+
+Weak examples
+
+Weak reasoning
+
+Weak transitions
+
+Technical language
+
+Large paragraphs
+
+Words above reading level
+
+Every issue should contain
+
+Problem
+
+Reason
+
+Suggested Improvement
+
+Priority
+
+============================================================
+
+5. LESSON IMPROVER
+
+Automatically rewrite ONLY weak sections.
+
+Expand explanations.
+
+Split paragraphs.
+
+Add examples.
+
+Add analogies.
+
+Explain hidden concepts.
+
+Explain hidden assumptions.
+
+Reduce reading difficulty.
+
+Never shorten explanations.
+
+Always increase understanding.
+
+============================================================
+
+6. QUALITY SCORE
+
+Every lesson receives
+
+Teaching Quality Score
+
+0–100
+
+Vocabulary
+
+Concept Teaching
+
+Reasoning
+
+Step Explanation
+
+Examples
+
+Memory
+
+Practice
+
+Confidence Building
+
+Weak Student Understanding
+
+Display this score internally only.
+
+Do NOT show students.
+
+============================================================
+
+7. PASS / FAIL
+
+Lesson cannot be shown unless
+
+Teaching Score ≥95
+
+Weak Student Score ≥95
+
+Reasoning Score ≥95
+
+Concept Score ≥95
+
+If below threshold
+
+Automatically regenerate.
+
+Repeat until passed.
+
+Maximum 3 review cycles.
+
+============================================================
+
+8. TEACHING RUBRIC
+
+Use this benchmark.
+
+0–40
+
+AI answer
+
+40–60
+
+Textbook
+
+60–80
+
+Good school teacher
+
+80–90
+
+Excellent private tutor
+
+90–95
+
+Top IIT coaching faculty
+
+95–100
+
+One-to-one world-class personal tutor
+
+SnapSolve target
+
+95+
+
+Never accept anything lower.
+
+============================================================
+
+9. UPDATE solveQuestion.ts
+
+Current
+
+AI
+
+↓
+
+Return
+
+Replace with
+
+Generate Draft
+
+↓
+
+Review
+
+↓
+
+Critique
+
+↓
+
+Improve
+
+↓
+
+Validate
+
+↓
+
+Return Final Lesson
+
+============================================================
+
+10. LOGGING
+
+Store internally
+
+Original draft
+
+Critic report
+
+Improved lesson
+
+Final score
+
+Do not show users.
+
+Useful for future model improvements.
+
+============================================================
+
+11. IMPORTANT
+
+Do NOT change the user interface.
+
+Do NOT add new pages.
+
+Do NOT add dashboards.
+
+Do NOT add animations.
+
+Do NOT add gamification.
+
+Do NOT add streaks.
+
+Only improve the quality of explanations.
+
+============================================================
+
+SUCCESS CRITERIA
+
+Before a lesson reaches the student,
+
+the system should honestly answer
+
+"If I gave this lesson to the weakest student in the class who normally scores 20/100, could they independently solve a similar question after reading it once?"
+
+If the answer is NOT an extremely confident YES,
+
+the lesson must be rewritten automatically.
+
+This Teaching Quality Review Engine becomes the final gatekeeper before every explanation shown in SnapSolve.
