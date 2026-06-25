@@ -20,10 +20,17 @@ export function buildSections(level: ReadingLevel): Record<string, TeachingSecti
   return result;
 }
 
-/** Checks whether a solution has enough content to render a given section. */
+/**
+ * Checks whether a solution has enough content to render a given section.
+ * Used by the legacy (bank/fallback) renderer only.
+ * TeachingLesson responses use the lesson field and bypass this check.
+ */
 export function hasSectionContent(key: string, r: AIResponse): boolean {
+  // If the solution has a lesson, all content is inside lesson — skip legacy checks
+  if (r.lesson) return false;
+
   switch (key) {
-    case "prereq":     return (r.prerequisites?.length ?? 0) > 0;
+    case "prereq":     return (r.prerequisites?.length ?? 0) > 0 || Boolean(r.conceptExplanation) || Boolean(r.questionUnderstanding);
     case "understand": return Boolean(r.questionUnderstanding);
     case "wordMath":   return Boolean(r.wordToMath?.trim());
     case "visual":     return Boolean(r.visualThinking?.trim());

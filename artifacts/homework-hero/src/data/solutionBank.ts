@@ -8,112 +8,206 @@ export type { VerificationResult };
  * All values are 0–100 integers.
  */
 export interface ConfidenceBreakdown {
-  /** 0–100 — Tesseract OCR confidence (100 for typed questions) */
   ocr:          number;
-  /** 0–100 — Topic-detection pattern match strength */
   topic:        number;
-  /** 0–100 — Keyword-density score against the question bank */
   bankMatch:    number;
-  /** 0–100 — Model-reported answer confidence (100 for bank solutions) */
   ai:           number;
-  /** 0–100 — Solution Verification Engine composite score */
   verification: number;
-  /** 0–100 — Composite score used for tier display */
   composite:    number;
 }
 
+/** A single step in a legacy bank/fallback solution */
 export interface SolutionStep {
   stepNumber:   number;
   title:        string;
   explanation:  string;
-  /** WHY this step is taken — Level 2 step-by-step reasoning */
   whyThisStep?: string;
   formula?:     string;
   result?:      string;
 }
 
 export interface SimilarQuestion {
-  id: string;
-  question: string;
-  hint: string;
-  answer: string;
+  id:         string;
+  question:   string;
+  hint:       string;
+  answer:     string;
   difficulty: "Easy" | "Medium" | "Hard";
 }
 
-export interface AIResponse {
-  id: string;
-  subject: Subject;
-  topic: string;
+// ─── Teaching Lesson — the new core object ────────────────────────────────────
+
+/** A single step in a guided reasoning sequence */
+export interface LessonStep {
+  what:    string;  // What we're doing
+  why:     string;  // Why we're doing it — the rule or justification
+  math:    string;  // Formula or equation (empty string if none)
+  result:  string;  // What we obtain (empty string if none)
+  pause:   string;  // Pause-and-think question (empty string if none)
+}
+
+/**
+ * TeachingLesson is the new core response object from the AI.
+ * It replaces the old steps[] + finalAnswer model entirely.
+ * Every field maps to an interactive section in TeachingLayout.
+ */
+export interface TeachingLesson {
+  topic:      string;
   difficulty: "Easy" | "Medium" | "Hard";
-  detectedQuestion: string;
-  steps: SolutionStep[];
-  finalAnswer: string;
   keyConcepts: string[];
-  similarQuestions: SimilarQuestion[];
-  /** Origin of the solution — for badge display and analytics */
-  source?: "bank" | "openai" | "fallback";
+  aiConfidence: number;
 
-  // ── Explanation Quality V2 fields (OpenAI solutions) ──────────────────────
-  /** Prerequisites: what the student must know first — shown before solution */
-  prerequisites?: string[];
-  /** Level 1 — Concept Explanation: define the concept in simple language */
-  conceptExplanation?: string;
-  /** Why students typically get confused on this topic */
-  confusionPoint?: string;
-  /** A specific CBSE/ICSE exam trap to watch for */
-  examTrap?: string;
-  /** Level 4 — Remember This: exam tip or shortcut */
-  examTip?: string;
-  /** One similar example with reveal toggle */
-  similarExample?: { problem: string; solution: string };
-  /** Follow-up question to check understanding */
-  checkUnderstanding?: { question: string; answer: string };
-  /** Explain More — deeper theory beyond the steps */
-  deeperExplanation?: string;
-  /** Explain More — 2-3 varied example strings */
-  additionalExamples?: string[];
-  /** Common mistakes to avoid — shown in Explain More */
-  commonMistakes?: string[];
+  /** Section 1 — Why are we learning this? Reduces anxiety before anything else. */
+  beforeWeStart: {
+    motivator:      string;
+    anxietyReducer: string;
+    preview:        string;
+  };
 
-  // ── Explanation Quality V3.0 fields ──────────────────────────────────────
-  /** V3 — rewrite question in plain English: what's given, what to find, which chapter */
-  questionUnderstanding?: string;
-  /** V3 — translate every phrase in the question to a math expression using → arrows */
-  wordToMath?: string;
-  /** V3 — Stage 5: what should go on inside the student's mind before writing anything */
-  thinkingProcess?: string;
-  /** V3 — Stage 7: mental picture / visual scene (empty if not applicable) */
-  visualThinking?: string;
-  /** V3 — substitute final answer back and confirm both sides match */
-  verification?: string;
-  /** V3 — 1–3 ultra-short memory hooks usable in an exam instantly */
-  memoryShortcut?: string[];
-  /** V3 — MCQ testing conceptual understanding of WHY a step was taken */
-  confidenceCheck?: {
+  /** Section 2 — What the student must know before starting */
+  prerequisites: string[];
+  vocabulary:    { term: string; meaning: string }[];
+
+  /** Section 3 — Build intuition before touching mathematics */
+  intuition: {
+    story:    string;
+    visual:   string;
+    everyday: string;
+  };
+
+  /** Section 4 — What is the question actually asking? */
+  questionTranslation: {
+    plainEnglish: string;
+    whatWeKnow:   string;
+    whatWeFind:   string;
+    wordToMath:   string;
+  };
+
+  /** Section 5 — What does an expert notice before writing anything? */
+  teacherThinking: {
+    firstNotice:   string;
+    whyThisMethod: string;
+    clues:         string;
+  };
+
+  /** Section 6 — The core lesson: guided reasoning with WHY for every step */
+  guidedReasoning: LessonStep[];
+
+  /** Section 8 — Pre-empted confusions, answered immediately */
+  confusionPoints: string[];
+
+  /** Section 9 — The 3 most common mistakes with root causes */
+  commonMistakes: {
+    mistake:      string;
+    whyItHappens: string;
+    howToAvoid:   string;
+  }[];
+
+  /** Section 10 — What was the examiner testing and how toppers think */
+  examinerThinking: {
+    whyAsked:      string;
+    conceptTested: string;
+    topperInsight: string;
+    examTip:       string;
+    examTrap:      string;
+  };
+
+  /** Section 11 — The final answer with verification */
+  finalAnswer: {
+    answer:       string;
+    whyCorrect:   string;
+    verification: string;
+  };
+
+  /** Section 12 — Simpler worked example of the same concept */
+  simplerExample: {
+    problem:  string;
+    solution: string;
+  };
+
+  /** Section 13 — Practice question with progressive hint reveal */
+  practiceQuestion: {
+    question: string;
+    hints:    string[];
+    solution: string;
+  };
+
+  /** Interactive MCQ to test conceptual understanding */
+  confidenceCheck: {
     question:     string;
-    options:      string[];  // exactly 4
-    correctIndex: number;    // 0-based
+    options:      string[];
+    correctIndex: number;
     explanation:  string;
   };
 
-  // ── Teaching Engine Phase 2 fields ────────────────────────────────────────
-  /** Section 12 — 3 conceptual "why" questions (not calculations) */
+  /** Section 16 — Short recall questions for retrieval practice */
+  retrievalPractice: string[];
+
+  /** Section 17 — Ultra-short memory bullets */
+  rememberThese: string[];
+
+  /** Section 18 — Celebratory encouragement showing what the student now knows */
+  confidenceBuilder: string;
+}
+
+// ─── AIResponse — the unified response type ──────────────────────────────────
+
+export interface AIResponse {
+  id:               string;
+  subject:          Subject;
+  topic:            string;
+  difficulty:       "Easy" | "Medium" | "Hard";
+  detectedQuestion: string;
+  keyConcepts:      string[];
+  similarQuestions: SimilarQuestion[];
+  source?:          "bank" | "openai" | "fallback";
+
+  /**
+   * TeachingLesson — present for all OpenAI responses (source: "openai").
+   * When present, TeachingLayout renders the full interactive lesson.
+   */
+  lesson?: TeachingLesson;
+
+  /**
+   * Legacy steps[] — present for bank/fallback responses only.
+   * TeachingLayout falls back to step-based rendering when lesson is absent.
+   */
+  steps:       SolutionStep[];
+  finalAnswer: string;
+
+  // Legacy fields kept for analytics, student model, and bank entries
+  prerequisites?:      string[];
+  conceptExplanation?: string;
+  confusionPoint?:     string;
+  examTrap?:           string;
+  examTip?:            string;
+  similarExample?:     { problem: string; solution: string };
+  checkUnderstanding?: { question: string; answer: string };
+  deeperExplanation?:  string;
+  additionalExamples?: string[];
+  commonMistakes?:     string[];
+  questionUnderstanding?: string;
+  wordToMath?:         string;
+  thinkingProcess?:    string;
+  visualThinking?:     string;
+  verification?:       string;
+  memoryShortcut?:     string[];
+  confidenceCheck?: {
+    question:     string;
+    options:      string[];
+    correctIndex: number;
+    explanation:  string;
+  };
   conceptualQuestions?: string[];
-  /** Section 13 — max 6 bullet points summarising what was learned */
-  learningSummary?: string[];
-  /** Section 14 — structured memory package: 3 exam tips, 3 tricks, 3 observations */
+  learningSummary?:     string[];
   rememberThis?: {
     examTips:     string[];
     memoryTricks: string[];
     observations: string[];
   };
 
-  /** 0–1 match confidence from the question bank scorer */
-  confidence?: number;
-  /** Full confidence breakdown (attached by the confidence engine after solving) */
+  confidence?:          number;
   confidenceBreakdown?: ConfidenceBreakdown;
-  /** Verification result from the Solution Verification Engine */
-  verificationResult?: VerificationResult;
+  verificationResult?:  VerificationResult;
 }
 
 // ─── ALGEBRA: QUADRATIC EQUATIONS ──────────────────────────────────────────────

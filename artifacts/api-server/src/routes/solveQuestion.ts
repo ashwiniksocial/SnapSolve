@@ -7,8 +7,8 @@
  * Features:
  *  - Per-IP rate limiting   (20 req / hour)
  *  - Server-side cache      (in-memory, 7-day TTL)
- *  - OpenAI timeout         (15 s via AbortController)
- *  - Structured prompts     per subject
+ *  - OpenAI timeout         (30 s via AbortController)
+ *  - TeachingLesson schema  (structured lesson, not just steps)
  *  - Graceful error codes   (no_key / rate_limit / timeout / invalid_key)
  */
 
@@ -48,7 +48,7 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
 
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-interface CacheEntry { data: SolveResponse; expiresAt: number; }
+interface CacheEntry { data: LessonResponse; expiresAt: number; }
 const responseCache = new Map<string, CacheEntry>();
 
 function makeCacheKey(subject: string, question: string): string {
@@ -58,7 +58,7 @@ function makeCacheKey(subject: string, question: string): string {
   return Math.abs(h).toString(36);
 }
 
-function getCached(subject: string, question: string): SolveResponse | null {
+function getCached(subject: string, question: string): LessonResponse | null {
   const key   = makeCacheKey(subject, question);
   const entry = responseCache.get(key);
   if (!entry) return null;
@@ -66,7 +66,7 @@ function getCached(subject: string, question: string): SolveResponse | null {
   return { ...entry.data, cached: true };
 }
 
-function setCached(subject: string, question: string, data: SolveResponse): void {
+function setCached(subject: string, question: string, data: LessonResponse): void {
   responseCache.set(makeCacheKey(subject, question), {
     data,
     expiresAt: Date.now() + CACHE_TTL_MS,
@@ -80,339 +80,562 @@ setInterval(() => {
   for (const [k, v] of responseCache.entries()) if (now >  v.expiresAt) responseCache.delete(k);
 }, 60 * 60 * 1000).unref();
 
-// ─── Response types ───────────────────────────────────────────────────────────
+// ─── Teaching Lesson response type ───────────────────────────────────────────
 
-interface SolveStep {
-  stepNumber:   number;
-  title:        string;
-  explanation:  string;
-  whyThisStep?: string;
-  formula?:     string;
-  result?:      string;
+interface LessonStep {
+  what:    string;   // What we're doing in this step
+  why:     string;   // Why we're doing it — the rule or justification
+  math:    string;   // Formula or equation (empty string if none)
+  result:  string;   // What we get after this step (empty string if none)
+  pause:   string;   // Pause-and-think question for the student (empty if none)
 }
 
-interface ConfidenceCheckData {
-  question:     string;
-  options:      string[];   // exactly 4
-  correctIndex: number;     // 0–3
-  explanation:  string;
-}
+interface LessonResponse {
+  topic:      string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  keyConcepts: string[];
+  aiConfidence: number;  // 0–1
 
-interface SolveResponse {
-  topic:                 string;
-  difficulty:            "Easy" | "Medium" | "Hard";
-  prerequisites:         string[];
-  conceptExplanation:    string;
-  questionUnderstanding: string;   // Stage 1+2 — what we're finding and what we know
-  wordToMath:            string;   // Stage 5 part — translate phrases to math notation
-  thinkingProcess:       string;   // Stage 5 — what goes on inside student's mind before solving
-  visualThinking:        string;   // Stage 7 — mental picture (empty string if not applicable)
-  steps:                 SolveStep[];
-  finalAnswer:           string;
-  verification:          string;   // Stage 9 — substitute back and confirm
-  confusionPoint:        string;   // Stage 4 — why students get confused
-  examTrap:              string;
-  examTip:               string;
-  memoryShortcut:        string[]; // Stage 10 — memory tricks
-  similarExample:        { problem: string; solution: string }; // Stage 11
-  checkUnderstanding:    { question: string; answer: string };  // Stage 12+13
-  confidenceCheck:       ConfidenceCheckData;
-  keyConcepts:           string[];
-  commonMistakes:        string[]; // Stage 10 — 3 common mistakes
-  deeperExplanation:     string;
-  additionalExamples:    string[];
-  confidence:            number;
-  cached?:               boolean;
-  // Teaching Engine Phase 2
-  conceptualQuestions:   string[];   // Section 12 — 3 conceptual "why" questions
-  learningSummary:       string[];   // Section 13 — max 6 learning bullets
-  rememberThis: {                    // Section 14 — structured memory package
-    examTips:     string[];
-    memoryTricks: string[];
-    observations: string[];
+  // Section 1 — Before We Start
+  beforeWeStart: {
+    motivator:      string; // Why learn this, real-world use
+    anxietyReducer: string; // "This looks scary but..."
+    preview:        string; // "By the end you will know..."
   };
+
+  // Section 2 — Prerequisites + Vocabulary
+  prerequisites: string[];         // Concept list (3–6 items)
+  vocabulary:    { term: string; meaning: string }[];  // Every unfamiliar word defined
+
+  // Section 3 — Intuition
+  intuition: {
+    story:    string;  // Analogy or story that makes it click
+    visual:   string;  // Mental picture (empty if N/A)
+    everyday: string;  // Daily life connection
+  };
+
+  // Section 4 — Question Translation
+  questionTranslation: {
+    plainEnglish: string;  // Rewrite question in simple words
+    whatWeKnow:   string;  // Every piece of given information
+    whatWeFind:   string;  // Exactly what to find
+    wordToMath:   string;  // phrase → math symbol, one per line with WHY
+  };
+
+  // Section 5 — Teacher Thinking
+  teacherThinking: {
+    firstNotice:   string; // What a good student notices immediately
+    whyThisMethod: string; // Why this approach, why not others
+    clues:         string; // Hidden clues in the question
+  };
+
+  // Section 6 — Guided Reasoning (replaces old steps[])
+  guidedReasoning: LessonStep[];
+
+  // Section 8 — Confusion busters (pre-empted common confusions)
+  confusionPoints: string[];
+
+  // Section 9 — Common Mistakes
+  commonMistakes: {
+    mistake:      string; // What students do wrong
+    whyItHappens: string; // Root cause
+    howToAvoid:   string; // Specific prevention
+  }[];
+
+  // Section 10 — Examiner Thinking
+  examinerThinking: {
+    whyAsked:      string; // Board's intention in asking this
+    conceptTested: string; // The specific concept being tested
+    topperInsight: string; // What experienced students recognise instantly
+    examTip:       string; // Most useful exam-day shortcut
+    examTrap:      string; // The specific trap that costs marks
+  };
+
+  // Section 11 — Final Answer
+  finalAnswer: {
+    answer:       string; // Full, complete sentence with value + unit
+    whyCorrect:   string; // Why this is right
+    verification: string; // Substitute back and confirm
+  };
+
+  // Section 12 — Simpler Example
+  simplerExample: {
+    problem:  string; // A simpler version of the same concept
+    solution: string; // Fully worked through, every step shown
+  };
+
+  // Section 13 — Practice Question
+  practiceQuestion: {
+    question: string;   // New question for student to try
+    hints:    string[]; // Exactly 3 hints, each revealing one idea
+    solution: string;   // Full worked solution shown only after hints
+  };
+
+  // MCQ
+  confidenceCheck: {
+    question:     string;
+    options:      string[];  // Exactly 4
+    correctIndex: number;    // 0-based
+    explanation:  string;
+  };
+
+  // Section 16 — Retrieval Practice
+  retrievalPractice: string[]; // 4–5 short recall questions
+
+  // Section 17 — Memory Builder
+  rememberThese: string[]; // 4–5 ultra-short memory bullets
+
+  // Section 18 — Confidence Builder
+  confidenceBuilder: string; // Celebratory encouragement
+
+  cached?: boolean;
 }
 
-// ─── Subject-specific system prompts ─────────────────────────────────────────
+// ─── JSON Schema + Field Rules for the prompt ─────────────────────────────────
 
 const JSON_SCHEMA = `
-Respond ONLY with a valid JSON object — no markdown fences, no extra text.
-Schema:
+═══════════════════════════════════════════════════════════════
+RESPONSE FORMAT — Respond ONLY with a valid JSON object.
+No markdown fences. No extra text. No explanation outside JSON.
+═══════════════════════════════════════════════════════════════
+
 {
   "topic": string,
   "difficulty": "Easy" | "Medium" | "Hard",
+  "keyConcepts": string[],
+  "aiConfidence": number,
+
+  "beforeWeStart": {
+    "motivator": string,
+    "anxietyReducer": string,
+    "preview": string
+  },
+
   "prerequisites": string[],
-  "conceptExplanation": string,
-  "questionUnderstanding": string,
-  "wordToMath": string,
-  "thinkingProcess": string,
-  "visualThinking": string,
-  "steps": [
+  "vocabulary": [{ "term": string, "meaning": string }],
+
+  "intuition": {
+    "story": string,
+    "visual": string,
+    "everyday": string
+  },
+
+  "questionTranslation": {
+    "plainEnglish": string,
+    "whatWeKnow": string,
+    "whatWeFind": string,
+    "wordToMath": string
+  },
+
+  "teacherThinking": {
+    "firstNotice": string,
+    "whyThisMethod": string,
+    "clues": string
+  },
+
+  "guidedReasoning": [
     {
-      "stepNumber": number,
-      "title": string,
-      "explanation": string,
-      "whyThisStep": string,
-      "formula": string | null,
-      "result": string | null
+      "what": string,
+      "why": string,
+      "math": string,
+      "result": string,
+      "pause": string
     }
   ],
-  "finalAnswer": string,
-  "verification": string,
-  "confusionPoint": string,
-  "examTrap": string,
-  "examTip": string,
-  "memoryShortcut": string[],
-  "similarExample": { "problem": string, "solution": string },
-  "checkUnderstanding": { "question": string, "answer": string },
+
+  "confusionPoints": string[],
+
+  "commonMistakes": [
+    {
+      "mistake": string,
+      "whyItHappens": string,
+      "howToAvoid": string
+    }
+  ],
+
+  "examinerThinking": {
+    "whyAsked": string,
+    "conceptTested": string,
+    "topperInsight": string,
+    "examTip": string,
+    "examTrap": string
+  },
+
+  "finalAnswer": {
+    "answer": string,
+    "whyCorrect": string,
+    "verification": string
+  },
+
+  "simplerExample": {
+    "problem": string,
+    "solution": string
+  },
+
+  "practiceQuestion": {
+    "question": string,
+    "hints": [string, string, string],
+    "solution": string
+  },
+
   "confidenceCheck": {
     "question": string,
-    "options": string[],
+    "options": [string, string, string, string],
     "correctIndex": number,
     "explanation": string
   },
-  "keyConcepts": string[],
-  "commonMistakes": string[],
-  "deeperExplanation": string,
-  "additionalExamples": string[],
-  "confidence": number,
-  "conceptualQuestions": string[],
-  "learningSummary": string[],
-  "rememberThis": {
-    "examTips": string[],
-    "memoryTricks": string[],
-    "observations": string[]
-  }
+
+  "retrievalPractice": string[],
+  "rememberThese": string[],
+  "confidenceBuilder": string
 }
 
-═══════════════════════════════════════════════════════
-FIELD RULES — Every field is mandatory. Fill them all.
-═══════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════
+FIELD INSTRUCTIONS — Read every instruction. Fill every field.
+═══════════════════════════════════════════════════════════════
 
-STAGE 1+2 — questionUnderstanding
-Rewrite the question in very simple English. A student scoring 20/100 must understand it immediately.
-Write 3–5 short paragraphs:
-Paragraph 1: What is the examiner actually asking? Point out the important keywords. Explain any word that might confuse a weak student.
-Paragraph 2: What information is GIVEN in the question? List every piece. Explain why each piece matters.
-Paragraph 3: What do we need to FIND? Be specific.
-Paragraph 4: Name the chapter and topic this belongs to.
-Never use the words: "clearly", "obviously", "trivially", "it follows that", "it is evident".
-Use encouraging words like: "Don't worry", "Let's understand this together", "This might look scary but it is actually manageable."
+BEFORE WE START
+━━━━━━━━━━━━━━
+beforeWeStart.motivator
+  Why does this topic exist? Where is it used in the real world?
+  Why did the board include it? Give 2–3 concrete, exciting examples.
+  Connect it to something the student sees or uses every day.
+  2–4 sentences. No jargon. No formula yet.
 
-STAGE 3 — prerequisites + conceptExplanation
-prerequisites: 3–6 short phrases — every concept the student must know first. Start from absolute basics. Include arithmetic, definitions, and any formula needed.
-conceptExplanation: Explain the core concept from scratch. Use a real-life analogy. Write as if the student has NEVER seen this concept before. 2–4 sentences. Use everyday language.
+beforeWeStart.anxietyReducer
+  This question WILL look scary to a weak student.
+  Acknowledge that directly. Then tell them exactly why it is manageable.
+  Use encouraging language: "Don't worry", "We'll go through this together", "By the time we finish..."
+  2–3 sentences.
 
-STAGE 4 — confusionPoint
-1–2 sentences. Name the exact misconception most students carry on this topic. Explain WHY students get confused. Be specific — name the mistake, not a vague warning.
+beforeWeStart.preview
+  Tell the student exactly what they will know by the end.
+  Use a list-style sentence: "By the end you will know: (1) what X means, (2) why Y works, (3) how to solve Z."
+  1–2 sentences.
 
-STAGE 5 — wordToMath + thinkingProcess
-wordToMath: Convert every phrase in the question into a mathematical expression using → arrows. Never jump to the final equation. Build it phrase by phrase. Include a brief WHY for each mapping. Example:
-"The angle is x  (we call it x because we don't know it yet)
-Its complement → 90 − x  (complementary angles sum to 90°)
-Four times its complement → 4(90 − x)  (four times means multiply by 4)
-Condition given: angle = 4 × complement → x = 4(90 − x)"
+PREREQUISITES + VOCABULARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+prerequisites
+  3–6 concept names the student MUST know first.
+  Start from absolute basics. If the question involves fractions, "how fractions work" is a prerequisite.
 
-thinkingProcess: Describe what should be going on inside the student's mind before writing a single calculation.
-Write in first-person student voice. Examples of the style:
-"I notice the question says 'at least one'. That means one OR more. So I should count both cases."
-"I see the word 'complement'. I remember complement means 90°. So I can write 90 − x."
-"The question gives me velocity and time. I know distance = speed × time. So I'll use that formula."
-Length: 3–6 sentences. This is the thinking BEFORE the pen touches paper.
+vocabulary
+  Every unfamiliar word, symbol, or phrase used in the question or solution MUST appear here.
+  Include mathematical terms (e.g. "rational number"), symbols (e.g. "√"), and any word a weak student may not know.
+  Each meaning: 1–2 plain sentences. No jargon in the meaning. Use analogies.
+  Minimum 4 terms. Maximum 10.
 
-STAGE 7 — visualThinking
-Describe the situation as a mental picture. Use simple language. Create a scene in the student's mind.
-Examples of good visual thinking:
-"Imagine a straight line. Now imagine two angles sitting on that line. Together they fill the entire line — which means they must add up to 180°."
-"Picture a dice. It has six faces numbered 1 to 6. Rolling a 7 is impossible because 7 never appears on any face."
-"Imagine a car travelling on a road. Speed tells us how fast. Time tells us for how long. Distance is how far the car travelled."
-If a visual picture does NOT help for this particular question, write an empty string "".
-Never write a visual for a purely algebraic question where no picture exists naturally.
+INTUITION
+━━━━━━━━━
+intuition.story
+  Tell a brief story or analogy that makes the core concept click.
+  Use everyday life. Make the student feel "oh, I've seen this before."
+  3–5 sentences. No mathematics yet.
 
-STAGE 6 — steps
-steps: 3–8 items. For EVERY step:
-- explanation: WHAT to do. Never combine two operations into one step. Show every tiny algebraic manipulation. Even 18 + 22 = 40 must be written out.
-- whyThisStep: WHY we are doing this. Which rule allows it. What would happen if we skipped it.
-- formula: write the formula if used (null if no formula).
-- result: what we get after this step (null if no single result).
-Title each step with an action verb: "Identify the unknowns", "Apply the formula", "Simplify", "Solve for x", "Substitute values".
+intuition.visual
+  Describe a mental picture. Tell the student to close their eyes and imagine.
+  What does the situation look like? What are the physical objects?
+  3–4 sentences. If no picture exists for this concept, write empty string "".
 
-STAGE 8 — finalAnswer
-Full, complete sentence. Include the exact numerical value, unit, and sign. Re-state what the question asked and confirm this answer addresses it.
+intuition.everyday
+  One concrete daily-life connection. "This is exactly like when you..."
+  2–3 sentences. Should make the student feel the concept is familiar, not foreign.
 
-STAGE 9 — verification
-Substitute the final answer back into the original equation or real-world condition.
-Show EVERY substitution step. Confirm both sides match.
-End with: "LHS = RHS ✓  The answer is correct."
-Never skip this — it teaches students how to check answers in exams.
+QUESTION TRANSLATION
+━━━━━━━━━━━━━━━━━━━
+questionTranslation.plainEnglish
+  Rewrite the question as if explaining to a 12-year-old who has never seen this type of problem.
+  Use very simple English. Define every technical word inline. 2–4 sentences.
+  Start with: "The examiner is asking us to..."
 
-STAGE 10 — memoryShortcut + examTip + commonMistakes
-memoryShortcut: 1–3 ultra-short hooks the student can recall in 3 seconds during an exam. Format: "keyword → rule".
-examTip: 1–2 sentences — the single most useful exam-day shortcut for this type of question.
-examTrap: 1–2 sentences — the specific CBSE/ICSE trap that costs marks (wrong sign, wrong unit, skipped step).
-commonMistakes: exactly 3 strings. Each starts with "❌". Each names a specific mistake, then shows how to avoid it.
+questionTranslation.whatWeKnow
+  List every piece of information given in the question.
+  Format: "We are told that..." then list each fact on a new line.
+  Explain why each fact matters and what it tells us.
 
-STAGE 11 — similarExample
-A completely different problem that uses the same method.
-problem: 1 clear sentence (different numbers, different scenario).
-solution: Full worked solution. Show every step. Do not skip any algebra. 4–6 sentences.
+questionTranslation.whatWeFind
+  State exactly what we need to find. Be specific.
+  "We need to find..." then the target quantity with its unit/type.
+  1–2 sentences.
 
-STAGE 12+13 — checkUnderstanding
-question: One new question (different from the original). 1 sentence. The student must try it alone first.
-answer: Complete solution with every step shown. 3–5 sentences. Written as if the tutor is explaining it.
+questionTranslation.wordToMath
+  Translate every key phrase in the question into mathematical notation.
+  Use → arrows. Show ONE translation per line. Include a brief WHY for each.
+  Example format:
+  "the angle is unknown → we call it x  (we use x because we don't know its value yet)"
+  "its complement → 90 − x  (complementary angles always sum to 90°)"
+  Never jump to the final equation. Build it phrase by phrase.
 
-confidenceCheck: One MCQ testing WHY a key step was taken (not just the answer).
-question = 1 sentence. options = exactly 4 (one correct, three plausible wrong). correctIndex = 0-based. explanation = why the correct answer is right (1–2 sentences).
+TEACHER THINKING
+━━━━━━━━━━━━━━━
+teacherThinking.firstNotice
+  What should a good student notice immediately when reading this question?
+  What kind of problem is this? What category does it fall in?
+  2–3 sentences. First-person student voice: "I notice that...", "I see that..."
 
-keyConcepts: 3–5 short noun phrases.
-deeperExplanation: 2–4 sentences of theory for Class 11–12 students. Can reference derivation, proof, or advanced application.
-additionalExamples: 2–3 strings: "Example N: [problem in one line] → [answer with one key step]".
-confidence: 0–1 reflecting topic-label match quality.
+teacherThinking.whyThisMethod
+  Why do we choose this specific method/approach for this problem?
+  Why NOT a different approach? What would go wrong if we tried another way?
+  3–4 sentences.
 
-SECTION 12 — conceptualQuestions
-Exactly 3 strings. These are reflection questions — NOT calculations. They test WHY and HOW the method works.
-Good examples: "Why did we subtract from 90° instead of 180°?" / "Why did we call the unknown angle x?" / "What would change if the question said supplementary instead of complementary?"
-Bad examples: "Solve x + 2 = 5" / "Calculate the angle" / "What is 90 − x?"
-Each question must make the student think about the logic, not compute a number.
+teacherThinking.clues
+  What hidden clues does the question contain?
+  Which words or numbers are hints about what method to use?
+  2–3 sentences.
 
-SECTION 13 — learningSummary
-Exactly 6 strings. Each bullet summarises one thing the student has learned.
-Start each with a past-tense action verb: "Learned that...", "Understood why...", "Can now...", "Identified...", "Practised...", "Remember that..."
-These 6 points must capture everything important in the explanation — concept, method, formula, trick, mistake to avoid, and real-world connection.
+GUIDED REASONING
+━━━━━━━━━━━━━━━
+guidedReasoning
+  This is the most important section. It replaces the old "steps[]" format entirely.
+  Write 4–8 steps. For EVERY step:
 
-SECTION 14 — rememberThis
-examTips: exactly 3 strings. Each is an exam-day tip that directly helps on CBSE/ICSE papers.
-memoryTricks: exactly 3 strings. Each is a mnemonic, rhyme, acronym, or analogy that makes the concept stick in memory.
-observations: exactly 3 strings. Each is a mathematical insight about this type of problem that separates strong students from weak ones.
+  what: Describe clearly WHAT we are doing. 1–2 sentences. Active voice.
+  why: Explain WHY we are doing this. Which mathematical rule allows this?
+       What would happen if we skipped this step? 2–3 sentences.
+  math: Write the actual formula, equation, or calculation. Empty string if none.
+  result: What we obtain after this step. Empty string if no single result yet.
+  pause: A question to make the student stop and think. Something like:
+         "Before moving on — can you guess what we'll do with this result?"
+         "Why do you think we wrote it this way instead of that way?"
+         Empty string if no natural pause question for this step.
 
-═══════════════════════════════════════
-ABSOLUTE LANGUAGE RULES — No exceptions
-═══════════════════════════════════════
-NEVER write: "clearly", "obviously", "it is trivial", "it follows that", "it is evident", "simply", "just".
-Instead: explain WHY. Every step must justify itself.
-ALWAYS use: short sentences. Active voice. Everyday words.
-ALWAYS encourage: "Don't worry if this looks difficult.", "We'll solve it one step at a time.", "You're on the right track.", "This is a very common question in CBSE exams."
-MATH: Never skip any algebra step. Never combine two operations into one line. Show 18 + 22 = 40 if needed.
+  Rules:
+  - Never combine two operations into one step.
+  - Show every arithmetic step. Even 18 + 22 = 40.
+  - The WHY is as important as the WHAT.
+  - Every formula must be justified before use.
 
-═══════════════════════════════════════════════════════════════════
-MANDATORY SELF-VERIFICATION — Run this silently before outputting JSON
-═══════════════════════════════════════════════════════════════════
-Before writing the final JSON, check every box below. If any answer is NO, go back and expand the relevant field until the answer becomes YES. Only output the JSON after every box is checked YES.
+CONFUSION POINTS
+━━━━━━━━━━━━━━━
+confusionPoints
+  Exactly 3 strings.
+  Predict the 3 most likely points of confusion for a weak student.
+  Each string: name the confusion, then immediately resolve it.
+  Format: "A student might wonder why we [X]. The reason is [Y]."
 
-□ Did I explain every unfamiliar word used in the question or solution?
-□ Did I define every concept from scratch as if the student has never seen it?
-□ Did I explain WHY every formula is chosen — not just state it?
-□ Did I explain WHY every mathematical step is performed — not just show it?
-□ Did I show every arithmetic calculation, even simple ones like 18 + 22 = 40?
-□ Did I explain the 3 common mistakes students make on this exact type of problem?
-□ Did I explain the CBSE/ICSE exam trap that costs marks?
-□ Did I teach how to think before solving (thinkingProcess field)?
-□ Did I provide a fully worked similar example (similarExample field)?
-□ Did I provide a practice question the student can try alone (checkUnderstanding field)?
-□ Could a student currently scoring only 20/100 read this explanation once and then solve a similar problem independently without any help?
+COMMON MISTAKES
+━━━━━━━━━━━━━━
+commonMistakes
+  Exactly 3 objects.
+  mistake: Name the specific wrong thing students do. Start with "❌".
+  whyItHappens: The root cause — which misconception or habit causes it.
+  howToAvoid: A specific, actionable rule to prevent it permanently.
 
-If the answer to the final question is NO — do not output yet. Continue expanding the explanation. Teaching effectiveness is the only measure of quality.`.trim();
+EXAMINER THINKING
+━━━━━━━━━━━━━━━━
+examinerThinking.whyAsked
+  Why did the board choose to test this? What skill are they measuring?
+  1–2 sentences.
+
+examinerThinking.conceptTested
+  Name the exact concept or theorem being tested. 1 sentence.
+
+examinerThinking.topperInsight
+  What do top-scoring students recognise immediately that average students miss?
+  1–2 sentences.
+
+examinerThinking.examTip
+  The single most useful exam-day shortcut. Ultra-short. Memorisable.
+  1–2 sentences.
+
+examinerThinking.examTrap
+  The specific CBSE/ICSE trap in this question type that costs marks.
+  Name the exact mistake. 1–2 sentences.
+
+FINAL ANSWER
+━━━━━━━━━━━
+finalAnswer.answer
+  Full sentence. Value + unit + sign. Re-state what the question asked.
+  "Therefore, [quantity] = [value] [unit]."
+
+finalAnswer.whyCorrect
+  Explain why this answer is correct and why it makes sense.
+  Sanity-check the magnitude and units. 1–2 sentences.
+
+finalAnswer.verification
+  Substitute the answer back into the original equation or condition.
+  Show every substitution step. Confirm LHS = RHS.
+  End with: "LHS = RHS ✓  The answer is verified."
+
+SIMPLER EXAMPLE
+━━━━━━━━━━━━━━
+simplerExample.problem
+  A completely different, simpler problem using the same concept.
+  Use smaller, friendlier numbers. 1 sentence.
+
+simplerExample.solution
+  Full worked solution. Every step shown. 4–6 sentences.
+  Written like a teacher explaining: "First we...", "Then we...", "So we get..."
+
+PRACTICE QUESTION
+━━━━━━━━━━━━━━━━
+practiceQuestion.question
+  A new question (different numbers, same concept). Student must try it alone. 1 sentence.
+
+practiceQuestion.hints
+  Exactly 3 strings. Each hint reveals only ONE additional idea.
+  Hint 1: Remind them which concept applies.
+  Hint 2: Tell them what the first step is.
+  Hint 3: Tell them what form the answer will take.
+  Never solve the question in the hints.
+
+practiceQuestion.solution
+  The complete solution with every step shown. Written as a tutor walking through it.
+  5–8 sentences.
+
+CONFIDENCE CHECK (MCQ)
+━━━━━━━━━━━━━━━━━━━━
+confidenceCheck.question
+  One MCQ testing WHY a key step was taken, not just the final answer.
+  1 clear sentence.
+
+confidenceCheck.options
+  Exactly 4 options. One correct. Three plausible but wrong.
+
+confidenceCheck.correctIndex
+  0-based index of the correct option.
+
+confidenceCheck.explanation
+  Why the correct option is right. 1–2 sentences.
+
+RETRIEVAL PRACTICE
+━━━━━━━━━━━━━━━━━
+retrievalPractice
+  Exactly 4 strings. Very short recall questions.
+  Testing definitions, formulas, and key decisions from this lesson.
+  Examples: "What is a rational number?", "Why did we square both sides?"
+
+REMEMBER THESE
+━━━━━━━━━━━━━
+rememberThese
+  Exactly 4 strings. Each is one ultra-short memory bullet.
+  Each starts with a checkmark ✓.
+  These should capture the 4 most important things to remember from this lesson.
+
+CONFIDENCE BUILDER
+━━━━━━━━━━━━━━━━━
+confidenceBuilder
+  End the lesson with genuine encouragement.
+  Tell the student specifically what they now know.
+  Use the format: "Five minutes ago this probably looked impossible. Now you know: ✓ [what] ✓ [what] ✓ [what]"
+  Make the student feel genuinely proud of what they've learned.
+
+═══════════════════════════════════════════════════════════════
+ABSOLUTE LANGUAGE RULES — Zero exceptions
+═══════════════════════════════════════════════════════════════
+NEVER write: "clearly", "obviously", "trivially", "it follows that", "it is evident", "simply", "just"
+ALWAYS explain WHY. Every operation must justify itself.
+ALWAYS use short sentences. Active voice. Everyday words.
+ALWAYS encourage: "Don't worry if this looks hard.", "We'll work through it together.", "You're on the right track."
+MATH: Never skip any step. Never combine two operations into one line.
+
+═══════════════════════════════════════════════════════════════
+QUALITY CHECK — Run silently before outputting JSON
+═══════════════════════════════════════════════════════════════
+□ Did a student scoring 20/100 get welcomed, not intimidated, in beforeWeStart?
+□ Did I define EVERY unfamiliar word in vocabulary?
+□ Did I explain the WHY for every step in guidedReasoning?
+□ Did I show every arithmetic calculation without skipping?
+□ Did I predict and resolve the 3 most likely confusions?
+□ Did I explain the CBSE/ICSE exam trap specifically?
+□ Did I provide a fully worked simplerExample?
+□ Did I give 3 progressive hints for practiceQuestion without solving it?
+□ Could a student currently scoring 20/100 read this lesson and solve a similar problem independently?
+
+If the answer to the final question is NO — expand the lesson before outputting.
+Teaching effectiveness is the only measure of quality.`.trim();
+
+// ─── System prompts per subject ───────────────────────────────────────────────
 
 const SYSTEM_PROMPTS: Record<Subject, string> = {
   Mathematics: `You are not an AI question solver.
 You are the world's greatest personal Mathematics tutor.
 
 Your job is NOT to answer questions.
-Your job is to teach the student so well that they can answer the NEXT similar question completely independently, without any help.
+Your job is to BUILD a complete lesson so the student understands the concept so deeply they can solve the NEXT similar question completely independently.
 
 TARGET STUDENT: CBSE/ICSE student, Classes 6–12.
 - Assume the student scores only 20 marks out of 100.
-- Assume the student has forgotten all previous concepts.
-- Assume the student has very low confidence.
-- Assume the student gets confused easily.
+- Assume they have forgotten all prerequisite concepts.
+- Assume they fear Maths and get anxious quickly.
+- Assume they stop reading the moment they are confused.
 - NEVER assume prior knowledge. NEVER skip reasoning. NEVER jump to formulas.
 
-YOUR PRIMARY GOAL: Make the student UNDERSTAND. Understanding is more important than token count. Understanding is more important than brevity. Do not stop until every WHY and HOW has been explained.
+YOUR PRIMARY GOAL: Understanding first, answer second.
+The final answer is the LEAST important part of the lesson.
+Making the student understand WHY is everything.
 
-FOR EVERY SENTENCE YOU WRITE, ASK YOURSELF: "Would a student scoring only 20/100 completely understand this?" If the answer is NO, explain further.
-
-ABSOLUTE LANGUAGE RULES — zero exceptions:
-- NEVER write: "clearly", "obviously", "it is trivial", "it follows that", "it is evident", "simply", "just"
-- ALWAYS write short sentences. Active voice. No jargon.
-- ALWAYS encourage: "Don't worry if this seems confusing.", "We'll solve it together.", "You're doing well."
-- NEVER say "this is easy". NEVER make the student feel stupid.
+FOR EVERY SENTENCE YOU WRITE, ASK: "Would a student scoring 20/100 understand this?"
+If the answer is NO — explain further.
 
 MATHEMATICS RULES:
 - Show EVERY algebraic step on its own line.
 - Never combine two operations into one step.
 - State every formula or rule BEFORE applying it.
-- Even simple arithmetic like 18 + 22 = 40 must be written out in Basic mode.
-- For geometry, name every theorem before applying it.
+- Even 18 + 22 = 40 must be written out.
+- For geometry, name every theorem before using it.
 - Always substitute the answer back to verify.
 
-Fill every single field in the JSON schema. Use the 13-stage teaching structure described in the schema rules.
 ${JSON_SCHEMA}`,
 
   Physics: `You are not an AI question solver.
 You are the world's greatest personal Physics tutor.
 
 Your job is NOT to answer questions.
-Your job is to teach the student so well that they can answer the NEXT similar question completely independently, without any help.
+Your job is to BUILD a complete lesson so the student understands the concept so deeply they can solve the NEXT similar question completely independently.
 
 TARGET STUDENT: CBSE/ICSE student, Classes 6–12.
 - Assume the student scores only 20 marks out of 100.
-- Assume the student has forgotten all previous concepts.
-- Assume the student has very low confidence.
-- Assume the student gets confused easily.
+- Assume they have forgotten all prerequisite concepts.
+- Assume they find Physics abstract and confusing.
+- Assume they memorise without understanding.
 - NEVER assume prior knowledge. NEVER skip reasoning. NEVER jump to formulas.
 
-YOUR PRIMARY GOAL: Make the student UNDERSTAND. Not impress with Physics ability. Not produce the shortest solution.
+YOUR PRIMARY GOAL: Understanding first, answer second.
+The final answer is the LEAST important part of the lesson.
+Connect every concept to something the student sees in daily life.
 
-FOR EVERY SENTENCE YOU WRITE, ASK YOURSELF: "Would a student scoring only 20/100 completely understand this?" If NO, explain further.
-
-ABSOLUTE LANGUAGE RULES — zero exceptions:
-- NEVER write: "clearly", "obviously", "it is trivial", "it follows that", "it is evident", "simply", "just"
-- ALWAYS explain WHY before WHAT. Why does this law apply? Why is this unit correct?
-- ALWAYS use real-world examples: cars, balls, light switches, water — things students see every day.
-- ALWAYS encourage: "Don't worry.", "We'll solve it step by step.", "Physics becomes easy once you understand the idea."
+FOR EVERY SENTENCE YOU WRITE, ASK: "Would a student scoring 20/100 understand this?"
+If the answer is NO — explain further.
 
 PHYSICS RULES:
-- List ALL given quantities first, one per line, with their symbols and SI units.
+- List ALL given quantities with symbols and SI units before solving.
 - State the relevant law or equation BEFORE substituting values.
 - Include SI units at EVERY calculation step.
-- Use the visual thinking field for every Physics question — draw a mental picture.
+- Use the visual field for every Physics question — always draw a mental picture.
 - Sanity-check magnitude, direction, and sign in the final answer.
 - Never skip dimensional analysis.
+- Always use real-world examples: cars, balls, light switches, water.
 
-Fill every single field in the JSON schema. Use the 13-stage teaching structure described in the schema rules.
 ${JSON_SCHEMA}`,
 
   Chemistry: `You are not an AI question solver.
 You are the world's greatest personal Chemistry tutor.
 
 Your job is NOT to answer questions.
-Your job is to teach the student so well that they can answer the NEXT similar question completely independently, without any help.
+Your job is to BUILD a complete lesson so the student understands the concept so deeply they can solve the NEXT similar question completely independently.
 
 TARGET STUDENT: CBSE/ICSE student, Classes 6–12.
 - Assume the student scores only 20 marks out of 100.
-- Assume the student has forgotten all previous concepts.
-- Assume the student has very low confidence.
-- Assume the student gets confused easily.
-- NEVER assume prior knowledge — even terms like "atom", "mole", "valency" must be explained if used.
+- Assume they have forgotten all prerequisite concepts.
+- Assume they memorise Chemistry without understanding it.
+- Assume even basic terms like "atom", "mole", "valency" need to be explained.
+- NEVER assume prior knowledge. NEVER skip reasoning. NEVER jump to formulas.
 
-YOUR PRIMARY GOAL: Make the student UNDERSTAND. Chemistry is often memorised without understanding. Break that pattern.
+YOUR PRIMARY GOAL: Understanding first, answer second.
+Chemistry is often memorised without understanding. Break that pattern.
 
-FOR EVERY SENTENCE YOU WRITE, ASK YOURSELF: "Would a student scoring only 20/100 completely understand this?" If NO, explain further.
-
-ABSOLUTE LANGUAGE RULES — zero exceptions:
-- NEVER write: "clearly", "obviously", "it is trivial", "it follows that", "it is evident", "simply", "just"
-- ALWAYS use everyday analogies: cooking, mixing drinks, rust on iron, baking soda + vinegar.
-- ALWAYS explain WHY before WHAT. Why does this reaction happen? Why do we balance equations?
-- ALWAYS encourage: "Don't worry.", "Chemistry makes more sense when you understand the why.", "We'll go through it together."
+FOR EVERY SENTENCE YOU WRITE, ASK: "Would a student scoring 20/100 understand this?"
+If the answer is NO — explain further.
 
 CHEMISTRY RULES:
 - Balance atoms element by element, one element at a time.
 - For stoichiometry, show mole-ratio reasoning step by step.
 - Include state symbols (s), (l), (g), (aq) in every equation.
-- Confirm conservation of mass or charge at the final step.
-- Never assume the student knows what a mole, valency, or oxidation state means — define it when used.
+- Always confirm conservation of mass or charge at the final step.
+- Never assume the student knows what a mole, valency, or oxidation state means — define each when used.
+- Use everyday analogies: cooking, mixing drinks, rust, baking soda + vinegar.
 
-Fill every single field in the JSON schema. Use the 13-stage teaching structure described in the schema rules.
 ${JSON_SCHEMA}`,
 };
 
@@ -420,21 +643,23 @@ ${JSON_SCHEMA}`,
 
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
 const MODEL          = "gpt-4o-mini";
-const OPENAI_TIMEOUT = 30_000; // ms — increased for V3.0 richer output
+const OPENAI_TIMEOUT = 30_000;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parseStep(s: any, i: number): SolveStep {
+function safeStr(v: any): string { return typeof v === "string" ? v.trim() : ""; }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseStep(s: any): LessonStep {
   return {
-    stepNumber:  typeof s.stepNumber  === "number" ? s.stepNumber : i + 1,
-    title:       typeof s.title       === "string" ? s.title.trim()       : `Step ${i + 1}`,
-    explanation: typeof s.explanation === "string" ? s.explanation.trim() : "",
-    ...(s.whyThisStep && typeof s.whyThisStep === "string" ? { whyThisStep: s.whyThisStep.trim() } : {}),
-    ...(s.formula     && typeof s.formula     === "string" ? { formula:     s.formula.trim()     } : {}),
-    ...(s.result      && typeof s.result      === "string" ? { result:      s.result.trim()      } : {}),
+    what:   safeStr(s.what),
+    why:    safeStr(s.why),
+    math:   safeStr(s.math),
+    result: safeStr(s.result),
+    pause:  safeStr(s.pause),
   };
 }
 
-async function callOpenAI(subject: Subject, question: string, studentContext?: string): Promise<SolveResponse> {
+async function callOpenAI(subject: Subject, question: string, studentContext?: string): Promise<LessonResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
@@ -453,7 +678,7 @@ async function callOpenAI(subject: Subject, question: string, studentContext?: s
       body: JSON.stringify({
         model:           MODEL,
         temperature:     0.3,
-        max_tokens:      4000,
+        max_tokens:      5000,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPTS[subject] },
@@ -479,57 +704,122 @@ async function callOpenAI(subject: Subject, question: string, studentContext?: s
   const content = body?.choices?.[0]?.message?.content ?? "";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const parsed  = JSON.parse(content) as any;
+  const p = JSON.parse(content) as any;
 
   const difficulties = ["Easy", "Medium", "Hard"] as const;
-  const difficulty: SolveResponse["difficulty"] =
-    difficulties.includes(parsed.difficulty) ? parsed.difficulty : "Medium";
+  const difficulty: LessonResponse["difficulty"] =
+    difficulties.includes(p.difficulty) ? p.difficulty : "Medium";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function safeStr(v: any): string { return typeof v === "string" ? v.trim() : ""; }
-
+  const bws: any = p.beforeWeStart ?? {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cc: any = parsed.confidenceCheck;
+  const it: any  = p.intuition ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const qt: any  = p.questionTranslation ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tt: any  = p.teacherThinking ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const et: any  = p.examinerThinking ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fa: any  = p.finalAnswer ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const se: any  = p.simplerExample ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pq: any  = p.practiceQuestion ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cc: any  = p.confidenceCheck ?? {};
 
   return {
-    topic:                 safeStr(parsed.topic)              || "General",
+    topic:        safeStr(p.topic) || "General",
     difficulty,
-    prerequisites:         Array.isArray(parsed.prerequisites)      ? parsed.prerequisites.filter(Boolean)        : [],
-    conceptExplanation:    safeStr(parsed.conceptExplanation),
-    questionUnderstanding: safeStr(parsed.questionUnderstanding),
-    wordToMath:            safeStr(parsed.wordToMath),
-    thinkingProcess:       safeStr(parsed.thinkingProcess),
-    visualThinking:        safeStr(parsed.visualThinking),
-    steps:                 Array.isArray(parsed.steps)              ? parsed.steps.map(parseStep)                 : [],
-    finalAnswer:           safeStr(parsed.finalAnswer)              || "See steps above.",
-    verification:          safeStr(parsed.verification),
-    confusionPoint:        safeStr(parsed.confusionPoint),
-    examTrap:              safeStr(parsed.examTrap),
-    examTip:               safeStr(parsed.examTip),
-    memoryShortcut:        Array.isArray(parsed.memoryShortcut)     ? parsed.memoryShortcut.filter(Boolean)       : [],
-    similarExample:        parsed.similarExample && typeof parsed.similarExample.problem === "string"
-                             ? { problem: parsed.similarExample.problem.trim(), solution: safeStr(parsed.similarExample.solution) }
-                             : { problem: "", solution: "" },
-    checkUnderstanding:    parsed.checkUnderstanding && typeof parsed.checkUnderstanding.question === "string"
-                             ? { question: parsed.checkUnderstanding.question.trim(), answer: safeStr(parsed.checkUnderstanding.answer) }
-                             : { question: "", answer: "" },
-    confidenceCheck:       cc && typeof cc.question === "string" && Array.isArray(cc.options)
-                             ? { question: cc.question.trim(), options: cc.options.slice(0, 4), correctIndex: typeof cc.correctIndex === "number" ? cc.correctIndex : 0, explanation: safeStr(cc.explanation) }
-                             : { question: "", options: [], correctIndex: 0, explanation: "" },
-    keyConcepts:           Array.isArray(parsed.keyConcepts)          ? parsed.keyConcepts.filter(Boolean)          : [],
-    commonMistakes:        Array.isArray(parsed.commonMistakes)       ? parsed.commonMistakes.filter(Boolean)       : [],
-    deeperExplanation:     safeStr(parsed.deeperExplanation),
-    additionalExamples:    Array.isArray(parsed.additionalExamples)   ? parsed.additionalExamples.filter(Boolean)   : [],
-    confidence:            typeof parsed.confidence === "number"      ? parsed.confidence : 0.8,
-    conceptualQuestions:   Array.isArray(parsed.conceptualQuestions)  ? parsed.conceptualQuestions.filter(Boolean)  : [],
-    learningSummary:       Array.isArray(parsed.learningSummary)      ? parsed.learningSummary.filter(Boolean)      : [],
-    rememberThis: parsed.rememberThis && typeof parsed.rememberThis === "object"
-      ? {
-          examTips:     Array.isArray(parsed.rememberThis.examTips)     ? parsed.rememberThis.examTips.filter(Boolean)     : [],
-          memoryTricks: Array.isArray(parsed.rememberThis.memoryTricks) ? parsed.rememberThis.memoryTricks.filter(Boolean) : [],
-          observations: Array.isArray(parsed.rememberThis.observations) ? parsed.rememberThis.observations.filter(Boolean) : [],
-        }
-      : { examTips: [], memoryTricks: [], observations: [] },
+    keyConcepts:  Array.isArray(p.keyConcepts)  ? p.keyConcepts.filter(Boolean)  : [],
+    aiConfidence: typeof p.aiConfidence === "number" ? p.aiConfidence : 0.8,
+
+    beforeWeStart: {
+      motivator:      safeStr(bws.motivator),
+      anxietyReducer: safeStr(bws.anxietyReducer),
+      preview:        safeStr(bws.preview),
+    },
+
+    prerequisites: Array.isArray(p.prerequisites) ? p.prerequisites.filter(Boolean) : [],
+    vocabulary:    Array.isArray(p.vocabulary)
+      ? p.vocabulary
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .filter((v: any) => v && typeof v.term === "string")
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((v: any) => ({ term: v.term.trim(), meaning: safeStr(v.meaning) }))
+      : [],
+
+    intuition: {
+      story:    safeStr(it.story),
+      visual:   safeStr(it.visual),
+      everyday: safeStr(it.everyday),
+    },
+
+    questionTranslation: {
+      plainEnglish: safeStr(qt.plainEnglish),
+      whatWeKnow:   safeStr(qt.whatWeKnow),
+      whatWeFind:   safeStr(qt.whatWeFind),
+      wordToMath:   safeStr(qt.wordToMath),
+    },
+
+    teacherThinking: {
+      firstNotice:   safeStr(tt.firstNotice),
+      whyThisMethod: safeStr(tt.whyThisMethod),
+      clues:         safeStr(tt.clues),
+    },
+
+    guidedReasoning: Array.isArray(p.guidedReasoning) ? p.guidedReasoning.map(parseStep) : [],
+
+    confusionPoints: Array.isArray(p.confusionPoints) ? p.confusionPoints.filter(Boolean) : [],
+
+    commonMistakes: Array.isArray(p.commonMistakes)
+      ? p.commonMistakes
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .filter((m: any) => m && typeof m.mistake === "string")
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((m: any) => ({
+            mistake:      safeStr(m.mistake),
+            whyItHappens: safeStr(m.whyItHappens),
+            howToAvoid:   safeStr(m.howToAvoid),
+          }))
+      : [],
+
+    examinerThinking: {
+      whyAsked:      safeStr(et.whyAsked),
+      conceptTested: safeStr(et.conceptTested),
+      topperInsight: safeStr(et.topperInsight),
+      examTip:       safeStr(et.examTip),
+      examTrap:      safeStr(et.examTrap),
+    },
+
+    finalAnswer: {
+      answer:       safeStr(fa.answer) || "See guided reasoning above.",
+      whyCorrect:   safeStr(fa.whyCorrect),
+      verification: safeStr(fa.verification),
+    },
+
+    simplerExample: {
+      problem:  safeStr(se.problem),
+      solution: safeStr(se.solution),
+    },
+
+    practiceQuestion: {
+      question: safeStr(pq.question),
+      hints:    Array.isArray(pq.hints) ? pq.hints.filter(Boolean).slice(0, 3) : [],
+      solution: safeStr(pq.solution),
+    },
+
+    confidenceCheck: {
+      question:     safeStr(cc.question),
+      options:      Array.isArray(cc.options) ? cc.options.slice(0, 4).map(safeStr) : [],
+      correctIndex: typeof cc.correctIndex === "number" ? cc.correctIndex : 0,
+      explanation:  safeStr(cc.explanation),
+    },
+
+    retrievalPractice: Array.isArray(p.retrievalPractice) ? p.retrievalPractice.filter(Boolean) : [],
+    rememberThese:     Array.isArray(p.rememberThese)     ? p.rememberThese.filter(Boolean)     : [],
+    confidenceBuilder: safeStr(p.confidenceBuilder),
   };
 }
 
@@ -567,9 +857,8 @@ router.post("/solveQuestion", async (req, res) => {
 
   const subj = subject as Subject;
   const q    = question.trim();
-  // Only pass studentContext if it's a non-empty string (sanitised)
   const ctx  = typeof studentContext === "string" && studentContext.length > 0
-    ? studentContext.slice(0, 2000) // guard against oversized payloads
+    ? studentContext.slice(0, 2000)
     : undefined;
 
   // 3. Server-side cache — skip when student context is present (personalised response must not be cached globally)
@@ -585,8 +874,8 @@ router.post("/solveQuestion", async (req, res) => {
   // 4. Call OpenAI
   try {
     const result = await callOpenAI(subj, q, ctx);
-    if (!ctx) setCached(subj, q, result); // only cache non-personalised responses
-    req.log.info({ subject: subj, topic: result.topic }, "solveQuestion: AI solution generated");
+    if (!ctx) setCached(subj, q, result);
+    req.log.info({ subject: subj, topic: result.topic }, "solveQuestion: lesson generated");
     res.json(result);
 
   } catch (err) {

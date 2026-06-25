@@ -3,3 +3,4 @@
 - [Clerk Auth wiring](clerk-auth-wiring.md) — publishableKeyFromHost must come from @clerk/react/internal (not @clerk/shared/keys) in the frontend; proxy/key setup verbatim.
 - [Student Model Architecture](student-model-arch.md) — 7-service localStorage-first system under src/services/studentModel/; Firestore-ready data shapes; cache bypassed when studentContext present.
 - [AI Personalization Flow](ai-personalization-flow.md) — studentContext built client-side, sent to backend in body, injected into user message only; server never caches personalised responses.
+- [TeachingLesson Architecture](teaching-lesson-arch.md) — TeachingLesson is the new core AI response object replacing steps[]; AIResponse.lesson holds it; bank/fallback entries still use steps[] with legacy renderer.
