@@ -17,6 +17,7 @@ import { matchSolutionWithScore, type AIResponse } from "@/data/solutionBank";
 import { solveWithOpenAI, isOpenAIAvailable }      from "@/services/ai/openaiSolver";
 import { detectBestTopic }                          from "@/services/ai/topicMatcher";
 import { computeConfidenceBreakdown }               from "@/services/confidenceEngine";
+import { verifySolution }                           from "@/services/verificationEngine";
 import type { Subject } from "@/data/subjects";
 
 export type { AIResponse, SolutionStep, SimilarQuestion } from "@/data/solutionBank";
@@ -75,6 +76,8 @@ export async function solve(
   const topicMatch = detectBestTopic(question, subject);
   const topicConf  = topicMatch?.confidence ?? 0;
 
+  const detectedTopicName = topicMatch?.topic;
+
   // ── Path A: strong bank match ─────────────────────────────────────────────
   if (bankScore > 0) {
     onPhase?.(PHASES_BANK[2], 2);
@@ -84,20 +87,28 @@ export async function solve(
     onPhase?.(PHASES_BANK[4], 4);
     await delay(240);
 
-    const confidenceBreakdown = computeConfidenceBreakdown({
-      ocrConf:   ocrConfidence,
-      topicConf,
-      bankScore,
-      aiConf:    1.0,      // bank entries are authoritative
-      source:    "bank",
-    });
-
-    return {
+    const partial: AIResponse = {
       ...bankResp,
       detectedQuestion: detectedQ,
       source:           "bank",
-      confidenceBreakdown,
     };
+
+    const verificationResult = verifySolution({
+      solution:      partial,
+      detectedTopic: detectedTopicName,
+      ocrConfidence,
+    });
+
+    const confidenceBreakdown = computeConfidenceBreakdown({
+      ocrConf:           ocrConfidence,
+      topicConf,
+      bankScore,
+      aiConf:            1.0,
+      source:            "bank",
+      verificationScore: verificationResult.score,
+    });
+
+    return { ...partial, confidenceBreakdown, verificationResult };
   }
 
   // ── Path B: OpenAI ────────────────────────────────────────────────────────
@@ -112,15 +123,22 @@ export async function solve(
       onPhase?.(PHASES_AI[4], 4);
       await delay(200);
 
-      const confidenceBreakdown = computeConfidenceBreakdown({
-        ocrConf:   ocrConfidence,
-        topicConf,
-        bankScore: 0,
-        aiConf:    aiResp.confidence ?? 0.8,
-        source:    "openai",
+      const verificationResult = verifySolution({
+        solution:      aiResp,
+        detectedTopic: detectedTopicName,
+        ocrConfidence,
       });
 
-      return { ...aiResp, confidenceBreakdown };
+      const confidenceBreakdown = computeConfidenceBreakdown({
+        ocrConf:           ocrConfidence,
+        topicConf,
+        bankScore:         0,
+        aiConf:            aiResp.confidence ?? 0.8,
+        source:            "openai",
+        verificationScore: verificationResult.score,
+      });
+
+      return { ...aiResp, confidenceBreakdown, verificationResult };
 
     } catch {
       // OpenAI failed — fall through to fallback
@@ -135,18 +153,26 @@ export async function solve(
   onPhase?.(PHASES_BANK[4], 4);
   await delay(220);
 
-  const confidenceBreakdown = computeConfidenceBreakdown({
-    ocrConf:   ocrConfidence,
-    topicConf,
-    bankScore: 0,
-    aiConf:    0.5,
-    source:    "fallback",
-  });
-
-  return {
+  const fallbackPartial: AIResponse = {
     ...bankResp,
     detectedQuestion: detectedQ,
     source:           "fallback",
-    confidenceBreakdown,
   };
+
+  const verificationResult = verifySolution({
+    solution:      fallbackPartial,
+    detectedTopic: detectedTopicName,
+    ocrConfidence,
+  });
+
+  const confidenceBreakdown = computeConfidenceBreakdown({
+    ocrConf:           ocrConfidence,
+    topicConf,
+    bankScore:         0,
+    aiConf:            0.5,
+    source:            "fallback",
+    verificationScore: verificationResult.score,
+  });
+
+  return { ...fallbackPartial, confidenceBreakdown, verificationResult };
 }

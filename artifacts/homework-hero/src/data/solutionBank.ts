@@ -1,4 +1,7 @@
 import type { Subject } from "./subjects";
+import type { VerificationResult } from "@/services/verificationEngine";
+
+export type { VerificationResult };
 
 /**
  * Per-answer confidence breakdown computed by the confidence engine.
@@ -6,15 +9,17 @@ import type { Subject } from "./subjects";
  */
 export interface ConfidenceBreakdown {
   /** 0–100 — Tesseract OCR confidence (100 for typed questions) */
-  ocr:       number;
+  ocr:          number;
   /** 0–100 — Topic-detection pattern match strength */
-  topic:     number;
+  topic:        number;
   /** 0–100 — Keyword-density score against the question bank */
-  bankMatch: number;
+  bankMatch:    number;
   /** 0–100 — Model-reported answer confidence (100 for bank solutions) */
-  ai:        number;
+  ai:           number;
+  /** 0–100 — Solution Verification Engine composite score */
+  verification: number;
   /** 0–100 — Composite score used for tier display */
-  composite: number;
+  composite:    number;
 }
 
 export interface SolutionStep {
@@ -74,6 +79,8 @@ export interface AIResponse {
   confidence?: number;
   /** Full confidence breakdown (attached by the confidence engine after solving) */
   confidenceBreakdown?: ConfidenceBreakdown;
+  /** Verification result from the Solution Verification Engine */
+  verificationResult?: VerificationResult;
 }
 
 // ─── ALGEBRA: QUADRATIC EQUATIONS ──────────────────────────────────────────────

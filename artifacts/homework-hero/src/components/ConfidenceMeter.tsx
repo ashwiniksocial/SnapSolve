@@ -26,10 +26,11 @@ const SW   = 6;
 const CIRC = 2 * Math.PI * R; // ≈ 175.93
 
 const SIGNALS: { key: keyof Omit<ConfidenceBreakdown, "composite">; label: string }[] = [
-  { key: "ocr",       label: "Scan Quality"   },
-  { key: "topic",     label: "Topic Match"    },
-  { key: "bankMatch", label: "Question Bank"  },
-  { key: "ai",        label: "Answer Quality" },
+  { key: "ocr",          label: "Scan Quality"   },
+  { key: "topic",        label: "Topic Match"    },
+  { key: "bankMatch",    label: "Question Bank"  },
+  { key: "ai",           label: "Answer Quality" },
+  { key: "verification", label: "Verification"   },
 ];
 
 function SignalBar({ value, accentColor }: { value: number; accentColor: string }) {

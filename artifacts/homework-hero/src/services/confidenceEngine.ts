@@ -24,23 +24,28 @@ const BANK_SCORE_SCALE = 40;
 
 export interface ConfidenceInput {
   /** Raw Tesseract confidence / 100, or 1.0 for typed questions */
-  ocrConf:   number;
+  ocrConf:           number;
   /** TopicMatch.confidence from topicMatcher (0–1) */
-  topicConf: number;
+  topicConf:         number;
   /** Raw score from matchSolutionWithScore (0 = no match) */
-  bankScore: number;
+  bankScore:         number;
   /** Model-reported confidence from AIResponse.confidence (0–1) */
-  aiConf:    number;
+  aiConf:            number;
   /** Which resolution path was taken */
-  source:    "bank" | "openai" | "fallback";
+  source:            "bank" | "openai" | "fallback";
+  /** Verification Engine composite score 0–100 (optional — omit if not yet computed) */
+  verificationScore?: number;
 }
 
 /**
- * Compute a ConfidenceBreakdown from all four signals.
+ * Compute a ConfidenceBreakdown from all five signals.
  * All output fields are 0–100 integers.
+ *
+ * When verificationScore is provided it blends into the composite at 20% weight,
+ * pulling the final score toward the verification engine's assessment.
  */
 export function computeConfidenceBreakdown(input: ConfidenceInput): ConfidenceBreakdown {
-  const { ocrConf, topicConf, bankScore, aiConf, source } = input;
+  const { ocrConf, topicConf, bankScore, aiConf, source, verificationScore } = input;
 
   // Normalise bank score: 4 matched keywords → 1.0
   const bankNorm = Math.min(bankScore / BANK_SCORE_SCALE, 1);
@@ -48,13 +53,10 @@ export function computeConfidenceBreakdown(input: ConfidenceInput): ConfidenceBr
   // Source-adaptive base score
   let base: number;
   if (source === "bank") {
-    // Answer comes directly from bank → bank match drives confidence
     base = 60 + 40 * bankNorm;
   } else if (source === "openai") {
-    // AI solved it → model confidence is primary signal
     base = 55 + 40 * Math.min(aiConf, 1);
   } else {
-    // Fallback → topic + bank signal guide quality
     base = 40 + 25 * topicConf + 15 * bankNorm;
   }
 
@@ -64,12 +66,20 @@ export function computeConfidenceBreakdown(input: ConfidenceInput): ConfidenceBr
   // OCR penalty: only for very poor scans (below 65% confidence)
   const ocrPenalty = Math.max(0, (0.65 - Math.min(ocrConf, 1)) * 30);
 
+  // Pre-verification composite (0–100)
+  const baseComposite = Math.min(100, Math.max(0, base + topicBonus - ocrPenalty));
+
+  // Blend in verification score when available (20% weight)
+  const verif = verificationScore ?? 80; // default 80 when not yet computed
+  const composite = Math.round(baseComposite * 0.80 + verif * 0.20);
+
   return {
-    ocr:       Math.round(Math.min(ocrConf, 1) * 100),
-    topic:     Math.round(Math.min(topicConf, 1) * 100),
-    bankMatch: Math.round(bankNorm * 100),
-    ai:        Math.round(Math.min(aiConf, 1) * 100),
-    composite: Math.round(Math.min(100, Math.max(0, base + topicBonus - ocrPenalty))),
+    ocr:          Math.round(Math.min(ocrConf, 1) * 100),
+    topic:        Math.round(Math.min(topicConf, 1) * 100),
+    bankMatch:    Math.round(bankNorm * 100),
+    ai:           Math.round(Math.min(aiConf, 1) * 100),
+    verification: Math.round(Math.min(100, Math.max(0, verif))),
+    composite,
   };
 }
 

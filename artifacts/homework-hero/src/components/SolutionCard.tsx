@@ -3,6 +3,7 @@ import type { AIResponse } from "@/services/aiSolver";
 import type { Subject } from "@/data/subjects";
 import { SUBJECTS } from "@/data/subjects";
 import ConfidenceMeter from "@/components/ConfidenceMeter";
+import VerificationBadge from "@/components/VerificationBadge";
 
 interface Props {
   solution: AIResponse;
@@ -102,6 +103,11 @@ export default function SolutionCard({ solution }: Props) {
             AI
           </span>
         </div>
+      )}
+
+      {/* ── Verification Badge ────────────────────────────────────────────── */}
+      {solution.verificationResult && (
+        <VerificationBadge result={solution.verificationResult} />
       )}
 
       {/* ── Confidence Meter ──────────────────────────────────────────────── */}
