@@ -53,15 +53,20 @@ const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 /**
  * @param ocrConfidence  Tesseract confidence 0–1 (default 1.0 = typed question).
  *                       Passed through to the confidence engine.
+ * @param opts.skipBank      When true, skip Path A (bank match) and go straight to OpenAI.
+ *                           Used by Practice mode to force the full AI teaching pipeline.
+ * @param opts.requireLesson When true, throw if the AI pipeline fails or returns no lesson.
+ *                           Disables all silent fallbacks. Failures become visible errors.
  */
 export async function solve(
   subject:       Subject,
   question:      string,
   ocrConfidence  = 1.0,
-  onPhase?:      (msg: string, index: number) => void
+  onPhase?:      (msg: string, index: number) => void,
+  opts?:         { skipBank?: boolean; requireLesson?: boolean }
 ): Promise<AIResponse> {
 
-  console.log(`[PIPELINE:A1] solve() called — subject="${subject}" ocrConf=${ocrConfidence} q="${question.slice(0, 60)}…"`);
+  console.log(`[PIPELINE:A1] solve() called — subject="${subject}" skipBank=${opts?.skipBank ?? false} requireLesson=${opts?.requireLesson ?? false} q="${question.slice(0, 60)}…"`);
 
   // Phase 0 — reading
   onPhase?.(PHASES_BANK[0], 0);
@@ -74,7 +79,7 @@ export async function solve(
   const { response: bankResp, score: bankScore } = matchSolutionWithScore(subject, question);
   const detectedQ  = question.trim() || bankResp.detectedQuestion;
 
-  console.log(`[PIPELINE:A2] question bank match score=${bankScore} — ${bankScore > 0 ? "MATCH FOUND → Path A (bank)" : "no match → checking OpenAI"}`);
+  console.log(`[PIPELINE:A2] question bank match score=${bankScore} — ${opts?.skipBank ? "skipBank=true → BYPASSING bank (Practice mode forces full AI pipeline)" : bankScore > 0 ? "MATCH FOUND → Path A (bank)" : "no match → checking OpenAI"}`);
 
   // Compute topic confidence once — used by all confidence paths
   const topicMatch = detectBestTopic(question, subject);
@@ -82,8 +87,8 @@ export async function solve(
 
   const detectedTopicName = topicMatch?.topic;
 
-  // ── Path A: strong bank match ─────────────────────────────────────────────
-  if (bankScore > 0) {
+  // ── Path A: strong bank match (skipped when skipBank=true) ───────────────
+  if (!opts?.skipBank && bankScore > 0) {
     console.log(`[PIPELINE:A3] PATH A — returning bank solution, source="bank", renderer=LegacyRenderer`);
     onPhase?.(PHASES_BANK[2], 2);
     await delay(500);
@@ -148,6 +153,12 @@ export async function solve(
       return { ...aiResp, confidenceBreakdown, verificationResult };
 
     } catch (err) {
+      if (opts?.requireLesson) {
+        // requireLesson=true means Practice mode: no silent fallback allowed.
+        // The caller (Solution.tsx) will catch this and show an explicit error UI.
+        console.error(`[PIPELINE:A4] PATH B FAILED — requireLesson=true → re-throwing, no fallback: "${String(err)}"`);
+        throw err;
+      }
       console.warn(`[PIPELINE:A4] PATH B FAILED — error="${String(err)}" → falling through to Path C (fallback)`);
       // OpenAI failed — fall through to fallback
     }
@@ -156,6 +167,13 @@ export async function solve(
   }
 
   // ── Path C: fallback (no key / OpenAI error / bank default) ──────────────
+  // When requireLesson=true, Path C is forbidden — the pipeline must either
+  // return a real TeachingLesson or throw a visible error.
+  if (opts?.requireLesson) {
+    const reason = isOpenAIAvailable() ? "backend_unavailable_or_no_key" : "openai_not_configured";
+    console.error(`[PIPELINE:A3] PATH C BLOCKED — requireLesson=true, reason="${reason}" → throwing to caller`);
+    throw new Error(`teaching_pipeline_unavailable — ${reason}`);
+  }
   console.log("[PIPELINE:A3] PATH C — returning fallback solution, source=\"fallback\", renderer=LegacyRenderer");
   onPhase?.(PHASES_BANK[2], 2);
   await delay(480);

@@ -14,7 +14,7 @@ import StarBurst from "@/components/StarBurst";
 import SocraticTutor from "@/components/socratic/SocraticTutor";
 import { getMasteryEntry } from "@/services/studentModel";
 
-type PageState = "loading" | "done";
+type PageState = "loading" | "done" | "error";
 
 export default function Solution() {
   const { session, update } = useSession();
@@ -25,6 +25,7 @@ export default function Solution() {
 
   const [pageState, setPageState]   = useState<PageState>("loading");
   const [solution, setSolution]     = useState<AIResponse | null>(null);
+  const [solveError, setSolveError] = useState<string | null>(null);
   const [phaseMsg, setPhaseMsg]     = useState("");
   const [phaseIdx, setPhaseIdx]     = useState(0);
   const [marked,   setMarked]       = useState(false);
@@ -32,9 +33,14 @@ export default function Solution() {
   const [showSimilar, setShowSimilar] = useState(false);
   const [showTutor,   setShowTutor]   = useState(false);
 
+  // Practice mode: ?practiceMode=1 forces full AI pipeline (skipBank + requireLesson).
+  // Failures surface as an explicit error UI — no silent fallback to bank/static data.
+  const practiceMode = new URLSearchParams(window.location.search).get("practiceMode") === "1";
+
   const runSolver = useCallback(async () => {
     setPageState("loading");
     setSolution(null);
+    setSolveError(null);
     setShowSimilar(false);
 
     // ── Dev audit mode: ?audit=1 bypasses session/OpenAI, loads fixture direct ──
@@ -49,18 +55,41 @@ export default function Solution() {
       return;
     }
 
-    const result = await solve(
-      session.subject,
-      session.question,
-      session.ocrConfidence ?? 1,
-      (msg, idx) => { setPhaseMsg(msg); setPhaseIdx(idx); }
-    );
+    if (practiceMode) {
+      console.log(`[PRACTICE:PIPELINE] practiceMode=1 detected — calling solve() with skipBank=true requireLesson=true`);
+      console.log(`[PRACTICE:PIPELINE] subject="${session.subject}" q="${session.question.slice(0, 80)}"`);
+      console.log(`[PRACTICE:PIPELINE] → POST /api/solveQuestion required (no bank fallback, no static fallback)`);
+    }
 
-    setSolution(result);
-    update({ practiceTopic: result.topic });
-    recordSolve(session.subject, result.topic, true);
-    setPageState("done");
-  }, [session.subject, session.question]);
+    try {
+      const result = await solve(
+        session.subject,
+        session.question,
+        session.ocrConfidence ?? 1,
+        (msg, idx) => { setPhaseMsg(msg); setPhaseIdx(idx); },
+        practiceMode ? { skipBank: true, requireLesson: true } : undefined
+      );
+
+      if (practiceMode) {
+        console.log(`[PRACTICE:PIPELINE] solve() returned — source="${result.source}" lesson=${!!result.lesson}`);
+        if (result.lesson) {
+          console.log(`[PRACTICE:PIPELINE] ✓ TeachingLesson present — rendering via LessonRenderer`);
+          console.log(`[PRACTICE:PIPELINE] ✓ Legacy renderer (q.steps[] / q.answer) NOT used`);
+        }
+      }
+
+      setSolution(result);
+      update({ practiceTopic: result.topic });
+      recordSolve(session.subject, result.topic, true);
+      setPageState("done");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[PRACTICE:PIPELINE] ✗ Pipeline failed — "${msg}"`);
+      console.error(`[PRACTICE:PIPELINE] ✗ Showing explicit error UI — no fallback, no hidden recovery`);
+      setSolveError(msg);
+      setPageState("error");
+    }
+  }, [session.subject, session.question, practiceMode]);
 
   useEffect(() => { runSolver(); }, []);
 
@@ -106,6 +135,36 @@ export default function Solution() {
             currentPhase={phaseMsg}
             phaseIndex={phaseIdx}
           />
+        )}
+
+        {/* Error state — only shown when pipeline fails with requireLesson=true */}
+        {pageState === "error" && (
+          <div className="fade-up space-y-4">
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-5 text-center space-y-3">
+              <p className="text-3xl">⚠️</p>
+              <p className="font-bold text-red-700 text-base">Teaching lesson generation failed.</p>
+              <p className="text-xs text-red-600 leading-relaxed font-mono break-all">
+                {solveError ?? "Unknown error"}
+              </p>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                The AI teaching pipeline could not generate a lesson for this question.
+                {practiceMode && " No fallback is shown — this failure is intentional and visible."}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={runSolver}
+                className="w-full py-3 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 active:scale-95 transition-all"
+              >
+                ↻ Retry
+              </button>
+              <Link href="/practice">
+                <button className="w-full py-3 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
+                  ← Back to Practice
+                </button>
+              </Link>
+            </div>
+          </div>
         )}
 
         {/* Solution content */}

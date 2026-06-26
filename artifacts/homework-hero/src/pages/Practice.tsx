@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Link } from "wouter";
+import { useState, useMemo, useCallback } from "react";
+import { Link, useLocation } from "wouter";
 import { SUBJECTS, type SubjectConfig } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useProgress } from "@/hooks/useProgress";
@@ -43,51 +43,31 @@ const typeStyle: Record<string, string> = {
   PYQ:         "bg-rose-50  text-rose-700  border-rose-200",
 };
 
-// ─── Single question card ─────────────────────────────────────────────────────
+// ─── Single question card — navigates to AI Teaching Lesson ──────────────────
+// Clicking ANY question opens the full AI tutor pipeline:
+//   POST /api/solveQuestion → Master Teacher → Blueprint → Lesson → LessonRenderer
+// No hint/steps/answer are ever shown here. Legacy expand-in-place is removed.
 function QuestionCard({
   q,
   cfg,
-  onAttempt,
+  onOpen,
 }: {
   q: Question;
   cfg: SubjectConfig;
-  onAttempt: (correct: boolean) => void;
+  onOpen: () => void;
 }) {
-  const [open,     setOpen]     = useState(false);
-  const [revealed, setRevealed] = useState(false);
-  const [result,   setResult]   = useState<"correct" | "incorrect" | null>(null);
-
-  const isDone = result !== null;
-
   return (
-    <div
-      className={`bg-white rounded-2xl border overflow-hidden shadow-sm transition-all ${
-        result === "correct"   ? "border-emerald-300" :
-        result === "incorrect" ? "border-red-300"     : "border-slate-200"
-      }`}
-    >
-      {/* Question row */}
-      <button className="w-full text-left p-4" onClick={() => {
-        const opening = !open;
-        if (opening) {
-          console.log(`[PRACTICE:CLICK] Question card opened`);
-          console.log(`[PRACTICE:Q_ID]   id="${q.id}" topic="${q.topicName}" chapter="${q.chapterName}" difficulty="${q.difficulty}"`);
-          console.log(`[PRACTICE:Q_TEXT] "${q.question.slice(0, 120)}"`);
-          console.log(`[PRACTICE:Q_DATA] steps.length=${q.steps.length} | answer="${q.answer?.slice(0, 80)}" | hint="${q.hint?.slice(0, 60)}"`);
-          console.log(`[PRACTICE:SOURCE] Data source = LOCAL_QUESTION_BANK (static import) — no solve() called, no aiSolver.ts, no HTTP request`);
-          console.log(`[PRACTICE:LESSON] solution.lesson = undefined (never computed — Practice does not call solve())`);
-          console.log(`[PRACTICE:RENDERER] Rendering q.steps[] directly — LegacyRenderer equivalent, hardcoded in Practice.tsx JSX`);
-        }
-        setOpen(opening);
-      }}>
+    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all hover:border-slate-300 hover:shadow-md">
+      <button
+        className="w-full text-left p-4 active:bg-slate-50 transition-colors"
+        onClick={onOpen}
+      >
         <div className="flex items-start gap-3">
           <div
-            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${
-              result === "correct"   ? "bg-emerald-500 text-white" :
-              result === "incorrect" ? "bg-red-400 text-white"     : "bg-slate-100 text-slate-500"
-            }`}
+            className="w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-0.5 font-bold"
+            style={{ backgroundColor: cfg.light, color: cfg.color }}
           >
-            {result === "correct" ? "✓" : result === "incorrect" ? "✗" : "?"}
+            ✦
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
@@ -102,108 +82,16 @@ function QuestionCard({
             </div>
             <p className="text-sm font-medium text-slate-800 leading-relaxed">{q.question}</p>
           </div>
-          <svg
-            className={`w-4 h-4 text-slate-400 flex-shrink-0 mt-1 transition-transform ${open ? "rotate-180" : ""}`}
-            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
+          <div className="flex flex-col items-end gap-0.5 flex-shrink-0 mt-1 ml-2">
+            <span className="text-[10px] font-black uppercase tracking-wide" style={{ color: cfg.color }}>
+              AI Lesson
+            </span>
+            <svg className="w-4 h-4" style={{ color: cfg.color }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
         </div>
       </button>
-
-      {/* Expanded content */}
-      {open && (
-        <div className="border-t border-slate-100 px-4 pb-4 pt-3 space-y-3">
-
-          {/* Hint */}
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-3">
-            <p className="text-xs font-semibold text-amber-700 mb-1">💡 Hint</p>
-            <p className="text-xs text-amber-800 leading-relaxed">{q.hint}</p>
-          </div>
-
-          {/* Steps */}
-          <div className="space-y-2">
-            {q.steps.map((step) => (
-              <div key={step.stepNumber} className="flex items-start gap-2.5">
-                <div
-                  className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0 mt-0.5"
-                  style={{ backgroundColor: cfg.color }}
-                >
-                  {step.stepNumber}
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-slate-700">{step.title}</p>
-                  <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">{step.explanation}</p>
-                  {step.formula && (
-                    <div className="mt-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2">
-                      <p className="text-[11px] font-mono text-slate-700 whitespace-pre-wrap">{step.formula}</p>
-                    </div>
-                  )}
-                  {step.result && (
-                    <p
-                      className="mt-1.5 text-[11px] font-semibold inline-flex items-center gap-1 px-2 py-1 rounded-lg"
-                      style={{ backgroundColor: cfg.light, color: cfg.color }}
-                    >
-                      → {step.result}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Reveal answer */}
-          {!revealed ? (
-            <button
-              onClick={() => setRevealed(true)}
-              className="w-full py-2.5 rounded-xl border-2 border-dashed border-slate-300 text-sm font-semibold text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-            >
-              Show Answer
-            </button>
-          ) : (
-            <div
-              className="rounded-xl border p-3"
-              style={{ backgroundColor: cfg.light, borderColor: cfg.border }}
-            >
-              <p className="text-xs font-semibold mb-1" style={{ color: cfg.color }}>✦ Answer</p>
-              <p className="text-xs font-semibold text-slate-800 leading-relaxed">{q.answer}</p>
-            </div>
-          )}
-
-          {/* Key concepts */}
-          <div className="flex flex-wrap gap-1.5">
-            {q.keyConcepts.map((c) => (
-              <span key={c} className="text-[11px] font-medium bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200">
-                {c}
-              </span>
-            ))}
-          </div>
-
-          {/* Mark correct / incorrect */}
-          {!isDone ? (
-            <div className="grid grid-cols-2 gap-2 pt-1">
-              <button
-                onClick={() => { setResult("correct"); onAttempt(true); }}
-                className="py-2.5 rounded-xl text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 active:scale-95 transition-all hover:bg-emerald-100"
-              >
-                ✓ Got it right
-              </button>
-              <button
-                onClick={() => { setResult("incorrect"); onAttempt(false); }}
-                className="py-2.5 rounded-xl text-sm font-semibold text-red-600 bg-red-50 border border-red-200 active:scale-95 transition-all hover:bg-red-100"
-              >
-                ✗ Got it wrong
-              </button>
-            </div>
-          ) : (
-            <p className={`text-center text-sm font-semibold py-2 rounded-xl ${
-              result === "correct" ? "text-emerald-600 bg-emerald-50" : "text-red-600 bg-red-50"
-            }`}>
-              {result === "correct" ? "✓ Correct — keep it up!" : "✗ Marked for revision"}
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }
@@ -322,15 +210,22 @@ export default function Practice() {
     setSelectedTopicId("all");
   };
 
-  const handleAttempt = (q: Question, correct: boolean) => {
-    recordSolve(session.subject, q.topicName, correct, q.id);
-    if (!correct) {
-      recordMistake(session.subject, q.topicName, q.chapterName, q.id, q.question);
-    } else {
-      recordResolution(q.id);
-    }
-    scheduleRevision(q.id, q.question, session.subject, q.topicName, q.chapterName, q.difficulty, correct);
-  };
+  const [, navigate] = useLocation();
+
+  // Opens a question in the full AI teaching pipeline.
+  // Stores question in session and navigates to /solution?practiceMode=1.
+  // Solution.tsx calls solve() with { skipBank: true, requireLesson: true } —
+  // forcing POST /api/solveQuestion → Master Teacher → Blueprint → Lesson → LessonRenderer.
+  // No hint/steps/answer are ever rendered. Failure is visible, never silently hidden.
+  const handleOpenQuestion = useCallback((q: Question) => {
+    console.log(`[PRACTICE:NAV] Question clicked → opening AI teaching lesson`);
+    console.log(`[PRACTICE:NAV] id="${q.id}" topic="${q.topicName}" difficulty="${q.difficulty}"`);
+    console.log(`[PRACTICE:NAV] question="${q.question.slice(0, 100)}"`);
+    console.log(`[PRACTICE:NAV] → storing in session, navigating to /solution?practiceMode=1`);
+    console.log(`[PRACTICE:NAV] → Pipeline: skipBank=true requireLesson=true → POST /api/solveQuestion REQUIRED`);
+    update({ subject: session.subject, question: q.question, practiceTopic: q.topicName });
+    navigate('/solution?practiceMode=1');
+  }, [session.subject, update, navigate]);
 
   const subjectNames = ["Physics", "Chemistry", "Mathematics"] as const;
 
@@ -622,7 +517,7 @@ export default function Practice() {
                     key={q.id}
                     q={q}
                     cfg={cfg}
-                    onAttempt={(correct) => handleAttempt(q, correct)}
+                    onOpen={() => handleOpenQuestion(q)}
                   />
                 ))}
               </div>

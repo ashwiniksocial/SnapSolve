@@ -1,0 +1,245 @@
+STOP.
+
+This is now the highest priority task in the entire project.
+
+Do not build any new features.
+
+Do not build any new AI engines.
+
+Do not improve prompts.
+
+Do not improve explanations.
+
+Do not improve the Master Teacher Engine.
+
+Do not improve the Quality Pipeline.
+
+Do not improve Lesson Planner.
+
+Those systems already exist.
+
+The problem is architectural.
+
+The Practice page completely bypasses the AI teaching pipeline.
+
+Your own execution trace proved this.
+
+Practice currently renders
+
+Question
+
+↓
+
+hint
+
+↓
+
+steps[]
+
+↓
+
+answer
+
+directly from the local question bank.
+
+This completely defeats the purpose of SnapSolve.
+
+We are not building a static question bank.
+
+We are building the world's greatest AI personal tutor.
+
+------------------------------------------------------
+
+YOUR TASK
+
+Completely rewrite ONLY the Practice execution flow.
+
+------------------------------------------------------
+
+NEW FLOW
+
+When a student opens a Practice question:
+
+Load only:
+
+Question text
+
+Subject
+
+Class
+
+Board
+
+Chapter
+
+Difficulty
+
+Topic
+
+Question ID
+
+Ignore every existing
+
+steps
+
+answer
+
+solution
+
+explanation
+
+field.
+
+Treat them as legacy data.
+
+They must never be rendered.
+
+------------------------------------------------------
+
+Instead immediately call
+
+POST /api/solveQuestion
+
+using the question text.
+
+This request must execute the COMPLETE pipeline:
+
+Question
+
+↓
+
+Master Teacher Planner
+
+↓
+
+Teaching Blueprint
+
+↓
+
+Lesson Generation
+
+↓
+
+Teaching Quality Pipeline
+
+↓
+
+Final TeachingLesson
+
+↓
+
+Frontend
+
+↓
+
+LessonRenderer
+
+No shortcuts.
+
+No legacy path.
+
+------------------------------------------------------
+
+The frontend must ONLY render
+
+solution.lesson
+
+using LessonRenderer.
+
+Never render q.steps.
+
+Never render q.answer.
+
+Never render legacy explanations.
+
+------------------------------------------------------
+
+If solution.lesson is missing,
+
+show an error saying
+
+"Teaching lesson generation failed."
+
+DO NOT silently fall back to
+
+steps[]
+
+answer
+
+legacy renderer
+
+or static explanations.
+
+Failures must be visible.
+
+Hidden fallbacks are forbidden.
+
+------------------------------------------------------
+
+Remove every automatic fallback that bypasses the AI tutor.
+
+The user must immediately know if the pipeline fails.
+
+------------------------------------------------------
+
+When finished,
+
+prove with logs:
+
+Question clicked
+
+↓
+
+POST /api/solveQuestion
+
+↓
+
+Master Teacher called
+
+↓
+
+Lesson Planner called
+
+↓
+
+Quality Pipeline called
+
+↓
+
+TeachingLesson returned
+
+↓
+
+solution.lesson exists
+
+↓
+
+LessonRenderer rendered
+
+↓
+
+Legacy renderer NOT used
+
+------------------------------------------------------
+
+Acceptance criteria
+
+Opening ANY Practice question should visibly look completely different.
+
+The student should immediately see the new teaching lesson.
+
+The old
+
+Hint
+
+Step 1
+
+Step 2
+
+Show Answer
+
+layout should never appear again for AI-generated lessons.
+
+The Practice page must become a direct window into the world's best AI tutor.
+
+Do not stop until this architecture is fully implemented and verified.
