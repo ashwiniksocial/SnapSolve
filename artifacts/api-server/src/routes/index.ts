@@ -5,6 +5,7 @@ import adminRouter         from "./admin";
 import profileRouter       from "./profile";
 import teacherReviewRouter from "./teacherReview";
 import tutorRouter         from "./tutor";
+import devLessonRouter     from "./devLesson";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use(adminRouter);
 router.use(profileRouter);
 router.use(teacherReviewRouter);
 router.use(tutorRouter);
+router.use(devLessonRouter);
 
 export default router;

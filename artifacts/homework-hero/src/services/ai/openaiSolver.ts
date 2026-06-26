@@ -217,7 +217,7 @@ async function callBackend(
 
 function s(v: unknown): string { return typeof v === "string" ? v.trim() : ""; }
 
-function toAIResponse(data: BackendLessonResponse, subject: Subject, question: string): AIResponse {
+export function toAIResponse(data: BackendLessonResponse, subject: Subject, question: string): AIResponse {
   const lesson: TeachingLesson = {
     topic:        s(data.topic) || "General",
     difficulty:   data.difficulty || "Medium",
@@ -366,15 +366,44 @@ export function describeError(err: unknown): string {
 
 const MIN_QUESTION_CHARS = 10;
 
+// ─── Dev fixture call (no API key needed) ─────────────────────────────────────
+
+export async function callDevLesson(): Promise<BackendLessonResponse> {
+  const res = await fetch("/api/devLesson", { method: "GET" });
+  if (!res.ok) throw new Error(`devLesson_${res.status}`);
+  return res.json() as Promise<BackendLessonResponse>;
+}
+
+// ─── Public API ─────────────────────────────────────────────────────────────
+
 export async function solveWithOpenAI(
   subject:  Subject,
   question: string
 ): Promise<AIResponse> {
-  if (question.trim().length < MIN_QUESTION_CHARS) {
-    throw new Error("question_too_short");
-  }
+  console.log(`[PIPELINE:B1] solveWithOpenAI() — subject="${subject}" q="${question.slice(0, 80)}"`);
 
-  console.log(`[PIPELINE:B1] solveWithOpenAI() — subject="${subject}" q="${question.slice(0, 60)}…"`);
+  // ── Dev audit path: bypass API key, return hardcoded fixture ──────────────
+  // Must be checked BEFORE the min-length guard.
+  if (question.trim() === "[AUDIT]") {
+    console.log("[PIPELINE:B2] AUDIT MODE — calling GET /api/devLesson (no API key needed)");
+    const raw = await callDevLesson();
+    console.log("[PIPELINE:B3-RAW] devLesson raw JSON:", JSON.stringify(raw, null, 2));
+    const mapped = toAIResponse(raw, subject, question.trim());
+    console.log(`[PIPELINE:B4-MAPPED] AIResponse after toAIResponse():
+  source   = "${mapped.source}"
+  topic    = "${mapped.topic}"
+  lesson   = ${!!mapped.lesson}
+  keyConcepts = [${mapped.lesson?.keyConcepts.join(", ")}]
+  guidedReasoning steps = ${mapped.lesson?.guidedReasoning.length}
+  confusionPoints = ${mapped.lesson?.confusionPoints.length}
+  commonMistakes  = ${mapped.lesson?.commonMistakes.length}
+  practiceQuestion present = ${!!mapped.lesson?.practiceQuestion.question}
+  confidenceCheck present  = ${!!mapped.lesson?.confidenceCheck.question}
+  retrievalPractice items  = ${mapped.lesson?.retrievalPractice.length}
+  rememberThese items      = ${mapped.lesson?.rememberThese.length}
+  confidenceBuilder present = ${!!mapped.lesson?.confidenceBuilder}`);
+    return mapped;
+  }
 
   // Client-side cache hit → instant, no network
   const cached = getCachedSolution(subject, question);
@@ -390,11 +419,25 @@ export async function solveWithOpenAI(
 
   // Backend call
   console.log("[PIPELINE:B4] START — fetch POST /api/solveQuestion");
-  const data   = await callBackend(subject, question, studentContext || undefined);
-  console.log(`[PIPELINE:B5] DONE — backend responded: topic="${data.topic}" guidedReasoning=${data.guidedReasoning?.length ?? 0} steps keyConcepts=${data.keyConcepts?.length ?? 0}`);
+  const data = await callBackend(subject, question, studentContext || undefined);
+  console.log(`[PIPELINE:B5-RAW] backend raw response:
+  topic            = "${data.topic}"
+  difficulty       = "${data.difficulty}"
+  keyConcepts      = [${data.keyConcepts?.join(", ")}]
+  guidedReasoning  = ${data.guidedReasoning?.length ?? 0} steps
+  confusionPoints  = ${data.confusionPoints?.length ?? 0}
+  commonMistakes   = ${data.commonMistakes?.length ?? 0}
+  practiceQuestion = "${data.practiceQuestion?.question?.slice(0, 60)}…"
+  confidenceCheck  = "${data.confidenceCheck?.question?.slice(0, 60)}…"
+  retrievalPractice= ${data.retrievalPractice?.length ?? 0} items
+  rememberThese    = ${data.rememberThese?.length ?? 0} items`);
 
   const result = toAIResponse(data, subject, question);
-  console.log(`[PIPELINE:B6] mapped to AIResponse — source="${result.source}" lesson=${!!result.lesson} topic="${result.topic}"`);
+  console.log(`[PIPELINE:B6-MAPPED] AIResponse after mapping:
+  source  = "${result.source}"
+  lesson  = ${!!result.lesson}
+  topic   = "${result.topic}"
+  guidedReasoning steps = ${result.lesson?.guidedReasoning.length ?? 0}`);
 
   // Store in client-side cache
   cacheSolution(subject, question, result);

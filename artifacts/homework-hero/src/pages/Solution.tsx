@@ -5,6 +5,7 @@ import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
 import { solve, type AIResponse } from "@/services/aiSolver";
+import { callDevLesson, toAIResponse } from "@/services/ai/openaiSolver";
 import { useCelebration } from "@/hooks/useCelebration";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -35,6 +36,18 @@ export default function Solution() {
     setPageState("loading");
     setSolution(null);
     setShowSimilar(false);
+
+    // ── Dev audit mode: ?audit=1 bypasses session/OpenAI, loads fixture direct ──
+    const auditMode = new URLSearchParams(window.location.search).get("audit") === "1";
+    if (auditMode) {
+      console.log("[AUDIT-PAGE] audit=1 detected → calling GET /api/devLesson");
+      const raw = await callDevLesson();
+      const mapped = toAIResponse(raw, "Mathematics", "Proof that √2 is Irrational");
+      console.log(`[AUDIT-PAGE] fixture mapped: topic="${mapped.topic}" lesson=${!!mapped.lesson} steps=${mapped.lesson?.guidedReasoning.length}`);
+      setSolution(mapped);
+      setPageState("done");
+      return;
+    }
 
     const result = await solve(
       session.subject,

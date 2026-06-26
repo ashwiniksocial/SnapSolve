@@ -474,8 +474,8 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#0369a1"
           borderColor="#bae6fd"
           bodyBg="#f0f9ff"
-          defaultOpen={isBasic}
-          hidden={isAdvanced}
+          defaultOpen={true}
+          hidden={false}
           badge={<span className="text-[9px] font-bold bg-sky-200 text-sky-800 px-2 py-0.5 rounded-full">Before you write anything</span>}
         >
           <div className="space-y-3">
@@ -574,7 +574,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#b91c1c"
           borderColor="#fecaca"
           bodyBg="#fef2f2"
-          defaultOpen={false}
+          defaultOpen={true}
           hidden={false}
           badge={<span className="text-[9px] font-bold bg-red-200 text-red-800 px-2 py-0.5 rounded-full">Watch out!</span>}
         >
@@ -597,8 +597,8 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#b45309"
           borderColor="#fde68a"
           bodyBg="#fffbeb"
-          defaultOpen={false}
-          hidden={isBasic}
+          defaultOpen={true}
+          hidden={false}
           badge={<span className="text-[9px] font-bold bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full">Exam strategy</span>}
         >
           <div className="space-y-3">
@@ -691,7 +691,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#0f766e"
           borderColor="#99f6e4"
           bodyBg="#f0fdfa"
-          defaultOpen={false}
+          defaultOpen={true}
           hidden={false}
         >
           <WorkedExampleCard
@@ -713,7 +713,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#15803d"
           borderColor="#bbf7d0"
           bodyBg="#f0fdf4"
-          defaultOpen={false}
+          defaultOpen={true}
           hidden={false}
           badge={<span className="text-[9px] font-bold bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full">Your turn</span>}
         >
@@ -737,7 +737,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#5b21b6"
           borderColor="#ddd6fe"
           bodyBg="#f5f3ff"
-          defaultOpen={false}
+          defaultOpen={true}
           hidden={false}
           badge={<span className="text-[9px] font-bold bg-violet-200 text-violet-800 px-2 py-0.5 rounded-full">MCQ</span>}
         >
@@ -756,7 +756,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#7e22ce"
           borderColor="#e9d5ff"
           bodyBg="#fdf4ff"
-          defaultOpen={false}
+          defaultOpen={true}
           hidden={false}
           badge={<span className="text-[9px] font-bold bg-purple-200 text-purple-800 px-2 py-0.5 rounded-full">Strengthen memory</span>}
         >
@@ -775,7 +775,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           headerText="#b45309"
           borderColor="#fde68a"
           bodyBg="#fffbeb"
-          defaultOpen={false}
+          defaultOpen={true}
           hidden={false}
         >
           <div className="space-y-2">

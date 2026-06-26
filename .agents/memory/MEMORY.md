@@ -6,3 +6,4 @@
 - [TeachingLesson Architecture](teaching-lesson-arch.md) — TeachingLesson is the new core AI response object replacing steps[]; AIResponse.lesson holds it; bank/fallback entries still use steps[] with legacy renderer.
 - [Teaching Quality Pipeline](teaching-quality-pipeline.md) — 9-file service in api-server/src/services/teachingQuality/; every lesson reviewed and improved server-side before reaching student; max 3 cycles; graceful degradation on failure.
 - [Master Teacher Engine](master-teacher-engine.md) — 10-file service in api-server/src/services/masterTeacher/; one planning call builds TeachingBlueprint injected into generation prompt; graceful fallback if planning fails.
+- [Dev Audit URL](dev-audit-url.md) — /solution?audit=1 directly loads fixture lesson; Playwright bracket chars break textarea fill so ?audit=1 is the reliable test path.
