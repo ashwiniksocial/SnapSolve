@@ -67,7 +67,19 @@ function QuestionCard({
       }`}
     >
       {/* Question row */}
-      <button className="w-full text-left p-4" onClick={() => setOpen((v) => !v)}>
+      <button className="w-full text-left p-4" onClick={() => {
+        const opening = !open;
+        if (opening) {
+          console.log(`[PRACTICE:CLICK] Question card opened`);
+          console.log(`[PRACTICE:Q_ID]   id="${q.id}" topic="${q.topicName}" chapter="${q.chapterName}" difficulty="${q.difficulty}"`);
+          console.log(`[PRACTICE:Q_TEXT] "${q.question.slice(0, 120)}"`);
+          console.log(`[PRACTICE:Q_DATA] steps.length=${q.steps.length} | answer="${q.answer?.slice(0, 80)}" | hint="${q.hint?.slice(0, 60)}"`);
+          console.log(`[PRACTICE:SOURCE] Data source = LOCAL_QUESTION_BANK (static import) — no solve() called, no aiSolver.ts, no HTTP request`);
+          console.log(`[PRACTICE:LESSON] solution.lesson = undefined (never computed — Practice does not call solve())`);
+          console.log(`[PRACTICE:RENDERER] Rendering q.steps[] directly — LegacyRenderer equivalent, hardcoded in Practice.tsx JSX`);
+        }
+        setOpen(opening);
+      }}>
         <div className="flex items-start gap-3">
           <div
             className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${

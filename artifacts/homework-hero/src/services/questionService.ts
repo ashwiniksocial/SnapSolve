@@ -43,7 +43,7 @@ export interface QuestionFilter {
  * Omitting a filter field means "any value is accepted".
  */
 export function getQuestions(filter: QuestionFilter = {}): Question[] {
-  return ALL_QUESTIONS.filter((q) => {
+  const results = ALL_QUESTIONS.filter((q) => {
     if (filter.classNum  !== undefined && q.classNum  !== filter.classNum)  return false;
     if (filter.subject   !== undefined && q.subject   !== filter.subject)   return false;
     if (filter.chapterId !== undefined && q.chapterId !== filter.chapterId) return false;
@@ -53,6 +53,12 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
     if (filter.questionType && filter.questionType !== "All" && q.questionType !== filter.questionType) return false;
     return true;
   });
+  console.log(`[BANK:getQuestions] filter=${JSON.stringify(filter)} → ${results.length} questions from ALL_QUESTIONS (static local TypeScript import — no network, no DB, no API)`);
+  const sample = results[0];
+  if (sample) {
+    console.log(`[BANK:getQuestions] sample[0] id="${sample.id}" steps.length=${sample.steps.length} has_answer=${!!sample.answer} lesson=undefined (Question type has no lesson field)`);
+  }
+  return results;
 }
 
 /** Get a single question by id. */
