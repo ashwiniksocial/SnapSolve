@@ -5,7 +5,6 @@ import { useSession }                                from "@/hooks/useSession";
 import { useScanHistory, compressImageToThumbnail, resizeForOCR, relativeTime } from "@/hooks/useScanHistory";
 import { safeRecognizeWithConfidence } from "@/services/ai/ocrService";
 import { cleanOcrText, detectBestTopic } from "@/services/ai/topicMatcher";
-import { generateSolution, generateSolutionFromText } from "@/services/ai/solutionEngine";
 import type { OcrProgress } from "@/services/ai/ocrService";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -186,21 +185,19 @@ export default function Scan() {
 
     setPhase("solving");
 
-    // Generate solution via AI service
-    const match   = detectBestTopic(question, session.subject) ?? { subject: session.subject, topic: detectedTopic || "General", confidence: 0.1 };
-    const solution = generateSolution(question, match);
+    // Detect topic for metadata (question solving happens in Solution.tsx via AI pipeline)
+    const match = detectBestTopic(question, session.subject) ?? { subject: session.subject, topic: detectedTopic || "General", confidence: 0.1 };
 
-    // Store result in session (same shape as aiSolver output)
     update({
-      question: question,
-      practiceTopic: solution.topic,
+      question:      question,
+      practiceTopic: match.topic,
     });
 
     // Save to scan history
     const thumbnail = imageFile ? await compressImageToThumbnail(imageFile) : "";
     addRecord({
       subject:       session.subject,
-      topic:         solution.topic,
+      topic:         match.topic,
       detectedText:  detectedText.slice(0, 500),
       questionText:  question,
       thumbnailUrl:  thumbnail,

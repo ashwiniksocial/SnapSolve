@@ -9,11 +9,12 @@
  */
 
 import { useState, useMemo, useRef } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import { getQuestionById } from "@/services/questionService";
+import { useSession } from "@/hooks/useSession";
 import type { RevisionItem, SRInterval } from "@/hooks/useRevisionPlanner";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -68,6 +69,8 @@ function RevisionCard({ item, isOverdue, onReview }: CardProps) {
   const [revealed, setRevealed] = useState(false);
   const [result,   setResult]   = useState<"correct" | "incorrect" | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { update } = useSession();
+  const [, navigate] = useLocation();
 
   const fullQ      = getQuestionById(item.questionId);
   const isDone     = result !== null;
@@ -180,10 +183,21 @@ function RevisionCard({ item, isOverdue, onReview }: CardProps) {
               Recall your answer, then reveal →
             </button>
           ) : fullQ ? (
-            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
-              <p className="text-xs font-semibold text-indigo-700 mb-1">✦ Answer</p>
-              <p className="text-xs font-semibold text-slate-800 leading-relaxed">{fullQ.answer}</p>
-            </div>
+            <>
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
+                <p className="text-xs font-semibold text-indigo-700 mb-1">✦ Answer</p>
+                <p className="text-xs font-semibold text-slate-800 leading-relaxed">{fullQ.answer}</p>
+              </div>
+              <button
+                onClick={() => {
+                  update({ question: item.question, practiceTopic: item.topic });
+                  navigate("/solution?practiceMode=1");
+                }}
+                className="w-full py-2 rounded-xl border border-indigo-200 bg-white text-xs font-semibold text-indigo-600 hover:bg-indigo-50 active:scale-95 transition-all"
+              >
+                ✦ Get Full AI Lesson →
+              </button>
+            </>
           ) : (
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-500 leading-relaxed">
               This question was added from a scan. Check your notes for the answer.
