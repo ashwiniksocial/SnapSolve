@@ -15,6 +15,7 @@
 import { callPlannerOpenAI, type TeachingBlueprint } from "./lessonPlanner";
 import { SNAPSOLVE_TEACHING_STANDARDS }              from "../teachingStandards";
 import { CONCEPT_MASTERY_FRAMEWORK }                 from "../conceptMasteryFramework";
+import { EDUCATION_POLICY_STANDARDS }               from "../educationPolicyStandards";
 import { getSubjectExpertPrompt }                    from "../subjectExpertBrain";
 import { TEACHER_MINDSET_PROMPT }                    from "./teacherMindset";
 import { MICRO_TEACHING_RULES }                      from "./microTeachingEngine";
@@ -37,6 +38,8 @@ const UNIVERSAL_SYSTEM_SUFFIX = `
 ${SNAPSOLVE_TEACHING_STANDARDS}
 
 ${CONCEPT_MASTERY_FRAMEWORK}
+
+${EDUCATION_POLICY_STANDARDS}
 
 ${TEACHER_MINDSET_PROMPT}
 

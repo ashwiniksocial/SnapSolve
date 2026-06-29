@@ -1,0 +1,85 @@
+STOP.
+
+Do not add any new UI.
+
+Do not add any new AI calls.
+
+Do not change the Teaching Pipeline.
+
+Do not change LessonRenderer.
+
+Do not create new services.
+
+This is a standards-alignment task only.
+
+Make SnapSolve permanently aligned with the Government of India's National Education Policy (NEP 2020) and the National Curriculum Framework (NCF 2023).
+
+Create ONE permanent standards document called:
+
+educationPolicyStandards.ts
+
+This must become part of the UNIVERSAL_SYSTEM_SUFFIX so every lesson automatically follows it.
+
+The standards must enforce:
+
+1. Competency-based learning instead of rote learning.
+
+2. Conceptual understanding before memorisation.
+
+3. Experiential learning using everyday situations.
+
+4. Inquiry-based teaching that encourages curiosity.
+
+5. Critical thinking and reasoning.
+
+6. Problem solving rather than formula application.
+
+7. Application-based explanations.
+
+8. Real-life connections in every lesson.
+
+9. Age-appropriate language.
+
+10. Continuous formative learning with frequent checkpoints.
+
+11. Self-reflection:
+   "Can you explain this in your own words?"
+
+12. Competency-based assessment instead of recall questions.
+
+13. Higher-order thinking questions.
+
+14. Multiple representations:
+    words, diagrams, stories, tables, mental models.
+
+15. Interdisciplinary connections whenever natural.
+
+16. Inclusive teaching suitable for weak learners.
+
+17. Confidence building without false praise.
+
+18. Ethical and responsible use of knowledge wherever applicable.
+
+19. Creativity and curiosity before examination preparation.
+
+20. Exam preparation only AFTER understanding.
+
+Do NOT duplicate existing teaching standards.
+
+Merge intelligently with the existing framework.
+
+Keep a single source of truth.
+
+No runtime behaviour changes.
+
+No additional API calls.
+
+No new architecture.
+
+Only strengthen the permanent educational philosophy of SnapSolve.
+
+Finally produce a report showing:
+
+• Files changed
+• Injection point
+• Confirmation that every future lesson automatically follows NEP 2020 and NCF 2023 principles.
