@@ -41,14 +41,20 @@ export interface QualityPipelineResult {
 // ─── Orchestrator ─────────────────────────────────────────────────────────────
 
 export async function runQualityPipeline(
-  draft:   LessonResponse,
-  apiKey:  string,
+  draft:       LessonResponse,
+  apiKey:      string,
+  onProgress?: (message: string, percent: number) => void,
 ): Promise<QualityPipelineResult> {
   let current     = draft;
   const qualityLog: CycleLog[] = [];
   let lastReport:   ReviewReport | null = null;
 
   for (let cycle = 1; cycle <= MAX_REVIEW_CYCLES; cycle++) {
+    // Emit progress: review starts at 65, 75, 85 for cycles 1, 2, 3
+    const reviewPct  = 65 + (cycle - 1) * 10;
+    const improvePct = reviewPct + 5;
+    onProgress?.(`Quality review — cycle ${cycle} of ${MAX_REVIEW_CYCLES}…`, reviewPct);
+
     // ── Review ────────────────────────────────────────────────────────────────
     let report: ReviewReport;
     try {
@@ -84,6 +90,7 @@ export async function runQualityPipeline(
 
     // ── Improve (not on the last cycle — just accept) ─────────────────────────
     if (cycle < MAX_REVIEW_CYCLES) {
+      onProgress?.(`Improving lesson — cycle ${cycle}…`, improvePct);
       try {
         current          = await improveLesson(current, report, apiKey);
         cycleEntry.improved = true;

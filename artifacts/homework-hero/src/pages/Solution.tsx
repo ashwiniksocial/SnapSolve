@@ -28,6 +28,8 @@ export default function Solution() {
   const [solveError, setSolveError] = useState<string | null>(null);
   const [phaseMsg, setPhaseMsg]     = useState("");
   const [phaseIdx, setPhaseIdx]     = useState(0);
+  const [progressMsg, setProgressMsg] = useState("");
+  const [progressPct, setProgressPct] = useState(0);
   const [marked,   setMarked]       = useState(false);
   const [burst,    setBurst]        = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
@@ -67,7 +69,8 @@ export default function Solution() {
         session.question,
         session.ocrConfidence ?? 1,
         (msg, idx) => { setPhaseMsg(msg); setPhaseIdx(idx); },
-        practiceMode ? { skipBank: true, requireLesson: true } : undefined
+        practiceMode ? { skipBank: true, requireLesson: true } : undefined,
+        (msg, pct) => { setProgressMsg(msg); setProgressPct(pct); }
       );
 
       if (practiceMode) {
@@ -134,6 +137,8 @@ export default function Solution() {
             subject={session.subject}
             currentPhase={phaseMsg}
             phaseIndex={phaseIdx}
+            progressMsg={progressMsg}
+            progressPct={progressPct}
           />
         )}
 

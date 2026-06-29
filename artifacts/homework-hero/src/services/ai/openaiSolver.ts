@@ -34,8 +34,13 @@ interface CacheEntry {
   timestamp: number;
 }
 
+// Matches the normalisation used server-side so the same question always hits the same cache entry.
+function normaliseQ(q: string): string {
+  return q.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,;:]+$/, "");
+}
+
 function hashKey(subject: string, question: string): string {
-  const raw = `${subject}::${question.trim().toLowerCase()}`;
+  const raw = `${subject}::${normaliseQ(question)}`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
@@ -174,17 +179,59 @@ interface BackendErrorResponse {
   retryAfter?: number;
 }
 
+// ─── Progress polling ─────────────────────────────────────────────────────────
+
+/**
+ * Polls GET /api/solveQuestion/progress/:requestId every 1.5 s while the main
+ * POST is in-flight, calling onProgress with the latest message + percentage.
+ * Stops automatically when the provided AbortSignal fires.
+ */
+async function pollProgress(
+  requestId:  string,
+  onProgress: (message: string, percent: number) => void,
+  signal:     AbortSignal,
+): Promise<void> {
+  while (!signal.aborted) {
+    await new Promise<void>((r) => setTimeout(r, 1_500));
+    if (signal.aborted) break;
+    try {
+      const res = await fetch(`/api/solveQuestion/progress/${encodeURIComponent(requestId)}`, { signal });
+      if (res.ok) {
+        const data = await res.json() as { message?: unknown; percent?: unknown };
+        if (typeof data.message === "string" && typeof data.percent === "number") {
+          onProgress(data.message, data.percent);
+        }
+      }
+    } catch {
+      // Polling errors are non-fatal — the main POST drives the final state
+    }
+  }
+}
+
 // ─── Backend call ─────────────────────────────────────────────────────────────
 
-const FRONTEND_TIMEOUT_MS = 38_000;
+const FRONTEND_TIMEOUT_MS = 120_000; // 120 s — well above worst-case ~70 s backend time
 
 async function callBackend(
-  subject:        Subject,
-  question:       string,
-  studentContext?: string
+  subject:         Subject,
+  question:        string,
+  studentContext?: string,
+  onProgress?:     (message: string, percent: number) => void,
 ): Promise<BackendLessonResponse> {
+  // Generate a requestId so the backend can key progress entries to this request
+  const requestId = (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function")
+    ? crypto.randomUUID()
+    : `req-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), FRONTEND_TIMEOUT_MS);
+
+  // Start progress polling concurrently with the main POST request
+  let pollAbort: AbortController | null = null;
+  if (onProgress) {
+    pollAbort = new AbortController();
+    void pollProgress(requestId, onProgress, pollAbort.signal);
+  }
 
   let res: Response;
   try {
@@ -192,10 +239,11 @@ async function callBackend(
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       signal:  controller.signal,
-      body:    JSON.stringify({ subject, question: question.trim(), studentContext }),
+      body:    JSON.stringify({ subject, question: question.trim(), studentContext, requestId }),
     });
   } finally {
     clearTimeout(timer);
+    pollAbort?.abort(); // Stop polling once the main request finishes
   }
 
   if (!res.ok) {
@@ -377,8 +425,9 @@ export async function callDevLesson(): Promise<BackendLessonResponse> {
 // ─── Public API ─────────────────────────────────────────────────────────────
 
 export async function solveWithOpenAI(
-  subject:  Subject,
-  question: string
+  subject:     Subject,
+  question:    string,
+  onProgress?: (message: string, percent: number) => void,
 ): Promise<AIResponse> {
   console.log(`[PIPELINE:B1] solveWithOpenAI() — subject="${subject}" q="${question.slice(0, 80)}"`);
 
@@ -419,7 +468,7 @@ export async function solveWithOpenAI(
 
   // Backend call
   console.log("[PIPELINE:B4] START — fetch POST /api/solveQuestion");
-  const data = await callBackend(subject, question, studentContext || undefined);
+  const data = await callBackend(subject, question, studentContext || undefined, onProgress);
   console.log(`[PIPELINE:B5-RAW] backend raw response:
   topic            = "${data.topic}"
   difficulty       = "${data.difficulty}"

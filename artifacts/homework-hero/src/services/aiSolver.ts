@@ -35,9 +35,9 @@ const PHASES_BANK: string[] = [
 const PHASES_AI: string[] = [
   "Reading your question…",
   "Checking question bank…",
-  "AI is solving your question…",
+  "AI is working on your lesson…",
   "Building step-by-step solution…",
-  "Finalising answer…",
+  "Finalising lesson…",
 ];
 
 export function getLoadingPhases(): string[] {
@@ -63,7 +63,8 @@ export async function solve(
   question:      string,
   ocrConfidence  = 1.0,
   onPhase?:      (msg: string, index: number) => void,
-  opts?:         { skipBank?: boolean; requireLesson?: boolean }
+  opts?:         { skipBank?: boolean; requireLesson?: boolean },
+  onDetail?:     (message: string, percent: number) => void,
 ): Promise<AIResponse> {
 
   console.log(`[PIPELINE:A1] solve() called — subject="${subject}" skipBank=${opts?.skipBank ?? false} requireLesson=${opts?.requireLesson ?? false} q="${question.slice(0, 60)}…"`);
@@ -127,7 +128,7 @@ export async function solve(
     onPhase?.(PHASES_AI[2], 2);
 
     try {
-      const aiResp = await solveWithOpenAI(subject, question);
+      const aiResp = await solveWithOpenAI(subject, question, onDetail);
       console.log(`[PIPELINE:A4] PATH B SUCCESS — source="${aiResp.source}" lesson=${!!aiResp.lesson} renderer=${aiResp.lesson ? "LessonRenderer" : "LegacyRenderer"}`);
 
       onPhase?.(PHASES_AI[3], 3);

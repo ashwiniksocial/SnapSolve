@@ -62,8 +62,14 @@ const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 interface CacheEntry { data: LessonResponse; expiresAt: number; }
 const responseCache = new Map<string, CacheEntry>();
 
+// Normalise before hashing so "Find x?" and "find x" share the same cache entry.
+// Collapses internal whitespace and strips trailing punctuation; math operators are preserved.
+function normaliseQuestion(q: string): string {
+  return q.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,;:]+$/, "");
+}
+
 function makeCacheKey(subject: string, question: string): string {
-  const raw = `${subject}::${question.trim().toLowerCase()}`;
+  const raw = `${subject}::${normaliseQuestion(question)}`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
@@ -84,11 +90,22 @@ function setCached(subject: string, question: string, data: LessonResponse): voi
   });
 }
 
+// ─── Progress store (tracks in-flight pipeline stages for the live progress UI) ──
+
+interface ProgressEntry { stage: string; message: string; percent: number; updatedAt: number; }
+const progressStore = new Map<string, ProgressEntry>();
+
+function setProgress(requestId: string | undefined, stage: string, message: string, percent: number): void {
+  if (!requestId) return;
+  progressStore.set(requestId, { stage, message, percent, updatedAt: Date.now() });
+}
+
 // Evict expired entries every hour so memory doesn't grow unbounded
 setInterval(() => {
   const now = Date.now();
-  for (const [k, v] of rateLimitStore.entries()) if (now >= v.resetAt) rateLimitStore.delete(k);
-  for (const [k, v] of responseCache.entries()) if (now >  v.expiresAt) responseCache.delete(k);
+  for (const [k, v] of rateLimitStore.entries()) if (now >= v.resetAt)                  rateLimitStore.delete(k);
+  for (const [k, v] of responseCache.entries())  if (now >  v.expiresAt)                responseCache.delete(k);
+  for (const [k, v] of progressStore.entries())  if (now - v.updatedAt > 5 * 60 * 1000) progressStore.delete(k);
 }, 60 * 60 * 1000).unref();
 
 // ─── JSON Schema + Field Rules for the generation prompt ─────────────────────
@@ -609,6 +626,18 @@ async function generateDraft(
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
+// GET /api/solveQuestion/progress/:requestId
+// Returns the current pipeline stage so the UI can show a live progress bar.
+router.get("/solveQuestion/progress/:requestId", (req, res) => {
+  const { requestId } = req.params;
+  const entry = progressStore.get(requestId);
+  if (!entry) {
+    res.json({ stage: "pending", message: "Starting…", percent: 2 });
+    return;
+  }
+  res.json(entry);
+});
+
 router.post("/solveQuestion", async (req, res) => {
   const ip = req.ip ?? (req.socket.remoteAddress ?? "unknown");
 
@@ -624,11 +653,14 @@ router.post("/solveQuestion", async (req, res) => {
   req.log.info({ ip }, "[PIPELINE:1] PASS — rate limit ok");
 
   // 2. Validate input
-  const { question, subject, studentContext } = req.body as {
-    question?: unknown;
-    subject?: unknown;
+  const { question, subject, studentContext, requestId: rawRequestId } = req.body as {
+    question?:       unknown;
+    subject?:        unknown;
     studentContext?: unknown;
+    requestId?:      unknown;
   };
+  const reqId = typeof rawRequestId === "string" && rawRequestId.length > 0 ? rawRequestId : undefined;
+  setProgress(reqId, "init", "Analysing your question…", 5);
 
   if (typeof question !== "string" || question.trim().length < 5) {
     res.status(400).json({ error: "invalid_question", message: "question must be at least 5 characters" });
@@ -657,12 +689,16 @@ router.post("/solveQuestion", async (req, res) => {
     const cached = getCached(subj, q);
     if (cached) {
       req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
+      setProgress(reqId, "cache_hit", "Lesson ready!", 100);
       res.json(cached);
+      if (reqId) progressStore.delete(reqId);
       return;
     }
     req.log.info({ subject: subj }, "[PIPELINE:3] MISS — server cache empty for this question");
+    setProgress(reqId, "cache_miss", "No cached lesson — building fresh…", 10);
   } else {
     req.log.info({ subject: subj }, "[PIPELINE:3] SKIP — personalised request bypasses server cache");
+    setProgress(reqId, "personalised", "Building personalised lesson…", 10);
   }
 
   // 4. Build teaching blueprint (lesson planning before generation)
@@ -672,6 +708,7 @@ router.post("/solveQuestion", async (req, res) => {
     req.log.warn("[PIPELINE:4] SKIP — no OPENAI_API_KEY; blueprint and generation both unavailable");
   } else {
     req.log.info({ subject: subj }, "[PIPELINE:4] START — calling Master Teacher Engine (lesson planner)");
+    setProgress(reqId, "blueprint_start", "Planning lesson structure…", 15);
     try {
       blueprint = await buildTeachingBlueprint(subj, q, apiKey);
       req.log.info({
@@ -681,6 +718,7 @@ router.post("/solveQuestion", async (req, res) => {
         systemSuffixLen: blueprint.systemSuffix.length,
         userPrefixLen:   blueprint.userPrefix.length,
       }, "[PIPELINE:4] DONE — teaching blueprint built");
+      setProgress(reqId, "blueprint_done", "Blueprint ready — writing lesson…", 35);
     } catch (err) {
       req.log.warn({ err: String(err) }, "[PIPELINE:4] FAIL — blueprint build errored; proceeding without plan");
     }
@@ -692,11 +730,13 @@ router.post("/solveQuestion", async (req, res) => {
     blueprintUsed: !!blueprint?.planningUsed,
     blueprintConcepts: blueprint?.conceptCount ?? 0,
   }, "[PIPELINE:5] START — calling OpenAI for draft lesson generation");
+  setProgress(reqId, "draft_start", "Writing your lesson…", 38);
   let draft: LessonResponse;
   try {
     draft = await generateDraft(subj, q, ctx, blueprint);
     req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
       "[PIPELINE:5] DONE — draft lesson generated");
+    setProgress(reqId, "draft_done", "Lesson written — quality checking…", 62);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     req.log.warn({ err: msg }, "solveQuestion: draft generation failed");
@@ -714,7 +754,9 @@ router.post("/solveQuestion", async (req, res) => {
   let finalLesson = draft;
 
   try {
-    const pipelineResult = await runQualityPipeline(draft, apiKey);
+    const pipelineResult = await runQualityPipeline(draft, apiKey, (msg, pct) => {
+      setProgress(reqId, "quality", msg, pct);
+    });
 
     finalLesson = pipelineResult.lesson;
 
@@ -750,9 +792,11 @@ router.post("/solveQuestion", async (req, res) => {
     req.log.info({ subject: subj }, "[PIPELINE:7] lesson cached on server");
   }
 
+  setProgress(reqId, "done", "Lesson ready!", 100);
   req.log.info({ subject: subj, topic: finalLesson.topic },
     "[PIPELINE:7] RESPONSE — sending final lesson to client");
   res.json(finalLesson);
+  if (reqId) progressStore.delete(reqId);
 });
 
 export default router;

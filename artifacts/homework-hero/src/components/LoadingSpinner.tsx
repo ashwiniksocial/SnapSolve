@@ -4,12 +4,14 @@ import type { Subject } from "@/data/subjects";
 import { SUBJECTS } from "@/data/subjects";
 
 interface Props {
-  subject: Subject;
+  subject:      Subject;
   currentPhase: string;
-  phaseIndex: number;
+  phaseIndex:   number;
+  progressMsg?: string;
+  progressPct?: number;
 }
 
-export default function LoadingSpinner({ subject, currentPhase, phaseIndex }: Props) {
+export default function LoadingSpinner({ subject, currentPhase, phaseIndex, progressMsg, progressPct = 0 }: Props) {
   const cfg = SUBJECTS[subject];
   const phases = getLoadingPhases();
 
@@ -63,8 +65,24 @@ export default function LoadingSpinner({ subject, currentPhase, phaseIndex }: Pr
         ))}
       </div>
 
-      <p className="mt-8 text-xs text-slate-400 font-medium">
-        AI is analysing your {subject} question…
+      {/* Live backend progress bar — shown only when the AI pipeline is running */}
+      {progressMsg && (
+        <div className="w-full max-w-sm mt-6 space-y-2">
+          <div className="flex justify-between items-center mb-1">
+            <p className="text-xs font-semibold text-slate-500 leading-tight">{progressMsg}</p>
+            <p className="text-xs font-bold ml-3 shrink-0" style={{ color: cfg.color }}>{progressPct}%</p>
+          </div>
+          <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-700 ease-out"
+              style={{ width: `${progressPct}%`, backgroundColor: cfg.color }}
+            />
+          </div>
+        </div>
+      )}
+
+      <p className="mt-6 text-xs text-slate-400 font-medium">
+        AI is building your {subject} lesson…
       </p>
     </div>
   );
