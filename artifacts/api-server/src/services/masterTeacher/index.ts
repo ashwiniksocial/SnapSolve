@@ -14,6 +14,7 @@
 
 import { callPlannerOpenAI, type TeachingBlueprint } from "./lessonPlanner";
 import { SNAPSOLVE_TEACHING_STANDARDS }              from "../teachingStandards";
+import { CONCEPT_MASTERY_FRAMEWORK }                 from "../conceptMasteryFramework";
 import { getSubjectExpertPrompt }                    from "../subjectExpertBrain";
 import { TEACHER_MINDSET_PROMPT }                    from "./teacherMindset";
 import { MICRO_TEACHING_RULES }                      from "./microTeachingEngine";
@@ -34,6 +35,8 @@ export interface BlueprintInjection {
 const UNIVERSAL_SYSTEM_SUFFIX = `
 
 ${SNAPSOLVE_TEACHING_STANDARDS}
+
+${CONCEPT_MASTERY_FRAMEWORK}
 
 ${TEACHER_MINDSET_PROMPT}
 

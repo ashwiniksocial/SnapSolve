@@ -1,0 +1,196 @@
+STOP.
+
+Do not build any new AI services.
+
+Do not build any new renderers.
+
+Do not build any new pipelines.
+
+Do not modify the architecture.
+
+The Master Teacher Engine, Teaching Standards, Subject Expert Brain, Lesson Planner, LessonRenderer and Quality Pipeline are now considered the permanent architecture.
+
+From this point onward, all work must improve the quality of the lesson itself.
+
+Our launch scope is fixed:
+
+• Classes 6–9
+• CBSE
+• ICSE
+
+Subjects:
+
+✓ Mathematics
+✓ Physics
+✓ Chemistry
+✓ Biology
+✓ Computer Science
+✓ Economics (only where applicable)
+
+Ignore every other class, board and subject for now.
+
+--------------------------------------------------
+
+NEW OBJECTIVE
+
+Create a "Concept Mastery Framework" that improves every generated lesson.
+
+This is NOT another AI pipeline.
+
+This is NOT another API.
+
+This is NOT another renderer.
+
+It is only an additional permanent prompt layer that teaches every concept like the world's greatest school teacher.
+
+--------------------------------------------------
+
+The framework must permanently enforce the following:
+
+For EVERY important concept, definition, theorem, law, formula or idea:
+
+1.
+
+Start with WHY.
+
+Never start with a textbook definition.
+
+Students should first understand why the concept had to exist.
+
+2.
+
+Explain the historical or practical problem the concept solves.
+
+3.
+
+Build intuition before formal language.
+
+4.
+
+Explain:
+
+What?
+
+Why?
+
+How?
+
+When?
+
+Where?
+
+Why not?
+
+5.
+
+Explain where students usually become confused.
+
+6.
+
+Answer the student's next question before they ask it.
+
+7.
+
+Explain every mathematical step.
+
+Never skip algebra.
+
+Never skip arithmetic.
+
+Never say "obviously".
+
+Never say "clearly".
+
+Never jump.
+
+8.
+
+Explain why every formula works.
+
+Never ask students to memorise first.
+
+Derive wherever appropriate.
+
+9.
+
+For every theorem,
+
+explain
+
+WHY it is true,
+
+not merely HOW to use it.
+
+10.
+
+For every scientific law,
+
+build intuition first,
+
+equation later.
+
+11.
+
+For Biology,
+
+teach every process as a flowing story.
+
+12.
+
+For Computer Science,
+
+teach algorithmic thinking,
+
+not syntax memorisation.
+
+13.
+
+For Economics,
+
+teach through everyday life examples before terminology.
+
+14.
+
+For every difficult concept,
+
+give
+
+at least
+
+three different ways
+
+to understand it:
+
+• visual
+
+• logical
+
+• real-life
+
+15.
+
+End every concept by asking:
+
+"Can this student now explain this to a younger sibling?"
+
+If not,
+
+the explanation is not complete.
+
+--------------------------------------------------
+
+This framework must become a permanent part of the universal teaching standards.
+
+There must be only one source of truth.
+
+No duplicate prompts.
+
+No duplicate philosophy.
+
+No new AI calls.
+
+No architectural changes.
+
+Only strengthen the lesson generation prompt so that every lesson produced by SnapSolve permanently becomes deeper, clearer, more intuitive and easier for weak students to understand.
+
+Finally, provide a report showing exactly where this framework was injected and why every future lesson across all supported subjects will automatically benefit from it.
