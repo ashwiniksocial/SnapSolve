@@ -13,6 +13,7 @@
  */
 
 import { callPlannerOpenAI, type TeachingBlueprint } from "./lessonPlanner";
+import { SNAPSOLVE_TEACHING_STANDARDS }              from "../teachingStandards";
 import { TEACHER_MINDSET_PROMPT }                    from "./teacherMindset";
 import { MICRO_TEACHING_RULES }                      from "./microTeachingEngine";
 import { SCAFFOLDING_STAGES_PROMPT }                 from "./scaffoldingEngine";
@@ -30,6 +31,8 @@ export interface BlueprintInjection {
 // These rules apply to every lesson regardless of question.
 
 const UNIVERSAL_SYSTEM_SUFFIX = `
+
+${SNAPSOLVE_TEACHING_STANDARDS}
 
 ${TEACHER_MINDSET_PROMPT}
 
