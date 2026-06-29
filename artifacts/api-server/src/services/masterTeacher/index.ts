@@ -14,6 +14,7 @@
 
 import { callPlannerOpenAI, type TeachingBlueprint } from "./lessonPlanner";
 import { SNAPSOLVE_TEACHING_STANDARDS }              from "../teachingStandards";
+import { getSubjectExpertPrompt }                    from "../subjectExpertBrain";
 import { TEACHER_MINDSET_PROMPT }                    from "./teacherMindset";
 import { MICRO_TEACHING_RULES }                      from "./microTeachingEngine";
 import { SCAFFOLDING_STAGES_PROMPT }                 from "./scaffoldingEngine";
@@ -137,8 +138,12 @@ export async function buildTeachingBlueprint(
   question: string,
   apiKey:   string,
 ): Promise<BlueprintInjection> {
+  // Subject Expert Brain — selected automatically by subject, injected first
+  const subjectExpert = getSubjectExpertPrompt(subject);
+  const expertBlock   = subjectExpert ? "\n\n" + subjectExpert : "";
+
   // Always include the universal rules in the system suffix
-  const systemSuffix = "\n\n" + UNIVERSAL_SYSTEM_SUFFIX;
+  const systemSuffix = expertBlock + "\n\n" + UNIVERSAL_SYSTEM_SUFFIX;
 
   // Attempt the planning call — fail gracefully if it errors
   let blueprint: TeachingBlueprint | null = null;

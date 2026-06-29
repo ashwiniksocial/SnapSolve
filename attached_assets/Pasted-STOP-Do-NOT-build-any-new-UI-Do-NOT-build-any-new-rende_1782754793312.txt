@@ -1,0 +1,131 @@
+STOP.
+
+Do NOT build any new UI.
+
+Do NOT build any new renderer.
+
+Do NOT build any new AI pipeline.
+
+Do NOT create another lesson format.
+
+Do NOT duplicate any prompt logic.
+
+The existing architecture (Teaching Standards → Master Teacher → Lesson Planner → Lesson Generation → Quality Pipeline → LessonRenderer) is now the permanent foundation.
+
+The next objective is to build the **SnapSolve Subject Expert Brain**.
+
+This is NOT an exam-specific layer.
+
+It is a subject-specific teaching layer.
+
+The goal is that every lesson should feel like it was written by the world's greatest teacher of that subject.
+
+The Subject Expert Brain must become another permanent prompt layer injected automatically before lesson generation.
+
+Create one permanent profile for every supported subject, including at least:
+
+* Mathematics
+* Physics
+* Chemistry
+* Biology
+* English
+* History
+* Geography
+* Economics
+* Political Science
+* Computer Science
+
+Each profile must define:
+
+1. How an expert teacher thinks.
+
+2. The natural sequence for introducing concepts.
+
+3. Which misconceptions students usually have.
+
+4. Which reasoning steps must never be skipped.
+
+5. What visualisations or mental models naturally help.
+
+6. How definitions should be introduced.
+
+7. When intuition should come before formalism.
+
+8. Which examples work best.
+
+9. How proofs should be explained.
+
+10. How formulae should be derived rather than memorised.
+
+11. Which examiner traps are universal to the subject.
+
+12. Which memory techniques naturally suit that subject.
+
+For Mathematics specifically, encode permanent rules such as:
+
+* Never skip algebraic transformations.
+* Never skip arithmetic calculations.
+* Explain every symbol.
+* Explain every sign change.
+* Explain every cancellation.
+* Explain why every operation is valid.
+* Show every intermediate step.
+* Explain why each formula works before using it.
+* Mention common mathematical misconceptions before students make them.
+* Always end with a general mathematical insight.
+
+For Physics:
+
+* Prioritise intuition before equations.
+* Explain physical meaning before mathematics.
+* Explain assumptions.
+* Track units.
+* Connect equations to real-world phenomena.
+* Explain limiting cases.
+
+For Chemistry:
+
+* Explain reactions at particle level.
+* Explain electron movement.
+* Explain why reactions occur.
+* Connect symbolic equations with molecular behaviour.
+
+For Biology:
+
+* Build process flow.
+* Explain relationships.
+* Explain function before terminology.
+* Use memorable biological stories where appropriate.
+
+For English:
+
+* Teach interpretation.
+* Explain author's intention.
+* Explain language devices in context.
+* Explain examiner expectations.
+
+Apply the same level of detail to every remaining subject.
+
+Architecture requirements:
+
+* One single source of truth.
+* One folder only.
+* No duplicated prompt text.
+* Automatically selected according to subject.
+* Injected into the existing generation prompt.
+* No additional OpenAI calls.
+* No new routes.
+* No UI changes.
+* No changes to the Quality Pipeline.
+* No changes to LessonRenderer.
+* No changes to TeachingLesson.
+
+The Subject Expert Brain must become a permanent architectural layer so that every future improvement to a subject profile automatically improves every lesson in that subject across the entire application.
+
+At the end provide:
+
+1. Folder structure.
+2. Files created.
+3. Injection point.
+4. Exact prompt flow.
+5. Confirmation that every AI-generated lesson now automatically benefits from the Subject Expert Brain without any code duplication.
