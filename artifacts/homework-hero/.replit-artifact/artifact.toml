@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "Homework Hero"
+title = "SnapSolve"
 version = "1.0.0"
 id = "artifacts/homework-hero"
 router = "path"
