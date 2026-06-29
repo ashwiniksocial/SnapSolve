@@ -1,11 +1,12 @@
 import { Router, type IRouter } from "express";
-import healthRouter        from "./health";
-import solveQuestionRouter from "./solveQuestion";
-import adminRouter         from "./admin";
-import profileRouter       from "./profile";
-import teacherReviewRouter from "./teacherReview";
-import tutorRouter         from "./tutor";
-import devLessonRouter     from "./devLesson";
+import healthRouter           from "./health";
+import solveQuestionRouter    from "./solveQuestion";
+import adminRouter            from "./admin";
+import profileRouter          from "./profile";
+import teacherReviewRouter    from "./teacherReview";
+import tutorRouter            from "./tutor";
+import devLessonRouter        from "./devLesson";
+import devEvaluateLessonRouter from "./devEvaluateLesson";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(profileRouter);
 router.use(teacherReviewRouter);
 router.use(tutorRouter);
 router.use(devLessonRouter);
+router.use(devEvaluateLessonRouter);
 
 export default router;
