@@ -8,4 +8,5 @@
 - [Master Teacher Engine](master-teacher-engine.md) — 10-file service in api-server/src/services/masterTeacher/; one planning call builds TeachingBlueprint injected into generation prompt; graceful fallback if planning fails.
 - [Dev Audit URL](dev-audit-url.md) — /solution?audit=1 directly loads fixture lesson; Playwright bracket chars break textarea fill so ?audit=1 is the reliable test path.
 - [Depth Differentiation](depth-differentiation.md) — BASIC/STD/ADV depth must be injected as system-level override via DEPTH_SYSTEM_OVERRIDES; user-message hint alone is overridden by field-level floors.
+- [Mode-specific lesson generation](mode-specific-lesson-generation.md) — each mode uses its own schema + pipeline; Compact=7 s, Standard=43 s, Detailed=103 s; cache keys include mode.
 - [Class 6 Maths Question Bank](class6-maths-qbank.md) — 1090 questions across 14 chapters; ch13/ch14 have irreducible structural dups; fixer scripts live in /tmp.

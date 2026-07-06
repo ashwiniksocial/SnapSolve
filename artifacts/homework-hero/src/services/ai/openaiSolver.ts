@@ -17,6 +17,7 @@
 import type { Subject }                    from "@/data/subjects";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
 import { buildStudentContext }             from "@/services/studentModel";
+import { getStoredLevel, type ReadingLevel } from "@/services/explanation/readingModeEngine";
 
 // ─── Availability check ───────────────────────────────────────────────────────
 
@@ -26,7 +27,7 @@ export function isOpenAIAvailable(): boolean {
 
 // ─── Client-side localStorage cache ──────────────────────────────────────────
 
-const CACHE_STORE_KEY = "studyai-ai-cache-v2"; // bumped — new lesson schema
+const CACHE_STORE_KEY = "studyai-ai-cache-v3"; // bumped — mode-specific responses
 const CACHE_TTL_MS    = 7 * 24 * 60 * 60 * 1000;
 
 interface CacheEntry {
@@ -39,8 +40,8 @@ function normaliseQ(q: string): string {
   return q.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,;:]+$/, "");
 }
 
-function hashKey(subject: string, question: string): string {
-  const raw = `${subject}::${normaliseQ(question)}`;
+function hashKey(subject: string, question: string, mode: ReadingLevel): string {
+  const raw = `${mode}::${subject}::${normaliseQ(question)}`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
@@ -55,25 +56,25 @@ function writeCache(store: Record<string, CacheEntry>): void {
   try { localStorage.setItem(CACHE_STORE_KEY, JSON.stringify(store)); } catch {}
 }
 
-export function getCachedSolution(subject: string, question: string): AIResponse | null {
+export function getCachedSolution(subject: string, question: string, mode: ReadingLevel = "standard"): AIResponse | null {
   const store = readCache();
-  const entry = store[hashKey(subject, question)];
+  const entry = store[hashKey(subject, question, mode)];
   if (!entry) return null;
   if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
-    delete store[hashKey(subject, question)];
+    delete store[hashKey(subject, question, mode)];
     writeCache(store);
     return null;
   }
   return entry.response;
 }
 
-function cacheSolution(subject: string, question: string, response: AIResponse): void {
+function cacheSolution(subject: string, question: string, mode: ReadingLevel, response: AIResponse): void {
   const store = readCache();
   const now   = Date.now();
   for (const k of Object.keys(store)) {
     if (now - store[k].timestamp > CACHE_TTL_MS) delete store[k];
   }
-  store[hashKey(subject, question)] = { response, timestamp: now };
+  store[hashKey(subject, question, mode)] = { response, timestamp: now };
   writeCache(store);
 }
 
@@ -215,6 +216,7 @@ const FRONTEND_TIMEOUT_MS = 120_000; // 120 s — well above worst-case ~70 s ba
 async function callBackend(
   subject:         Subject,
   question:        string,
+  mode:            ReadingLevel,
   studentContext?: string,
   onProgress?:     (message: string, percent: number) => void,
 ): Promise<BackendLessonResponse> {
@@ -239,7 +241,7 @@ async function callBackend(
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       signal:  controller.signal,
-      body:    JSON.stringify({ subject, question: question.trim(), studentContext, requestId }),
+      body:    JSON.stringify({ subject, question: question.trim(), mode, studentContext, requestId }),
     });
   } finally {
     clearTimeout(timer);
@@ -454,21 +456,24 @@ export async function solveWithOpenAI(
     return mapped;
   }
 
+  // Read the stored mode so the backend generates only the sections this mode needs.
+  const mode = getStoredLevel();
+
   // Client-side cache hit → instant, no network
-  const cached = getCachedSolution(subject, question);
+  const cached = getCachedSolution(subject, question, mode);
   if (cached) {
-    console.log("[PIPELINE:B2] HIT — localStorage cache → returning cached AIResponse, no backend call");
+    console.log(`[PIPELINE:B2] HIT — localStorage cache (mode=${mode}) → returning cached AIResponse, no backend call`);
     return { ...cached, detectedQuestion: question };
   }
-  console.log("[PIPELINE:B2] MISS — localStorage cache empty → calling backend POST /api/solveQuestion");
+  console.log(`[PIPELINE:B2] MISS — localStorage cache empty (mode=${mode}) → calling backend POST /api/solveQuestion`);
 
   // Build student context for personalised AI response
   const studentContext = buildStudentContext(subject);
   console.log(`[PIPELINE:B3] studentContext built — length=${studentContext?.length ?? 0} chars`);
 
-  // Backend call
+  // Backend call — passes mode so the server generates only the required sections
   console.log("[PIPELINE:B4] START — fetch POST /api/solveQuestion");
-  const data = await callBackend(subject, question, studentContext || undefined, onProgress);
+  const data = await callBackend(subject, question, mode, studentContext || undefined, onProgress);
   console.log(`[PIPELINE:B5-RAW] backend raw response:
   topic            = "${data.topic}"
   difficulty       = "${data.difficulty}"
@@ -489,7 +494,7 @@ export async function solveWithOpenAI(
   guidedReasoning steps = ${result.lesson?.guidedReasoning.length ?? 0}`);
 
   // Store in client-side cache
-  cacheSolution(subject, question, result);
+  cacheSolution(subject, question, mode, result);
   console.log("[PIPELINE:B7] response stored in localStorage cache");
 
   return result;

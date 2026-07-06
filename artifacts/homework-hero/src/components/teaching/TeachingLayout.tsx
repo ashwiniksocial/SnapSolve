@@ -243,13 +243,13 @@ function LessonRenderer({ lesson, level, cfg }: {
 
   // Pre-compute which sections will actually render (for sequential numbering)
   const show = {
-    concept:   lesson.keyConcepts.length > 0,
+    concept:   !isCompact && lesson.keyConcepts.length > 0,
     intuition: isDetailed && !!(lesson.intuition.story || lesson.intuition.visual || lesson.intuition.everyday),
     translate: !isCompact && !!lesson.questionTranslation.plainEnglish,
     steps:     lesson.guidedReasoning.length > 0,
-    mistakes:  !isCompact && lesson.commonMistakes.length > 0,
+    mistakes:  isDetailed && lesson.commonMistakes.length > 0,
     answer:    !!lesson.finalAnswer.answer,
-    similar:   !isCompact && !!lesson.simplerExample.problem,
+    similar:   isDetailed && !!lesson.simplerExample.problem,
     practice:  !isCompact && !!lesson.practiceQuestion.question,
     remember:  (isCompact || isDetailed) && lesson.rememberThese.length > 0,
   };
@@ -419,7 +419,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           id="lesson-mistakes"
           num={num.mistakes}
           icon="❌"
-          title={isDetailed ? "Common Mistakes" : "Common Mistake"}
+          title="Common Mistakes"
           headerBg="#fef2f2"
           headerText="#b91c1c"
           borderColor="#fecaca"
@@ -553,10 +553,10 @@ function LegacyRenderer({ solution, level, cfg }: {
   const isCompact  = level === "advanced";
 
   const show = {
-    concept:  (solution.keyConcepts?.length ?? 0) > 0,
+    concept:  !isCompact && (solution.keyConcepts?.length ?? 0) > 0,
     steps:    true,
-    mistakes: !isCompact && (solution.commonMistakes?.length ?? 0) > 0,
-    similar:  !isCompact && !!solution.similarExample?.problem,
+    mistakes: isDetailed && (solution.commonMistakes?.length ?? 0) > 0,
+    similar:  isDetailed && !!solution.similarExample?.problem,
     practice: !isCompact && !!solution.checkUnderstanding?.question,
     remember: (isCompact || isDetailed) && !!(solution.rememberThis || (solution.memoryShortcut?.length ?? 0) > 0),
   };
@@ -634,7 +634,7 @@ function LegacyRenderer({ solution, level, cfg }: {
           id={`mistakes-${level}`}
           num={num.mistakes}
           icon="❌"
-          title={isDetailed ? "Common Mistakes" : "Common Mistake"}
+          title="Common Mistakes"
           headerBg="#fef2f2"
           headerText="#b91c1c"
           borderColor="#fecaca"

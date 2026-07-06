@@ -15,7 +15,7 @@ export function setStoredLevel(level: ReadingLevel): void {
 }
 
 export const LEVEL_META: Record<ReadingLevel, { label: string; hint: string; color: string }> = {
-  basic:    { label: "Detailed",  hint: "Full explanation", color: "bg-indigo-600 text-white border-indigo-600" },
-  standard: { label: "Standard",  hint: "Key content",      color: "bg-blue-500 text-white border-blue-500"    },
-  advanced: { label: "Compact",   hint: "Quick reference",  color: "bg-slate-600 text-white border-slate-600"  },
+  basic:    { label: "Detailed",  hint: "8 sections · Full lesson",  color: "bg-indigo-600 text-white border-indigo-600" },
+  standard: { label: "Standard",  hint: "5 sections · Core content", color: "bg-blue-500 text-white border-blue-500"    },
+  advanced: { label: "Compact",   hint: "3 sections · Steps only",   color: "bg-slate-600 text-white border-slate-600"  },
 };

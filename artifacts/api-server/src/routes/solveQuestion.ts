@@ -44,6 +44,10 @@ const SUBJECTS = [
 ] as const;
 type Subject = (typeof SUBJECTS)[number];
 
+// ─── Lesson mode (mirrors ReadingLevel on the frontend) ───────────────────────
+type LessonMode = "basic" | "standard" | "advanced";
+const LESSON_MODES: readonly LessonMode[] = ["basic", "standard", "advanced"];
+
 // ─── Rate limiting ────────────────────────────────────────────────────────────
 
 const RATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
@@ -80,23 +84,23 @@ function normaliseQuestion(q: string): string {
   return q.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,;:]+$/, "");
 }
 
-function makeCacheKey(subject: string, question: string): string {
-  const raw = `${subject}::${normaliseQuestion(question)}`;
+function makeCacheKey(subject: string, question: string, mode: LessonMode): string {
+  const raw = `${mode}::${subject}::${normaliseQuestion(question)}`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
 }
 
-function getCached(subject: string, question: string): LessonResponse | null {
-  const key   = makeCacheKey(subject, question);
+function getCached(subject: string, question: string, mode: LessonMode): LessonResponse | null {
+  const key   = makeCacheKey(subject, question, mode);
   const entry = responseCache.get(key);
   if (!entry) return null;
   if (Date.now() > entry.expiresAt) { responseCache.delete(key); return null; }
   return { ...entry.data, cached: true };
 }
 
-function setCached(subject: string, question: string, data: LessonResponse): void {
-  responseCache.set(makeCacheKey(subject, question), {
+function setCached(subject: string, question: string, mode: LessonMode, data: LessonResponse): void {
+  responseCache.set(makeCacheKey(subject, question, mode), {
     data,
     expiresAt: Date.now() + CACHE_TTL_MS,
   });
@@ -536,6 +540,198 @@ QUALITY CHECK — Run silently before outputting JSON
 If the answer to the final question is NO — expand the lesson before outputting.
 Teaching effectiveness is the only measure of quality.`.trim();
 
+// ─── Mode-specific schemas for Standard and Compact modes ─────────────────────
+//
+// Detailed mode uses the full JSON_SCHEMA above (embedded in SYSTEM_PROMPTS).
+// Standard and Compact use reduced schemas — fewer sections, lower output tokens.
+
+const JSON_SCHEMA_STANDARD = `
+═══════════════════════════════════════════════════════════════
+RESPONSE FORMAT — STANDARD MODE
+Respond ONLY with a valid JSON object. No markdown fences. No extra text.
+═══════════════════════════════════════════════════════════════
+
+{
+  "topic":        string,
+  "difficulty":   "Easy" | "Medium" | "Hard",
+  "keyConcepts":  string[],
+  "aiConfidence": number,
+
+  "questionTranslation": {
+    "plainEnglish": string,
+    "whatWeKnow":   string,
+    "whatWeFind":   string,
+    "wordToMath":   string
+  },
+
+  "guidedReasoning": [
+    {
+      "what":   string,
+      "why":    string,
+      "math":   string,
+      "result": string,
+      "pause":  string
+    }
+  ],
+
+  "finalAnswer": {
+    "answer":       string,
+    "whyCorrect":   string,
+    "verification": string
+  },
+
+  "practiceQuestion": {
+    "question": string,
+    "hints":    [string, string, string],
+    "solution": string
+  }
+}
+
+═══════════════════════════════════════════════════════════════
+FIELD RULES
+═══════════════════════════════════════════════════════════════
+
+topic
+  Short topic name. E.g. "Pythagoras' Theorem".
+
+keyConcepts
+  2–4 labels. Each under 6 words.
+
+questionTranslation.plainEnglish
+  Start: "The examiner is asking us to…"  2–3 simple sentences.
+
+questionTranslation.whatWeKnow
+  "We are told that…" — list each given fact on its own line.
+
+questionTranslation.whatWeFind
+  "We need to find…" — name the quantity and its unit/type.
+
+questionTranslation.wordToMath
+  Translate key phrases using → arrows, one per line.
+  Include a brief WHY for each.
+
+guidedReasoning — the core section
+  Write 4–6 steps. Adjust to student depth if specified in context:
+    BASIC: 6–8 steps, WHY 3–4 sentences, everyday analogies.
+    STANDARD: 4–6 steps, WHY 2–3 sentences.
+    ADVANCED: 3–4 steps, WHY 1 sentence, no analogies.
+
+  what:   WHAT we do. 1–2 sentences, active voice.
+  why:    WHY — the rule, theorem, or reason. 2–3 sentences.
+  math:   Formula / calculation, or "" if none.
+  result: What we obtain, or "".
+  pause:  A reflection question, or "".
+
+  Rules: Never combine two operations. Show every arithmetic step.
+         Justify every formula before use.
+
+finalAnswer.answer
+  Full sentence: "Therefore, [quantity] = [value] [unit]."
+
+finalAnswer.whyCorrect
+  Sanity-check magnitude and units. 1–2 sentences.
+
+finalAnswer.verification
+  Substitute back. Show every step. End: "LHS = RHS ✓  The answer is verified."
+
+practiceQuestion.question
+  New question — same concept, different numbers. 1 sentence.
+
+practiceQuestion.hints
+  Exactly 3 strings. Each reveals ONE additional idea. Never solve in hints.
+
+practiceQuestion.solution
+  Complete solution. Every step. 5–8 sentences written as a tutor.
+
+═══════════════════════════════════════════════════════════════
+ABSOLUTE LANGUAGE RULES — Zero exceptions
+═══════════════════════════════════════════════════════════════
+NEVER write: "clearly", "obviously", "trivially", "it follows that", "simply", "just"
+ALWAYS explain WHY. Every operation must justify itself.
+ALWAYS use short sentences. Active voice. Everyday words.
+
+═══════════════════════════════════════════════════════════════
+QUALITY CHECK
+═══════════════════════════════════════════════════════════════
+□ Did I explain WHY for every guidedReasoning step?
+□ Did I show every arithmetic calculation?
+□ Is the final answer verified by substitution?
+□ Can a student solve a similar problem independently?`.trim();
+
+const JSON_SCHEMA_COMPACT = `
+═══════════════════════════════════════════════════════════════
+RESPONSE FORMAT — COMPACT MODE
+Respond ONLY with a valid JSON object. No markdown fences. No extra text.
+═══════════════════════════════════════════════════════════════
+
+{
+  "topic":        string,
+  "difficulty":   "Easy" | "Medium" | "Hard",
+  "aiConfidence": number,
+
+  "guidedReasoning": [
+    {
+      "what":   string,
+      "why":    string,
+      "math":   string,
+      "result": string,
+      "pause":  string
+    }
+  ],
+
+  "finalAnswer": {
+    "answer":       string,
+    "whyCorrect":   string,
+    "verification": string
+  },
+
+  "rememberThese": string[]
+}
+
+═══════════════════════════════════════════════════════════════
+FIELD RULES
+═══════════════════════════════════════════════════════════════
+
+topic
+  Short concept name. E.g. "Pythagoras' Theorem".
+
+guidedReasoning — write 3–5 concise steps
+  what:   What we do. 1 sentence.
+  why:    The rule applied. 1–2 sentences.
+  math:   Formula or calculation — always show it.
+  result: What we get, or "".
+  pause:  Always "".
+
+  Rules: Show every calculation. State the rule before applying it.
+         Never skip a step, even trivial arithmetic.
+
+finalAnswer.answer
+  "Therefore, [quantity] = [value] [unit]."
+
+finalAnswer.whyCorrect
+  1 sentence — why this answer makes sense.
+
+finalAnswer.verification
+  Substitute back into the original. Confirm LHS = RHS.
+
+rememberThese
+  3–4 strings. Each starts with ✓.
+  The most important facts and rules from this solution.
+
+═══════════════════════════════════════════════════════════════
+QUALITY CHECK
+═══════════════════════════════════════════════════════════════
+□ Is every calculation shown?
+□ Is the answer verified by substitution?
+□ Are the memory bullets genuinely useful for revision?`.trim();
+
+// Strips the full Detailed schema from a subject prompt so a mode-specific
+// schema can be appended instead. Works because each SYSTEM_PROMPTS entry
+// ends with exactly JSON_SCHEMA (no trailing whitespace after .trim()).
+function getSubjectPreamble(subject: Subject): string {
+  return SYSTEM_PROMPTS[subject].slice(0, SYSTEM_PROMPTS[subject].length - JSON_SCHEMA.length);
+}
+
 // ─── System prompts per subject ───────────────────────────────────────────────
 
 const SYSTEM_PROMPTS: Record<Subject, string> = {
@@ -881,10 +1077,11 @@ const MODEL          = "gpt-4o-mini";
 const OPENAI_TIMEOUT = 90_000;
 
 async function generateDraft(
-  subject:        Subject,
-  question:       string,
+  subject:         Subject,
+  question:        string,
+  mode:            LessonMode,
   studentContext?: string,
-  blueprint?:     BlueprintInjection,
+  blueprint?:      BlueprintInjection,
 ): Promise<LessonResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
@@ -892,14 +1089,21 @@ async function generateDraft(
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), OPENAI_TIMEOUT);
 
-  // Inject the teaching blueprint into the system and user messages when available.
-  // Also append a depth-specific override so the model's field-level authority matches
-  // the student's explanation depth setting from studentContext.
+  // Depth override only applies to Detailed mode — Standard/Compact schemas
+  // embed their own concise depth guidance directly.
   const depth         = extractDepth(studentContext);
-  const depthOverride = DEPTH_SYSTEM_OVERRIDES[depth];
-  const baseSystem    = blueprint?.systemSuffix
-    ? SYSTEM_PROMPTS[subject] + blueprint.systemSuffix
-    : SYSTEM_PROMPTS[subject];
+  const depthOverride = mode === "basic" ? DEPTH_SYSTEM_OVERRIDES[depth] : "";
+
+  // Build mode-specific system prompt.
+  // Detailed (basic): use SYSTEM_PROMPTS[subject] which already includes the full JSON_SCHEMA.
+  // Standard/Compact: use the subject preamble + the reduced mode-specific schema.
+  const subjectBase = mode === "basic"
+    ? SYSTEM_PROMPTS[subject]
+    : getSubjectPreamble(subject) + (mode === "standard" ? JSON_SCHEMA_STANDARD : JSON_SCHEMA_COMPACT);
+
+  const baseSystem = blueprint?.systemSuffix
+    ? subjectBase + blueprint.systemSuffix
+    : subjectBase;
   const systemContent = baseSystem + depthOverride;
 
   const baseUserContent = studentContext
@@ -909,6 +1113,9 @@ async function generateDraft(
   const userContent = blueprint?.userPrefix
     ? blueprint.userPrefix + baseUserContent
     : baseUserContent;
+
+  // Token budget scales with mode: fewer sections = fewer output tokens needed.
+  const maxTokens = mode === "basic" ? 4000 : mode === "standard" ? 2000 : 1200;
 
   let res: Response;
   try {
@@ -922,7 +1129,7 @@ async function generateDraft(
       body: JSON.stringify({
         model:           MODEL,
         temperature:     0.3,
-        max_tokens:      5000,
+        max_tokens:      maxTokens,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: systemContent },
@@ -981,12 +1188,14 @@ router.post("/solveQuestion", async (req, res) => {
   req.log.info({ ip }, "[PIPELINE:1] PASS — rate limit ok");
 
   // 2. Validate input
-  const { question, subject, studentContext, requestId: rawRequestId } = req.body as {
+  const { question, subject, studentContext, requestId: rawRequestId, mode: rawMode } = req.body as {
     question?:       unknown;
     subject?:        unknown;
     studentContext?: unknown;
     requestId?:      unknown;
+    mode?:           unknown;
   };
+  const mode: LessonMode = LESSON_MODES.includes(rawMode as LessonMode) ? rawMode as LessonMode : "standard";
   const reqId = typeof rawRequestId === "string" && rawRequestId.length > 0 ? rawRequestId : undefined;
   setProgress(reqId, "init", "Analysing your question…", 5);
 
@@ -1014,7 +1223,7 @@ router.post("/solveQuestion", async (req, res) => {
 
   // 3. Server-side cache — skip for personalised responses
   if (!ctx) {
-    const cached = getCached(subj, q);
+    const cached = getCached(subj, q, mode);
     if (cached) {
       req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
       setProgress(reqId, "cache_hit", "Lesson ready!", 100);
@@ -1034,6 +1243,10 @@ router.post("/solveQuestion", async (req, res) => {
   let blueprint: BlueprintInjection | undefined;
   if (!apiKey) {
     req.log.warn("[PIPELINE:4] SKIP — no OPENAI_API_KEY; blueprint and generation both unavailable");
+  } else if (mode === "advanced") {
+    // Compact mode: skip planning to reduce latency — a steps-only response doesn't benefit from a blueprint.
+    req.log.info({ subject: subj, mode }, "[PIPELINE:4] SKIP — Compact mode does not use blueprint");
+    setProgress(reqId, "blueprint_done", "Building compact solution…", 35);
   } else {
     req.log.info({ subject: subj }, "[PIPELINE:4] START — calling Master Teacher Engine (lesson planner)");
     setProgress(reqId, "blueprint_start", "Planning lesson structure…", 15);
@@ -1061,7 +1274,7 @@ router.post("/solveQuestion", async (req, res) => {
   setProgress(reqId, "draft_start", "Writing your lesson…", 38);
   let draft: LessonResponse;
   try {
-    draft = await generateDraft(subj, q, ctx, blueprint);
+    draft = await generateDraft(subj, q, mode, ctx, blueprint);
     req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
       "[PIPELINE:5] DONE — draft lesson generated");
     setProgress(reqId, "draft_done", "Lesson written — quality checking…", 62);
@@ -1077,65 +1290,70 @@ router.post("/solveQuestion", async (req, res) => {
     return;
   }
 
-  // 6. Teaching Quality Pipeline — review → improve → repeat (max 3 cycles)
-  //    Wrapped in a wall-clock race so the total response time stays under
-  //    REQUEST_BUDGET_MS. The quality pipeline degrades gracefully on timeout.
-  req.log.info({ subject: subj, topic: draft.topic }, "[PIPELINE:6] START — Teaching Quality Pipeline (review + improve)");
+  // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
+  //    Standard and Compact modes skip this for faster responses.
   let finalLesson = draft;
 
-  const qualityBudgetMs = REQUEST_BUDGET_MS - (Date.now() - requestStart);
-
-  if (qualityBudgetMs < 5_000) {
-    req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] SKIP — insufficient budget remaining; returning draft");
+  if (mode !== "basic") {
+    // Standard: plan + draft only (~25–30 s). Compact: draft only (~10–15 s).
+    req.log.info({ subject: subj, mode }, "[PIPELINE:6] SKIP — Quality pipeline runs only for Detailed mode");
   } else {
-    try {
-      const timeoutSignal = new Promise<null>((resolve) =>
-        setTimeout(() => resolve(null), qualityBudgetMs)
-      );
+    req.log.info({ subject: subj, topic: draft.topic }, "[PIPELINE:6] START — Teaching Quality Pipeline (review + improve)");
 
-      const pipelineResult = await Promise.race([
-        runQualityPipeline(draft, apiKey, (msg, pct) => {
-          setProgress(reqId, "quality", msg, pct);
-        }),
-        timeoutSignal,
-      ]);
+    const qualityBudgetMs = REQUEST_BUDGET_MS - (Date.now() - requestStart);
 
-      if (pipelineResult === null) {
-        req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] TIMEOUT — budget exceeded; returning draft");
-      } else {
-        finalLesson = pipelineResult.lesson;
+    if (qualityBudgetMs < 5_000) {
+      req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] SKIP — insufficient budget remaining; returning draft");
+    } else {
+      try {
+        const timeoutSignal = new Promise<null>((resolve) =>
+          setTimeout(() => resolve(null), qualityBudgetMs)
+        );
 
-        req.log.info({
-          subject:    subj,
-          topic:      draft.topic,
-          cyclesRun:  pipelineResult.cyclesRun,
-          passed:     pipelineResult.passed,
-          overall:    pipelineResult.finalScore.overall,
-          rubric:     pipelineResult.qualityLog.at(-1)?.scores,
-          weakScore:  pipelineResult.finalScore.weakStudentUnderstanding,
-        }, "[PIPELINE:6] DONE — quality pipeline complete");
+        const pipelineResult = await Promise.race([
+          runQualityPipeline(draft, apiKey, (msg, pct) => {
+            setProgress(reqId, "quality", msg, pct);
+          }),
+          timeoutSignal,
+        ]);
 
-        for (const cycle of pipelineResult.qualityLog) {
-          req.log.debug({
-            cycle:      cycle.cycle,
-            scores:     cycle.scores,
-            confusions: cycle.confusions.length,
-            issues:     cycle.issueCount,
-            passed:     cycle.passed,
-            improved:   cycle.improved,
-          }, "solveQuestion: quality cycle");
+        if (pipelineResult === null) {
+          req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] TIMEOUT — budget exceeded; returning draft");
+        } else {
+          finalLesson = pipelineResult.lesson;
+
+          req.log.info({
+            subject:    subj,
+            topic:      draft.topic,
+            cyclesRun:  pipelineResult.cyclesRun,
+            passed:     pipelineResult.passed,
+            overall:    pipelineResult.finalScore.overall,
+            rubric:     pipelineResult.qualityLog.at(-1)?.scores,
+            weakScore:  pipelineResult.finalScore.weakStudentUnderstanding,
+          }, "[PIPELINE:6] DONE — quality pipeline complete");
+
+          for (const cycle of pipelineResult.qualityLog) {
+            req.log.debug({
+              cycle:      cycle.cycle,
+              scores:     cycle.scores,
+              confusions: cycle.confusions.length,
+              issues:     cycle.issueCount,
+              passed:     cycle.passed,
+              improved:   cycle.improved,
+            }, "solveQuestion: quality cycle");
+          }
         }
+      } catch (err) {
+        // Quality pipeline failure is non-fatal — we still return the draft
+        req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
       }
-    } catch (err) {
-      // Quality pipeline failure is non-fatal — we still return the draft
-      req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
     }
   }
 
   // 7. Cache the reviewed lesson (not the draft)
   if (!ctx) {
-    setCached(subj, q, finalLesson);
-    req.log.info({ subject: subj }, "[PIPELINE:7] lesson cached on server");
+    setCached(subj, q, mode, finalLesson);
+    req.log.info({ subject: subj, mode }, "[PIPELINE:7] lesson cached on server");
   }
 
   setProgress(reqId, "done", "Lesson ready!", 100);
