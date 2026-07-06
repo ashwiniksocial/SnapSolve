@@ -30,7 +30,7 @@ export interface ReviewReport {
 
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
 const MODEL          = "gpt-4o-mini";
-const REVIEW_TIMEOUT = 25_000;
+const REVIEW_TIMEOUT = 55_000;
 
 // ─── Review Prompt ────────────────────────────────────────────────────────────
 

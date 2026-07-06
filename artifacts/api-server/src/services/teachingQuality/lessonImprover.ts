@@ -19,7 +19,7 @@ import type { ReviewReport }                         from "./lessonReviewer";
 
 const OPENAI_URL      = "https://api.openai.com/v1/chat/completions";
 const MODEL           = "gpt-4o-mini";
-const IMPROVE_TIMEOUT = 35_000;
+const IMPROVE_TIMEOUT = 70_000;
 
 // ─── Minimal JSON structure hint for the improver ────────────────────────────
 // Full field instructions are not repeated — the model improves based on the

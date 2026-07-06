@@ -763,7 +763,7 @@ ${JSON_SCHEMA}`,
 
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
 const MODEL          = "gpt-4o-mini";
-const OPENAI_TIMEOUT = 30_000;
+const OPENAI_TIMEOUT = 90_000;
 
 async function generateDraft(
   subject:        Subject,
@@ -841,7 +841,12 @@ router.get("/solveQuestion/progress/:requestId", (req, res) => {
   res.json(entry);
 });
 
+// Total time budget for the entire request (ms).
+// Must be comfortably below the 120 s frontend AbortController timeout.
+const REQUEST_BUDGET_MS = 105_000;
+
 router.post("/solveQuestion", async (req, res) => {
+  const requestStart = Date.now();
   const ip = req.ip ?? (req.socket.remoteAddress ?? "unknown");
 
   req.log.info({ ip }, "[PIPELINE:1] route entry — POST /api/solveQuestion");
@@ -953,40 +958,58 @@ router.post("/solveQuestion", async (req, res) => {
   }
 
   // 6. Teaching Quality Pipeline — review → improve → repeat (max 3 cycles)
+  //    Wrapped in a wall-clock race so the total response time stays under
+  //    REQUEST_BUDGET_MS. The quality pipeline degrades gracefully on timeout.
   req.log.info({ subject: subj, topic: draft.topic }, "[PIPELINE:6] START — Teaching Quality Pipeline (review + improve)");
   let finalLesson = draft;
 
-  try {
-    const pipelineResult = await runQualityPipeline(draft, apiKey, (msg, pct) => {
-      setProgress(reqId, "quality", msg, pct);
-    });
+  const qualityBudgetMs = REQUEST_BUDGET_MS - (Date.now() - requestStart);
 
-    finalLesson = pipelineResult.lesson;
+  if (qualityBudgetMs < 5_000) {
+    req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] SKIP — insufficient budget remaining; returning draft");
+  } else {
+    try {
+      const timeoutSignal = new Promise<null>((resolve) =>
+        setTimeout(() => resolve(null), qualityBudgetMs)
+      );
 
-    req.log.info({
-      subject:    subj,
-      topic:      draft.topic,
-      cyclesRun:  pipelineResult.cyclesRun,
-      passed:     pipelineResult.passed,
-      overall:    pipelineResult.finalScore.overall,
-      rubric:     pipelineResult.qualityLog.at(-1)?.scores,
-      weakScore:  pipelineResult.finalScore.weakStudentUnderstanding,
-    }, "[PIPELINE:6] DONE — quality pipeline complete");
+      const pipelineResult = await Promise.race([
+        runQualityPipeline(draft, apiKey, (msg, pct) => {
+          setProgress(reqId, "quality", msg, pct);
+        }),
+        timeoutSignal,
+      ]);
 
-    // Detailed per-cycle log for future model improvement
-    for (const cycle of pipelineResult.qualityLog) {
-      req.log.debug({
-        cycle:      cycle.cycle,
-        scores:     cycle.scores,
-        confusions: cycle.confusions.length,
-        issues:     cycle.issueCount,
-        passed:     cycle.passed,
-        improved:   cycle.improved,
-      }, "solveQuestion: quality cycle");
+      if (pipelineResult === null) {
+        req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] TIMEOUT — budget exceeded; returning draft");
+      } else {
+        finalLesson = pipelineResult.lesson;
+
+        req.log.info({
+          subject:    subj,
+          topic:      draft.topic,
+          cyclesRun:  pipelineResult.cyclesRun,
+          passed:     pipelineResult.passed,
+          overall:    pipelineResult.finalScore.overall,
+          rubric:     pipelineResult.qualityLog.at(-1)?.scores,
+          weakScore:  pipelineResult.finalScore.weakStudentUnderstanding,
+        }, "[PIPELINE:6] DONE — quality pipeline complete");
+
+        for (const cycle of pipelineResult.qualityLog) {
+          req.log.debug({
+            cycle:      cycle.cycle,
+            scores:     cycle.scores,
+            confusions: cycle.confusions.length,
+            issues:     cycle.issueCount,
+            passed:     cycle.passed,
+            improved:   cycle.improved,
+          }, "solveQuestion: quality cycle");
+        }
+      }
+    } catch (err) {
+      // Quality pipeline failure is non-fatal — we still return the draft
+      req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
     }
-  } catch (err) {
-    // Quality pipeline failure is non-fatal — we still return the draft
-    req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
   }
 
   // 7. Cache the reviewed lesson (not the draft)
