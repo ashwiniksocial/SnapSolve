@@ -219,6 +219,67 @@ No markdown fences. No extra text. No explanation outside JSON.
 }
 
 ═══════════════════════════════════════════════════════════════
+EXPLANATION DEPTH — Read this FIRST before filling any field.
+═══════════════════════════════════════════════════════════════
+
+The student's context (in the user message) contains:
+  "Preferred explanation depth: BASIC | STANDARD | ADVANCED"
+
+Read it and apply the following structural targets to EVERY field.
+If no depth is specified, treat as STANDARD.
+
+BASIC  (struggling student, score ~30–50, slow learner):
+  • guidedReasoning : 6–8 steps. Every single operation gets its own step.
+                      Never combine two operations on one line.
+                      The WHY for each step: 3–5 full sentences.
+                      Use analogies in the WHY whenever possible.
+  • vocabulary      : 6–10 terms. MANDATORY — include ALL of these categories:
+                        (a) Every subject-specific term in the question/solution.
+                        (b) Operation words the student may not know: "simplify",
+                            "substitute", "isolate", "evaluate", "express", "formula",
+                            "expression", "coefficient", "variable" — add whichever appear.
+                        (c) Any geometry or algebra word used, even if it seems basic.
+                      Do NOT stop at 4–5 terms. Keep adding until you have 6–10.
+  • prerequisites   : 4–6 items. Start from absolute basics — arithmetic operations,
+                      number sense, what letters mean in maths, basic formulas used.
+                      Never write fewer than 4 prerequisite items for a BASIC student.
+  • intuition.story : 5–7 sentences. Rich everyday context, no assumed knowledge.
+  • simplerExample  : 6–8 sentences for the solution. Show every sub-step.
+  • confusionPoints : Predict beginner mistakes. Resolve each fully (3–4 sentences).
+  • practiceQuestion.hints : Three very specific hints, each nudging one sub-step.
+  • beforeWeStart   : Warm, explicit anxiety acknowledgement. 3–4 sentences.
+
+STANDARD  (average student, score ~50–75, moderate pace):
+  • guidedReasoning : 4–6 steps. Combine only obvious sub-operations.
+                      The WHY for each step: 2–3 sentences.
+  • vocabulary      : 4–6 terms. Subject-specific and non-obvious terms only.
+  • prerequisites   : 3–4 items. Core prerequisites directly needed.
+  • intuition.story : 3–5 sentences.
+  • simplerExample  : 4–6 sentences for the solution.
+  • confusionPoints : 2–3 sentences each.
+  • practiceQuestion.hints : Three progressive hints.
+  • beforeWeStart   : Encouraging, balanced. 2–3 sentences.
+
+ADVANCED  (strong student, score ~75–95, fast learner):
+  • guidedReasoning : 3–4 steps. Combine routine operations into one step.
+                      The WHY for each step: 1–2 sentences. State the rule concisely.
+  • vocabulary      : 2–4 terms. MANDATORY — skip any term a strong Class 8–10 student
+                      already knows (area, perimeter, rectangle, add, subtract, ratio, etc.).
+                      Only define genuinely non-obvious or advanced terms specific to
+                      THIS problem's method. If all terms are standard, write only 2.
+  • prerequisites   : 1–3 items. Only the single most direct prerequisite(s) needed.
+                      Do NOT list foundational arithmetic — assume it is known.
+  • intuition.story : 2–3 sentences. Brief conceptual framing, no hand-holding.
+  • simplerExample  : 3–4 sentences for the solution. Concise.
+  • confusionPoints : 1–2 sentences each — name the confusion and resolve it tersely.
+  • practiceQuestion.hints : Three hints that progressively unlock the method,
+                             without spelling out each arithmetic step.
+  • beforeWeStart   : Brief. Skip extensive motivation — strong students don't need it.
+
+These targets override any conflicting default length guidance below.
+Depth is the primary axis of differentiation. Enforce it strictly.
+
+═══════════════════════════════════════════════════════════════
 FIELD INSTRUCTIONS — Read every instruction. Fill every field.
 ═══════════════════════════════════════════════════════════════
 
@@ -251,7 +312,8 @@ vocabulary
   Every unfamiliar word, symbol, or phrase used in the question or solution MUST appear here.
   Include mathematical terms (e.g. "rational number"), symbols (e.g. "√"), and any word a weak student may not know.
   Each meaning: 1–2 plain sentences. No jargon in the meaning. Use analogies.
-  Minimum 4 terms. Maximum 10.
+  Minimum 4 terms (BASIC/STANDARD) or minimum 2 terms (ADVANCED). Maximum 10.
+  The EXPLANATION DEPTH section above overrides this floor — ADVANCED may use 2–4 terms.
 
 INTUITION
 ━━━━━━━━━
@@ -759,6 +821,58 @@ COMPUTER SCIENCE RULES:
 ${JSON_SCHEMA}`,
 };
 
+// ─── Depth extraction + system-level overrides ───────────────────────────────
+
+function extractDepth(ctx?: string): "BASIC" | "STANDARD" | "ADVANCED" {
+  if (!ctx) return "STANDARD";
+  if (/Preferred explanation depth:\s*BASIC/i.test(ctx))    return "BASIC";
+  if (/Preferred explanation depth:\s*ADVANCED/i.test(ctx)) return "ADVANCED";
+  return "STANDARD";
+}
+
+const DEPTH_SYSTEM_OVERRIDES: Record<"BASIC" | "STANDARD" | "ADVANCED", string> = {
+  BASIC: `
+
+═══════════════════════════════════════════════════════════════
+ACTIVE DEPTH LEVEL: BASIC — Struggling student (score ~30–50)
+These rules OVERRIDE all field-level defaults below.
+═══════════════════════════════════════════════════════════════
+• guidedReasoning: Write 6–8 steps. Split EVERY sub-operation onto its own step.
+  Even trivial arithmetic like "15 ÷ 3 = 5" gets its own step with its own WHY.
+  WHY per step: 3–5 sentences. Use everyday analogies. Justify every rule.
+• vocabulary: Write 6–10 terms. Include all subject terms PLUS any operation
+  words that appear (simplify, substitute, isolate, evaluate, formula,
+  expression, coefficient, variable, factor, multiple, etc.).
+  DO NOT stop at 4–5. Count the terms and keep adding until you reach 6.
+• prerequisites: Write 4–6 items. Start from arithmetic basics and number sense.
+  Never write fewer than 4 prerequisite items.
+• intuition.story: 5–7 sentences. Rich, relatable everyday context.
+• simplerExample.solution: 6–8 sentences. Show every arithmetic sub-step.
+• beforeWeStart.anxietyReducer: 3–4 warm, encouraging sentences.`,
+
+  STANDARD: ``,
+
+  ADVANCED: `
+
+═══════════════════════════════════════════════════════════════
+ACTIVE DEPTH LEVEL: ADVANCED — Strong student (score ~75–95)
+These rules OVERRIDE all field-level defaults below.
+═══════════════════════════════════════════════════════════════
+• guidedReasoning: Write 3–4 steps. Combine routine sub-operations freely.
+  WHY per step: 1–2 sentences. State the rule name, then move on. No analogies.
+• vocabulary: Write 2–4 terms ONLY. The "Minimum 4" floor does NOT apply here.
+  SKIP any term a strong Class 8–10 student already knows:
+  (area, perimeter, rectangle, triangle, multiply, divide, add, subtract,
+  ratio, fraction, equal, formula, variable, equation — skip these).
+  Only define genuinely non-obvious or problem-specific terms.
+  If all terms are standard, write exactly 2 terms.
+• prerequisites: Write 1–3 items. Assume arithmetic and basic algebra are known.
+  Only list the direct concept this problem builds on.
+• intuition.story: 2–3 sentences. Brief conceptual framing only.
+• simplerExample.solution: 3–4 sentences. Concise. Skip trivial sub-steps.
+• beforeWeStart: Keep very brief — strong students don't need extensive motivation.`,
+};
+
 // ─── OpenAI draft generation call ────────────────────────────────────────────
 
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
@@ -777,10 +891,15 @@ async function generateDraft(
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), OPENAI_TIMEOUT);
 
-  // Inject the teaching blueprint into the system and user messages when available
-  const systemContent = blueprint?.systemSuffix
+  // Inject the teaching blueprint into the system and user messages when available.
+  // Also append a depth-specific override so the model's field-level authority matches
+  // the student's explanation depth setting from studentContext.
+  const depth         = extractDepth(studentContext);
+  const depthOverride = DEPTH_SYSTEM_OVERRIDES[depth];
+  const baseSystem    = blueprint?.systemSuffix
     ? SYSTEM_PROMPTS[subject] + blueprint.systemSuffix
     : SYSTEM_PROMPTS[subject];
+  const systemContent = baseSystem + depthOverride;
 
   const baseUserContent = studentContext
     ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
