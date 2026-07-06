@@ -7,7 +7,7 @@ export function getStoredLevel(): ReadingLevel {
     const v = localStorage.getItem(LEVEL_KEY);
     if (v === "basic" || v === "standard" || v === "advanced") return v;
   } catch {}
-  return "basic";
+  return "standard";
 }
 
 export function setStoredLevel(level: ReadingLevel): void {
@@ -15,7 +15,7 @@ export function setStoredLevel(level: ReadingLevel): void {
 }
 
 export const LEVEL_META: Record<ReadingLevel, { label: string; hint: string; color: string }> = {
-  basic:    { label: "Basic",    hint: "Every tiny step",  color: "bg-emerald-500 text-white border-emerald-500" },
-  standard: { label: "Standard", hint: "Key content",       color: "bg-blue-500 text-white border-blue-500" },
-  advanced: { label: "Advanced", hint: "Exam-focused",      color: "bg-violet-500 text-white border-violet-500" },
+  basic:    { label: "Detailed",  hint: "Full explanation", color: "bg-indigo-600 text-white border-indigo-600" },
+  standard: { label: "Standard",  hint: "Key content",      color: "bg-blue-500 text-white border-blue-500"    },
+  advanced: { label: "Compact",   hint: "Quick reference",  color: "bg-slate-600 text-white border-slate-600"  },
 };
