@@ -17,6 +17,7 @@
 import { CONFUSION_PREDICTOR_PROMPT } from "./confusionPredictor";
 import { ANALOGY_RULES_PROMPT }       from "./analogySelector";
 import { PACING_RULES_PROMPT }        from "./lessonPacingEngine";
+import { retryFetch }                  from "../../lib/retryFetch";
 
 // ─── Blueprint types ──────────────────────────────────────────────────────────
 
@@ -114,7 +115,7 @@ export async function callPlannerOpenAI(
 
   let res: Response;
   try {
-    res = await fetch(OPENAI_URL, {
+    res = await retryFetch(OPENAI_URL, {
       method:  "POST",
       headers: {
         "Content-Type":  "application/json",
@@ -134,7 +135,7 @@ export async function callPlannerOpenAI(
           },
         ],
       }),
-    });
+    }, "planner");
   } finally {
     clearTimeout(timer);
   }

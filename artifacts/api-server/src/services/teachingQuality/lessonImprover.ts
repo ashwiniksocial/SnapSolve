@@ -14,6 +14,7 @@
 
 import { parseLessonResponse, type LessonResponse } from "../../lib/lessonTypes";
 import type { ReviewReport }                         from "./lessonReviewer";
+import { retryFetch }                                from "../../lib/retryFetch";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -129,7 +130,7 @@ export async function improveLesson(
 
   let res: Response;
   try {
-    res = await fetch(OPENAI_URL, {
+    res = await retryFetch(OPENAI_URL, {
       method:  "POST",
       headers: {
         "Content-Type":  "application/json",
@@ -149,7 +150,7 @@ export async function improveLesson(
           },
         ],
       }),
-    });
+    }, "improve");
   } finally {
     clearTimeout(timer);
   }

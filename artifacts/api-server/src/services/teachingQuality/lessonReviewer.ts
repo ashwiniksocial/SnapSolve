@@ -17,6 +17,7 @@ import type { DimensionScores } from "./qualityScoreEngine";
 import { parseDimensionScores } from "./qualityScoreEngine";
 import { PASS_THRESHOLD }       from "./teachingRubric";
 import { WEAK_STUDENT_PERSONA } from "./weakStudentSimulator";
+import { retryFetch }            from "../../lib/retryFetch";
 
 export interface ReviewReport {
   scores:         DimensionScores;
@@ -275,7 +276,7 @@ export async function reviewLesson(
 
   let res: Response;
   try {
-    res = await fetch(OPENAI_URL, {
+    res = await retryFetch(OPENAI_URL, {
       method:  "POST",
       headers: {
         "Content-Type":  "application/json",
@@ -295,7 +296,7 @@ export async function reviewLesson(
           },
         ],
       }),
-    });
+    }, "review");
   } finally {
     clearTimeout(timer);
   }

@@ -23,6 +23,7 @@
 import { Router }             from "express";
 import { parseLessonResponse, type LessonResponse } from "../lib/lessonTypes";
 import { runQualityPipeline }    from "../services/teachingQuality";
+import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
 
 const router = Router();
@@ -911,7 +912,7 @@ async function generateDraft(
 
   let res: Response;
   try {
-    res = await fetch(OPENAI_URL, {
+    res = await retryFetch(OPENAI_URL, {
       method:  "POST",
       headers: {
         "Content-Type":  "application/json",
@@ -928,7 +929,7 @@ async function generateDraft(
           { role: "user",   content: userContent },
         ],
       }),
-    });
+    }, "draft");
   } finally {
     clearTimeout(timer);
   }
@@ -1070,7 +1071,7 @@ router.post("/solveQuestion", async (req, res) => {
 
     if (msg.includes("no_key"))      { res.status(503).json({ error: "no_key",          message: "OPENAI_API_KEY is not configured on the server" }); return; }
     if (msg.includes("invalid_key")) { res.status(503).json({ error: "invalid_key",     message: "OPENAI_API_KEY is invalid" }); return; }
-    if (msg.includes("rate_limit"))  { res.status(429).json({ error: "openai_rate_limit" }); return; }
+    if (msg.includes("rate_limit"))  { res.status(429).json({ error: "openai_rate_limit", message: "High demand right now — please wait a moment and try again." }); return; }
     if (msg.includes("aborted"))     { res.status(504).json({ error: "timeout",          message: "OpenAI request timed out" }); return; }
     res.status(502).json({ error: "openai_error", message: msg });
     return;

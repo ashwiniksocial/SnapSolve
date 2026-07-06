@@ -22,13 +22,20 @@ export const RUBRIC: RubricBand[] = [
 /**
  * Every scored dimension must reach this score before the lesson is approved.
  * If even one dimension is below this threshold, the lesson is sent for improvement.
+ *
+ * 80 = "Excellent private tutor" — explains WHY, very few hidden jumps.
+ * Lessons that clear this bar on the first review skip the improve cycle entirely,
+ * saving 2–4 LLM calls per question. The threshold is still high enough to catch
+ * genuinely poor lessons (textbook-quality, < 60) and trigger improvement.
  */
-export const PASS_THRESHOLD = 95;
+export const PASS_THRESHOLD = 80;
 
 /**
  * Maximum number of review+improve cycles before accepting the best result.
+ * Two cycles (1 review → 1 improve → 1 final review) give a strong quality
+ * signal while keeping the worst-case call count to 5 (plan + draft + 2 reviews + 1 improve).
  */
-export const MAX_REVIEW_CYCLES = 3;
+export const MAX_REVIEW_CYCLES = 2;
 
 export function getRubricLabel(score: number): string {
   for (const band of RUBRIC) {
