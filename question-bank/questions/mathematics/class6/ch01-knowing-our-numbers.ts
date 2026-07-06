@@ -646,7 +646,7 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     answer: "False. In the Indian number system, the first comma is placed after three digits from the right (hundreds place), but all subsequent commas are placed after every two digits. For example: 1,23,45,678. In the international system, commas are placed after every three digits throughout: 123,456,789.",
     steps: [
       { stepNumber: 1, title: "Recall the Indian comma rule", explanation: "Indian system: starting from the right, first group = 3 digits, then groups of 2 digits each going left. This gives positions at: hundreds (3rd from right), then ten-thousands (5th from right), then ten-lakhs (7th from right)." },
-      { stepNumber: 2, title: "Apply to an example", explanation: "Number: 123456789. Indian: 12,34,56,789. Wait — that has groups of 2 throughout after the first 3. Correct Indian: 1,23,45,678 (for 123456789 — no, that's 9 digits). Let me use 56870954: Indian = 5,68,70,954. Groups from right: 954 (3 digits), then 70 (2), then 68 (2), then 5 (1).", result: "Statement is FALSE — groups are not all size 3" },
+      { stepNumber: 2, title: "Apply to an example", explanation: "Take the number 56870954. Applying the Indian rule from the right: first group of 3 digits = 954, then groups of 2 digits = 70, 68, 5. Indian notation: 5,68,70,954. The groups have sizes 1, 2, 2, 3 — NOT all size 3.", result: "Statement is FALSE — only the first (rightmost) group is 3 digits; all subsequent groups are 2 digits" },
       { stepNumber: 3, title: "Contrast with international system", explanation: "International: groups of 3 throughout. 56,870,954 — each comma separates groups of exactly 3." },
     ],
     hint: "Count the digits between commas in 1,23,45,678 — are all groups the same size?",
@@ -978,12 +978,12 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     difficulty: "Medium", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 8,
     question: "A student examines four large numbers written in different formats and claims they are all equal. Check whether the student is correct: (P) 3,00,00,000; (Q) 300 lakh; (R) 30 million; (S) 3,00,000 thousands. Are all four equal? If not, which is the odd one out?",
-    answer: "P = 3 crore = 3,00,00,000. Q = 300 lakh = 300 × 1,00,000 = 3,00,00,000. R = 30 million = 30 × 10,00,000 = 3,00,00,000. S = 3,00,000 thousands = 3,00,000 × 1,000 = 3,00,00,00,000 (too large — 3 arab, not 3 crore). S is the odd one out. P, Q, and R are all equal to 3 crore.",
+    answer: "P = 3 crore = 3,00,00,000. Q = 300 lakh = 300 × 1,00,000 = 3,00,00,000. R = 30 million = 30 × 10,00,000 = 3,00,00,000. S = 3,00,000 thousands = 3,00,000 × 1,000 = 30,00,00,000 (too large — 30 crore, not 3 crore). S is the odd one out. P, Q, and R are all equal to 3 crore.",
     steps: [
       { stepNumber: 1, title: "Evaluate P", explanation: "P = 3,00,00,000. This is 3 crore directly from the Indian notation.", result: "P = 3 crore = 3,00,00,000" },
       { stepNumber: 2, title: "Evaluate Q", explanation: "Q = 300 lakh = 300 × 1,00,000 = 3,00,00,000.", result: "Q = 3 crore = 3,00,00,000 ✓" },
       { stepNumber: 3, title: "Evaluate R", explanation: "R = 30 million = 30 × 10,00,000 = 3,00,00,000. (Because 1 million = 10 lakh = 10,00,000.)", result: "R = 3 crore = 3,00,00,000 ✓" },
-      { stepNumber: 4, title: "Evaluate S", explanation: "S = 3,00,000 thousands = 3,00,000 × 1,000 = 3,00,00,00,000 (9 zeros = 3 arab/300 crore).", result: "S ≠ 3 crore. S = 300 crore. S is the odd one out." },
+      { stepNumber: 4, title: "Evaluate S", explanation: "S = 3,00,000 thousands = 3,00,000 × 1,000 = 30,00,00,000 (8 digits = 30 crore).", result: "S ≠ 3 crore. S = 30 crore. S is the odd one out." },
     ],
     hint: "Convert each to a standard unit (crore, or plain digits) before comparing.",
     keyConcepts: ["equivalent representations of large numbers", "unit conversion accuracy"],
@@ -1004,11 +1004,11 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     difficulty: "Hard", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 10,
     question: "A school project asks students to compare India's area and population. India's area is 3,287,263 square km (international format) and its population is 1,40,00,00,000 (Indian format). Express both in the Indian number system and explain why the population number is so much larger than the area number, even though 'population' and 'area' might seem comparable in size.",
-    answer: "Area: 3,287,263 sq km (international) = 32,87,263 sq km (Indian) — about 32 lakh sq km. Population: 1,40,00,00,000 (Indian) = 140 crore people. Population (140 crore) is about 4,260 times larger than area (32.87 lakh). They are not 'comparable' because they measure completely different things in different units — square km measures area and is bounded by the physical size of India, while population counts individual people and can be much larger than the area in sq km.",
+    answer: "Area: 3,287,263 sq km (international) = 32,87,263 sq km (Indian) — about 32 lakh sq km. Population: 1,40,00,00,000 (Indian) = 140 crore people. Population (140 crore) is about 426 times larger than area (32.87 lakh) in raw numerical terms. They are not 'comparable' because they measure completely different things in different units — square km measures area and is bounded by the physical size of India, while population counts individual people and can be much larger than the area in sq km.",
     steps: [
       { stepNumber: 1, title: "Convert area to Indian system", explanation: "3,287,263 (7 digits). Remove commas: 3287263. Indian rule from right: 263 (3), 87 (2), 3 (remaining = 2 digits: 32). Indian: 32,87,263 sq km.", result: "Area = 32,87,263 sq km ≈ 32 lakh sq km" },
       { stepNumber: 2, title: "Read the population in Indian system", explanation: "1,40,00,00,000 is already in Indian system. Groups: 1 (arab/100 crore), 40 (crore), 00 (lakh), 00 (thousand), 000 (units) = 140 crore people.", result: "Population = 140 crore people" },
-      { stepNumber: 3, title: "Compare and explain", explanation: "140 crore ÷ 32.87 lakh ≈ 140 × 1,00,000 ÷ 32,87,000 ≈ 4,260. Population is ~4,260× larger numerically. This is expected: area is in sq km (a large unit) and population counts every individual person — no reason for them to be similar in magnitude." },
+      { stepNumber: 3, title: "Compare and explain", explanation: "140 crore ÷ 32.87 lakh ≈ 1,40,00,00,000 ÷ 32,87,000 ≈ 426. Population is ~426× larger numerically than the area value. This is expected: area is in sq km (a large unit) and population counts every individual person — no reason for them to be similar in magnitude." },
     ],
     hint: "Convert area using the international-to-Indian rule. For population, it's already in Indian. Then think: what do the units mean?",
     hint2: "Area is in km² — a physical measurement bounded by geography. Population counts people — can be any size. Numbers comparing things in different units cannot be compared directly.",
@@ -1132,7 +1132,7 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     difficulty: "Medium", bloomsLevel: "apply",
     marks: 2, estimatedTimeMinutes: 5,
     question: "Write in the Indian number system with commas and in words: Forty-five million three hundred thousand.",
-    answer: "Forty-five million = 4,50,00,000? No — 45 million = 45,000,000 = 4,50,00,000. Three hundred thousand = 3,00,000. Total = 45,000,000 + 300,000 = 45,300,000 = 4,53,00,000. In words (Indian): Four crore fifty-three lakh.",
+    answer: "45 million = 45,000,000 = 4,50,00,000 (Indian). Three hundred thousand = 300,000 = 3,00,000. Total = 45,000,000 + 300,000 = 45,300,000 = 4,53,00,000. In words (Indian): Four crore fifty-three lakh.",
     steps: [
       { stepNumber: 1, title: "Convert forty-five million to digits", explanation: "45 million = 45 × 1,000,000 = 45,000,000." },
       { stepNumber: 2, title: "Convert three hundred thousand to digits", explanation: "300 thousand = 300 × 1,000 = 300,000 = 3,00,000." },
@@ -1196,7 +1196,7 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     difficulty: "Easy", bloomsLevel: "understand",
     marks: 2, estimatedTimeMinutes: 4,
     question: "True or False: 7,450 rounded to the nearest thousand is 8,000. Justify your answer.",
-    answer: "True. To round 7,450 to the nearest thousand, look at the hundreds digit: it is 4. Since 4 < 5, we round down — the thousands digit stays as 7, and all digits to its right become 0. So 7,450 → 7,000. Wait — actually, the hundreds digit IS 4, so the answer is 7,000, NOT 8,000. The statement is FALSE. 7,450 rounded to the nearest thousand is 7,000.",
+    answer: "False. To round 7,450 to the nearest thousand, look at the hundreds digit: it is 4. Since 4 < 5, we round down — the thousands digit stays as 7, and all digits to its right become 0. So 7,450 rounded to the nearest thousand is 7,000, not 8,000. The statement is FALSE.",
     steps: [
       { stepNumber: 1, title: "Identify the digit to examine", explanation: "Rounding 7,450 to the nearest thousand: look at the hundreds digit. In 7,450, hundreds digit = 4." },
       { stepNumber: 2, title: "Apply the rule", explanation: "Hundreds digit = 4 < 5, so round DOWN. Thousands digit stays as 7. Replace all digits to the right of thousands with 0.", result: "7,450 rounded to nearest thousand = 7,000" },
@@ -1306,7 +1306,7 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     difficulty: "Easy", bloomsLevel: "apply",
     marks: 2, estimatedTimeMinutes: 5,
     question: "Estimate the sum 438 + 876 by rounding each number to the nearest hundred. Then find the exact sum and check how close the estimate is.",
-    answer: "Round 438 to nearest hundred: units digit is 3 (look at tens: 3 < 5, so round down) → 400. Round 876: tens digit is 7 ≥ 5 → round up → 900. Estimated sum = 400 + 900 = 1,300. Exact sum = 438 + 876 = 1,314. The estimate 1,300 is within 14 of the exact answer (1.1% error).",
+    answer: "Round 438 to nearest hundred: tens digit = 3 < 5, round down → 400. Round 876: tens digit = 7 ≥ 5, round up → 900. Estimated sum = 400 + 900 = 1,300. Exact sum = 438 + 876 = 1,314. The estimate 1,300 is within 14 of the exact answer (1.1% error).",
     steps: [
       { stepNumber: 1, title: "Round 438 to nearest hundred", explanation: "Tens digit = 3 < 5. Round down. Hundreds digit stays at 4. Tens and units = 0.", result: "438 → 400" },
       { stepNumber: 2, title: "Round 876 to nearest hundred", explanation: "Tens digit = 7 ≥ 5. Round up. Hundreds digit: 8 + 1 = 9. Tens and units = 0.", result: "876 → 900" },
@@ -1486,7 +1486,7 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     difficulty: "Medium", bloomsLevel: "evaluate",
     marks: 3, estimatedTimeMinutes: 8,
     question: "A librarian estimates the number of books on 38 shelves, each holding approximately 47 books, as 2,000. Is this estimate reasonable? Construct a better estimate and explain whether the librarian's figure is an over-estimate or under-estimate.",
-    answer: "The librarian's estimate of 2,000 is an under-estimate and not sufficiently accurate. Better estimate: round 38 → 40, round 47 → 50. Estimate = 40 × 50 = 2,000. Wait — this gives exactly 2,000 as well. But exact = 38 × 47 = 1,786. So 2,000 is actually an over-estimate of 214. The librarian is correct that 2,000 is a reasonable order-of-magnitude estimate, but it overstates the true count by about 12%.",
+    answer: "The librarian's estimate of 2,000 is an over-estimate. Better estimate using rounding: round 38 → 40, round 47 → 50. Estimate = 40 × 50 = 2,000 — the same figure the librarian arrived at. Exact = 38 × 47 = 1,786. Since 2,000 > 1,786, the estimate is an over-estimate by 214 (about 12%). The librarian's figure of 2,000 is a reasonable order-of-magnitude estimate, but it overstates the true count.",
     steps: [
       { stepNumber: 1, title: "Round both numbers", explanation: "38 → 40, 47 → 50." },
       { stepNumber: 2, title: "Compute estimate", explanation: "40 × 50 = 2,000.", result: "Estimate = 2,000" },
@@ -1587,7 +1587,7 @@ export const CH01_KNOWING_OUR_NUMBERS: QuestionV2[] = [
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 10,
-    question: "Rounding 8,450 to the nearest thousand gives 8,000. Rounding 8,550 to the nearest thousand gives 9,000. Both original numbers have '5' in the hundreds position. Explain why they round to DIFFERENT thousands, even though both have '5' in the deciding position. Does this reveal a limitation in the rounding rule?",
+    question: "Rounding 8,450 to the nearest thousand gives 8,000. Rounding 8,550 to the nearest thousand gives 9,000. Both original numbers have the digit 5 in the tens place and 0 in the units place. Explain why they round to DIFFERENT thousands, even though both contain the digit 5. Does this reveal a limitation in the rounding rule?",
     answer: "When rounding to the nearest thousand, you look at the hundreds digit. For 8,450: hundreds digit = 4 (NOT 5). The 5 is in the TENS place. Since 4 < 5, round down → 8,000. For 8,550: hundreds digit = 5. Since 5 ≥ 5, round up → 9,000. The two numbers do NOT both have 5 in the deciding position — this is the key insight. The student who thinks both have '5 in the hundreds' is confusing tens and hundreds. This also shows why identifying the CORRECT 'deciding digit' matters — reading the wrong position leads to wrong conclusions.",
     steps: [
       { stepNumber: 1, title: "Identify the correct deciding digit for each number", explanation: "Rounding to nearest thousand: the deciding digit is the hundreds digit (one place to the right of thousands). 8,450: hundreds digit = 4. 8,550: hundreds digit = 5. These are DIFFERENT deciding digits." },
