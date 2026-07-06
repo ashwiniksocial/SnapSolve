@@ -1080,7 +1080,7 @@ export const CH04_BASIC_GEOMETRICAL_IDEAS: QuestionV2[] = [
     chapterId: "ch04", chapterName: "Basic Geometrical Ideas",
     topicId: "t2", topicName: "Curves, Polygons, and Angles",
     questionType: "previous-year", questionFormat: "ShortAnswer",
-    difficulty: "Medium", bloomsLevel: "evaluate",
+    difficulty: "Medium", bloomsLevel: "remember",
     marks: 3, estimatedTimeMinutes: 5,
     question: "A complete rotation of a ray about its endpoint measures 360°. Explain why this is called a complete angle and not a reflex angle.",
     answer: "A reflex angle is defined as an angle that measures more than 180° and strictly less than 360°. A complete rotation (360°) means the ray has turned all the way around and returned to its starting position — forming a full circle. This is not a reflex angle because a reflex angle must be strictly less than 360°. At exactly 360°, the ray coincides with its original position. We call 360° a complete angle (or full angle) to distinguish this special case — a full revolution — from the partial reflex rotation (180°–360°). In summary: reflex is 180° < θ < 360°; complete is θ = 360°.",
