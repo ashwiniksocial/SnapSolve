@@ -18,7 +18,8 @@ import ExamMode          from "@/pages/ExamMode";
 import SignInPage        from "@/pages/SignIn";
 import SignUpPage        from "@/pages/SignUp";
 import OnboardingPage    from "@/pages/Onboarding";
-import ProfilePage       from "@/pages/Profile";
+import ProfilePage            from "@/pages/Profile";
+import DevTeachingValidator   from "@/pages/DevTeachingValidator";
 
 // ─── Clerk wiring (copy verbatim — same code runs in dev and prod) ────────────
 
@@ -140,7 +141,7 @@ function BottomNav() {
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-const AUTH_PATHS = ["/sign-in", "/sign-up", "/onboarding"];
+const AUTH_PATHS = ["/sign-in", "/sign-up", "/onboarding", "/dev"];
 
 function Router() {
   const [location] = useLocation();
@@ -169,7 +170,8 @@ function Router() {
           <Route path="/profile"     component={ProfilePage} />
           <Route path="/admin"       component={Admin} />
           <Route path="/teacher"     component={TeacherDashboard} />
-          <Route path="/exam"        component={ExamMode} />
+          <Route path="/exam"              component={ExamMode} />
+          <Route path="/dev/validate"      component={DevTeachingValidator} />
         </Switch>
       </div>
       {!hideNav && <BottomNav />}
