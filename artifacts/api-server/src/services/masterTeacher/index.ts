@@ -12,7 +12,8 @@
  * continues without the blueprint rather than failing the entire request.
  */
 
-import { callPlannerOpenAI, type TeachingBlueprint } from "./lessonPlanner";
+import type { TeachingBlueprint } from "./lessonPlanner";
+import { buildBlueprintFromAssets }              from "./deterministicPlanner";
 import { SNAPSOLVE_TEACHING_STANDARDS }              from "../teachingStandards";
 import { CONCEPT_MASTERY_FRAMEWORK }                 from "../conceptMasteryFramework";
 import { EDUCATION_POLICY_STANDARDS }               from "../educationPolicyStandards";
@@ -151,12 +152,11 @@ export async function buildTeachingBlueprint(
   // Always include the universal rules in the system suffix
   const systemSuffix = expertBlock + "\n\n" + UNIVERSAL_SYSTEM_SUFFIX;
 
-  // Attempt the planning call — fail gracefully if it errors
-  let blueprint: TeachingBlueprint | null = null;
-  try {
-    blueprint = await callPlannerOpenAI(subject, question, apiKey);
-  } catch {
-    // Planning call failed — lesson generation continues without blueprint
+  // Build the blueprint deterministically from the academic knowledge registry.
+  // Zero LLM calls — replaces the previous callPlannerOpenAI round-trip.
+  const blueprint: TeachingBlueprint | null = buildBlueprintFromAssets(subject, question);
+
+  if (!blueprint || blueprint.conceptOrder.length === 0) {
     return {
       systemSuffix,
       userPrefix:   "",
@@ -165,9 +165,7 @@ export async function buildTeachingBlueprint(
     };
   }
 
-  const userPrefix = blueprint.conceptOrder.length > 0
-    ? formatBlueprint(blueprint) + "\n\n"
-    : "";
+  const userPrefix = formatBlueprint(blueprint) + "\n\n";
 
   return {
     systemSuffix,

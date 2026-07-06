@@ -5,8 +5,8 @@
 - [AI Personalization Flow](ai-personalization-flow.md) — studentContext built client-side, sent to backend in body, injected into user message only; server never caches personalised responses.
 - [TeachingLesson Architecture](teaching-lesson-arch.md) — TeachingLesson is the new core AI response object replacing steps[]; AIResponse.lesson holds it; bank/fallback entries still use steps[] with legacy renderer.
 - [Teaching Quality Pipeline](teaching-quality-pipeline.md) — 9-file service in api-server/src/services/teachingQuality/; every lesson reviewed and improved server-side before reaching student; max 3 cycles; graceful degradation on failure.
-- [Master Teacher Engine](master-teacher-engine.md) — 10-file service in api-server/src/services/masterTeacher/; one planning call builds TeachingBlueprint injected into generation prompt; graceful fallback if planning fails.
+- [Master Teacher Engine](master-teacher-engine.md) — planning LLM call replaced by deterministicPlanner.ts (< 1 ms registry lookup); Standard −28% latency; Detailed gains ~10 s more quality-pipeline budget.
 - [Dev Audit URL](dev-audit-url.md) — /solution?audit=1 directly loads fixture lesson; Playwright bracket chars break textarea fill so ?audit=1 is the reliable test path.
 - [Depth Differentiation](depth-differentiation.md) — BASIC/STD/ADV depth must be injected as system-level override via DEPTH_SYSTEM_OVERRIDES; user-message hint alone is overridden by field-level floors.
-- [Mode-specific lesson generation](mode-specific-lesson-generation.md) — each mode uses its own schema + pipeline; Compact=7 s, Standard=43 s, Detailed=103 s; cache keys include mode.
+- [Mode-specific lesson generation](mode-specific-lesson-generation.md) — each mode uses its own schema + pipeline; Compact≈7 s, Standard≈23 s (was 32 s), Detailed≈105 s (budget-capped, quality gets more time); cache keys include mode.
 - [Class 6 Maths Question Bank](class6-maths-qbank.md) — 1090 questions across 14 chapters; ch13/ch14 have irreducible structural dups; fixer scripts live in /tmp.
