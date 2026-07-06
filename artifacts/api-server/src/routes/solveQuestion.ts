@@ -588,75 +588,44 @@ Respond ONLY with a valid JSON object. No markdown fences. No extra text.
 }
 
 ═══════════════════════════════════════════════════════════════
-FIELD RULES
+FIELD RULES — be concise; every field is one sentence unless noted
 ═══════════════════════════════════════════════════════════════
 
-topic
-  Short topic name. E.g. "Pythagoras' Theorem".
-
-keyConcepts
-  2–4 labels. Each under 6 words.
+topic           Short topic name. E.g. "Pythagoras' Theorem".
+keyConcepts     2–3 labels. Each under 5 words.
+aiConfidence    0.0–1.0
 
 questionTranslation.plainEnglish
-  Start: "The examiner is asking us to…"  2–3 simple sentences.
-
+  "The examiner is asking us to…" — 1–2 sentences max.
 questionTranslation.whatWeKnow
-  "We are told that…" — list each given fact on its own line.
-
+  "We are told that…" — one fact per line.
 questionTranslation.whatWeFind
-  "We need to find…" — name the quantity and its unit/type.
-
+  "We need to find…" — name the quantity and its unit.
 questionTranslation.wordToMath
-  Translate key phrases using → arrows, one per line.
-  Include a brief WHY for each.
+  Key phrase → symbol/expression, one per line. 2–3 lines max.
 
-guidedReasoning — the core section
-  Write 4–6 steps. Adjust to student depth if specified in context:
-    BASIC: 6–8 steps, WHY 3–4 sentences, everyday analogies.
-    STANDARD: 4–6 steps, WHY 2–3 sentences.
-    ADVANCED: 3–4 steps, WHY 1 sentence, no analogies.
+guidedReasoning — WRITE EXACTLY 4 STEPS. NOT 3. NOT 5. NOT 6. EXACTLY 4.
+  Each step covers ONE operation or ONE new idea. Never two.
 
-  what:   WHAT we do. 1–2 sentences, active voice.
-  why:    WHY — the rule, theorem, or reason. 2–3 sentences.
-  math:   Formula / calculation, or "" if none.
-  result: What we obtain, or "".
-  pause:  A reflection question, or "".
+  what:   What we do. 1 sentence, active voice.
+  why:    The reason — rule, theorem, or logic. 1–2 sentences.
+  math:   The key formula or calculation (short). "" if none.
+  result: What we get. 1 phrase or 1 short sentence. "" if none.
+  pause:  A short reflection question for the student. "" if none.
 
-  Rules: Never combine two operations. Show every arithmetic step.
-         Justify every formula before use.
+  Rules: Justify every formula before using it. Show key sub-steps in math.
+         NEVER combine two operations in one step.
 
-finalAnswer.answer
-  Full sentence: "Therefore, [quantity] = [value] [unit]."
+finalAnswer.answer       "Therefore, [quantity] = [value] [unit]." — 1 sentence.
+finalAnswer.whyCorrect   Sanity-check magnitude and units. 1 sentence.
+finalAnswer.verification Substitute back; confirm LHS = RHS. 2–3 sentences.
 
-finalAnswer.whyCorrect
-  Sanity-check magnitude and units. 1–2 sentences.
+practiceQuestion.question  New question, same concept, different structure. 1 sentence.
+practiceQuestion.hints     Exactly 3 strings. Reveal thinking, not answers.
+practiceQuestion.solution  Key steps as a tutor. 3–4 sentences.
 
-finalAnswer.verification
-  Substitute back. Show every step. End: "LHS = RHS ✓  The answer is verified."
-
-practiceQuestion.question
-  New question — same concept, different numbers. 1 sentence.
-
-practiceQuestion.hints
-  Exactly 3 strings. Each reveals ONE additional idea. Never solve in hints.
-
-practiceQuestion.solution
-  Complete solution. Every step. 5–8 sentences written as a tutor.
-
-═══════════════════════════════════════════════════════════════
-ABSOLUTE LANGUAGE RULES — Zero exceptions
-═══════════════════════════════════════════════════════════════
-NEVER write: "clearly", "obviously", "trivially", "it follows that", "simply", "just"
-ALWAYS explain WHY. Every operation must justify itself.
-ALWAYS use short sentences. Active voice. Everyday words.
-
-═══════════════════════════════════════════════════════════════
-QUALITY CHECK
-═══════════════════════════════════════════════════════════════
-□ Did I explain WHY for every guidedReasoning step?
-□ Did I show every arithmetic calculation?
-□ Is the final answer verified by substitution?
-□ Can a student solve a similar problem independently?`.trim();
+ABSOLUTE RULES: Never write "clearly", "obviously", "it follows", "simply", "just".
+Always explain WHY. Short sentences. Active voice.`.trim();
 
 const JSON_SCHEMA_COMPACT = `
 ═══════════════════════════════════════════════════════════════
@@ -1115,7 +1084,7 @@ async function generateDraft(
     : baseUserContent;
 
   // Token budget scales with mode: fewer sections = fewer output tokens needed.
-  const maxTokens = mode === "basic" ? 4000 : mode === "standard" ? 2000 : 1200;
+  const maxTokens = mode === "basic" ? 4000 : mode === "standard" ? 1200 : 800;
 
   let res: Response;
   try {
@@ -1251,7 +1220,7 @@ router.post("/solveQuestion", async (req, res) => {
     req.log.info({ subject: subj }, "[PIPELINE:4] START — calling Master Teacher Engine (lesson planner)");
     setProgress(reqId, "blueprint_start", "Planning lesson structure…", 15);
     try {
-      blueprint = await buildTeachingBlueprint(subj, q, apiKey);
+      blueprint = await buildTeachingBlueprint(subj, q, apiKey, mode);
       req.log.info({
         subject:      subj,
         concepts:     blueprint.conceptCount,

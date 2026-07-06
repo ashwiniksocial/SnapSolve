@@ -23,6 +23,7 @@ import { MICRO_TEACHING_RULES }                      from "./microTeachingEngine
 import { SCAFFOLDING_STAGES_PROMPT }                 from "./scaffoldingEngine";
 import { CHECKPOINT_RULES_PROMPT }                   from "./studentCheckpointEngine";
 import { DIALOGUE_RULES_PROMPT }                     from "./teacherDialogueEngine";
+import { STANDARD_CORE_RULES }                       from "./standardSystemSuffix";
 
 export interface BlueprintInjection {
   systemSuffix:  string;   // append to system prompt
@@ -31,8 +32,12 @@ export interface BlueprintInjection {
   planningUsed:  boolean;  // false if planning call failed/skipped
 }
 
-// ─── Universal system suffix ──────────────────────────────────────────────────
-// These rules apply to every lesson regardless of question.
+// ─── System suffixes ──────────────────────────────────────────────────────────
+//
+// UNIVERSAL_SYSTEM_SUFFIX — used by Detailed mode (mode === "basic" → full depth).
+// STANDARD_SYSTEM_SUFFIX  — used by Standard mode (mode === "basic" in route, but
+//   passed as "standard" here). Replaces the three large files with a lean distillation
+//   (~4 k chars vs ~72 k chars) while keeping the five small engine files intact.
 
 const UNIVERSAL_SYSTEM_SUFFIX = `
 
@@ -63,6 +68,23 @@ LESSON QUALITY CHECKLIST — Run before writing each paragraph
 
 The lesson should end with a clear "I can now..." statement embedded in the
 confidenceBuilder — something the student can say with genuine pride.`.trim();
+
+// Lean suffix for Standard mode: STANDARD_CORE_RULES replaces the three large
+// files but the five small engines (mindset, micro, scaffold, checkpoint, dialogue)
+// are retained — they are compact and directly shape the JSON output fields.
+const STANDARD_SYSTEM_SUFFIX = `
+
+${STANDARD_CORE_RULES}
+
+${TEACHER_MINDSET_PROMPT}
+
+${MICRO_TEACHING_RULES}
+
+${SCAFFOLDING_STAGES_PROMPT}
+
+${CHECKPOINT_RULES_PROMPT}
+
+${DIALOGUE_RULES_PROMPT}`.trim();
 
 // ─── Blueprint formatter ──────────────────────────────────────────────────────
 
@@ -144,13 +166,16 @@ export async function buildTeachingBlueprint(
   subject:  string,
   question: string,
   apiKey:   string,
+  mode?:    string,
 ): Promise<BlueprintInjection> {
   // Subject Expert Brain — selected automatically by subject, injected first
   const subjectExpert = getSubjectExpertPrompt(subject);
   const expertBlock   = subjectExpert ? "\n\n" + subjectExpert : "";
 
-  // Always include the universal rules in the system suffix
-  const systemSuffix = expertBlock + "\n\n" + UNIVERSAL_SYSTEM_SUFFIX;
+  // Standard mode uses a lean suffix (~14 k chars) instead of the full universal
+  // suffix (~69 k chars) to reduce input-token count and improve response latency.
+  const suffixBody  = mode === "standard" ? STANDARD_SYSTEM_SUFFIX : UNIVERSAL_SYSTEM_SUFFIX;
+  const systemSuffix = expertBlock + "\n\n" + suffixBody;
 
   // Build the blueprint deterministically from the academic knowledge registry.
   // Zero LLM calls — replaces the previous callPlannerOpenAI round-trip.
