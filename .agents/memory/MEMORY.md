@@ -8,5 +8,5 @@
 - [Master Teacher Engine](master-teacher-engine.md) — planning LLM call replaced by deterministicPlanner.ts (< 1 ms registry lookup); Standard −28% latency; Detailed gains ~10 s more quality-pipeline budget.
 - [Dev Audit URL](dev-audit-url.md) — /solution?audit=1 directly loads fixture lesson; Playwright bracket chars break textarea fill so ?audit=1 is the reliable test path.
 - [Depth Differentiation](depth-differentiation.md) — BASIC/STD/ADV depth must be injected as system-level override via DEPTH_SYSTEM_OVERRIDES; user-message hint alone is overridden by field-level floors.
-- [Mode-specific lesson generation](mode-specific-lesson-generation.md) — Standard latency driven by OUTPUT tokens (not input); 4-step schema + maxTokens 1200 → ~11 s median; system suffix trimming (−72%) had no measurable effect.
+- [Mode-specific lesson generation](mode-specific-lesson-generation.md) — Standard has hard 15 s AbortController budget; fallback lesson served on timeout; 4-step schema + maxTokens 1200 → 9.6–10.8 s all four test categories; Detailed unchanged.
 - [Class 6 Maths Question Bank](class6-maths-qbank.md) — 1090 questions across 14 chapters; ch13/ch14 have irreducible structural dups; fixer scripts live in /tmp.

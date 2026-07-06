@@ -21,7 +21,7 @@
  */
 
 import { Router }             from "express";
-import { parseLessonResponse, type LessonResponse } from "../lib/lessonTypes";
+import { parseLessonResponse, type LessonResponse, type LessonStep } from "../lib/lessonTypes";
 import { runQualityPipeline }    from "../services/teachingQuality";
 import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
@@ -1043,7 +1043,141 @@ These rules OVERRIDE all field-level defaults below.
 
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
 const MODEL          = "gpt-4o-mini";
-const OPENAI_TIMEOUT = 90_000;
+const OPENAI_TIMEOUT    = 90_000;
+const STANDARD_BUDGET_MS = 15_000; // wall-clock guarantee for Standard mode
+
+// ─── Standard-mode fallback lesson ───────────────────────────────────────────
+// Built deterministically when the Standard 15 s budget expires.
+// Returns a complete LessonResponse that teaches the problem-solving method
+// for the subject, even though the specific numerical answer isn't computed.
+
+function buildStandardFallback(
+  question: string,
+  subject:  string,
+  blueprint?: BlueprintInjection,
+): LessonResponse {
+  const shortQ = question.trim().length > 60
+    ? question.trim().slice(0, 57) + "…"
+    : question.trim();
+
+  // Extract the first concept name from the formatted blueprint userPrefix.
+  // The planner writes lines like "CONCEPT 1: PYTHAGOREAN THEOREM [◆ MEDIUM]"
+  let concept = `${subject} problem`;
+  if (blueprint?.userPrefix) {
+    const m = blueprint.userPrefix.match(/CONCEPT \d+:\s*([^\n\[⚠◆◇]+)/);
+    if (m?.[1]) concept = m[1].trim();
+  }
+
+  const steps: LessonStep[] = [
+    {
+      what:   "Read the question carefully and identify exactly what is being asked.",
+      why:    "Most errors start with misreading the question. Writing down 'given' and 'find' before touching the maths prevents wasted work.",
+      math:   "",
+      result: "Given information and target quantity clearly identified.",
+      pause:  "Can you state in your own words what the question is asking?",
+    },
+    {
+      what:   `Identify the relevant concept and method: ${concept}.`,
+      why:    `Recognising ${concept} tells you which formula or reasoning strategy applies. One concept — one approach.`,
+      math:   "Write the formula or strategy statement before substituting any numbers.",
+      result: "Method chosen and written down.",
+      pause:  `What do you already know about ${concept}?`,
+    },
+    {
+      what:   "Apply the method step by step, showing every calculation.",
+      why:    "Skipping sub-steps is the most common reason marks are lost in exams. Each line should follow from the previous one with a clear reason.",
+      math:   "Write one operation per line. Label what you are doing (e.g. 'subtract 5 from both sides').",
+      result: "Each line leads to the next. Final numerical result obtained.",
+      pause:  "Have you written down the reason for every step?",
+    },
+    {
+      what:   "Verify your answer by substituting back or checking units and magnitude.",
+      why:    "Verification turns a possible answer into a confirmed answer. A result that doesn't pass the check means an error exists in step 3.",
+      math:   "Substitute your result back into the original equation. Check LHS = RHS.",
+      result: "Answer verified. Ready to write the final statement.",
+      pause:  "Does your answer make sense given the scale of the numbers in the question?",
+    },
+  ];
+
+  return {
+    topic:        concept,
+    difficulty:   "Medium",
+    keyConcepts:  [concept],
+    aiConfidence: 0.5,
+
+    beforeWeStart: {
+      motivator:      `This ${subject} question is very solvable — the method is systematic.`,
+      anxietyReducer: "Every complex problem breaks into simple steps. We will go through them one at a time.",
+      preview:        "We will read → identify the concept → apply the method → verify.",
+    },
+
+    prerequisites:  [],
+    vocabulary:     [],
+
+    intuition: { story: "", visual: "", everyday: "" },
+
+    questionTranslation: {
+      plainEnglish: `The examiner is asking us to work with: ${shortQ}`,
+      whatWeKnow:   "We are told: refer to the given values in your question.",
+      whatWeFind:   "We need to find: the quantity or proof requested above.",
+      wordToMath:   "Write each given value as a mathematical symbol before solving.",
+    },
+
+    teacherThinking: {
+      firstNotice:   `This is a ${subject} problem. Start by identifying the concept and the formula it requires.`,
+      whyThisMethod: "A step-by-step approach ensures every part of the solution is justified — which is what examiners reward.",
+      clues:         "The units, the given values, and the question's phrasing all point to the method.",
+    },
+
+    guidedReasoning:  steps,
+    confusionPoints: [
+      "Confirm you are solving for the right quantity before starting calculations.",
+      "Check that your formula applies to this specific form of the problem.",
+    ],
+
+    commonMistakes: [],
+
+    examinerThinking: {
+      whyAsked:      "",
+      conceptTested: concept,
+      topperInsight: "Toppers always state the formula before using it, show every step, and verify their answer.",
+      examTip:       "",
+      examTrap:      "",
+    },
+
+    finalAnswer: {
+      answer:       "Work through the four steps above to find your specific answer.",
+      whyCorrect:   "A correct answer will survive the substitution check in step 4.",
+      verification: "Substitute your answer back into the original equation and confirm it holds.",
+    },
+
+    simplerExample: { problem: "", solution: "" },
+
+    practiceQuestion: {
+      question: `Try a similar ${subject} question using the same concept — change one of the given values.`,
+      hints: [
+        "Step 1 — Write down what is given and what you need to find.",
+        "Step 2 — Write the formula for this concept before substituting.",
+        "Step 3 — Work through the calculation line by line and verify.",
+      ],
+      solution: "Follow the same four steps: read → identify → apply → verify.",
+    },
+
+    confidenceCheck: {
+      question: "", options: [], correctIndex: 0, explanation: "",
+    },
+
+    retrievalPractice: [],
+    rememberThese: [
+      `Always verify your ${subject} answers by substituting back into the original equation.`,
+    ],
+    confidenceBuilder:
+      `You now know the method for approaching this type of ${subject} problem. ` +
+      `Try one more similar question to build fluency.`,
+  };
+}
+
+// ─── OpenAI draft generation ──────────────────────────────────────────────────
 
 async function generateDraft(
   subject:         Subject,
@@ -1051,12 +1185,13 @@ async function generateDraft(
   mode:            LessonMode,
   studentContext?: string,
   blueprint?:      BlueprintInjection,
+  timeoutMs?:      number,
 ): Promise<LessonResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
   const controller = new AbortController();
-  const timer      = setTimeout(() => controller.abort(), OPENAI_TIMEOUT);
+  const timer      = setTimeout(() => controller.abort(), timeoutMs ?? OPENAI_TIMEOUT);
 
   // Depth override only applies to Detailed mode — Standard/Compact schemas
   // embed their own concise depth guidance directly.
@@ -1242,8 +1377,14 @@ router.post("/solveQuestion", async (req, res) => {
   }, "[PIPELINE:5] START — calling OpenAI for draft lesson generation");
   setProgress(reqId, "draft_start", "Writing your lesson…", 38);
   let draft: LessonResponse;
+  // Standard mode: compute the remaining wall-clock budget (subtract blueprint + cache time).
+  // This becomes the hard abort deadline for the OpenAI call.
+  const standardTimeoutMs = mode === "standard"
+    ? Math.max(5_000, STANDARD_BUDGET_MS - (Date.now() - requestStart))
+    : undefined;
+
   try {
-    draft = await generateDraft(subj, q, mode, ctx, blueprint);
+    draft = await generateDraft(subj, q, mode, ctx, blueprint, standardTimeoutMs);
     req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
       "[PIPELINE:5] DONE — draft lesson generated");
     setProgress(reqId, "draft_done", "Lesson written — quality checking…", 62);
@@ -1254,9 +1395,17 @@ router.post("/solveQuestion", async (req, res) => {
     if (msg.includes("no_key"))      { res.status(503).json({ error: "no_key",          message: "OPENAI_API_KEY is not configured on the server" }); return; }
     if (msg.includes("invalid_key")) { res.status(503).json({ error: "invalid_key",     message: "OPENAI_API_KEY is invalid" }); return; }
     if (msg.includes("rate_limit"))  { res.status(429).json({ error: "openai_rate_limit", message: "High demand right now — please wait a moment and try again." }); return; }
-    if (msg.includes("aborted"))     { res.status(504).json({ error: "timeout",          message: "OpenAI request timed out" }); return; }
-    res.status(502).json({ error: "openai_error", message: msg });
-    return;
+
+    if (msg.includes("aborted") && mode === "standard") {
+      // Standard budget (15 s) expired — serve a structured method guide instead of a 504.
+      req.log.warn({ budget: STANDARD_BUDGET_MS, elapsed: Date.now() - requestStart },
+        "[PIPELINE:5] BUDGET — Standard 15 s expired; serving fallback lesson");
+      draft = buildStandardFallback(q, subj, blueprint);
+    } else if (msg.includes("aborted")) {
+      res.status(504).json({ error: "timeout", message: "OpenAI request timed out" }); return;
+    } else {
+      res.status(502).json({ error: "openai_error", message: msg }); return;
+    }
   }
 
   // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
