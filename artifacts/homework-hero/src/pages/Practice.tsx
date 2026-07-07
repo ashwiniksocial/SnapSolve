@@ -250,8 +250,8 @@ export default function Practice() {
   // Visibility card data — static counts per class (Mathematics)
   const CLASS_CARDS = [
     { classNum: 6, chapters: 14, questions: 1091 },
-    { classNum: 7, chapters: 8,  questions: 600  },
-    { classNum: 8, chapters: 6,  questions: 450  },
+    { classNum: 7, chapters: 13, questions: 975  },
+    { classNum: 8, chapters: 13, questions: 975  },
     { classNum: 9, chapters: 15, questions: 397  },
   ];
 

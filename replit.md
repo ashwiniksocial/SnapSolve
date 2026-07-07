@@ -39,7 +39,7 @@ AI-powered homework and practice platform for Class 6–12 students covering Phy
 ## Product
 
 - **Scan & Solve**: photograph or type a homework question → Tesseract.js OCR → AI step-by-step solution
-- **Practice**: 150-question bank (Class 9 Maths) with chapter/topic/difficulty filters and live accuracy tracking
+- **Practice**: multi-class question bank — Class 6 (14 ch, 1091 q), Class 7 (13 ch, 975 q), Class 8 (13 ch, 975 q), Class 9 (15 ch, ~397 q) — with chapter/topic/difficulty filters and live accuracy tracking
 - **Progress**: per-subject analytics, weak topic detection, and study recommendations
 - **Question Workspace**: deep-dive workspace for any question with hints, steps, and revision saving
 - **Scan History**: last 10 scans with thumbnails, stored in localStorage, revisitable

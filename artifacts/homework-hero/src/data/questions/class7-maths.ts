@@ -1,7 +1,7 @@
 /**
  * Class 7 Mathematics — question bank integration.
  * Imports QuestionV2 data from question-bank/ and adapts to the frontend Question (V1) type.
- * 8 chapters available (ch01, ch02, ch04, ch06, ch08, ch09, ch12, ch13).
+ * 13 chapters available (ch01–ch13).
  */
 
 import { adaptV2Questions, buildChapterMeta } from "./v2adapter";
@@ -10,20 +10,30 @@ import type { Question, ChapterMeta } from "./types";
 
 import { CH01_INTEGERS }               from "../../../../../question-bank/questions/mathematics/class7/ch01-integers";
 import { CH02_FRACTIONS_AND_DECIMALS } from "../../../../../question-bank/questions/mathematics/class7/ch02-fractions-and-decimals";
+import { CH03_DATA_HANDLING }          from "../../../../../question-bank/questions/mathematics/class7/ch03-data-handling";
 import { CH04_SIMPLE_EQUATIONS }       from "../../../../../question-bank/questions/mathematics/class7/ch04-simple-equations";
+import { CH05_LINES_AND_ANGLES }       from "../../../../../question-bank/questions/mathematics/class7/ch05-lines-and-angles";
 import { CH06_TRIANGLE_AND_ITS_PROPERTIES } from "../../../../../question-bank/questions/mathematics/class7/ch06-triangle-and-its-properties";
+import { CH07_CONGRUENCE_OF_TRIANGLES } from "../../../../../question-bank/questions/mathematics/class7/ch07-congruence-of-triangles";
 import { CH08_COMPARING_QUANTITIES }   from "../../../../../question-bank/questions/mathematics/class7/ch08-comparing-quantities";
 import { CH09_RATIONAL_NUMBERS }       from "../../../../../question-bank/questions/mathematics/class7/ch09-rational-numbers";
+import { CH10_PRACTICAL_GEOMETRY }     from "../../../../../question-bank/questions/mathematics/class7/ch10-practical-geometry";
+import { CH11_PERIMETER_AND_AREA }     from "../../../../../question-bank/questions/mathematics/class7/ch11-perimeter-and-area";
 import { CH12_ALGEBRAIC_EXPRESSIONS }  from "../../../../../question-bank/questions/mathematics/class7/ch12-algebraic-expressions";
 import { CH13_EXPONENTS_AND_POWERS }   from "../../../../../question-bank/questions/mathematics/class7/ch13-exponents-and-powers";
 
 const RAW: QuestionV2Like[] = [
   ...(CH01_INTEGERS               as unknown as QuestionV2Like[]),
   ...(CH02_FRACTIONS_AND_DECIMALS as unknown as QuestionV2Like[]),
+  ...(CH03_DATA_HANDLING          as unknown as QuestionV2Like[]),
   ...(CH04_SIMPLE_EQUATIONS       as unknown as QuestionV2Like[]),
+  ...(CH05_LINES_AND_ANGLES       as unknown as QuestionV2Like[]),
   ...(CH06_TRIANGLE_AND_ITS_PROPERTIES as unknown as QuestionV2Like[]),
+  ...(CH07_CONGRUENCE_OF_TRIANGLES as unknown as QuestionV2Like[]),
   ...(CH08_COMPARING_QUANTITIES   as unknown as QuestionV2Like[]),
   ...(CH09_RATIONAL_NUMBERS       as unknown as QuestionV2Like[]),
+  ...(CH10_PRACTICAL_GEOMETRY     as unknown as QuestionV2Like[]),
+  ...(CH11_PERIMETER_AND_AREA     as unknown as QuestionV2Like[]),
   ...(CH12_ALGEBRAIC_EXPRESSIONS  as unknown as QuestionV2Like[]),
   ...(CH13_EXPONENTS_AND_POWERS   as unknown as QuestionV2Like[]),
 ];
