@@ -19,7 +19,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 1: Introduction to Linear Equations ─────────────────────────────────
   {
     id: "c9-m-ch3-t1-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Easy",
     question: "Which of the following is a linear equation in two variables? (a) 3x − 2y = 5 (b) x² + y = 3 (c) x/y = 2",
@@ -33,7 +33,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Easy",
     question: "Write the equation 3x = 7 as a linear equation in two variables.",
@@ -46,7 +46,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Easy",
     question: "Is (2, 3) a solution of x + y = 5?",
@@ -59,7 +59,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Easy",
     question: "What is the general form of a linear equation in two variables?",
@@ -72,7 +72,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Medium",
     question: "If x = 2 is a solution of 3x + 2y = 12, find y.",
@@ -85,7 +85,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Medium",
     question: "Express y in terms of x for the equation 2x + 3y = 9.",
@@ -99,7 +99,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Medium",
     question: "How many solutions does a linear equation in two variables have?",
@@ -112,7 +112,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Medium",
     question: "Find two solutions of 4x + 3y = 12.",
@@ -126,7 +126,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Hard",
     question: "If (a, 2) and (1, a²−1) both satisfy the equation x + y = 3, find all possible values of a.",
@@ -140,7 +140,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t1", topicName: "Introduction to Linear Equations",
     difficulty: "Hard",
     question: "If (2,0), (0,3), and (k, k+1) all satisfy the same linear equation, find k.",
@@ -156,7 +156,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 2: Solutions of a Linear Equation ───────────────────────────────────
   {
     id: "c9-m-ch3-t2-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy",
     question: "Find two solutions of x + y = 7.",
@@ -170,7 +170,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy",
     question: "Verify that (3, 1) is a solution of 2x − y = 5.",
@@ -183,7 +183,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy",
     question: "Find y when x = 4 in the equation 3x − 2y = 6.",
@@ -196,7 +196,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy",
     question: "Find x when y = 0 in 2x + 3y = 10.",
@@ -209,7 +209,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium",
     question: "For the equation x − 2y + 3 = 0, find the solution when y = 1.",
@@ -222,7 +222,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium",
     question: "Does (1, −1) satisfy the equation 2x + 3y + 1 = 0?",
@@ -235,7 +235,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium",
     question: "Find three solutions of 2x + y = 5.",
@@ -250,7 +250,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium",
     question: "The equation 2y = 8 can be written as 0·x + 2y = 8. Write three solutions.",
@@ -263,7 +263,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Hard",
     question: "If (p+q, p−q) is a solution of 3x − 5y = 8, find a relation between p and q.",
@@ -277,7 +277,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Hard",
     question: "For what value of a does ax + 3y = 2a have the solution (1, 2)?",
@@ -292,7 +292,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 3: Graph of a Linear Equation ───────────────────────────────────────
   {
     id: "c9-m-ch3-t3-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Easy",
     question: "What shape does the graph of a linear equation in two variables make?",
@@ -305,7 +305,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Easy",
     question: "Find the x-intercept and y-intercept of 2x + 3y = 6.",
@@ -319,7 +319,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Easy",
     question: "Does every linear equation in two variables pass through the origin?",
@@ -332,7 +332,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Easy",
     question: "How many points are needed to uniquely draw the graph of a linear equation?",
@@ -345,7 +345,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Medium",
     question: "Find the x and y intercepts of 4x − 5y = 20.",
@@ -359,7 +359,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Medium",
     question: "Write the equation of a line passing through the origin with slope 3.",
@@ -372,7 +372,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Medium",
     question: "Determine if (1,2), (2,4), (3,6) all lie on y = 2x.",
@@ -387,7 +387,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Medium",
     question: "Find two points on the graph of x − y = 3.",
@@ -401,7 +401,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Hard",
     question: "A line passes through (2, 3) and has y-intercept 1. Find its equation.",
@@ -415,7 +415,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t3", topicName: "Graph of a Linear Equation",
     difficulty: "Hard",
     question: "Find the equation of a line through (−2, 1) parallel to 3x + y = 7.",
@@ -432,7 +432,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 4: Lines Parallel to the Axes ──────────────────────────────────────
   {
     id: "c9-m-ch3-t4-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Easy",
     question: "What does the equation y = 3 represent geometrically?",
@@ -445,7 +445,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Easy",
     question: "What does x = −2 represent geometrically?",
@@ -458,7 +458,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Easy",
     question: "Write the equation of the x-axis.",
@@ -471,7 +471,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Easy",
     question: "Write the equation of the y-axis.",
@@ -484,7 +484,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Medium",
     question: "Write the equation of a line parallel to the x-axis, 4 units below it.",
@@ -497,7 +497,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Medium",
     question: "Which of the following passes through (4, 0)? (a) x = 4 (b) y = 4 (c) x + y = 4",
@@ -512,7 +512,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Medium",
     question: "Write the equation of a line parallel to the y-axis passing through (−3, 5).",
@@ -526,7 +526,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Medium",
     question: "Do y = 5 and y = −5 intersect? Explain.",
@@ -539,7 +539,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Hard",
     question: "A point P moves so that it is always equidistant from the lines x = 3 and x = −3. Find the locus of P.",
@@ -553,7 +553,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t4", topicName: "Lines Parallel to the Axes",
     difficulty: "Hard",
     question: "Find the area of the rectangle formed by the lines x = 1, x = 5, y = 2, y = 6.",
@@ -570,7 +570,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 5: Real-World Applications ─────────────────────────────────────────
   {
     id: "c9-m-ch3-t5-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Easy",
     question: "The cost of x notebooks at ₹5 each and y pens at ₹3 each is ₹50. Write a linear equation.",
@@ -583,7 +583,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Easy",
     question: "The perimeter of a rectangle is 40 cm. Write a linear equation relating length l and width w.",
@@ -596,7 +596,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Easy",
     question: "Two numbers sum to 100. If the numbers are x and y, write the linear equation.",
@@ -609,7 +609,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Easy",
     question: "Age of a father is 3 times the age of his son. Write a linear equation if father's age is f and son's age is s.",
@@ -622,7 +622,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Medium",
     question: "A taxi charges ₹10 for the first km and ₹6 for each subsequent km. Write an equation for the total fare y (in ₹) for x km (x ≥ 1).",
@@ -636,7 +636,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Medium",
     question: "₹100 is distributed among students. Some get ₹4 and some get ₹5. Write an equation for x students getting ₹4 and y students getting ₹5. Find one solution.",
@@ -650,7 +650,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Medium",
     question: "The sum of ages of father and son is 44, and the father is 3 times older than the son. Find their ages.",
@@ -664,7 +664,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Medium",
     question: "A motorboat covers 80 km upstream in 4 hours and 80 km downstream in 2 hours. Find speed of boat in still water (u) and speed of stream (v).",
@@ -678,7 +678,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Hard",
     question: "Two friends together have ₹370. If one had ₹20 more, they would have equal amounts. Find each friend's amount.",
@@ -692,7 +692,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch3", chapterName: "Coordinate Geometry",
     topicId: "t5", topicName: "Real-World Applications",
     difficulty: "Hard",
     question: "The denominator of a fraction exceeds the numerator by 8. If the numerator is doubled and denominator is decreased by 2, the new fraction equals 4/5. Find the original fraction.",
