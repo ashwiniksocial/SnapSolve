@@ -8,6 +8,7 @@
     "status": "tsx ./src/statusReport.ts",
     "bank-audit": "tsx ./src/questionBankAudit.ts",
     "latency-audit": "tsx ./src/latencyAudit.ts",
+    "curriculum-check": "tsx ./src/curriculumGateway.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

@@ -234,10 +234,41 @@ if (todos.length) {
   console.log("  (none found)");
 }
 
+// Curriculum quality gateway — inline summary
+section("CURRICULUM QUALITY GATEWAY");
+try {
+  const { execSync: exec } = await import("child_process");
+  const out = exec(
+    "pnpm --filter @workspace/scripts run curriculum-check",
+    { cwd: ROOT, encoding: "utf8", stdio: "pipe" }
+  );
+  // Extract the summary block only (lines from SUMMARY onward)
+  const lines = out.split("\n");
+  const summaryStart = lines.findIndex(l => l.includes("SUMMARY"));
+  if (summaryStart >= 0) {
+    lines.slice(summaryStart).forEach(l => console.log(l));
+  } else {
+    console.log(out);
+  }
+} catch (err: unknown) {
+  // Gateway exited non-zero (failures found) — print its stdout/stderr
+  const e = err as { stdout?: string; stderr?: string; message?: string };
+  const out = e.stdout ?? e.stderr ?? e.message ?? "unknown error";
+  const lines = out.split("\n");
+  const summaryStart = lines.findIndex(l => l.includes("SUMMARY"));
+  if (summaryStart >= 0) {
+    lines.slice(summaryStart).forEach(l => console.log(l));
+  } else {
+    console.log(out.slice(0, 2000));
+  }
+  console.log("  Run: pnpm --filter @workspace/scripts run curriculum-check");
+}
+
 // Unresolved bugs (from known issues)
 section("KNOWN UNRESOLVED BUGS");
-console.log("  • Physics / Chemistry / Biology chapters not yet in question bank");
-console.log("  • Class 9 question count: ~397 (some chapters incomplete relative to target 750)");
+console.log("  • Class 9 Maths Ch3 topics mislabelled (Linear Equations content, not Coordinate Geometry)");
+console.log("  • Class 7 Ch14 Symmetry + Ch15 Visualising Solid Shapes absent from question bank");
+console.log("  • Class 8 Ch10 Visualising Solid Shapes absent from question bank");
 console.log("  • No cross-device sync (localStorage only)");
 
 // Git

@@ -10,3 +10,4 @@
 - [Depth Differentiation](depth-differentiation.md) — BASIC/STD/ADV depth must be injected as system-level override via DEPTH_SYSTEM_OVERRIDES; user-message hint alone is overridden by field-level floors.
 - [Mode-specific lesson generation](mode-specific-lesson-generation.md) — Standard has hard 15 s AbortController budget; fallback lesson served on timeout; 4-step schema + maxTokens 1200 → 9.6–10.8 s all four test categories; Detailed unchanged.
 - [Multi-class question bank integration](multi-class-qbank.md) — classes 6-9 integrated via v2adapter.ts; question-bank files have stale tag names needing ts-nocheck; classNum from profile.classLevel ?? 9.
+- [Curriculum Gateway design](curriculum-gateway.md) — V1 file parseV1Meta must use `[^{]*` (not `[^}]*`) to stop before topics, and `[^"]+` (not `[^"']+`) for strings with apostrophes; authoritative NCERT chapter list is hardcoded in the script itself (chapterRegistry is incomplete).
