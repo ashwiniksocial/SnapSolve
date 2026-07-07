@@ -38,7 +38,13 @@ export interface QuestionV2Like {
 }
 
 function mapDifficulty(d: string): Difficulty {
-  return d === "Olympiad" ? "Hard" : (d as Difficulty);
+  switch (d.trim().toLowerCase()) {
+    case "easy":     return "Easy";
+    case "medium":   return "Medium";
+    case "hard":
+    case "olympiad": return "Hard";
+    default:         return d.trim() as Difficulty;
+  }
 }
 
 function mapQuestionType(qType: string, qFormat?: string): QuestionType | undefined {

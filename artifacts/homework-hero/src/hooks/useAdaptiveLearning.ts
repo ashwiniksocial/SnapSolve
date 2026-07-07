@@ -85,7 +85,7 @@ interface AdaptiveCache {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const SUBJECT_LIST: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+const SUBJECT_LIST: Subject[] = ["Physics", "Chemistry", "Mathematics", "Economics"];
 
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
@@ -235,7 +235,7 @@ function loadCachedRecommendations(): DailyRecommendation[] | null {
 
 function computeAll(): TopicProfile[] {
   return computeTopicProfiles(
-    safeRead<ProgressStore>(PROGRESS_KEY, { Physics: {}, Chemistry: {}, Mathematics: {} }),
+    safeRead<ProgressStore>(PROGRESS_KEY, { Physics: {}, Chemistry: {}, Mathematics: {}, Economics: {} }),
     safeRead<JournalStore>(MISTAKES_KEY, { events: [], attempts: {} }),
     safeRead<RevisionStore>(REVISION_KEY, {}),
   );

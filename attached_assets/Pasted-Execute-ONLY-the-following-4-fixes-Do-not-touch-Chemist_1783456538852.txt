@@ -1,0 +1,105 @@
+Execute ONLY the following 4 fixes.
+
+Do not touch Chemistry, Biology, Computer Science, content files, curriculum files, adapters, or question banks.
+
+Goal: make the learning engine fully functional before expansion.
+
+FIX 1 — Revision System Wiring (Highest Priority)
+
+File:
+- Solution.tsx
+
+Tasks:
+1. Import useRevisionPlanner.
+2. Initialize:
+   const { recordAttempt } = useRevisionPlanner();
+3. In "Got it" handler:
+   keep existing logAttempt logic
+   add recordAttempt(...)
+4. In "Needs Review" handler:
+   keep existing logic
+   add recordAttempt(...)
+
+Requirements:
+- Questions must enter studyai-revision-v1.
+- Revision.tsx must show newly solved questions.
+- No duplicate entries.
+- Preserve existing analytics and attempt logging.
+
+After implementation:
+- Trace runtime path from button click → localStorage.
+- Show exact localStorage payload example.
+
+FIX 2 — Difficulty Normalization (Single Source Fix)
+
+File:
+- v2adapter.ts
+
+Current:
+return d === "Olympiad" ? "Hard" : (d as Difficulty);
+
+Replace with normalization logic that converts:
+
+easy -> Easy
+medium -> Medium
+hard -> Hard
+Olympiad -> Hard
+
+Do NOT edit the 6 Class 8 files.
+Fix centrally in adapter.
+
+After implementation:
+- Verify all Class 6–8 questions produce valid Difficulty values.
+- Report total normalized question count.
+
+FIX 3 — Economics Adaptive Learning
+
+File:
+- useAdaptiveLearning.ts
+
+Add Economics to SUBJECT_LIST.
+
+Then verify:
+Economics attempt
+→ adaptive profile
+→ recommendation engine
+→ daily recommendation chip
+
+Show complete runtime trace.
+
+FIX 4 — Topic Matcher Completion
+
+File:
+- topicMatcher.ts
+
+Add Sound topic patterns.
+
+Also create Chemistry topic table structure now (no content changes):
+- Matter
+- Atoms and Molecules
+- Structure of Atom
+
+Only matcher definitions.
+No Chemistry questions.
+
+Verify:
+- Sample Sound question classifies correctly.
+- No regression to Physics topics.
+
+After all 4 fixes:
+
+Run:
+- tsc --noEmit
+- curriculum-check
+- bank-audit
+- status
+
+Generate:
+RELEASE READINESS REPORT
+
+Answer:
+1. Is revision queue now functional?
+2. Are all difficulties normalized?
+3. Is Economics adaptive learning active?
+4. Is Physics topic classification complete?
+5. READY FOR CHEMISTRY? YES or NO

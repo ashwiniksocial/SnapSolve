@@ -82,9 +82,39 @@ const PHYSICS_TOPICS: [string, RegExp[]][] = [
     /gravit/i, /\bg\s*=\s*9\.8/i, /orbital/i, /planet/i,
     /satellite/i, /weight\s+on\s+(moon|planet)/i, /escape\s+velocity/i,
   ]],
+  ["Sound", [
+    /\bsound\b/i, /\bwave\b/i, /\becho\b/i, /reverberation/i,
+    /\bfrequency\b/i, /\bamplitude\b/i, /wavelength/i,
+    /\bpitch\b/i, /\bloudness\b/i, /\bHz\b/i,
+    /ultrasound/i, /infrasound/i, /speed\s+of\s+sound/i,
+    /340\s*m\/s/i, /longitudinal\s+wave/i, /compression/i, /rarefaction/i,
+    /\bSONAR\b/i, /\bdecibel\b/i, /\bdB\b/i, /audible/i,
+  ]],
 ];
 
 const CHEMISTRY_TOPICS: [string, RegExp[]][] = [
+  ["Matter", [
+    /\bmatter\b/i, /\bsolid\b/i, /\bliquid\b/i, /\bgas\b/i,
+    /evaporation/i, /condensation/i, /sublimation/i,
+    /melting\s+point/i, /boiling\s+point/i, /\bplasma\b/i,
+    /diffusion/i, /interconversion/i, /change\s+of\s+state/i,
+    /latent\s+heat/i, /matter\s+around\s+us/i, /pure\s+substance/i,
+  ]],
+  ["Atoms and Molecules", [
+    /\batoms?\s+and\s+molecules?\b/i, /atomic\s+mass/i,
+    /molecular\s+mass/i, /mole\s+concept/i,
+    /chemical\s+formula/i, /\bvalency\b/i,
+    /law\s+of\s+(definite|multiple)\s+proportion/i,
+    /\bdalton\b/i, /\bH2O\b/i, /\bNaCl\b/i, /formula\s+unit/i,
+    /law\s+of\s+conservation/i, /relative\s+atomic/i,
+  ]],
+  ["Structure of Atom", [
+    /structure\s+of\s+(the\s+)?atom/i, /\bthomson\b/i, /\brutherford\b/i,
+    /electron\s+configuration/i, /\bbohr\b/i,
+    /\bisobar\b/i, /\bisotope\b/i, /\bnucleus\b/i,
+    /mass\s+number/i, /atomic\s+number/i, /shell\s+(k|l|m|n)/i,
+    /electron.*shell/i, /proton.*neutron/i,
+  ]],
   ["Balancing Chemical Equations", [
     /balanc/i, /chemical\s+equation/i, /reactant/i, /product/i,
     /\+\s*O2/i, /combustion/i, /conservation\s+of\s+mass/i,

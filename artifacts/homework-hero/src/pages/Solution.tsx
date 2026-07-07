@@ -5,9 +5,11 @@ import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptLog } from "@/hooks/useAttemptLog";
+import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
 import { callDevLesson, toAIResponse } from "@/services/ai/openaiSolver";
 import { useCelebration } from "@/hooks/useCelebration";
+import type { Difficulty } from "@/services/questionService";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
@@ -22,6 +24,7 @@ export default function Solution() {
   const { completeToday, isTodayCompleted } = useStreak();
   const { recordSolve } = useProgress();
   const { logAttempt } = useAttemptLog();
+  const { recordAttempt } = useRevisionPlanner();
   const celebrate = useCelebration();
   const cfg = SUBJECTS[session.subject];
 
@@ -234,6 +237,15 @@ export default function Solution() {
                           session.subject,
                           session.practiceClassNum ?? 9,
                         );
+                        recordAttempt(
+                          session.practiceQuestionId!,
+                          session.question,
+                          session.subject,
+                          session.practiceTopic ?? "",
+                          session.practiceChapterName ?? "",
+                          (session.practiceQuestionDiff ?? "Medium") as Difficulty,
+                          true,
+                        );
                       }
                     }}
                     className={`py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
@@ -257,6 +269,15 @@ export default function Solution() {
                           session.practiceChapterName ?? "",
                           session.subject,
                           session.practiceClassNum ?? 9,
+                        );
+                        recordAttempt(
+                          session.practiceQuestionId!,
+                          session.question,
+                          session.subject,
+                          session.practiceTopic ?? "",
+                          session.practiceChapterName ?? "",
+                          (session.practiceQuestionDiff ?? "Medium") as Difficulty,
+                          false,
                         );
                         recordSolve(session.subject, session.practiceTopic, false);
                       }
