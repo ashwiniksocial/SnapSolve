@@ -1,7 +1,7 @@
 /**
  * Class 8 Mathematics — question bank integration.
  * Imports QuestionV2 data from question-bank/ and adapts to the frontend Question (V1) type.
- * 13 chapters available (ch01–ch13).
+ * 14 chapters available (ch01–ch13 + ch14 Visualising Solid Shapes).
  */
 
 import { adaptV2Questions, buildChapterMeta } from "./v2adapter";
@@ -21,6 +21,7 @@ import { CH10_EXPONENTS_AND_POWERS }  from "../../../../../question-bank/questio
 import { CH11_DIRECT_AND_INVERSE_PROPORTIONS } from "../../../../../question-bank/questions/mathematics/class8/ch11-direct-and-inverse-proportions";
 import { CH12_INTRODUCTION_TO_GRAPHS } from "../../../../../question-bank/questions/mathematics/class8/ch12-introduction-to-graphs";
 import { CH13_FACTORISATION }         from "../../../../../question-bank/questions/mathematics/class8/ch13-factorisation";
+import { CH14_VISUALISING_SOLID_SHAPES_CL8 } from "../../../../../question-bank/questions/mathematics/class8/ch14-visualising-solid-shapes";
 
 const RAW: QuestionV2Like[] = [
   ...(CH01_RATIONAL_NUMBERS      as unknown as QuestionV2Like[]),
@@ -36,6 +37,7 @@ const RAW: QuestionV2Like[] = [
   ...(CH11_DIRECT_AND_INVERSE_PROPORTIONS as unknown as QuestionV2Like[]),
   ...(CH12_INTRODUCTION_TO_GRAPHS as unknown as QuestionV2Like[]),
   ...(CH13_FACTORISATION         as unknown as QuestionV2Like[]),
+  ...(CH14_VISUALISING_SOLID_SHAPES_CL8 as unknown as QuestionV2Like[]),
 ];
 
 export const CLASS8_MATHS_QUESTIONS: Question[] = adaptV2Questions(RAW);

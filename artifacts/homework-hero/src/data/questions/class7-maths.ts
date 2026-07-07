@@ -1,7 +1,7 @@
 /**
  * Class 7 Mathematics — question bank integration.
  * Imports QuestionV2 data from question-bank/ and adapts to the frontend Question (V1) type.
- * 13 chapters available (ch01–ch13).
+ * 15 chapters available (ch01–ch15).
  */
 
 import { adaptV2Questions, buildChapterMeta } from "./v2adapter";
@@ -21,6 +21,8 @@ import { CH10_PRACTICAL_GEOMETRY }     from "../../../../../question-bank/questi
 import { CH11_PERIMETER_AND_AREA }     from "../../../../../question-bank/questions/mathematics/class7/ch11-perimeter-and-area";
 import { CH12_ALGEBRAIC_EXPRESSIONS }  from "../../../../../question-bank/questions/mathematics/class7/ch12-algebraic-expressions";
 import { CH13_EXPONENTS_AND_POWERS }   from "../../../../../question-bank/questions/mathematics/class7/ch13-exponents-and-powers";
+import { CH14_SYMMETRY }               from "../../../../../question-bank/questions/mathematics/class7/ch14-symmetry";
+import { CH15_VISUALISING_SOLID_SHAPES } from "../../../../../question-bank/questions/mathematics/class7/ch15-visualising-solid-shapes";
 
 const RAW: QuestionV2Like[] = [
   ...(CH01_INTEGERS               as unknown as QuestionV2Like[]),
@@ -36,6 +38,8 @@ const RAW: QuestionV2Like[] = [
   ...(CH11_PERIMETER_AND_AREA     as unknown as QuestionV2Like[]),
   ...(CH12_ALGEBRAIC_EXPRESSIONS  as unknown as QuestionV2Like[]),
   ...(CH13_EXPONENTS_AND_POWERS   as unknown as QuestionV2Like[]),
+  ...(CH14_SYMMETRY               as unknown as QuestionV2Like[]),
+  ...(CH15_VISUALISING_SOLID_SHAPES as unknown as QuestionV2Like[]),
 ];
 
 export const CLASS7_MATHS_QUESTIONS: Question[] = adaptV2Questions(RAW);
