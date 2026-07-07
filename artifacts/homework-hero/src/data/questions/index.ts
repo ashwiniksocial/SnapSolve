@@ -1,5 +1,5 @@
 /**
- * Central question bank registry — Classes 6, 7, 8, 9 Mathematics; Class 9 Economics.
+ * Central question bank registry — Classes 6, 7, 8, 9 Mathematics; Class 9 Economics; Class 9 Physics.
  *
  * Adding a new class/chapter:
  *  1. Create a class<N>-<subject>.ts file in this directory.
@@ -37,6 +37,12 @@ import { CHAPTER_META as ECO_CH2_META, QUESTIONS as ECO_CH2_QUESTIONS } from "./
 import { CHAPTER_META as ECO_CH3_META, QUESTIONS as ECO_CH3_QUESTIONS } from "./class9-economics-ch3";
 import { CHAPTER_META as ECO_CH4_META, QUESTIONS as ECO_CH4_QUESTIONS } from "./class9-economics-ch4";
 
+import { CHAPTER_META as PHY_CH1_META, QUESTIONS as PHY_CH1_QUESTIONS } from "./class9-physics-ch1";
+import { CHAPTER_META as PHY_CH2_META, QUESTIONS as PHY_CH2_QUESTIONS } from "./class9-physics-ch2";
+import { CHAPTER_META as PHY_CH3_META, QUESTIONS as PHY_CH3_QUESTIONS } from "./class9-physics-ch3";
+import { CHAPTER_META as PHY_CH4_META, QUESTIONS as PHY_CH4_QUESTIONS } from "./class9-physics-ch4";
+import { CHAPTER_META as PHY_CH5_META, QUESTIONS as PHY_CH5_QUESTIONS } from "./class9-physics-ch5";
+
 const CLASS9_MATHS_CHAPTERS: ChapterMeta[] = [
   CH1_META, CH2_META, CH3_META, CH4_META, CH5_META,
   CH6_META, CH7_META, CH8_META, CH9_META, CH10_META,
@@ -60,12 +66,22 @@ const CLASS9_ECONOMICS_QUESTIONS: Question[] = [
   ...ECO_CH3_QUESTIONS, ...ECO_CH4_QUESTIONS,
 ];
 
+const CLASS9_PHYSICS_CHAPTERS: ChapterMeta[] = [
+  PHY_CH1_META, PHY_CH2_META, PHY_CH3_META, PHY_CH4_META, PHY_CH5_META,
+];
+
+const CLASS9_PHYSICS_QUESTIONS: Question[] = [
+  ...PHY_CH1_QUESTIONS, ...PHY_CH2_QUESTIONS, ...PHY_CH3_QUESTIONS,
+  ...PHY_CH4_QUESTIONS, ...PHY_CH5_QUESTIONS,
+];
+
 export const ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS6_MATHS_CHAPTERS,
   ...CLASS7_MATHS_CHAPTERS,
   ...CLASS8_MATHS_CHAPTERS,
   ...CLASS9_MATHS_CHAPTERS,
   ...CLASS9_ECONOMICS_CHAPTERS,
+  ...CLASS9_PHYSICS_CHAPTERS,
 ];
 
 export const ALL_QUESTIONS: Question[] = [
@@ -74,6 +90,7 @@ export const ALL_QUESTIONS: Question[] = [
   ...CLASS8_MATHS_QUESTIONS,
   ...CLASS9_MATHS_QUESTIONS,
   ...CLASS9_ECONOMICS_QUESTIONS,
+  ...CLASS9_PHYSICS_QUESTIONS,
 ];
 
 export type { ChapterMeta, Question };
