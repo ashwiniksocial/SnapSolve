@@ -4,6 +4,7 @@ import { SUBJECTS } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
+import { useAttemptLog } from "@/hooks/useAttemptLog";
 import { solve, type AIResponse } from "@/services/aiSolver";
 import { callDevLesson, toAIResponse } from "@/services/ai/openaiSolver";
 import { useCelebration } from "@/hooks/useCelebration";
@@ -20,6 +21,7 @@ export default function Solution() {
   const { session, update } = useSession();
   const { completeToday, isTodayCompleted } = useStreak();
   const { recordSolve } = useProgress();
+  const { logAttempt } = useAttemptLog();
   const celebrate = useCelebration();
   const cfg = SUBJECTS[session.subject];
 
@@ -30,10 +32,12 @@ export default function Solution() {
   const [phaseIdx, setPhaseIdx]     = useState(0);
   const [progressMsg, setProgressMsg] = useState("");
   const [progressPct, setProgressPct] = useState(0);
-  const [marked,   setMarked]       = useState(false);
-  const [burst,    setBurst]        = useState(false);
+  const [marked,      setMarked]      = useState(false);
+  const [burst,       setBurst]       = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
   const [showTutor,   setShowTutor]   = useState(false);
+  // practiceMode result: null = not yet rated, true = got it, false = needs review
+  const [practiceResult, setPracticeResult] = useState<boolean | null>(null);
 
   // Practice mode: ?practiceMode=1 forces full AI pipeline (skipBank + requireLesson).
   const practiceMode = new URLSearchParams(window.location.search).get("practiceMode") === "1";
@@ -74,6 +78,25 @@ export default function Solution() {
       setSolution(result);
       update({ practiceTopic: result.topic });
       recordSolve(session.subject, result.topic, true);
+
+      // Log to attempt detail log when we have question context from practice mode
+      if (
+        practiceMode &&
+        session.practiceQuestionId &&
+        session.practiceChapterId
+      ) {
+        logAttempt(
+          session.practiceQuestionId,
+          session.question,
+          true, // default correct on view; student can override below
+          session.practiceQuestionDiff ?? "Medium",
+          session.practiceChapterId,
+          session.practiceChapterName ?? "",
+          session.subject,
+          session.practiceClassNum ?? 9,
+        );
+      }
+
       setPageState("done");
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -175,6 +198,73 @@ export default function Solution() {
                 initialMastery={getMasteryEntry(solution.topic, session.subject)?.masteryScore ?? 40}
                 onClose={() => setShowTutor(false)}
               />
+            )}
+
+            {/* ── Practice mode self-assessment ──────────────────────────── */}
+            {practiceMode && session.practiceQuestionId && (
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                <p className="text-xs font-semibold text-slate-500 mb-3 text-center">
+                  How did you do?
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => {
+                      if (practiceResult !== true) {
+                        setPracticeResult(true);
+                        logAttempt(
+                          session.practiceQuestionId!,
+                          session.question,
+                          true,
+                          session.practiceQuestionDiff ?? "Medium",
+                          session.practiceChapterId ?? "",
+                          session.practiceChapterName ?? "",
+                          session.subject,
+                          session.practiceClassNum ?? 9,
+                        );
+                      }
+                    }}
+                    className={`py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
+                      practiceResult === true
+                        ? "bg-emerald-500 border-emerald-500 text-white"
+                        : "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100"
+                    }`}
+                  >
+                    ✓ Got it
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (practiceResult !== false) {
+                        setPracticeResult(false);
+                        logAttempt(
+                          session.practiceQuestionId!,
+                          session.question,
+                          false,
+                          session.practiceQuestionDiff ?? "Medium",
+                          session.practiceChapterId ?? "",
+                          session.practiceChapterName ?? "",
+                          session.subject,
+                          session.practiceClassNum ?? 9,
+                        );
+                        recordSolve(session.subject, session.practiceTopic, false);
+                      }
+                    }}
+                    className={`py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
+                      practiceResult === false
+                        ? "bg-red-500 border-red-500 text-white"
+                        : "border-red-300 text-red-700 bg-red-50 hover:bg-red-100"
+                    }`}
+                  >
+                    ✗ Needs Review
+                  </button>
+                </div>
+                {practiceResult !== null && (
+                  <p className="text-[11px] text-center text-slate-400 mt-2">
+                    {practiceResult
+                      ? "Recorded as correct — great work!"
+                      : "Marked for review — keep practising!"}
+                  </p>
+                )}
+              </div>
             )}
 
             {/* ── Action buttons: 2 × 2 grid ─────────────────────────────── */}

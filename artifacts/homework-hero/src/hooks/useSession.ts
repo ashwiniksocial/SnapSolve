@@ -7,6 +7,12 @@ interface SessionData {
   practiceTopic:  string;
   /** Tesseract OCR confidence (0–1). Undefined / missing = 1.0 (typed question). */
   ocrConfidence?: number;
+  /** Set by Practice page when opening a question — used by Solution + Analytics */
+  practiceQuestionId?:   string;
+  practiceQuestionDiff?: string;
+  practiceChapterId?:    string;
+  practiceChapterName?:  string;
+  practiceClassNum?:     number;
 }
 
 const KEY = "studyai-session";

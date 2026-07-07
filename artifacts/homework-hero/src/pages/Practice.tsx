@@ -217,7 +217,7 @@ export default function Practice() {
   const [, navigate] = useLocation();
 
   // Opens a question in the full AI teaching pipeline.
-  // Stores question in session and navigates to /solution?practiceMode=1.
+  // Stores question + analytics metadata in session, navigates to /solution?practiceMode=1.
   // Solution.tsx calls solve() with { skipBank: true, requireLesson: true } —
   // forcing POST /api/solveQuestion → Master Teacher → Blueprint → Lesson → LessonRenderer.
   // No hint/steps/answer are ever rendered. Failure is visible, never silently hidden.
@@ -227,7 +227,16 @@ export default function Practice() {
     console.log(`[PRACTICE:NAV] question="${q.question.slice(0, 100)}"`);
     console.log(`[PRACTICE:NAV] → storing in session, navigating to /solution?practiceMode=1`);
     console.log(`[PRACTICE:NAV] → Pipeline: skipBank=true requireLesson=true → POST /api/solveQuestion REQUIRED`);
-    update({ subject: session.subject, question: q.question, practiceTopic: q.topicName });
+    update({
+      subject:               session.subject,
+      question:              q.question,
+      practiceTopic:         q.topicName,
+      practiceQuestionId:    q.id,
+      practiceQuestionDiff:  q.difficulty,
+      practiceChapterId:     q.chapterId,
+      practiceChapterName:   q.chapterName,
+      practiceClassNum:      q.classNum,
+    });
     navigate('/solution?practiceMode=1');
   }, [session.subject, update, navigate]);
 
@@ -269,11 +278,18 @@ export default function Practice() {
               <h1 className="text-xl font-bold text-slate-900">Practice</h1>
               <p className="text-sm text-slate-500 mt-0.5">Class {classNum} · {chapters.length} chapter{chapters.length !== 1 ? "s" : ""} · {session.subject}</p>
             </div>
-            <Link href="/challenge">
-              <button className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-all flex-shrink-0 mt-1">
-                ✦ Workspace
-              </button>
-            </Link>
+            <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+              <Link href="/analytics">
+                <button className="text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-all">
+                  📊 Analytics
+                </button>
+              </Link>
+              <Link href="/challenge">
+                <button className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-all">
+                  ✦ Workspace
+                </button>
+              </Link>
+            </div>
           </div>
 
           {/* Subject tabs — all 6 subjects; Coming Soon for those without content */}

@@ -20,6 +20,7 @@ import SignUpPage        from "@/pages/SignUp";
 import OnboardingPage    from "@/pages/Onboarding";
 import ProfilePage            from "@/pages/Profile";
 import DevTeachingValidator   from "@/pages/DevTeachingValidator";
+import Analytics              from "@/pages/Analytics";
 
 // ─── Clerk wiring (copy verbatim — same code runs in dev and prod) ────────────
 
@@ -171,6 +172,7 @@ function Router() {
           <Route path="/admin"       component={Admin} />
           <Route path="/teacher"     component={TeacherDashboard} />
           <Route path="/exam"              component={ExamMode} />
+          <Route path="/analytics"           component={Analytics} />
           <Route path="/dev/validate"      component={DevTeachingValidator} />
         </Switch>
       </div>

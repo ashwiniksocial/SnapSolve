@@ -3,6 +3,9 @@
  *
  * Reads the user's attempted question IDs from useProgress and maps them
  * against the question bank to compute per-chapter completion and accuracy.
+ *
+ * @param subject  Subject to compute stats for.
+ * @param classNum Class number (defaults to 9 for backward compatibility).
  */
 
 import { useMemo } from "react";
@@ -35,15 +38,15 @@ export interface ChapterCompletion {
   topics: TopicCompletion[];
 }
 
-export function useChapterStats(subject: Subject): ChapterCompletion[] {
+export function useChapterStats(subject: Subject, classNum = 9): ChapterCompletion[] {
   const { progress } = useProgress();
 
   return useMemo(() => {
-    const chapters = getChapters(9, subject);
+    const chapters = getChapters(classNum, subject);
     const subjectProgress = (progress as Record<string, Record<string, { solved: number; correct: number; attempted: string[] }>>)[subject] ?? {};
 
     return chapters.map((ch) => {
-      const chapterQuestions = getQuestions({ classNum: 9, subject, chapterId: ch.id });
+      const chapterQuestions = getQuestions({ classNum, subject, chapterId: ch.id });
 
       const topicCompletions: TopicCompletion[] = ch.topics.map((t) => {
         const topicQs = chapterQuestions.filter((q) => q.topicId === t.id);
@@ -95,5 +98,5 @@ export function useChapterStats(subject: Subject): ChapterCompletion[] {
         topics: topicCompletions,
       };
     });
-  }, [progress, subject]);
+  }, [progress, subject, classNum]);
 }
