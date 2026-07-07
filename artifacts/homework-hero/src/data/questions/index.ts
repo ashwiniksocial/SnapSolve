@@ -1,10 +1,9 @@
 /**
- * Central question bank registry.
+ * Central question bank registry — Classes 6, 7, 8, 9 Mathematics.
  *
  * Adding a new class/chapter:
- *  1. Create `class<N>-<subject>-ch<M>.ts` following the same structure.
- *  2. Import and spread QUESTIONS here.
- *  3. Add CHAPTER_META to ALL_CHAPTERS.
+ *  1. Create a class<N>-maths.ts adapter in this directory.
+ *  2. Import and spread CHAPTERS + QUESTIONS below.
  *
  * Firebase migration path:
  *  Replace ALL_QUESTIONS with a Firestore query in questionService.ts.
@@ -29,18 +28,36 @@ import { CHAPTER_META as CH13_META, QUESTIONS as CH13_QUESTIONS } from "./class9
 import { CHAPTER_META as CH14_META, QUESTIONS as CH14_QUESTIONS } from "./class9-maths-ch14";
 import { CHAPTER_META as CH15_META, QUESTIONS as CH15_QUESTIONS } from "./class9-maths-ch15";
 
-export const ALL_CHAPTERS: ChapterMeta[] = [
+import { CLASS6_MATHS_CHAPTERS, CLASS6_MATHS_QUESTIONS } from "./class6-maths";
+import { CLASS7_MATHS_CHAPTERS, CLASS7_MATHS_QUESTIONS } from "./class7-maths";
+import { CLASS8_MATHS_CHAPTERS, CLASS8_MATHS_QUESTIONS } from "./class8-maths";
+
+const CLASS9_MATHS_CHAPTERS: ChapterMeta[] = [
   CH1_META, CH2_META, CH3_META, CH4_META, CH5_META,
   CH6_META, CH7_META, CH8_META, CH9_META, CH10_META,
   CH11_META, CH12_META, CH13_META, CH14_META, CH15_META,
 ];
 
-export const ALL_QUESTIONS: Question[] = [
+const CLASS9_MATHS_QUESTIONS: Question[] = [
   ...CH1_QUESTIONS,  ...CH2_QUESTIONS,  ...CH3_QUESTIONS,
   ...CH4_QUESTIONS,  ...CH5_QUESTIONS,  ...CH6_QUESTIONS,
   ...CH7_QUESTIONS,  ...CH8_QUESTIONS,  ...CH9_QUESTIONS,
   ...CH10_QUESTIONS, ...CH11_QUESTIONS, ...CH12_QUESTIONS,
   ...CH13_QUESTIONS, ...CH14_QUESTIONS, ...CH15_QUESTIONS,
+];
+
+export const ALL_CHAPTERS: ChapterMeta[] = [
+  ...CLASS6_MATHS_CHAPTERS,
+  ...CLASS7_MATHS_CHAPTERS,
+  ...CLASS8_MATHS_CHAPTERS,
+  ...CLASS9_MATHS_CHAPTERS,
+];
+
+export const ALL_QUESTIONS: Question[] = [
+  ...CLASS6_MATHS_QUESTIONS,
+  ...CLASS7_MATHS_QUESTIONS,
+  ...CLASS8_MATHS_QUESTIONS,
+  ...CLASS9_MATHS_QUESTIONS,
 ];
 
 export type { ChapterMeta, Question };

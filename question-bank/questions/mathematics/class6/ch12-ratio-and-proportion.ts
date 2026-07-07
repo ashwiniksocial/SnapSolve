@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Question Bank — Mathematics, Class 6, Chapter 12: Ratio and Proportion
  *

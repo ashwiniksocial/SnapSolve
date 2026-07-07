@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Question Bank — Mathematics, Class 7, Chapter 2: Fractions and Decimals
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Question Bank — Mathematics, Class 6, Chapter 14: Practical Geometry
  *

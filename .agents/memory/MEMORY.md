@@ -4,9 +4,9 @@
 - [Student Model Architecture](student-model-arch.md) — 7-service localStorage-first system under src/services/studentModel/; Firestore-ready data shapes; cache bypassed when studentContext present.
 - [AI Personalization Flow](ai-personalization-flow.md) — studentContext built client-side, sent to backend in body, injected into user message only; server never caches personalised responses.
 - [TeachingLesson Architecture](teaching-lesson-arch.md) — TeachingLesson is the new core AI response object replacing steps[]; AIResponse.lesson holds it; bank/fallback entries still use steps[] with legacy renderer.
-- [Teaching Quality Pipeline](teaching-quality-pipeline.md) — 9-file service in api-server/src/services/teachingQuality/; every lesson reviewed and improved server-side before reaching student; max 3 cycles; graceful degradation on failure.
+- [Teaching Quality Pipeline](teaching-quality-pipeline.md) — 9-file service in api-server/src/services/teachingQuality/; every lesson reviewed and improved server-side before reaching student; max 2 cycles; graceful degradation on failure.
 - [Master Teacher Engine](master-teacher-engine.md) — planning LLM call replaced by deterministicPlanner.ts (< 1 ms registry lookup); Standard −28% latency; Detailed gains ~10 s more quality-pipeline budget.
 - [Dev Audit URL](dev-audit-url.md) — /solution?audit=1 directly loads fixture lesson; Playwright bracket chars break textarea fill so ?audit=1 is the reliable test path.
 - [Depth Differentiation](depth-differentiation.md) — BASIC/STD/ADV depth must be injected as system-level override via DEPTH_SYSTEM_OVERRIDES; user-message hint alone is overridden by field-level floors.
 - [Mode-specific lesson generation](mode-specific-lesson-generation.md) — Standard has hard 15 s AbortController budget; fallback lesson served on timeout; 4-step schema + maxTokens 1200 → 9.6–10.8 s all four test categories; Detailed unchanged.
-- [Class 6 Maths Question Bank](class6-maths-qbank.md) — 1090 questions across 14 chapters; ch13/ch14 have irreducible structural dups; fixer scripts live in /tmp.
+- [Multi-class question bank integration](multi-class-qbank.md) — classes 6-9 integrated via v2adapter.ts; question-bank files have stale tag names needing ts-nocheck; classNum from profile.classLevel ?? 9.

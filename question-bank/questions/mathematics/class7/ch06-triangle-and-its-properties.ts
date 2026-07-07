@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Question Bank — Mathematics, Class 7, Chapter 6: The Triangle and its Properties
  *

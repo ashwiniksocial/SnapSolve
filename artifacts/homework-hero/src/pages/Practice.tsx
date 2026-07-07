@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import { Link, useLocation } from "wouter";
 import { SUBJECTS, type SubjectConfig } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
+import { useProfile } from "@/hooks/useProfile";
 import { useProgress } from "@/hooks/useProgress";
 import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
@@ -157,6 +158,9 @@ export default function Practice() {
   const { recordAttempt: scheduleRevision } = useRevisionPlanner();
   const { getSubjectTier, getSubjectMastery } = useAdaptiveLearning();
 
+  const { profile } = useProfile();
+  const classNum = profile.classLevel ?? 9;
+
   const cfg             = SUBJECTS[session.subject];
   const adaptiveTier    = getSubjectTier(session.subject);
   const adaptiveMastery = getSubjectMastery(session.subject);
@@ -165,8 +169,8 @@ export default function Practice() {
 
   // Chapter / topic / difficulty / type filters
   const chapters = useMemo(
-    () => getChapters(9, session.subject),
-    [session.subject]
+    () => getChapters(classNum, session.subject),
+    [classNum, session.subject]
   );
 
   const [selectedChapterId, setSelectedChapterId] = useState<string>(
@@ -182,14 +186,14 @@ export default function Practice() {
   const questions = useMemo(
     () =>
       getQuestions({
-        classNum:     9,
+        classNum:     classNum,
         subject:      session.subject,
         chapterId:    selectedChapterId,
         ...(selectedTopicId !== "all" ? { topicId: selectedTopicId } : {}),
         difficulty:   selectedDiff,
         questionType: selectedType,
       }),
-    [session.subject, selectedChapterId, selectedTopicId, selectedDiff, selectedType]
+    [classNum, session.subject, selectedChapterId, selectedTopicId, selectedDiff, selectedType]
   );
 
   // Analytics
@@ -197,7 +201,7 @@ export default function Practice() {
 
   // Handlers
   const handleSubjectChange = (s: typeof session.subject) => {
-    const newChapters = getChapters(9, s);
+    const newChapters = getChapters(classNum, s);
     update({ subject: s });
     setSelectedChapterId(newChapters[0]?.id ?? "");
     setSelectedTopicId("all");
@@ -241,7 +245,7 @@ export default function Practice() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-xl font-bold text-slate-900">Practice</h1>
-              <p className="text-sm text-slate-500 mt-0.5">Class 9 · All 15 CBSE chapters</p>
+              <p className="text-sm text-slate-500 mt-0.5">Class {classNum} · {chapters.length} chapter{chapters.length !== 1 ? "s" : ""} · Mathematics</p>
             </div>
             <Link href="/challenge">
               <button className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-all flex-shrink-0 mt-1">

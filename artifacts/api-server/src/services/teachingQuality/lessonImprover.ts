@@ -140,7 +140,7 @@ export async function improveLesson(
       body: JSON.stringify({
         model:           MODEL,
         temperature:     0.4,
-        max_tokens:      5000,
+        max_tokens:      3500,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: system },

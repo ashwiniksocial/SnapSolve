@@ -493,28 +493,6 @@ confidenceCheck.correctIndex
 confidenceCheck.explanation
   Why the correct option is right. 1–2 sentences.
 
-RETRIEVAL PRACTICE
-━━━━━━━━━━━━━━━━━
-retrievalPractice
-  Exactly 4 strings. Very short recall questions.
-  Testing definitions, formulas, and key decisions from this lesson.
-  Examples: "What is a rational number?", "Why did we square both sides?"
-
-REMEMBER THESE
-━━━━━━━━━━━━━
-rememberThese
-  Exactly 4 strings. Each is one ultra-short memory bullet.
-  Each starts with a checkmark ✓.
-  These should capture the 4 most important things to remember from this lesson.
-
-CONFIDENCE BUILDER
-━━━━━━━━━━━━━━━━━
-confidenceBuilder
-  End the lesson with genuine encouragement.
-  Tell the student specifically what they now know.
-  Use the format: "Five minutes ago this probably looked impossible. Now you know: ✓ [what] ✓ [what] ✓ [what]"
-  Make the student feel genuinely proud of what they've learned.
-
 ═══════════════════════════════════════════════════════════════
 ABSOLUTE LANGUAGE RULES — Zero exceptions
 ═══════════════════════════════════════════════════════════════
@@ -1219,7 +1197,7 @@ async function generateDraft(
     : baseUserContent;
 
   // Token budget scales with mode: fewer sections = fewer output tokens needed.
-  const maxTokens = mode === "basic" ? 4000 : mode === "standard" ? 1200 : 800;
+  const maxTokens = mode === "basic" ? 2800 : mode === "standard" ? 1200 : 800;
 
   let res: Response;
   try {
@@ -1274,7 +1252,7 @@ router.get("/solveQuestion/progress/:requestId", (req, res) => {
 
 // Total time budget for the entire request (ms).
 // Must be comfortably below the 120 s frontend AbortController timeout.
-const REQUEST_BUDGET_MS = 105_000;
+const REQUEST_BUDGET_MS = 70_000;
 
 router.post("/solveQuestion", async (req, res) => {
   const requestStart = Date.now();

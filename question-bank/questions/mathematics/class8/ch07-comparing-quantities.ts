@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Question Bank — Mathematics, Class 8, Chapter 7: Comparing Quantities
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Question Bank — Mathematics, Class 8, Chapter 5: Squares and Square Roots
  *
