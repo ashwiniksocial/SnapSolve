@@ -1,0 +1,103 @@
+STOP.
+
+Before adding any new feature, create a permanent PROJECT STATUS REPORT command.
+
+Create one command:
+
+PROJECT STATUS REPORT
+
+Every time it is run, output:
+
+====================================
+PROJECT STATUS REPORT
+====================================
+
+Current routes
+Current navigation items
+Current classes available
+Current subjects available
+Current chapter counts by class
+Current question counts by class
+Current AI modes
+Current latency:
+- Compact
+- Standard
+- Detailed
+
+Current analytics metrics available
+Current unresolved bugs
+Current TODO items
+
+Files changed since last checkpoint
+Git diff summary
+
+Screenshots generated:
+- Home
+- Practice
+- Solution
+- Progress
+- Analytics
+
+====================================
+
+Then perform a FULL AUDIT.
+
+AUDIT REQUIREMENTS
+
+1. Verify every chapter in:
+   - Class 6 Mathematics
+   - Class 7 Mathematics
+   - Class 8 Mathematics
+   - Class 9 Mathematics
+
+2. Verify:
+   - chapter visible
+   - questions load
+   - solution opens
+   - attempt tracking works
+   - accuracy updates
+   - weakest chapter updates
+   - strongest chapter updates
+
+3. Verify Practice page metrics:
+
+Questions Solved
+Overall Accuracy
+Strongest Chapter
+Weakest Chapter
+
+4. Verify analytics survive page refresh.
+
+5. Verify analytics survive logout/login.
+
+6. Verify analytics survive browser restart.
+
+7. Verify no hardcoded counts remain anywhere.
+
+8. Verify chapter/question counts are computed from source data.
+
+9. Generate screenshots for:
+   - Empty student
+   - Student with 20 attempts
+   - Student with weak chapter
+   - Student with strong chapter
+
+DO NOT BUILD NEW FEATURES.
+
+DO NOT BUILD NEW SUBJECTS.
+
+DO NOT REDESIGN UI.
+
+DO NOT TOUCH AI PROMPTS.
+
+Goal:
+
+Prove that the entire Mathematics learning loop works end-to-end before expanding into Physics, Chemistry, Biology, Economics, or Computer Science.
+
+Report only:
+
+- Audit failures
+- Files changed
+- Bugs fixed
+- Screenshots generated
+- Remaining blockers
