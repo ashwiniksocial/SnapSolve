@@ -5,7 +5,10 @@ import { useSession } from "@/hooks/useSession";
 import { useProfile } from "@/hooks/useProfile";
 import { useAdaptiveLearning } from "@/hooks/useAdaptiveLearning";
 import { useChapterStats } from "@/hooks/useChapterStats";
-import { useAttemptLog } from "@/hooks/useAttemptLog";
+import { useAttemptLog }   from "@/hooks/useAttemptLog";
+import { useStreak }        from "@/hooks/useStreak";
+import { useMasteryScore }  from "@/hooks/useMasteryScore";
+import { useProgress }      from "@/hooks/useProgress";
 import {
   getChapters,
   getTopics,
@@ -131,10 +134,14 @@ export default function Practice() {
   const { session, update }                    = useSession();
   const { profile }                            = useProfile();
   const { getSubjectTier, getSubjectMastery }  = useAdaptiveLearning();
-  const { getChapterAttempts }                 = useAttemptLog();
+  const { log, getChapterAttempts }            = useAttemptLog();
+  const { streak }                             = useStreak();
+  const { getSubjectStats }                    = useProgress();
 
   // Class state — local, defaults to profile; lets student switch without leaving Practice
   const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
+
+  const mastery = useMasteryScore(session.subject, practiceClass);
 
   const cfg             = SUBJECTS[session.subject];
   const adaptiveTier    = getSubjectTier(session.subject);
@@ -160,6 +167,50 @@ export default function Practice() {
   const overallAcc  = overallAccuracy(chapterStats);
   const strongestCh = strongestChapter(chapterStats, 3);
   const weakestCh   = weakestChapter(chapterStats, questionMap, 5);
+
+  // Study time estimate: attempts × avg minutes per question
+  const studyMinutes = useMemo(() => {
+    const relevant = Object.values(log).filter(
+      (r) => r.subject === session.subject && r.classNum === practiceClass,
+    );
+    return relevant.reduce((sum, r) => sum + Math.min(5 + (r.attempts - 1) * 2, 12), 0);
+  }, [log, session.subject, practiceClass]);
+
+  // Topic-level stats from useProgress
+  const subjectStats = useMemo(
+    () => getSubjectStats(session.subject),
+    [getSubjectStats, session.subject],
+  );
+
+  const strongTopicsList = useMemo(
+    () =>
+      subjectStats.topicStats
+        .filter((t) => t.solved >= 3 && t.accuracy >= 70)
+        .sort((a, b) => b.accuracy - a.accuracy)
+        .slice(0, 3),
+    [subjectStats],
+  );
+
+  const weakTopicsList = useMemo(
+    () =>
+      subjectStats.topicStats
+        .filter((t) => t.solved >= 1 && t.accuracy < 70)
+        .sort((a, b) => a.accuracy - b.accuracy)
+        .slice(0, 3),
+    [subjectStats],
+  );
+
+  const recommendedAction = useMemo((): string => {
+    if (totalSolved === 0)
+      return "Start with Easy questions in Chapter 1 to build your foundation.";
+    if (weakTopicsList.length > 0)
+      return `Focus on "${weakTopicsList[0].topic}" — only ${weakTopicsList[0].accuracy}% accuracy.`;
+    if (mastery.consistency < 40)
+      return "Explore more chapters to build breadth across topics.";
+    if (overallAcc >= 80 && totalSolved >= 10)
+      return "Challenge yourself with Hard & HOTS questions to level up!";
+    return "Keep practicing consistently — great progress!";
+  }, [totalSolved, weakTopicsList, mastery.consistency, overallAcc]);
 
   // ── Chapter performance: weak-first sort ───────────────────────────────────
   const sortedChapters = useMemo(
@@ -370,43 +421,133 @@ export default function Practice() {
 
       <div className="max-w-lg mx-auto px-5 py-5 space-y-4">
 
-        {/* ── Dashboard metrics (4 cards) ── */}
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Questions Solved</p>
-            <p className="text-2xl font-black" style={{ color: cfg.color }}>
-              {totalSolved > 0 ? totalSolved : "—"}
-            </p>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {totalSolved > 0 ? "attempts logged" : "Start practicing"}
-            </p>
+        {/* ── Dashboard metrics (5 cards) ── */}
+        <div className="space-y-2">
+          {/* Row 1 — Questions Solved + Accuracy */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Questions Solved</p>
+              <p className="text-2xl font-black" style={{ color: cfg.color }}>
+                {totalSolved > 0 ? totalSolved : "—"}
+              </p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                {totalSolved > 0 ? "attempts logged" : "Start practicing"}
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Accuracy</p>
+              <p className="text-2xl font-black" style={{ color: cfg.color }}>
+                {totalSolved > 0 ? `${overallAcc}%` : "—"}
+              </p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                {totalSolved > 0 ? "of answers correct" : "No data yet"}
+              </p>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Overall Accuracy</p>
-            <p className="text-2xl font-black" style={{ color: cfg.color }}>
-              {totalSolved > 0 ? `${overallAcc}%` : "—"}
-            </p>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {totalSolved > 0 ? "of answers correct" : "No data yet"}
-            </p>
+
+          {/* Row 2 — Streak · Study Time · Mastery */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm text-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Streak</p>
+              <p className="text-xl font-black text-amber-500">
+                {streak > 0 ? streak : "—"}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">
+                {streak === 1 ? "day" : streak > 1 ? "days" : "Start today"}
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm text-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Study Time</p>
+              <p className="text-xl font-black text-blue-500">
+                {studyMinutes > 0
+                  ? studyMinutes < 60
+                    ? `${studyMinutes}m`
+                    : `${Math.floor(studyMinutes / 60)}h`
+                  : "—"}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">estimated</p>
+            </div>
+            <div
+              className="rounded-2xl border p-3 shadow-sm text-center"
+              style={{ backgroundColor: mastery.score > 0 ? `${mastery.color}12` : undefined, borderColor: mastery.score > 0 ? `${mastery.color}30` : "#e2e8f0" }}
+            >
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Mastery</p>
+              <p className="text-xl font-black" style={{ color: mastery.score > 0 ? mastery.color : "#94a3b8" }}>
+                {mastery.score > 0 ? mastery.score : "—"}
+              </p>
+              <p className="text-[10px] mt-0.5 font-semibold" style={{ color: mastery.score > 0 ? mastery.color : "#94a3b8" }}>
+                {mastery.score > 0 ? mastery.label : "No data"}
+              </p>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Strongest Chapter</p>
-            <p className="text-sm font-bold text-slate-800 leading-tight truncate">
-              {strongestCh?.chapterName ?? "—"}
+        </div>
+
+        {/* ── Strongest Topics ── */}
+        {strongTopicsList.length > 0 && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+            <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wide mb-2.5">
+              💪 Strongest Topics
             </p>
-            <p className="text-[11px] mt-0.5 font-semibold text-emerald-600">
-              {strongestCh ? `${strongestCh.accuracy}% accuracy` : "≥3 attempts needed"}
-            </p>
+            <div className="space-y-1.5">
+              {strongTopicsList.map((t) => (
+                <div key={t.topic} className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-slate-700 truncate flex-1 mr-3">{t.topic}</p>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="w-16 h-1.5 bg-emerald-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-500 rounded-full"
+                        style={{ width: `${t.accuracy}%` }}
+                      />
+                    </div>
+                    <span className="text-xs font-bold text-emerald-600 w-8 text-right">{t.accuracy}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Weakest Chapter</p>
-            <p className="text-sm font-bold text-slate-800 leading-tight truncate">
-              {weakestCh?.chapterName ?? "—"}
+        )}
+
+        {/* ── Weakest Topics ── */}
+        {weakTopicsList.length > 0 && (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
+            <p className="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2.5">
+              🎯 Needs Attention
             </p>
-            <p className="text-[11px] mt-0.5 font-semibold text-red-500">
-              {weakestCh ? `${weakestCh.accuracy}% accuracy` : "≥5 attempts needed"}
+            <div className="space-y-1.5">
+              {weakTopicsList.map((t) => (
+                <div key={t.topic} className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-slate-700 truncate flex-1 mr-3">{t.topic}</p>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="w-16 h-1.5 bg-red-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-red-400 rounded-full"
+                        style={{ width: `${t.accuracy}%` }}
+                      />
+                    </div>
+                    <span className="text-xs font-bold text-red-500 w-8 text-right">{t.accuracy}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Recommended Next Action ── */}
+        <div
+          className="rounded-2xl border p-4 flex items-start gap-3"
+          style={{ backgroundColor: `${cfg.color}08`, borderColor: `${cfg.color}25` }}
+        >
+          <div
+            className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-sm"
+            style={{ backgroundColor: `${cfg.color}20`, color: cfg.color }}
+          >
+            ✦
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: cfg.color }}>
+              Recommended Next Action
             </p>
+            <p className="text-sm text-slate-700 leading-relaxed">{recommendedAction}</p>
           </div>
         </div>
 
