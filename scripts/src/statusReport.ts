@@ -266,9 +266,6 @@ try {
 
 // Unresolved bugs (from known issues)
 section("KNOWN UNRESOLVED BUGS");
-console.log("  • Class 9 Maths Ch3 topics mislabelled (Linear Equations content, not Coordinate Geometry)");
-console.log("  • Class 7 Ch14 Symmetry + Ch15 Visualising Solid Shapes absent from question bank");
-console.log("  • Class 8 Ch10 Visualising Solid Shapes absent from question bank");
 console.log("  • No cross-device sync (localStorage only)");
 
 // Git

@@ -21,6 +21,7 @@ import OnboardingPage    from "@/pages/Onboarding";
 import ProfilePage            from "@/pages/Profile";
 import DevTeachingValidator   from "@/pages/DevTeachingValidator";
 import Analytics              from "@/pages/Analytics";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
 
 // ─── Clerk wiring (copy verbatim — same code runs in dev and prod) ────────────
 
@@ -151,30 +152,32 @@ function Router() {
   return (
     <>
       <div className={hideNav ? "min-h-screen" : "pb-20 min-h-screen"}>
-        <Switch>
-          {/* Auth routes — MUST use /*? wildcard for Clerk's OAuth sub-paths */}
-          <Route path="/sign-in/*?" component={SignInPage} />
-          <Route path="/sign-up/*?" component={SignUpPage} />
-          <Route path="/onboarding"  component={OnboardingPage} />
+        <RouteErrorBoundary key={location}>
+          <Switch>
+            {/* Auth routes — MUST use /*? wildcard for Clerk's OAuth sub-paths */}
+            <Route path="/sign-in/*?" component={SignInPage} />
+            <Route path="/sign-up/*?" component={SignUpPage} />
+            <Route path="/onboarding"  component={OnboardingPage} />
 
-          {/* App routes */}
-          <Route path="/"            component={Home} />
-          <Route path="/scan"        component={Scan} />
-          <Route path="/solution"    component={Solution} />
-          <Route path="/challenge"   component={QuestionWorkspace} />
-          <Route path="/practice"    component={Practice} />
-          <Route path="/progress"    component={Progress} />
-          <Route path="/history"     component={History} />
-          <Route path="/journal"     component={Journal} />
-          <Route path="/revision"    component={Revision} />
-          <Route path="/improvement" component={Improvement} />
-          <Route path="/profile"     component={ProfilePage} />
-          <Route path="/admin"       component={Admin} />
-          <Route path="/teacher"     component={TeacherDashboard} />
-          <Route path="/exam"              component={ExamMode} />
-          <Route path="/analytics"           component={Analytics} />
-          <Route path="/dev/validate"      component={DevTeachingValidator} />
-        </Switch>
+            {/* App routes */}
+            <Route path="/"            component={Home} />
+            <Route path="/scan"        component={Scan} />
+            <Route path="/solution"    component={Solution} />
+            <Route path="/challenge"   component={QuestionWorkspace} />
+            <Route path="/practice"    component={Practice} />
+            <Route path="/progress"    component={Progress} />
+            <Route path="/history"     component={History} />
+            <Route path="/journal"     component={Journal} />
+            <Route path="/revision"    component={Revision} />
+            <Route path="/improvement" component={Improvement} />
+            <Route path="/profile"     component={ProfilePage} />
+            <Route path="/admin"       component={Admin} />
+            <Route path="/teacher"     component={TeacherDashboard} />
+            <Route path="/exam"              component={ExamMode} />
+            <Route path="/analytics"           component={Analytics} />
+            <Route path="/dev/validate"      component={DevTeachingValidator} />
+          </Switch>
+        </RouteErrorBoundary>
       </div>
       {!hideNav && <BottomNav />}
     </>
