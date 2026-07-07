@@ -1,4 +1,10 @@
-export type Subject = "Physics" | "Chemistry" | "Mathematics";
+export type Subject =
+  | "Mathematics"
+  | "Physics"
+  | "Chemistry"
+  | "Biology"
+  | "Economics"
+  | "Computer Science";
 
 export interface SubjectConfig {
   icon: string;
@@ -12,6 +18,27 @@ export interface SubjectConfig {
 }
 
 export const SUBJECTS: Record<Subject, SubjectConfig> = {
+  Mathematics: {
+    icon: "📐",
+    color: "#d97706",
+    light: "#fffbeb",
+    border: "#fde68a",
+    textClass: "text-amber-700",
+    bgClass: "bg-amber-50",
+    borderClass: "border-amber-200",
+    topics: [
+      "Sets & Relations",
+      "Algebra",
+      "Quadratic Equations",
+      "Trigonometry",
+      "Coordinate Geometry",
+      "Calculus",
+      "Matrices & Determinants",
+      "Probability",
+      "Vectors",
+      "Statistics",
+    ],
+  },
   Physics: {
     icon: "⚡",
     color: "#6366f1",
@@ -54,25 +81,67 @@ export const SUBJECTS: Record<Subject, SubjectConfig> = {
       "Polymers",
     ],
   },
-  Mathematics: {
-    icon: "📐",
-    color: "#d97706",
-    light: "#fffbeb",
-    border: "#fde68a",
-    textClass: "text-amber-700",
-    bgClass: "bg-amber-50",
-    borderClass: "border-amber-200",
+  Biology: {
+    icon: "🧬",
+    color: "#16a34a",
+    light: "#f0fdf4",
+    border: "#bbf7d0",
+    textClass: "text-green-700",
+    bgClass: "bg-green-50",
+    borderClass: "border-green-200",
     topics: [
-      "Sets & Relations",
-      "Algebra",
-      "Quadratic Equations",
-      "Trigonometry",
-      "Coordinate Geometry",
-      "Calculus",
-      "Matrices & Determinants",
-      "Probability",
-      "Vectors",
-      "Statistics",
+      "Cell Biology",
+      "Genetics",
+      "Human Physiology",
+      "Plant Physiology",
+      "Ecology",
+      "Evolution",
+      "Biotechnology",
+      "Reproduction",
+      "Diversity of Life",
+      "Biomolecules",
+    ],
+  },
+  Economics: {
+    icon: "📊",
+    color: "#0284c7",
+    light: "#f0f9ff",
+    border: "#bae6fd",
+    textClass: "text-sky-700",
+    bgClass: "bg-sky-50",
+    borderClass: "border-sky-200",
+    topics: [
+      "Microeconomics",
+      "Macroeconomics",
+      "Supply & Demand",
+      "Market Structures",
+      "GDP & Growth",
+      "Inflation",
+      "Money & Banking",
+      "International Trade",
+      "Public Finance",
+      "Indian Economy",
+    ],
+  },
+  "Computer Science": {
+    icon: "💻",
+    color: "#7c3aed",
+    light: "#f5f3ff",
+    border: "#ddd6fe",
+    textClass: "text-violet-700",
+    bgClass: "bg-violet-50",
+    borderClass: "border-violet-200",
+    topics: [
+      "Programming Basics",
+      "Data Structures",
+      "Algorithms",
+      "Databases",
+      "Networking",
+      "Operating Systems",
+      "Object-Oriented Programming",
+      "Web Technologies",
+      "Python",
+      "Digital Logic",
     ],
   },
 };

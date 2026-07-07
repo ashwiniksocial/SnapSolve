@@ -231,8 +231,10 @@ export default function Practice() {
     navigate('/solution?practiceMode=1');
   }, [session.subject, update, navigate]);
 
-  // Only show subjects that have question bank content for this class
-  const ALL_SUBJECTS: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+  // All subjects — show all tabs; "Coming Soon" for those without content
+  const ALL_SUBJECTS: Subject[] = [
+    "Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Computer Science",
+  ];
   const availableSubjects = useMemo(
     () => ALL_SUBJECTS.filter((s) => getChapters(classNum, s).length > 0),
     [classNum]
@@ -244,6 +246,14 @@ export default function Practice() {
       handleSubjectChange(availableSubjects[0]);
     }
   }, [availableSubjects, session.subject]);
+
+  // Visibility card data — static counts per class (Mathematics)
+  const CLASS_CARDS = [
+    { classNum: 6, chapters: 14, questions: 1091 },
+    { classNum: 7, chapters: 8,  questions: 600  },
+    { classNum: 8, chapters: 6,  questions: 450  },
+    { classNum: 9, chapters: 15, questions: 397  },
+  ];
 
   // Current chapter completion
   const currentChapterCompletion = chapterStats.find((cs) => cs.chapterId === selectedChapterId);
@@ -266,21 +276,33 @@ export default function Practice() {
             </Link>
           </div>
 
-          {/* Subject tabs — only subjects with question bank content for this class */}
+          {/* Subject tabs — all 6 subjects; Coming Soon for those without content */}
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1">
-            {availableSubjects.map((s) => {
+            {ALL_SUBJECTS.map((s) => {
               const c = SUBJECTS[s];
-              const active = session.subject === s;
+              const hasContent = availableSubjects.includes(s);
+              const active = session.subject === s && hasContent;
               return (
                 <button
                   key={s}
-                  onClick={() => handleSubjectChange(s)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
-                    active ? "text-white border-transparent shadow-sm" : "bg-white text-slate-600 border-slate-200"
+                  onClick={() => hasContent ? handleSubjectChange(s) : undefined}
+                  disabled={!hasContent}
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold border transition-all ${
+                    active
+                      ? "text-white border-transparent shadow-sm"
+                      : hasContent
+                        ? "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                        : "bg-slate-50 text-slate-400 border-slate-200 cursor-default"
                   }`}
                   style={active ? { backgroundColor: c.color } : {}}
                 >
-                  {c.icon} {s}
+                  <span>{c.icon}</span>
+                  <span>{s}</span>
+                  {!hasContent && (
+                    <span className="text-[9px] font-bold bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-full ml-0.5">
+                      SOON
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -322,6 +344,36 @@ export default function Practice() {
               <p className="text-xs text-slate-500 font-medium mt-0.5">{label}</p>
             </div>
           ))}
+        </div>
+
+        {/* ── Content visibility cards ── */}
+        <div>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Available Content</p>
+          <div className="grid grid-cols-4 gap-2">
+            {CLASS_CARDS.map((card) => {
+              const isActive = card.classNum === classNum;
+              return (
+                <div
+                  key={card.classNum}
+                  className={`rounded-2xl border p-3 text-center transition-all ${
+                    isActive
+                      ? "border-amber-300 bg-amber-50 shadow-sm"
+                      : "border-slate-200 bg-white"
+                  }`}
+                >
+                  <p className={`text-sm font-bold ${isActive ? "text-amber-700" : "text-slate-700"}`}>
+                    Class {card.classNum}
+                  </p>
+                  <p className={`text-xs mt-1 font-semibold ${isActive ? "text-amber-600" : "text-slate-500"}`}>
+                    {card.chapters} ch
+                  </p>
+                  <p className={`text-[11px] mt-0.5 ${isActive ? "text-amber-500" : "text-slate-400"}`}>
+                    {card.questions} q
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* ── Recommendations ── */}

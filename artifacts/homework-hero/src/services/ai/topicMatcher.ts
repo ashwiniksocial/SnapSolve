@@ -142,6 +142,18 @@ const SUBJECT_HINTS: Record<Subject, RegExp[]> = {
     /\b(atom|molecule|element|compound|reaction|acid|base|bond|ion|electron|mole)\b/i,
     /\b[A-Z][a-z]?\d*\s*\+\s*[A-Z]/, /→|➜/, /\bpH\b/i,
   ],
+  Biology: [
+    /\b(cell|gene|dna|rna|protein|organism|species|evolution|photosynthesis|mitosis)\b/i,
+    /\b(nucleus|chromosome|enzyme|bacteria|virus|ecology|ecosystem)\b/i,
+  ],
+  Economics: [
+    /\b(demand|supply|market|price|gdp|inflation|interest|trade|economy|consumer)\b/i,
+    /\b(cost|revenue|profit|tax|subsidy|budget|fiscal|monetary)\b/i,
+  ],
+  "Computer Science": [
+    /\b(algorithm|array|function|loop|variable|class|object|database|network|program)\b/i,
+    /\b(python|java|c\+\+|html|css|sql|bit|byte|binary|boolean)\b/i,
+  ],
 };
 
 function detectSubject(text: string): Subject {
