@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useProfile } from "@/hooks/useProfile";
 
 const BOARDS = ["CBSE", "ICSE", "State Board", "Other"] as const;
-const CLASSES = [6, 7, 8, 9, 10, 11, 12] as const;
+const CLASSES = [6, 7, 8, 9] as const;
 
 export default function Onboarding() {
   const { profile, updateProfile } = useProfile();

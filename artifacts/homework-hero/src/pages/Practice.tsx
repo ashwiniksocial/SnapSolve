@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { SUBJECTS, type SubjectConfig } from "@/data/subjects";
+import { SUBJECTS, type SubjectConfig, type Subject } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useProfile } from "@/hooks/useProfile";
 import { useProgress } from "@/hooks/useProgress";
@@ -231,7 +231,19 @@ export default function Practice() {
     navigate('/solution?practiceMode=1');
   }, [session.subject, update, navigate]);
 
-  const subjectNames = ["Physics", "Chemistry", "Mathematics"] as const;
+  // Only show subjects that have question bank content for this class
+  const ALL_SUBJECTS: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+  const availableSubjects = useMemo(
+    () => ALL_SUBJECTS.filter((s) => getChapters(classNum, s).length > 0),
+    [classNum]
+  );
+
+  // Auto-switch if current subject has no content for this class
+  useEffect(() => {
+    if (availableSubjects.length > 0 && !availableSubjects.includes(session.subject)) {
+      handleSubjectChange(availableSubjects[0]);
+    }
+  }, [availableSubjects, session.subject]);
 
   // Current chapter completion
   const currentChapterCompletion = chapterStats.find((cs) => cs.chapterId === selectedChapterId);
@@ -245,7 +257,7 @@ export default function Practice() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-xl font-bold text-slate-900">Practice</h1>
-              <p className="text-sm text-slate-500 mt-0.5">Class {classNum} · {chapters.length} chapter{chapters.length !== 1 ? "s" : ""} · Mathematics</p>
+              <p className="text-sm text-slate-500 mt-0.5">Class {classNum} · {chapters.length} chapter{chapters.length !== 1 ? "s" : ""} · {session.subject}</p>
             </div>
             <Link href="/challenge">
               <button className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-all flex-shrink-0 mt-1">
@@ -254,9 +266,9 @@ export default function Practice() {
             </Link>
           </div>
 
-          {/* Subject tabs */}
+          {/* Subject tabs — only subjects with question bank content for this class */}
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1">
-            {subjectNames.map((s) => {
+            {availableSubjects.map((s) => {
               const c = SUBJECTS[s];
               const active = session.subject === s;
               return (
