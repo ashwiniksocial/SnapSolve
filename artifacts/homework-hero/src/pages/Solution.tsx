@@ -76,8 +76,21 @@ export default function Solution() {
       );
 
       setSolution(result);
+      // Use the predefined topic name from the question bank (session.practiceTopic) so
+      // useChapterStats can match it by key.  Fall back to the AI-inferred name for
+      // Scan / typed-question flows where no bank topic name is available.
+      // Also pass the question ID so the `attempted[]` array is populated and chapter
+      // completion percentages compute correctly.
+      const topicKey = (practiceMode && session.practiceTopic)
+        ? session.practiceTopic
+        : result.topic;
+      recordSolve(
+        session.subject,
+        topicKey,
+        true,
+        practiceMode ? session.practiceQuestionId : undefined,
+      );
       update({ practiceTopic: result.topic });
-      recordSolve(session.subject, result.topic, true);
 
       // Log to attempt detail log when we have question context from practice mode
       if (
