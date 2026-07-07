@@ -1,0 +1,105 @@
+Conduct a RELEASE READINESS AUDIT focused ONLY on the remaining non-content blockers.
+
+Do NOT modify code.
+Do NOT create content.
+Audit only.
+
+Verify each item with file paths, line numbers, runtime flow, and PASS/FAIL evidence.
+
+1. REVISION SYSTEM
+- Check whether useRevisionPlanner is now imported in Solution.tsx
+- Check whether recordAttempt() is called from:
+  - "Got it"
+  - "Needs Review"
+- Trace:
+  Solution.tsx
+    → recordAttempt()
+    → studyai-revision-v1
+    → Revision.tsx
+- Confirm whether practice questions now enter the revision queue.
+- If not, identify exact missing wiring.
+
+2. CLASS 8 DIFFICULTY NORMALIZATION
+Verify all Class 8 question files use:
+  Easy
+  Medium
+  Hard
+
+Search entire Class 8 bank.
+List any remaining lowercase:
+  easy
+  medium
+  hard
+
+3. TOPIC MATCHER
+Audit topicMatcher.ts.
+
+Verify:
+- Sound exists in PHYSICS_TOPICS
+- Physics Ch5 questions classify correctly
+
+Provide confidence scores before/after if available.
+
+4. ADAPTIVE LEARNING
+Audit useAdaptiveLearning.ts.
+
+Verify Economics is included in:
+SUBJECT_LIST
+
+Trace:
+Economics attempts
+ → adaptive profile
+ → recommendation engine
+ → daily recommendation chip
+
+5. OPENAI AVAILABILITY CHECK
+Audit isOpenAIAvailable().
+
+Determine:
+- Does it still return true unconditionally?
+- Does it actually validate API key presence?
+- What happens when OPENAI_API_KEY is missing?
+
+Provide exact runtime path.
+
+6. ERROR BOUNDARIES
+Search entire frontend.
+
+Report:
+- ErrorBoundary component exists?
+- Which routes are wrapped?
+- Which routes remain unprotected?
+
+Audit:
+Practice
+Solution
+Revision
+Progress
+Scan
+Journal
+
+7. STATUS REPORT BUG
+Verify whether scripts/src/statusReport.ts still reports resolved maths defects as unresolved.
+
+If stale:
+- show exact lines
+- show exact text
+
+8. FINAL RELEASE GATE
+
+Produce:
+
+READY FOR CHEMISTRY?
+YES / NO
+
+Blocking issues remaining:
+P0
+P1
+P2
+P3
+
+If YES:
+Provide recommended Chemistry implementation order.
+
+If NO:
+Provide exact next development step and rationale.
