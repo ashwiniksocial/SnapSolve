@@ -1,5 +1,5 @@
 /**
- * Central question bank registry — Classes 6, 7, 8, 9 Mathematics; Class 9 Economics; Class 9 Physics.
+ * Central question bank registry — Classes 6, 7, 8, 9 Mathematics; Class 9 Economics; Class 9 Physics; Class 9 Chemistry.
  *
  * Adding a new class/chapter:
  *  1. Create a class<N>-<subject>.ts file in this directory.
@@ -43,6 +43,8 @@ import { CHAPTER_META as PHY_CH3_META, QUESTIONS as PHY_CH3_QUESTIONS } from "./
 import { CHAPTER_META as PHY_CH4_META, QUESTIONS as PHY_CH4_QUESTIONS } from "./class9-physics-ch4";
 import { CHAPTER_META as PHY_CH5_META, QUESTIONS as PHY_CH5_QUESTIONS } from "./class9-physics-ch5";
 
+import { CLASS9_CHEMISTRY_CHAPTERS, CLASS9_CHEMISTRY_QUESTIONS } from "./class9-chemistry";
+
 const CLASS9_MATHS_CHAPTERS: ChapterMeta[] = [
   CH1_META, CH2_META, CH3_META, CH4_META, CH5_META,
   CH6_META, CH7_META, CH8_META, CH9_META, CH10_META,
@@ -82,6 +84,7 @@ export const ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS9_MATHS_CHAPTERS,
   ...CLASS9_ECONOMICS_CHAPTERS,
   ...CLASS9_PHYSICS_CHAPTERS,
+  ...CLASS9_CHEMISTRY_CHAPTERS,
 ];
 
 export const ALL_QUESTIONS: Question[] = [
@@ -91,6 +94,7 @@ export const ALL_QUESTIONS: Question[] = [
   ...CLASS9_MATHS_QUESTIONS,
   ...CLASS9_ECONOMICS_QUESTIONS,
   ...CLASS9_PHYSICS_QUESTIONS,
+  ...CLASS9_CHEMISTRY_QUESTIONS,
 ];
 
 export type { ChapterMeta, Question };
