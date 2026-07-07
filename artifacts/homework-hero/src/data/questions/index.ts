@@ -1,8 +1,8 @@
 /**
- * Central question bank registry — Classes 6, 7, 8, 9 Mathematics.
+ * Central question bank registry — Classes 6, 7, 8, 9 Mathematics; Class 9 Economics.
  *
  * Adding a new class/chapter:
- *  1. Create a class<N>-maths.ts adapter in this directory.
+ *  1. Create a class<N>-<subject>.ts file in this directory.
  *  2. Import and spread CHAPTERS + QUESTIONS below.
  *
  * Firebase migration path:
@@ -32,6 +32,11 @@ import { CLASS6_MATHS_CHAPTERS, CLASS6_MATHS_QUESTIONS } from "./class6-maths";
 import { CLASS7_MATHS_CHAPTERS, CLASS7_MATHS_QUESTIONS } from "./class7-maths";
 import { CLASS8_MATHS_CHAPTERS, CLASS8_MATHS_QUESTIONS } from "./class8-maths";
 
+import { CHAPTER_META as ECO_CH1_META, QUESTIONS as ECO_CH1_QUESTIONS } from "./class9-economics-ch1";
+import { CHAPTER_META as ECO_CH2_META, QUESTIONS as ECO_CH2_QUESTIONS } from "./class9-economics-ch2";
+import { CHAPTER_META as ECO_CH3_META, QUESTIONS as ECO_CH3_QUESTIONS } from "./class9-economics-ch3";
+import { CHAPTER_META as ECO_CH4_META, QUESTIONS as ECO_CH4_QUESTIONS } from "./class9-economics-ch4";
+
 const CLASS9_MATHS_CHAPTERS: ChapterMeta[] = [
   CH1_META, CH2_META, CH3_META, CH4_META, CH5_META,
   CH6_META, CH7_META, CH8_META, CH9_META, CH10_META,
@@ -46,11 +51,21 @@ const CLASS9_MATHS_QUESTIONS: Question[] = [
   ...CH13_QUESTIONS, ...CH14_QUESTIONS, ...CH15_QUESTIONS,
 ];
 
+const CLASS9_ECONOMICS_CHAPTERS: ChapterMeta[] = [
+  ECO_CH1_META, ECO_CH2_META, ECO_CH3_META, ECO_CH4_META,
+];
+
+const CLASS9_ECONOMICS_QUESTIONS: Question[] = [
+  ...ECO_CH1_QUESTIONS, ...ECO_CH2_QUESTIONS,
+  ...ECO_CH3_QUESTIONS, ...ECO_CH4_QUESTIONS,
+];
+
 export const ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS6_MATHS_CHAPTERS,
   ...CLASS7_MATHS_CHAPTERS,
   ...CLASS8_MATHS_CHAPTERS,
   ...CLASS9_MATHS_CHAPTERS,
+  ...CLASS9_ECONOMICS_CHAPTERS,
 ];
 
 export const ALL_QUESTIONS: Question[] = [
@@ -58,6 +73,7 @@ export const ALL_QUESTIONS: Question[] = [
   ...CLASS7_MATHS_QUESTIONS,
   ...CLASS8_MATHS_QUESTIONS,
   ...CLASS9_MATHS_QUESTIONS,
+  ...CLASS9_ECONOMICS_QUESTIONS,
 ];
 
 export type { ChapterMeta, Question };
