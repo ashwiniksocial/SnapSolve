@@ -18,3 +18,9 @@ id = "2HjbGDaDxz4wTowQ_RkG1"
 uri = "file://PROJECT_MASTER_STATUS_2026_27.md"
 type = "text"
 title = "Project Master Status 2026-27"
+
+[[outputs]]
+id = "0V4EiAB-NvQs-zy_miD6P"
+uri = "file://GATEWAY_CHANGE_APPROVAL.md"
+type = "text"
+title = "GATEWAY_CHANGE_APPROVAL.md"
