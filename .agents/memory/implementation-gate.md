@@ -22,6 +22,24 @@ No new question authoring may begin for any subject or grade until an official-s
 
 Metadata-only changes (exam ↔ supplementary tag, chapter name, difficulty) do NOT require an audit. They only need the evidence already in the completed baseline audit.
 
+## Verified question counts (corrected 2026-07-08 — supersede all prior reports)
+
+| Subject | Grade | Questions | Exam-aligned | Notes |
+|---|---|---|---|---|
+| Mathematics | 6 | 1,090 | 1,090 | V2 bank, 14 chapters |
+| Mathematics | 7 | 1,129 | 979 | Ch10+Ch15 (150q) non-exam — tag only |
+| Mathematics | 8 | 1,054 | 1,054 | V2 bank, 14 chapters |
+| Mathematics | 9 | 499 | 499* | Adapter files (NOT V2 bank); prior "0" report was wrong |
+| Physics | 9 | 125 | 100 | ch3 Gravitation (25q) non-exam; prior "250" was wrong |
+| Chemistry | 9 | 75 | 0 | ch01 only (75q), all non-exam; ch02–04 = 0q |
+| Biology | 9 | 0 | 0 | — |
+| Economics | 9 | 100 | 0 | Legacy 4-chapter structure, frozen |
+| Computer Applications | 9 | 0 | 0 | — |
+
+*Constructions (ch11, 46q) compliance unverified — may be non-exam per CBSE 2022-23 rationalisation.
+
+**IMPORTANT:** Class 9 Maths questions are in ADAPTER FILES at `artifacts/homework-hero/src/data/questions/class9-maths-ch*.ts`, not in V2 bank at `question-bank/questions/mathematics/`. Always check both locations.
+
 ## Current gate status per subject/grade (as of 2026-07-08)
 
 | Subject | Grade | Gate | Evidence |
