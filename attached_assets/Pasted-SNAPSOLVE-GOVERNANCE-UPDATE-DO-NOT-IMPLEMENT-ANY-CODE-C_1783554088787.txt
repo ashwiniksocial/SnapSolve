@@ -1,0 +1,127 @@
+SNAPSOLVE GOVERNANCE UPDATE — DO NOT IMPLEMENT ANY CODE
+
+Create or update:
+
+/docs/GOVERNANCE/PROJECT_MASTER_CONTEXT.md
+
+Purpose:
+This file is the permanent project memory and source of truth for future audits, planning, implementation, and AI handoffs.
+
+Requirements:
+
+1. Add timestamp:
+Generated: <current date/time>
+
+2. Record current product objective:
+
+SnapSolve is a CBSE-focused learning app targeting launch before the 2026 Half-Yearly examinations.
+
+Primary goal:
+Provide syllabus-aligned question practice, revision, assessment, progress tracking, and AI-assisted learning.
+
+CEO/CTO constraints:
+- Cash constrained
+- Time constrained
+- Launch speed prioritized
+- No unnecessary rewrites
+- No duplicate audits
+- No speculative implementation
+
+3. Record curriculum governance rules:
+
+AUTHORITATIVE SOURCES ONLY:
+- ncert.nic.in
+- cbseacademic.nic.in
+- education.gov.in (if required)
+
+No coaching websites.
+No blogs.
+No publishers.
+No third-party syllabus sites.
+
+Third-party sources may be used only for discovery, never as evidence.
+
+4. Record current approved curriculum scope:
+
+BOARD:
+CBSE
+
+CLASSES:
+6, 7, 8, 9
+
+SUBJECTS:
+
+Classes 6–8:
+- Mathematics
+- Science
+- Computational Thinking and AI
+
+Class 9:
+- Mathematics
+- Science
+- Information Technology (IT)
+- Computer Applications (CA)
+- Artificial Intelligence (AI)
+
+Explicitly record:
+
+Class 9 Physics, Chemistry, and Biology are NOT treated as separate product subjects.
+They exist only as internal Science domains if needed.
+Student-facing subject = Science.
+
+Economics is OUT OF SCOPE unless future official curriculum evidence requires it.
+
+5. Record implementation strategy:
+
+Priority order:
+1. Mathematics
+2. Science
+3. Class 9 Computer Applications
+4. Class 9 Information Technology
+5. AI
+6. Classes 6–8 Computational Thinking and AI
+
+6. Record current governance requirements:
+
+Before:
+- Authoring
+- Auditing
+- Validation
+- Gateway updates
+- Metadata updates
+- Curriculum changes
+
+Official CBSE/NCERT evidence must be verified first.
+
+7. Record project memory rules:
+
+Before any future recommendation:
+
+Read PROJECT_MASTER_CONTEXT.md first.
+
+Use it as the single source of truth.
+
+If new evidence conflicts with this file:
+- Flag conflict
+- Do not implement automatically
+- Request governance review
+
+8. Add a CHANGE LOG section.
+
+Create first entry:
+
+[YYYY-MM-DD]
+- Curriculum scope frozen
+- CBSE classes 6–9
+- Maths + Science all classes
+- CT+AI for classes 6–8
+- IT + CA + AI for class 9
+- Official sources only governance adopted
+
+Output:
+Provide the complete file contents only.
+No code changes.
+No curriculum changes.
+No authoring.
+No gateway edits.
+Documentation only.

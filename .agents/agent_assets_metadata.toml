@@ -42,3 +42,9 @@ id = "VC2zV2lnML4BL9QjxARC3"
 uri = "file://CLASS9_SCIENCE_EXECUTIVE_DECISION.md"
 type = "text"
 title = "CLASS9_SCIENCE_EXECUTIVE_DECISION.md"
+
+[[outputs]]
+id = "0YFBJiC_Qz9mx5hgF21D0"
+uri = "file://docs/GOVERNANCE/PROJECT_MASTER_CONTEXT.md"
+type = "text"
+title = "docs/GOVERNANCE/PROJECT_MASTER_CONTEXT.md"
