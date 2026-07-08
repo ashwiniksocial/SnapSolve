@@ -24,3 +24,9 @@ id = "0V4EiAB-NvQs-zy_miD6P"
 uri = "file://GATEWAY_CHANGE_APPROVAL.md"
 type = "text"
 title = "GATEWAY_CHANGE_APPROVAL.md"
+
+[[outputs]]
+id = "IcVigzW6oYnHVbof9VGpS"
+uri = "file://GATEWAY_FIX_VERIFICATION.md"
+type = "text"
+title = "GATEWAY_FIX_VERIFICATION.md"
