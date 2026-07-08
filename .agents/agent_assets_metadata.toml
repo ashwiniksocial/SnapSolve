@@ -12,3 +12,9 @@ id = "ukc6XS-NN8uezGSKXXQTE"
 uri = "file://PROJECT_LAUNCH_READINESS.md"
 type = "text"
 title = "Project Launch Readiness"
+
+[[outputs]]
+id = "2HjbGDaDxz4wTowQ_RkG1"
+uri = "file://PROJECT_MASTER_STATUS_2026_27.md"
+type = "text"
+title = "Project Master Status 2026-27"
