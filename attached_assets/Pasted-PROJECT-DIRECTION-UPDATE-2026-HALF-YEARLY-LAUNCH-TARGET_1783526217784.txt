@@ -1,0 +1,132 @@
+PROJECT DIRECTION UPDATE — 2026 HALF-YEARLY LAUNCH TARGET
+
+IMPORTANT PRODUCT DECISION
+
+The platform target is now:
+
+NCERT / CBSE SESSION 2026–27 ONLY
+
+Do NOT use 2025–26 curriculum as the implementation reference.
+
+GOVERNANCE RULE (ALREADY ADOPTED)
+
+For curriculum decisions, audits, implementation, verification, chapter creation, chapter deletion, syllabus mapping, compliance checks, and release readiness:
+
+ONLY the following sources are authoritative:
+
+1. https://ncert.nic.in
+2. https://cbseacademic.nic.in
+3. Official NCERT textbook PDFs
+4. Official CBSE curriculum PDFs and circulars
+
+Non-authoritative sources (Educart, Oswaal, PW, Competishun, myCBSEguide, coaching sites, blogs, YouTube, news articles, AI summaries, etc.) may be used only as discovery signals and never as evidence.
+
+No curriculum change may be implemented unless verified from NCERT/CBSE primary sources.
+
+========================================================
+
+NEXT TASK — CURRICULUM BASELINE LOCK
+
+AUDIT ONLY.
+
+DO NOT WRITE CODE.
+DO NOT AUTHOR QUESTIONS.
+DO NOT MODIFY FILES.
+
+Objective:
+
+Create the definitive 2026–27 curriculum baseline for SnapSolve.
+
+Subjects:
+
+- Class 6 Mathematics
+- Class 7 Mathematics
+- Class 8 Mathematics
+- Class 9 Mathematics
+- Class 9 Science
+- Class 9 Social Science
+
+For each subject:
+
+1. Retrieve official NCERT textbook title.
+2. Retrieve official NCERT chapter list.
+3. Retrieve official CBSE curriculum chapter list.
+4. Confirm whether NCERT and CBSE match.
+5. Produce final authoritative chapter list.
+6. Mark status:
+
+   VERIFIED
+   PARTIALLY VERIFIED
+   NOT VERIFIED
+
+7. Provide source citations for every conclusion.
+
+========================================================
+
+AFTER THAT
+
+Create a GAP REPORT against the current SnapSolve content.
+
+For every subject:
+
+- Existing chapters in SnapSolve
+- Missing chapters
+- Extra chapters
+- Renamed chapters
+- Deleted chapters
+- Chapters needing migration
+- Chapters needing archival
+
+Output:
+
+### Subject
+Current State
+Official 2026–27 State
+Gap
+Required Action
+
+========================================================
+
+MOST IMPORTANT
+
+Determine whether the already-authored:
+
+Class 9 Chemistry
+Chapter 1
+"Matter in Our Surroundings"
+(75 questions)
+
+is:
+
+A. Still part of official NCERT/CBSE 2026–27
+
+OR
+
+B. Removed from official NCERT/CBSE 2026–27
+
+Use ONLY NCERT/CBSE primary sources.
+
+Provide evidence.
+
+========================================================
+
+FINAL DELIVERABLE
+
+Produce a single document:
+
+SNAPSOLVE 2026–27 CURRICULUM BASELINE REPORT
+
+with:
+
+- verified chapter lists
+- evidence links
+- gap analysis
+- launch implications
+- recommended implementation order
+
+No code changes.
+No content authoring.
+No scaffolding.
+No migrations.
+
+Audit only.
