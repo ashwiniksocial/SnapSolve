@@ -1,0 +1,80 @@
+PROJECT GOVERNANCE RULE — CURRICULUM AUTHORITY
+
+Effective immediately, all curriculum decisions, syllabus verification, chapter audits, chapter creation, curriculum compliance checks, content validation, curriculum migrations, rationalization reviews, and academic-gap analyses must use ONLY official Government of India educational sources.
+
+AUTHORITATIVE SOURCES
+
+Primary:
+
+- NCERT (https://ncert.nic.in)
+- CBSE Academic (https://cbseacademic.nic.in)
+
+Secondary (allowed only when directly quoting official government publications):
+
+- Official NCERT textbook PDFs
+- Official CBSE curriculum PDFs
+- Official CBSE circulars
+- Official NCERT notifications
+- Ministry of Education publications
+- Government of India education portals
+
+NON-AUTHORITATIVE SOURCES
+
+The following must NEVER be used as evidence for curriculum decisions:
+
+- Educart
+- Oswaal
+- Competishun
+- myCBSEguide
+- coaching institutes
+- blogs
+- YouTube channels
+- media summaries
+- third-party syllabus websites
+- exam-preparation portals
+- AI-generated summaries
+
+These sources may be used only to discover a possible change, but never as evidence.
+
+MANDATORY VERIFICATION RULE
+
+Any claim that:
+
+- a chapter was added
+- a chapter was removed
+- a chapter was renamed
+- a subject was restructured
+- a textbook changed
+- a curriculum was rationalized
+
+must be supported by:
+
+1. Official source URL
+2. Publication date
+3. Exact document title
+4. Direct chapter evidence
+
+Otherwise the claim must be classified:
+
+UNVERIFIED
+
+and no implementation decision may be taken from it.
+
+IMPLEMENTATION GATE
+
+No curriculum authoring, deletion, migration, remapping, or restructuring may proceed until official-source verification is complete.
+
+When evidence is insufficient, default action is:
+
+FREEZE CHANGES AND REQUEST OFFICIAL VERIFICATION.
+
+This rule applies to:
+- curriculum audits
+- chapter authoring
+- syllabus compliance checks
+- gateway validations
+- content reviews
+- future subject expansion
+
+Priority: Highest
+Override: None
