@@ -36,3 +36,9 @@ id = "V7UGmgTxvGtAjYL_vX69H"
 uri = "file://CLASS9_SCIENCE_LAUNCH_READINESS.md"
 type = "text"
 title = "CLASS9_SCIENCE_LAUNCH_READINESS.md"
+
+[[outputs]]
+id = "VC2zV2lnML4BL9QjxARC3"
+uri = "file://CLASS9_SCIENCE_EXECUTIVE_DECISION.md"
+type = "text"
+title = "CLASS9_SCIENCE_EXECUTIVE_DECISION.md"
