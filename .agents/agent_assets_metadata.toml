@@ -30,3 +30,9 @@ id = "IcVigzW6oYnHVbof9VGpS"
 uri = "file://GATEWAY_FIX_VERIFICATION.md"
 type = "text"
 title = "GATEWAY_FIX_VERIFICATION.md"
+
+[[outputs]]
+id = "V7UGmgTxvGtAjYL_vX69H"
+uri = "file://CLASS9_SCIENCE_LAUNCH_READINESS.md"
+type = "text"
+title = "CLASS9_SCIENCE_LAUNCH_READINESS.md"
