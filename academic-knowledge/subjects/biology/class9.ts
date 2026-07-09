@@ -5,7 +5,7 @@
 import type { ChapterKnowledge } from "../../types";
 
 export const FUNDAMENTAL_UNIT_OF_LIFE: ChapterKnowledge = {
-  chapterId: "ch01", chapterName: "The Fundamental Unit of Life", classNum: 9, subject: "Biology", board: "Both",
+  chapterId: "ch01", chapterName: "Cell — The Fundamental Unit of Life", classNum: 9, subject: "Biology", board: "Both",
 
   learningObjectives: [
     { statement: "State the cell theory and name the scientists who contributed to its formulation", bloomsLevel: "remember", assessable: true },
@@ -401,6 +401,11 @@ export const DIVERSITY_IN_LIVING_ORGANISMS: ChapterKnowledge = {
   ],
 };
 
+/**
+ * ⚠️  NON-EXAM 2026-27: "Why Do We Fall Ill?" is NOT in the 2026-27 CBSE Class 9 Science exam syllabus.
+ * Retained for curriculum completeness and enrichment only.
+ * Authority: CLASS9_CURRICULUM_BASELINE.md §2-C, CLASS9_STRUCTURE_ALIGNMENT.md CHANGE-019.
+ */
 export const WHY_DO_WE_FALL_ILL: ChapterKnowledge = {
   chapterId: "ch04", chapterName: "Why Do We Fall Ill?", classNum: 9, subject: "Biology", board: "Both",
 
@@ -531,6 +536,11 @@ export const WHY_DO_WE_FALL_ILL: ChapterKnowledge = {
   ],
 };
 
+/**
+ * ⚠️  NON-EXAM 2026-27: "Natural Resources" is NOT in the 2026-27 CBSE Class 9 Science exam syllabus.
+ * Retained for curriculum completeness and enrichment only.
+ * Authority: CLASS9_CURRICULUM_BASELINE.md §2-C, CLASS9_STRUCTURE_ALIGNMENT.md CHANGE-019.
+ */
 export const NATURAL_RESOURCES: ChapterKnowledge = {
   chapterId: "ch05", chapterName: "Natural Resources", classNum: 9, subject: "Biology", board: "Both",
 
@@ -654,6 +664,11 @@ export const NATURAL_RESOURCES: ChapterKnowledge = {
   ],
 };
 
+/**
+ * ⚠️  NON-EXAM 2026-27: "Improvement in Food Resources" is NOT in the 2026-27 CBSE Class 9 Science exam syllabus.
+ * Retained for curriculum completeness and enrichment only.
+ * Authority: CLASS9_CURRICULUM_BASELINE.md §2-C, CLASS9_STRUCTURE_ALIGNMENT.md CHANGE-019.
+ */
 export const IMPROVEMENT_IN_FOOD_RESOURCES: ChapterKnowledge = {
   chapterId: "ch06", chapterName: "Improvement in Food Resources", classNum: 9, subject: "Biology", board: "Both",
 
@@ -778,10 +793,137 @@ export const IMPROVEMENT_IN_FOOD_RESOURCES: ChapterKnowledge = {
   ],
 };
 
+/** CHANGE-020: New 2026-27 exam chapter — chapterId ch11 in the integrated NCERT Science syllabus. */
+export const REPRODUCTION: ChapterKnowledge = {
+  chapterId: "ch11", chapterName: "Reproduction", classNum: 9, subject: "Biology", board: "Both",
+
+  learningObjectives: [
+    { statement: "Define reproduction and explain its importance for species survival", bloomsLevel: "understand", assessable: true },
+    { statement: "Distinguish between asexual and sexual reproduction with examples from plants and animals", bloomsLevel: "understand", assessable: true },
+    { statement: "Describe the methods of asexual reproduction: fission, budding, fragmentation, spore formation, vegetative propagation", bloomsLevel: "understand", assessable: true },
+    { statement: "Explain the events of sexual reproduction in flowering plants: pollination, fertilisation, seed and fruit formation", bloomsLevel: "understand", assessable: true },
+    { statement: "Compare modes of reproduction in animals; explain significance of oviparous vs viviparous strategies", bloomsLevel: "analyse", assessable: true },
+  ],
+
+  nepCompetencyMap: [
+    { ruleCode: "NEP-IDC", application: "Observe bread mould under a microscope; identify spore formation and sporangiophores; classify as asexual reproduction" },
+    { ruleCode: "NEP-HOT", application: "Evaluate: 'Asexual reproduction produces identical copies; sexual reproduction produces variety.' Why might genetic variety be advantageous for species survival?" },
+    { ruleCode: "NEP-REPR", application: "Draw and label the life cycle showing alternation between asexual and sexual phases; identify which stage is diploid and which haploid" },
+    { ruleCode: "NEP-ETH", application: "Discuss cloning — is asexual reproduction of complex organisms ethical? What risks does genetic uniformity pose (e.g. crop monocultures)?" },
+  ],
+
+  cbseOutcomes: [
+    "Student explains why reproduction is necessary for the continuity of a species",
+    "Student distinguishes asexual from sexual reproduction with examples of each type",
+    "Student describes the process of pollination, fertilisation, and seed/fruit formation in flowering plants",
+    "Student compares oviparous and viviparous animals; explains internal and external fertilisation",
+  ],
+
+  icseOutcomes: [
+    "ICSE expects: detailed study of vegetative propagation methods (artificial: cutting, grafting, layering) with labelled diagrams",
+    "ICSE additionally tests: the role of each floral part (petal, sepal, anther, stigma, style, ovary, ovule) in sexual reproduction",
+  ],
+
+  coreConcepts: [
+    "Reproduction is the biological process by which organisms produce offspring, ensuring species continuity",
+    "Asexual reproduction: single parent, no gametes, genetically identical offspring — fast and efficient, no variation",
+    "Sexual reproduction: two parents, gametes formed, genetically varied offspring — creates diversity that drives adaptation",
+    "Vegetative propagation: asexual reproduction in plants using roots, stems, or leaves (natural + artificial methods)",
+    "Pollination: transfer of pollen from anther to stigma; may be self- or cross-pollination via wind, insects, or other agents",
+    "Fertilisation in plants: pollen tube grows to ovule; male gamete fuses with egg → zygote → seed; ovary → fruit",
+  ],
+
+  subtopics: [
+    { id: "t1", name: "Introduction to Reproduction", coreConcept: "Reproduction ensures species survival; two broad types: asexual and sexual", keyIdea: "Without reproduction, species become extinct — it is as fundamental as nutrition and respiration", estimatedPeriods: 1 },
+    { id: "t2", name: "Asexual Reproduction", coreConcept: "One parent, no gametes, offspring are clones: fission (Amoeba, Paramecium), budding (Hydra, yeast), spore formation (Rhizopus), fragmentation (Spirogyra)", keyIdea: "Asexual reproduction is fast and efficient — ideal when conditions are stable and favourable", estimatedPeriods: 3 },
+    { id: "t3", name: "Vegetative Propagation", coreConcept: "Asexual reproduction in plants via vegetative parts: runners (strawberry), rhizomes (ginger), bulbs (onion), tubers (potato), leaf buds (Bryophyllum)", keyIdea: "Natural vegetative propagation + artificial methods (cutting, layering, grafting) — horticulturally and agriculturally significant", estimatedPeriods: 2 },
+    { id: "t4", name: "Sexual Reproduction in Plants", coreConcept: "Flower is the reproductive organ: pollination → pollen tube growth → fertilisation → seed → fruit. Double fertilisation is unique to angiosperms.", keyIdea: "The pollen tube bridges the gap from stigma to ovule, delivering the male gamete to the egg", estimatedPeriods: 3 },
+    { id: "t5", name: "Reproduction in Animals", coreConcept: "Oviparous (egg-laying) vs viviparous (live birth); external vs internal fertilisation; budding in Hydra; regeneration in starfish", keyIdea: "Viviparous animals protect the embryo inside the mother's body; oviparous provide nutrition inside the egg", estimatedPeriods: 2 },
+  ],
+
+  conceptGraph: [
+    { from: "bio:9:ch01:cell-division", to: "bio:9:ch11:asexual-reproduction", relationship: "applies", explanation: "Asexual reproduction fundamentally relies on mitosis — the cell divides and each part develops into a new organism" },
+    { from: "bio:9:ch11:gamete-formation", to: "bio:9:ch11:fertilisation", relationship: "enables", explanation: "Gametes must fuse in fertilisation to restore the diploid chromosome number; formation precedes fusion" },
+    { from: "bio:9:ch03:diversity-angiosperms", to: "bio:9:ch11:sexual-reproduction-plants", relationship: "applies", explanation: "Angiosperms (flowering plants) reproduce sexually via flowers — diversity of Chapter 3 connects to the mechanism in Chapter 11" },
+  ],
+
+  prerequisites: {
+    chapters: [
+      { subject: "Biology", classNum: 9, chapterId: "ch01", chapterName: "Cell — The Fundamental Unit of Life", requiredConcepts: ["bio:9:ch01:cell-division-basic", "bio:9:ch01:nucleus-dna"] },
+    ],
+    concepts: ["bio:9:ch01:nucleus-dna", "bio:9:ch01:cell-membrane"],
+  },
+
+  essentialDefinitions: [
+    { term: "Reproduction", formalDefinition: "The biological process by which an organism produces new individuals similar to itself, ensuring the continuity of the species", informalExplanation: "Making copies of yourself so the species doesn't die out" },
+    { term: "Gamete", formalDefinition: "A mature haploid reproductive cell (sperm or egg) that unites with another gamete during sexual reproduction to form a diploid zygote", informalExplanation: "The sex cells — sperm from the father, egg from the mother; each has half the normal number of chromosomes" },
+    { term: "Pollination", formalDefinition: "The transfer of pollen grains from the anther of a flower to the stigma of the same or another flower of the same species", informalExplanation: "Pollen reaching the sticky stigma of a flower — carried by wind, insects, water, or animals" },
+    { term: "Fertilisation", formalDefinition: "The fusion of the male gamete with the female gamete to form a diploid zygote", informalExplanation: "When sperm meets egg — the two half-sets of chromosomes combine to form a complete new cell that grows into a new organism" },
+    { term: "Vegetative Propagation", formalDefinition: "A form of asexual reproduction in plants where new plants develop from vegetative parts (roots, stems, or leaves) without seeds or spores", informalExplanation: "Growing a new plant from a cutting, tuber, or runner — no seeds, no flowers needed" },
+  ],
+
+  formulaInventory: [],
+
+  lawsAndTheorems: [],
+
+  commonMisconceptions: [
+    { misconception: "Only animals reproduce sexually; plants only reproduce asexually", correction: "Most flowering plants reproduce sexually via flowers. Many also reproduce asexually via vegetative propagation. The distinction is single parent (asexual) vs two parents with gametes (sexual), not which kingdom.", whyItHappens: "Animal mating is visible; plant sexual reproduction (pollination, fertilisation) is less obvious", revealingQuestion: "A rose cutting grows into a new rose plant. A rose flower produces seeds after pollination. Which is sexual? Which is asexual? Explain." },
+    { misconception: "Pollination and fertilisation are the same event", correction: "Pollination = transfer of pollen to the stigma (before fertilisation). Fertilisation = actual fusion of nuclei inside the ovule. Sequence: pollination → pollen tube growth → fertilisation. They are separate, sequential events.", whyItHappens: "Students conflate pollen reaching the flower with fertilisation occurring", revealingQuestion: "A bee carries pollen from one flower to another. Has fertilisation occurred? What must happen next?" },
+  ],
+
+  examinerTraps: [
+    { trap: "Stating that pollen fuses with the egg during pollination", typicalScenario: "Student writes 'during pollination, the pollen fuses with the egg to form a zygote'", avoidanceStrategy: "Pollination = pollen transfer to stigma only. Fertilisation (pollen tube grows to ovule; male nucleus fuses with egg) is a separate subsequent event.", marksAtRisk: "1 mark for confusing pollination with fertilisation" },
+    { trap: "Stating that all bacteria reproduce sexually", typicalScenario: "Student writes 'bacteria reproduce both sexually and asexually via binary fission'", avoidanceStrategy: "Bacteria (Monera) reproduce asexually by binary fission — no gametes, no fusion. Binary fission is a form of asexual reproduction.", marksAtRisk: "1 mark for wrong reproduction type for bacteria" },
+  ],
+
+  typicalMistakes: [
+    { mistake: "Spores are seeds", correction: "Spores are single cells produced asexually — no fertilisation needed; they germinate directly into new organisms. Seeds form after fertilisation and contain a plant embryo with a food store.", conceptualError: "Confusing asexual (spore) and sexual (seed) reproductive units" },
+    { mistake: "Grafting produces a plant genetically identical to the rootstock", correction: "The scion (top part, grafted) retains its own genetics and produces its characteristic fruit. The rootstock provides roots and support. The resulting plant has TWO genotypes — it is a chimera, not genetically identical to either parent.", conceptualError: "Not understanding that grafting is a mechanical union, not a genetic fusion" },
+  ],
+
+  bloomsMap: [
+    { subtopicId: "t2", entryLevel: "remember", masteryLevel: "apply", targetLevels: ["remember", "understand", "apply"], hotsStarters: ["An organism reproduces by splitting into two equal halves. Identify the type of reproduction. Why would asexual reproduction be advantageous in a stable, resource-rich environment?", "What would happen to a population of organisms that could only reproduce asexually if their environment suddenly changed?"] },
+    { subtopicId: "t4", entryLevel: "understand", masteryLevel: "analyse", targetLevels: ["understand", "apply", "analyse"], hotsStarters: ["Trace the journey of a pollen grain from the anther to fertilisation in a flower.", "Why is cross-pollination generally considered advantageous over self-pollination? What are the disadvantages?"] },
+  ],
+
+  difficultyProgression: [
+    { step: 1, concept: "Definition of reproduction; why it is necessary; asexual vs sexual distinction", tier: "foundational", teachingNote: "Start with why — 'What would happen if no organism reproduced?' establishes the need before the mechanism" },
+    { step: 2, concept: "Types of asexual reproduction: fission, budding, spore formation, fragmentation", tier: "easy", dependsOnStep: 1, teachingNote: "One diagram per type; connect to organism examples. Amoeba (fission), Hydra (budding), Rhizopus (spores), Spirogyra (fragmentation)" },
+    { step: 3, concept: "Vegetative propagation: natural methods (runner, rhizome, bulb, tuber, leaf bud) and artificial (cutting, layering, grafting)", tier: "medium", dependsOnStep: 2, teachingNote: "Bring in actual plant material: potato 'eye', Bryophyllum leaf, ginger rhizome — students observe and classify" },
+    { step: 4, concept: "Flower structure → pollination → pollen tube growth → fertilisation → seed and fruit formation", tier: "hard", dependsOnStep: 1, teachingNote: "Key sequence must be mastered step-by-step. Diagram of flower cross-section; trace pollen from anther to ovule. This is the #1 exam topic in this chapter." },
+    { step: 5, concept: "Animal reproduction: oviparous vs viviparous; internal vs external fertilisation", tier: "medium", dependsOnStep: 1, teachingNote: "Comparison table: fish (external, oviparous) → frog (external, oviparous) → bird (internal, oviparous) → mammal (internal, viviparous)" },
+  ],
+
+  realLifeApplications: [
+    { context: "Grafting in orchards (mango, apple, citrus)", conceptUsed: "Artificial vegetative propagation — grafting", explanation: "Farmers graft shoots of high-yielding varieties (scion) onto hardy rootstocks — combining disease resistance with quality fruit. The resulting plant produces fruit with the scion's genetics, ready to bear fruit sooner than a seedling.", ageRelevance: "Students from agricultural families will have seen this; connects to food production and India's horticulture industry" },
+    { context: "Bee pollination and food security", conceptUsed: "Cross-pollination and the role of pollinators", explanation: "Bees transfer pollen between flowers while collecting nectar. Without bees, most crop plants cannot set fruit. Colony collapse disorder threatens global food security — directly linking pollination biology to global agriculture.", ageRelevance: "Climate change and pollinator loss are the defining issues for this generation; connects biology to current events" },
+    { context: "Seedless fruit varieties (bananas, grapes, watermelons)", conceptUsed: "Vegetative propagation; reproductive biology", explanation: "Seedless fruits cannot reproduce sexually (no viable seeds). They are propagated entirely by vegetative means. This is a deliberate agricultural manipulation of the plant's reproductive biology.", ageRelevance: "Students eat bananas daily — learning they are sterile clones propagated vegetatively is genuinely surprising and memorable" },
+  ],
+
+  crossChapterLinks: [
+    { subject: "Biology", classNum: 9, chapterId: "ch01", chapterName: "Cell — The Fundamental Unit of Life", linkType: "builds-on", description: "Cell division (mitosis and meiosis) underlies both asexual and sexual reproduction; organelle knowledge from Chapter 1 explains why cells divide" },
+    { subject: "Biology", classNum: 9, chapterId: "ch03", chapterName: "Diversity in Living Organisms", linkType: "parallel-concept", description: "Classification of organisms in Chapter 3 reflects their mode of reproduction — kingdoms are partly defined by reproductive strategies" },
+  ],
+
+  crossSubjectLinks: [
+    { subject: "Chemistry", topic: "Plant hormones (auxins, gibberellins) that regulate flowering and germination", description: "Plant hormones are chemical compounds that control the timing of reproduction — chemistry determines when a plant flowers and when seeds germinate", strength: "medium" },
+  ],
+
+  teachingSequence: [
+    { step: 1, action: "Open question: 'What would happen if no living thing could reproduce?' — class discussion; establish necessity", duration: "10 minutes", pedagogyNote: "NEP-HOT: the question reveals that reproduction is a fundamental property of life, not just an additional feature" },
+    { step: 2, action: "Asexual reproduction: show images of Amoeba binary fission, Hydra budding, Rhizopus spore case, Spirogyra fragmentation", duration: "20 minutes", pedagogyNote: "One diagram per type; student labels and names each. Check: 'In all four cases, how many parents are involved?'" },
+    { step: 3, action: "Vegetative propagation: show actual samples (potato with 'eyes', Bryophyllum leaf with buds, ginger rhizome, strawberry runner)", duration: "15 minutes", pedagogyNote: "NEP-IDC: hands-on identification. Students observe and ask: 'Where is the new plant going to come from?'" },
+    { step: 4, action: "Flower dissection (or detailed diagram): identify reproductive organs; explain the pollination-to-fertilisation sequence step by step", duration: "25 minutes", pedagogyNote: "Key sequence: anther releases pollen → pollen lands on stigma → pollen tube grows through style → male nucleus reaches ovule → fertilisation → zygote → embryo → seed; ovary → fruit" },
+    { step: 5, action: "Animal reproduction comparison table: fish, frog, bird, human — fertilisation type and reproduction type", duration: "15 minutes", pedagogyNote: "Students fill in the table; teacher corrects. Common error: students say frog has internal fertilisation — it does NOT." },
+    { step: 6, action: "Consolidation: 'Why does sexual reproduction create variety?' — brief introduction to chromosomes from each parent", duration: "10 minutes", pedagogyNote: "Plants the seed for Class 10 genetics — this chapter is the biological bridge between cell biology and genetics" },
+  ],
+};
+
 export const BIOLOGY_CLASS9: ChapterKnowledge[] = [
   FUNDAMENTAL_UNIT_OF_LIFE,
   TISSUES,
   DIVERSITY_IN_LIVING_ORGANISMS,
+  REPRODUCTION,
   WHY_DO_WE_FALL_ILL,
   NATURAL_RESOURCES,
   IMPROVEMENT_IN_FOOD_RESOURCES,

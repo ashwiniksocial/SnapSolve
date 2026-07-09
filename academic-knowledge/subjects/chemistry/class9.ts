@@ -137,8 +137,9 @@ export const MATTER_IN_OUR_SURROUNDINGS: ChapterKnowledge = {
   ],
 };
 
+/** CHANGE-023: Official 2026-27 chapter name is "Exploring Mixtures" (was "Is Matter Around Us Pure?" in pre-2026-27 NCERT). */
 export const IS_MATTER_AROUND_US_PURE: ChapterKnowledge = {
-  chapterId: "ch02", chapterName: "Is Matter Around Us Pure?", classNum: 9, subject: "Chemistry", board: "Both",
+  chapterId: "ch02", chapterName: "Exploring Mixtures", classNum: 9, subject: "Chemistry", board: "Both",
 
   learningObjectives: [
     { statement: "Distinguish between pure substances and mixtures using physical properties", bloomsLevel: "understand", assessable: true },

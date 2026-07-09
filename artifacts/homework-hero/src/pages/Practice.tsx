@@ -47,7 +47,7 @@ const typeStyle: Record<string, string> = {
   PYQ:         "bg-rose-50   text-rose-700   border-rose-200",
 };
 const CLASS_OPTIONS = [6, 7, 8, 9];
-const ALL_SUBJECTS: Subject[] = ["Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Computer Science"];
+const ALL_SUBJECTS: Subject[] = ["Mathematics", "Science"];
 
 // ─── Chapter status (5 tiers) ──────────────────────────────────────────────────
 type ChapterStatus = "new" | "learning" | "improving" | "strong" | "mastered";

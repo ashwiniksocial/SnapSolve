@@ -110,6 +110,7 @@ const CHAPTER_MAP: Record<Subject, Record<ClassNum, string[]>> = {
       "Structure of the Atom",
     ],
   },
+  Science: { 6: [], 7: [], 8: [], 9: [] },
   Biology: { 6: [], 7: [], 8: [], 9: [] },
   Economics: { 6: [], 7: [], 8: [], 9: [] },
   "Computer Science": { 6: [], 7: [], 8: [], 9: [] },

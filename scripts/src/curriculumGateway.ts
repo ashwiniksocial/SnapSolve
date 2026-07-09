@@ -28,6 +28,7 @@ import { resolve, join } from "path";
 const ROOT    = resolve(import.meta.dirname, "../../");
 const HH_DATA = join(ROOT, "artifacts/homework-hero/src/data/questions");
 const QB_MATH = join(ROOT, "question-bank/questions/mathematics");
+const QB_CHEM = join(ROOT, "question-bank/questions/chemistry");
 
 // ─── Output helpers ───────────────────────────────────────────────────────────
 const HR   = "═".repeat(62);
@@ -97,18 +98,21 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
     { name: "Introduction to Graphs",                   slug: "introduction-to-graphs" },
   ],
   "9-Mathematics": [
-    { name: "Number Systems",                           slug: "number-systems" },
-    { name: "Polynomials",                              slug: "polynomials" },
+    { name: "Number System",                            slug: "number-system" },
+    { name: "Introduction to Polynomials",              slug: "introduction-to-polynomials" },
+    { name: "Sequences and Progressions",               slug: "sequences-and-progressions" },
+    { name: "Exploring Algebraic Identities",           slug: "exploring-algebraic-identities" },
     { name: "Coordinate Geometry",                      slug: "coordinate-geometry" },
     { name: "Linear Equations in Two Variables",        slug: "linear-equations-in-two-variables" },
     { name: "Introduction to Euclid's Geometry",        slug: "euclids-geometry" },
     { name: "Lines and Angles",                         slug: "lines-and-angles" },
     { name: "Triangles",                                slug: "triangles" },
     { name: "Quadrilaterals",                           slug: "quadrilaterals" },
-    { name: "Areas of Parallelograms and Triangles",    slug: "areas-of-parallelograms" },
     { name: "Circles",                                  slug: "circles" },
-    { name: "Constructions",                            slug: "constructions", cbseDeleted: true },
-    { name: "Heron's Formula",                          slug: "herons-formula" },
+    { name: "Constructions",                            slug: "constructions",              cbseDeleted: true },
+    { name: "Areas of Parallelograms and Triangles",    slug: "areas-of-parallelograms",   cbseDeleted: true },
+    { name: "Heron's Formula",                          slug: "herons-formula",             cbseDeleted: true },
+    { name: "Area and Perimeter",                       slug: "area-and-perimeter" },
     { name: "Surface Areas and Volumes",                slug: "surface-areas-and-volumes" },
     { name: "Statistics",                               slug: "statistics" },
     { name: "Probability",                              slug: "probability" },
@@ -120,11 +124,23 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
     { name: "Food Security in India",         slug: "food-security" },
   ],
   "9-Physics": [
-    { name: "Motion",                   slug: "motion" },
-    { name: "Force and Laws of Motion", slug: "force" },
-    { name: "Gravitation",              slug: "gravitation" },
-    { name: "Work and Energy",          slug: "work" },
-    { name: "Sound",                    slug: "sound" },
+    { name: "Motion",                              slug: "motion" },
+    { name: "Force and Laws of Motion",            slug: "force" },
+    { name: "Gravitation",                         slug: "gravitation",                cbseDeleted: true },
+    { name: "Work, Energy and Simple Machines",    slug: "work-energy-simple-machines" },
+    { name: "Sound",                               slug: "sound" },
+  ],
+  "9-Chemistry": [
+    { name: "Matter in Our Surroundings",          slug: "matter-in-our-surroundings",  cbseDeleted: true },
+    { name: "Exploring Mixtures",                  slug: "exploring-mixtures" },
+    { name: "Structure of the Atom",               slug: "structure-of-the-atom" },
+    { name: "Atoms and Molecules",                 slug: "atoms-and-molecules" },
+  ],
+  "9-Biology": [
+    { name: "Cell — The Fundamental Unit of Life", slug: "cell-fundamental-unit-of-life" },
+    { name: "Tissues",                             slug: "tissues" },
+    { name: "Reproduction",                        slug: "reproduction" },
+    { name: "Diversity in Living Organisms",       slug: "diversity-in-living-organisms" },
   ],
 };
 
@@ -132,6 +148,7 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
 const MIN_Q: Record<string, number> = {
   "6-Mathematics": 50, "7-Mathematics": 50, "8-Mathematics": 50,
   "9-Mathematics": 20, "9-Economics": 15,   "9-Physics": 15,
+  "9-Chemistry":   15, "9-Biology":   15,
 };
 
 // ─── Chapter record produced by inspection ────────────────────────────────────
@@ -473,19 +490,33 @@ function checkMissingExpected(): Finding[] {
           found = files.some(f => f.includes(exp.slug));
         }
       } else if (cls === 9) {
-        // For Class 9, scan CHAPTER_META.name in all matching prefix files
-        let prefix = "maths";
-        if (subject === "Economics") prefix = "economics";
-        if (subject === "Physics")   prefix = "physics";
+        if (subject === "Chemistry") {
+          // Chemistry uses the V2 adapter; scan question-bank per-chapter files
+          const dir = join(QB_CHEM, "class9");
+          if (existsSync(dir)) {
+            const files = readdirSync(dir).filter(f => f.endsWith(".ts"));
+            found = files.some(f => {
+              const src = read(join(dir, f));
+              return src.includes(`chapterName: "${exp.name}"`) || src.includes(`chapterName: '${exp.name}'`);
+            });
+          }
+        } else if (subject === "Biology") {
+          // Biology: no question files exist yet — found stays false (F7 FAILs are expected/documented)
+        } else {
+          // V1 format: scan CHAPTER_META.name in matching prefix files
+          let prefix = "maths";
+          if (subject === "Economics") prefix = "economics";
+          if (subject === "Physics")   prefix = "physics";
 
-        if (existsSync(HH_DATA)) {
-          const pattern = new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
-          const files = readdirSync(HH_DATA).filter(f => pattern.test(f));
-          found = files.some(f => {
-            const src = read(join(HH_DATA, f));
-            const meta = parseV1Meta(src);
-            return meta?.name.toLowerCase() === exp.name.toLowerCase();
-          });
+          if (existsSync(HH_DATA)) {
+            const pattern = new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
+            const files = readdirSync(HH_DATA).filter(f => pattern.test(f));
+            found = files.some(f => {
+              const src = read(join(HH_DATA, f));
+              const meta = parseV1Meta(src);
+              return meta?.name.toLowerCase() === exp.name.toLowerCase();
+            });
+          }
         }
       }
 

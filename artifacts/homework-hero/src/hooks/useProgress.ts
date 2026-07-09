@@ -22,7 +22,7 @@ function load(): ProgressData {
     const raw = localStorage.getItem(KEY);
     if (raw) return JSON.parse(raw) as ProgressData;
   } catch {}
-  return { Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {} };
+  return { Science: {}, Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {} };
 }
 
 function persist(data: ProgressData) {
@@ -182,7 +182,7 @@ export function useProgress() {
 
   // Reset all data (settings / debug)
   const resetProgress = useCallback(() => {
-    const empty: ProgressData = { Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {} };
+    const empty: ProgressData = { Science: {}, Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {} };
     persist(empty);
     setProgress(empty);
   }, []);

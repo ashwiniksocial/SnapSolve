@@ -184,6 +184,10 @@ const SUBJECT_HINTS: Record<Subject, RegExp[]> = {
     /\b(algorithm|array|function|loop|variable|class|object|database|network|program)\b/i,
     /\b(python|java|c\+\+|html|css|sql|bit|byte|binary|boolean)\b/i,
   ],
+  Science: [
+    /\b(force|velocity|energy|atom|molecule|cell|organism|gravity|reaction|motion)\b/i,
+    /\b(photosynthesis|element|compound|nucleus|tissue|reproduction|ecosystem)\b/i,
+  ],
 };
 
 function detectSubject(text: string): Subject {

@@ -443,7 +443,7 @@ The 2026-27 Class 9 Science is structured as an integrated subject across four d
 | 10 | Sound | Physics | Exam-active |
 | 11 | Reproduction | Biology | Exam-active |
 | 12 | Diversity in Living Organisms | Biology | Exam-active |
-| 13 | Our Earth | Earth Science | Exam-active |
+| 13 | Earth as a System: Energy, Matter & Life | Earth Science | Exam-active |
 | 14 | Natural Resources | Earth Science | **Non-exam** (formative/portfolio only) |
 
 **Exam-active chapters:** 12 (Ch2–Ch13)  
@@ -492,7 +492,7 @@ The 2026-27 Class 9 Science is structured as an integrated subject across four d
 |---|---|---|
 | B-S9-1 | Biology: zero content; live UI dead-end (DEC-011) | Hide Biology in UI immediately; register `9-Biology` in gateway with 0-question floor; author Ch2, 3, 11, 12 |
 | B-S9-2 | Chemistry: 0 of 3 exam chapters have questions (DEC-013 finding) | Register `9-Chemistry` in gateway; author Ch5, Ch8, Ch9 questions |
-| B-S9-3 | Earth Science: zero content | Author Ch13 ("Our Earth"); do not author Ch14 |
+| B-S9-3 | Earth Science: zero content | Author Ch13 ("Earth as a System: Energy, Matter & Life"); do not author Ch14 |
 | B-S9-4 | Physics Ch3 "Gravitation" may be out of 2026-27 exam scope | Verify against official CBSE Science circular; hide or flag if confirmed out of scope |
 | B-S9-5 | Physics chapter names misaligned with 2026-27 official names | Rename repo files and gateway entries after verification |
 
@@ -754,7 +754,7 @@ Until the verification is complete, the `6-Science`, `7-Science`, `8-Science` ga
 | B-S8-1 | Science | 8 | HIGH | Chapter list unverified — NCERT JavaScript barrier |
 | B-S9-1 | Science (Biology) | 9 | **CRITICAL** | Zero content; live UI dead-end (DEC-011); blocks launch |
 | B-S9-2 | Science (Chemistry) | 9 | **CRITICAL** | 0 of 3 exam chapters have questions; blocks Science coverage claim |
-| B-S9-3 | Science (Earth Sci) | 9 | HIGH | Zero content for Ch13 ("Our Earth") |
+| B-S9-3 | Science (Earth Sci) | 9 | HIGH | Zero content for Ch13 ("Earth as a System: Energy, Matter & Life") |
 | B-S9-4 | Science (Physics) | 9 | MEDIUM | Ch3 "Gravitation" may be out of 2026-27 exam scope; verify |
 | B-S9-5 | Science (Physics) | 9 | MEDIUM | Chapter names misaligned with 2026-27 official names |
 | B-CA-1 | Computer Applications | 9 | LOW | Zero content; P3 priority; no authoring started |

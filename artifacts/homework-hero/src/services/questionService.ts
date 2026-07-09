@@ -14,8 +14,19 @@ export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType };
 
 // ─── Chapter / topic navigation ───────────────────────────────────────────────
 
-/** All chapters for a given class + subject. */
+/** Internal domain labels that make up the student-facing "Science" subject. */
+const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology"];
+
+/** All chapters for a given class + subject.
+ *  "Science" resolves to the union of Physics, Chemistry, and Biology chapters
+ *  (internal domain labels — never shown directly to students).
+ */
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
+  if (subject === "Science") {
+    return ALL_CHAPTERS.filter(
+      (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject)
+    );
+  }
   return ALL_CHAPTERS.filter(
     (c) => c.classNum === classNum && c.subject === subject
   );
@@ -43,9 +54,16 @@ export interface QuestionFilter {
  * Omitting a filter field means "any value is accepted".
  */
 export function getQuestions(filter: QuestionFilter = {}): Question[] {
+  const isScience = filter.subject === "Science";
   const results = ALL_QUESTIONS.filter((q) => {
     if (filter.classNum  !== undefined && q.classNum  !== filter.classNum)  return false;
-    if (filter.subject   !== undefined && q.subject   !== filter.subject)   return false;
+    if (filter.subject   !== undefined) {
+      if (isScience) {
+        if (!SCIENCE_DOMAINS.includes(q.subject)) return false;
+      } else if (q.subject !== filter.subject) {
+        return false;
+      }
+    }
     if (filter.chapterId !== undefined && q.chapterId !== filter.chapterId) return false;
     if (filter.topicId   !== undefined && q.topicId   !== filter.topicId)   return false;
     if (filter.topicName !== undefined && q.topicName !== filter.topicName) return false;
@@ -107,7 +125,10 @@ export interface ChapterStats {
 export function getAllChapterStats(classNum: number, subject: string): ChapterStats[] {
   const chapters = getChapters(classNum, subject);
   return chapters.map((ch) => {
-    const qs = getQuestions({ classNum, subject, chapterId: ch.id });
+    // Use ch.subject (the chapter's native domain) so "Science" sessions correctly
+    // fetch Physics / Chemistry / Biology questions for each chapter.
+    const chSubject = ch.subject;
+    const qs = getQuestions({ classNum, subject: chSubject, chapterId: ch.id });
     const byType: Record<QuestionType, number> = {
       MCQ: 0, ShortAnswer: 0, LongAnswer: 0, HOTS: 0, PYQ: 0,
     };
@@ -119,7 +140,7 @@ export function getAllChapterStats(classNum: number, subject: string): ChapterSt
       chapterName: ch.name,
       chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
       totalQuestions: qs.length,
-      byDifficulty: getDifficultyBreakdown({ classNum, subject, chapterId: ch.id }),
+      byDifficulty: getDifficultyBreakdown({ classNum, subject: chSubject, chapterId: ch.id }),
       byType,
     };
   });

@@ -574,11 +574,12 @@ export default function ExamMode() {
   const mathChapters  = useChapterStats("Mathematics");
 
   const chapterMap: Record<Subject, ReturnType<typeof useChapterStats>> = {
-    Physics:           physChapters,
-    Chemistry:         chemChapters,
-    Mathematics:       mathChapters,
-    Biology:           [],
-    Economics:         [],
+    Science:            [],
+    Physics:            physChapters,
+    Chemistry:          chemChapters,
+    Mathematics:        mathChapters,
+    Biology:            [],
+    Economics:          [],
     "Computer Science": [],
   };
 
@@ -591,7 +592,7 @@ export default function ExamMode() {
 
   // Weak topics and accuracy maps per subject
   const weakTopicsMap  = useMemo(() => {
-    const out: Record<Subject, string[]> = { Physics: [], Chemistry: [], Mathematics: [], Biology: [], Economics: [], "Computer Science": [] };
+    const out: Record<Subject, string[]> = { Science: [], Physics: [], Chemistry: [], Mathematics: [], Biology: [], Economics: [], "Computer Science": [] };
     for (const s of ALL_SUBJECTS) {
       out[s] = getSubjectStats(s).weakTopics;
     }
@@ -599,7 +600,7 @@ export default function ExamMode() {
   }, [getSubjectStats]);
 
   const accuracyMap = useMemo(() => {
-    const out: Record<Subject, Record<string, number>> = { Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {} };
+    const out: Record<Subject, Record<string, number>> = { Science: {}, Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {} };
     for (const s of ALL_SUBJECTS) {
       const stats = getSubjectStats(s);
       for (const ts of stats.topicStats) {
@@ -616,7 +617,7 @@ export default function ExamMode() {
 
   // Subject completion pct (avg chapter completion)
   const subjectCompletion = useMemo(() => {
-    const out: Record<Subject, number> = { Physics: 0, Chemistry: 0, Mathematics: 0, Biology: 0, Economics: 0, "Computer Science": 0 };
+    const out: Record<Subject, number> = { Science: 0, Physics: 0, Chemistry: 0, Mathematics: 0, Biology: 0, Economics: 0, "Computer Science": 0 };
     for (const s of ALL_SUBJECTS) {
       const chapters = chapterMap[s];
       if (!chapters.length) { out[s] = 0; continue; }

@@ -1,5 +1,6 @@
 export type Subject =
   | "Mathematics"
+  | "Science"
   | "Physics"
   | "Chemistry"
   | "Biology"
@@ -18,6 +19,27 @@ export interface SubjectConfig {
 }
 
 export const SUBJECTS: Record<Subject, SubjectConfig> = {
+  Science: {
+    icon: "🔬",
+    color: "#0891b2",
+    light: "#ecfeff",
+    border: "#a5f3fc",
+    textClass: "text-cyan-700",
+    bgClass: "bg-cyan-50",
+    borderClass: "border-cyan-200",
+    topics: [
+      "Motion & Force",
+      "Work & Energy",
+      "Sound",
+      "Atoms & Molecules",
+      "Structure of Atom",
+      "Mixtures & Solutions",
+      "Cell Biology",
+      "Tissues",
+      "Reproduction",
+      "Diversity of Life",
+    ],
+  },
   Mathematics: {
     icon: "📐",
     color: "#d97706",
