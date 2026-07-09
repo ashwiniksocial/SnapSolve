@@ -29,6 +29,7 @@ const ROOT    = resolve(import.meta.dirname, "../../");
 const HH_DATA = join(ROOT, "artifacts/homework-hero/src/data/questions");
 const QB_MATH = join(ROOT, "question-bank/questions/mathematics");
 const QB_CHEM = join(ROOT, "question-bank/questions/chemistry");
+const QB_BIO  = join(ROOT, "question-bank/questions/biology");
 
 // ─── Output helpers ───────────────────────────────────────────────────────────
 const HR   = "═".repeat(62);
@@ -137,10 +138,10 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
     { name: "Atoms and Molecules",                 slug: "atoms-and-molecules" },
   ],
   "9-Biology": [
-    { name: "Cell — The Fundamental Unit of Life", slug: "cell-fundamental-unit-of-life" },
-    { name: "Tissues",                             slug: "tissues" },
-    { name: "Reproduction",                        slug: "reproduction" },
-    { name: "Diversity in Living Organisms",       slug: "diversity-in-living-organisms" },
+    { name: "The Fundamental Unit of Life",  slug: "fundamental-unit-of-life" },
+    { name: "Tissues",                       slug: "tissues" },
+    { name: "Diversity in Living Organisms", slug: "diversity-in-living-organisms" },
+    { name: "Why Do We Fall Ill?",           slug: "why-do-we-fall-ill" },
   ],
 };
 
@@ -501,7 +502,12 @@ function checkMissingExpected(): Finding[] {
             });
           }
         } else if (subject === "Biology") {
-          // Biology: no question files exist yet — found stays false (F7 FAILs are expected/documented)
+          // Biology uses V2 adapter; detect by slug match in question-bank file names
+          const dir = join(QB_BIO, "class9");
+          if (existsSync(dir)) {
+            const files = readdirSync(dir).filter(f => f.endsWith(".ts"));
+            found = files.some(f => f.includes(exp.slug));
+          }
         } else {
           // V1 format: scan CHAPTER_META.name in matching prefix files
           let prefix = "maths";
