@@ -1,5 +1,7 @@
 # GOVERNANCE_AUDIT.md
 
+**Version:** 1.0
+**Status:** FROZEN — changes only with CEO approval.
 **Document type:** Cross-document consistency audit — read-only. No files were modified.
 **Date:** 2026-07-09
 **Auditor:** Agent (no code changes made)
