@@ -84,3 +84,9 @@ id = "zvGnMtMfgrXoo0a2capAc"
 uri = "file://docs/GOVERNANCE/PROJECT_STRUCTURE.md"
 type = "text"
 title = "PROJECT_STRUCTURE.md — 2026-07-09"
+
+[[outputs]]
+id = "U7KN4OWBh1ZINx6QE5Tko"
+uri = "file://docs/GOVERNANCE/ROADMAP.md"
+type = "text"
+title = "ROADMAP.md — 2026-07-09"
