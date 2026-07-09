@@ -48,3 +48,27 @@ id = "0YFBJiC_Qz9mx5hgF21D0"
 uri = "file://docs/GOVERNANCE/PROJECT_MASTER_CONTEXT.md"
 type = "text"
 title = "docs/GOVERNANCE/PROJECT_MASTER_CONTEXT.md"
+
+[[outputs]]
+id = "_kEaAAho80o5_Dj3y6hHJ"
+uri = "file://docs/GOVERNANCE/PROJECT_MEMORY.md"
+type = "text"
+title = "PROJECT_MEMORY.md"
+
+[[outputs]]
+id = "5g2zv4rt7wfc5ouiK3YuI"
+uri = "file://docs/GOVERNANCE/PROJECT_STATUS.md"
+type = "text"
+title = "PROJECT_STATUS.md"
+
+[[outputs]]
+id = "CsEMtZAOjrtCRGJjqfAse"
+uri = "file://docs/GOVERNANCE/DECISION_LOG.md"
+type = "text"
+title = "DECISION_LOG.md"
+
+[[outputs]]
+id = "5U9fG-zwUjBsw8XLOIjKg"
+uri = "file://docs/GOVERNANCE/CHECKPOINT_GATEWAYS.md"
+type = "text"
+title = "CHECKPOINT_GATEWAYS.md"
