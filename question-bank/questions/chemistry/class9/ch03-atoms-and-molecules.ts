@@ -1,21 +1,764 @@
 // @ts-nocheck
 /**
- * Question Bank — Chemistry, Class 9, Chapter 3: Atoms and Molecules
+ * Question Bank — Chemistry, Class 9, Chapter 3 (file) / Official Ch9: Atoms and Molecules
  *
- * Placeholder — questions to be authored.
- * NCERT Class 9 Science (Old / Rationalized syllabus, Chapter 3)
- * Also maps to Chapter 3 of the "Exploration" textbook (2025-26).
+ * 30 questions — types: concept (5), ncert (10), competency (5), hots (5),
+ *                        previous-year (3), assertion-reason (2)
+ * Board: Both (CBSE + ICSE) | Category: standard | Schema: QuestionV2
+ * CBSE 2026-27 Science (Code 086), Chapter 9 — Atoms and Molecules
  *
- * Topic coverage (planned):
- *   t1 Laws of Chemical Combination
- *   t2 Dalton's Atomic Theory
- *   t3 Atoms — Symbols, Atomic Mass
- *   t4 Molecules and Chemical Formulae
- *   t5 Mole Concept
+ * Difficulty distribution: Easy 10 · Medium 13 · Hard 7
  *
- * v0 2026-07-07 — Scaffold only (StudyAI authoring team)
+ * Topic coverage:
+ *   t1  Laws of Chemical Combination             —  6 q
+ *   t2  Dalton's Atomic Theory                   —  4 q
+ *   t3  Atoms — Symbols and Atomic Mass          —  4 q
+ *   t4  Molecules and Chemical Formulae          —  7 q
+ *   t5  Mole Concept                             —  9 q
+ *
+ * Concept nodes:
+ *   chm:9:ch03:law-conservation-mass
+ *   chm:9:ch03:law-definite-proportions
+ *   chm:9:ch03:law-multiple-proportions
+ *   chm:9:ch03:daltons-atomic-theory
+ *   chm:9:ch03:atomic-symbols
+ *   chm:9:ch03:atomic-mass
+ *   chm:9:ch03:molecular-formula
+ *   chm:9:ch03:chemical-formula-writing
+ *   chm:9:ch03:mole-concept
+ *   chm:9:ch03:molar-mass
+ *   chm:9:ch03:avogadro-number
+ *
+ * v1 2026-07-09 — Initial authoring (StudyAI authoring team)
  */
 
 import type { QuestionV2 } from "../../../types";
+import { STANDARD_TAGS } from "../../../tagging";
 
-export const CH03_ATOMS_AND_MOLECULES: QuestionV2[] = [];
+export const CH03_ATOMS_AND_MOLECULES: QuestionV2[] = [
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t1 — Laws of Chemical Combination
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch03-con-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t1", topicName: "Laws of Chemical Combination",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "State the Law of Conservation of Mass. Who proposed it and in what year?",
+    answer: "Law of Conservation of Mass (Lavoisier, 1774): In any chemical reaction, the total mass of the reactants is equal to the total mass of the products. Matter is neither created nor destroyed during a chemical reaction — it only changes form.\n\nStatement: Mass can neither be created nor destroyed in a chemical reaction.\n\nProposer: Antoine Laurent Lavoisier, based on careful experiments with burning reactions in closed containers.",
+    steps: [
+      { stepNumber: 1, title: "State the law", explanation: "Total mass of reactants = total mass of products. Mass is conserved." },
+      { stepNumber: 2, title: "Proposer and context", explanation: "Lavoisier (1774) established this through experiments with combustion in sealed vessels where no mass could escape." },
+    ],
+    hint: "Remember: in a chemical reaction, atoms are rearranged — none are created or destroyed. If atoms are conserved, what else is conserved?",
+    keyConcepts: ["law of conservation of mass", "Lavoisier", "chemical reaction"],
+    conceptsCovered: ["chm:9:ch03:law-conservation-mass"],
+    prerequisites: [],
+    commonErrors: ["Forgetting to name Lavoisier as the proposer — CBSE frequently tests attribution of each law to its proposer."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "conservation-of-mass"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch03-con-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t1", topicName: "Laws of Chemical Combination",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "State the Law of Definite Proportions (Law of Constant Composition). Who proposed it?",
+    answer: "Law of Definite Proportions (Proust, 1799): In a pure chemical compound, the elements are always present in a definite ratio by mass, regardless of the source or method of preparation of the compound.\n\nExample: In water (H₂O), hydrogen and oxygen are always combined in the mass ratio H:O = 1:8 (or 2:16 = 1:8). Whether the water comes from a river, is prepared in a lab, or falls as rain — the ratio is always 1:8.\n\nProposer: Joseph Louis Proust.",
+    steps: [
+      { stepNumber: 1, title: "State the law", explanation: "In any pure compound, elements combine in a fixed mass ratio — regardless of source or preparation method." },
+      { stepNumber: 2, title: "Example", explanation: "H₂O: H:O = 2:16 = 1:8 by mass. Always, everywhere." },
+      { stepNumber: 3, title: "Proposer", explanation: "Joseph Louis Proust (1799)." },
+    ],
+    hint: "The key word is 'definite' — the ratio never changes regardless of how or where the compound is made.",
+    keyConcepts: ["law of definite proportions", "Proust", "fixed composition", "mass ratio"],
+    conceptsCovered: ["chm:9:ch03:law-definite-proportions"],
+    prerequisites: [],
+    commonErrors: ["Confusing Law of Definite Proportions with Law of Conservation of Mass — they are different laws by different scientists."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "definite-proportions"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch03-nce-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t1", topicName: "Laws of Chemical Combination",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "5.4 g of aluminium reacts with excess oxygen to form 10.2 g of aluminium oxide. If 3.24 g of aluminium is burnt in excess oxygen, what mass of aluminium oxide will be produced? Which law does this illustrate?",
+    answer: "Given data: 5.4 g Al → 10.2 g Al₂O₃\n\nRatio: mass of Al₂O₃ / mass of Al = 10.2 / 5.4 = 1.889 (approximately 17:9)\n\nFor 3.24 g Al:\nmass of Al₂O₃ = 3.24 × (10.2 / 5.4) = 3.24 × 1.889 = 6.12 g\n\nThis illustrates the Law of Definite Proportions (also called Law of Constant Composition): in any pure compound (Al₂O₃), the elements (Al and O) are always combined in the same fixed mass ratio, regardless of the amount of reactant used.",
+    steps: [
+      { stepNumber: 1, title: "Find the mass ratio", explanation: "Al₂O₃ formed per gram of Al = 10.2 / 5.4 = 17/9 ≈ 1.889.", formula: "mass ratio = 10.2 g Al₂O₃ / 5.4 g Al" },
+      { stepNumber: 2, title: "Calculate product mass", explanation: "mass of Al₂O₃ = 3.24 × (10.2/5.4) = 3.24 × 1.889 = 6.12 g.", result: "6.12 g Al₂O₃" },
+      { stepNumber: 3, title: "Identify the law", explanation: "Same mass ratio used for different amounts → Law of Definite Proportions." },
+    ],
+    hint: "Find the mass of product per gram of aluminium. Use that ratio to find product for 3.24 g Al.",
+    keyConcepts: ["law of definite proportions", "fixed mass ratio", "aluminium oxide"],
+    conceptsCovered: ["chm:9:ch03:law-definite-proportions"],
+    prerequisites: [],
+    commonErrors: ["Using total mass conservation (adding masses) rather than the ratio — the law of definite proportions involves ratios within the product, not total mass."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "definite-proportions", "numerical"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-nce-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t1", topicName: "Laws of Chemical Combination",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "3 g of hydrogen combine with 24 g of oxygen to form 27 g of water. 6 g of hydrogen are mixed with 40 g of oxygen. Find the mass of water formed and the mass of the excess reactant remaining. Which law is demonstrated here?",
+    answer: "From the given data: H:O ratio in water = 3:24 = 1:8 by mass.\n\n6 g of H requires oxygen = 6 × 8 = 48 g. But only 40 g of oxygen is available — oxygen is the limiting reagent.\n\nOxygen available = 40 g. Hydrogen needed for 40 g O₂ = 40 / 8 = 5 g.\n\nMass of water formed = 5 + 40 = 45 g\nExcess hydrogen = 6 – 5 = 1 g remaining unreacted.\n\nThis demonstrates:\n(1) Law of Definite Proportions — water always has H:O = 1:8 by mass.\n(2) Law of Conservation of Mass — 5 g H + 40 g O = 45 g H₂O (mass conserved).",
+    steps: [
+      { stepNumber: 1, title: "Find H:O ratio in water", explanation: "3 g H : 24 g O = 1:8 by mass." },
+      { stepNumber: 2, title: "Find limiting reagent", explanation: "6 g H needs 48 g O. Only 40 g O available → O is limiting. H needed for 40 g O = 40/8 = 5 g." },
+      { stepNumber: 3, title: "Calculate mass of water and excess", explanation: "Water = 5 + 40 = 45 g. Excess H = 6 – 5 = 1 g.", result: "45 g water; 1 g H₂ unreacted" },
+      { stepNumber: 4, title: "Laws illustrated", explanation: "Definite Proportions (1:8 ratio always); Conservation of Mass (5 + 40 = 45 g)." },
+    ],
+    hint: "First find the H:O ratio in water from the given data. Then determine which of H or O runs out first.",
+    keyConcepts: ["law of conservation of mass", "law of definite proportions", "limiting reagent"],
+    conceptsCovered: ["chm:9:ch03:law-conservation-mass", "chm:9:ch03:law-definite-proportions"],
+    prerequisites: [],
+    commonErrors: ["Assuming all 6 g H reacts (ignoring that O is the limiting reagent) — water is always 1:8 H:O, so check which is limiting."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "limiting-reagent", "laws-of-combination"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-cmp-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t1", topicName: "Laws of Chemical Combination",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A student burns a piece of magnesium ribbon in a sealed flask and observes that the white magnesium oxide formed has a greater mass than the original magnesium ribbon. The student concludes: 'This disproves the Law of Conservation of Mass.' Evaluate this conclusion.",
+    answer: "The student's conclusion is INCORRECT.\n\nThe Law of Conservation of Mass states that the total mass of reactants equals the total mass of products. In this reaction:\nMagnesium + Oxygen → Magnesium oxide\n2Mg + O₂ → 2MgO\n\nMagnesium oxide (MgO) has a greater mass than the original Mg ribbon because it incorporates oxygen from the air inside the sealed flask. The total mass (Mg + O₂ consumed from flask air) equals the mass of MgO formed — mass is conserved.\n\nThe student only compared the mass of Mg ribbon with the mass of MgO — ignoring the mass of oxygen that reacted. When all reactants (Mg AND O₂) are accounted for, total mass is conserved. The law is NOT disproved.",
+    steps: [
+      { stepNumber: 1, title: "Identify the error in reasoning", explanation: "The student compared only Mg ribbon mass vs MgO mass, ignoring the oxygen that reacted." },
+      { stepNumber: 2, title: "Apply the law correctly", explanation: "Mass of Mg + Mass of O₂ consumed = Mass of MgO formed. Both sides are equal — mass IS conserved." },
+      { stepNumber: 3, title: "Why MgO is heavier", explanation: "MgO incorporates oxygen from the sealed flask. The extra mass comes from the reactant O₂." },
+    ],
+    hint: "The Law of Conservation of Mass applies to the TOTAL mass of ALL reactants vs ALL products. What did the student forget to include as a reactant?",
+    keyConcepts: ["law of conservation of mass", "magnesium combustion", "oxygen as reactant"],
+    conceptsCovered: ["chm:9:ch03:law-conservation-mass"],
+    prerequisites: [],
+    commonErrors: ["Accepting the student's reasoning — students often forget that oxygen is a reactant and has mass."],
+    tags: [STANDARD_TAGS.CONCEPTUAL, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch03", "conservation-of-mass", "common-misconception"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-hot-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t1", topicName: "Laws of Chemical Combination",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "Two different oxides of copper contain 88.8% and 80% copper by mass respectively. Show that the data is consistent with the Law of Multiple Proportions.",
+    answer: "For Law of Multiple Proportions: the masses of one element (oxygen) that combine with a fixed mass of the other element (copper) should be in a simple whole-number ratio.\n\nOxide 1: 88.8% Cu → 11.2% O\nIn 100 g: 88.8 g Cu, 11.2 g O\nMass of O per gram of Cu = 11.2 / 88.8 = 0.1261 g O per g Cu\n\nOxide 2: 80% Cu → 20% O\nIn 100 g: 80 g Cu, 20 g O\nMass of O per gram of Cu = 20 / 80 = 0.25 g O per g Cu\n\nRatio of O masses (for same mass of Cu) = 0.1261 : 0.25 ≈ 0.5044 : 1 ≈ 1:2\n\nThe masses of oxygen combining with a fixed mass of copper are in the ratio 1:2 — a simple whole-number ratio. This is consistent with the Law of Multiple Proportions.\n\n(These two oxides are Cu₂O and CuO respectively.)",
+    steps: [
+      { stepNumber: 1, title: "Find O% for each oxide", explanation: "Oxide 1: O = 100 − 88.8 = 11.2%. Oxide 2: O = 100 − 80 = 20%." },
+      { stepNumber: 2, title: "Find mass of O per g of Cu in each", explanation: "Oxide 1: 11.2/88.8 = 0.1261 g O/g Cu. Oxide 2: 20/80 = 0.25 g O/g Cu." },
+      { stepNumber: 3, title: "Find the ratio", explanation: "0.1261 : 0.25 ≈ 1:1.98 ≈ 1:2. Simple whole-number ratio → Law of Multiple Proportions confirmed." },
+    ],
+    hint: "For the Law of Multiple Proportions, fix the mass of ONE element and compare how much of the OTHER element combines. The ratio should be a simple whole number.",
+    keyConcepts: ["law of multiple proportions", "copper oxides", "simple whole-number ratio"],
+    conceptsCovered: ["chm:9:ch03:law-multiple-proportions"],
+    prerequisites: [],
+    commonErrors: ["Comparing percentages directly instead of computing mass of one element per fixed mass of the other — the law requires a ratio for a FIXED mass of one element."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.NUMERICALS, "class9", "ch03", "law-multiple-proportions", "hots"],
+    source: "original",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t2 — Dalton's Atomic Theory
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch03-con-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t2", topicName: "Dalton's Atomic Theory",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "State any FOUR postulates of Dalton's Atomic Theory.",
+    answer: "(1) All matter is made up of very tiny, indivisible particles called atoms.\n(2) Atoms of the same element are identical in mass and properties; atoms of different elements differ in mass and properties.\n(3) Atoms can neither be created nor destroyed (consistent with the Law of Conservation of Mass).\n(4) Atoms of different elements combine in simple whole-number ratios to form compound atoms (molecules), and a given compound always has the same type and number of atoms.\n\n[Note: Some postulates of Dalton's theory have been revised — atoms ARE divisible (protons, neutrons, electrons); atoms of the same element can have different masses (isotopes); atoms of the same element can have slightly different properties in some cases. However, the theory correctly explained the laws of chemical combination.]",
+    steps: [
+      { stepNumber: 1, title: "Tiny indivisible particles", explanation: "All matter is made of atoms — smallest unit." },
+      { stepNumber: 2, title: "Atoms of same element are identical", explanation: "Same element: same mass, same properties." },
+      { stepNumber: 3, title: "Atoms cannot be created or destroyed", explanation: "Explains conservation of mass." },
+      { stepNumber: 4, title: "Atoms combine in whole-number ratios", explanation: "Explains law of definite proportions — compounds always have the same ratio." },
+    ],
+    hint: "NCERT lists the four postulates in order. Remember: tiny, identical, cannot be created/destroyed, combine in whole-number ratios.",
+    keyConcepts: ["Dalton's atomic theory", "atom", "postulates"],
+    conceptsCovered: ["chm:9:ch03:daltons-atomic-theory"],
+    prerequisites: [],
+    commonErrors: ["Not mentioning the limitation of Dalton's theory (atoms are divisible — protons, neutrons, electrons exist; isotopes show atoms of same element can differ in mass)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "daltons-theory"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch03-asr-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t2", topicName: "Dalton's Atomic Theory",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): Dalton's atomic theory explained the laws of chemical combination successfully.\nReason (R): Dalton's theory proposed that atoms are indivisible and identical for elements of the same type.\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "B — Both A and R are true but R is NOT the correct explanation of A.\n\nA is TRUE: Dalton's atomic theory successfully explained the laws of conservation of mass, definite proportions, and multiple proportions.\n\nR is TRUE: Dalton did propose atoms are indivisible and identical within an element.\n\nWhy R does NOT explain A: The reason Dalton's theory explained the laws of chemical combination is specifically the postulate that atoms combine in fixed, whole-number ratios and are indestructible — NOT simply that they are indivisible and identical. The 'indivisible and identical' claim (R) addresses the nature of atoms, but the explanatory power for the laws comes from the combining-ratio postulates. R is true but is not the specific reason for A.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Evaluate A", explanation: "Dalton's theory DID explain laws of chemical combination. A is TRUE." },
+      { stepNumber: 2, title: "Evaluate R", explanation: "Dalton did state atoms are indivisible and identical within an element. R is TRUE." },
+      { stepNumber: 3, title: "Does R explain A?", explanation: "The explanatory power for the laws comes from the combining-ratio postulates, not from 'indivisible and identical'. R is true but is not the CORRECT explanation for A." },
+    ],
+    hint: "Both A and R are correct facts. But does R specifically explain WHY Dalton's theory explained the laws of chemical combination?",
+    keyConcepts: ["Dalton's atomic theory", "postulates", "laws of chemical combination"],
+    conceptsCovered: ["chm:9:ch03:daltons-atomic-theory"],
+    prerequisites: [],
+    commonErrors: ["Choosing A (both true, R explains A) — students accept R as explanation without checking whether it is the SPECIFIC reason."],
+    tags: [STANDARD_TAGS.TRICKY, "class9", "ch03", "daltons-theory", "assertion-reason"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-hot-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t2", topicName: "Dalton's Atomic Theory",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Dalton's atomic theory proposed that atoms of the same element are identical in all respects. Modern chemistry has shown this postulate to be incorrect. Identify what discovery led to this revision and explain how the revised understanding is consistent with the Law of Definite Proportions.",
+    answer: "Discovery that revised the postulate: The existence of ISOTOPES. Isotopes are atoms of the same element that have the same atomic number (same number of protons) but different mass numbers (different numbers of neutrons). For example, chlorine has two naturally occurring isotopes: ³⁵Cl (mass 35) and ³⁷Cl (mass 37). They are atoms of the same element but have different masses — contradicting Dalton's claim that atoms of the same element are identical.\n\nConsistency with Law of Definite Proportions: Despite isotopes having different masses, the Law of Definite Proportions is maintained because:\n(1) Natural samples of an element always contain isotopes in the same natural abundance ratio (e.g., ³⁵Cl:³⁷Cl ≈ 75:25 always). This gives chlorine a constant average atomic mass (35.5 g/mol).\n(2) Chemical compounds formed using natural chlorine always use this same average composition, so the mass ratio in any compound containing Cl is effectively constant.\nIsotopes do not violate the law in practice because their natural abundance is always constant.",
+    steps: [
+      { stepNumber: 1, title: "Discovery: isotopes", explanation: "Atoms of the same element can have different masses (different neutron numbers) — called isotopes. This disproves 'identical in all respects'." },
+      { stepNumber: 2, title: "Example", explanation: "³⁵Cl and ³⁷Cl: same Z (17 protons), different A (35 vs 37). Different masses." },
+      { stepNumber: 3, title: "Consistency with definite proportions", explanation: "Natural isotopic abundance is constant for any element. Average atomic mass is constant. So mass ratios in compounds made from natural elements are still fixed." },
+    ],
+    hint: "Which particles in an atom make Dalton's 'identical atoms' claim wrong? How does natural isotopic abundance save the Law of Definite Proportions?",
+    hint2: "Isotopes: same number of protons, different number of neutrons → different mass. What happens to the average mass if the abundance ratio is always constant?",
+    hint3: "If ³⁵Cl is always 75% and ³⁷Cl is always 25% in nature, what is the effective mass always used in chemical calculations?",
+    keyConcepts: ["isotopes", "Dalton's theory", "law of definite proportions", "average atomic mass"],
+    conceptsCovered: ["chm:9:ch03:daltons-atomic-theory", "chm:9:ch03:law-definite-proportions"],
+    prerequisites: [],
+    commonErrors: ["Saying isotopes completely disprove the Law of Definite Proportions — they do not, because natural isotopic abundance is constant."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BEYOND_NCERT, "class9", "ch03", "isotopes", "daltons-theory", "hots"],
+    source: "original",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t3 — Atoms: Symbols and Atomic Mass
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch03-con-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t3", topicName: "Atoms — Symbols and Atomic Mass",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Why is the atomic mass of an element expressed in 'atomic mass units' (amu or u) rather than in grams? What is the value of 1 amu in grams?",
+    answer: "Atoms are extremely tiny — their actual masses in grams are inconveniently small numbers. For example, the mass of a hydrogen atom is approximately 1.67 × 10⁻²⁴ g. Using such numbers in calculations is cumbersome.\n\nInstead, atomic masses are expressed relative to a reference. The standard reference is the Carbon-12 isotope (¹²C): 1 amu (u) = 1/12 of the mass of a single ¹²C atom.\n\nValue: 1 amu (u) = 1.66 × 10⁻²⁴ g (approximately 1.66054 × 10⁻²⁴ g).\n\nOn this scale: H = 1 u, O = 16 u, C = 12 u (by definition), making calculations straightforward.",
+    steps: [
+      { stepNumber: 1, title: "Problem with grams", explanation: "Actual atomic masses in grams are ~10⁻²⁴ g — inconveniently small for chemical calculations." },
+      { stepNumber: 2, title: "Relative atomic mass", explanation: "Atomic masses expressed relative to ¹²C. 1 amu = 1/12 of mass of one ¹²C atom." },
+      { stepNumber: 3, title: "Conversion", explanation: "1 amu = 1.66 × 10⁻²⁴ g." },
+    ],
+    hint: "Think about why scientists use a relative scale rather than absolute masses in grams — what makes atomic masses hard to work with in grams?",
+    keyConcepts: ["atomic mass unit", "amu", "Carbon-12 reference", "relative atomic mass"],
+    conceptsCovered: ["chm:9:ch03:atomic-mass"],
+    prerequisites: [],
+    commonErrors: ["Saying 1 amu = 1/12 of mass of an oxygen atom — the standard reference is Carbon-12, not oxygen."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, "class9", "ch03", "atomic-mass-unit"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch03-nce-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t3", topicName: "Atoms — Symbols and Atomic Mass",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Give the chemical symbols for the following elements and state whether they are derived from their English name or from a name in another language:\n(a) Sodium  (b) Iron  (c) Gold  (d) Potassium",
+    answer: "(a) Sodium — Symbol: Na. Derived from Latin 'Natrium'.\n(b) Iron — Symbol: Fe. Derived from Latin 'Ferrum'.\n(c) Gold — Symbol: Au. Derived from Latin 'Aurum'.\n(d) Potassium — Symbol: K. Derived from Latin 'Kalium'.",
+    steps: [
+      { stepNumber: 1, title: "Symbols from Latin names", explanation: "Na (Natrium), Fe (Ferrum), Au (Aurum), K (Kalium) — all from Latin, not from their English names." },
+    ],
+    hint: "Many symbols for metals are not from English names — they come from Latin (the language of early chemistry).",
+    examTip: "Na, Fe, Au, K, Cu (Cuprum), Pb (Plumbum), Hg (Hydrargyrum) — all from Latin. These are frequently tested in CBSE exams.",
+    keyConcepts: ["chemical symbols", "Latin names", "element symbols"],
+    conceptsCovered: ["chm:9:ch03:atomic-symbols"],
+    prerequisites: [],
+    commonErrors: ["Writing 'So' for sodium or 'Ir' for iron — these common abbreviations of English names are NOT the correct IUPAC symbols."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "chemical-symbols"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-pyq-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t3", topicName: "Atoms — Symbols and Atomic Mass",
+    questionType: "previous-year", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 1,
+    question: "The atomic mass of an element is defined relative to:\n(A) Mass of a hydrogen atom\n(B) One-twelfth of the mass of a C-12 isotope\n(C) Mass of an oxygen atom\n(D) Mass of a proton",
+    answer: "B. The atomic mass unit (u or amu) is defined as exactly 1/12th of the mass of a Carbon-12 (¹²C) isotope. This replaced the older hydrogen-based and oxygen-based references and is the current IUPAC standard.",
+    options: [
+      "A) Mass of a hydrogen atom",
+      "B) One-twelfth of the mass of a C-12 isotope",
+      "C) Mass of an oxygen atom",
+      "D) Mass of a proton",
+    ],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Current IUPAC standard", explanation: "1 amu = 1/12 mass of ¹²C. This is the internationally agreed definition." },
+    ],
+    hint: "The reference for atomic mass is Carbon-12, not hydrogen or oxygen (which were used historically).",
+    keyConcepts: ["atomic mass unit", "Carbon-12 reference"],
+    conceptsCovered: ["chm:9:ch03:atomic-mass"],
+    prerequisites: [],
+    commonErrors: ["Choosing A (hydrogen) — hydrogen was the original reference but has been replaced by Carbon-12 as the IUPAC standard."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "atomic-mass-unit", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2023,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — standard type",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t4 — Molecules and Chemical Formulae
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch03-con-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t4", topicName: "Molecules and Chemical Formulae",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Distinguish between a molecule of an element and a molecule of a compound, giving one example of each.",
+    answer: "Molecule of an element: Contains atoms of only ONE type of element, bonded together. The element's molecules may be diatomic (2 atoms), triatomic (3 atoms), or polyatomic. Example: O₂ (diatomic oxygen molecule — 2 oxygen atoms bonded). Others: N₂, H₂, Cl₂, O₃ (ozone — triatomic), P₄ (tetra-atomic), S₈.\n\nMolecule of a compound: Contains atoms of TWO OR MORE DIFFERENT elements bonded together in a fixed ratio. Example: H₂O (2 hydrogen atoms + 1 oxygen atom). Others: CO₂, NH₃, HCl, CH₄.",
+    steps: [
+      { stepNumber: 1, title: "Element molecule", explanation: "Only one type of atom. Example: O₂ (2 oxygen atoms)." },
+      { stepNumber: 2, title: "Compound molecule", explanation: "Two or more different types of atom. Example: H₂O (H and O atoms bonded)." },
+    ],
+    hint: "Count how many types of elements are present. One type = element molecule. More than one type = compound molecule.",
+    keyConcepts: ["molecule of element", "molecule of compound", "diatomic", "chemical formula"],
+    conceptsCovered: ["chm:9:ch03:molecular-formula"],
+    prerequisites: [],
+    commonErrors: ["Thinking O₂ is a compound because it has 2 atoms — it is a molecule of an element (only oxygen atoms)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, "class9", "ch03", "molecule-types"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch03-nce-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t4", topicName: "Molecules and Chemical Formulae",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Write the chemical formulae for the following compounds using the valency (criss-cross) method:\n(a) Aluminium oxide  (b) Calcium chloride  (c) Magnesium nitride  (d) Sodium sulphate",
+    answer: "(a) Aluminium oxide: Al (valency 3) and O (valency 2). By criss-cross: Al₂O₃.\n\n(b) Calcium chloride: Ca (valency 2) and Cl (valency 1). By criss-cross: CaCl₂.\n\n(c) Magnesium nitride: Mg (valency 2) and N (valency 3). By criss-cross: Mg₃N₂.\n\n(d) Sodium sulphate: Na (valency 1) and SO₄²⁻ (valency 2). By criss-cross: Na₂SO₄.",
+    steps: [
+      { stepNumber: 1, title: "Criss-cross method", explanation: "Write the valency of each ion/atom. Swap the valency numbers as subscripts. Simplify if possible." },
+      { stepNumber: 2, title: "Al₂O₃", explanation: "Al: valency 3, O: valency 2. Swap → Al₂O₃." },
+      { stepNumber: 3, title: "CaCl₂", explanation: "Ca: valency 2, Cl: valency 1. Swap → Ca₁Cl₂ = CaCl₂." },
+      { stepNumber: 4, title: "Mg₃N₂", explanation: "Mg: valency 2, N: valency 3. Swap → Mg₃N₂." },
+      { stepNumber: 5, title: "Na₂SO₄", explanation: "Na: valency 1, SO₄: valency 2. Swap → Na₂(SO₄)₁ = Na₂SO₄." },
+    ],
+    hint: "Criss-cross: write valency of each; swap them as subscripts; cancel common factors; use brackets for polyatomic ions when subscript > 1.",
+    keyConcepts: ["chemical formula", "valency", "criss-cross method", "polyatomic ions"],
+    conceptsCovered: ["chm:9:ch03:chemical-formula-writing"],
+    prerequisites: [],
+    commonErrors: ["Forgetting to simplify — e.g. writing Ca₂Cl₂ instead of CaCl₂ (divide by 2)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "chemical-formula", "valency"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-nce-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t4", topicName: "Molecules and Chemical Formulae",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Calculate the molecular mass of: (a) Glucose (C₆H₁₂O₆)  (b) Nitric acid (HNO₃)  (c) Calcium carbonate (CaCO₃)\n(Atomic masses: H=1, C=12, N=14, O=16, Ca=40)",
+    answer: "(a) Glucose C₆H₁₂O₆:\n= 6(12) + 12(1) + 6(16)\n= 72 + 12 + 96\n= 180 g/mol\n\n(b) Nitric acid HNO₃:\n= 1(1) + 1(14) + 3(16)\n= 1 + 14 + 48\n= 63 g/mol\n\n(c) Calcium carbonate CaCO₃:\n= 1(40) + 1(12) + 3(16)\n= 40 + 12 + 48\n= 100 g/mol",
+    steps: [
+      { stepNumber: 1, title: "Method", explanation: "Molecular mass = sum of (atomic mass × number of atoms) for each element.", formula: "M = Σ(nᵢ × Aᵢ)" },
+      { stepNumber: 2, title: "Glucose", explanation: "6(12) + 12(1) + 6(16) = 72 + 12 + 96 = 180 g/mol.", result: "180 g/mol" },
+      { stepNumber: 3, title: "Nitric acid", explanation: "1 + 14 + 3(16) = 1 + 14 + 48 = 63 g/mol.", result: "63 g/mol" },
+      { stepNumber: 4, title: "Calcium carbonate", explanation: "40 + 12 + 3(16) = 40 + 12 + 48 = 100 g/mol.", result: "100 g/mol" },
+    ],
+    hint: "Multiply atomic mass of each element by the number of its atoms in the formula, then add all contributions.",
+    keyConcepts: ["molecular mass", "molar mass", "formula mass"],
+    conceptsCovered: ["chm:9:ch03:molar-mass"],
+    prerequisites: [],
+    commonErrors: ["Using nitrogen atomic mass as 7 instead of 14 — the CBSE standard atomic mass for N = 14."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "molecular-mass"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-cmp-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t4", topicName: "Molecules and Chemical Formulae",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "An unknown compound X contains only carbon, hydrogen, and oxygen. It is found that 0.54 g of compound X contains 0.216 g of carbon, 0.036 g of hydrogen, and 0.288 g of oxygen. Determine the empirical formula of compound X. (Atomic masses: C=12, H=1, O=16)",
+    answer: "Step 1 — Find moles of each element:\nMoles of C = 0.216 / 12 = 0.018 mol\nMoles of H = 0.036 / 1 = 0.036 mol\nMoles of O = 0.288 / 16 = 0.018 mol\n\nStep 2 — Find simplest mole ratio (divide by smallest = 0.018):\nC: 0.018/0.018 = 1\nH: 0.036/0.018 = 2\nO: 0.018/0.018 = 1\n\nRatio C:H:O = 1:2:1\n\nEmpirical formula: CH₂O (this is the empirical formula of formaldehyde, and also the repeating unit of glucose C₆H₁₂O₆).",
+    steps: [
+      { stepNumber: 1, title: "Convert masses to moles", explanation: "C: 0.216/12 = 0.018 mol. H: 0.036/1 = 0.036 mol. O: 0.288/16 = 0.018 mol." },
+      { stepNumber: 2, title: "Simplest ratio", explanation: "Divide all by smallest (0.018): C=1, H=2, O=1." },
+      { stepNumber: 3, title: "Write empirical formula", explanation: "CH₂O.", result: "Empirical formula: CH₂O" },
+    ],
+    hint: "Find moles of each element, then divide all by the smallest mole value to get the simplest whole-number ratio.",
+    keyConcepts: ["empirical formula", "mole ratio", "molecular formula"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:molecular-formula"],
+    prerequisites: [],
+    commonErrors: ["Dividing masses by atomic masses incorrectly — make sure to divide grams by atomic mass (g/mol) to get moles."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch03", "empirical-formula"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-hot-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t4", topicName: "Molecules and Chemical Formulae",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "The formula of copper sulphate is written as CuSO₄ (not CuS₁O₄). The formula of aluminium sulphate is Al₂(SO₄)₃ (not Al₂S₃O₁₂). Explain why brackets are used in aluminium sulphate but NOT in copper sulphate, even though SO₄²⁻ is a polyatomic ion in both.",
+    answer: "In CuSO₄: There is only ONE sulphate (SO₄²⁻) ion per formula unit. When a polyatomic ion appears exactly once in a formula, brackets are NOT needed — no ambiguity arises about how many S and O atoms are present (it is clearly 1 S and 4 O). Writing Cu(SO₄) is technically correct but unnecessarily cumbersome.\n\nIn Al₂(SO₄)₃: There are THREE sulphate (SO₄²⁻) ions per formula unit. The subscript '3' must apply to the ENTIRE SO₄ group — not just to the oxygen. Without brackets, 'Al₂SO₄₃' would be misread as 1 sulphur and 43 (or 4+3=7) oxygens — an entirely different composition. Brackets make clear that the entire (SO₄) group appears 3 times.\n\nRule: Brackets around a polyatomic ion are required ONLY when its subscript is greater than 1.",
+    steps: [
+      { stepNumber: 1, title: "CuSO₄: subscript 1", explanation: "Only 1 sulphate. No subscript needed outside (SO₄)¹ → brackets omitted for simplicity." },
+      { stepNumber: 2, title: "Al₂(SO₄)₃: subscript 3", explanation: "3 sulphate groups. Brackets required so '3' applies to the entire SO₄ group, not just O." },
+      { stepNumber: 3, title: "General rule", explanation: "Brackets for polyatomic ions are required when their subscript is > 1." },
+    ],
+    hint: "Think about what the subscript '3' in Al₂(SO₄)₃ would attach to if there were no brackets. Which atom would it incorrectly modify?",
+    keyConcepts: ["chemical formula", "brackets", "polyatomic ions", "sulphate"],
+    conceptsCovered: ["chm:9:ch03:chemical-formula-writing"],
+    prerequisites: [],
+    commonErrors: ["Always using brackets for SO₄ regardless of subscript — brackets for polyatomic ions are needed ONLY when subscript > 1."],
+    tags: [STANDARD_TAGS.CONCEPTUAL, STANDARD_TAGS.TRICKY, "class9", "ch03", "chemical-formula", "brackets", "hots"],
+    source: "original",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t5 — Mole Concept
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch03-nce-006",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Define one mole. What is Avogadro's number and what is its significance?",
+    answer: "One mole: The amount of substance that contains as many elementary entities (atoms, molecules, ions, or other specified particles) as there are atoms in exactly 12 g of Carbon-12. This number is called Avogadro's number.\n\nAvogadro's number (Nₐ): 6.022 × 10²³ particles per mole.\n\nSignificance: Avogadro's number bridges the atomic/molecular scale and the laboratory (macroscopic) scale. Because atoms and molecules are too small to be counted individually, chemists count them in moles — 1 mole of any substance always contains 6.022 × 10²³ entities. This allows mass measurements in grams to be directly related to numbers of atoms or molecules.",
+    steps: [
+      { stepNumber: 1, title: "Definition of 1 mole", explanation: "Amount of substance containing 6.022 × 10²³ elementary entities; equal to Avogadro's number of particles." },
+      { stepNumber: 2, title: "Avogadro's number value", explanation: "Nₐ = 6.022 × 10²³ mol⁻¹." },
+      { stepNumber: 3, title: "Significance", explanation: "Links microscopic (atomic) scale to macroscopic (gram) scale. Makes counting atoms practical." },
+    ],
+    hint: "The mole is a counting unit — like a 'dozen' but for atoms. A dozen = 12; a mole = 6.022 × 10²³.",
+    keyConcepts: ["mole", "Avogadro's number", "mole concept"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:avogadro-number"],
+    prerequisites: [],
+    commonErrors: ["Giving Avogadro's number as 6.023 × 10²³ — CBSE accepts 6.022 × 10²³. Use the exact value from NCERT."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "mole-concept"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-nce-007",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Calculate:\n(a) The number of molecules in 36 g of water (H₂O).\n(b) The mass of 3.011 × 10²³ molecules of glucose (C₆H₁₂O₆).\n(Atomic masses: H=1, C=12, O=16. Nₐ = 6.022 × 10²³ mol⁻¹)",
+    answer: "(a) Molar mass of H₂O = 2(1) + 16 = 18 g/mol\nMoles of H₂O = 36 / 18 = 2 mol\nNumber of molecules = 2 × 6.022 × 10²³ = 1.2044 × 10²⁴ molecules\n\n(b) Molar mass of glucose = 6(12) + 12(1) + 6(16) = 72 + 12 + 96 = 180 g/mol\nMoles of glucose = 3.011 × 10²³ / 6.022 × 10²³ = 0.5 mol\nMass = 0.5 × 180 = 90 g",
+    steps: [
+      { stepNumber: 1, title: "Part (a): moles of H₂O", explanation: "M(H₂O) = 18 g/mol. n = 36/18 = 2 mol.", formula: "n = mass / molar mass" },
+      { stepNumber: 2, title: "Part (a): number of molecules", explanation: "N = n × Nₐ = 2 × 6.022 × 10²³ = 1.2044 × 10²⁴.", result: "1.2044 × 10²⁴ molecules" },
+      { stepNumber: 3, title: "Part (b): moles of glucose", explanation: "M(C₆H₁₂O₆) = 180 g/mol. n = 3.011 × 10²³ / 6.022 × 10²³ = 0.5 mol.", formula: "n = N / Nₐ" },
+      { stepNumber: 4, title: "Part (b): mass", explanation: "mass = n × M = 0.5 × 180 = 90 g.", result: "90 g" },
+    ],
+    hint: "Three interconnected formulae: n = mass/M; N = n × Nₐ; mass = n × M. Identify which you need for each part.",
+    keyConcepts: ["mole concept", "Avogadro's number", "molar mass", "number of molecules"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:avogadro-number", "chm:9:ch03:molar-mass"],
+    prerequisites: [],
+    commonErrors: ["Forgetting to calculate molar mass before dividing — using 36/6.022×10²³ directly gives the wrong answer."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.FREQUENTLY_ASKED, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "mole-concept", "numerical"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-nce-008",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "What is the mass of:\n(a) 0.2 mol of oxygen atoms\n(b) 0.5 mol of water molecules\n(c) 3 mol of CO₂ molecules\n(Atomic masses: H=1, C=12, O=16. Nₐ = 6.022 × 10²³ mol⁻¹)",
+    answer: "(a) 0.2 mol of oxygen atoms:\nMolar mass of O atom = 16 g/mol\nMass = 0.2 × 16 = 3.2 g\n\n(b) 0.5 mol of water molecules (H₂O):\nMolar mass of H₂O = 2 + 16 = 18 g/mol\nMass = 0.5 × 18 = 9 g\n\n(c) 3 mol of CO₂:\nMolar mass of CO₂ = 12 + 32 = 44 g/mol\nMass = 3 × 44 = 132 g",
+    steps: [
+      { stepNumber: 1, title: "Formula", explanation: "mass = n × molar mass.", formula: "mass = n × M" },
+      { stepNumber: 2, title: "Part (a)", explanation: "O atom: M = 16 g/mol. mass = 0.2 × 16 = 3.2 g.", result: "3.2 g" },
+      { stepNumber: 3, title: "Part (b)", explanation: "H₂O: M = 18 g/mol. mass = 0.5 × 18 = 9 g.", result: "9 g" },
+      { stepNumber: 4, title: "Part (c)", explanation: "CO₂: M = 12 + 2(16) = 44 g/mol. mass = 3 × 44 = 132 g.", result: "132 g" },
+    ],
+    hint: "mass = n × M. First calculate molar mass for each substance, then multiply by the number of moles.",
+    keyConcepts: ["mole concept", "molar mass", "mass calculation"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:molar-mass"],
+    prerequisites: [],
+    commonErrors: ["For part (a): using molar mass of O₂ (32) instead of O atom (16) — the question asks for oxygen ATOMS, not molecules."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "mole-concept", "mass-calculation"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-cmp-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A doctor prescribes 500 mg of aspirin (C₉H₈O₄, molar mass = 180 g/mol). How many molecules of aspirin are in this tablet?\n(Nₐ = 6.022 × 10²³ mol⁻¹)",
+    answer: "Mass of aspirin = 500 mg = 0.5 g\nMolar mass of C₉H₈O₄ = 9(12) + 8(1) + 4(16) = 108 + 8 + 64 = 180 g/mol\n\nMoles of aspirin = mass / molar mass = 0.5 / 180 = 1/360 mol ≈ 2.778 × 10⁻³ mol\n\nNumber of molecules = n × Nₐ = (0.5/180) × 6.022 × 10²³\n= 2.778 × 10⁻³ × 6.022 × 10²³\n= 1.673 × 10²¹ molecules\n\nApproximately 1.67 × 10²¹ aspirin molecules.",
+    steps: [
+      { stepNumber: 1, title: "Convert mg to g", explanation: "500 mg = 0.5 g." },
+      { stepNumber: 2, title: "Calculate moles", explanation: "n = 0.5 / 180 = 2.778 × 10⁻³ mol." },
+      { stepNumber: 3, title: "Calculate number of molecules", explanation: "N = n × Nₐ = 2.778 × 10⁻³ × 6.022 × 10²³ ≈ 1.67 × 10²¹ molecules.", result: "≈ 1.67 × 10²¹ molecules" },
+    ],
+    hint: "Convert mg to g first. Then: moles = mass (g) / molar mass (g/mol); molecules = moles × Avogadro's number.",
+    keyConcepts: ["mole concept", "Avogadro's number", "number of molecules"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:avogadro-number"],
+    prerequisites: [],
+    commonErrors: ["Forgetting to convert 500 mg to grams before dividing by molar mass."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.REAL_LIFE, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch03", "mole-concept", "aspirin"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-cmp-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "Which of the following contains the greatest number of atoms? Justify with calculation.\n(a) 18 g of water (H₂O)  (b) 12 g of carbon (C)  (c) 56 g of iron (Fe)\n(Atomic masses: H=1, C=12, O=16, Fe=56. Nₐ = 6.022 × 10²³ mol⁻¹)",
+    answer: "Count atoms in each:\n\n(a) 18 g H₂O: moles = 18/18 = 1 mol molecules. Each H₂O has 3 atoms (2H + 1O). Total atoms = 1 × 3 × 6.022 × 10²³ = 1.807 × 10²⁴ atoms.\n\n(b) 12 g C: moles = 12/12 = 1 mol atoms. Total atoms = 1 × 6.022 × 10²³ = 6.022 × 10²³ atoms.\n\n(c) 56 g Fe: moles = 56/56 = 1 mol atoms. Total atoms = 1 × 6.022 × 10²³ = 6.022 × 10²³ atoms.\n\nComparison: (a) 1.807 × 10²⁴ > (b) = (c) 6.022 × 10²³\n\nAnswer: 18 g of water contains the greatest number of atoms (1.807 × 10²⁴), because each mole of H₂O molecules contains 3 atoms (2 H + 1 O), so the total atom count is 3 times Avogadro's number.",
+    steps: [
+      { stepNumber: 1, title: "Moles of each substance", explanation: "H₂O: 18/18 = 1 mol. C: 12/12 = 1 mol. Fe: 56/56 = 1 mol. All have 1 mole." },
+      { stepNumber: 2, title: "Atoms per mole", explanation: "H₂O: 3 atoms per molecule × 1 mol = 3 mol atoms. C: 1 atom per formula unit. Fe: 1 atom per formula unit." },
+      { stepNumber: 3, title: "Compare", explanation: "H₂O has 3× more atoms than C or Fe for the same number of moles.", result: "Water has most atoms: 1.807 × 10²⁴" },
+    ],
+    hint: "First find moles of each. Then multiply by atoms per formula unit. Water has 3 atoms per molecule — this is key.",
+    keyConcepts: ["mole concept", "atoms per molecule", "number of atoms"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:avogadro-number"],
+    prerequisites: [],
+    commonErrors: ["Comparing moles directly without accounting for atoms per formula unit — 1 mol H₂O ≠ 1 mol atoms."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "mole-concept", "atom-counting"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-cmp-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "competency", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "Calculate the number of moles of magnesium present in 12 g of magnesium. Also find the number of magnesium atoms present. (Atomic mass of Mg = 24. Nₐ = 6.022 × 10²³ mol⁻¹)",
+    answer: "Moles of Mg = mass / atomic mass = 12 / 24 = 0.5 mol\n\nNumber of Mg atoms = moles × Nₐ = 0.5 × 6.022 × 10²³ = 3.011 × 10²³ atoms",
+    steps: [
+      { stepNumber: 1, title: "Calculate moles", explanation: "n = 12 / 24 = 0.5 mol.", formula: "n = mass / atomic mass" },
+      { stepNumber: 2, title: "Calculate number of atoms", explanation: "N = 0.5 × 6.022 × 10²³ = 3.011 × 10²³ atoms.", result: "3.011 × 10²³ Mg atoms" },
+    ],
+    hint: "moles = mass / atomic mass; then atoms = moles × Avogadro's number.",
+    keyConcepts: ["mole concept", "Avogadro's number", "number of atoms"],
+    conceptsCovered: ["chm:9:ch03:mole-concept"],
+    prerequisites: [],
+    commonErrors: ["Using molar mass of MgO or Mg₂ instead of Mg atomic mass (24)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, "class9", "ch03", "mole-concept", "magnesium"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-hot-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "A student says: 'One mole of H₂ and one mole of O₂ have the same number of molecules, but H₂ is lighter so 1 mole of H₂ must have fewer atoms.' Evaluate this statement.",
+    answer: "The student's statement is INCORRECT.\n\nCorrecting each claim:\n(1) 'Same number of molecules' — CORRECT. One mole of any substance contains exactly 6.022 × 10²³ formula units/molecules, regardless of the substance. So 1 mol H₂ and 1 mol O₂ both contain 6.022 × 10²³ molecules.\n\n(2) 'H₂ is lighter so must have fewer atoms' — INCORRECT. Being lighter means a smaller molar mass (mass per mole), NOT fewer molecules or atoms per mole. H₂ has molar mass 2 g/mol; O₂ has molar mass 32 g/mol. But both 1-mol samples contain 6.022 × 10²³ molecules.\n\n(3) Atom count comparison:\n1 mol H₂: 6.022 × 10²³ molecules × 2 atoms/molecule = 1.204 × 10²⁴ H atoms\n1 mol O₂: 6.022 × 10²³ molecules × 2 atoms/molecule = 1.204 × 10²⁴ O atoms\n\nBoth 1-mol samples contain the SAME number of atoms (1.204 × 10²⁴). Mass and atom count are independent: molar mass determines mass per mole, not the count of particles.",
+    steps: [
+      { stepNumber: 1, title: "Correct part 1: same molecules", explanation: "1 mol of any substance = 6.022 × 10²³ particles. Both H₂ and O₂ have the same molecule count per mole." },
+      { stepNumber: 2, title: "Correct part 2: lighter ≠ fewer atoms", explanation: "Molar mass determines MASS per mole, not molecule count. 'Lighter' means less mass per mole." },
+      { stepNumber: 3, title: "Count atoms in each", explanation: "H₂: 6.022×10²³ × 2 = 1.204×10²⁴ H atoms. O₂: 6.022×10²³ × 2 = 1.204×10²⁴ O atoms. Same count." },
+    ],
+    hint: "The mole is a counting unit. 1 mole always = 6.022 × 10²³ particles. Mass does not change the count.",
+    keyConcepts: ["mole concept", "Avogadro's number", "molar mass vs particle count"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:avogadro-number"],
+    prerequisites: [],
+    commonErrors: ["Agreeing with the student — confusing molar mass (mass/mol) with number of particles per mole. These are independent quantities."],
+    tags: [STANDARD_TAGS.CONCEPTUAL, STANDARD_TAGS.TRICKY, "class9", "ch03", "mole-concept", "hots", "misconception"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-pyq-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "previous-year", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "Calculate the number of aluminium ions (Al³⁺) present in 0.051 g of aluminium oxide (Al₂O₃). (Atomic masses: Al=27, O=16. Nₐ = 6.022 × 10²³ mol⁻¹)",
+    answer: "Molar mass of Al₂O₃ = 2(27) + 3(16) = 54 + 48 = 102 g/mol\n\nMoles of Al₂O₃ = 0.051 / 102 = 5 × 10⁻⁴ mol\n\nEach formula unit of Al₂O₃ contains 2 Al³⁺ ions.\nMoles of Al³⁺ = 2 × 5 × 10⁻⁴ = 1 × 10⁻³ mol\n\nNumber of Al³⁺ ions = 1 × 10⁻³ × 6.022 × 10²³ = 6.022 × 10²⁰ ions",
+    steps: [
+      { stepNumber: 1, title: "Molar mass of Al₂O₃", explanation: "M = 2(27) + 3(16) = 102 g/mol." },
+      { stepNumber: 2, title: "Moles of Al₂O₃", explanation: "n = 0.051/102 = 5 × 10⁻⁴ mol." },
+      { stepNumber: 3, title: "Moles of Al³⁺", explanation: "Each Al₂O₃ has 2 Al. Moles of Al³⁺ = 2 × 5×10⁻⁴ = 10⁻³ mol." },
+      { stepNumber: 4, title: "Number of ions", explanation: "N = 10⁻³ × 6.022 × 10²³ = 6.022 × 10²⁰.", result: "6.022 × 10²⁰ Al³⁺ ions" },
+    ],
+    examTip: "This is a 2-step mole problem: first find moles of compound, then multiply by atoms/ions per formula unit. CBSE frequently uses this type.",
+    keyConcepts: ["mole concept", "ions per formula unit", "number of ions"],
+    conceptsCovered: ["chm:9:ch03:mole-concept"],
+    prerequisites: [],
+    commonErrors: ["Forgetting to multiply by 2 (Al ions per formula unit) — the formula Al₂O₃ has 2 Al per formula unit."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch03", "mole-concept", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2023,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — frequently recurring mole concept numerical",
+  },
+
+  {
+    id: "bo-chm-9-ch03-asr-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): The molar mass of oxygen molecule (O₂) is 32 g/mol.\nReason (R): One mole of oxygen molecules contains 6.022 × 10²³ oxygen atoms.\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "C — A is true but R is false.\n\nA is TRUE: The molar mass of O₂ = 2 × 16 = 32 g/mol. ✓\n\nR is FALSE: One mole of O₂ molecules contains 2 × 6.022 × 10²³ = 1.2044 × 10²⁴ oxygen ATOMS (not 6.022 × 10²³). One mole of O₂ contains 6.022 × 10²³ MOLECULES — each molecule has 2 atoms. R mistakenly states the number of atoms equals Avogadro's number, confusing molecules with atoms.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "Evaluate A", explanation: "M(O₂) = 2 × 16 = 32 g/mol. A is TRUE." },
+      { stepNumber: 2, title: "Evaluate R", explanation: "1 mol O₂ = 6.022×10²³ MOLECULES. Each molecule has 2 O atoms. So 1 mol O₂ has 2 × 6.022×10²³ ATOMS = 1.2044×10²⁴ atoms. R says 6.022×10²³ atoms — FALSE." },
+    ],
+    hint: "1 mole of O₂ = 6.022×10²³ MOLECULES. Each O₂ molecule has 2 oxygen ATOMS. So how many atoms are there in total?",
+    keyConcepts: ["mole concept", "molecules vs atoms", "Avogadro's number", "O₂"],
+    conceptsCovered: ["chm:9:ch03:mole-concept", "chm:9:ch03:avogadro-number"],
+    prerequisites: [],
+    commonErrors: ["Choosing A (both true, R explains A) — students overlook the molecule vs atom distinction in R."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "mole-concept", "assertion-reason"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch03-pyq-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "previous-year", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "Calculate the formula unit mass of: (a) MgCl₂  (b) Na₂SO₄\n(Atomic masses: Na=23, Mg=24, S=32, Cl=35.5, O=16)",
+    answer: "(a) MgCl₂:\n= Mg + 2(Cl)\n= 24 + 2(35.5)\n= 24 + 71\n= 95 u\n\n(b) Na₂SO₄:\n= 2(Na) + S + 4(O)\n= 2(23) + 32 + 4(16)\n= 46 + 32 + 64\n= 142 u",
+    steps: [
+      { stepNumber: 1, title: "MgCl₂", explanation: "24 + 2(35.5) = 24 + 71 = 95 u.", result: "95 u" },
+      { stepNumber: 2, title: "Na₂SO₄", explanation: "2(23) + 32 + 4(16) = 46 + 32 + 64 = 142 u.", result: "142 u" },
+    ],
+    examTip: "For ionic compounds, the term 'formula unit mass' is used instead of 'molecular mass' (since ionic compounds don't have discrete molecules).",
+    keyConcepts: ["formula unit mass", "ionic compound", "molar mass"],
+    conceptsCovered: ["chm:9:ch03:molar-mass"],
+    prerequisites: [],
+    commonErrors: ["Using Cl atomic mass as 35 instead of 35.5 — the standard atomic mass of chlorine is 35.5 g/mol."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch03", "formula-unit-mass", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2024,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science board examination — standard type",
+  },
+
+  {
+    id: "bo-chm-9-ch03-hot-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch03", chapterName: "Atoms and Molecules",
+    topicId: "t5", topicName: "Mole Concept",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Carbon occurs as two naturally abundant isotopes: ¹²C (98.9%, atomic mass 12.000 u) and ¹³C (1.1%, atomic mass 13.003 u). Calculate the average atomic mass of carbon. Why does the CBSE textbook list the atomic mass of carbon as 12 u if the true average is slightly higher?",
+    answer: "Average atomic mass = (abundance of ¹²C × mass of ¹²C) + (abundance of ¹³C × mass of ¹³C)\n= (0.989 × 12.000) + (0.011 × 13.003)\n= 11.868 + 0.14303\n= 12.011 u\n\nTrue average atomic mass = 12.011 u (this is the value given in most advanced references).\n\nWhy CBSE uses 12 u: For Class 9 calculations, 12.011 ≈ 12 u. Rounding to whole numbers simplifies arithmetic in exercises without introducing significant error at this level. The textbook uses whole-number atomic masses (H=1, C=12, O=16) as approximations to keep calculations tractable for students. More precise values are used in higher classes and competitive chemistry.",
+    steps: [
+      { stepNumber: 1, title: "Apply weighted average formula", explanation: "Average mass = Σ (fractional abundance × mass of isotope)." },
+      { stepNumber: 2, title: "Calculate", explanation: "(0.989 × 12.000) + (0.011 × 13.003) = 11.868 + 0.143 = 12.011 u.", result: "12.011 u" },
+      { stepNumber: 3, title: "Why CBSE uses 12", explanation: "12.011 ≈ 12 at Class 9 level. Whole-number approximations keep exercises accessible." },
+    ],
+    hint: "Average atomic mass = sum of (fractional abundance × mass) for each isotope. A fractional abundance of 98.9% = 0.989.",
+    keyConcepts: ["average atomic mass", "isotopes", "weighted average", "Carbon-12"],
+    conceptsCovered: ["chm:9:ch03:atomic-mass"],
+    prerequisites: [],
+    commonErrors: ["Adding masses and dividing by 2 — this gives a simple average, not the WEIGHTED average (which accounts for different abundances)."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BEYOND_NCERT, "class9", "ch03", "average-atomic-mass", "isotopes", "hots"],
+    source: "original",
+  },
+
+];

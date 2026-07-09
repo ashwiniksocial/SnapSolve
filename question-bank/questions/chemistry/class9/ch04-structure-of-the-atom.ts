@@ -1,21 +1,822 @@
 // @ts-nocheck
 /**
- * Question Bank — Chemistry, Class 9, Chapter 4: Structure of the Atom
+ * Question Bank — Chemistry, Class 9, Chapter 4 (file) / Official Ch8: Structure of the Atom
  *
- * Placeholder — questions to be authored.
- * NCERT Class 9 Science (Old / Rationalized syllabus, Chapter 4)
- * Also maps to Chapter 4 of the "Exploration" textbook (2025-26).
+ * 30 questions — types: concept (5), ncert (11), competency (5), hots (5),
+ *                        previous-year (3), assertion-reason (1)
+ * Board: Both (CBSE + ICSE) | Category: standard | Schema: QuestionV2
+ * CBSE 2026-27 Science (Code 086), Chapter 8 — Structure of the Atom
  *
- * Topic coverage (planned):
- *   t1 Charged Particles in Matter
- *   t2 Thomson's and Rutherford's Atomic Models
- *   t3 Bohr's Model and Electron Distribution
- *   t4 Valency and Atomic Number / Mass Number
- *   t5 Isotopes and Isobars
+ * Difficulty distribution: Easy 11 · Medium 12 · Hard 7
  *
- * v0 2026-07-07 — Scaffold only (StudyAI authoring team)
+ * Topic coverage:
+ *   t1  Charged Particles in Matter              —  3 q
+ *   t2  Thomson's and Rutherford's Atomic Models —  6 q
+ *   t3  Bohr's Model and Electron Distribution   —  8 q
+ *   t4  Atomic Number, Mass Number, Valency      —  7 q
+ *   t5  Isotopes and Isobars                     —  6 q
+ *
+ * Concept nodes:
+ *   chm:9:ch04:electron-discovery
+ *   chm:9:ch04:proton-discovery
+ *   chm:9:ch04:neutron-discovery
+ *   chm:9:ch04:thomson-model
+ *   chm:9:ch04:rutherford-model
+ *   chm:9:ch04:alpha-scattering
+ *   chm:9:ch04:bohr-model
+ *   chm:9:ch04:electron-shells
+ *   chm:9:ch04:atomic-number
+ *   chm:9:ch04:mass-number
+ *   chm:9:ch04:valency
+ *   chm:9:ch04:isotopes
+ *   chm:9:ch04:isobars
+ *
+ * v1 2026-07-09 — Initial authoring (StudyAI authoring team)
  */
 
 import type { QuestionV2 } from "../../../types";
+import { STANDARD_TAGS } from "../../../tagging";
 
-export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [];
+export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t1 — Charged Particles in Matter
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch04-con-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t1", topicName: "Charged Particles in Matter",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Name the three fundamental subatomic particles. For each, state: (a) who discovered it, (b) its charge, and (c) its approximate mass in atomic mass units.",
+    answer: "1. Electron:\n(a) Discovered by J.J. Thomson (1897) through cathode ray tube experiments.\n(b) Charge: −1 (or −1.6 × 10⁻¹⁹ C).\n(c) Mass: approximately 9.11 × 10⁻³¹ kg ≈ 1/1836 u ≈ negligible compared to proton/neutron.\n\n2. Proton:\n(a) Discovered by Ernest Rutherford (1919); E. Goldstein observed positively charged canal rays in 1886 (precursor).\n(b) Charge: +1 (or +1.6 × 10⁻¹⁹ C).\n(c) Mass: approximately 1 u (1.67 × 10⁻²⁷ kg).\n\n3. Neutron:\n(a) Discovered by James Chadwick (1932).\n(b) Charge: 0 (neutral).\n(c) Mass: approximately 1 u (1.68 × 10⁻²⁷ kg) — slightly more than proton.",
+    steps: [
+      { stepNumber: 1, title: "Electron", explanation: "Thomson 1897; charge −1; mass negligible (≈ 1/1836 u)." },
+      { stepNumber: 2, title: "Proton", explanation: "Goldstein/Rutherford; charge +1; mass ≈ 1 u." },
+      { stepNumber: 3, title: "Neutron", explanation: "Chadwick 1932; charge 0; mass ≈ 1 u." },
+    ],
+    hint: "CBSE requires name + discoverer + charge + mass for all three. Electron: Thomson. Neutron: Chadwick.",
+    keyConcepts: ["electron", "proton", "neutron", "subatomic particles", "Thomson", "Chadwick"],
+    conceptsCovered: ["chm:9:ch04:electron-discovery", "chm:9:ch04:proton-discovery", "chm:9:ch04:neutron-discovery"],
+    prerequisites: [],
+    commonErrors: ["Attributing the discovery of the proton to Goldstein alone — Goldstein observed canal rays; Rutherford is credited with identifying the proton as a particle."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "subatomic-particles"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t1", topicName: "Charged Particles in Matter",
+    questionType: "ncert", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "In a cathode ray tube experiment, J.J. Thomson deflected cathode rays using an electric field. What conclusion did he draw?\n(A) Cathode rays consist of positively charged particles.\n(B) Cathode rays are electromagnetic radiation.\n(C) Cathode rays consist of negatively charged particles (electrons).\n(D) Cathode rays consist of neutral particles.",
+    answer: "C. When Thomson applied an electric field, cathode rays bent towards the positive plate — proving the particles are negatively charged. He called them electrons. This was evidence that atoms contain smaller, negatively charged particles.",
+    options: [
+      "A) Positively charged particles",
+      "B) Electromagnetic radiation",
+      "C) Negatively charged particles (electrons)",
+      "D) Neutral particles",
+    ],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "Electric field deflection", explanation: "Like charges repel; opposite attract. Cathode rays bent TOWARDS positive plate → they are negatively charged." },
+    ],
+    hint: "Opposite charges attract. Cathode rays deflect TOWARD the positive plate → they must carry negative charge.",
+    keyConcepts: ["cathode ray", "electron", "Thomson experiment"],
+    conceptsCovered: ["chm:9:ch04:electron-discovery"],
+    prerequisites: [],
+    commonErrors: ["Choosing B — cathode rays are particle beams, not electromagnetic waves like light. They are deflected by electric/magnetic fields, unlike true electromagnetic radiation."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, "class9", "ch04", "cathode-ray", "electron"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t1", topicName: "Charged Particles in Matter",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Why is an atom electrically neutral even though it contains charged subatomic particles?",
+    answer: "An atom contains equal numbers of protons (charge +1 each) and electrons (charge −1 each). The positive charges of all protons exactly cancel the negative charges of all electrons, making the net charge of the atom zero — electrically neutral.\n\nExample: A carbon atom (C) has 6 protons and 6 electrons. Total positive charge = +6; total negative charge = −6. Net charge = 0.\n\nNeutrons carry no charge and do not affect electrical neutrality.",
+    steps: [
+      { stepNumber: 1, title: "Charge of protons", explanation: "Each proton has charge +1. Total positive charge = number of protons." },
+      { stepNumber: 2, title: "Charge of electrons", explanation: "Each electron has charge −1. Total negative charge = number of electrons." },
+      { stepNumber: 3, title: "Equal numbers", explanation: "In a neutral atom: number of protons = number of electrons. Net charge = +n − n = 0." },
+    ],
+    hint: "Think about what 'neutral' means — zero net charge. What condition makes the positive and negative charges cancel exactly?",
+    keyConcepts: ["electrical neutrality", "proton", "electron", "charge balance"],
+    conceptsCovered: ["chm:9:ch04:atomic-number"],
+    prerequisites: [],
+    commonErrors: ["Thinking neutrons make atoms neutral — neutrons are neutral themselves but that is not why the atom as a whole is neutral; it is the proton–electron balance that matters."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "electrical-neutrality"],
+    source: "original",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t2 — Thomson's and Rutherford's Atomic Models
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch04-con-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Describe Thomson's model of the atom. What was the main limitation of this model?",
+    answer: "Thomson's model (1904) — 'Plum Pudding Model':\n- The atom is a sphere of uniformly distributed positive charge (the 'pudding').\n- Electrons (negatively charged) are embedded within this positive sphere, like plums in a pudding.\n- The negative charges of electrons and the positive charge of the sphere exactly cancel, making the atom neutral overall.\n\nLimitation: Thomson's model could not explain the results of Rutherford's gold foil (alpha particle scattering) experiment. If Thomson's model were correct, alpha particles should have passed through the atom with very little deflection (since the charge would be spread out uniformly). Instead, Rutherford found that a few alpha particles were deflected at very large angles — even bouncing back. This showed that the positive charge was concentrated in a very small, dense region (the nucleus), not spread throughout the atom. Thomson's model did not include a nucleus.",
+    steps: [
+      { stepNumber: 1, title: "Thomson's model", explanation: "Positive sphere (pudding) with electrons (plums) embedded. Net charge = 0." },
+      { stepNumber: 2, title: "Limitation", explanation: "Cannot explain large-angle deflection of alpha particles in Rutherford's experiment — required a concentrated dense nucleus." },
+    ],
+    hint: "The nickname 'plum pudding' is a helpful memory tool. What is the 'pudding' and what are the 'plums'?",
+    keyConcepts: ["Thomson model", "plum pudding model", "positive sphere", "electrons embedded"],
+    conceptsCovered: ["chm:9:ch04:thomson-model"],
+    prerequisites: [],
+    commonErrors: ["Saying Thomson's model placed electrons on the SURFACE of the atom — they are EMBEDDED inside (not on the surface)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "thomson-model"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 4, estimatedTimeMinutes: 5,
+    question: "Describe Rutherford's alpha particle scattering experiment. What were the three key observations and what conclusions did Rutherford draw from each?",
+    answer: "Experiment: A beam of alpha (α) particles (positively charged, heavy particles from radium) was directed at a very thin gold foil (about 1000 atoms thick). A fluorescent ZnS screen surrounded the foil to detect particles in all directions.\n\nObservation 1: Most alpha particles passed straight through the gold foil without deflection.\nConclusion 1: Most of the atom is empty space — the alpha particles passed through the empty regions unobstructed.\n\nObservation 2: A small fraction of alpha particles were deflected by small angles.\nConclusion 2: The positive charge of the atom is not uniformly distributed — it is concentrated. When alpha particles passed close to the concentrated positive charge, they were deflected.\n\nObservation 3: Very few alpha particles (about 1 in 20,000) were deflected by very large angles (> 90°, some bounced back).\nConclusion 3: The positive charge is concentrated in an extremely small, very dense region at the centre of the atom — called the NUCLEUS. This tiny nucleus accounts for almost all the mass of the atom.",
+    steps: [
+      { stepNumber: 1, title: "Setup", explanation: "α particles → thin gold foil → ZnS screen detects direction of particles." },
+      { stepNumber: 2, title: "Obs 1 + Conclusion 1", explanation: "Most pass straight through → atom is mostly empty space." },
+      { stepNumber: 3, title: "Obs 2 + Conclusion 2", explanation: "Small deflections → positive charge is concentrated (not uniform)." },
+      { stepNumber: 4, title: "Obs 3 + Conclusion 3", explanation: "Large deflections (bounce back) → very small, very dense positive nucleus at the centre." },
+    ],
+    hint: "Match each observation to its conclusion: straight through → empty space; slight deflection → concentrated charge; bounce back → dense nucleus.",
+    examTip: "CBSE expects all three observations and all three conclusions. Missing any one costs marks.",
+    keyConcepts: ["Rutherford's experiment", "alpha particles", "gold foil", "nucleus", "empty space"],
+    conceptsCovered: ["chm:9:ch04:rutherford-model", "chm:9:ch04:alpha-scattering"],
+    prerequisites: [],
+    commonErrors: ["Stating only one or two observations — CBSE expects all three observations and their corresponding conclusions."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "rutherford-experiment"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "State the postulates of Rutherford's nuclear model of the atom. What was the main drawback of this model?",
+    answer: "Postulates of Rutherford's model:\n(1) Most of the mass of the atom and all of its positive charge are concentrated in an extremely small, dense region at the centre called the nucleus.\n(2) The nucleus is very small compared to the overall size of the atom (nuclear diameter ~10⁻¹⁵ m; atomic diameter ~10⁻¹⁰ m — the atom is about 100,000 times larger than the nucleus).\n(3) Negatively charged electrons revolve around the nucleus in circular orbits — similar to planets orbiting the Sun. The electrostatic attraction between nucleus and electrons provides the centripetal force.\n(4) The atom as a whole is electrically neutral — the positive nuclear charge equals the total negative charge of all electrons.\n\nMain drawback (why Rutherford's model failed):\nAccording to classical electromagnetic theory, a charged particle undergoing circular (accelerating) motion continuously radiates electromagnetic energy (loses energy). If electrons lose energy continuously, they should spiral inward towards the nucleus and collapse into it within about 10⁻⁸ seconds. But atoms are stable — they do NOT collapse. Rutherford's model could not explain this stability of atoms.",
+    steps: [
+      { stepNumber: 1, title: "Postulates summary", explanation: "Small dense positive nucleus; electrons revolve in circular orbits; mostly empty space; electrically neutral." },
+      { stepNumber: 2, title: "Drawback", explanation: "Classical EM theory: accelerating electrons should radiate energy, spiral into nucleus. Atoms would not be stable. But atoms ARE stable → Rutherford's model fails." },
+    ],
+    hint: "The drawback relates to classical physics — an accelerating charged particle radiates energy. What happens to an electron if it continuously loses energy?",
+    keyConcepts: ["Rutherford's nuclear model", "nucleus", "electron orbits", "stability problem"],
+    conceptsCovered: ["chm:9:ch04:rutherford-model"],
+    prerequisites: [],
+    commonErrors: ["Forgetting to mention the stability problem as the drawback — just describing the model is not enough; CBSE expects the limitation."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "rutherford-model", "drawback"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-hot-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "In Rutherford's gold foil experiment, why was gold (rather than, say, iron or aluminium) chosen as the target material? Why was the foil made extremely thin (about 1000 atoms thick) rather than a thicker piece of metal?",
+    answer: "Why gold: Gold was chosen because:\n(1) Gold can be beaten into extremely thin foils (gold leaf) — its high malleability means a foil of just ~100–1000 atoms thick can be made without holes or tears.\n(2) Gold is a heavy metal (high atomic number Z=79, high mass number) — its nucleus carries a large positive charge (+79). A larger positive nuclear charge deflects alpha particles through larger angles, making the scattering pattern more observable and definitive.\n(3) Gold is chemically inert — it does not react with air or alpha particles to form a new substance that could confuse the results.\n\nWhy extremely thin foil: The foil must be thin enough that alpha particles mostly pass through without hitting two or more nuclei in sequence (multiple scattering). If the foil were thick, most alpha particles would undergo many small deflections, obscuring the few large-angle deflections from direct near-nucleus encounters. The thin foil ensures that each particle interacts with essentially one layer of atoms, keeping the scattering pattern interpretable.",
+    steps: [
+      { stepNumber: 1, title: "Why gold", explanation: "High malleability (can be beaten very thin); high Z (large positive nuclear charge → larger deflections); chemically inert." },
+      { stepNumber: 2, title: "Why thin foil", explanation: "Thin foil = mostly single-scattering events. Thick foil = multiple collisions, masking the clean large-angle scattering pattern." },
+    ],
+    hint: "Think about two properties of gold: (1) Can it be beaten very thin? (2) Does its large atomic number help exaggerate the scattering effect?",
+    keyConcepts: ["Rutherford's experiment", "gold foil", "malleability", "atomic number", "single scattering"],
+    conceptsCovered: ["chm:9:ch04:alpha-scattering"],
+    prerequisites: [],
+    commonErrors: ["Saying gold is used because it is 'abundant' or 'easy to obtain' — the key reasons are malleability and high atomic number."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BEYOND_NCERT, "class9", "ch04", "rutherford-experiment", "hots", "gold-foil"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-cmp-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "If Rutherford had used protons (instead of alpha particles) in his gold foil experiment, and if Thomson's 'plum pudding' model were correct, predict what would be observed. Then predict what Rutherford actually observed (with the nuclear model). Explain the difference.",
+    answer: "Prediction with Thomson's model (if it were true):\nThomson's model has the positive charge spread uniformly throughout the atom. If protons (positive, light) were fired at such a diffuse positive charge distribution, all protons would experience only slight, gentle repulsion as they passed through — they would all pass through with only very small, random deflections. NO large-angle deflections or back-scattering would occur.\n\nActual prediction (nuclear model, with either proton or alpha particles):\nThe positive charge is concentrated in a tiny, dense nucleus. Most protons pass through the empty space undeflected. A few pass close to the nucleus, experience intense repulsion, and are deflected at large angles. A very few hit nearly head-on and bounce back.\n\nDifference: Thomson's model predicts uniform, mild deflections only. The nuclear model predicts mostly straight-through paths + very occasional large-angle back-scattering. The latter is what is actually observed — proving the nuclear model.",
+    steps: [
+      { stepNumber: 1, title: "Thomson's model prediction", explanation: "Diffuse positive charge → gentle, uniform small deflections. No large-angle scattering." },
+      { stepNumber: 2, title: "Nuclear model (actual) prediction", explanation: "Mostly straight through (empty space) + rare large-angle deflections (near nucleus) + occasional back-scattering (head-on with nucleus)." },
+      { stepNumber: 3, title: "Why they differ", explanation: "The key difference: concentrated vs diffuse positive charge. Only a concentrated nucleus can deflect α particles through large angles." },
+    ],
+    hint: "What would a 'smeared out' positive charge do to an incoming positive particle vs. what a concentrated dense positive nucleus would do?",
+    keyConcepts: ["Thomson model prediction", "nuclear model prediction", "alpha scattering", "comparison"],
+    conceptsCovered: ["chm:9:ch04:thomson-model", "chm:9:ch04:rutherford-model"],
+    prerequisites: [],
+    commonErrors: ["Saying Thomson's model predicts NO deflection at all — it predicts small random deflections, just not large-angle ones."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch04", "rutherford-experiment", "model-comparison"],
+    source: "original",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t3 — Bohr's Model and Electron Distribution
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch04-con-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "State the postulates of Bohr's model of the atom. How did Bohr's model solve the problem with Rutherford's model?",
+    answer: "Bohr's postulates (1913):\n(1) Electrons revolve around the nucleus in fixed circular paths called orbits, shells, or energy levels (labelled K, L, M, N from the nucleus outward, or n=1, 2, 3, 4).\n(2) While revolving in these fixed orbits, electrons do NOT radiate energy. Each orbit corresponds to a fixed energy state (energy is quantised).\n(3) Energy is emitted or absorbed ONLY when an electron jumps from a higher orbit to a lower orbit (emission) or from a lower to a higher orbit (absorption). The energy of the emitted/absorbed photon equals the difference in energy between the two orbits.\n\nHow Bohr solved Rutherford's problem: Rutherford's model failed because a classically accelerating electron should radiate energy and spiral into the nucleus. Bohr proposed — as a postulate — that electrons in fixed orbits do NOT radiate. This was not explained by classical physics but was instead stated as a quantum rule. By restricting electrons to fixed orbits without radiation, Bohr explained why atoms are stable.",
+    steps: [
+      { stepNumber: 1, title: "Postulate 1: fixed orbits", explanation: "Electrons move in fixed circular shells (K, L, M, N). No continuous radiation in these orbits." },
+      { stepNumber: 2, title: "Postulate 2: quantised energy", explanation: "Each orbit has a fixed energy. Electron does NOT lose energy while in an orbit." },
+      { stepNumber: 3, title: "Postulate 3: energy emission/absorption", explanation: "Energy emitted/absorbed only when electron transitions between orbits." },
+      { stepNumber: 4, title: "Solves Rutherford's problem", explanation: "Bohr postulated: no radiation in fixed orbits → atoms are stable. Classical physics does not apply here." },
+    ],
+    hint: "The key innovation in Bohr's model: electrons in fixed orbits do NOT radiate. This is what prevents the electron from spiralling in.",
+    keyConcepts: ["Bohr's model", "fixed orbits", "quantised energy", "electron shells", "K L M N"],
+    conceptsCovered: ["chm:9:ch04:bohr-model"],
+    prerequisites: [],
+    commonErrors: ["Saying Bohr's model says electrons cannot move between orbits — they CAN transition, but energy is emitted/absorbed during the transition."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "bohr-model"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Write the electronic configuration (shell-wise distribution) of the following elements:\n(a) Sodium (Na, Z=11)  (b) Chlorine (Cl, Z=17)  (c) Calcium (Ca, Z=20)\nState the rule for maximum electrons in each shell.",
+    answer: "Rule: Maximum electrons in shell n = 2n².\nK(n=1): max 2. L(n=2): max 8. M(n=3): max 18. N(n=4): max 32.\n(Note: outer shells generally fill up to 8 before inner shells fill to maximum.)\n\n(a) Na (Z=11): K=2, L=8, M=1. Configuration: 2, 8, 1.\n(b) Cl (Z=17): K=2, L=8, M=7. Configuration: 2, 8, 7.\n(c) Ca (Z=20): K=2, L=8, M=8, N=2. Configuration: 2, 8, 8, 2.",
+    steps: [
+      { stepNumber: 1, title: "Shell capacity rule", explanation: "Max e⁻ in shell n = 2n². K=2, L=8, M=18 (but outer shells fill to 8 first in practice).", formula: "Max e⁻ = 2n²" },
+      { stepNumber: 2, title: "Na (11e)", explanation: "Fill K=2, L=8, M=1 → 2, 8, 1." },
+      { stepNumber: 3, title: "Cl (17e)", explanation: "Fill K=2, L=8, M=7 → 2, 8, 7." },
+      { stepNumber: 4, title: "Ca (20e)", explanation: "Fill K=2, L=8, M=8, N=2 → 2, 8, 8, 2." },
+    ],
+    hint: "Fill shells from inside out. K holds max 2, L holds max 8. For M: hold up to 8 before moving to N at Class 9 level.",
+    keyConcepts: ["electronic configuration", "shells", "2n² rule", "K L M N shells"],
+    conceptsCovered: ["chm:9:ch04:electron-shells", "chm:9:ch04:bohr-model"],
+    prerequisites: [],
+    commonErrors: ["Placing more than 8 electrons in M shell before starting N shell — at Class 9 level, M is filled to 8 before N starts."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "electronic-configuration"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-006",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
+    questionType: "ncert", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "An element has electronic configuration 2, 8, 7. It belongs to which period and which group of the periodic table (based on number of shells and valence electrons)?\n(A) Period 3, Group 7\n(B) Period 3, Group 17\n(C) Period 2, Group 17\n(D) Period 2, Group 7",
+    answer: "B. Period 3, Group 17.\nPeriod = number of electron shells = 3 (K, L, M). Group (for halogens): valence electrons = 7 → Group 17 (in the modern IUPAC periodic table). This element is Chlorine (Cl).",
+    options: [
+      "A) Period 3, Group 7",
+      "B) Period 3, Group 17",
+      "C) Period 2, Group 17",
+      "D) Period 2, Group 7",
+    ],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Determine period", explanation: "Number of shells used = 3 (K, L, M) → Period 3." },
+      { stepNumber: 2, title: "Determine group", explanation: "Valence electrons = 7 → Group 17 (halogens in IUPAC; Group VIIA in old notation)." },
+    ],
+    hint: "Period = number of occupied shells. Group = number of valence electrons (for groups 1–18 in IUPAC).",
+    keyConcepts: ["electronic configuration", "period", "group", "valence electrons"],
+    conceptsCovered: ["chm:9:ch04:electron-shells"],
+    prerequisites: [],
+    commonErrors: ["Saying Group 7 (confusing number of valence electrons with group number in old vs IUPAC notation) — in IUPAC, 7 valence electrons = Group 17."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, "class9", "ch04", "electronic-configuration", "periodic-table"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-cmp-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "An element X has atomic number 19. Without identifying the element, determine: (a) its electronic configuration, (b) the number of valence electrons, (c) its likely chemical behaviour (metal or non-metal, reactive or inert), and (d) the type of ion it would form and its charge.",
+    answer: "(a) Atomic number 19 → 19 electrons.\nElectronic configuration: K=2, L=8, M=8, N=1. [2, 8, 8, 1]\n\n(b) Valence electrons: 1 (in the outermost N shell).\n\n(c) Chemical behaviour: With only 1 valence electron, element X tends to LOSE this electron easily to achieve a stable noble gas configuration (like argon: 2,8,8). This behaviour is characteristic of a METAL — specifically an alkali metal (highly reactive, reacts vigorously with water to produce hydrogen gas and a base).\n\n(d) Ion formed: X loses 1 electron → X⁺ (cation with charge +1).\nResulting configuration: 2, 8, 8 (same as Ar).\n\n[Element X is Potassium, K, Z=19]",
+    steps: [
+      { stepNumber: 1, title: "Electronic configuration", explanation: "19 electrons: K=2, L=8, M=8, N=1 → 2, 8, 8, 1." },
+      { stepNumber: 2, title: "Valence electrons", explanation: "Outermost shell (N) has 1 electron → 1 valence electron." },
+      { stepNumber: 3, title: "Chemical behaviour", explanation: "1 valence electron → easily lost → highly reactive metal (alkali metal behaviour)." },
+      { stepNumber: 4, title: "Ion formed", explanation: "Loses 1 e⁻ → X⁺ (charge +1). Configuration becomes 2, 8, 8." },
+    ],
+    hint: "Count electrons and fill shells (K=2, L=8, M=8 at Class 9 level). Valence electrons = electrons in outermost shell. Trend: 1 valence electron → loses it → positive ion.",
+    keyConcepts: ["electronic configuration", "valence electrons", "metal character", "ion formation"],
+    conceptsCovered: ["chm:9:ch04:electron-shells", "chm:9:ch04:valency"],
+    prerequisites: [],
+    commonErrors: ["Writing M=9, N=10 for 19 electrons — at Class 9 level, M fills to 8 before N starts. Configuration is 2, 8, 8, 1 (not 2, 8, 9)."],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch04", "electronic-configuration", "valence-electrons"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-hot-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "Element A has electronic configuration 2, 8, 6 and element B has configuration 2, 8, 8, 2. Predict: (a) the type of ion each would form, (b) which one would you expect to be more reactive and why, (c) the chemical formula of the compound formed when A and B react.",
+    answer: "(a) Ions formed:\nElement A (6 valence electrons): needs 2 more to complete its octet → gains 2 electrons → forms A²⁻ (anion, charge −2). [A is sulfur, S]\nElement B (2 valence electrons): loses 2 electrons → forms B²⁺ (cation, charge +2). [B is calcium, Ca]\n\n(b) Reactivity:\nElement B (Ca) is more reactive — metals with few valence electrons (especially 1 or 2) are highly reactive because losing a small number of electrons to reach a stable configuration requires relatively little energy. Ca is an alkaline earth metal, reactive enough to react with cold water.\nElement A (S) is non-metallic; it gains electrons but is less reactive than the most electronegative elements (F, O, Cl).\n\n(c) Compound formula:\nB²⁺ and A²⁻ combine in 1:1 ratio (charges cancel: +2 and −2).\nFormula: BA → written as CaS (calcium sulphide).",
+    steps: [
+      { stepNumber: 1, title: "Ions from A", explanation: "6 valence e⁻ → gains 2 → A²⁻." },
+      { stepNumber: 2, title: "Ions from B", explanation: "2 valence e⁻ → loses 2 → B²⁺." },
+      { stepNumber: 3, title: "Reactivity comparison", explanation: "B (2 valence e⁻, metal) is more reactive — easily loses 2 electrons." },
+      { stepNumber: 4, title: "Compound formula", explanation: "B²⁺ + A²⁻ → BA; charges cancel in 1:1 → CaS." },
+    ],
+    hint: "6 valence electrons: needs 2 more → gains them. 2 valence electrons: easier to lose 2 than gain 6 → loses them. Equal but opposite charges → 1:1 ratio.",
+    keyConcepts: ["valence electrons", "anion", "cation", "compound formula", "reactivity"],
+    conceptsCovered: ["chm:9:ch04:electron-shells", "chm:9:ch04:valency"],
+    prerequisites: [],
+    commonErrors: ["Saying A loses electrons because it has 6 — A would need to lose 6 to reach octet of zero, but it is far easier to gain 2. The rule: if valence electrons > 4, gain electrons."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch04", "electronic-configuration", "ion-formation", "hots"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-asr-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): Electrons in Bohr's model do not radiate energy while moving in their fixed orbits.\nReason (R): Electrons in fixed orbits are stationary and therefore do not accelerate.\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "C — A is true but R is false.\n\nA is TRUE: In Bohr's model, electrons in fixed orbits do not radiate energy. This is a postulate of the model, proposed to explain atomic stability.\n\nR is FALSE: Electrons in circular orbits are NOT stationary — they are moving in a circle, which means they ARE continuously accelerating (centripetal acceleration, always towards the nucleus). Bohr did NOT say electrons are stationary; he postulated — as a QUANTUM rule — that despite acceleration, they do not radiate energy. This was a departure from classical physics, not a claim that electrons are stationary.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "Evaluate A", explanation: "Bohr's postulate: electrons in fixed orbits do not radiate. A is TRUE." },
+      { stepNumber: 2, title: "Evaluate R", explanation: "Electrons in circular motion are ACCELERATING (centripetal). They are not stationary. R is FALSE." },
+    ],
+    hint: "An object moving in a circle is always accelerating — even at constant speed, it changes direction. Are electrons in Bohr's circular orbits stationary?",
+    keyConcepts: ["Bohr's model", "circular motion", "centripetal acceleration", "radiation"],
+    conceptsCovered: ["chm:9:ch04:bohr-model"],
+    prerequisites: [],
+    commonErrors: ["Choosing A (both true, R explains A) — students incorrectly believe circular orbit = stationary. Circular motion = constant acceleration (change in direction)."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch04", "bohr-model", "assertion-reason"],
+    source: "original",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t4 — Atomic Number, Mass Number, and Valency
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch04-con-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Define: (a) atomic number, (b) mass number. If an atom has atomic number Z=17 and mass number A=35, find the number of protons, electrons (in the neutral atom), and neutrons.",
+    answer: "(a) Atomic number (Z): The number of protons in the nucleus of an atom. It uniquely identifies the element. In a neutral atom, it also equals the number of electrons.\n\n(b) Mass number (A): The total number of protons and neutrons (collectively called nucleons) in the nucleus. A = Z + N, where N = number of neutrons.\n\nFor Z=17, A=35:\nProtons = Z = 17\nElectrons (neutral atom) = Z = 17\nNeutrons = A − Z = 35 − 17 = 18",
+    steps: [
+      { stepNumber: 1, title: "Atomic number (Z)", explanation: "Z = number of protons. In neutral atom, Z = number of electrons." },
+      { stepNumber: 2, title: "Mass number (A)", explanation: "A = protons + neutrons. So neutrons = A − Z." },
+      { stepNumber: 3, title: "Calculate", explanation: "Protons = 17; Electrons = 17; Neutrons = 35 − 17 = 18.", result: "p=17, e=17, n=18" },
+    ],
+    hint: "Z = protons = electrons (neutral). A = protons + neutrons. Neutrons = A - Z.",
+    keyConcepts: ["atomic number", "mass number", "protons", "neutrons", "electrons"],
+    conceptsCovered: ["chm:9:ch04:atomic-number", "chm:9:ch04:mass-number"],
+    prerequisites: [],
+    commonErrors: ["Forgetting that mass number includes BOTH protons and neutrons. Neutrons = A - Z, not A - electrons."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "atomic-number", "mass-number"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-007",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 4, estimatedTimeMinutes: 5,
+    question: "For each element below, determine the number of protons, electrons, and neutrons, and write the electronic configuration:\n(a) ¹⁴₇N  (b) ²³₁₁Na  (c) ²⁰⁸₈₂Pb\n(Atomic numbers given as subscripts, mass numbers as superscripts)",
+    answer: "(a) Nitrogen: Z=7, A=14\nProtons = 7, Electrons = 7, Neutrons = 14 − 7 = 7\nElectronic configuration: K=2, L=5 → (2, 5)\n\n(b) Sodium: Z=11, A=23\nProtons = 11, Electrons = 11, Neutrons = 23 − 11 = 12\nElectronic configuration: K=2, L=8, M=1 → (2, 8, 1)\n\n(c) Lead: Z=82, A=208\nProtons = 82, Electrons = 82, Neutrons = 208 − 82 = 126\n(Electronic configuration beyond Class 9 scope — not required.)",
+    steps: [
+      { stepNumber: 1, title: "Nitrogen", explanation: "p=7, e=7, n=7. Config: 2, 5." },
+      { stepNumber: 2, title: "Sodium", explanation: "p=11, e=11, n=12. Config: 2, 8, 1." },
+      { stepNumber: 3, title: "Lead", explanation: "p=82, e=82, n=126. Electronic config is beyond Class 9 scope." },
+    ],
+    hint: "Z = protons = electrons. Neutrons = A − Z. Fill shells K, L, M in order.",
+    keyConcepts: ["atomic number", "mass number", "electronic configuration"],
+    conceptsCovered: ["chm:9:ch04:atomic-number", "chm:9:ch04:mass-number", "chm:9:ch04:electron-shells"],
+    prerequisites: [],
+    commonErrors: ["Computing neutrons as A − electrons instead of A − Z — for neutral atoms these are the same, but using the correct formula reinforces the concept."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch04", "subatomic-particle-count"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-008",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Define valency. Determine the valency of the following elements using their electronic configurations:\n(a) Carbon (Z=6)  (b) Oxygen (Z=8)  (c) Sodium (Z=11)  (d) Argon (Z=18)",
+    answer: "Valency: The combining capacity of an atom of an element; equal to the number of electrons in the outermost shell (valence electrons) if ≤ 4, or equal to (8 − valence electrons) if > 4.\n\n(a) Carbon (Z=6): config 2, 4. Valence electrons = 4. Valency = 4.\n(b) Oxygen (Z=8): config 2, 6. Valence electrons = 6. Valency = 8 − 6 = 2.\n(c) Sodium (Z=11): config 2, 8, 1. Valence electrons = 1. Valency = 1.\n(d) Argon (Z=18): config 2, 8, 8. Valence electrons = 8 (complete octet). Valency = 0 (noble gas — inert, does not combine).",
+    steps: [
+      { stepNumber: 1, title: "Valency rule", explanation: "If valence e⁻ ≤ 4: valency = number of valence e⁻. If > 4: valency = 8 − valence e⁻. Noble gas (8): valency = 0." },
+      { stepNumber: 2, title: "Carbon", explanation: "2, 4 → 4 valence e⁻ → valency 4." },
+      { stepNumber: 3, title: "Oxygen", explanation: "2, 6 → 6 valence e⁻ → valency 8−6 = 2." },
+      { stepNumber: 4, title: "Sodium", explanation: "2, 8, 1 → 1 valence e⁻ → valency 1." },
+      { stepNumber: 5, title: "Argon", explanation: "2, 8, 8 → complete octet → valency 0." },
+    ],
+    hint: "Valency ≤ 4 → equals valence electrons. Valency > 4 → use (8 − valence electrons). Completed octet → valency 0.",
+    keyConcepts: ["valency", "valence electrons", "combining capacity", "octet rule"],
+    conceptsCovered: ["chm:9:ch04:valency", "chm:9:ch04:electron-shells"],
+    prerequisites: [],
+    commonErrors: ["Giving valency of Ar as 8 (confusing the number of valence electrons with valency) — Ar has a FULL octet so its valency is 0 (it doesn't combine)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "valency"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-pyq-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
+    questionType: "previous-year", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "An element has 2 electrons in the K shell, 8 electrons in the L shell, and 3 electrons in the M shell. Its valency is:\n(A) 2  (B) 3  (C) 5  (D) 8",
+    answer: "B. The element has electronic configuration 2, 8, 3. Valence electrons = 3 (in the outermost M shell). Since 3 ≤ 4, valency = 3. [This is Aluminium, Al]",
+    options: ["A) 2", "B) 3", "C) 5", "D) 8"],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Identify valence electrons", explanation: "Config: 2, 8, 3. Outermost shell (M) has 3 electrons." },
+      { stepNumber: 2, title: "Apply valency rule", explanation: "3 ≤ 4 → valency = 3." },
+    ],
+    examTip: "Valency questions always go through the same 2 steps: (1) find valence electrons (outermost shell), (2) apply the rule (≤4 → valency = ve; >4 → valency = 8 − ve; =8 → valency = 0).",
+    keyConcepts: ["valency", "valence electrons"],
+    conceptsCovered: ["chm:9:ch04:valency"],
+    prerequisites: [],
+    commonErrors: ["Choosing C (5) — if you subtracted from 8: 8−3=5, but this rule applies only when valence electrons > 4. Here 3 < 4, so valency = 3."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "valency", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2023,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — standard type",
+  },
+
+  {
+    id: "bo-chm-9-ch04-cmp-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "An ion has 10 electrons and a charge of +1. Identify: (a) the atomic number of the element, (b) the number of protons, (c) the number of neutrons if the mass number is 23, (d) the element's name and symbol.",
+    answer: "The ion has charge +1, which means it has lost 1 electron compared to the neutral atom.\nIf the ion has 10 electrons and charge +1, the neutral atom had 10 + 1 = 11 electrons.\n\n(a) Atomic number Z = number of protons in nucleus = 11 (since atomic number = protons, and neutral atom has equal protons and electrons).\n(b) Number of protons = 11.\n(c) Mass number A = 23. Neutrons = A − Z = 23 − 11 = 12.\n(d) Element with Z=11: Sodium (Na). The ion is Na⁺.",
+    steps: [
+      { stepNumber: 1, title: "Find electrons in neutral atom", explanation: "Ion has +1 charge → lost 1 electron. Neutral atom electrons = 10 + 1 = 11." },
+      { stepNumber: 2, title: "Atomic number = protons", explanation: "In neutral atom, protons = electrons = 11. Z = 11." },
+      { stepNumber: 3, title: "Neutrons", explanation: "N = A − Z = 23 − 11 = 12.", result: "12 neutrons" },
+      { stepNumber: 4, title: "Element", explanation: "Z=11 is Sodium (Na). Ion is Na⁺." },
+    ],
+    hint: "For a +1 ion: it has LOST 1 electron. So neutral atom electrons = ion electrons + 1 (for each unit of positive charge).",
+    keyConcepts: ["atomic number", "ions", "electron count", "protons", "neutrons"],
+    conceptsCovered: ["chm:9:ch04:atomic-number", "chm:9:ch04:mass-number"],
+    prerequisites: [],
+    commonErrors: ["Taking Z = 10 (the number of electrons in the ION) — Z equals protons in the neutral atom, not electrons in the ion."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch04", "ions", "atomic-number"],
+    source: "original",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t5 — Isotopes and Isobars
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "bo-chm-9-ch04-con-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Define isotopes and isobars. Give one example of each. State one property that is the same and one that differs between isotopes.",
+    answer: "Isotopes: Atoms of the same element (same atomic number Z) that have different mass numbers (different number of neutrons).\nExample: Hydrogen has three isotopes:\n  ¹₁H (protium) — Z=1, A=1 (0 neutrons)\n  ²₁H (deuterium) — Z=1, A=2 (1 neutron)\n  ³₁H (tritium) — Z=1, A=3 (2 neutrons)\n\nIsobars: Atoms of different elements (different atomic numbers Z) that have the same mass number (A).\nExample: ⁴⁰₁₈Ar and ⁴⁰₂₀Ca — both have A=40, but Z=18 (Ar) and Z=20 (Ca).\n\nFor isotopes:\nSame property: Same atomic number (Z), same number of protons, same chemical properties (same electronic configuration, same valency).\nDifferent property: Different mass numbers (A), different number of neutrons, different physical properties (density, radioactivity in some cases).",
+    steps: [
+      { stepNumber: 1, title: "Isotopes definition", explanation: "Same Z, different A. Example: ¹H, ²H, ³H." },
+      { stepNumber: 2, title: "Isobars definition", explanation: "Different Z, same A. Example: ⁴⁰Ar (Z=18) and ⁴⁰Ca (Z=20)." },
+      { stepNumber: 3, title: "Isotope properties", explanation: "Same: Z, chemical properties. Different: A, physical properties (mass, nuclear stability)." },
+    ],
+    hint: "Isotopes: ISO (same) TOPE (place) — same place in the periodic table (same Z). Isobars: same mass number (A).",
+    keyConcepts: ["isotopes", "isobars", "atomic number", "mass number", "neutrons"],
+    conceptsCovered: ["chm:9:ch04:isotopes", "chm:9:ch04:isobars"],
+    prerequisites: [],
+    commonErrors: ["Confusing isotopes and isobars — isotopes have same Z (same element), isobars have same A (same mass, different element)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "isotopes-isobars"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-009",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Chlorine exists as two naturally occurring isotopes: ³⁵Cl (atomic mass 35, abundance 75%) and ³⁷Cl (atomic mass 37, abundance 25%). (a) Calculate the average atomic mass of chlorine. (b) Why do both isotopes have the same chemical properties? (c) How do their physical properties differ?",
+    answer: "(a) Average atomic mass = (0.75 × 35) + (0.25 × 37) = 26.25 + 9.25 = 35.5 u\n[This matches the standard atomic mass of Cl = 35.5 u.]\n\n(b) Same chemical properties: Isotopes have the same number of protons and hence the same electronic configuration (both ³⁵Cl and ³⁷Cl have 17 protons, configuration 2, 8, 7). Chemical properties depend on electronic configuration — so both isotopes react identically and form the same compounds (HCl, NaCl, etc.).\n\n(c) Different physical properties: The two isotopes have different mass numbers (35 vs 37), meaning different nuclear masses. This gives them different:\n- Atomic mass (35 u vs 37 u)\n- Density (slightly different)\n- Rate of diffusion (lighter ³⁵Cl diffuses faster — Graham's Law)\n- Nuclear stability and radioactive properties (³⁷Cl is stable; ³⁵Cl is also stable; but heavier isotopes of other elements can be radioactive)",
+    steps: [
+      { stepNumber: 1, title: "Average atomic mass", explanation: "(0.75 × 35) + (0.25 × 37) = 26.25 + 9.25 = 35.5 u.", formula: "Average M = Σ(abundance × mass)" },
+      { stepNumber: 2, title: "Same chemical properties", explanation: "Same Z (17) → same config (2,8,7) → same reactivity and valency." },
+      { stepNumber: 3, title: "Different physical properties", explanation: "Different A (35 vs 37) → different mass → different density and diffusion rate." },
+    ],
+    hint: "Chemical properties depend on electron configuration (= same for isotopes). Physical properties depend on mass (= different for isotopes).",
+    keyConcepts: ["isotopes", "average atomic mass", "chlorine isotopes", "chemical vs physical properties"],
+    conceptsCovered: ["chm:9:ch04:isotopes"],
+    prerequisites: [],
+    commonErrors: ["Saying isotopes have completely identical properties — chemical properties are the same, but physical properties differ."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch04", "chlorine-isotopes"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-010",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "State two applications of isotopes in medicine and one application in nuclear energy.",
+    answer: "Applications in medicine:\n(1) Radiation therapy (cancer treatment): Cobalt-60 (⁶⁰Co) emits gamma radiation used to destroy cancer cells selectively in radiation therapy (cobalt therapy).\n(2) Diagnostic imaging and metabolic studies: Iodine-131 (¹³¹I) is used to treat thyroid disorders and to image the thyroid gland. It accumulates in the thyroid because the thyroid normally absorbs iodine from the blood.\n\nApplication in nuclear energy:\nUranium-235 (²³⁵U) is the fissile isotope used in nuclear reactors and atomic bombs. When struck by a neutron, ²³⁵U undergoes nuclear fission (splits into smaller nuclei), releasing enormous energy and 2–3 additional neutrons that sustain a chain reaction. This energy heats water to produce steam, which drives turbines in nuclear power plants.",
+    steps: [
+      { stepNumber: 1, title: "Medical 1: Co-60", explanation: "Gamma emitter used in cancer therapy (cobalt therapy) to destroy tumour cells." },
+      { stepNumber: 2, title: "Medical 2: I-131", explanation: "Used for thyroid imaging and treatment (thyroid takes up iodine)." },
+      { stepNumber: 3, title: "Nuclear energy: U-235", explanation: "Fissile material. Undergoes chain fission reaction, releasing energy for power generation." },
+    ],
+    hint: "Think of common isotopes mentioned in NCERT: Co-60 for cancer, I-131 for thyroid, U-235 for nuclear power.",
+    keyConcepts: ["isotopes", "radioactive isotopes", "nuclear medicine", "nuclear energy"],
+    conceptsCovered: ["chm:9:ch04:isotopes"],
+    prerequisites: [],
+    commonErrors: ["Confusing isotopes with isobars in applications — these specific uses are all for isotopes (same element, different mass)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.REAL_LIFE, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "isotope-applications"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-nce-011",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "ncert", questionFormat: "MCQ",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which of the following pairs represents isobars?\n(A) ¹H and ²H\n(B) ¹⁶O and ¹⁷O\n(C) ⁴⁰₁₈Ar and ⁴⁰₂₀Ca\n(D) ¹²C and ¹³C",
+    answer: "C. ⁴⁰₁₈Ar (Z=18, A=40) and ⁴⁰₂₀Ca (Z=20, A=40) are isobars — different elements (different Z) with the same mass number (A=40). Options A, B, D are all pairs of isotopes — same element, different mass numbers.",
+    options: [
+      "A) ¹H and ²H",
+      "B) ¹⁶O and ¹⁷O",
+      "C) ⁴⁰₁₈Ar and ⁴⁰₂₀Ca",
+      "D) ¹²C and ¹³C",
+    ],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "Check each pair", explanation: "A: both H, Z=1, A=1 vs 2 → isotopes. B: both O, Z=8, A=16 vs 17 → isotopes. C: Ar Z=18 vs Ca Z=20, A=40 both → isobars ✓. D: both C, Z=6, A=12 vs 13 → isotopes." },
+    ],
+    hint: "Isobars: different Z, same A. Check which pair has DIFFERENT atomic numbers but the SAME mass number.",
+    keyConcepts: ["isobars", "isotopes", "atomic number", "mass number"],
+    conceptsCovered: ["chm:9:ch04:isobars", "chm:9:ch04:isotopes"],
+    prerequisites: [],
+    commonErrors: ["Confusing isobars and isotopes — isobars have same A (mass number), isotopes have same Z (atomic number)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "isobars", "isotopes"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-pyq-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "previous-year", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Write the electronic configurations of ³⁵₁₇Cl and ³⁷₁₇Cl. Are they isotopes or isobars? Give two differences between their physical and chemical properties.",
+    answer: "Both have Z=17, so both have 17 electrons.\nElectronic configuration (same for both): K=2, L=8, M=7 → (2, 8, 7)\n\n³⁵Cl: A=35, neutrons = 35−17 = 18\n³⁷Cl: A=37, neutrons = 37−17 = 20\n\nRelationship: They are ISOTOPES — same element (same Z=17), different mass numbers (35 vs 37).\n\nDifferences:\nPhysical: Different atomic mass (35 u vs 37 u) and different number of neutrons (18 vs 20). ³⁷Cl is slightly heavier, so it diffuses more slowly.\nChemical: Same chemical properties — both have identical electronic configuration (2, 8, 7) and the same valency (1). Both form the same compounds (HCl, NaCl, etc.).",
+    steps: [
+      { stepNumber: 1, title: "Electronic configuration", explanation: "Both have Z=17 → 17 electrons → 2, 8, 7 (same)." },
+      { stepNumber: 2, title: "Isotopes or isobars?", explanation: "Same Z (17), different A (35 vs 37) → ISOTOPES." },
+      { stepNumber: 3, title: "Physical difference", explanation: "Different mass (35 vs 37 u) and neutron count (18 vs 20)." },
+      { stepNumber: 4, title: "Chemical: same", explanation: "Same config → same valency (1) → same compounds formed." },
+    ],
+    examTip: "CBSE often asks for both isotope/isobar identification AND the specific similarities/differences. Remember: isotopes have identical chemical properties but different physical properties.",
+    keyConcepts: ["isotopes", "chlorine isotopes", "electronic configuration", "physical vs chemical properties"],
+    conceptsCovered: ["chm:9:ch04:isotopes", "chm:9:ch04:electron-shells"],
+    prerequisites: [],
+    commonErrors: ["Saying the two chlorine atoms have different chemical properties — isotopes have the SAME chemical properties."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "isotopes", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2024,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science board examination — recurring type",
+  },
+
+  {
+    id: "bo-chm-9-ch04-pyq-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "previous-year", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "The atomic number of an element is 20. Write the electronic configuration of the element. State the period and group of this element, and name it.",
+    answer: "Atomic number Z = 20 → 20 electrons.\nElectronic configuration: K=2, L=8, M=8, N=2 → (2, 8, 8, 2)\n\nPeriod: Number of occupied shells = 4 → Period 4.\nGroup: 2 valence electrons → Group 2 (alkaline earth metals).\n\nElement name: Calcium (Ca).",
+    steps: [
+      { stepNumber: 1, title: "Electronic configuration", explanation: "20 electrons: K=2, L=8, M=8, N=2." },
+      { stepNumber: 2, title: "Period", explanation: "4 shells occupied → Period 4." },
+      { stepNumber: 3, title: "Group", explanation: "2 valence electrons → Group 2." },
+      { stepNumber: 4, title: "Element name", explanation: "Z=20, Group 2, Period 4 → Calcium (Ca)." },
+    ],
+    examTip: "Always determine: (1) config, (2) number of shells = period, (3) valence electrons = group (for Groups 1–2 and 13–18).",
+    keyConcepts: ["electronic configuration", "period", "group", "calcium"],
+    conceptsCovered: ["chm:9:ch04:electron-shells", "chm:9:ch04:atomic-number"],
+    prerequisites: [],
+    commonErrors: ["Writing config as 2, 8, 10 or 2, 9, 9 instead of 2, 8, 8, 2 — at Class 9, M shell fills to 8 before N starts."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch04", "electronic-configuration", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2023,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science board examination — recurring type",
+  },
+
+  {
+    id: "bo-chm-9-ch04-hot-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Carbon-12 (¹²C) and carbon-14 (¹⁴C) are both isotopes of carbon. Carbon-14 is radioactive and is used in radiocarbon dating of archaeological samples. Explain: (a) why both have identical chemical properties, and (b) why ¹²C is stable but ¹⁴C is radioactive, using their nuclear compositions.",
+    answer: "(a) Same chemical properties:\nBoth ¹²C and ¹⁴C have Z=6, so both have 6 protons and 6 electrons in the neutral atom. Their electronic configurations are identical: 2, 4. Since chemical properties depend entirely on electronic configuration (valence electrons, bonding behaviour), both isotopes react identically — forming the same covalent bonds, same compounds, same valency (4). A living organism cannot chemically distinguish ¹²C from ¹⁴C, so both are incorporated into organic molecules in the same way.\n\n(b) Nuclear stability:\n¹²C: 6 protons + 6 neutrons. Neutron-to-proton (n:p) ratio = 1:1. This is the ideal ratio for light elements and gives maximum nuclear stability.\n¹⁴C: 6 protons + 8 neutrons. n:p ratio = 8:6 = 4:3 > 1. Excess neutrons make the nucleus unstable. ¹⁴C undergoes beta decay (emits a beta particle, converting a neutron to a proton) to become ¹⁴N, with a half-life of 5730 years. This radioactivity is what makes ¹⁴C useful for dating — its known decay rate allows age determination.",
+    steps: [
+      { stepNumber: 1, title: "Same chemical properties", explanation: "Both Z=6 → both have config 2, 4. Same valence electrons → same reactivity, same compounds." },
+      { stepNumber: 2, title: "¹²C stability", explanation: "6p + 6n → n:p = 1:1 (optimal for light nuclei) → stable." },
+      { stepNumber: 3, title: "¹⁴C radioactivity", explanation: "6p + 8n → n:p > 1 → unstable. Beta decay converts neutron to proton → becomes ¹⁴N over 5730 years." },
+    ],
+    hint: "Chemical properties → electrons. Stability → nuclear composition. A 1:1 neutron:proton ratio gives stability for light elements.",
+    keyConcepts: ["isotopes", "nuclear stability", "neutron-proton ratio", "radiocarbon dating"],
+    conceptsCovered: ["chm:9:ch04:isotopes"],
+    prerequisites: [],
+    commonErrors: ["Saying ¹⁴C is chemically different from ¹²C — they are chemically identical; the difference is nuclear, not electronic."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BEYOND_NCERT, STANDARD_TAGS.REAL_LIFE, "class9", "ch04", "isotopes", "radiocarbon-dating", "hots"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-cmp-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A forensic scientist uses isotope analysis to determine the origin of a sample of arsenic (As, Z=33). She finds the sample contains two types of arsenic atoms: one with A=75 and another with A=73. Are these isotopes or isobars? Determine the number of neutrons in each and explain whether the scientist can use chemical tests to distinguish them.",
+    answer: "Both atoms have Z=33 (arsenic), A=75 and A=73.\n\nRelationship: These are ISOTOPES — same element (same Z=33), different mass numbers.\n\nNeutrons:\n⁷⁵As: neutrons = A − Z = 75 − 33 = 42 neutrons.\n⁷³As: neutrons = 73 − 33 = 40 neutrons.\n\nCan chemical tests distinguish them? NO. Isotopes of the same element have identical electronic configurations (Z=33 → 2, 8, 18, 5 for both). Since chemical reactivity is determined by electronic configuration, both isotopes undergo the same chemical reactions and form the same compounds. Chemical tests cannot distinguish ⁷⁵As from ⁷³As. The scientist would need physical methods (mass spectrometry) that separate particles by mass, not chemistry.",
+    steps: [
+      { stepNumber: 1, title: "Identify relationship", explanation: "Same Z (33), different A (75 vs 73) → ISOTOPES." },
+      { stepNumber: 2, title: "Neutrons in each", explanation: "⁷⁵As: 75−33=42. ⁷³As: 73−33=40." },
+      { stepNumber: 3, title: "Chemical tests", explanation: "Same electronic config → same chemistry. Chemical tests CANNOT distinguish isotopes. Need mass spectrometry." },
+    ],
+    hint: "Same Z = same element = same electronic configuration = same chemistry. To distinguish isotopes, you need to measure MASS, not chemical behaviour.",
+    keyConcepts: ["isotopes", "forensic science", "mass spectrometry", "chemical properties"],
+    conceptsCovered: ["chm:9:ch04:isotopes"],
+    prerequisites: [],
+    commonErrors: ["Saying chemical tests CAN distinguish isotopes — they cannot; isotopes react identically."],
+    tags: [STANDARD_TAGS.REAL_LIFE, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch04", "isotopes", "forensic"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-cmp-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Compare the following pairs and state whether each is a pair of isotopes, isobars, or neither: (a) ⁴⁰₁₈Ar and ⁴⁰₁₉K, (b) ¹⁴₆C and ¹⁴₇N, (c) ²³₁₁Na and ²³₁₁Na+. Explain your reasoning for each.",
+    answer: "(a) ⁴⁰₁₈Ar and ⁴⁰₁₉K:\nAr: Z=18, A=40. K: Z=19, A=40. Same A, different Z → ISOBARS.\n\n(b) ¹⁴₆C and ¹⁴₇N:\nC: Z=6, A=14. N: Z=7, A=14. Same A, different Z → ISOBARS.\n\n(c) ²³₁₁Na and ²³₁₁Na⁺:\nNa: Z=11, A=23 (neutral atom, 11 electrons). Na⁺: Z=11, A=23 (ion with 10 electrons, not 11).\nBoth have the SAME atomic number (Z=11) and SAME mass number (A=23). They are the same isotope of sodium — Na and Na⁺ are not a 'pair' of isotopes or isobars relative to each other. They are simply sodium in different ionisation states (neutral atom vs +1 cation). Neither the term 'isotope' nor 'isobar' applies — they are the same atomic species in different charge states.",
+    steps: [
+      { stepNumber: 1, title: "Pair (a)", explanation: "Z=18 vs Z=19; A=40 both. Different Z, same A → ISOBARS." },
+      { stepNumber: 2, title: "Pair (b)", explanation: "Z=6 vs Z=7; A=14 both. Different Z, same A → ISOBARS." },
+      { stepNumber: 3, title: "Pair (c)", explanation: "Na and Na⁺: same Z=11, same A=23. Same species, different charge states. Not isotopes (same Z) or isobars (same element). NEITHER." },
+    ],
+    hint: "Isotope = same Z, different A. Isobar = different Z, same A. For pair (c), check both Z and A carefully — and consider what a positive ion is.",
+    keyConcepts: ["isotopes", "isobars", "ions", "classification"],
+    conceptsCovered: ["chm:9:ch04:isotopes", "chm:9:ch04:isobars"],
+    prerequisites: [],
+    commonErrors: ["Classifying Na and Na⁺ as isotopes — ions are not a separate isotope; they are the same atom with different electron count."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch04", "isotopes-isobars", "classification"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-hot-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Hydrogen (¹H), Deuterium (²H), and Tritium (³H) are isotopes. However, 'heavy water' (D₂O, where D = ²H) has measurably different physical properties from ordinary water (H₂O). Explain why the physical properties differ, and explain why the CHEMICAL properties of D₂O and H₂O are nearly identical.",
+    answer: "Physical properties differ:\nD₂O has molar mass = 2(2) + 16 = 20 g/mol, compared to H₂O = 2(1) + 16 = 18 g/mol. The deuterium atoms are twice as heavy as ordinary hydrogen atoms.\nConsequences of greater mass:\n- Boiling point: D₂O boils at 101.4°C (slightly higher than H₂O's 100°C) — heavier molecules require more energy to evaporate.\n- Melting point: D₂O melts at 3.8°C (compared to 0°C for H₂O).\n- Density: D₂O is denser than H₂O (1.105 g/cm³ vs 1.000 g/cm³).\n- Rate of reaction (kinetic isotope effect): O–D bonds are slightly stronger than O–H bonds, making some reactions involving D₂O slightly slower.\n\nChemical properties are nearly identical:\nBoth H (Z=1) and D (Z=1) have the same atomic number — same electronic configuration (1 electron in K shell). Since chemical bonding and reactivity depend on electron configuration, D₂O and H₂O form the same types of bonds (O–H vs O–D are both covalent, similar bond energies at this level), react with the same substances, and have the same molecular geometry. The difference in chemistry is a subtle kinetic isotope effect — not a qualitative difference.",
+    steps: [
+      { stepNumber: 1, title: "Why physical properties differ", explanation: "D is twice as heavy as H (A=2 vs 1). D₂O has higher molar mass → higher boiling/melting point, higher density." },
+      { stepNumber: 2, title: "Why chemical properties are same", explanation: "Both H and D have Z=1 → same electron (K=1) → same electronic configuration → same bonding and reactivity." },
+    ],
+    hint: "Physical properties depend on MASS (heavier D vs lighter H). Chemical properties depend on ELECTRONS (both H and D have 1 electron each).",
+    keyConcepts: ["heavy water", "isotopes", "physical vs chemical properties", "kinetic isotope effect"],
+    conceptsCovered: ["chm:9:ch04:isotopes"],
+    prerequisites: [],
+    commonErrors: ["Saying D₂O has completely different chemical properties from H₂O — the differences are subtle (kinetic), not qualitative."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BEYOND_NCERT, STANDARD_TAGS.REAL_LIFE, "class9", "ch04", "heavy-water", "isotopes", "hots"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch04-hot-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch04", chapterName: "Structure of the Atom",
+    topicId: "t5", topicName: "Isotopes and Isobars",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A student says: 'Since ⁴⁰Ar and ⁴⁰Ca are isobars with the same mass number, they must have the same number of neutrons.' Evaluate this claim. Calculate the number of neutrons in each and explain the result.",
+    answer: "The student's claim is INCORRECT.\n\nIsobars have the same mass number (A) but different atomic numbers (Z). Since:\nneutrons = A − Z\n\nⁱ If Z differs (which it must, since isobars are DIFFERENT elements), neutrons = A − Z will also be different for each isobar.\n\nCalculation:\n⁴⁰₁₈Ar: neutrons = 40 − 18 = 22 neutrons.\n⁴⁰₂₀Ca: neutrons = 40 − 20 = 20 neutrons.\n\nAr has 22 neutrons; Ca has 20 neutrons — they are different.\n\nConclusion: The same mass number A does NOT mean the same number of neutrons. In fact, for two isobars, the one with the HIGHER atomic number always has FEWER neutrons (because A = Z + N → N = A − Z, and higher Z means lower N for the same A).",
+    steps: [
+      { stepNumber: 1, title: "Identify the error", explanation: "Same A ≠ same neutrons. Neutrons = A − Z. Same A but different Z → different neutrons." },
+      { stepNumber: 2, title: "Calculate for Ar", explanation: "N = 40 − 18 = 22." },
+      { stepNumber: 3, title: "Calculate for Ca", explanation: "N = 40 − 20 = 20." },
+      { stepNumber: 4, title: "Conclusion", explanation: "Ar: 22n, Ca: 20n. Different neutron counts. Higher Z → lower N for same A." },
+    ],
+    hint: "For isobars: same A, different Z. Since N = A − Z, and Z differs, N must also differ.",
+    keyConcepts: ["isobars", "neutrons", "mass number", "atomic number"],
+    conceptsCovered: ["chm:9:ch04:isobars", "chm:9:ch04:mass-number"],
+    prerequisites: [],
+    commonErrors: ["Accepting the student's claim — same mass number does NOT mean same neutrons; only same neutrons + same Z would give same mass number."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.CONCEPTUAL, "class9", "ch04", "isobars", "neutrons", "hots"],
+    source: "original",
+  },
+
+];
