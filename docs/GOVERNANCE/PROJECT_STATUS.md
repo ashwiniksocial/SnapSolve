@@ -30,14 +30,14 @@ Physics passes the curriculum gateway. Chapter-level content issues (Gravitation
 
 ### Question bank — Class 9 Chemistry (partial)
 
-| File | Chapter | Questions | Exam-relevant |
-|---|---|---|---|
-| `ch01-matter-in-our-surroundings.ts` | Matter in Our Surroundings | 75 | NO — non-exam chapter |
-| `ch02-is-matter-around-us-pure.ts` | Is Matter Around Us Pure? (scaffold) | 0 | YES (official Ch5) |
-| `ch03-atoms-and-molecules.ts` | Atoms and Molecules (scaffold) | 0 | YES (official Ch9) |
-| `ch04-structure-of-the-atom.ts` | Structure of the Atom (scaffold) | 0 | YES (official Ch8) |
+| File | Chapter | Questions | Exam-relevant | Quality Audit |
+|---|---|---|---|---|
+| `ch01-matter-in-our-surroundings.ts` | Matter in Our Surroundings | 75 | NO — non-exam chapter | Not audited (non-exam) |
+| `ch02-is-matter-around-us-pure.ts` | Exploring Mixtures (official Ch5) | 31 | YES | PASS — 4 fixes applied (see DEC-012) |
+| `ch03-atoms-and-molecules.ts` | Atoms and Molecules (official Ch9) | 30 | YES | PASS — no fixes required |
+| `ch04-structure-of-the-atom.ts` | Structure of the Atom (official Ch8) | 30 | YES | PASS — no fixes required |
 
-75 questions exist but all are in a non-exam chapter. Three official exam chapters are empty scaffolds.
+91 exam-ready questions across three official exam chapters. Quality audit completed 2026-07-09 (see DEC-012).
 
 ### Curriculum gateway fixes
 
@@ -108,12 +108,13 @@ Prior internal documents (`PROJECT_LAUNCH_CURRICULUM_MAP_2026_27.md`, `GATEWAY_C
 **Resolution:** Hide Biology in `ALL_SUBJECTS`, or render a "Coming Soon" gate. Does not require content authoring.
 **Dependency:** None — this is a one-line UI fix.
 
-### BLOCKER 2 — Chemistry has zero exam-ready content
+### BLOCKER 2 — Chemistry exam-chapter authoring (PARTIALLY RESOLVED)
 
-**Severity:** Critical — subject cannot be launched.
-**Detail:** All 75 authored Chemistry questions are in "Matter in Our Surroundings" (Ch1) — a chapter confirmed excluded from the 2026-27 annual exam. The three official exam chapters (Ch5, Ch8, Ch9 equivalents) are empty scaffolds.
-**Resolution:** Author questions for Ch5 (Exploring Mixtures and their Separation), Ch8 (Structure of an Atom), Ch9 (Atoms and Molecules). Chemistry chapter names in repo also need updating to match the official 2026-27 names before authoring begins.
-**Dependency:** Gateway registration for `9-Chemistry` should be completed first.
+**Severity:** High — was Critical; now partially resolved.
+**Detail:** All three official exam chapters (Ch5 Exploring Mixtures, Ch8 Structure of the Atom, Ch9 Atoms and Molecules) have been authored and quality-audited. Ch02 (31q), Ch03 (30q), Ch04 (30q) = 91 exam-ready questions. Quality audit completed 2026-07-09, all three chapters PASS (see DEC-014).
+**Remaining gap:** Ch01 "Matter in Our Surroundings" (75q) is confirmed non-exam and excluded from launch. The three exam chapters are now content-complete for an initial launch set.
+**Resolution needed:** Gateway registration for `9-Chemistry` to enable automated quality gating. UI integration to surface Chemistry chapters to students.
+**Dependency:** BLOCKER 3 (gateway registration) remains open.
 
 ### BLOCKER 3 — Chemistry and Biology have no gateway coverage
 

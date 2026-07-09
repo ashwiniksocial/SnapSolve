@@ -2,12 +2,12 @@
 /**
  * Question Bank — Chemistry, Class 9, Chapter 2 (file) / Official Ch5: Exploring Mixtures
  *
- * 30 questions — types: concept (5), ncert (11), competency (5), hots (4),
- *                        previous-year (3), assertion-reason (2), case-study (1) [total: 31]
+ * 31 questions — types: concept (5), ncert (11), competency (5), hots (4),
+ *                        previous-year (3), assertion-reason (2), case-study (1)
  * Board: Both (CBSE + ICSE) | Category: standard | Schema: QuestionV2
  * CBSE 2026-27 Science (Code 086), Chapter 5 — Exploring Mixtures
  *
- * Difficulty distribution: Easy 10 · Medium 14 · Hard 7
+ * Difficulty distribution: Easy 9 · Medium 16 · Hard 6
  *
  * Topic coverage:
  *   t1  Types of Mixtures and Solutions   — 10 q
@@ -344,11 +344,11 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     difficulty: "Medium", bloomsLevel: "understand",
     marks: 3, estimatedTimeMinutes: 4,
     question: "Classify the following as solution, colloid, or suspension, giving a reason for each: (a) blood, (b) fog, (c) muddy river water, (d) ink.",
-    answer: "(a) Blood — Colloid. Blood plasma contains dissolved salts and proteins dispersed in the colloidal size range. It shows the Tyndall effect and does not settle on standing at rest.\n(b) Fog — Colloid (aerosol). Tiny liquid water droplets (1–100 µm range) dispersed in air. Visible as a Tyndall cone in car headlights.\n(c) Muddy river water — Suspension. Contains large clay and silt particles (> 100 nm) that settle on standing and are retained on filter paper.\n(d) Ink — Colloid (sol). Pigment particles dispersed in water in the colloidal size range. Fresh ink shows the Tyndall effect and is stable.",
+    answer: "(a) Blood — Colloid. Blood plasma contains dissolved salts and proteins dispersed in the colloidal size range. It shows the Tyndall effect and does not settle on standing at rest.\n(b) Fog — Colloid (aerosol). Tiny water droplets dispersed in air; classified as a colloidal aerosol in NCERT. Visible as a Tyndall cone in car headlights.\n(c) Muddy river water — Suspension. Contains large clay and silt particles (> 100 nm) that settle on standing and are retained on filter paper.\n(d) Ink — Colloid (sol). Pigment particles dispersed in water in the colloidal size range. Fresh ink shows the Tyndall effect and is stable.",
     steps: [
       { stepNumber: 1, title: "Particle size criterion", explanation: "Solution: < 1 nm. Colloid: 1–100 nm. Suspension: > 100 nm." },
       { stepNumber: 2, title: "Blood", explanation: "Colloidal dispersion of proteins and cells — stable, shows Tyndall effect." },
-      { stepNumber: 3, title: "Fog", explanation: "Aerosol (liquid in gas) — colloidal water droplets in air." },
+      { stepNumber: 3, title: "Fog", explanation: "Aerosol (liquid in gas) — tiny water droplets dispersed in air, classified as a colloidal aerosol by NCERT." },
       { stepNumber: 4, title: "Muddy water", explanation: "Suspension — large soil particles settle on standing, can be filtered." },
       { stepNumber: 5, title: "Ink", explanation: "Sol (solid in liquid) — colloidal pigment in water, stable." },
     ],
@@ -419,7 +419,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     difficulty: "Medium", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 5,
     question: "Meera shines her phone's torch through a glass of warm fresh milk in a dark room and sees a visible glowing beam. The same torch shone through filtered mineral water shows no such beam. Explain what type of mixture each liquid is, and identify the principle responsible for the observation.",
-    answer: "Fresh milk — Colloid: Milk is a colloidal dispersion of fat globules and casein protein micelles in water. These particles are in the colloidal size range (roughly 10–300 nm).\n\nFiltered mineral water — True solution: Dissolved mineral salts (Ca²⁺, Mg²⁺, Na⁺, Cl⁻, etc.) are ionic — particle size < 1 nm. Far too small to scatter visible light.\n\nPrinciple — Tyndall effect: When light passes through milk, the colloidal fat and protein particles scatter the light in all directions, making the beam path visible. The mineral water's dissolved ions are too small to scatter visible light, so no beam appears.",
+    answer: "Fresh milk — Colloid: Milk is a colloidal dispersion of fat globules and casein protein micelles in water. These particles are in the colloidal size range (1–100 nm per NCERT definition).\n\nFiltered mineral water — True solution: Dissolved mineral salts (Ca²⁺, Mg²⁺, Na⁺, Cl⁻, etc.) are ionic — particle size < 1 nm. Far too small to scatter visible light.\n\nPrinciple — Tyndall effect: When light passes through milk, the colloidal fat and protein particles scatter the light in all directions, making the beam path visible. The mineral water's dissolved ions are too small to scatter visible light, so no beam appears.",
     steps: [
       { stepNumber: 1, title: "Classify milk", explanation: "Milk = colloid (fat + protein particles, colloidal size range) → scatters light → Tyndall beam visible." },
       { stepNumber: 2, title: "Classify mineral water", explanation: "Filtered mineral water = true solution (dissolved ions, < 1 nm) → no light scattering → no visible beam." },
@@ -716,25 +716,28 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     chapterId: "ch02", chapterName: "Exploring Mixtures",
     topicId: "t3", topicName: "Separation Techniques",
     questionType: "previous-year", questionFormat: "ShortAnswer",
-    difficulty: "Medium", bloomsLevel: "understand",
-    marks: 3, estimatedTimeMinutes: 4,
-    question: "Explain the principle of chromatography. How is it used to separate the coloured components of a mixture of dyes?",
-    answer: "Principle: Chromatography separates components based on their different degrees of adsorption on the stationary phase and their different solubilities in the mobile phase. Strongly adsorbed components travel slowly; those more soluble in the solvent travel faster.\n\nSeparation of dyes:\n1. Place an ink spot on the pencil baseline on chromatography paper, above the solvent level.\n2. The solvent (mobile phase) rises by capillary action.\n3. Each dye is carried upward at a rate depending on its adsorption on paper (stationary phase) and solubility in solvent (mobile phase).\n4. The dyes separate into distinct coloured spots at different heights.\n5. The Rf value (distance by dye / distance by solvent front) is characteristic of each dye.",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A paper chromatography experiment is performed on a mixture of two dyes, X and Y. The chromatography strip is 15 cm long. After the experiment:\n• The solvent front travels 12 cm from the baseline.\n• Dye X forms a spot 9 cm from the baseline.\n• Dye Y forms a spot 3 cm from the baseline.\n\n(a) Calculate the Rf value for each dye. [1 mark]\n(b) Which dye is more strongly adsorbed on the chromatography paper? Justify. [1 mark]\n(c) A pure sample of a known dye Z has Rf = 0.85 under the same conditions. Can dye X or dye Y be dye Z? [1 mark]",
+    answer: "(a) Rf = distance moved by dye / distance moved by solvent front\nRf(X) = 9 / 12 = 0.75\nRf(Y) = 3 / 12 = 0.25\n\n(b) Dye Y is more strongly adsorbed on the paper. A strongly adsorbed component spends more time bound to the stationary phase and less time moving with the solvent, so it travels a shorter distance. Dye Y (Rf = 0.25, 3 cm) barely moved compared to Dye X (Rf = 0.75, 9 cm), indicating Y has a much greater affinity for the paper (stationary phase).\n\n(c) Neither X nor Y is dye Z. Dye X has Rf = 0.75 and dye Y has Rf = 0.25, while dye Z has Rf = 0.85. Since Rf is a characteristic property of a substance under fixed conditions (same solvent, same paper, same temperature), a dye with a different Rf value is a different substance.",
     steps: [
-      { stepNumber: 1, title: "Principle", explanation: "Differential adsorption + differential solubility → different travel speeds → separation." },
-      { stepNumber: 2, title: "Key procedural note", explanation: "Spot ABOVE solvent level. Covered container to prevent evaporation." },
-      { stepNumber: 3, title: "Result", explanation: "Distinct coloured spots at different heights. Rf identifies each dye." },
+      { stepNumber: 1, title: "Apply Rf formula", explanation: "Rf = (distance moved by component) / (distance moved by solvent). X: 9/12 = 0.75. Y: 3/12 = 0.25." },
+      { stepNumber: 2, title: "Interpret Rf for adsorption", explanation: "Lower Rf → less distance → more time on paper → more strongly adsorbed. Dye Y is more strongly adsorbed." },
+      { stepNumber: 3, title: "Identify using Rf", explanation: "Rf is a fingerprint for each substance under fixed conditions. X(0.75) ≠ 0.85 and Y(0.25) ≠ 0.85 → neither is Z." },
     ],
-    examTip: "CBSE expects both principle (adsorption + solubility) and procedure. Mentioning Rf values earns additional marks. Stating spot is above solvent level is frequently penalised if omitted.",
-    keyConcepts: ["chromatography", "stationary phase", "mobile phase", "Rf value"],
+    examTip: "CBSE frequently asks Rf calculation and interpretation. Rf is always between 0 and 1; Rf close to 1 = weakly adsorbed/highly soluble in solvent; Rf close to 0 = strongly adsorbed/less soluble in solvent.",
+    keyConcepts: ["Rf value", "chromatography", "adsorption", "identification of substance"],
     conceptsCovered: ["chm:9:ch02:chromatography"],
     prerequisites: [],
-    commonErrors: ["Forgetting to state the ink spot must be ABOVE the solvent level — frequently penalised omission."],
-    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "chromatography", "previous-year"],
+    commonErrors: [
+      "Dividing solvent distance by dye distance (inverting the Rf formula).",
+      "Thinking higher Rf means more strongly adsorbed — it is the opposite.",
+    ],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "chromatography", "Rf-value", "previous-year"],
     source: "original",
-    yearIfPreviousYear: 2024,
+    yearIfPreviousYear: 2023,
     boardIfPreviousYear: "CBSE",
-    sourceReference: "CBSE Class 9 Science — standard board examination question type",
+    sourceReference: "CBSE Class 9 Science — Rf value calculation, standard board examination type",
   },
 
   // ── ASSERTION-REASON (1 question, t3) ────────────────────────────────────

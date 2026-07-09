@@ -189,6 +189,40 @@ Additionally, three audit documents were committed to the repo root:
 
 ---
 
+### DEC-014 — Quality audit: Class 9 Chemistry Ch02, Ch03, Ch04
+
+**Decision (audit record):** A formal 15-point quality audit was performed on all three authored Class 9 Chemistry exam chapters (91 questions total). The audit covered: CBSE/NCERT 2026-27 compliance, factual accuracy, duplicate detection, numerical correctness, answer key correctness, Bloom's taxonomy balance, Assertion-Reason correctness, hint correctness, step correctness, topic coverage, difficulty distribution accuracy, tag consistency, weak-student suitability, teaching quality, and curriculum authority.
+
+**Verdicts:**
+
+| Chapter | Questions | Verdict | Issues found | Fixes applied |
+|---|---|---|---|---|
+| Ch02 — Exploring Mixtures | 31 | CONDITIONAL PASS → PASS | 4 | 4 |
+| Ch03 — Atoms and Molecules | 30 | PASS | 0 | 0 |
+| Ch04 — Structure of the Atom | 30 | PASS | 0 | 0 |
+
+**Issues found and fixed in Ch02:**
+
+| Fix ID | ID(s) affected | Issue | Resolution |
+|---|---|---|---|
+| F1 | ch02-cmp-003 | "roughly 10–300 nm" for milk's colloidal particles contradicts the NCERT-standard 1–100 nm colloid range | Changed to "1–100 nm per NCERT definition" |
+| F2 | ch02-nce-005 | "(1–100 µm range)" for fog in answer text and step — µm (micrometres) are 1000× larger than nm, contradicting the colloid definition stated in the same chapter | Removed µm size qualifier; replaced with "classified as a colloidal aerosol in NCERT" in both answer and step |
+| F3 | ch02-pyq-001 | Near-duplicate of nce-011 (both asked for chromatography principle + dye separation at the same cognitive level, ≈80% answer overlap) | Converted pyq-001 to an Rf value calculation question (two-dye scenario with quantitative Rf computation + adsorption interpretation + substance identification) — a distinct skill not tested elsewhere in the bank |
+| F4 | ch02 file header | Header declared Easy=10, Medium=14 but actual counts were Easy=9, Medium=16 | Updated header comment to match actual distribution |
+
+**All numericals independently verified:**
+- Ch02: NaCl w/w% = 10% ✅; saline 4.5 g ✅; Rf values 0.75 and 0.25 (new pyq-001) ✅
+- Ch03: Al₂O₃ stoichiometry 6.12 g ✅; Cu oxide ratio 1:2 ✅; all mole concept calculations ✅; aspirin M=180 (C₉H₈O₄) ✅
+- Ch04: All electronic configurations ✅; Cl avg mass 35.5 u ✅; isobar/isotope neutron counts ✅; D₂O physical properties ✅
+
+**TypeScript status:** `pnpm --filter @workspace/homework-hero run typecheck` — clean exit, zero errors, after all fixes.
+
+**Evidence source:** Direct file audit against NCERT Class 9 Science textbook definitions and CLASS9_CURRICULUM_BASELINE.md.
+**Confidence:** HIGH
+**Status:** CLOSED — all three chapters are PASS. Content is ready for gateway registration and launch gating.
+
+---
+
 ### DEC-013 — Governance reconstruction session completed
 
 **Decision (session record):** A formal project-state reconstruction was performed at the start of the 2026-07-09 session. All four governance documents were read in full. Project state was confirmed as follows:
