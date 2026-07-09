@@ -2,8 +2,8 @@
 
 **Document type:** Living status record — updated after every significant work session.
 **Governance authority:** `PROJECT_MASTER_CONTEXT.md`
-**Last updated:** 2026-07-08
-**Sources:** `GATEWAY_FIX_VERIFICATION.md`, `CLASS9_SCIENCE_LAUNCH_READINESS.md`, `CLASS9_SCIENCE_EXECUTIVE_DECISION.md`, direct repository inspection.
+**Last updated:** 2026-07-09
+**Sources:** `GATEWAY_FIX_VERIFICATION.md`, `CLASS9_SCIENCE_LAUNCH_READINESS.md`, `CLASS9_SCIENCE_EXECUTIVE_DECISION.md`, direct repository inspection, governance reconstruction session 2026-07-09.
 
 ---
 

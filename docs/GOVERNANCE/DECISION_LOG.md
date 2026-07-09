@@ -155,3 +155,49 @@ All prior internal documents that reference the older chapter structure are now 
 **Evidence source:** Repository (direct file inspection)
 **Confidence:** HIGH
 **Status:** RECORDED — fix (hide or show Coming Soon state) is pending implementation. No code was changed as part of this audit session.
+
+---
+
+## 2026-07-09
+
+---
+
+### DEC-012 — Governance framework created
+
+**Decision:** A permanent governance folder (`docs/GOVERNANCE/`) was established as the single source of truth for all future sessions, audits, implementation, and AI handoffs. The following documents were created and committed:
+
+| Document | Purpose |
+|---|---|
+| `PROJECT_MASTER_CONTEXT.md` | 9-section permanent reference: product objective, launch target, curriculum scope, official source rule, teaching philosophy, UI philosophy, architecture rules, CEO/CTO constraints, restart protocol |
+| `PROJECT_MEMORY.md` | Durable facts, architectural decisions, sharp edges — what the code alone cannot tell a future session |
+| `PROJECT_STATUS.md` | Living status record: completed work, pending work, blockers, next task, known risks |
+| `DECISION_LOG.md` | Chronological record of all governance, scope, and architectural decisions (this file) |
+| `CHECKPOINT_GATEWAYS.md` | 7-gate quality registry: curriculum, question bank, teaching quality, UI, AI, architecture, release |
+
+Additionally, three audit documents were committed to the repo root:
+
+| Document | Purpose |
+|---|---|
+| `CLASS9_SCIENCE_LAUNCH_READINESS.md` | Full Class 9 Science audit against official CBSE 2026-27 curriculum |
+| `CLASS9_SCIENCE_EXECUTIVE_DECISION.md` | CEO-level decision brief: evidence source, confidence, product impact per finding; 5 sections |
+| `GATEWAY_FIX_VERIFICATION.md` | Post-implementation verification record for GC-01 and GC-04 |
+
+**Rationale:** Prior sessions produced audit findings and decisions but had no persistent governance structure. Any future session starting without this folder risked re-litigating closed decisions (especially the Gravitation dispute) or acting on stale documents.
+**Evidence source:** Product/governance decision.
+**Confidence:** HIGH
+**Status:** ACTIVE — all documents are live. Restart protocol (Section 9 of `PROJECT_MASTER_CONTEXT.md`) requires reading these four documents before any new session begins.
+
+---
+
+### DEC-013 — Governance reconstruction session completed
+
+**Decision (session record):** A formal project-state reconstruction was performed at the start of the 2026-07-09 session. All four governance documents were read in full. Project state was confirmed as follows:
+
+- **No changes were made to product code.** All work in the session was documentation only.
+- **No decisions were reversed or reopened.** DEC-001 through DEC-011 remain as recorded.
+- **Blockers confirmed unchanged:** Biology live dead-end (B1), Chemistry zero exam content (B2), gateway unregistered for Chemistry/Biology (B3), stale internal docs (B4).
+- **Next task confirmed:** Documentation + gateway registration pass — register `9-Chemistry` and `9-Biology` in `EXPECTED` map; supersede stale internal curriculum docs. Zero content authoring, zero new curriculum research required.
+
+**Evidence source:** Governance documents (this folder) + direct repository inspection.
+**Confidence:** HIGH
+**Status:** CLOSED — reconstruction complete. Project state is fully understood. Implementation may proceed on the confirmed next task.

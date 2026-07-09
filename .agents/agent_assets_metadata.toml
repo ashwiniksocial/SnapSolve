@@ -59,13 +59,13 @@ title = "PROJECT_MEMORY.md"
 id = "5g2zv4rt7wfc5ouiK3YuI"
 uri = "file://docs/GOVERNANCE/PROJECT_STATUS.md"
 type = "text"
-title = "PROJECT_STATUS.md — 5 sections"
+title = "PROJECT_STATUS.md — updated 2026-07-09"
 
 [[outputs]]
 id = "CsEMtZAOjrtCRGJjqfAse"
 uri = "file://docs/GOVERNANCE/DECISION_LOG.md"
 type = "text"
-title = "DECISION_LOG.md"
+title = "DECISION_LOG.md — DEC-012 and DEC-013 added"
 
 [[outputs]]
 id = "5U9fG-zwUjBsw8XLOIjKg"
