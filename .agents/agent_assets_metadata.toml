@@ -78,3 +78,9 @@ id = "3M3QXTeSPU6qGnh0AGuyD"
 uri = "file://GOVERNANCE_AUDIT.md"
 type = "text"
 title = "GOVERNANCE_AUDIT.md — 2026-07-09"
+
+[[outputs]]
+id = "zvGnMtMfgrXoo0a2capAc"
+uri = "file://docs/GOVERNANCE/PROJECT_STRUCTURE.md"
+type = "text"
+title = "PROJECT_STRUCTURE.md — 2026-07-09"
