@@ -28,6 +28,151 @@
 
 ---
 
+## Milestones
+
+| # | Milestone | Gate | Covers |
+|---|---|---|---|
+| M1 | **Governance Complete** | All governance documents live, consistent, and covering full scope | Phases 0-doc |
+| M2 | **CBSE Class 9 Complete** | All Class 9 subjects release-ready | Phase 0 + Phase 1 + Phase 2 |
+| M3 | **CBSE Classes 6–8 Complete** | All Classes 6–8 subjects release-ready | Phase 3 |
+| M4 | **Closed Beta** | Invite-only access; feedback loop active | After M2 |
+| M5 | **Open Beta** | Public access; all content complete | After M3 |
+| M6 | **Half-Yearly Launch** | All release gates OPEN; full public launch | After M5 |
+
+---
+
+### Milestone 1 — Governance Complete
+
+**Gate:** Every governance document is live, internally consistent, and covers the full approved scope. No stale documents remain without a supersession notice. No live defects exist in governance records.
+
+**Completion criteria:**
+
+| # | Criterion | Status |
+|---|---|---|
+| G1 | `docs/GOVERNANCE/` — all 7 documents live (PMC, PM, PS, DL, CG, PROJECT_STRUCTURE, ROADMAP) | **DONE** |
+| G2 | `GOVERNANCE_AUDIT.md` v1.0 frozen at repo root | **DONE** |
+| G3 | Root audit documents complete (CLASS9_SCIENCE_LAUNCH_READINESS, CLASS9_SCIENCE_EXECUTIVE_DECISION, GATEWAY_FIX_VERIFICATION) | **DONE** |
+| G4 | `replit.md` corrected: class range "6–12" → "6–9"; question count updated (P0-A) | OPEN |
+| G5 | Stale internal docs superseded: `GATEWAY_CHANGE_APPROVAL.md` and `PROJECT_LAUNCH_CURRICULUM_MAP_2026_27.md` carry supersession notices (P0-C) | OPEN |
+| G6 | `PROJECT_STATUS.md` decision log count corrected: 11 → 13 (P0-D) | OPEN |
+| G7 | `CHECKPOINT_GATEWAYS.md` Gate 4 U3 corrected: marked CLOSED until Biology UI fix is live (P0-E) | OPEN |
+
+**Deliverable:** Every governance document accurately reflects the current state of the repository and the approved scope. A new session that reads the governance folder in order arrives at correct assumptions before writing a single line of code.
+
+---
+
+### Milestone 2 — CBSE Class 9 Complete
+
+**Gate:** Every approved Class 9 subject has a gateway-registered, fully authored, correctly labeled, UI-wired question bank, and the Class 9 release gate is OPEN for all subjects.
+
+**Dependency:** M1 complete.
+
+**Completion criteria:**
+
+| # | Criterion | Phase | Status |
+|---|---|---|---|
+| C1 | Mathematics (Classes 6–9) release gate OPEN | Done | **DONE** |
+| C2 | UI subject list corrected: Biology/Economics/Computer Science hidden or gated; Science shown as unified subject (P0-B) | Phase 0 | OPEN |
+| C3 | `9-Chemistry` registered in curriculum gateway (P1-A) | Phase 1 | OPEN |
+| C4 | `9-Biology` registered in curriculum gateway (P1-B) | Phase 1 | OPEN |
+| C5 | Class 9 Chemistry: 3 official exam chapters (Ch5, Ch8, Ch9 equivalents) fully authored, gateway PASS (P1-C) | Phase 1 | OPEN |
+| C6 | Class 9 Biology: 4 official exam chapters scaffolded, authored, wired into `index.ts`, gateway PASS (P1-D) | Phase 1 | OPEN |
+| C7 | Physics Gravitation resolved: labeled non-exam or deprecated (P1-E) | Phase 1 | OPEN |
+| C8 | Physics Simple Machines gap filled (P1-E) | Phase 1 | OPEN |
+| C9 | Class 9 Computer Applications (CA, Subject Code 165): audited, gateway-registered, authored, wired (P2-A) | Phase 2 | OPEN |
+| C10 | Class 9 Information Technology (IT, Subject Code 402): audited, gateway-registered, authored, wired (P2-B) | Phase 2 | OPEN |
+| C11 | Class 9 Artificial Intelligence (AI, Subject Code 417): audited, gateway-registered, authored, wired (P2-C) | Phase 2 | OPEN |
+| C12 | All Class 9 subjects: curriculum gateway exits 0 failures | Phase 2 | OPEN |
+| C13 | Non-exam chapters (Chemistry Ch01, Gravitation if retained): labeled in UI | Phase 1 | OPEN |
+
+**Deliverable:** A student in Class 9 can practice every approved CBSE 2026-27 subject — Mathematics, Science (Physics, Chemistry, Biology), Computer Applications, IT, and AI — with no empty states, no misleading subjects, and no non-exam content presented as exam-ready.
+
+---
+
+### Milestone 3 — CBSE Classes 6–8 Complete
+
+**Gate:** Every approved Class 6–8 subject has a gateway-registered, authored, UI-wired question bank, and the release gate is OPEN for all classes.
+
+**Dependency:** M2 complete.
+
+**Completion criteria:**
+
+| # | Criterion | Phase | Status |
+|---|---|---|---|
+| D1 | Mathematics Classes 6–8 release gate OPEN | Done | **DONE** |
+| D2 | Class 6 Science: official chapter list audited, gateway-registered, authored, wired (P3-A) | Phase 3 | OPEN |
+| D3 | Class 7 Science: official chapter list audited, gateway-registered, authored, wired (P3-A) | Phase 3 | OPEN |
+| D4 | Class 8 Science: official chapter list audited, gateway-registered, authored, wired (P3-A) | Phase 3 | OPEN |
+| D5 | Class 6 Computational Thinking and AI: audited, gateway-registered, authored, wired (P3-B) | Phase 3 | OPEN |
+| D6 | Class 7 Computational Thinking and AI: audited, gateway-registered, authored, wired (P3-B) | Phase 3 | OPEN |
+| D7 | Class 8 Computational Thinking and AI: audited, gateway-registered, authored, wired (P3-B) | Phase 3 | OPEN |
+| D8 | All Classes 6–8 subjects: curriculum gateway exits 0 failures | Phase 3 | OPEN |
+
+**Deliverable:** A student in any of Classes 6, 7, or 8 can practice every approved CBSE subject for their year with no empty states.
+
+---
+
+### Milestone 4 — Closed Beta
+
+**Gate:** Platform is functionally complete for Class 9 (M2 done). Invited users can access the full Class 9 experience. A structured feedback loop is in place.
+
+**Dependency:** M2 complete. M3 is not required — closed beta may run in parallel with Phase 3 authoring.
+
+**Completion criteria:**
+
+| # | Criterion |
+|---|---|
+| B1 | All M2 content and code criteria met |
+| B2 | Invite-only access mechanism implemented (auth gating or invite codes) |
+| B3 | Feedback collection mechanism in place (in-app or external) |
+| B4 | Critical UI gate conditions all OPEN (no empty subjects, no misleading labels) |
+| B5 | AI pipeline confirmed stable under real student load |
+
+**Deliverable:** Real Class 9 students using the product under controlled conditions. Feedback informs final launch quality.
+
+---
+
+### Milestone 5 — Open Beta
+
+**Gate:** All content for all approved classes is complete (M3 done). Platform is open to any student in Classes 6–9 without an invite.
+
+**Dependency:** M3 complete; M4 feedback incorporated.
+
+**Completion criteria:**
+
+| # | Criterion |
+|---|---|
+| E1 | All M3 content and code criteria met |
+| E2 | M4 (closed beta) feedback addressed |
+| E3 | All curriculum gateway keys passing with 0 failures |
+| E4 | All 7 checkpoint gates OPEN or PARTIAL with no blocking conditions |
+| E5 | Public access enabled |
+
+**Deliverable:** Full platform available to any CBSE Class 6–9 student. Final quality validation before the examination deadline.
+
+---
+
+### Milestone 6 — Half-Yearly Launch
+
+**Gate:** All release gates fully OPEN. Platform launched publicly before the 2026 CBSE Half-Yearly examinations.
+
+**Dependency:** M5 complete.
+
+**Completion criteria:**
+
+| # | Criterion |
+|---|---|
+| F1 | All M5 criteria met |
+| F2 | All 7 checkpoint gates OPEN (no PARTIAL or CLOSED) |
+| F3 | Curriculum gateway: 0 failures, 0 unregistered approved subjects |
+| F4 | No student-facing subject is selectable with empty or non-exam content without a clear label |
+| F5 | `replit.md`, all governance documents, and all gateway registrations are current and consistent |
+| F6 | Platform launched before CBSE 2026 Half-Yearly examination window opens |
+
+**Deliverable:** SnapSolve is live. Every CBSE Class 6–9 student preparing for their 2026 Half-Yearly examinations can use the platform.
+
+---
+
 ## Phase 0 — Live defect fixes and governance cleanup
 
 **Dependency:** None — all Phase 0 tasks are independent of each other and of new content.
