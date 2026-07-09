@@ -72,3 +72,9 @@ id = "5U9fG-zwUjBsw8XLOIjKg"
 uri = "file://docs/GOVERNANCE/CHECKPOINT_GATEWAYS.md"
 type = "text"
 title = "CHECKPOINT_GATEWAYS.md — 7 gates"
+
+[[outputs]]
+id = "3M3QXTeSPU6qGnh0AGuyD"
+uri = "file://GOVERNANCE_AUDIT.md"
+type = "text"
+title = "GOVERNANCE_AUDIT.md — 2026-07-09"
