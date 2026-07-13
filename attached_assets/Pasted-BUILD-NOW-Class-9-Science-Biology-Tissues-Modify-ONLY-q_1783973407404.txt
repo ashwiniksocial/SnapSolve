@@ -1,0 +1,83 @@
+BUILD NOW — Class 9 Science / Biology / Tissues.
+
+Modify ONLY:
+
+`question-bank/questions/biology/class9/ch02-tissues.ts`
+
+Objective:
+Make the existing Tissues chapter fully usable for students by authoring a strong QuestionV2 question bank.
+
+Requirements:
+
+* Create exactly 50 questions.
+* Use the existing QuestionV2 schema and patterns from:
+  `ch01-the-fundamental-unit-of-life.ts`
+* Preserve all existing architecture and wiring.
+* Do not modify any other file unless compilation fails directly because of this file.
+
+Coverage:
+Topic 1 — Plant Tissues
+
+* Meristematic tissue
+* Apical, lateral and intercalary meristems
+* Permanent tissues
+* Parenchyma
+* Collenchyma
+* Sclerenchyma
+* Xylem
+* Phloem
+
+Topic 2 — Animal Tissues
+
+* Epithelial tissue
+* Connective tissue
+* Muscular tissue
+* Nervous tissue
+
+Question quality:
+
+* Easy: 40%
+* Medium: 40%
+* Hard: 20%
+* Mix conceptual understanding, application, comparison, reasoning and exam-style questions.
+* Include MCQ, ShortAnswer and HOTS using only question types already supported by the existing schema.
+* Avoid trivial repetition.
+* Avoid duplicate questions.
+* Explanations must teach the concept clearly, not merely state the answer.
+* Keep language suitable for a weak Class 9 student.
+* Every question must be traceable to the confirmed current Class 9 Biology chapter scope already established in the project.
+
+STRICTLY DO NOT:
+
+* Create governance documents.
+* Modify trackers.
+* Modify DECISION_LOG.
+* Modify PROJECT_STATUS.
+* Change UI.
+* Change adapters.
+* Change services.
+* Change gateways.
+* Change prompts.
+* Change architecture.
+* Start another chapter.
+
+After authoring:
+
+1. Run the minimum required type/build validation.
+2. Verify exactly 50 questions load from the file.
+3. Verify IDs are unique.
+4. Verify topic IDs are valid.
+5. Verify difficulty distribution is 20 Easy / 20 Medium / 10 Hard.
+6. Confirm no other file was modified.
+
+Report only:
+
+* Questions created
+* Topic distribution
+* Difficulty distribution
+* Question-type distribution
+* Validation result
+* Files modified
+* Any actual blocker
+
+STOP.
