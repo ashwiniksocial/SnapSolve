@@ -73,7 +73,7 @@ Allowed values: `NOT STARTED` · `IN PROGRESS` · `COMPLETE` · `PENDING SOURCE`
 | SRC-009 | 8 | Mathematics | Ganita Prakash — Textbook of Mathematics for Grade 8 (Part II) | NCERT Textbook | Reprint 2026–27 | Part II: 8 PDFs received | NOT STARTED | 0% | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED | BLOCKED | Extract exact chapter titles from official Ganita Prakash Grade 8 Part II PDFs; record in governance | Chapter titles not yet extracted |
 | SRC-010 | 8 | Science | Curiosity — Textbook of Science for Grade 8 | NCERT Textbook | Reprint 2026–27 | 14 PDFs received; canonical pattern pending extraction | NOT STARTED | 0% | NOT STARTED | NOT STARTED | NOT STARTED | NOT APPLICABLE | BLOCKED | Extract exact chapter titles from official Curiosity Grade 8 PDFs; register `8-Science` in gateway | ACADEMIC_LIBRARY_INDEX records source as complete; chapter titles not yet extracted |
 | SRC-011 | 8 | Computational Thinking and AI | CBSE Computational Thinking and Artificial Intelligence Curriculum | CBSE Curriculum Document | 2026–27; Classes 3–8 combined | Combined official PDF (class-wise extraction pending) | NOT STARTED | 0% | NOT STARTED | NOT STARTED | NOT STARTED | NOT APPLICABLE | BLOCKED | Extract Class 8 scope from combined PDF; freeze chapter/unit list | Same physical document as SRC-003 and SRC-007 |
-| SRC-012 | 9 | Mathematics | Ganita Manjari — Textbook of Mathematics for Grade 9 (Part I) | NCERT Textbook | First Edition April 2026 | 9 PDFs + 1 cover JPG received | IN PROGRESS | 50% | IN PROGRESS | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED | Update `9-Mathematics` EXPECTED map with 8 official Part I chapter names; rename stale repo chapters; create 2 missing chapter files | 8 Part I chapter titles recorded in ACADEMIC_LIBRARY_INDEX; gateway and repo use pre-2026-27 names; DEC-007 established structure |
+| SRC-012 | 9 | Mathematics | Ganita Manjari — Textbook of Mathematics for Grade 9 (Part I) | NCERT Textbook | First Edition April 2026 | 9 PDFs + 1 cover JPG received | IN PROGRESS | 50% | IN PROGRESS | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED | Update `9-Mathematics` EXPECTED map with 8 official Part I chapter names; rename stale repo chapters; create 2 missing chapter files | 8 Part I chapter titles recorded in ACADEMIC_LIBRARY_INDEX; gateway and repo use pre-2026-27 names; source: CBSE `Maths_SecP1IX_2026-27.pdf` and PROJECT_BASELINE_2026_27.md Part C-4 |
 | SRC-013 | 9 | Mathematics | Ganita Manjari — Textbook of Mathematics for Grade 9 (Part II) | NCERT Textbook | Not yet released | Not yet received | PENDING SOURCE | 0% | PENDING SOURCE | PENDING SOURCE | PENDING SOURCE | PENDING SOURCE | BLOCKED | Await official NCERT publication of Part II; receive source; begin extraction | Implementation rule: do not invent, infer, or author Part II chapters until official NCERT publication is received (ACADEMIC_LIBRARY_INDEX §6.1) |
 | SRC-014 | 9 | Science | Exploration — Textbook of Science for Grade 9 | NCERT Textbook | First Edition April 2026 | `iesc1ps`, `iesc101`–`iesc113` (14 PDFs) | IN PROGRESS | 40% | IN PROGRESS | IN PROGRESS | IN PROGRESS | NOT STARTED | NOT STARTED | Extract exact chapter titles from official Exploration PDFs to confirm DEC-007 14-chapter list; complete Chemistry, Biology, Earth Science gateway registration | Chapter structure established via DEC-007; ACADEMIC_LIBRARY_INDEX notes chapter titles still to be extracted from PDFs; Physics gateway PASS; Chemistry/Biology/EarthScience gateways not registered |
 | SRC-015 | 9 | Artificial Intelligence (417) | CBSE Artificial Intelligence Syllabus — Code 417 | CBSE Syllabus Document | 2026–27 | Official PDF received | NOT STARTED | 0% | NOT STARTED | NOT STARTED | NOT STARTED | NOT APPLICABLE | NOT STARTED | Extract unit list, marks, and exam-active scope from Code 417 syllabus; cross-check with SRC-016 and SRC-017; register `9-ArtificialIntelligence` in gateway | Part of three-document set for AI (417); unit-by-unit freeze requires all three sources |
@@ -91,13 +91,11 @@ Allowed values: `NOT STARTED` · `IN PROGRESS` · `COMPLETE` · `PENDING SOURCE`
 | Status | Count | Source IDs |
 |---|---|---|
 | COMPLETE | 0 | — |
-| IN PROGRESS | 5 | SRC-001, SRC-002, SRC-004, SRC-005, SRC-012, SRC-014, SRC-021 |
-| NOT STARTED | 10 | SRC-003, SRC-006, SRC-007, SRC-008, SRC-009, SRC-010, SRC-011, SRC-015, SRC-016, SRC-017, SRC-018, SRC-019, SRC-020 |
+| IN PROGRESS | 7 | SRC-001, SRC-002, SRC-004, SRC-005, SRC-012, SRC-014, SRC-021 |
+| NOT STARTED | 13 | SRC-003, SRC-006, SRC-007, SRC-008, SRC-009, SRC-010, SRC-011, SRC-015, SRC-016, SRC-017, SRC-018, SRC-019, SRC-020 |
 | PENDING SOURCE | 1 | SRC-013 |
 | BLOCKED | 0 | — |
 | NOT APPLICABLE | 0 | — |
-
-**Note:** IN PROGRESS count includes SRC-014 and SRC-021 making actual count 7 rows IN PROGRESS, 12 rows NOT STARTED, 1 PENDING SOURCE. Table above is corrected in detail rows.
 
 ---
 
