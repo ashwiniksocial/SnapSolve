@@ -1,12 +1,18 @@
 # SOURCE_EXTRACTION_TRACKER.md
 
 **Document type:** Official curriculum source extraction and implementation mapping tracker  
-**Version:** 1.0 (draft)  
+**Version:** 1.0  
 **Date:** 13 July 2026  
-**Status:** LIVE TRACKER — updated after each extraction session  
+**Frozen:** 14 July 2026 — DEC-017  
+**Status:** FROZEN v1.0 — source statuses locked at baseline; updates permitted only for genuine extraction progress, official source revisions, or newly released official sources  
+**Baseline source count:** 21  
+**Verification result:** VERIFIED  
+**Verification date:** 14 July 2026  
 **Authority:** `ACADEMIC_LIBRARY_INDEX.md` (FROZEN v1.0) is the canonical source list. This document tracks implementation progress against it.
 
-**Source files read to populate this document:**
+**Change-control rule:** Do not repeat the completed source-registry audit unless an official source changes or a documented conflict appears. Update individual row statuses only as extraction work is completed against that source.
+
+**Source files read to populate this document (initial population):**
 
 1. `docs/governance/ACADEMIC_LIBRARY_INDEX.md` — canonical source library (FROZEN v1.0)
 2. `docs/governance/SYLLABUS_FREEZE_v1.md` — implementation map (draft)

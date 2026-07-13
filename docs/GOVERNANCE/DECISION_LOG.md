@@ -281,3 +281,43 @@ Additionally, three audit documents were committed to the repo root:
 **Evidence source:** Product/CEO decision — governance document, not a curriculum fact.
 **Confidence:** HIGH
 **Status:** ACTIVE — binding on all curriculum and content decisions.
+
+---
+
+## 2026-07-14
+
+---
+
+### DEC-017 — Source Extraction Tracker frozen as baseline and added to mandatory restart set
+
+**Decision:** `docs/governance/SOURCE_EXTRACTION_TRACKER.md` is frozen at v1.0 as the verified baseline record of all 21 official curriculum sources tracked by SnapSolve.
+
+**Freeze record:**
+
+| Field | Value |
+|---|---|
+| Document | `docs/governance/SOURCE_EXTRACTION_TRACKER.md` |
+| Version | 1.0 |
+| Baseline source count | 21 |
+| Verification result | VERIFIED |
+| Verification date | 14 July 2026 |
+| Verified against | PROJECT_MEMORY, PROJECT_STATUS, DECISION_LOG, CHECKPOINT_GATEWAYS, ACADEMIC_LIBRARY_INDEX, SYLLABUS_FREEZE_v1 |
+| Corrections applied at freeze | 2 (summary counts corrected: IN PROGRESS 5→7, NOT STARTED 10→13; SRC-012 Remarks: erroneous DEC-007 reference replaced with correct source citation) |
+
+**Change-control rule:** Updates to individual source rows are permitted only to record genuine extraction progress, official source revisions, or newly released official sources (e.g. Ganita Manjari Part II on NCERT release). The completed source-registry audit must not be repeated unless an official source changes or a documented conflict appears.
+
+**Mandatory session restart document set (updated):** Future sessions must read all seven documents before planning or implementing any curriculum, content, or governance work:
+
+1. `docs/GOVERNANCE/PROJECT_MEMORY.md`
+2. `docs/GOVERNANCE/PROJECT_STATUS.md`
+3. `docs/GOVERNANCE/DECISION_LOG.md`
+4. `docs/GOVERNANCE/CHECKPOINT_GATEWAYS.md`
+5. `docs/governance/ACADEMIC_LIBRARY_INDEX.md`
+6. `docs/governance/SYLLABUS_FREEZE_v1.md`
+7. `docs/governance/SOURCE_EXTRACTION_TRACKER.md` ← added by this decision
+
+**Rationale:** The tracker captures which sources have been extracted and which remain pending. Without it, a future session cannot know the current extraction state and may re-audit sources already verified, or begin implementation work against a source whose extraction is incomplete.
+
+**Evidence source:** Product/governance decision — documentation, not a curriculum fact.
+**Confidence:** HIGH
+**Status:** ACTIVE — binding on all future session restarts and source extraction work.

@@ -2,8 +2,18 @@
 
 **Document type:** Living status record — updated after every significant work session.
 **Governance authority:** `PROJECT_MASTER_CONTEXT.md`
-**Last updated:** 2026-07-13
+**Last updated:** 2026-07-14
 **Sources:** `GATEWAY_FIX_VERIFICATION.md`, `CLASS9_SCIENCE_LAUNCH_READINESS.md`, `CLASS9_SCIENCE_EXECUTIVE_DECISION.md`, direct repository inspection, governance reconstruction session 2026-07-09.
+
+**Mandatory session restart documents (7):** Read all of these before any planning, authoring, or implementation work. See DEC-017 for rationale.
+
+1. `docs/GOVERNANCE/PROJECT_MEMORY.md`
+2. `docs/GOVERNANCE/PROJECT_STATUS.md`
+3. `docs/GOVERNANCE/DECISION_LOG.md`
+4. `docs/GOVERNANCE/CHECKPOINT_GATEWAYS.md`
+5. `docs/governance/ACADEMIC_LIBRARY_INDEX.md`
+6. `docs/governance/SYLLABUS_FREEZE_v1.md`
+7. `docs/governance/SOURCE_EXTRACTION_TRACKER.md`
 
 ---
 
