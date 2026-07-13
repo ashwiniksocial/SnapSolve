@@ -321,3 +321,37 @@ Additionally, three audit documents were committed to the repo root:
 **Evidence source:** Product/governance decision — documentation, not a curriculum fact.
 **Confidence:** HIGH
 **Status:** ACTIVE — binding on all future session restarts and source extraction work.
+
+---
+
+## 2026-07-14
+
+---
+
+### DEC-018 — SRC-021 extraction confirmed complete; cross-check record created
+
+**Decision:** SRC-021 (CBSE Secondary Curriculum 2026-27) extraction is confirmed complete at 100%. Curriculum mapping (CM) is confirmed complete. The tracker row is updated accordingly.
+
+**Cross-check findings:**
+
+| In-scope Class 9 subject | Source PDF within SRC-021 | Extraction location | Verdict |
+|---|---|---|---|
+| Mathematics | `Maths_SecP1IX_2026-27.pdf` (560 KB) | PROJECT_BASELINE C-4 | COMPLETE |
+| Science | `Science_SecP1IX_2026-27_RM.pdf` + DEC-007 CBSE Circular | PROJECT_BASELINE C-8 | COMPLETE |
+| Computer Applications (165) | `Computer_Applications_SecP1IX_2026-27.pdf` (233 KB) | PROJECT_BASELINE C-9 | COMPLETE |
+| Information Technology (402) | `402-IT-IX.pdf` (272 KB) | PROJECT_BASELINE C-10 | COMPLETE |
+| Artificial Intelligence (417) | `417-AI-IX.pdf` (319 KB) | PROJECT_BASELINE C-11 | COMPLETE |
+
+All 5 in-scope Class 9 subjects have been extracted and verified. 9 out-of-scope subjects (Social Science, English, Hindi, Sanskrit, other languages, Computer Science, Economics, Health & Physical Education, Fine Arts) are confirmed excluded — no tracker rows exist for them, which is correct.
+
+**Open item:** AI (417) Unit B5 "Introduction to Python" — theory/practical hour split not recorded in PROJECT_BASELINE C-11. This is a minor gap in SRC-015/016/017 (the AI source set), not a gap in SRC-021 extraction. It does not affect subject scope or exam-active determination. Resolution deferred to the AI (417) implementation sprint (P5).
+
+**Artefact created:** `docs/governance/SRC021_CROSS_CHECK.md` — formal cross-check table with subject-by-subject verification, excluded-subject confirmation, and open item record.
+
+**Tracker changes applied:**
+- SRC-021: Ext Status IN PROGRESS → COMPLETE; Ext % 80% → 100%; CM IN PROGRESS → COMPLETE
+- EXTRACTION STATUS SUMMARY: COMPLETE count 0 → 1; IN PROGRESS count 7 → 6
+
+**Evidence source:** Cross-check of PROJECT_BASELINE_2026_27.md Parts C-4 through C-14 against ACADEMIC_LIBRARY_INDEX §2 (frozen in-scope subject list) and SOURCE_EXTRACTION_TRACKER SRC-021 row.
+**Confidence:** HIGH — all source PDFs confirmed via HTTP 200 on 2026-07-09; all extractions in PROJECT_BASELINE are marked FROZEN with source URLs.
+**Status:** ACTIVE — SRC-021 extraction complete; remaining SRC-021 columns (GM, QBM, UIM, Freeze) to be updated as implementation work progresses.

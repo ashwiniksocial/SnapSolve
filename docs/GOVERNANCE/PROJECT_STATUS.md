@@ -78,12 +78,15 @@ Physics passes the curriculum gateway. Chapter-level content issues (Gravitation
 | `PROJECT_MASTER_CONTEXT.md` | `docs/GOVERNANCE/` | Complete — 9 sections |
 | `PROJECT_MEMORY.md` | `docs/GOVERNANCE/` | Complete |
 | `PROJECT_STATUS.md` | `docs/GOVERNANCE/` | This file |
-| `DECISION_LOG.md` | `docs/GOVERNANCE/` | Complete — 16 decisions recorded |
+| `DECISION_LOG.md` | `docs/GOVERNANCE/` | Complete — 18 decisions recorded (DEC-001–DEC-018) |
 | `CHECKPOINT_GATEWAYS.md` | `docs/GOVERNANCE/` | Complete |
 | `CLASS9_SCIENCE_LAUNCH_READINESS.md` | repo root | Complete — full audit |
 | `CLASS9_SCIENCE_EXECUTIVE_DECISION.md` | repo root | Complete — CEO-level decision brief |
 | `GATEWAY_FIX_VERIFICATION.md` | repo root | Complete — GC-01 and GC-04 verified |
 | `ACADEMIC_LIBRARY_INDEX.md` | `docs/governance/` | **FROZEN v1.0** — 13 July 2026 (DEC-016) |
+| `SYLLABUS_FREEZE_v1.md` | `docs/governance/` | **FROZEN** — 17-subject implementation map |
+| `SOURCE_EXTRACTION_TRACKER.md` | `docs/governance/` | **FROZEN v1.0** — 21-source baseline (DEC-017); 1 COMPLETE, 6 IN PROGRESS as of 14 July 2026 |
+| `SRC021_CROSS_CHECK.md` | `docs/governance/` | Complete — SRC-021 cross-check; all 5 in-scope Class 9 subjects verified (DEC-018) |
 
 ### AI teaching pipeline
 

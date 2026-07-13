@@ -88,7 +88,7 @@ Allowed values: `NOT STARTED` · `IN PROGRESS` · `COMPLETE` · `PENDING SOURCE`
 | SRC-018 | 9 | Information Technology (402) | CBSE Information Technology Syllabus — Code 402 | CBSE Syllabus Document | 2026–27 | Official PDF received | NOT STARTED | 0% | NOT STARTED | NOT STARTED | NOT STARTED | NOT APPLICABLE | NOT STARTED | Extract unit list, marks, and exam-active scope from Code 402 syllabus; cross-check with SRC-019; register `9-InformationTechnology` in gateway | Part of two-document set for IT (402) |
 | SRC-019 | 9 | Information Technology (402) | NCERT Domestic Data Entry Operator — Textbook for Class IX | NCERT Textbook | 2026–27 | Official PDF received | NOT STARTED | 0% | NOT STARTED | NOT STARTED | NOT STARTED | NOT APPLICABLE | NOT STARTED | Extract unit scope and content coverage; cross-check with SRC-018 | Part of two-document set for IT (402) |
 | SRC-020 | 9 | Computer Applications (165) | CBSE Computer Applications Syllabus — Code 165 | CBSE Syllabus Document | 2026–27 | Official PDF received | NOT STARTED | 0% | NOT STARTED | NOT STARTED | NOT STARTED | NOT APPLICABLE | NOT STARTED | Extract unit list, marks, and exam-active scope from Code 165 syllabus; register `9-ComputerApplications` in gateway | Syllabus only; no complete official textbook currently in source library (ACADEMIC_LIBRARY_INDEX §6.5) |
-| SRC-021 | All | Overarching | CBSE Secondary Curriculum 2026–27 | CBSE Curriculum Document | 2026–27 | `Maths_SecP1IX_2026-27.pdf` and related documents on `cbseacademic.nic.in` | IN PROGRESS | 80% | IN PROGRESS | IN PROGRESS | NOT STARTED | NOT STARTED | NOT STARTED | Complete cross-check of all Class 9 subject structures against this document; confirm no subject-level gaps remain | Used extensively in PROJECT_BASELINE_2026_27.md; covers Class 9 curriculum framework and subject structure; does not cover Classes 6–8 |
+| SRC-021 | All | Overarching | CBSE Secondary Curriculum 2026–27 | CBSE Curriculum Document | 2026–27 | `Maths_SecP1IX_2026-27.pdf` and related documents on `cbseacademic.nic.in` | COMPLETE | 100% | COMPLETE | IN PROGRESS | NOT STARTED | NOT STARTED | NOT STARTED | GM: register CA/IT/AI gateways as implementation progresses; QBM/UIM: update as content is authored | Cross-check completed 14 July 2026 — all 5 in-scope Class 9 subjects extracted and verified; 9 out-of-scope subjects confirmed excluded. Open item: AI (417) B5 hour detail — minor; does not block extraction. See `SRC021_CROSS_CHECK.md` |
 
 ---
 
@@ -96,8 +96,8 @@ Allowed values: `NOT STARTED` · `IN PROGRESS` · `COMPLETE` · `PENDING SOURCE`
 
 | Status | Count | Source IDs |
 |---|---|---|
-| COMPLETE | 0 | — |
-| IN PROGRESS | 7 | SRC-001, SRC-002, SRC-004, SRC-005, SRC-012, SRC-014, SRC-021 |
+| COMPLETE | 1 | SRC-021 |
+| IN PROGRESS | 6 | SRC-001, SRC-002, SRC-004, SRC-005, SRC-012, SRC-014 |
 | NOT STARTED | 13 | SRC-003, SRC-006, SRC-007, SRC-008, SRC-009, SRC-010, SRC-011, SRC-015, SRC-016, SRC-017, SRC-018, SRC-019, SRC-020 |
 | PENDING SOURCE | 1 | SRC-013 |
 | BLOCKED | 0 | — |
