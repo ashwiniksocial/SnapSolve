@@ -2,7 +2,7 @@
 
 **Document type:** Living status record — updated after every significant work session.
 **Governance authority:** `PROJECT_MASTER_CONTEXT.md`
-**Last updated:** 2026-07-09
+**Last updated:** 2026-07-13
 **Sources:** `GATEWAY_FIX_VERIFICATION.md`, `CLASS9_SCIENCE_LAUNCH_READINESS.md`, `CLASS9_SCIENCE_EXECUTIVE_DECISION.md`, direct repository inspection, governance reconstruction session 2026-07-09.
 
 ---
@@ -27,6 +27,20 @@ All four classes pass the curriculum gateway with zero failures. Warnings are no
 | 5 (3 full match, 1 partial, 1 non-exam) | 125 | PASS — clean | Partial |
 
 Physics passes the curriculum gateway. Chapter-level content issues (Gravitation label, Simple Machines gap) are recorded as open items — not gateway failures.
+
+### Question bank — Class 9 Biology (partial)
+
+| File | Chapter | Questions | Gateway | Quality Audit |
+|---|---|---|---|---|
+| `ch01-the-fundamental-unit-of-life.ts` | The Fundamental Unit of Life | 75 | slug detected — PASS | PASS — HOTS_EQUIVALENT tag fix applied (see DEC-015) |
+
+**Difficulty distribution:** Easy 30 · Medium 30 · Hard 15 (40%/40%/20%).
+**Topic coverage:** t1 Cell Theory and Cell Discovery 20q · t2 Cell Membrane and Cell Wall 25q · t3 Cell Organelles 30q.
+**Type distribution:** con×14, nce×16, cmp×12, asr×10, hot×13, pyq×10.
+**Duplicate IDs:** none.
+**Invalid tags:** none (after fix — all 12 STANDARD_TAGS references are valid).
+**TypeScript:** clean exit, zero errors.
+**Adapter:** CH01 imported and exported in `class9-biology.ts`.
 
 ### Question bank — Class 9 Chemistry (partial)
 
@@ -101,12 +115,12 @@ Prior internal documents (`PROJECT_LAUNCH_CURRICULUM_MAP_2026_27.md`, `GATEWAY_C
 
 ## Current blockers
 
-### BLOCKER 1 — Biology is live in the UI with zero content
+### BLOCKER 1 — Biology is live in the UI with partial content (Ch01 only)
 
-**Severity:** Critical — live student-facing defect.
-**Detail:** `Practice.tsx` lists "Biology" in `ALL_SUBJECTS`. `subjects.ts` has a full `SubjectConfig` for Biology. `index.ts` has zero Biology imports. A student who selects Biology gets zero chapters and zero questions — a silent dead-end, not a "coming soon" state.
-**Resolution:** Hide Biology in `ALL_SUBJECTS`, or render a "Coming Soon" gate. Does not require content authoring.
-**Dependency:** None — this is a one-line UI fix.
+**Severity:** High — potentially incomplete student-facing experience.
+**Detail:** `Practice.tsx` lists "Biology" in `ALL_SUBJECTS`. Ch01 (75q) is authored and wired into `class9-biology.ts`. Ch02–Ch04 are not yet authored. A student who selects Biology will see only one chapter; remaining chapters show zero questions.
+**Resolution:** Either surface Ch01 only (hide unwritten chapters), or render a "More chapters coming soon" notice. Does not require further content authoring to unblock.
+**Dependency:** None — UI-only decision.
 
 ### BLOCKER 2 — Chemistry exam-chapter authoring (PARTIALLY RESOLVED)
 

@@ -322,7 +322,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
     conceptsCovered: ["bio:9:ch01:cell-theory-postulates"],
     prerequisites: ["bio:9:ch01:cell-theory-postulates", "bio:9:ch01:prokaryote-eukaryote-distinction"],
     commonErrors: ["Claiming viruses ARE cells — they lack every defining feature of a cell.", "Claiming cell theory is wrong because of viruses — cell theory applies only to cellular life."],
-    tags: [STANDARD_TAGS.HOTS_EQUIVALENT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.TRICKY, STANDARD_TAGS.CONCEPTUAL, "class9", "ch01", "virus", "cell-theory"],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.TRICKY, STANDARD_TAGS.CONCEPTUAL, "class9", "ch01", "virus", "cell-theory"],
     source: "original",
   },
 

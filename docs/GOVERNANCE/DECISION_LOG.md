@@ -223,6 +223,34 @@ Additionally, three audit documents were committed to the repo root:
 
 ---
 
+### DEC-015 — Biology Ch01 "The Fundamental Unit of Life" authored and verified
+
+**Decision:** 75 questions authored for Class 9 Biology Chapter 1 with full V2 metadata. One invalid tag (`STANDARD_TAGS.HOTS_EQUIVALENT`) was identified and removed from `cmp-003`; `STANDARD_TAGS.BOARD_IMPORTANT` (already present in the same array) covers the intent.
+
+**Content summary:**
+
+| Dimension | Detail |
+|---|---|
+| File | `question-bank/questions/biology/class9/ch01-the-fundamental-unit-of-life.ts` |
+| Total questions | 75 |
+| Difficulty | Easy 30 · Medium 30 · Hard 15 |
+| Topics | t1 Cell Theory 20q · t2 Cell Membrane/Wall 25q · t3 Organelles 30q |
+| Types | con 14 · nce 16 · cmp 12 · asr 10 · hot 13 · pyq 10 |
+| Duplicate IDs | None |
+| Invalid tags | None (after fix) |
+
+**Verification results (2026-07-13):**
+- TypeScript (`pnpm --filter @workspace/homework-hero run typecheck`): PASS — clean exit, zero errors.
+- Curriculum gateway: Biology slug `fundamental-unit-of-life` detected in ch01 filename — PASS. No Biology failures in `curriculum-check` output.
+- Bank audit: Biology is outside the bank-audit script scope (Mathematics only by design) — not a defect.
+- Adapter wiring: `CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE` imported and spread into `CLASS9_BIOLOGY_QUESTIONS` in `class9-biology.ts`.
+
+**Evidence source:** Direct repository inspection; `tagging.ts` STANDARD_TAGS vocabulary; TypeScript compiler; `curriculum-check` output.
+**Confidence:** HIGH
+**Status:** CLOSED — Ch01 is content-complete and verified.
+
+---
+
 ### DEC-013 — Governance reconstruction session completed
 
 **Decision (session record):** A formal project-state reconstruction was performed at the start of the 2026-07-09 session. All four governance documents were read in full. Project state was confirmed as follows:
