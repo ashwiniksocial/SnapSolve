@@ -68,11 +68,12 @@ Physics passes the curriculum gateway. Chapter-level content issues (Gravitation
 | `PROJECT_MASTER_CONTEXT.md` | `docs/GOVERNANCE/` | Complete — 9 sections |
 | `PROJECT_MEMORY.md` | `docs/GOVERNANCE/` | Complete |
 | `PROJECT_STATUS.md` | `docs/GOVERNANCE/` | This file |
-| `DECISION_LOG.md` | `docs/GOVERNANCE/` | Complete — 11 decisions recorded |
+| `DECISION_LOG.md` | `docs/GOVERNANCE/` | Complete — 16 decisions recorded |
 | `CHECKPOINT_GATEWAYS.md` | `docs/GOVERNANCE/` | Complete |
 | `CLASS9_SCIENCE_LAUNCH_READINESS.md` | repo root | Complete — full audit |
 | `CLASS9_SCIENCE_EXECUTIVE_DECISION.md` | repo root | Complete — CEO-level decision brief |
 | `GATEWAY_FIX_VERIFICATION.md` | repo root | Complete — GC-01 and GC-04 verified |
+| `ACADEMIC_LIBRARY_INDEX.md` | `docs/governance/` | **FROZEN v1.0** — 13 July 2026 (DEC-016) |
 
 ### AI teaching pipeline
 

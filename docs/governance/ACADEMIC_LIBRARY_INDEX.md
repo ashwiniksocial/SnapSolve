@@ -2,9 +2,27 @@
 
 **Version:** 1.0  
 **Curriculum Session:** CBSE / NCERT 2026–27  
-**Status:** SOURCE LIBRARY UNDER FINAL VERIFICATION  
+**Status:** FROZEN v1.0  
 **Last Updated:** 13 July 2026  
 **Authority:** Official Government of India sources only
+
+**Approved by:** CEO  
+**Freeze Date:** 13 July 2026  
+**Freeze Version:** 1.0  
+**Freeze Authority:** Official Government of India academic sources only.
+
+---
+
+## CHANGE CONTROL RULE
+
+This document is frozen.  
+It may be modified only if:
+
+- NCERT officially releases a new textbook;
+- CBSE officially revises the curriculum;
+- A factual error is discovered against an official Government source.
+
+All modifications must record the official source, the date, and the decision number in DECISION_LOG.md before the change is applied.
 
 ---
 

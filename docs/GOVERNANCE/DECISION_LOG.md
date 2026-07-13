@@ -263,3 +263,21 @@ Additionally, three audit documents were committed to the repo root:
 **Evidence source:** Governance documents (this folder) + direct repository inspection.
 **Confidence:** HIGH
 **Status:** CLOSED — reconstruction complete. Project state is fully understood. Implementation may proceed on the confirmed next task.
+
+---
+
+## 2026-07-13
+
+---
+
+### DEC-016 — Academic Library Index frozen as the canonical source library
+
+**Decision:** `docs/governance/ACADEMIC_LIBRARY_INDEX.md` is frozen at v1.0 as the canonical record of all official Government of India academic sources held for SnapSolve. No chapter, topic, curriculum mapping, gateway rule, or content file may be created or modified unless it is traceable to a source listed in this index.
+
+**Rationale:** Formalises the source-library governance rule. Provides a single authoritative reference that any session, developer, or auditor can consult to verify whether a curriculum claim has official backing.
+
+**Change-control rule recorded in document:** Modifications permitted only on official NCERT release, official CBSE curriculum revision, or discovery of a factual error against an official Government source.
+
+**Evidence source:** Product/CEO decision — governance document, not a curriculum fact.
+**Confidence:** HIGH
+**Status:** ACTIVE — binding on all curriculum and content decisions.
