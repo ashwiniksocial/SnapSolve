@@ -1871,4 +1871,29 @@ export const CH02_TISSUES: QuestionV2[] = [
     boardIfPreviousYear: "CBSE",
   },
 
+  {
+    id: "bo-bio-9-ch02-cmp-015",
+    schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
+    chapterId: "ch02", chapterName: "Tissues",
+    topicId: "t2", topicName: "Animal Tissues",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Name the four main types of animal tissues and give one example location for each in the human body.",
+    answer: "The four main types of animal tissues are:\n1. Epithelial tissue — lines the skin (outer surface of body) and inner lining of the cheek.\n2. Connective tissue — found in bone, blood, cartilage, and tendons.\n3. Muscular tissue — found in the walls of the heart, in limb muscles, and in the walls of the intestine.\n4. Nervous tissue — found in the brain, spinal cord, and nerves.",
+    steps: [
+      { stepNumber: 1, title: "Epithelial tissue", explanation: "Covers body surfaces and lines organs. Example: skin, inner cheek lining." },
+      { stepNumber: 2, title: "Connective tissue", explanation: "Connects, supports, and binds other tissues. Example: bone, blood, cartilage." },
+      { stepNumber: 3, title: "Muscular tissue", explanation: "Responsible for movement. Example: heart wall (cardiac), limb muscles (striated), intestine wall (smooth)." },
+      { stepNumber: 4, title: "Nervous tissue", explanation: "Receives and transmits signals. Example: brain, spinal cord, nerves." },
+    ],
+    hint: "Think of what each tissue DOES — cover, connect, move, or signal — and match it to a body location.",
+    keyConcepts: ["epithelial tissue", "connective tissue", "muscular tissue", "nervous tissue"],
+    conceptsCovered: ["bio:9:ch02:animal-tissue-types", "bio:9:ch02:epithelial-tissue-definition", "bio:9:ch02:connective-tissue-matrix"],
+    prerequisites: [],
+    commonErrors: ["Forgetting connective tissue includes blood and bone — students often list only 'soft' connective tissues"],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.CONCEPTUAL, "class9", "ch02", "animal-tissues", "tissue-types"],
+    source: "original",
+  },
+
 ];
