@@ -1,0 +1,62 @@
+READ-ONLY COMPATIBILITY AUDIT ONLY.
+
+Do not modify any file.
+Do not install packages.
+Do not generate questions.
+Do not redesign architecture, UI, Practice, Solution, Revision, Analytics, Navigation, Home, or the teaching engine.
+
+Objective:
+Determine whether offline/template-generated questions can be added as normal stored QuestionV2 records without changing current student-facing behaviour.
+
+Inspect only the minimum necessary files for:
+
+1. QuestionV2 schema and validation
+2. Chapter/question-bank registration and adapters
+3. Practice question selection and rendering
+4. Compact / Standard / Detailed answer modes
+5. Solution and TeachingLesson pipeline
+6. Attempt recording and stable question IDs
+7. Analytics, mastery and topic tracking
+8. Revision scheduling and repeat-question behaviour
+9. Duplicate detection and difficulty/topic validation
+10. Production build requirements
+
+Answer these questions with exact file references:
+
+A. Can a generator produce stored QuestionV2 records that enter the existing system without UI or architecture changes?
+B. Which fields are mandatory?
+C. Which fields are optional but important for Compact, Standard and Detailed answers?
+D. Do solutions come from stored explanations, the AI teaching pipeline, or both?
+E. Will generated questions work with Analytics and Revision if they have permanent IDs?
+F. Can unseen-question rotation be supported using existing attempt history?
+G. What would break if questions were generated live at runtime?
+H. What is the smallest safe implementation for an offline generator proof?
+I. Exactly which files would need modification for that proof?
+J. Can the proof be completed without changing the QuestionV2 schema?
+
+Final report format:
+
+1. Compatibility verdict:
+   - COMPATIBLE WITHOUT ARCHITECTURE CHANGE
+   - COMPATIBLE WITH SMALL BACKWARD-COMPATIBLE CHANGE
+   - NOT COMPATIBLE
+
+2. Current end-to-end data flow
+
+3. Mandatory generated-question contract
+
+4. Risks and blockers
+
+5. Smallest proof-of-concept recommendation
+
+6. Exact files that would be modified
+
+7. Estimated Replit effort and risk:
+   - Low / Medium / High
+
+8. Final decision:
+   - BUILD PROOF
+   - DO NOT BUILD
+
+Stop after the report.
+Do not implement anything.
