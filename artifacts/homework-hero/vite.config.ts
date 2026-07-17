@@ -30,7 +30,7 @@ export default defineConfig({
   base: basePath,
   plugins: [
     react(),
-    tailwindcss({ optimize: false }),
+    tailwindcss(),
     runtimeErrorOverlay(),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
@@ -67,7 +67,8 @@ export default defineConfig({
       strict: true,
       allow: [
         path.resolve(import.meta.dirname),
-        path.resolve(import.meta.dirname, "../.."),
+        path.resolve(import.meta.dirname, "../../question-bank"),
+        path.resolve(import.meta.dirname, "../../lib"),
       ],
     },
   },
