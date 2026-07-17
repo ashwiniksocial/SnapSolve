@@ -1,0 +1,77 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read target file → append questions → validate → freeze → next chapter.
+
+Do NOT modify:
+- frozen Mathematics chapters
+- completed Physics Chapter 1 — Motion
+- UI
+- navigation
+- architecture
+- AI pipeline
+- prompts
+- LessonRenderer
+- unrelated files
+
+Current task:
+Class 9 Physics Chapter 2 — Force and Laws of Motion.
+
+Instructions:
+1. Locate only the target chapter file and directly required schema/type file.
+2. Do not scan the repository.
+3. Do not read unrelated chapter files.
+4. Retain all valid existing questions.
+5. Increase the chapter to a minimum of 50 strong, unique questions.
+6. Follow natural syllabus weightage, not equal questions per topic.
+7. Use only authorised current NCERT/CBSE Class 9 content.
+8. No Class 10 leakage.
+9. Do not produce a plan. Begin editing immediately.
+
+Cover adequately:
+- force and change in motion
+- balanced and unbalanced forces
+- inertia
+- mass as a measure of inertia
+- Newton’s first law
+- momentum
+- Newton’s second law
+- force, mass and acceleration
+- change in momentum
+- Newton’s third law
+- action–reaction pairs
+- conservation of momentum
+- conceptual and numerical applications
+
+Question mix:
+- MCQ
+- short answer
+- long answer
+- numerical
+- assertion–reason where appropriate
+- HOTS
+- NCERT/PYQ-style questions where applicable
+
+Quality:
+- balanced Easy/Medium/Hard
+- scientifically and mathematically verified
+- correct formulas, units, signs and calculations
+- realistic numerical values
+- complete explanations in the existing project format
+- no duplicate IDs or duplicate questions
+- no cosmetic rewriting of valid existing questions
+
+Validation:
+- verify final count and topic counts
+- check duplicate IDs and duplicate questions
+- run TypeScript typecheck
+- fix only confirmed errors
+- freeze the chapter after validation
+
+Return only:
+- existing count
+- questions added
+- final count
+- topic coverage
+- validation result
+- files modified
