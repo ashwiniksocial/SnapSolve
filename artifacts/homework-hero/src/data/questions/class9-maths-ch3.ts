@@ -6,11 +6,11 @@ export const CHAPTER_META: ChapterMeta = {
   classNum: 9,
   subject: "Mathematics",
   topics: [
-    { id: "t1", name: "Cartesian Plane",                    questionCount: 10 },
-    { id: "t2", name: "Coordinates of a Point",             questionCount: 10 },
-    { id: "t3", name: "Quadrants",                          questionCount: 12 },
-    { id: "t4", name: "Plotting Points",                    questionCount: 12 },
-    { id: "t5", name: "Applications of Coordinate Geometry",questionCount: 12 },
+    { id: "t1", name: "Cartesian Plane",                 questionCount: 10 },
+    { id: "t2", name: "Coordinates of a Point",          questionCount: 9  },
+    { id: "t3", name: "Quadrants",                       questionCount: 12 },
+    { id: "t4", name: "Plotting Points",                 questionCount: 11 },
+    { id: "t5", name: "Reading Coordinates from a Graph",questionCount: 8  },
   ],
 };
 
@@ -242,20 +242,6 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 2, title: "From y-axis", explanation: "Distance = |x-coordinate| = |3| = 3 units.", result: "4 units from x-axis; 3 units from y-axis" },
     ],
     keyConcepts: ["distance from axes", "|x|", "|y|"],
-  },
-  {
-    id: "c9-m-ch3-t2-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t2", topicName: "Coordinates of a Point",
-    difficulty: "Hard",
-    question: "If the abscissa of a point equals its ordinate and the point is 5√2 units from the origin, find the point (assume it is in the first quadrant).",
-    hint: "Use x = y and distance formula from origin: √(x² + y²) = 5√2.",
-    answer: "(5, 5)",
-    steps: [
-      { stepNumber: 1, title: "Set up equations", explanation: "Let x = y (abscissa = ordinate). Distance from origin: √(x² + y²) = 5√2.", formula: "√(2x²) = 5√2" },
-      { stepNumber: 2, title: "Solve", explanation: "x√2 = 5√2 → x = 5. Since x = y, point is (5, 5).", result: "(5, 5)" },
-    ],
-    keyConcepts: ["abscissa = ordinate", "distance from origin", "first quadrant"],
   },
   {
     id: "c9-m-ch3-t2-q09", classNum: 9, subject: "Mathematics",
@@ -603,27 +589,12 @@ export const QUESTIONS: Question[] = [
     ],
     keyConcepts: ["rectangle area", "diagonal midpoint", "origin as centre"],
   },
-  {
-    id: "c9-m-ch3-t4-q12", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t4", topicName: "Plotting Points",
-    difficulty: "Hard",
-    question: "A point P moves such that it is always 5 units from the origin. Write three such points and describe the locus of P.",
-    hint: "Distance from origin = √(x² + y²) = 5. Try different quadrants.",
-    answer: "Three points: (5,0), (0,5), (3,4). The locus of all points 5 units from the origin is a circle with centre O and radius 5.",
-    steps: [
-      { stepNumber: 1, title: "Check (5, 0)", explanation: "√(25+0) = 5 ✓" },
-      { stepNumber: 2, title: "Check (3, 4)", explanation: "√(9+16) = √25 = 5 ✓" },
-      { stepNumber: 3, title: "Locus", explanation: "All (x, y) with x² + y² = 25 form a circle centred at origin with radius 5.", result: "Locus: circle, centre (0,0), radius 5" },
-    ],
-    keyConcepts: ["locus", "circle", "distance from origin", "x² + y² = r²"],
-  },
 
-  // ── Topic 5: Applications of Coordinate Geometry ──────────────────────────────
+  // ── Topic 5: Reading Coordinates from a Graph ────────────────────────────────
   {
     id: "c9-m-ch3-t5-q01", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "A flag post is at coordinates (0, 8) on a grid map. How far is it from the main road (the x-axis)?",
     hint: "Distance from x-axis = |y-coordinate|.",
@@ -636,7 +607,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "c9-m-ch3-t5-q02", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "A school is at (−6, 0) and a hospital is at (4, 0) on a coordinate map. Both are on the main road (x-axis). How far apart are they?",
     hint: "Both on the x-axis; distance = |x₂ − x₁|.",
@@ -649,7 +620,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "c9-m-ch3-t5-q03", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "A tree is at (3, 0) and a lamp post is at (3, 5) on a map. How far apart are they vertically?",
     hint: "Same x-coordinate means they are directly above/below each other.",
@@ -662,7 +633,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "c9-m-ch3-t5-q04", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "What are the coordinates of a point that is 9 units above the origin on the y-axis?",
     hint: "On the y-axis, x = 0.",
@@ -675,7 +646,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "c9-m-ch3-t5-q05", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "Two houses are at A(0, 0) and B(6, 0) on a straight road. A park is to be built equidistant from both houses, on the same road. What are the park's coordinates?",
     hint: "Equidistant from A and B on the x-axis — it's the midpoint.",
@@ -688,7 +659,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "c9-m-ch3-t5-q06", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "A bridge connects town A(1, 4) to town B(7, 4). A service point is placed at the centre of the bridge. Find its coordinates.",
     hint: "Centre of a segment = midpoint formula.",
@@ -701,7 +672,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "c9-m-ch3-t5-q07", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "A rectangle-shaped garden has corners at (−3, 1), (5, 1), (5, −2), (−3, −2). Find the length, width, and area of the garden.",
     hint: "Find horizontal and vertical side lengths from the coordinates.",
@@ -716,7 +687,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "c9-m-ch3-t5-q08", classNum: 9, subject: "Mathematics",
     chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
+    topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "A ship moves from port P(2, −3) to port Q(2, 5). How far did it travel? In which direction?",
     hint: "Same x-coordinate — movement is purely vertical.",
@@ -725,62 +696,5 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 1, title: "Same x → vertical motion", explanation: "|5 − (−3)| = 8 units upward." },
     ],
     keyConcepts: ["vertical movement", "same abscissa", "distance"],
-  },
-  {
-    id: "c9-m-ch3-t5-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
-    difficulty: "Hard",
-    question: "Triangle ABC has A(0, 0), B(6, 0), C(3, 4). Find the area of the triangle using coordinate geometry.",
-    hint: "Area = (1/2)|x₁(y₂ − y₃) + x₂(y₃ − y₁) + x₃(y₁ − y₂)|.",
-    answer: "Area = (1/2)|0(0−4) + 6(4−0) + 3(0−0)| = (1/2)|0 + 24 + 0| = 12 sq units.",
-    steps: [
-      { stepNumber: 1, title: "Apply formula", explanation: "Area = (1/2)|0(0−4) + 6(4−0) + 3(0−0)| = (1/2)|24| = 12.", result: "12 sq units" },
-    ],
-    keyConcepts: ["coordinate area formula", "triangle", "shoelace formula"],
-  },
-  {
-    id: "c9-m-ch3-t5-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
-    difficulty: "Hard",
-    question: "A point P divides the segment joining A(2, 4) and B(8, 4) in the ratio 1:2 from A. Find P.",
-    hint: "Use section formula: x = (m·x₂ + n·x₁)/(m+n), y = (m·y₂ + n·y₁)/(m+n).",
-    answer: "P = ((1×8 + 2×2)/(1+2), (1×4 + 2×4)/(1+2)) = (12/3, 12/3) = (4, 4).",
-    steps: [
-      { stepNumber: 1, title: "Section formula (m=1, n=2)", explanation: "x = (1×8 + 2×2)/3 = 12/3 = 4. y = (1×4 + 2×4)/3 = 12/3 = 4." },
-      { stepNumber: 2, title: "Result", explanation: "P = (4, 4).", result: "(4, 4)" },
-    ],
-    keyConcepts: ["section formula", "internal division", "ratio"],
-  },
-  {
-    id: "c9-m-ch3-t5-q11", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
-    difficulty: "Hard",
-    question: "A point moves from (1, 2) to (7, 10). How much did it move along the x-direction? Along the y-direction? What is the straight-line distance?",
-    hint: "Δx = x₂ − x₁, Δy = y₂ − y₁, distance = √(Δx² + Δy²).",
-    answer: "Δx = 7−1 = 6. Δy = 10−2 = 8. Distance = √(36+64) = √100 = 10 units.",
-    steps: [
-      { stepNumber: 1, title: "Horizontal change", explanation: "Δx = 7 − 1 = 6 units." },
-      { stepNumber: 2, title: "Vertical change", explanation: "Δy = 10 − 2 = 8 units." },
-      { stepNumber: 3, title: "Straight-line distance", explanation: "√(6² + 8²) = √(36+64) = √100 = 10 units.", result: "6 right, 8 up, distance = 10" },
-    ],
-    keyConcepts: ["displacement", "distance formula", "Pythagoras"],
-  },
-  {
-    id: "c9-m-ch3-t5-q12", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
-    topicId: "t5", topicName: "Applications of Coordinate Geometry",
-    difficulty: "Hard",
-    question: "Three points A(1, 1), B(4, 5), C(7, 1) are the vertices of a triangle. Using coordinates, determine if the triangle is isosceles.",
-    hint: "Calculate AB and CB. If they are equal, the triangle is isosceles.",
-    answer: "AB = √((4−1)²+(5−1)²) = √(9+16) = 5. CB = √((7−4)²+(1−5)²) = √(9+16) = 5. AB = CB = 5, so triangle ABC is isosceles.",
-    steps: [
-      { stepNumber: 1, title: "AB", explanation: "√(3² + 4²) = √25 = 5." },
-      { stepNumber: 2, title: "CB", explanation: "√(3² + 4²) = √25 = 5." },
-      { stepNumber: 3, title: "AC", explanation: "√(6² + 0²) = 6. AB = CB ≠ AC → isosceles.", result: "Isosceles: AB = CB = 5" },
-    ],
-    keyConcepts: ["isosceles triangle", "distance formula", "equal sides"],
   },
 ];
