@@ -1,0 +1,100 @@
+NEXT TASK — STUDENT-FACING ACCEPTANCE TEST ONLY.
+
+Do not generate more questions.
+Do not add templates.
+Do not redesign or refactor anything.
+Do not change UI, Practice, Analytics, Revision, TeachingLesson, schemas, adapters or existing question content.
+Do not call OpenAI repeatedly merely for testing.
+Do not install packages.
+
+Objective:
+Verify that the 25 generated Class 7 Mathematics, Chapter 4 questions work correctly in the actual student-facing application before any scaling decision.
+
+1. Start the application using the repository’s normal development workflow.
+
+2. Confirm that Class 7 → Mathematics → Simple Equations shows:
+   - the original 75 questions,
+   - plus the 25 generated questions,
+   - exactly 100 questions total,
+   - no duplicate cards,
+   - no missing or malformed questions.
+
+3. Test these 8 representative generated questions, one from each blueprint family:
+   - B1 Direct Solve
+   - B2 Word-to-Equation
+   - B3 MCQ Verification
+   - B4 Error Spotting
+   - B5 Equation-to-Verbal
+   - B6 Fill Missing Value
+   - B7 Daily-Life Application
+   - B8 True/False
+
+4. For each of the 8 questions, verify:
+   - question text renders correctly,
+   - mathematical symbols display correctly,
+   - options render and submit correctly where applicable,
+   - correct/incorrect grading works,
+   - hints work,
+   - stored fallback steps render correctly,
+   - no raw schema fields or formatting errors appear.
+
+5. Test solution modes using only 3 representative questions:
+   - one Easy,
+   - one Medium,
+   - one Hard.
+
+For each, test:
+   - Compact
+   - Standard
+   - Detailed
+
+Verify that:
+   - each mode actually differs in depth,
+   - the mathematical answer remains identical,
+   - no explanation contradicts the stored answer,
+   - Detailed mode remains understandable to a weak Class 7 student,
+   - no mode omits essential algebra steps.
+
+Limit AI/API testing to these 9 solution requests only:
+3 questions × 3 modes.
+
+6. Test downstream behaviour:
+   - answer one generated question correctly,
+   - answer one incorrectly,
+   - confirm both attempts are recorded,
+   - confirm chapter analytics updates,
+   - confirm the incorrect question enters Revision,
+   - reopen the revision item and confirm the exact same question and ID return.
+
+7. Check presentation order:
+   Determine whether generated word problems appear consecutively or whether Practice already randomises/interleaves questions.
+
+Do not change ordering yet. Report the current behaviour and whether consecutive similar questions create a real problem.
+
+8. Run the actual supported production build command using the required environment variables, including PORT if necessary.
+
+Do not report “production build passed” unless the real frontend build finishes successfully.
+
+9. Correct the previous report’s factual error:
+Bloom’s coverage is currently 4 levels:
+understand, apply, analyse and evaluate.
+Do not claim six levels.
+
+Final report:
+
+1. Total Simple Equations question count shown in Practice
+2. Results for the 8 representative questions
+3. Compact/Standard/Detailed comparison for the 3 tested questions
+4. Analytics and Revision test results
+5. Question-order/interleaving finding
+6. Actual frontend production build result
+7. Any confirmed student-facing defect
+8. Exact screenshots or console evidence where available
+9. Estimated API cost incurred during this test
+10. Recommendation:
+   - APPROVE GENERATOR FOR CONTROLLED SCALE
+   - FIX SPECIFIC DEFECTS FIRST
+   - ABANDON GENERATOR
+
+Do not modify code unless a confirmed blocking defect prevents the test.
+If a blocker is found, report it first and stop.
