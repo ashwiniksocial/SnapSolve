@@ -1,0 +1,78 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read target file → append questions → validate → freeze → next chapter.
+
+Do NOT modify:
+- frozen Mathematics chapters
+- completed Physics Chapters 1 and 2
+- UI
+- navigation
+- architecture
+- AI pipeline
+- prompts
+- LessonRenderer
+- unrelated files
+
+Current task:
+Class 9 Physics Chapter 3 — Gravitation.
+
+Instructions:
+1. Locate only the Gravitation question-bank file and directly required schema/type file.
+2. Do not scan the repository.
+3. Do not read unrelated chapter files.
+4. Retain all valid existing questions.
+5. Increase the chapter to a minimum of 50 strong, unique questions.
+6. Follow natural syllabus weightage and topic importance.
+7. Use only authorised current NCERT/CBSE Class 9 content.
+8. No Class 10 leakage.
+9. Do not produce a plan. Begin implementation immediately.
+
+Cover adequately:
+- universal law of gravitation
+- gravitational force between two bodies
+- importance of gravitation
+- free fall
+- acceleration due to gravity
+- mass and weight
+- weight on the Moon
+- thrust and pressure
+- pressure in fluids
+- buoyancy
+- Archimedes’ principle
+- relative density
+- conceptual and numerical applications
+
+Question mix:
+- MCQ
+- short answer
+- long answer
+- numerical
+- assertion–reason where appropriate
+- HOTS
+- NCERT/PYQ-style questions where applicable
+
+Quality:
+- balanced Easy/Medium/Hard
+- scientifically and mathematically verified
+- correct formulas, units, signs and calculations
+- realistic numerical values
+- complete explanations in the existing format
+- no duplicate IDs
+- no duplicate questions
+- no cosmetic rewriting of valid existing questions
+
+Validation:
+- verify final count and topic counts
+- check duplicate IDs and duplicate questions
+- run TypeScript typecheck
+- fix only confirmed errors
+- freeze the chapter after validation
+
+Return only:
+- existing count
+- questions added
+- final count
+- topic coverage
+- validation result
+- files modified
