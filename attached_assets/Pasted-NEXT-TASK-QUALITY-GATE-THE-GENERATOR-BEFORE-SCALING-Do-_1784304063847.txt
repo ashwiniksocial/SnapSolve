@@ -1,0 +1,168 @@
+NEXT TASK — QUALITY-GATE THE GENERATOR BEFORE SCALING.
+
+Do not generate 75 questions yet.
+Do not build a universal blueprint engine.
+Do not change architecture, UI, Practice, Analytics, Revision, TeachingLesson, Compact/Standard/Detailed modes, schemas, adapters, or existing questions.
+Do not call OpenAI or external APIs.
+Do not install packages.
+
+Objective:
+Upgrade the current Class 7 Simple Equations proof from a technical proof into a small educational-quality proof, while preserving the existing QuestionV2 pipeline.
+
+Current proof:
+- Class 7 Mathematics
+- Chapter 4 Simple Equations
+- 10 deterministic generated questions
+- 3 templates
+- existing generator and validation scripts
+
+TASK 1 — Audit the 10 generated questions
+
+Evaluate each question for:
+
+1. syllabus and topic correctness
+2. mathematical correctness
+3. meaningful difficulty level
+4. repetition or near-repetition
+5. age-appropriate wording
+6. weak-student clarity
+7. step-by-step solution quality
+8. hint usefulness
+9. common-error relevance
+10. distractor quality
+11. Bloom’s level accuracy
+12. whether the question adds genuine practice value
+
+Do not modify existing manually authored questions.
+
+TASK 2 — Add only 5 additional blueprint families
+
+Extend the proof generator with exactly these five families:
+
+1. Find and correct the wrong solution step
+2. Convert a verbal statement into an equation
+3. Convert an equation into a verbal statement
+4. Find the missing number/value in an equation
+5. Daily-life application problem
+
+Each family must be deterministic and parameter-driven.
+
+Do not add case studies, assertion-reason, previous-year claims, diagrams, multiple-correct MCQs, or complex universal engines at this stage.
+
+TASK 3 — Produce a 25-question quality pilot
+
+Replace the current 10-question proof output with exactly 25 generated questions for the same chapter.
+
+Required distribution:
+
+Difficulty:
+- 10 Easy
+- 10 Medium
+- 5 Hard
+
+Question format:
+- at least 5 ShortAnswer
+- at least 5 MCQ
+- at least 3 FillInTheBlanks
+- at least 3 TrueFalse
+- remaining questions may use suitable existing formats
+
+Educational variety:
+- no blueprint family may contribute more than 5 questions
+- at least 8 distinct blueprint families total
+- no questions differing only by changed numbers
+- include direct, reverse, diagnostic, verbal, and application reasoning
+
+TASK 4 — Preserve stable identity
+
+Important:
+
+- Keep the IDs of the original 10 proof questions unchanged.
+- Their question content must also remain unchanged unless the quality audit identifies a confirmed mathematical or pedagogical defect.
+- New questions must receive permanent IDs continuing from gen-011.
+- Never renumber existing generated questions.
+- Validate against all repository IDs for collisions.
+
+TASK 5 — Improve generated teaching metadata
+
+Every generated question must contain:
+
+- correct full answer
+- logical steps[]
+- useful hint
+- hint2 where beneficial
+- keyConcepts
+- conceptsCovered
+- prerequisites
+- realistic commonErrors
+- tags
+- accurate Bloom’s level
+- accurate difficulty
+- examTip for Medium and Hard questions where useful
+
+The stored steps must be understandable to a weak Class 7 student and must not skip algebraic transformations.
+
+TASK 6 — Validation
+
+Extend the existing validation script to verify:
+
+1. exactly 25 generated questions
+2. original 10 IDs preserved
+3. new IDs begin at gen-011
+4. no ID collision
+5. 10 Easy / 10 Medium / 5 Hard
+6. required question-format distribution
+7. at least 8 blueprint families
+8. maximum 5 questions per family
+9. no exact duplicates
+10. no number-substitution near-duplicates
+11. all mathematical answers independently verified
+12. all MCQ options unique
+13. correct MCQ option appears exactly once
+14. topic IDs valid
+15. all mandatory QuestionV2 fields present
+16. steps contain logical progression
+17. Medium and Hard questions are genuinely harder than Easy questions
+18. generated questions pass adaptV2Questions()
+19. current Practice filtering retrieves all 25
+20. stable IDs remain available to Analytics and Revision
+21. existing non-generated chapter questions remain unchanged
+22. TypeScript passes
+23. production verification passes using the repository’s valid build/typecheck process
+24. two generator runs produce byte-for-byte identical output
+
+Do not claim browser/UI validation unless it was actually performed.
+
+TASK 7 — Report
+
+Report:
+
+1. Quality findings for the original 10 questions
+2. Any original question corrected and the exact reason
+3. Eight blueprint families now present
+4. Distribution by blueprint, format, difficulty and Bloom’s level
+5. All 25 permanent IDs
+6. Three representative questions:
+   - one Easy
+   - one Medium
+   - one Hard
+   Include their stored hints and steps in the report.
+7. Estimated safe variation capacity
+8. Exact files modified
+9. Validation results 1–24
+10. Estimated effort to produce a reviewed 75-question chapter using this system
+11. Whether the 25-question set is educationally varied enough for a student practice session
+
+Final status must be exactly one of:
+
+QUALITY PILOT PASSED — READY FOR MANUAL REVIEW
+
+or
+
+QUALITY PILOT FAILED — DO NOT SCALE
+
+Stop after the 25-question pilot.
+Do not expand to another chapter.
+Do not generate 75 questions.
+Do not create a universal engine.
+Do not push until reporting.
