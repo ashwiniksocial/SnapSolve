@@ -1,0 +1,102 @@
+IMPLEMENT ONLY A SMALL DETERMINISTIC QUESTION-GENERATOR PROOF.
+
+Do not redesign architecture.
+Do not change UI.
+Do not change Practice, Analytics, Revision, Solution, Compact/Standard/Detailed modes, TeachingLesson, adapters, schemas or existing questions.
+Do not call OpenAI or any external API.
+Do not install packages.
+Do not create a new subject or chapter.
+
+Objective:
+Prove that deterministic offline templates can generate valid stored QuestionV2 records that behave exactly like existing handwritten questions.
+
+1. Select one already-completed Mathematics chapter with:
+   - clear numerical question patterns,
+   - existing valid topic IDs,
+   - existing QuestionV2 questions,
+   - low risk of geometry/image requirements.
+
+Prefer the simplest suitable chapter after inspecting the minimum necessary files.
+
+2. Create one development-only generator script:
+   scripts/src/generateMathQuestionProof.ts
+
+3. Create exactly 3 deterministic templates, for example:
+   - direct calculation,
+   - application/word problem,
+   - misconception-based MCQ.
+
+4. Use a fixed seed or fixed parameter sets.
+   Re-running the script must produce byte-for-byte identical question content and identical IDs.
+
+5. Generate exactly 10 new QuestionV2 questions:
+   - 4 Easy
+   - 4 Medium
+   - 2 Hard
+   - use only existing valid chapter/topic IDs
+   - permanent canonical IDs
+   - no collision with existing IDs
+   - valid answers
+   - plausible unique MCQ options where applicable
+   - complete steps[]
+   - hint
+   - keyConcepts
+   - conceptsCovered
+   - commonErrors
+   - tags
+   - all mandatory QuestionV2 fields
+
+6. Do not overwrite or regenerate existing chapter questions.
+
+7. Prefer writing the generated records into a separate proof file:
+   question-bank/questions/mathematics/class<N>/<existing-chapter>-generated-proof.ts
+
+8. Add only the minimum import/spread required to include these 10 questions in the existing Mathematics question pipeline.
+
+9. Add one script entry to scripts/package.json only if required:
+   "generate:math-proof": "tsx ./src/generateMathQuestionProof.ts"
+
+Mandatory validation:
+
+A. Generator output is identical across two consecutive runs.
+B. Exactly 10 generated questions.
+C. 10 unique permanent IDs.
+D. No ID collision with existing repository questions.
+E. No duplicate or near-duplicate question text.
+F. Correct 4 Easy / 4 Medium / 2 Hard distribution.
+G. All topic IDs already exist in the selected chapter.
+H. All mandatory QuestionV2 fields are present.
+I. Every mathematical answer is independently recomputed by code.
+J. Correct MCQ answer appears exactly once in options.
+K. Existing question count remains unchanged apart from the 10 additions.
+L. TypeScript validation passes.
+M. Production build passes.
+N. Questions appear through the current Practice filtering flow.
+O. Stored steps[] render through the existing fallback/bank solution path.
+P. Confirm Compact, Standard and Detailed AI modes require no change.
+Q. Confirm Analytics and Revision receive permanent question IDs.
+
+Do not spend Replit effort on full browser automation unless an existing lightweight test already supports it. Validate through current services and build checks.
+
+Report:
+
+1. Chapter selected and why.
+2. Three templates created.
+3. Ten generated question IDs.
+4. Potential number of safe variations from these templates.
+5. Exact files modified.
+6. Validation results A–Q.
+7. Any behaviour or architecture change: YES/NO.
+8. Estimated cost comparison:
+   - 10 manually authored questions
+   - 10 template-generated questions
+   - estimated scaling impact for 75 questions.
+9. Final status:
+   PROOF VERIFIED — SAFE TO EVALUATE
+   or
+   PROOF FAILED — DO NOT SCALE
+
+Stop after this proof.
+Do not extend it to another chapter.
+Do not create a universal generation engine.
+Do not push until reporting the result.

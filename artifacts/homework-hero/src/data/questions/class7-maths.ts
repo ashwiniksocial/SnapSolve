@@ -23,6 +23,7 @@ import { CH12_ALGEBRAIC_EXPRESSIONS }  from "../../../../../question-bank/questi
 import { CH13_EXPONENTS_AND_POWERS }   from "../../../../../question-bank/questions/mathematics/class7/ch13-exponents-and-powers";
 import { CH14_SYMMETRY }               from "../../../../../question-bank/questions/mathematics/class7/ch14-symmetry";
 import { CH15_VISUALISING_SOLID_SHAPES } from "../../../../../question-bank/questions/mathematics/class7/ch15-visualising-solid-shapes";
+import { CH04_SIMPLE_EQUATIONS_GENERATED_PROOF } from "../../../../../question-bank/questions/mathematics/class7/ch04-simple-equations-generated-proof";
 
 const RAW: QuestionV2Like[] = [
   ...(CH01_INTEGERS               as unknown as QuestionV2Like[]),
@@ -40,6 +41,7 @@ const RAW: QuestionV2Like[] = [
   ...(CH13_EXPONENTS_AND_POWERS   as unknown as QuestionV2Like[]),
   ...(CH14_SYMMETRY               as unknown as QuestionV2Like[]),
   ...(CH15_VISUALISING_SOLID_SHAPES as unknown as QuestionV2Like[]),
+  ...(CH04_SIMPLE_EQUATIONS_GENERATED_PROOF as unknown as QuestionV2Like[]),
 ];
 
 export const CLASS7_MATHS_QUESTIONS: Question[] = adaptV2Questions(RAW);

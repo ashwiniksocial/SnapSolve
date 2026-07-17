@@ -1,0 +1,109 @@
+IMPLEMENT THE PROOF NOW.
+
+Do not repeat the audit.
+Do not produce another report-only response.
+Do not call OpenAI or any external API.
+Do not redesign architecture.
+Do not change UI, Practice, Analytics, Revision, Solution, TeachingLesson, Compact/Standard/Detailed modes, adapters, schemas, or existing questions.
+Do not install packages.
+
+Objective:
+Create and integrate a small deterministic offline Mathematics question-generator proof using the existing QuestionV2 architecture.
+
+STEP 1 — Select chapter
+Inspect the minimum necessary files and select one already-completed Mathematics chapter that:
+- has clear numerical patterns,
+- already has valid topic IDs,
+- has no image/diagram dependency,
+- is low risk for deterministic answer verification.
+
+Prefer Fractions, Integers, Linear Equations, Ratio/Proportion, or another similarly suitable existing chapter.
+
+STEP 2 — Create generator
+Create:
+
+scripts/src/generateMathQuestionProof.ts
+
+Requirements:
+- exactly 3 reusable deterministic templates,
+- fixed seed or fixed parameter sets,
+- no randomness that changes between runs,
+- no AI/API calls,
+- generates exactly 10 QuestionV2 records,
+- 4 Easy / 4 Medium / 2 Hard,
+- permanent canonical IDs,
+- IDs must not collide with any existing repository question,
+- valid existing chapterId and topicId values,
+- complete mandatory QuestionV2 fields,
+- verified answer,
+- full steps[],
+- hint,
+- keyConcepts,
+- conceptsCovered,
+- commonErrors,
+- tags,
+- plausible unique MCQ distractors where applicable.
+
+STEP 3 — Output
+Write generated records into a separate file:
+
+question-bank/questions/mathematics/class<N>/<chapter-name>-generated-proof.ts
+
+Do not overwrite or edit existing question records.
+
+STEP 4 — Register
+Add only:
+- one script command in scripts/package.json if required,
+- one import and one spread in the existing Mathematics data registration file.
+
+STEP 5 — Determinism test
+Run the generator twice.
+
+Verify:
+- both outputs are byte-for-byte identical,
+- IDs and question text remain identical,
+- no existing file is changed unexpectedly.
+
+STEP 6 — Validation
+Validate all of the following:
+
+1. Exactly 10 generated questions.
+2. 10 unique permanent IDs.
+3. No collision with existing IDs.
+4. 4 Easy / 4 Medium / 2 Hard.
+5. Existing valid chapter and topic IDs only.
+6. All mandatory QuestionV2 fields present.
+7. Correct answer independently recomputed by code.
+8. MCQ correct answer appears exactly once.
+9. No duplicate or near-duplicate question text.
+10. Existing chapter questions remain unchanged.
+11. New questions pass through adaptV2Questions().
+12. Questions are retrievable through current Practice filtering.
+13. Stable IDs are available to Analytics and Revision.
+14. Stored steps[] are usable by the existing fallback/bank path.
+15. Compact, Standard and Detailed AI modes require no change.
+16. TypeScript validation passes.
+17. Production build passes.
+
+Do not run expensive browser automation unless an existing lightweight test already supports it.
+
+Report only after implementation:
+
+- selected chapter and reason,
+- three templates created,
+- 10 generated IDs,
+- estimated safe variation capacity,
+- exact files modified,
+- validation results 1–17,
+- whether any existing behaviour changed,
+- whether any architecture changed,
+- estimated effort to scale one chapter to 75 questions.
+
+Final status must be exactly one of:
+
+PROOF VERIFIED — SAFE TO REVIEW
+PROOF FAILED — DO NOT SCALE
+
+Stop after completing this proof.
+Do not expand to other chapters.
+Do not push until reporting the result.

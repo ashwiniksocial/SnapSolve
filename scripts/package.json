@@ -9,6 +9,8 @@
     "bank-audit": "tsx ./src/questionBankAudit.ts",
     "latency-audit": "tsx ./src/latencyAudit.ts",
     "curriculum-check": "tsx ./src/curriculumGateway.ts",
+    "generate-proof": "tsx ./src/generateMathQuestionProof.ts",
+    "validate-proof": "tsx ./src/validateGeneratedProof.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
