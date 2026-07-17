@@ -6,9 +6,11 @@ export const CHAPTER_META: ChapterMeta = {
   classNum: 9,
   subject: "Physics",
   topics: [
-    { id: "t1", name: "Distance and Displacement",         questionCount: 8 },
-    { id: "t2", name: "Speed and Velocity",                questionCount: 9 },
-    { id: "t3", name: "Acceleration and Equations of Motion", questionCount: 8 },
+    { id: "t1", name: "Distance and Displacement",            questionCount: 12 },
+    { id: "t2", name: "Speed and Velocity",                   questionCount: 12 },
+    { id: "t3", name: "Acceleration and Equations of Motion", questionCount: 15 },
+    { id: "t4", name: "Graphical Representation of Motion",   questionCount: 8 },
+    { id: "t5", name: "Uniform Circular Motion",              questionCount: 3 },
   ],
 };
 
@@ -128,6 +130,63 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 2, title: "When they are equal", explanation: "Distance = |displacement| only when the body moves in a straight line without reversing direction. Any curve or reversal makes distance > |displacement|.", result: "Distance ≥ |Displacement|; equal only for straight-line, one-direction motion" },
     ],
     keyConcepts: ["Triangle inequality", "Straight-line motion", "Comparison of scalars and vectors"],
+  },
+  {
+    id: "c9-phy-ch1-t1-q09", classNum: 9, subject: "Physics",
+    chapterId: "phy-ch1", chapterName: "Motion",
+    topicId: "t1", topicName: "Distance and Displacement",
+    difficulty: "Easy", questionType: "MCQ",
+    question: "An odometer in a vehicle measures:\n(a) Speed  (b) Velocity  (c) Distance travelled  (d) Displacement",
+    hint: "An odometer keeps a running total of how far the vehicle has moved, regardless of direction.",
+    answer: "(c) Distance travelled",
+    steps: [
+      { stepNumber: 1, title: "Purpose of odometer", explanation: "An odometer records the total path length (distance) covered by a vehicle, irrespective of direction. It is a scalar instrument.", result: "Answer: (c) Distance travelled" },
+    ],
+    keyConcepts: ["Odometer", "Distance", "Scalar measurement"],
+  },
+  {
+    id: "c9-phy-ch1-t1-q10", classNum: 9, subject: "Physics",
+    chapterId: "phy-ch1", chapterName: "Motion",
+    topicId: "t1", topicName: "Distance and Displacement",
+    difficulty: "Easy", questionType: "MCQ",
+    question: "Which of the following is an example of non-uniform motion?\n(a) A car moving at constant 60 km/h on a straight road\n(b) A stone dropped freely from rest\n(c) A train moving with uniform speed between two stations\n(d) A satellite at fixed orbital speed",
+    hint: "Non-uniform motion means speed is changing.",
+    answer: "(b) A stone dropped freely from rest",
+    steps: [
+      { stepNumber: 1, title: "Check each option", explanation: "(a) Constant speed on straight road — uniform. (b) Dropped stone — speeds up due to gravity, so speed changes — non-uniform. (c) & (d) — constant speed — uniform.", result: "Answer: (b)" },
+    ],
+    keyConcepts: ["Non-uniform motion", "Free fall", "Changing speed"],
+  },
+  {
+    id: "c9-phy-ch1-t1-q11", classNum: 9, subject: "Physics",
+    chapterId: "phy-ch1", chapterName: "Motion",
+    topicId: "t1", topicName: "Distance and Displacement",
+    difficulty: "Medium", questionType: "ShortAnswer",
+    question: "An object covers 20 m in the first 4 s and 30 m in the next 5 s. (i) Is this motion uniform or non-uniform? Justify. (ii) Find the average speed for the whole journey.",
+    hint: "Compare speed in each interval. Average speed = total distance ÷ total time.",
+    answer: "(i) Non-uniform — speed differs in the two intervals. (ii) Average speed = 50/9 ≈ 5.6 m/s",
+    steps: [
+      { stepNumber: 1, title: "Speed in first interval", explanation: "v₁ = 20 m ÷ 4 s = 5 m/s." },
+      { stepNumber: 2, title: "Speed in second interval", explanation: "v₂ = 30 m ÷ 5 s = 6 m/s. Since v₁ ≠ v₂, the motion is non-uniform.", result: "Non-uniform motion" },
+      { stepNumber: 3, title: "Average speed", explanation: "Total distance = 50 m; total time = 9 s.", formula: "Average speed = 50/9 ≈ 5.6 m/s", result: "≈ 5.6 m/s" },
+    ],
+    keyConcepts: ["Uniform vs non-uniform", "Average speed", "Speed comparison"],
+  },
+  {
+    id: "c9-phy-ch1-t1-q12", classNum: 9, subject: "Physics",
+    chapterId: "phy-ch1", chapterName: "Motion",
+    topicId: "t1", topicName: "Distance and Displacement",
+    difficulty: "Hard", questionType: "HOTS",
+    question: "A person walks 2 km North in 30 min, rests for 10 min, then walks 1 km South in 15 min. Find: (i) total distance, (ii) net displacement, (iii) average speed, (iv) average velocity magnitude for the entire journey. Take North as positive.",
+    hint: "Use total distance for speed; net displacement for velocity. Total time includes rest.",
+    answer: "(i) 3 km  (ii) 1 km North  (iii) ≈ 3.27 km/h  (iv) ≈ 1.09 km/h",
+    steps: [
+      { stepNumber: 1, title: "Distance and displacement", explanation: "Distance = 2 + 1 = 3 km. Displacement = +2 − 1 = +1 km (1 km North)." },
+      { stepNumber: 2, title: "Total time", explanation: "Time = 30 + 10 + 15 = 55 min = 55/60 h." },
+      { stepNumber: 3, title: "Average speed", explanation: "", formula: "Speed = 3 ÷ (55/60) = 3 × 60/55 = 180/55 ≈ 3.27 km/h" },
+      { stepNumber: 4, title: "Average velocity", explanation: "", formula: "Velocity = 1 ÷ (55/60) = 60/55 ≈ 1.09 km/h (North)", result: "Speed ≈ 3.27 km/h; Velocity ≈ 1.09 km/h North" },
+    ],
+    keyConcepts: ["Average speed vs average velocity", "Rest period", "Net displacement", "HOTS"],
   },
 
   // ── Topic 2: Speed and Velocity ─────────────────────────────────────────────
