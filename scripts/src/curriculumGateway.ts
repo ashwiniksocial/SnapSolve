@@ -101,7 +101,7 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
   "9-Mathematics": [
     { name: "Number System",                            slug: "number-system" },
     { name: "Introduction to Polynomials",              slug: "introduction-to-polynomials" },
-    { name: "Sequences and Progressions",               slug: "sequences-and-progressions" },
+    { name: "Predicting What Comes Next: Exploring Sequences and Progressions", slug: "sequences-and-progressions" },
     { name: "Exploring Algebraic Identities",           slug: "exploring-algebraic-identities" },
     { name: "Coordinate Geometry",                      slug: "coordinate-geometry" },
     { name: "Linear Equations in Two Variables",        slug: "linear-equations-in-two-variables" },

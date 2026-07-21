@@ -1,0 +1,119 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read official chapter → build → validate → freeze.
+
+CURRENT TASK:
+Class 9 Mathematics — Predicting What Comes Next: Exploring Sequences and Progressions.
+
+Official source:
+Current NCERT Ganita Manjari Grade 9 Part I, Chapter 8.
+
+IMPORTANT:
+Read the official chapter source before deciding its topic structure.
+Do not infer content from Class 10 Arithmetic Progressions or Class 11 Sequences and Series.
+
+Existing reusable questions:
+None confirmed.
+
+Target:
+Exactly 75 strong, unique questions.
+
+Scope only:
+- official Ganita Manjari Part I Chapter 8 source
+- new Class 9 Mathematics chapter file
+- Class 9 Mathematics index/registration
+- existing gateway entry
+- directly required types/schema files
+
+Do NOT:
+- build Area and Perimeter
+- infer any Ganita Manjari Part II chapter
+- modify frozen Algebraic Identities
+- modify legacy Mathematics chapters
+- modify Physics, Chemistry, Biology or Economics
+- scan the full repository
+- modify UI, architecture, AI pipeline, prompts or LessonRenderer
+- create governance documents
+
+IMPLEMENTATION:
+1. Use the next safe internal chapter identifier without renumbering existing files.
+2. Use the exact official display title:
+   “Predicting What Comes Next: Exploring Sequences and Progressions”
+3. Preserve the existing gateway slug unless changing only the display title is required.
+4. Register the chapter exactly once.
+5. Begin implementation immediately.
+
+CONTENT RULE:
+Include only concepts explicitly supported by the official Grade 9 chapter.
+
+Potential areas to verify from the source:
+- recognising patterns
+- describing number sequences
+- finding missing terms
+- term-position relationships
+- arithmetic patterns
+- geometric or multiplicative patterns, only if included
+- recursive descriptions
+- visual and geometrical patterns
+- tables and diagrams
+- predicting subsequent terms
+- constructing sequences from rules
+- identifying incorrect pattern claims
+- real-life applications
+- reasoning and generalisation
+
+Do not include unless explicitly present:
+- Class 10 AP formula-based syllabus
+- sum of n terms of an AP
+- Class 11 GP formulae
+- infinite series
+- sigma notation
+- advanced recurrence relations
+- mathematical induction
+
+Question quality:
+- optimized for weak Class 9 students
+- detailed step-by-step explanations
+- strong visual and pattern reasoning
+- balanced Easy, Medium and Hard
+- concept
+- NCERT-style
+- competency-based
+- HOTS
+- assertion–reason
+- previous-year style only where appropriate
+- error analysis
+- no duplicate IDs
+- no duplicate or cosmetically rewritten questions
+
+Validation:
+1. Exactly 75 questions.
+2. All questions fall within the official chapter.
+3. Topic totals match.
+4. No duplicate IDs.
+5. No duplicate question text.
+6. Single import and registration.
+7. Gateway F7 for Sequences and Progressions clears.
+8. TypeScript passes.
+9. Add the existing frozen-file convention.
+10. Freeze the chapter.
+
+Do not attempt to clear the Area and Perimeter gateway failure.
+Record it as:
+PENDING — GANITA MANJARI CLASS 9 PART II NOT YET RELEASED.
+
+Return only:
+- official source verified
+- reusable seed count
+- questions added
+- final count
+- topic distribution
+- question-type mix
+- difficulty distribution
+- registration/gateway changes
+- validation result
+- remaining gateway blockers
+- files modified
+- final status:
+  SEQUENCES AND PROGRESSIONS — COMPLETE AND FROZEN
