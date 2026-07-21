@@ -1,0 +1,125 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+BUDGET CONTROL MODE:
+USD 260 already spent.
+
+CURRENT PHASE:
+Controlled beta launch readiness.
+
+LOCKED PRODUCT RULES:
+- Student-facing subjects remain Mathematics and Science only.
+- Economics stays internal and hidden.
+- Do not modify frozen curriculum.
+- Do not add new features unrelated to beta access.
+- Preserve existing architecture.
+- Use the existing Clerk authentication integration.
+- Do not introduce another authentication provider.
+
+CURRENT TASK:
+Make the existing SnapSolve app ready for a small approval-controlled beta.
+
+FIRST:
+Read the existing authentication, sign-in, sign-up, onboarding and route-protection implementation.
+
+Do not run a broad repository audit.
+
+REQUIRED BETA FLOW:
+1. A signed-out user may access only:
+   - landing/home information required before login
+   - sign-in
+   - sign-up
+
+2. Student learning routes must require authentication:
+   - Practice
+   - Scan
+   - Solution
+   - Revision
+   - Progress
+   - History
+   - Exam
+   - Journal
+   - Improvement
+   - Profile
+   - Analytics
+   - Teacher/Admin routes where applicable
+
+3. Use the existing Clerk user identity.
+4. Do not build custom OTP infrastructure if Clerk already handles verification.
+5. Do not store passwords or OTPs in SnapSolve.
+6. Preserve the current student data and localStorage behaviour.
+
+APPROVAL-CONTROLLED BETA:
+Check whether an existing approval/allowlist mechanism already exists.
+
+If it exists:
+- connect it correctly to authenticated users
+- do not redesign it
+
+If it does not exist:
+implement the smallest safe beta gate using an environment-variable allowlist of approved Clerk user email addresses.
+
+Example concept:
+APPROVED_BETA_EMAILS=email1@example.com,email2@example.com
+
+Rules:
+- approved authenticated users can use the student app
+- authenticated but unapproved users see a simple “Beta access pending approval” screen
+- no database
+- no admin dashboard
+- no invitation workflow
+- no email automation
+- no new dependency
+- never expose the full allowlist in client-visible UI or logs
+
+If a secure server-side environment-variable allowlist cannot be implemented within the current architecture:
+- do not create an insecure client-only security gate
+- report the exact blocker instead
+
+VERIFY:
+- signed-out route protection
+- sign-in and sign-up work
+- approved-user access
+- unapproved-user pending screen
+- refresh/session persistence
+- logout
+- direct URL protection
+- lazy-loaded routes still work
+- Mathematics and Science visible
+- Economics hidden
+- no console/runtime errors
+- TypeScript passes
+- production build passes
+
+DO NOT:
+- redesign onboarding
+- add subscriptions or payments
+- add NDA acceptance yet
+- create an admin system
+- create a database
+- modify Clerk configuration beyond what is directly necessary
+- modify curriculum or question banks
+- change AI prompts or LessonRenderer
+- work on Classes 6–8
+- create governance documents
+
+EXECUTION:
+1. Inspect the direct auth files only.
+2. Confirm the current behaviour.
+3. Apply only the smallest required beta-access changes.
+4. Test the complete login/access/logout flow.
+5. Stop.
+
+RETURN ONLY:
+- existing authentication finding
+- route-protection status
+- beta-approval implementation
+- approved-user result
+- unapproved-user result
+- logout/refresh result
+- security limitations, if any
+- files modified
+- environment variables required
+- typecheck/build result
+- final status:
+
+SNAPSOLVE CONTROLLED BETA ACCESS — PASS or BLOCKED

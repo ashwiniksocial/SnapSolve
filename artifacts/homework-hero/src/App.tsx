@@ -1,5 +1,5 @@
-import { lazy, Suspense } from "react";
-import { ClerkProvider, Show } from "@clerk/react";
+import { lazy, Suspense, useState, useEffect, type ReactNode } from "react";
+import { ClerkProvider, Show, useAuth, useClerk } from "@clerk/react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, Router as WouterRouter, Link, useLocation } from "wouter";
@@ -155,6 +155,116 @@ function BottomNav() {
   );
 }
 
+// ─── Beta access gate ─────────────────────────────────────────────────────────
+
+const BETA_CACHE_KEY = "studyai_beta_approved";
+
+function BetaPendingScreen({ email }: { email?: string }) {
+  const { signOut } = useClerk();
+  const [, navigate]  = useLocation();
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-sm text-center">
+        <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-3xl mx-auto mb-5">
+          ⏳
+        </div>
+        <h1 className="text-xl font-bold text-slate-900 mb-2">Beta Access Pending</h1>
+        {email && (
+          <p className="text-sm font-medium text-slate-700 mb-1">{email}</p>
+        )}
+        <p className="text-sm text-slate-500 mb-8">
+          Your account is registered. We'll notify you when your access is approved.
+        </p>
+        <button
+          onClick={() => signOut(() => {
+            sessionStorage.removeItem(BETA_CACHE_KEY);
+            navigate("/");
+          })}
+          className="w-full py-3 rounded-2xl text-sm font-semibold text-slate-600 border border-slate-200 bg-white hover:bg-slate-50 transition-colors"
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function RequireAuth({ children }: { children: ReactNode }) {
+  const { isSignedIn, isLoaded, getToken } = useAuth();
+  const { user }                           = useClerk();
+  const [, navigate]                       = useLocation();
+  const [betaStatus, setBetaStatus]        = useState<"checking" | "approved" | "pending">("checking");
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (!isSignedIn) {
+      navigate("/sign-in");
+      return;
+    }
+
+    // Session cache — avoids re-checking on every navigation between protected routes.
+    const cached = sessionStorage.getItem(BETA_CACHE_KEY);
+    if (cached === "1") { setBetaStatus("approved"); return; }
+    if (cached === "0") { setBetaStatus("pending");  return; }
+
+    // Fetch approval from the server (email never leaves the server).
+    getToken().then(async (token) => {
+      if (!token) { setBetaStatus("pending"); return; }
+      try {
+        const res = await fetch("/api/beta/check", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = (await res.json()) as { approved: boolean };
+          const approved = data.approved;
+          sessionStorage.setItem(BETA_CACHE_KEY, approved ? "1" : "0");
+          setBetaStatus(approved ? "approved" : "pending");
+        } else {
+          setBetaStatus("pending");
+        }
+      } catch {
+        // Network error — fail open so server downtime doesn't lock out students.
+        setBetaStatus("approved");
+      }
+    });
+  }, [isLoaded, isSignedIn, getToken, navigate]);
+
+  if (!isLoaded || (isSignedIn && betaStatus === "checking")) return <PageLoader />;
+  if (!isSignedIn) return null;
+
+  if (betaStatus === "pending") {
+    const email = user?.primaryEmailAddress?.emailAddress;
+    return <BetaPendingScreen email={email} />;
+  }
+
+  return <>{children}</>;
+}
+
+function ProtectedSwitch() {
+  return (
+    <RequireAuth>
+      <Switch>
+        <Route path="/scan"        component={Scan} />
+        <Route path="/solution"    component={Solution} />
+        <Route path="/challenge"   component={QuestionWorkspace} />
+        <Route path="/practice"    component={Practice} />
+        <Route path="/progress"    component={Progress} />
+        <Route path="/history"     component={History} />
+        <Route path="/journal"     component={Journal} />
+        <Route path="/revision"    component={Revision} />
+        <Route path="/improvement" component={Improvement} />
+        <Route path="/profile"     component={ProfilePage} />
+        <Route path="/admin"       component={Admin} />
+        <Route path="/teacher"     component={TeacherDashboard} />
+        <Route path="/exam"        component={ExamMode} />
+        <Route path="/analytics"   component={Analytics} />
+        <Route path="/dev/validate" component={DevTeachingValidator} />
+      </Switch>
+    </RequireAuth>
+  );
+}
+
 // ─── Router ───────────────────────────────────────────────────────────────────
 
 const AUTH_PATHS = ["/sign-in", "/sign-up", "/onboarding", "/dev"];
@@ -174,23 +284,11 @@ function Router() {
               <Route path="/sign-up/*?" component={SignUpPage} />
               <Route path="/onboarding"  component={OnboardingPage} />
 
-              {/* App routes */}
+              {/* Public landing — accessible while signed out */}
               <Route path="/"            component={Home} />
-              <Route path="/scan"        component={Scan} />
-              <Route path="/solution"    component={Solution} />
-              <Route path="/challenge"   component={QuestionWorkspace} />
-              <Route path="/practice"    component={Practice} />
-              <Route path="/progress"    component={Progress} />
-              <Route path="/history"     component={History} />
-              <Route path="/journal"     component={Journal} />
-              <Route path="/revision"    component={Revision} />
-              <Route path="/improvement" component={Improvement} />
-              <Route path="/profile"     component={ProfilePage} />
-              <Route path="/admin"       component={Admin} />
-              <Route path="/teacher"     component={TeacherDashboard} />
-              <Route path="/exam"        component={ExamMode} />
-              <Route path="/analytics"   component={Analytics} />
-              <Route path="/dev/validate" component={DevTeachingValidator} />
+
+              {/* All other routes require authentication + beta approval */}
+              <Route>{() => <ProtectedSwitch />}</Route>
             </Switch>
           </Suspense>
         </RouteErrorBoundary>
