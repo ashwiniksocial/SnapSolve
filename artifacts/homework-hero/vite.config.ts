@@ -57,6 +57,24 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Vendor: React core — small, changes rarely, maximises cache hits
+          if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/")) {
+            return "vendor-react";
+          }
+          // Vendor: Clerk auth
+          if (id.includes("node_modules/@clerk/")) {
+            return "vendor-clerk";
+          }
+          // Vendor: routing + UI utilities
+          if (id.includes("node_modules/wouter/") || id.includes("node_modules/clsx/") || id.includes("node_modules/class-variance-authority/") || id.includes("node_modules/tailwind-merge/")) {
+            return "vendor-ui";
+          }
+        },
+      },
+    },
   },
   server: {
     port,

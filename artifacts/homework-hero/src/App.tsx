@@ -1,27 +1,41 @@
+import { lazy, Suspense } from "react";
 import { ClerkProvider, Show } from "@clerk/react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, Router as WouterRouter, Link, useLocation } from "wouter";
-import Home            from "@/pages/Home";
-import Scan            from "@/pages/Scan";
-import Solution        from "@/pages/Solution";
-import Practice        from "@/pages/Practice";
-import Progress        from "@/pages/Progress";
-import QuestionWorkspace from "@/pages/Challenge";
-import History         from "@/pages/History";
-import Journal         from "@/pages/Journal";
-import Revision        from "@/pages/Revision";
-import Improvement     from "@/pages/Improvement";
-import Admin             from "@/pages/Admin";
-import TeacherDashboard  from "@/pages/TeacherDashboard";
-import ExamMode          from "@/pages/ExamMode";
-import SignInPage        from "@/pages/SignIn";
-import SignUpPage        from "@/pages/SignUp";
-import OnboardingPage    from "@/pages/Onboarding";
-import ProfilePage            from "@/pages/Profile";
-import DevTeachingValidator   from "@/pages/DevTeachingValidator";
-import Analytics              from "@/pages/Analytics";
+import Home from "@/pages/Home";
 import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
+
+// Lazy-loaded routes — each becomes its own JS chunk loaded on first visit.
+// Pages that use the question bank (Practice, Revision, Analytics, Solution)
+// will only pull in the ~7 MB question-bank chunk when the student first
+// navigates to one of those routes, not at app startup.
+const Scan                 = lazy(() => import("@/pages/Scan"));
+const Solution             = lazy(() => import("@/pages/Solution"));
+const Practice             = lazy(() => import("@/pages/Practice"));
+const Progress             = lazy(() => import("@/pages/Progress"));
+const QuestionWorkspace    = lazy(() => import("@/pages/Challenge"));
+const History              = lazy(() => import("@/pages/History"));
+const Journal              = lazy(() => import("@/pages/Journal"));
+const Revision             = lazy(() => import("@/pages/Revision"));
+const Improvement          = lazy(() => import("@/pages/Improvement"));
+const Admin                = lazy(() => import("@/pages/Admin"));
+const TeacherDashboard     = lazy(() => import("@/pages/TeacherDashboard"));
+const ExamMode             = lazy(() => import("@/pages/ExamMode"));
+const SignInPage            = lazy(() => import("@/pages/SignIn"));
+const SignUpPage            = lazy(() => import("@/pages/SignUp"));
+const OnboardingPage        = lazy(() => import("@/pages/Onboarding"));
+const ProfilePage           = lazy(() => import("@/pages/Profile"));
+const DevTeachingValidator  = lazy(() => import("@/pages/DevTeachingValidator"));
+const Analytics             = lazy(() => import("@/pages/Analytics"));
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-indigo-600 animate-spin" />
+    </div>
+  );
+}
 
 // ─── Clerk wiring (copy verbatim — same code runs in dev and prod) ────────────
 
@@ -153,30 +167,32 @@ function Router() {
     <>
       <div className={hideNav ? "min-h-screen" : "pb-20 min-h-screen"}>
         <RouteErrorBoundary key={location}>
-          <Switch>
-            {/* Auth routes — MUST use /*? wildcard for Clerk's OAuth sub-paths */}
-            <Route path="/sign-in/*?" component={SignInPage} />
-            <Route path="/sign-up/*?" component={SignUpPage} />
-            <Route path="/onboarding"  component={OnboardingPage} />
+          <Suspense fallback={<PageLoader />}>
+            <Switch>
+              {/* Auth routes — MUST use /*? wildcard for Clerk's OAuth sub-paths */}
+              <Route path="/sign-in/*?" component={SignInPage} />
+              <Route path="/sign-up/*?" component={SignUpPage} />
+              <Route path="/onboarding"  component={OnboardingPage} />
 
-            {/* App routes */}
-            <Route path="/"            component={Home} />
-            <Route path="/scan"        component={Scan} />
-            <Route path="/solution"    component={Solution} />
-            <Route path="/challenge"   component={QuestionWorkspace} />
-            <Route path="/practice"    component={Practice} />
-            <Route path="/progress"    component={Progress} />
-            <Route path="/history"     component={History} />
-            <Route path="/journal"     component={Journal} />
-            <Route path="/revision"    component={Revision} />
-            <Route path="/improvement" component={Improvement} />
-            <Route path="/profile"     component={ProfilePage} />
-            <Route path="/admin"       component={Admin} />
-            <Route path="/teacher"     component={TeacherDashboard} />
-            <Route path="/exam"              component={ExamMode} />
-            <Route path="/analytics"           component={Analytics} />
-            <Route path="/dev/validate"      component={DevTeachingValidator} />
-          </Switch>
+              {/* App routes */}
+              <Route path="/"            component={Home} />
+              <Route path="/scan"        component={Scan} />
+              <Route path="/solution"    component={Solution} />
+              <Route path="/challenge"   component={QuestionWorkspace} />
+              <Route path="/practice"    component={Practice} />
+              <Route path="/progress"    component={Progress} />
+              <Route path="/history"     component={History} />
+              <Route path="/journal"     component={Journal} />
+              <Route path="/revision"    component={Revision} />
+              <Route path="/improvement" component={Improvement} />
+              <Route path="/profile"     component={ProfilePage} />
+              <Route path="/admin"       component={Admin} />
+              <Route path="/teacher"     component={TeacherDashboard} />
+              <Route path="/exam"        component={ExamMode} />
+              <Route path="/analytics"   component={Analytics} />
+              <Route path="/dev/validate" component={DevTeachingValidator} />
+            </Switch>
+          </Suspense>
         </RouteErrorBoundary>
       </div>
       {!hideNav && <BottomNav />}

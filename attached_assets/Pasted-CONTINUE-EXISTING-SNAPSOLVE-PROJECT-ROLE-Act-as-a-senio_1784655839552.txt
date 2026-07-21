@@ -1,0 +1,124 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+ROLE:
+Act as a senior performance engineer and product-quality reviewer.
+
+BUDGET CONTROL:
+USD 260 has already been spent.
+
+Do not perform broad refactoring.
+Do not redesign architecture.
+Do not add features.
+Do not modify frozen curriculum content.
+Do not scan the full repository unless directly required by a confirmed issue.
+
+CURRENT TASK:
+Run a narrow launch-readiness performance and usability audit for the existing Class 9 student flow.
+
+PRIMARY GOAL:
+Identify only measurable student-facing problems that affect speed, stability, mobile usability, or task completion.
+
+TEST FLOW:
+1. Open the app as a new student.
+2. Reach Class 9.
+3. Open Mathematics.
+4. Open Exploring Algebraic Identities.
+5. Load and answer a question.
+6. Open the solution.
+7. Return to Practice.
+8. Open Science.
+9. Open one Physics, Chemistry, and Biology chapter.
+10. Open Economics.
+11. Check Progress, Revision, History, and Home.
+12. Repeat the key flow in a mobile-sized viewport.
+
+MEASURE OR VERIFY:
+- initial app load time
+- route transition time
+- subject and chapter load time
+- question load time
+- solution load time for question-bank questions
+- AI solution generation time only if already functional
+- unnecessary loading screens
+- blank or frozen screens
+- browser console errors and warnings
+- failed network requests
+- oversized JavaScript bundles
+- large eager-loaded question-bank files
+- unnecessary re-renders
+- obvious memory spikes
+- page-unresponsive risk
+- mobile layout overflow
+- touch-target usability
+- navigation clarity
+- back-button behaviour
+- progress persistence after refresh
+- resume behaviour after leaving and returning
+
+IMPORTANT:
+Differentiate between:
+A. confirmed launch blocker
+B. measurable high-impact slowdown
+C. minor issue
+D. speculative optimisation
+
+Fix only A and B issues.
+
+ALLOWED FIXES:
+- lazy or dynamic loading of large question-bank modules
+- removing confirmed unnecessary rebuild or load triggers
+- small rendering optimisations
+- fixing confirmed runtime or navigation defects
+- small mobile layout corrections
+- eliminating failed requests or console errors
+- directly required import or configuration changes
+
+DO NOT:
+- rewrite the UI
+- change visual branding
+- change teaching content
+- create new routes
+- add analytics products
+- introduce new dependencies unless absolutely necessary
+- perform code-style cleanup
+- refactor working components
+- change the AI pipeline
+- alter prompts
+- modify LessonRenderer
+- work on Classes 6–8
+- fix unrelated Class 7 gateway issues
+- create governance or audit documents
+
+EXECUTION RULE:
+1. Inspect the current implementation first.
+2. Establish a baseline.
+3. Identify confirmed A/B issues.
+4. Apply the smallest safe fixes.
+5. Re-test the same flow.
+6. Report before-and-after evidence.
+7. Stop when no confirmed A/B issue remains.
+
+VALIDATION:
+- Class 9 student flow still works
+- all active subjects remain reachable
+- question banks load correctly
+- solutions render correctly
+- progress persists
+- no curriculum visibility regression
+- no new runtime errors
+- TypeScript passes
+- production build passes if already supported
+
+RETURN ONLY:
+- baseline measurements
+- confirmed A/B issues
+- fixes applied
+- before/after measurements
+- mobile result
+- console/network result
+- files modified
+- typecheck/build result
+- deferred minor or speculative issues
+- final status:
+
+SNAPSOLVE CLASS 9 LAUNCH PERFORMANCE — PASS or BLOCKED
