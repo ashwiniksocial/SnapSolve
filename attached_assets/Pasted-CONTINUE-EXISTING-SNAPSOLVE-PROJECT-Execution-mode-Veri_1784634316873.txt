@@ -1,0 +1,89 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Verify chapter identity → build questions → validate → freeze.
+
+CURRENT TASK:
+Class 9 Biology Chapter 4.
+
+Existing registered stub:
+question-bank/questions/biology/class9/ch04-why-do-we-fall-ill.ts
+
+IMPORTANT:
+1. Verify the current official NCERT 2026–27 chapter title and scope corresponding to this stub.
+2. Reuse the existing file and registration.
+3. Do not create a duplicate chapter or second file.
+4. Update only the chapter title/metadata if officially required.
+
+Scope only:
+- target chapter file
+- direct Biology adapter/registration
+- directly required schema/type files
+
+Do NOT:
+- modify completed Biology Chapters 1–3
+- modify Physics, Chemistry or Mathematics
+- scan the full repository
+- modify UI, navigation, architecture, AI pipeline, prompts or LessonRenderer
+- create governance documents
+- perform another audit
+
+Build requirements:
+1. Current count is reported as 0.
+2. Build exactly 75 strong, unique questions.
+3. Follow natural syllabus weightage.
+4. Use only current official NCERT/CBSE Class 9 content.
+5. No Class 11 biology or medical-course leakage.
+
+Cover only officially authorised concepts, including where applicable:
+- meaning of health and disease
+- health as physical, mental and social well-being
+- acute and chronic diseases
+- causes of diseases
+- infectious and non-infectious diseases
+- disease-causing organisms
+- means of transmission
+- organ-specific and tissue-specific effects
+- principles of treatment
+- principles of prevention
+- immunity and vaccination
+- public health, sanitation and hygiene
+- community-level disease prevention
+- case-based and real-life health situations
+
+Question quality:
+- explanations suitable for weak Class 9 students
+- Easy, Medium and Hard mix
+- MCQ
+- concept questions
+- NCERT-style questions
+- competency-based questions
+- HOTS
+- assertion–reason
+- previous-year style where appropriate
+- no duplicate IDs
+- no duplicate or cosmetically rewritten questions
+- scientifically accurate and age-appropriate
+
+Validation:
+1. Final count exactly 75.
+2. Verify official chapter title and metadata.
+3. Verify no duplicate registration.
+4. Verify topic totals equal 75.
+5. Check duplicate IDs and question text.
+6. Run TypeScript typecheck.
+7. Fix only confirmed errors.
+8. Freeze the chapter.
+
+Return only:
+- official chapter identity confirmed
+- existing count
+- questions added
+- final count
+- topic distribution
+- question-type mix
+- difficulty distribution
+- metadata/registration changes
+- validation result
+- files modified
+- final status
