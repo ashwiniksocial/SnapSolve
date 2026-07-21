@@ -127,7 +127,7 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
   "9-Physics": [
     { name: "Motion",                              slug: "motion" },
     { name: "Force and Laws of Motion",            slug: "force" },
-    { name: "Gravitation",                         slug: "gravitation",                cbseDeleted: true },
+    { name: "Gravitation",                         slug: "gravitation" },
     { name: "Work, Energy and Simple Machines",    slug: "work-energy-simple-machines" },
     { name: "Sound",                               slug: "sound" },
   ],
