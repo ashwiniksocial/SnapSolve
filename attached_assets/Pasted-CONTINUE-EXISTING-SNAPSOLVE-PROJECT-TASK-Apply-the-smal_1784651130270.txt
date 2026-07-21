@@ -1,0 +1,86 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+TASK:
+Apply the smallest safe metadata/gateway corrections required to complete the Class 9 integration gate for currently released official curriculum.
+
+FACT:
+Ganita Manjari Class 9 Part II has not yet been released.
+
+Therefore:
+“Area and Perimeter” must not be treated as a currently missing build chapter or cause Class 9 validation failure.
+
+Scope only:
+- curriculumGateway.ts
+- directly required gateway types/check logic
+- existing Class 9 Biology gateway metadata
+- existing Class 9 Mathematics gateway metadata
+
+Do NOT:
+- generate questions
+- modify frozen question content
+- modify chapter registrations
+- modify legacy Polynomials
+- build Area and Perimeter
+- scan Classes 6–8
+- modify UI, architecture, AI pipeline, prompts or LessonRenderer
+- create new governance documents
+
+Required changes:
+
+1. AREA AND PERIMETER
+Represent “Area and Perimeter” as:
+
+PENDING OFFICIAL SOURCE —
+GANITA MANJARI CLASS 9 PART II NOT YET RELEASED
+
+Preferred implementation:
+- use an existing pendingSource / sourcePending / unavailable flag if already supported.
+
+If no such status exists:
+- make the smallest local gateway adjustment so F7 does not fail for this entry while the official source is unavailable.
+- retain the entry and slug.
+- do not mark it cbseDeleted.
+- do not delete it.
+- do not create a large new status framework.
+
+2. BIOLOGY TITLE
+Update the Class 9 Biology gateway title:
+
+From:
+“Diversity in Living Organisms”
+
+To:
+“Patterns in Life: Diversity and Classification”
+
+This is metadata-only.
+Do not modify the 75 frozen Biology questions.
+
+3. Re-run Class 9-only integration validation.
+
+Validate:
+- Mathematics confirmed released chapters pass
+- Exploring Algebraic Identities passes
+- Predicting What Comes Next: Exploring Sequences and Progressions passes
+- Area and Perimeter is reported as source-pending, not missing or failed
+- Physics passes
+- Chemistry passes
+- Biology passes
+- Economics passes
+- no duplicate Class 9 registrations
+- no orphan Class 9 files
+- TypeScript passes
+
+Do not fail Class 9 because of the unrelated pre-existing Class 7 Mathematics duplicate ch04 issue.
+
+Return only:
+- Area and Perimeter gateway handling
+- Biology metadata correction
+- Class 9 subject status table
+- remaining Class 9 failures
+- TypeScript result
+- files modified
+- final status:
+
+CLASS 9 — COMPLETE AND FROZEN FOR ALL CURRENTLY RELEASED OFFICIAL SOURCES
+
+GANITA MANJARI PART II — PENDING OFFICIAL NCERT RELEASE
