@@ -1,0 +1,85 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+BUDGET CONTROL MODE:
+USD 260 already spent.
+Make only the smallest confirmed launch-critical changes.
+
+CURRENT TASK:
+Fix Class 9 student-facing curriculum visibility.
+
+CONFIRMED DEFECT:
+These chapters are marked cbseDeleted in the official curriculum gateway but are still shown as active Practice chapters:
+
+- Areas of Parallelograms and Triangles
+- Constructions
+- Heron’s Formula
+
+They must not appear as active Class 9 curriculum chapters.
+
+IMPORTANT:
+Do not delete their question files.
+Do not destroy authored content.
+Hide them from the normal student-facing active curriculum only.
+
+Scope only:
+- Class 9 Mathematics chapter metadata
+- question/chapter service filtering
+- Practice subject/chapter visibility
+- directly required types
+- curriculumGateway metadata only if required
+
+Do NOT:
+- generate questions
+- modify frozen question text
+- redesign UI
+- modify Classes 6–8
+- refactor architecture
+- scan the full repository
+- add a large curriculum-status framework
+- modify AI pipeline, prompts or LessonRenderer
+
+IMPLEMENTATION RULE:
+Use the smallest reliable approach.
+
+Preferred:
+1. Add or propagate an existing curriculum visibility/status field into ChapterMeta.
+2. Mark the three deleted chapters inactive/deleted.
+3. Filter them from the standard Practice chapter list.
+4. Preserve their files and questions for archive/reference use.
+
+Also verify:
+- Area and Perimeter remains hidden because sourcePending and no content exists.
+- Exploring Algebraic Identities remains visible.
+- Predicting What Comes Next remains visible.
+- all other active Class 9 Mathematics chapters remain visible.
+
+ECONOMICS CHECK:
+Verify whether Economics has a clear student-facing subject selection path.
+
+If Economics is incorrectly accessed through a Mathematics state/session workaround:
+- fix only the confirmed routing/filter defect
+- expose Economics through the existing subject-selection pattern
+- do not redesign navigation
+
+If Economics already has a proper independent path, make no change and report exactly how it is reached.
+
+VALIDATE:
+- deleted chapters absent from normal Class 9 Practice selection
+- active chapters unchanged
+- sourcePending chapter absent
+- archived question files preserved
+- Economics independently reachable or confirmed correct
+- no duplicate registrations
+- no runtime errors
+- TypeScript passes
+
+Return only:
+- deleted-chapter visibility before/after
+- implementation used
+- Economics access finding
+- exact fixes
+- files modified
+- typecheck result
+- final status:
+
+CLASS 9 CURRICULUM VISIBILITY — PASS or BLOCKED

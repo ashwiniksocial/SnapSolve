@@ -2,7 +2,7 @@ import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
   id: "ch9", name: "Areas of Parallelograms and Triangles",
-  classNum: 9, subject: "Mathematics",
+  classNum: 9, subject: "Mathematics", cbseDeleted: true,
   topics: [
     { id: "t1", name: "Figures on Same Base and Between Same Parallels", questionCount: 13 },
     { id: "t2", name: "Area of Parallelogram",                            questionCount: 13 },

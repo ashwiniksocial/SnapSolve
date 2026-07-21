@@ -51,4 +51,6 @@ export interface ChapterMeta {
   classNum: number;
   subject: string;
   topics: TopicMeta[];
+  /** Chapter removed from CBSE board exam syllabus; hidden from active Practice. Questions archived. */
+  cbseDeleted?: true;
 }

@@ -24,11 +24,11 @@ const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology"];
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   if (subject === "Science") {
     return ALL_CHAPTERS.filter(
-      (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject)
+      (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject) && !c.cbseDeleted
     );
   }
   return ALL_CHAPTERS.filter(
-    (c) => c.classNum === classNum && c.subject === subject
+    (c) => c.classNum === classNum && c.subject === subject && !c.cbseDeleted
   );
 }
 

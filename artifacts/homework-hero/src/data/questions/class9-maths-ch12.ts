@@ -2,7 +2,7 @@ import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
   id: "ch12", name: "Heron's Formula",
-  classNum: 9, subject: "Mathematics",
+  classNum: 9, subject: "Mathematics", cbseDeleted: true,
   topics: [
     { id: "t1", name: "Semi-perimeter and Heron's Formula",  questionCount: 14 },
     { id: "t2", name: "Area of Scalene and General Triangles", questionCount: 13 },
