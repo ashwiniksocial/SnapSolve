@@ -1,0 +1,84 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read target file → build/append questions → validate → freeze → next.
+
+Do NOT modify:
+- completed Physics chapters
+- frozen Mathematics chapters
+- UI
+- navigation
+- architecture
+- AI pipeline
+- prompts
+- LessonRenderer
+- unrelated files
+
+Current task:
+Class 9 Science Chapter 5 — Exploring Mixtures and Their Separation.
+
+IMPORTANT:
+Use the current official NCERT Grade 9 Science textbook “Exploration” and CBSE 2026–27 curriculum.
+Do not use the discontinued old chapter structure.
+Do not introduce content outside the authorised chapter.
+
+Instructions:
+1. Locate only the target chapter file and directly required schema/type file.
+2. Do not scan the repository.
+3. If the file is absent, create it using the existing question-bank structure.
+4. Retain valid existing questions.
+5. Build the chapter to a minimum of 50 strong, unique questions.
+6. Follow natural syllabus weightage and educational importance.
+7. Begin implementation immediately. Do not produce a plan.
+
+Cover only concepts authorised in the chapter, including:
+- pure substances and mixtures
+- homogeneous and heterogeneous mixtures
+- solutions, suspensions and colloids
+- solute, solvent and concentration
+- saturated and unsaturated solutions
+- physical properties used for separation
+- handpicking, sieving and winnowing
+- sedimentation, decantation and filtration
+- evaporation and crystallisation
+- centrifugation
+- separating funnel
+- sublimation
+- chromatography
+- distillation and fractional distillation
+- selecting the appropriate separation method
+- everyday and laboratory applications
+
+Question mix:
+- MCQ
+- short answer
+- long answer
+- application-based
+- experimental/observation-based
+- assertion–reason where appropriate
+- HOTS
+- NCERT-style questions
+
+Quality:
+- balanced Easy/Medium/Hard
+- scientifically verified
+- clear explanations suitable for weak students
+- no duplicate IDs or questions
+- no unsupported Class 10 leakage
+- no cosmetic rewriting of valid questions
+
+Validation:
+- verify final count and topic coverage
+- verify duplicate IDs/questions
+- run TypeScript typecheck
+- correct only confirmed errors
+- freeze the chapter
+
+Return only:
+- existing count
+- questions added
+- final count
+- topic coverage
+- question-type mix
+- validation result
+- files modified

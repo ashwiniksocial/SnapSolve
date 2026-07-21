@@ -46,6 +46,8 @@ import { CHAPTER_META as PHY_CH5_META, QUESTIONS as PHY_CH5_QUESTIONS } from "./
 import { CLASS9_CHEMISTRY_CHAPTERS, CLASS9_CHEMISTRY_QUESTIONS } from "./class9-chemistry";
 import { CLASS9_BIOLOGY_CHAPTERS,  CLASS9_BIOLOGY_QUESTIONS  } from "./class9-biology";
 
+import { CHAPTER_META as SCI_CH5_META, QUESTIONS as SCI_CH5_QUESTIONS } from "./class9-science-ch5";
+
 const CLASS9_MATHS_CHAPTERS: ChapterMeta[] = [
   CH1_META, CH2_META, CH3_META, CH4_META, CH5_META,
   CH6_META, CH7_META, CH8_META, CH9_META, CH10_META,
@@ -78,6 +80,14 @@ const CLASS9_PHYSICS_QUESTIONS: Question[] = [
   ...PHY_CH4_QUESTIONS, ...PHY_CH5_QUESTIONS,
 ];
 
+const CLASS9_SCIENCE_CHAPTERS: ChapterMeta[] = [
+  SCI_CH5_META,
+];
+
+const CLASS9_SCIENCE_QUESTIONS: Question[] = [
+  ...SCI_CH5_QUESTIONS,
+];
+
 export const ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS6_MATHS_CHAPTERS,
   ...CLASS7_MATHS_CHAPTERS,
@@ -87,6 +97,7 @@ export const ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS9_PHYSICS_CHAPTERS,
   ...CLASS9_CHEMISTRY_CHAPTERS,
   ...CLASS9_BIOLOGY_CHAPTERS,
+  ...CLASS9_SCIENCE_CHAPTERS,
 ];
 
 export const ALL_QUESTIONS: Question[] = [
@@ -98,6 +109,7 @@ export const ALL_QUESTIONS: Question[] = [
   ...CLASS9_PHYSICS_QUESTIONS,
   ...CLASS9_CHEMISTRY_QUESTIONS,
   ...CLASS9_BIOLOGY_QUESTIONS,
+  ...CLASS9_SCIENCE_QUESTIONS,
 ];
 
 export type { ChapterMeta, Question };
