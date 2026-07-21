@@ -560,11 +560,13 @@ export const QUESTIONS: Question[] = [
     difficulty: "Medium",
     question: "The sequence 128, 64, 32, 16, ... halves each time. Find the 8th term.",
     hint: "Divide by 2 repeatedly, or reason: 8th term is 7 halvings after 128.",
-    answer: "1. Terms: 128, 64, 32, 16, 8, 4, 2, 1.",
+    answer: "The 8th term is 1. Full sequence: Term 1 = 128, Term 2 = 64, Term 3 = 32, Term 4 = 16, Term 5 = 8, Term 6 = 4, Term 7 = 2, Term 8 = 1.",
     steps: [
-      { stepNumber: 1, title: "Extend by halving", explanation: "128→64→32→16→8→4→2→1. The 8th term is 1.", result: "8th term = 1" },
+      { stepNumber: 1, title: "Identify the common ratio", explanation: "Each term is obtained by multiplying the previous term by 1/2 (which is the same as dividing by 2). This fixed multiplier is called the common ratio. Here, common ratio r = 1/2.", result: "Common ratio r = 1/2" },
+      { stepNumber: 2, title: "Number the terms from 1 to 8", explanation: "Term 1 = 128. Term 2 = 128 × 1/2 = 64. Term 3 = 64 × 1/2 = 32. Term 4 = 32 × 1/2 = 16. Term 5 = 16 × 1/2 = 8. Term 6 = 8 × 1/2 = 4. Term 7 = 4 × 1/2 = 2. Term 8 = 2 × 1/2 = 1.", result: "All 8 terms listed" },
+      { stepNumber: 3, title: "State the 8th term", explanation: "Counting from Term 1 (= 128) to Term 8, we apply the common ratio seven times: 128 × (1/2)⁷ = 128 ÷ 128 = 1. The 8th term is 1.", result: "8th term = 1" },
     ],
-    keyConcepts: ["Halving sequence", "Geometric pattern"],
+    keyConcepts: ["Halving sequence", "Common ratio", "Geometric pattern", "Numbered terms"],
   },
   {
     id: "c9-m-ch17-t3-q07", classNum: 9, subject: "Mathematics",

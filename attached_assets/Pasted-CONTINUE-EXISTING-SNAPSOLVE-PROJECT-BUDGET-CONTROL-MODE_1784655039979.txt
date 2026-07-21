@@ -1,0 +1,73 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+BUDGET CONTROL MODE:
+USD 260 already spent.
+
+CURRENT TASK:
+Apply two isolated teaching-content corrections only.
+
+Scope only:
+- c9-phy-ch1-t1-q07
+- c9-m-ch17-t3-q06
+- directly required question files
+
+Do NOT:
+- scan other chapters
+- rewrite any other questions
+- modify adapters, schema, renderer, UI or architecture
+- generate new questions
+- reopen frozen chapters beyond these exact records
+- run broad audits
+
+FIX 1 — PHYSICS
+Question ID:
+c9-phy-ch1-t1-q07
+
+Confirmed defects:
+- stated distance is wrong
+- endpoint geometry is inconsistent
+- explanation contains leaked author uncertainty text
+
+Required action:
+1. Read the exact current question.
+2. Preserve the intended learning objective: distance versus displacement on a rectangular path.
+3. Make the question statement, endpoint and route unambiguous.
+4. Recalculate the correct distance and displacement.
+5. Replace all leaked authoring text with clear student-facing steps.
+6. Explain why distance and displacement differ.
+7. State units correctly.
+8. Ensure the final answer matches the calculations exactly.
+
+Do not merely patch the number. Correct the full geometry and explanation consistently.
+
+FIX 2 — MATHEMATICS
+Question ID:
+c9-m-ch17-t3-q06
+
+Required improvement:
+- preserve the same correct question and answer
+- explain that each term is obtained by multiplying by 1/2
+- identify the common ratio
+- number the terms clearly from first to eighth
+- show why the eighth term is 1
+- keep language simple for a weak Class 9 student
+
+VALIDATE:
+- both IDs unchanged
+- no duplicate IDs
+- no malformed steps
+- no leaked internal notes
+- answer matches explanation
+- TypeScript passes
+
+Then rerun only these two questions through the teaching-quality criteria.
+
+Return only:
+- before/after issue summary
+- corrected answer and reasoning summary
+- two-question verdict table
+- files modified
+- typecheck result
+- final status:
+
+TARGETED TEACHING DEFECTS — FIXED AND VALIDATED
