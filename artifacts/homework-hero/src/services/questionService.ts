@@ -102,11 +102,6 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
     if (filter.questionType && filter.questionType !== "All" && q.questionType !== filter.questionType) return false;
     return true;
   });
-  console.log(`[BANK:getQuestions] filter=${JSON.stringify(filter)} → ${results.length} questions (lazy bundle, no network — preloadQBank() must be called first)`);
-  const sample = results[0];
-  if (sample) {
-    console.log(`[BANK:getQuestions] sample[0] id="${sample.id}" steps.length=${sample.steps.length} has_answer=${!!sample.answer} lesson=undefined (Question type has no lesson field)`);
-  }
   return results;
 }
 

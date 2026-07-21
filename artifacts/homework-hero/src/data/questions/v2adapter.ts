@@ -55,13 +55,27 @@ function mapQuestionType(qType: string, qFormat?: string): QuestionType | undefi
   return "ShortAnswer";
 }
 
+/**
+ * Ensure chapter IDs are globally unique across all Science sub-domains.
+ * Chemistry and Biology both use bare "ch01"–"ch04" in the V2 question bank,
+ * which collides when both bundles are loaded into the shared ALL_CHAPTERS cache.
+ * Prefix those IDs here — at the single adapt boundary — so every downstream
+ * consumer (getChapters, getQuestions, getTopics, useChapterStats, render keys)
+ * automatically sees non-colliding IDs without needing per-call workarounds.
+ */
+function prefixChapterId(subject: string, chapterId: string): string {
+  if (subject === "Chemistry") return `chem-${chapterId}`;
+  if (subject === "Biology")   return `bio-${chapterId}`;
+  return chapterId;
+}
+
 /** Convert an array of QuestionV2-shaped objects to the frontend Question type. */
 export function adaptV2Questions(qs: QuestionV2Like[]): Question[] {
   return qs.map((q) => ({
     id:           q.id,
     classNum:     q.classNum,
     subject:      q.subject,
-    chapterId:    q.chapterId,
+    chapterId:    prefixChapterId(q.subject, q.chapterId),
     chapterName:  q.chapterName,
     topicId:      q.topicId,
     topicName:    q.topicName,

@@ -1,0 +1,101 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+Fix one confirmed Practice data bug only.
+
+CONFIRMED UI EVIDENCE:
+When toggling between Science and Mathematics, the Practice page continues to show Science chapters even while the Mathematics tab is selected.
+
+Previous fixes to:
+- selectedSubject state
+- selectedChapterId
+- memo dependencies
+- React keys
+
+did NOT solve the underlying data problem.
+
+DO NOT:
+- claim PASS from code inspection
+- run a broad audit
+- modify unrelated pages
+- add features
+- modify question content
+- redesign UI
+- refactor architecture
+
+INSPECT ONLY:
+- artifacts/homework-hero/src/pages/Practice.tsx
+- questionService.ts
+- class9-bundle.ts
+- useChapterStats.ts
+- useMasteryScore.ts
+
+REQUIRED DEBUG METHOD:
+Add temporary targeted console logging only around the subject-switch data path.
+
+On every switch, log:
+- selectedSubject
+- class number
+- getChapters(class, selectedSubject) result count
+- first 3 returned chapter titles
+- useChapterStats subject input
+- first 3 chapterStats titles
+- sortedChapters first 3 titles
+
+Reproduce in the actual authenticated Preview:
+
+Mathematics → Science → Mathematics
+
+Identify the exact first point where Mathematics changes into Science data.
+
+LIKELY AREAS TO VERIFY:
+1. getChapters() ignores or incorrectly handles subject
+2. class9-bundle merges all subject chapters into one array without correct subject metadata/filtering
+3. Science and Mathematics chapters share IDs and lookup resolves the wrong records
+4. chapterStats uses chapterId-only lookups instead of class + subject + chapterId
+5. questionMap or chapter metadata maps are keyed only by chapterId
+6. a cached class-level result is returned regardless of selectedSubject
+
+REQUIRED FIX:
+All chapter and question lookups must be uniquely scoped by:
+
+class + subject + chapterId
+
+Do not rely on chapterId alone.
+
+Acceptance:
+- Mathematics selected → only Mathematics chapter titles and questions
+- Science selected → only Science chapter titles and questions
+- No stale data during switching
+- Math → Science → Math works
+- Science → Math → Science works
+- 10 rapid switches work
+- opening a Mathematics chapter gives Mathematics questions
+- opening a Science chapter gives Science questions
+- refresh preserves the selected subject correctly
+
+IMPORTANT:
+After finding the root cause:
+- remove all temporary console logs
+- test in the authenticated Preview
+- provide screenshot evidence for both Mathematics and Science states
+- do not mark PASS without actual browser interaction
+
+RUN:
+- frontend TypeScript
+- production build with required env vars
+
+RETURN ONLY:
+- first incorrect data point found
+- actual root cause
+- exact fix
+- files modified
+- Mathematics screenshot result
+- Science screenshot result
+- rapid-switch result
+- chapter-open result
+- TypeScript result
+- production build result
+- final status:
+
+PRACTICE SUBJECT FILTERING — PASS or BLOCKED
