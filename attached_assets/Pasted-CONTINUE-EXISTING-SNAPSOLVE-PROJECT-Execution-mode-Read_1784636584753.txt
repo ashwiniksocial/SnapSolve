@@ -1,0 +1,93 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read target file → complete question bank → validate → freeze.
+
+CURRENT TASK:
+Class 9 Chemistry — Atoms and Molecules.
+
+Existing file:
+question-bank/questions/chemistry/class9/ch03-atoms-and-molecules.ts
+
+Current count:
+28 questions.
+
+Target:
+Exactly 75 strong, unique questions.
+
+Scope only:
+- target chapter file
+- direct Chemistry adapter/registration
+- directly required schema/type files
+
+Do NOT:
+- modify completed Biology or Physics
+- modify frozen Mathematics
+- modify Matter in Our Surroundings
+- modify Exploring Mixtures and Their Separation
+- modify Is Matter Around Us Pure?
+- scan the full repository
+- modify UI, navigation, architecture, AI pipeline, prompts or LessonRenderer
+- create governance documents
+
+Instructions:
+1. Retain all valid existing questions.
+2. Add only the missing questions needed to reach exactly 75.
+3. Follow natural syllabus weighting.
+4. Use only current authorised NCERT/CBSE Class 9 scope.
+5. No Class 11 chemistry leakage.
+6. Begin implementation immediately. Do not produce a plan.
+
+Cover comprehensively:
+- laws of chemical combination
+- law of conservation of mass
+- law of constant proportions
+- Dalton’s atomic theory
+- atoms and atomic symbols
+- atomic mass
+- molecules and molecular mass
+- ions: cations and anions
+- writing chemical formulae
+- valency
+- formulae of ionic compounds
+- mole concept at Class 9 level
+- molar mass
+- numerical problems using atomic mass, molecular mass and mole
+- simple mass-ratio and formula-based applications
+
+Question quality:
+- optimized for weak Class 9 students
+- clear step-by-step explanations
+- balanced Easy/Medium/Hard
+- MCQ
+- concept
+- NCERT-style
+- competency-based
+- HOTS
+- assertion–reason
+- previous-year style where appropriate
+- numericals
+- no duplicate IDs
+- no duplicate or cosmetically rewritten questions
+- scientifically verified answers and calculations
+
+Validation:
+1. Final count exactly 75.
+2. Topic totals match actual questions.
+3. No duplicate IDs.
+4. No duplicate question text.
+5. Registration remains single and correct.
+6. TypeScript typecheck passes.
+7. Fix only confirmed errors.
+8. Freeze the chapter.
+
+Return only:
+- existing count
+- questions added
+- final count
+- topic distribution
+- question-type mix
+- difficulty distribution
+- validation result
+- files modified
+- final status
