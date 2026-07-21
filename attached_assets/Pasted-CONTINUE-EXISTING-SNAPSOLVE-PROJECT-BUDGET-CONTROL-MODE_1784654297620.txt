@@ -1,0 +1,114 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+BUDGET CONTROL MODE:
+USD 260 already spent.
+
+Do not generate new chapters.
+Do not expand question banks.
+Do not rewrite hundreds of answers.
+
+CURRENT TASK:
+Run a narrow Class 9 teaching-answer quality gate.
+
+PURPOSE:
+Verify that existing question-bank solutions are genuinely understandable for weak Class 9 students.
+
+Scope:
+Test 15 representative questions only:
+
+Mathematics:
+- Exploring Algebraic Identities — 2 questions
+- Predicting What Comes Next: Exploring Sequences and Progressions — 2 questions
+
+Physics:
+- Motion — 2 questions
+
+Chemistry:
+- Exploring Mixtures and Their Separation — 2 questions
+
+Biology:
+- Patterns in Life: Diversity and Classification — 2 questions
+
+Economics:
+- The Story of Village Palampur — 2 questions
+
+Additionally:
+- 1 assertion–reason question
+- 1 difficult numerical question
+- 1 error-analysis or HOTS question
+
+Choose a balanced mix:
+- Easy
+- Medium
+- Hard
+- conceptual
+- numerical
+- competency-based
+
+Do NOT:
+- scan every question
+- regenerate complete chapters
+- modify UI
+- modify architecture
+- add features
+- rewrite frozen question files unless a confirmed defect requires a minimal fix
+- modify Classes 6–8
+- alter curriculum gateway
+- create governance documents
+
+For each selected question, verify:
+
+1. Correct answer is accurate.
+2. Explanation directly answers the question.
+3. Steps are shown in logical order.
+4. No reasoning step is skipped.
+5. Language is understandable to a weak Class 9 student.
+6. Important formula, definition or principle is explained before use.
+7. Units and calculations are correct.
+8. Wrong options or common mistakes are explained where useful.
+9. Final answer is clearly stated at the end.
+10. No irrelevant verbosity or advanced-class leakage.
+11. Renderer displays the complete explanation.
+12. No undefined fields, blank steps or malformed content.
+
+Classify every tested answer:
+
+- PASS
+- WEAK BUT USABLE
+- FAIL
+
+IMPORTANT:
+First determine whether any weakness is:
+
+A. isolated question-content defect
+B. adapter/schema defect
+C. renderer defect
+D. systemic explanation-generation defect
+
+Fix only confirmed B, C or high-impact systemic defects.
+
+For isolated weak questions:
+- report their IDs
+- do not start mass rewriting in this task
+
+If a small shared formatting or adapter fix improves many answers safely:
+- apply only that smallest fix
+- re-test the affected samples
+
+Run TypeScript after any modification.
+
+Return only:
+
+- 15-question test table
+- PASS / WEAK / FAIL totals
+- subject-wise result
+- confirmed factual errors
+- explanation-quality weaknesses
+- root-cause classification
+- systemic fixes applied
+- isolated question IDs needing later improvement
+- files modified
+- typecheck result
+- final status:
+
+CLASS 9 TEACHING-ANSWER QUALITY — PASS, CONDITIONAL PASS, or BLOCKED
