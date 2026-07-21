@@ -1,0 +1,70 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+TASK:
+Perform a narrow Class 9 cross-subject integration and curriculum validation.
+
+Scope only:
+- Class 9 Mathematics
+- Class 9 Physics
+- Class 9 Chemistry
+- Class 9 Biology
+- Class 9 Economics
+- their direct adapters/registrations
+- curriculumGateway.ts
+- directly required type/schema files
+
+Do NOT:
+- generate or expand questions
+- rewrite explanations
+- scan Classes 6–8
+- modify UI, architecture, AI pipeline, prompts or LessonRenderer
+- create governance or audit documents
+- modify frozen content unless a confirmed integration defect exists
+
+Validate:
+
+1. Every Class 9 subject is registered once and accessible.
+2. Every active chapter is registered exactly once.
+3. No duplicate chapter slugs.
+4. No duplicate chapter registrations.
+5. No orphan Class 9 question-bank files.
+6. No missing imports or broken exports.
+7. No active chapter has cbseDeleted:true.
+8. Deleted/excluded chapters are not exposed as active.
+9. Question counts and topic totals match.
+10. Chapter names and IDs match their gateway entries.
+11. TypeScript passes.
+12. Curriculum gateway results for Class 9 only.
+
+IMPORTANT:
+The gateway currently reports pre-existing failures in Class 9 Mathematics.
+
+For each Class 9 Mathematics failure:
+- identify the exact chapter
+- identify the exact failing rule
+- identify whether it is:
+  a. incorrect gateway metadata
+  b. duplicate slug/registration
+  c. outdated syllabus mapping
+  d. missing chapter
+  e. genuine question-bank defect
+- do not fix anything during the initial diagnosis
+
+After diagnosis:
+- fix only confirmed low-risk metadata, registration or gateway defects
+- do not alter valid frozen Mathematics questions
+- do not perform cosmetic changes
+- rerun the Class 9-only validation
+
+Return only:
+- subject-level status table
+- chapter counts
+- registration findings
+- deleted-flag findings
+- orphan/missing-file findings
+- exact Class 9 Mathematics gateway failures
+- confirmed fixes
+- typecheck result
+- files modified
+- final status:
+  CLASS 9 INTEGRATION GATE — PASS or BLOCKED
