@@ -1,0 +1,87 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read target file → append questions → validate → freeze.
+
+Do NOT modify:
+- frozen Mathematics chapters
+- completed Physics Chapters 1–4
+- UI
+- navigation
+- architecture
+- AI pipeline
+- prompts
+- LessonRenderer
+- unrelated files
+
+Current task:
+Class 9 Physics Chapter 5 — Sound.
+
+Instructions:
+1. Locate only the Sound question-bank file and directly required schema/type file.
+2. Do not scan the repository.
+3. Do not read unrelated chapter files.
+4. Retain all valid existing questions.
+5. Increase the chapter to a minimum of 50 strong, unique questions.
+6. Follow natural syllabus weightage and educational importance.
+7. Use only authorised current NCERT/CBSE Class 9 content.
+8. No Class 10 leakage.
+9. Begin implementation immediately. Do not produce a plan.
+
+Cover adequately:
+- production of sound by vibrating objects
+- propagation of sound through a medium
+- longitudinal waves
+- compressions and rarefactions
+- amplitude, time period and frequency
+- wavelength
+- speed of sound
+- relation v = fλ
+- loudness and pitch
+- quality or timbre
+- reflection of sound
+- echo
+- reverberation
+- multiple reflection of sound
+- uses of multiple reflection
+- range of hearing
+- infrasonic and ultrasonic sound
+- applications of ultrasound
+- SONAR
+- structure and working of the human ear
+- numerical and conceptual applications
+
+Question mix:
+- MCQ
+- short answer
+- long answer
+- numerical
+- assertion–reason where appropriate
+- HOTS
+- NCERT/PYQ-style questions where applicable
+
+Quality:
+- balanced Easy/Medium/Hard
+- scientifically and mathematically verified
+- correct formulas, units and calculations
+- realistic numerical values
+- complete explanations in the existing project format
+- no duplicate IDs
+- no duplicate questions
+- no cosmetic rewriting of valid existing questions
+
+Validation:
+- verify final count and topic coverage
+- check duplicate IDs and duplicate questions
+- run TypeScript typecheck
+- fix only confirmed errors
+- freeze the chapter after validation
+
+Return only:
+- existing count
+- questions added
+- final count
+- topic coverage
+- question-type mix
+- validation result
+- files modified
