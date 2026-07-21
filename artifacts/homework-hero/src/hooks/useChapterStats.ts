@@ -38,7 +38,8 @@ export interface ChapterCompletion {
   topics: TopicCompletion[];
 }
 
-export function useChapterStats(subject: Subject, classNum = 9): ChapterCompletion[] {
+/** @param _bankReady Pass the bankReady flag from the page so the memo re-runs when the lazy bundle finishes loading. */
+export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boolean): ChapterCompletion[] {
   const { progress } = useProgress();
 
   return useMemo(() => {
@@ -98,5 +99,5 @@ export function useChapterStats(subject: Subject, classNum = 9): ChapterCompleti
         topics: topicCompletions,
       };
     });
-  }, [progress, subject, classNum]);
+  }, [progress, subject, classNum, _bankReady]);
 }

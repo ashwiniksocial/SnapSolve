@@ -248,12 +248,12 @@ export default function Practice() {
   const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
   const [bankReady,      setBankReady]     = useState(false);
 
-  const mastery      = useMasteryScore(session.subject, practiceClass);
+  const mastery      = useMasteryScore(session.subject, practiceClass, bankReady);
   const cfg          = SUBJECTS[session.subject];
   const adaptiveTier = getSubjectTier(session.subject);
   const adaptiveMastery = getSubjectMastery(session.subject);
 
-  const chapterStats = useChapterStats(session.subject, practiceClass);
+  const chapterStats = useChapterStats(session.subject, practiceClass, bankReady);
 
   const chapters = useMemo(
     () => bankReady ? getChapters(practiceClass, session.subject) : [],

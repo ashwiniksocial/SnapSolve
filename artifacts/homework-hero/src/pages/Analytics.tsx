@@ -10,7 +10,7 @@
  * All data from localStorage (useProgress + useAttemptLog). No AI, no backend.
  */
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "wouter";
 import { useProfile }       from "@/hooks/useProfile";
 import { useSession }       from "@/hooks/useSession";
@@ -23,7 +23,7 @@ import {
   weakestChapter,
   buildQuestionMap,
 } from "@/services/analytics";
-import { getQuestions }     from "@/services/questionService";
+import { getQuestions, preloadQBank } from "@/services/questionService";
 import { SUBJECTS, type Subject } from "@/data/subjects";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -67,8 +67,9 @@ export default function Analytics() {
   const [subject, setSubject]               = useState<Subject>(session.subject);
   const [selectedChapterId, setSelected]    = useState<string | null>(null);
   const [seedDone, setSeedDone]             = useState(false);
+  const [bankReady, setBankReady]           = useState(false);
 
-  const chapterStats  = useChapterStats(subject, classNum);
+  const chapterStats  = useChapterStats(subject, classNum, bankReady);
   const cfg           = SUBJECTS[subject];
 
   // Question map for difficulty-weighted weak area detection
@@ -187,7 +188,26 @@ export default function Analytics() {
     window.location.reload();
   }
 
+  // ── Preload question bank ─────────────────────────────────────────────────
+  useEffect(() => {
+    setBankReady(false);
+    preloadQBank(classNum).then(() => setBankReady(true));
+  }, [classNum]);
+
   // ── Render ─────────────────────────────────────────────────────────────────
+  if (!bankReady) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center space-y-2 px-6">
+          <div
+            className="w-8 h-8 border-2 rounded-full animate-spin mx-auto"
+            style={{ borderColor: `${cfg.color}25`, borderTopColor: cfg.color }}
+          />
+          <p className="text-sm font-medium text-slate-500">Loading questions…</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-slate-50">
 

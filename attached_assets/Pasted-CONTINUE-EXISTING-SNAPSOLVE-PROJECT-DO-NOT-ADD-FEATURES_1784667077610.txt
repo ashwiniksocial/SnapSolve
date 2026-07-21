@@ -1,0 +1,109 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+DO NOT ADD FEATURES.
+DO NOT REFACTOR.
+DO NOT MODIFY CURRICULUM.
+DO NOT RUN A BROAD AUDIT.
+
+CURRENT TASK:
+Validate and, only if necessary, correct the question-bank lazy-loading implementation and the completed beta-defect fixes.
+
+IMPORTANT RISK TO CHECK:
+The previous implementation stated that questionService consumers may return empty arrays until Practice calls preloadQBank().
+
+This is NOT acceptable if Revision, Analytics, Solution, History, Exam, direct URLs or page refresh depend on questionService independently.
+
+REQUIRED:
+
+1. Inspect only:
+- questionService.ts
+- class9-bundle.ts
+- class678-bundle.ts
+- direct questionService consumers
+- Practice.tsx
+- Solution.tsx
+- TeachingLayout.tsx
+- openaiSolver.ts
+- vite.config.ts
+
+2. Ensure every route that needs question-bank data loads the required bank itself.
+Do not rely on the student visiting Practice first.
+
+3. Directly test:
+- /practice
+- /revision
+- /analytics
+- /solution with valid saved/current question state
+- browser refresh on Solution
+- browser refresh on Practice
+- switching Class 9 Mathematics to Science
+- switching from Class 9 to Classes 6–8
+
+4. No route may silently receive empty question/chapter arrays while loading.
+Use an explicit loading state until the required bundle is ready.
+
+5. Verify these exact questions:
+
+A.
+The following data shows the number of books read by 10 students:
+3, 7, 2, 5, 4, 7, 3, 8, 5, 7.
+Arrange this data in ascending order and prepare a frequency table.
+
+B.
+Verify by substitution that (x + a)(x + b) =
+x² + (a + b)x + ab.
+Use x = 2, a = 3, b = 5.
+
+For each question confirm:
+- Detailed = exactly 8 visible non-empty sections
+- Standard = exactly 5 visible non-empty sections
+- Compact = exactly 3 visible non-empty sections
+- switching modes does not make another AI call
+- Re-solve preserves the selected mode and still gives 8/5/3
+
+6. Verify navigation:
+- heading says “SnapSolve Solution”
+- Back to Chapter works
+- Back to Questions works, if implemented
+- New Question never opens Scan
+- browser Back works
+- selected class, subject and chapter are preserved
+
+7. Verify Practice:
+- chapters/questions appear before mastery details
+- mastery is collapsed by default
+- mastery calculation remains unchanged
+
+8. Measure separately:
+- sign-in completion to Home
+- beta-check API time
+- Practice route load
+- Class 9 Mathematics bank load
+- first question render
+- subsequent Easy/Medium/Hard question render
+- Mathematics-to-Science switch
+
+9. Run:
+- frontend TypeScript
+- API TypeScript
+- production build
+
+FIX ONLY CONFIRMED FAILURES.
+
+RETURN ONLY:
+- whether any consumer depended on Practice preloading
+- any correction applied
+- route-by-route lazy-loading results
+- exact 8/5/3 results for both questions
+- Re-solve result
+- navigation results
+- Practice mastery result
+- measured timings
+- generated chunk sizes
+- files modified
+- TypeScript results
+- production build result
+- remaining blocker
+
+FINAL STATUS:
+SNAPSOLVE BETA DEFECT VALIDATION — PASS or BLOCKED

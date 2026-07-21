@@ -1,10 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "wouter";
 import { useExamMode, getUrgency, urgencyColors } from "@/hooks/useExamMode";
 import type { ExamConfig, ExamSubject, ExamTask } from "@/hooks/useExamMode";
 import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { useChapterStats } from "@/hooks/useChapterStats";
+import { preloadQBank }    from "@/services/questionService";
 import { SUBJECTS } from "@/data/subjects";
 import type { Subject } from "@/data/subjects";
 
@@ -569,9 +570,11 @@ export default function ExamMode() {
   // Always call hooks (rules of hooks)
   const { getSubjectStats } = useProgress();
   const { getDueItems }     = useRevisionPlanner();
-  const physChapters  = useChapterStats("Physics");
-  const chemChapters  = useChapterStats("Chemistry");
-  const mathChapters  = useChapterStats("Mathematics");
+  const [bankReady, setBankReady] = useState(false);
+
+  const physChapters  = useChapterStats("Physics",     9, bankReady);
+  const chemChapters  = useChapterStats("Chemistry",   9, bankReady);
+  const mathChapters  = useChapterStats("Mathematics", 9, bankReady);
 
   const chapterMap: Record<Subject, ReturnType<typeof useChapterStats>> = {
     Science:            [],
@@ -642,8 +645,25 @@ export default function ExamMode() {
     );
   }, [config, targetSubjects, weakTopicsMap, accuracyMap, dueItems, daysRemaining, completedIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Preload question bank (class 9 — matches useChapterStats default) ──────
+  useEffect(() => {
+    setBankReady(false);
+    preloadQBank(9).then(() => setBankReady(true));
+  }, []);
+
   if (!config) {
     return <SetupView onSave={saveConfig} />;
+  }
+
+  if (!bankReady) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center space-y-2 px-6">
+          <div className="w-8 h-8 border-2 border-slate-200 border-t-slate-600 rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-medium text-slate-500">Loading questions…</p>
+        </div>
+      </div>
+    );
   }
 
   return (

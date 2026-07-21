@@ -8,13 +8,14 @@
  *  4. Mastered     (celebration card)
  */
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { useMistakeJournal } from "@/hooks/useMistakeJournal";
-import { getQuestionById } from "@/services/questionService";
-import { useSession } from "@/hooks/useSession";
+import { getQuestionById, preloadQBank } from "@/services/questionService";
+import { useSession }  from "@/hooks/useSession";
+import { useProfile }  from "@/hooks/useProfile";
 import type { RevisionItem, SRInterval } from "@/hooks/useRevisionPlanner";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -320,6 +321,7 @@ export default function Revision() {
   } = useRevisionPlanner();
 
   const { getTopicsNeedingRevision } = useMistakeJournal();
+  const { profile }                  = useProfile();
 
   const weakTopics = useMemo(
     () => getTopicsNeedingRevision().map((t) => t.topic),
@@ -340,6 +342,7 @@ export default function Revision() {
 
   // Track this session's results (for progress bar)
   const [sessionResults, setSessionResults] = useState<Record<string, "correct" | "incorrect">>({});
+  const [bankReady, setBankReady]           = useState(false);
 
   const reviewedCount    = Object.keys(sessionResults).length;
   const sessionComplete  = sessionItems.length > 0 && reviewedCount === sessionItems.length;
@@ -353,6 +356,23 @@ export default function Revision() {
   };
 
   const hasAnything = totalScheduled > 0 || masteredCount > 0;
+
+  // ── Preload question bank ─────────────────────────────────────────────────
+  useEffect(() => {
+    setBankReady(false);
+    preloadQBank(profile.classLevel ?? 9).then(() => setBankReady(true));
+  }, [profile.classLevel]);
+
+  if (!bankReady) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center space-y-2 px-6">
+          <div className="w-8 h-8 border-2 border-slate-200 border-t-slate-600 rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-medium text-slate-500">Loading questions…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">

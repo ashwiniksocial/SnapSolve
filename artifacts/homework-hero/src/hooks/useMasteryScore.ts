@@ -116,7 +116,8 @@ function masteryColor(score: number): string {
   return "#94a3b8";                   // slate-400
 }
 
-export function useMasteryScore(subject: Subject, classNum: number): MasteryResult {
+/** @param _bankReady Pass the bankReady flag from the page so the memo re-runs when the lazy bundle finishes loading. */
+export function useMasteryScore(subject: Subject, classNum: number, _bankReady?: boolean): MasteryResult {
   const { log } = useAttemptLog();
 
   return useMemo(() => {
@@ -148,5 +149,5 @@ export function useMasteryScore(subject: Subject, classNum: number): MasteryResu
       label:       masteryLabel(score),
       color:       masteryColor(score),
     };
-  }, [log, subject, classNum]);
+  }, [log, subject, classNum, _bankReady]);
 }
