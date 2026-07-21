@@ -1,0 +1,89 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+Confirmed Practice subject-state bug repair only.
+
+DO NOT:
+- run a broad audit
+- add features
+- redesign UI
+- modify question content
+- modify unrelated pages
+- change architecture
+- touch Workspace again
+
+CONFIRMED BUG:
+After:
+Mathematics → Science → Mathematics
+
+the Mathematics tab becomes selected, but Science chapters remain displayed.
+
+The previous selectedChapterId fix did NOT solve the real data-state problem.
+
+INSPECT ONLY:
+- artifacts/homework-hero/src/pages/Practice.tsx
+- useChapterStats.ts
+- useMasteryScore.ts
+- questionService.ts
+- the direct session/profile hook used by Practice
+
+CHECK SPECIFICALLY:
+1. chapterStats/useChapterStats caching by subject
+2. useMemo dependencies missing session.subject
+3. bankReady not resetting on subject change
+4. preloadQBank returning cached class data without triggering subject-specific recomputation
+5. sortedChapters using stale chapterStats
+6. session update being asynchronous while rendering depends on old session.subject
+7. any local chapter list/state retaining the previous subject
+
+REQUIRED FIX:
+- Mathematics selected must render only Mathematics chapters.
+- Science selected must render only Science chapters.
+- On every subject switch:
+  - immediately hide the old subject chapter list
+  - show the existing loading state if recomputation is pending
+  - recompute chapterStats using the newly selected subject
+  - render only when the selected subject and chapter data match
+- Do not rely only on selectedChapterId.
+- Do not show stale chapters during the transition.
+- Keep Class 9 selected.
+- Preserve progress/mastery calculations.
+
+PREFERRED SAFE APPROACH:
+Use a dedicated local selectedSubject state in Practice as the immediate source of truth for rendering and handlers, then sync it to session/profile storage.
+
+Ensure:
+- useChapterStats receives selectedSubject directly
+- sortedChapters depends on selectedSubject and chapterStats
+- any bank/data readiness state resets when selectedSubject changes
+- stale async results cannot overwrite the current selectedSubject view
+
+VALIDATE IN THE ACTUAL UI:
+1. Mathematics → Science → Mathematics
+2. Science → Mathematics → Science
+3. Repeat switching 10 times
+4. Confirm the visible tab, heading, recommended chapter and full chapter list all match the same subject
+5. Open one Mathematics chapter
+6. Return and open one Science chapter
+7. Refresh while Mathematics is selected
+8. Refresh while Science is selected
+9. Confirm no Economics tab
+10. Confirm Workspace remains absent
+11. TypeScript passes
+12. Production build passes with required workflow env vars
+
+Do not claim PASS from source inspection alone.
+Use browser interaction and screenshots.
+
+RETURN ONLY:
+- actual root cause
+- files modified
+- UI test evidence
+- Mathematics → Science → Mathematics result
+- rapid-switch result
+- refresh result
+- TypeScript result
+- production build result
+- final status:
+
+PRACTICE SUBJECT DATA STATE — PASS or BLOCKED

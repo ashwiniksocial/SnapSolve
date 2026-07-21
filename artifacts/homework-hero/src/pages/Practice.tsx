@@ -246,26 +246,31 @@ export default function Practice() {
   const { getSubjectStats }                    = useProgress();
 
   const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
-  const [bankReady,      setBankReady]     = useState(false);
+  const [bankReady,       setBankReady]      = useState(false);
+  // selectedSubject is the synchronous source of truth for all chapter
+  // rendering and computation. It updates immediately in the event handler so
+  // every memo and hook sees the new subject in the same render tick.
+  // update({ subject }) keeps session / localStorage in sync asynchronously.
+  const [selectedSubject, setSelectedSubject] = useState<Subject>(session.subject);
 
-  const mastery      = useMasteryScore(session.subject, practiceClass, bankReady);
-  const cfg          = SUBJECTS[session.subject];
-  const adaptiveTier = getSubjectTier(session.subject);
-  const adaptiveMastery = getSubjectMastery(session.subject);
+  const mastery      = useMasteryScore(selectedSubject, practiceClass, bankReady);
+  const cfg          = SUBJECTS[selectedSubject];
+  const adaptiveTier = getSubjectTier(selectedSubject);
+  const adaptiveMastery = getSubjectMastery(selectedSubject);
 
-  const chapterStats = useChapterStats(session.subject, practiceClass, bankReady);
+  const chapterStats = useChapterStats(selectedSubject, practiceClass, bankReady);
 
   const chapters = useMemo(
-    () => bankReady ? getChapters(practiceClass, session.subject) : [],
-    [bankReady, practiceClass, session.subject],
+    () => bankReady ? getChapters(practiceClass, selectedSubject) : [],
+    [bankReady, practiceClass, selectedSubject],
   );
 
   const questionMap = useMemo(() => {
     const all = chapters.flatMap((ch) =>
-      getQuestions({ classNum: practiceClass, subject: session.subject, chapterId: ch.id })
+      getQuestions({ classNum: practiceClass, subject: selectedSubject, chapterId: ch.id })
     );
     return buildQuestionMap(all);
-  }, [chapters, practiceClass, session.subject]);
+  }, [chapters, practiceClass, selectedSubject]);
 
   // ── Metrics ─────────────────────────────────────────────────────────────────
   const totalSolved = chapterStats.reduce((s, ch) => s + ch.solved, 0);
@@ -273,15 +278,15 @@ export default function Practice() {
 
   const studyMinutes = useMemo(() => {
     const relevant = Object.values(log).filter(
-      (r) => r.subject === session.subject && r.classNum === practiceClass,
+      (r) => r.subject === selectedSubject && r.classNum === practiceClass,
     );
     return relevant.reduce((sum, r) => sum + Math.min(5 + (r.attempts - 1) * 2, 12), 0);
-  }, [log, session.subject, practiceClass]);
+  }, [log, selectedSubject, practiceClass]);
 
   // ── Topic stats from useProgress ────────────────────────────────────────────
   const subjectStats = useMemo(
-    () => getSubjectStats(session.subject),
-    [getSubjectStats, session.subject],
+    () => getSubjectStats(selectedSubject),
+    [getSubjectStats, selectedSubject],
   );
 
   const strongTopicsList = useMemo(
@@ -328,9 +333,8 @@ export default function Practice() {
   }, [chapterStats]);
 
   // ── Chapter progress sorted ─────────────────────────────────────────────────
-  // session.subject is included so sortedChapters immediately clears when the
-  // subject changes — even before chapterStats re-runs — preventing stale
-  // chapters from the previous subject ever appearing in the list.
+  // selectedSubject is explicit here so sortedChapters invalidates in the same
+  // render tick as the subject change, before chapterStats re-runs.
   const sortedChapters = useMemo(
     () =>
       [...chapterStats].sort((a, b) => {
@@ -339,7 +343,7 @@ export default function Practice() {
         if (STATUS_ORDER[sa] !== STATUS_ORDER[sb]) return STATUS_ORDER[sa] - STATUS_ORDER[sb];
         return a.accuracy - b.accuracy;
       }),
-    [chapterStats, session.subject],
+    [chapterStats, selectedSubject],
   );
 
   // ── Filter state ────────────────────────────────────────────────────────────
@@ -356,21 +360,21 @@ export default function Practice() {
     () =>
       getQuestions({
         classNum:     practiceClass,
-        subject:      session.subject,
+        subject:      selectedSubject,
         chapterId:    selectedChapterId,
         ...(selectedTopicId !== "all" ? { topicId: selectedTopicId } : {}),
         difficulty:   selectedDiff,
         questionType: selectedType,
       }),
-    [practiceClass, session.subject, selectedChapterId, selectedTopicId, selectedDiff, selectedType],
+    [practiceClass, selectedSubject, selectedChapterId, selectedTopicId, selectedDiff, selectedType],
   );
 
   const drilldownAttempts = useMemo(
     () =>
       selectedChapterId
-        ? getChapterAttempts(selectedChapterId, practiceClass, session.subject)
+        ? getChapterAttempts(selectedChapterId, practiceClass, selectedSubject)
         : [],
-    [selectedChapterId, practiceClass, session.subject, getChapterAttempts],
+    [selectedChapterId, practiceClass, selectedSubject, getChapterAttempts],
   );
 
   // ── Subject helpers ─────────────────────────────────────────────────────────
@@ -380,8 +384,9 @@ export default function Practice() {
   );
 
   const handleSubjectChange = useCallback((s: Subject) => {
+    setSelectedSubject(s);                    // sync — clears stale chapters immediately
     const next = getChapters(practiceClass, s);
-    update({ subject: s });
+    update({ subject: s });                   // async persist to session / localStorage
     setSelectedChapterId(next[0]?.id ?? "");
     setSelectedTopicId("all");
     setSelectedDiff("All");
@@ -390,18 +395,18 @@ export default function Practice() {
   }, [practiceClass, update]);
 
   useEffect(() => {
-    if (availableSubjects.length > 0 && !availableSubjects.includes(session.subject)) {
+    if (availableSubjects.length > 0 && !availableSubjects.includes(selectedSubject)) {
       handleSubjectChange(availableSubjects[0]);
     }
-  }, [availableSubjects, session.subject, handleSubjectChange]);
+  }, [availableSubjects, selectedSubject, handleSubjectChange]);
 
   // Fires only when the bank loads or the class changes.
-  // Subject changes are handled synchronously inside handleSubjectChange, so
-  // keeping session.subject in deps would create a second async write that races
-  // with the synchronous one and can pin the wrong chapter on rapid switching.
+  // selectedSubject is intentionally excluded from deps — subject switches are
+  // handled synchronously by handleSubjectChange. The closure captures the
+  // latest selectedSubject at the time bankReady / practiceClass changes.
   useEffect(() => {
     if (!bankReady) return;
-    const next = getChapters(practiceClass, session.subject);
+    const next = getChapters(practiceClass, selectedSubject);
     setSelectedChapterId(next[0]?.id ?? "");
     setDrilldownOpen(false);
     setSelectedTopicId("all");
@@ -419,7 +424,7 @@ export default function Practice() {
 
   const handleOpenQuestion = useCallback((q: Question) => {
     update({
-      subject:               session.subject,
+      subject:               selectedSubject,
       question:              q.question,
       practiceTopic:         q.topicName,
       practiceQuestionId:    q.id,
@@ -429,14 +434,14 @@ export default function Practice() {
       practiceClassNum:      q.classNum,
     });
     navigate("/solution?practiceMode=1");
-  }, [session.subject, update, navigate]);
+  }, [selectedSubject, update, navigate]);
 
   const handleReopenQuestion = useCallback((questionId: string) => {
     const found = chapters
-      .flatMap((ch) => getQuestions({ classNum: practiceClass, subject: session.subject, chapterId: ch.id }))
+      .flatMap((ch) => getQuestions({ classNum: practiceClass, subject: selectedSubject, chapterId: ch.id }))
       .find((q) => q.id === questionId);
     if (found) handleOpenQuestion(found);
-  }, [chapters, practiceClass, session.subject, handleOpenQuestion]);
+  }, [chapters, practiceClass, selectedSubject, handleOpenQuestion]);
 
   const openChapter = useCallback((chapterId: string) => {
     setSelectedChapterId(chapterId);
@@ -487,7 +492,7 @@ export default function Practice() {
             <div>
               <h1 className="text-xl font-bold text-slate-900">Practice</h1>
               <p className="text-sm text-slate-500 mt-0.5">
-                Class {practiceClass} · {chapters.length} chapter{chapters.length !== 1 ? "s" : ""} · {session.subject}
+                Class {practiceClass} · {chapters.length} chapter{chapters.length !== 1 ? "s" : ""} · {selectedSubject}
               </p>
             </div>
           </div>
@@ -496,7 +501,7 @@ export default function Practice() {
           <div className="flex gap-2 mb-3">
             {CLASS_OPTIONS.map((cn) => {
               const active     = practiceClass === cn;
-              const hasContent = getChapters(cn, session.subject).length > 0;
+              const hasContent = getChapters(cn, selectedSubject).length > 0;
               return (
                 <button
                   key={cn}
@@ -522,7 +527,7 @@ export default function Practice() {
             {ALL_SUBJECTS.map((s) => {
               const c          = SUBJECTS[s];
               const hasContent = availableSubjects.includes(s);
-              const active     = session.subject === s && hasContent;
+              const active     = selectedSubject === s && hasContent;
               return (
                 <button
                   key={s}
@@ -664,7 +669,7 @@ export default function Practice() {
               {weakChapters.map((cs) => {
                 const chNum = cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
                 return (
-                  <div key={cs.chapterId} className="px-4 py-3 flex items-center gap-3">
+                  <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`} className="px-4 py-3 flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-slate-800 truncate">
                         <span className="text-slate-400 font-normal text-xs mr-1">Ch {chNum}.</span>
@@ -763,7 +768,7 @@ export default function Practice() {
                 const chNum      = cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
 
                 return (
-                  <div key={cs.chapterId}>
+                  <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`}>
                     <button
                       onClick={() => handleChapterRowClick(cs.chapterId)}
                       className={`w-full text-left rounded-2xl border p-3.5 bg-white shadow-sm transition-all hover:border-slate-300 ${
@@ -1028,7 +1033,7 @@ export default function Practice() {
             <p className="text-4xl mb-3">📚</p>
             <p className="font-semibold text-slate-700">No chapters available yet</p>
             <p className="text-sm text-slate-500 mt-1">
-              Class {practiceClass} {session.subject} content is coming soon.
+              Class {practiceClass} {selectedSubject} content is coming soon.
             </p>
           </div>
         )}
