@@ -133,7 +133,7 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
   ],
   "9-Chemistry": [
     { name: "Matter in Our Surroundings",          slug: "matter-in-our-surroundings",  cbseDeleted: true },
-    { name: "Exploring Mixtures",                  slug: "exploring-mixtures" },
+    { name: "Exploring Mixtures and Their Separation", slug: "exploring-mixtures-and-their-separation" },
     { name: "Structure of the Atom",               slug: "structure-of-the-atom" },
     { name: "Atoms and Molecules",                 slug: "atoms-and-molecules" },
   ],

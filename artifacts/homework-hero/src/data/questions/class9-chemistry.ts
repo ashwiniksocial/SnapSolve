@@ -5,7 +5,7 @@
  *
  * Chapters:
  *   Ch01 Matter in Our Surroundings
- *   Ch02 Is Matter Around Us Pure?
+ *   Ch02 Exploring Mixtures and Their Separation
  *   Ch03 Atoms and Molecules
  *   Ch04 Structure of the Atom
  *

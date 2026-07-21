@@ -1,0 +1,128 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Verify target → correct scope → complete question bank → validate → freeze.
+
+CURRENT TASK:
+Class 9 Chemistry — Exploring Mixtures and Their Separation.
+
+Existing implementation file:
+question-bank/questions/chemistry/class9/ch02-is-matter-around-us-pure.ts
+
+Important:
+This legacy filename and export may remain unchanged to preserve architecture.
+Do not create another chapter file.
+
+Current count:
+31 questions.
+
+Target:
+Exactly 75 strong, unique, active questions.
+
+Official source of truth:
+CBSE Science 086 Class IX syllabus 2026–27 and current NCERT Grade 9 Science chapter:
+“Exploring Mixtures and Their Separation”.
+
+CONFIRMED OFFICIAL SCOPE:
+- homogeneous and heterogeneous mixtures
+- solutions, suspensions and colloids
+- properties and comparison of each
+- concentration of solutions:
+  - mass by mass percentage
+  - mass by volume percentage
+  - volume by volume percentage
+- solubility and effect of temperature
+- interpretation of solubility data/graphs
+- separation based on physical properties
+- crystallisation
+- distillation
+- fractional distillation only if explicitly within Class 9 source
+- paper chromatography
+- sublimation
+- centrifugation
+- coagulation
+- filtration, evaporation and separating funnel where supported
+- selection of the appropriate separation technique
+- laboratory apparatus and safety
+- daily-life and environmental applications
+
+SCOPE CORRECTION:
+The existing 3 questions under:
+t4 — “Physical and Chemical Changes”
+are not part of the official chapter scope.
+
+Do not delete useful authored work unnecessarily.
+
+Replace or remap these 3 questions into valid, genuinely different questions from the confirmed chapter scope.
+Do not merely change their topic labels while retaining out-of-scope content.
+
+Then add 44 further questions so the final active count is exactly 75.
+
+Recommended final topic structure:
+t1 — Types of Mixtures
+t2 — Solutions, Suspensions and Colloids
+t3 — Concentration, Solubility and Data Interpretation
+t4 — Separation Techniques and Applications
+
+You may adjust natural topic totals according to learning importance.
+Ensure topic metadata totals equal 75.
+
+Metadata:
+- Use the official display title consistently:
+  “Exploring Mixtures and Their Separation”
+- Preserve the existing filename, export and single registration unless a metadata-only correction is required.
+- Update the outdated adapter comment from “Is Matter Around Us Pure?” to the official title.
+- Do not create a duplicate slug, export, registration or file.
+
+Question quality:
+- retain all valid existing in-scope questions
+- exactly 75 final questions
+- optimized for weak Class 9 students
+- clear step-by-step explanations
+- scientifically accurate calculations
+- strong numerical coverage for concentration
+- interpretation of tables, graphs and experimental observations
+- competency and real-life applications
+- balanced Easy, Medium and Hard
+- concept
+- NCERT-style
+- competency-based
+- HOTS
+- assertion–reason
+- previous-year style where appropriate
+- no duplicate IDs
+- no duplicate or cosmetically rewritten questions
+
+Do NOT:
+- modify Matter in Our Surroundings
+- modify Atoms and Molecules
+- modify Structure of the Atom
+- modify frozen Biology, Physics or Mathematics
+- scan the full repository
+- modify UI, architecture, AI pipeline, prompts or LessonRenderer
+- create governance documents
+
+Validation:
+1. Exactly 75 active questions.
+2. Zero Physical and Chemical Changes questions remaining.
+3. All questions fall within the official chapter scope.
+4. Topic totals match actual count.
+5. No duplicate IDs.
+6. No duplicate or near-duplicate question text.
+7. Single registration remains correct.
+8. Official chapter title is consistent in question metadata.
+9. TypeScript typecheck passes.
+10. Freeze the chapter after validation.
+
+Return only:
+- existing count
+- out-of-scope questions replaced
+- new questions added
+- final count
+- topic distribution
+- question-type mix
+- difficulty distribution
+- metadata changes
+- validation results
+- files modified
+- final status: EXPLORING MIXTURES AND THEIR SEPARATION — FROZEN

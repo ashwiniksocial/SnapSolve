@@ -1,42 +1,52 @@
 // @ts-nocheck
 /**
- * Question Bank — Chemistry, Class 9, Chapter 2 (file) / Official Ch5: Exploring Mixtures
+ * Question Bank — Chemistry, Class 9, Chapter 2 (file) / Official Ch5: Exploring Mixtures and Their Separation
  *
- * 31 questions — types: concept (5), ncert (11), competency (5), hots (4),
- *                        previous-year (3), assertion-reason (2), case-study (1)
+ * 75 questions — types: concept (13), ncert (25), competency (14), hots (10),
+ *                        assertion-reason (7), previous-year (6)
  * Board: Both (CBSE + ICSE) | Category: standard | Schema: QuestionV2
- * CBSE 2026-27 Science (Code 086), Chapter 5 — Exploring Mixtures
+ * CBSE 2026-27 Science (Code 086), Chapter 5 — Exploring Mixtures and Their Separation
  *
- * Difficulty distribution: Easy 9 · Medium 16 · Hard 6
+ * Difficulty distribution: Easy 25 · Medium 38 · Hard 12
  *
  * Topic coverage:
- *   t1  Types of Mixtures and Solutions   — 10 q
- *   t2  Colloids and Suspensions          —  8 q
- *   t3  Separation Techniques             — 10 q
- *   t4  Physical and Chemical Changes     —  3 q
+ *   t1  Types of Mixtures                             — 18 q
+ *   t2  Solutions, Suspensions and Colloids           — 18 q
+ *   t3  Concentration, Solubility and Data Interp.   — 20 q
+ *   t4  Separation Techniques and Applications       — 19 q
  *
  * Concept nodes:
  *   chm:9:ch02:mixture-types
+ *   chm:9:ch02:homogeneous-heterogeneous
+ *   chm:9:ch02:alloys
  *   chm:9:ch02:solution-properties
- *   chm:9:ch02:concentration-calculation
- *   chm:9:ch02:solubility
  *   chm:9:ch02:suspension-properties
  *   chm:9:ch02:colloid-properties
  *   chm:9:ch02:tyndall-effect
+ *   chm:9:ch02:colloid-types
+ *   chm:9:ch02:concentration-calculation
+ *   chm:9:ch02:mass-percent
+ *   chm:9:ch02:volume-percent
+ *   chm:9:ch02:solubility
+ *   chm:9:ch02:temperature-solubility
+ *   chm:9:ch02:crystallisation
+ *   chm:9:ch02:distillation
+ *   chm:9:ch02:fractional-distillation
  *   chm:9:ch02:filtration
  *   chm:9:ch02:evaporation
- *   chm:9:ch02:distillation
- *   chm:9:ch02:crystallisation
  *   chm:9:ch02:sublimation
  *   chm:9:ch02:centrifugation
  *   chm:9:ch02:chromatography
- *   chm:9:ch02:physical-chemical-change
+ *   chm:9:ch02:magnetic-separation
+ *   chm:9:ch02:coagulation
  *
  * Note: File identifier preserved as ch02 / CH02_IS_MATTER_AROUND_US_PURE to avoid
  * adapter import changes (architecture freeze). chapterName field updated to
- * "Exploring Mixtures" to match the official 2026-27 CBSE Chapter 5 name.
+ * "Exploring Mixtures and Their Separation" to match the official 2026-27 CBSE Chapter 5 title.
  *
  * v1 2026-07-09 — Initial authoring (StudyAI authoring team)
+ * v2 2026-07-21 — Expanded to 75 q; official title corrected; t4 scope corrected;
+ *                 topic structure revised to 4-topic CBSE 2026-27 syllabus layout.
  */
 
 import type { QuestionV2 } from "../../../types";
@@ -45,16 +55,16 @@ import { STANDARD_TAGS } from "../../../tagging";
 export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // TOPIC t1 — Types of Mixtures and Solutions
+  // TOPIC t1 — Types of Mixtures  (18 questions)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  // ── CONCEPT (4 questions) ────────────────────────────────────────────────
+  // ── CONCEPT ─────────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-con-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
     marks: 1, estimatedTimeMinutes: 2,
@@ -83,8 +93,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "TrueOrFalse",
     difficulty: "Easy", bloomsLevel: "understand",
     marks: 1, estimatedTimeMinutes: 2,
@@ -105,60 +115,91 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   },
 
   {
-    id: "bo-chm-9-ch02-con-003",
+    id: "bo-chm-9-ch02-con-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
-    questionType: "concept", questionFormat: "ShortAnswer",
-    difficulty: "Easy", bloomsLevel: "understand",
-    marks: 2, estimatedTimeMinutes: 3,
-    question: "State THREE properties of a true solution that distinguish it from a suspension.",
-    answer: "(1) Particle size: Solution particles (ions or molecules) are < 1 nm in diameter; suspension particles are > 100 nm and visible to the naked eye or under a microscope.\n(2) Stability: A solution is stable indefinitely — solute does not settle on standing. A suspension is unstable — particles settle over time.\n(3) Filterability: A solution cannot be filtered through ordinary filter paper (particles are too small to be retained). A suspension can be filtered — particles are trapped on the filter paper.",
-    steps: [
-      { stepNumber: 1, title: "Particle size", explanation: "Solution: < 1 nm (ions/molecules). Suspension: > 100 nm (visible on settling)." },
-      { stepNumber: 2, title: "Stability", explanation: "Solution: no settling. Suspension: particles settle on standing." },
-      { stepNumber: 3, title: "Filterability", explanation: "Solution: passes completely through filter paper. Suspension: particles retained on filter paper." },
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "concept", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "In a solution of sugar in water, which is the solute and which is the solvent?\n(A) Sugar is the solvent; water is the solute.\n(B) Sugar is the solute; water is the solvent.\n(C) Both sugar and water are solutes.\n(D) Both sugar and water are solvents.",
+    answer: "B. In any solution, the solute is the substance that is dissolved and is present in the smaller quantity. The solvent is the substance that does the dissolving and is usually present in the larger quantity. Sugar (solid, smaller quantity) is dissolved in water (liquid, larger quantity) → sugar is the solute; water is the solvent.",
+    options: [
+      "A) Sugar is the solvent; water is the solute",
+      "B) Sugar is the solute; water is the solvent",
+      "C) Both sugar and water are solutes",
+      "D) Both sugar and water are solvents",
     ],
-    hint: "Think about particle size, whether particles settle, and whether they pass through filter paper.",
-    keyConcepts: ["solution", "suspension", "particle size", "stability", "filterability"],
-    conceptsCovered: ["chm:9:ch02:solution-properties", "chm:9:ch02:suspension-properties"],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Define solute", explanation: "Solute = substance that dissolves; usually the minor component." },
+      { stepNumber: 2, title: "Define solvent", explanation: "Solvent = substance that dissolves the solute; usually the major component (and the liquid)." },
+      { stepNumber: 3, title: "Apply", explanation: "Sugar (solid, minor) dissolves in water (liquid, major). Sugar = solute; water = solvent." },
+    ],
+    hint: "The solvent is usually the liquid present in larger quantity. The solid that disappears into it is the solute.",
+    keyConcepts: ["solute", "solvent", "solution"],
+    conceptsCovered: ["chm:9:ch02:solution-properties"],
     prerequisites: [],
-    commonErrors: ["Saying solutions can be filtered — they cannot. Only suspensions (and coarse colloids with special membranes) are separated by filtration."],
-    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "solution-vs-suspension"],
+    commonErrors: ["Confusing solute and solvent — remember: solvent is the liquid you pour INTO; solute is what you add to it."],
+    tags: [STANDARD_TAGS.CONCEPTUAL, "class9", "ch02", "solute-solvent"],
     source: "concept",
   },
 
   {
-    id: "bo-chm-9-ch02-con-004",
+    id: "bo-chm-9-ch02-con-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "MCQ",
-    difficulty: "Easy", bloomsLevel: "remember",
-    marks: 1, estimatedTimeMinutes: 1,
-    question: "Which of the following is a correct example of a solid dissolved in a liquid (true solution)?\n(A) Fog\n(B) Sugar dissolved in water\n(C) Oil and water shaken together\n(D) Sand in water",
-    answer: "B. Sugar dissolved in water is a true solution — solid (sugar) dissolved in liquid (water), homogeneous, particle size < 1 nm. Fog is a colloid (liquid in gas). Oil + water is a heterogeneous mixture (two immiscible liquid phases). Sand in water is a suspension (undissolved solid settles).",
-    options: ["A) Fog", "B) Sugar dissolved in water", "C) Oil and water shaken together", "D) Sand in water"],
-    correctOption: "B",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which of the following is an example of a HETEROGENEOUS mixture?\n(A) Salt solution\n(B) Air\n(C) Vinegar\n(D) Granite rock",
+    answer: "D. Granite is a heterogeneous mixture — it contains visible crystals of different minerals (quartz, feldspar, mica) that are visually distinguishable. Salt solution, air, and vinegar are all homogeneous mixtures — they appear uniform throughout with no visible boundaries between components.",
+    options: ["A) Salt solution", "B) Air", "C) Vinegar", "D) Granite rock"],
+    correctOption: "D",
     steps: [
-      { stepNumber: 1, title: "Check each option", explanation: "A: fog = colloid. B: sugar in water = true solution ✓. C: oil + water = heterogeneous/emulsion. D: sand = suspension." },
+      { stepNumber: 1, title: "Check each option", explanation: "Salt solution: uniform → homogeneous. Air: uniform gas mixture → homogeneous. Vinegar: acetic acid in water → homogeneous. Granite: distinct mineral crystals visible → heterogeneous ✓." },
     ],
-    hint: "A true solution is transparent and uniform — you cannot see the solute particles.",
-    keyConcepts: ["solution", "solute", "solvent"],
-    conceptsCovered: ["chm:9:ch02:solution-properties"],
+    hint: "A heterogeneous mixture has visibly different parts. Which option shows visible distinct regions?",
+    keyConcepts: ["heterogeneous mixture", "granite", "homogeneous mixture"],
+    conceptsCovered: ["chm:9:ch02:homogeneous-heterogeneous"],
     prerequisites: [],
-    commonErrors: ["Choosing D — sand does not dissolve; it forms a suspension, not a solution."],
-    tags: [STANDARD_TAGS.NCERT_DIRECT, "class9", "ch02", "solution-examples"],
+    commonErrors: ["Thinking air is heterogeneous because it contains different gases — gases mix uniformly, so air is homogeneous."],
+    tags: [STANDARD_TAGS.CONCEPTUAL, "class9", "ch02", "heterogeneous-mixture"],
     source: "concept",
   },
 
-  // ── NCERT-STYLE (4 questions, t1) ───────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-con-008",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "What is an alloy? Name the components of any TWO alloys and state whether each alloy is a homogeneous or heterogeneous mixture.",
+    answer: "An alloy is a homogeneous mixture of two or more metals (or a metal with a non-metal) prepared by melting and mixing the components. Alloys are homogeneous because the component metals are uniformly distributed at the atomic level and no distinct regions are visible.\n\nTwo examples:\n1. Brass: copper (Cu) + zinc (Zn). Homogeneous mixture.\n2. Steel: iron (Fe) + carbon (C). Homogeneous mixture.\n\n(Other examples: bronze = Cu + Sn; stainless steel = Fe + Cr + Ni.)",
+    steps: [
+      { stepNumber: 1, title: "Define alloy", explanation: "Alloy = homogeneous mixture of metals (or metal + non-metal). Prepared by mixing in molten state." },
+      { stepNumber: 2, title: "Examples", explanation: "Brass (Cu + Zn), Steel (Fe + C), Bronze (Cu + Sn), Stainless steel (Fe + Cr + Ni)." },
+      { stepNumber: 3, title: "Type of mixture", explanation: "All alloys are homogeneous — components distributed uniformly at atomic level." },
+    ],
+    hint: "Alloys are made of metals blended together. Are the components uniformly mixed or visibly separate?",
+    keyConcepts: ["alloy", "homogeneous mixture", "brass", "steel"],
+    conceptsCovered: ["chm:9:ch02:alloys", "chm:9:ch02:homogeneous-heterogeneous"],
+    prerequisites: [],
+    commonErrors: ["Calling alloys 'compounds' — alloys are mixtures because the ratio of metals is variable and components can be recovered."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "alloys"],
+    source: "concept",
+  },
+
+  // ── NCERT-STYLE ──────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-nce-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
     marks: 3, estimatedTimeMinutes: 4,
@@ -172,7 +213,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     ],
     hint: "Homogeneous = 1 phase throughout. Heterogeneous = multiple phases visible.",
     keyConcepts: ["homogeneous mixture", "heterogeneous mixture", "uniform composition"],
-    conceptsCovered: ["chm:9:ch02:mixture-types"],
+    conceptsCovered: ["chm:9:ch02:homogeneous-heterogeneous"],
     prerequisites: [],
     commonErrors: ["Giving air as an example of heterogeneous — air is homogeneous (gases mix uniformly)."],
     tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "mixture-classification"],
@@ -180,58 +221,10 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   },
 
   {
-    id: "bo-chm-9-ch02-nce-002",
-    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
-    questionType: "ncert", questionFormat: "Numerical",
-    difficulty: "Medium", bloomsLevel: "apply",
-    marks: 2, estimatedTimeMinutes: 4,
-    question: "Calculate the mass by mass percentage (w/w%) of a solution prepared by dissolving 10 g of common salt (NaCl) in 90 g of water.",
-    answer: "Mass of solute (NaCl) = 10 g\nMass of solvent (water) = 90 g\nMass of solution = 10 + 90 = 100 g\n\nw/w% = (mass of solute ÷ mass of solution) × 100\n= (10 ÷ 100) × 100\n= 10%\n\nThe solution is 10% (w/w) NaCl.",
-    steps: [
-      { stepNumber: 1, title: "Identify given quantities", explanation: "Mass of solute (NaCl) = 10 g; mass of solvent (water) = 90 g.", formula: "w/w% = (mass of solute / mass of solution) × 100" },
-      { stepNumber: 2, title: "Calculate mass of solution", explanation: "Mass of solution = 10 + 90 = 100 g." },
-      { stepNumber: 3, title: "Apply formula", explanation: "w/w% = (10 / 100) × 100 = 10%.", result: "10% (w/w) NaCl solution" },
-    ],
-    hint: "First add the masses to get total mass of solution, then: (mass of solute ÷ mass of solution) × 100.",
-    keyConcepts: ["concentration", "mass percentage", "w/w percent"],
-    conceptsCovered: ["chm:9:ch02:concentration-calculation"],
-    prerequisites: [],
-    commonErrors: ["Dividing mass of solute by mass of SOLVENT instead of mass of SOLUTION — gives (10/90) × 100 = 11.1%, which is wrong."],
-    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, STANDARD_TAGS.NUMERICALS, "class9", "ch02", "concentration"],
-    source: "original",
-  },
-
-  {
-    id: "bo-chm-9-ch02-nce-003",
-    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
-    questionType: "ncert", questionFormat: "ShortAnswer",
-    difficulty: "Medium", bloomsLevel: "understand",
-    marks: 3, estimatedTimeMinutes: 4,
-    question: "What is meant by a saturated solution? How does an unsaturated solution differ from a supersaturated solution? State one way to convert an unsaturated solution into a saturated one.",
-    answer: "Saturated solution: Contains the maximum amount of solute that can dissolve at a given temperature. If excess solute is added, it settles undissolved.\n\nUnsaturated solution: Contains less solute than the maximum that can dissolve at that temperature — more solute can be added and it will dissolve.\n\nSupersaturated solution: Contains more dissolved solute than a saturated solution at the same temperature. Prepared by dissolving solute at high temperature then cooling slowly — the excess stays dissolved in an unstable equilibrium and crystallises out on disturbance.\n\nConverting unsaturated to saturated: Add more solute with stirring at constant temperature until no more dissolves (excess solute remains at the bottom).",
-    steps: [
-      { stepNumber: 1, title: "Saturated solution", explanation: "Maximum dissolved solute at given T. Adding more: it settles undissolved." },
-      { stepNumber: 2, title: "Unsaturated vs supersaturated", explanation: "Unsaturated: below max capacity. Supersaturated: above normal max (metastable, crystallises on disturbance)." },
-      { stepNumber: 3, title: "Converting unsaturated → saturated", explanation: "Add solute with stirring at constant T until no more dissolves." },
-    ],
-    hint: "Think of saturation like a glass filled to the brim. Saturated = full; unsaturated = not full; supersaturated = temporarily overflowing.",
-    keyConcepts: ["saturated solution", "unsaturated solution", "supersaturated solution", "solubility"],
-    conceptsCovered: ["chm:9:ch02:solubility"],
-    prerequisites: [],
-    commonErrors: ["Confusing supersaturated with saturated — supersaturated has MORE solute than saturated at that temperature."],
-    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "solubility"],
-    source: "original",
-  },
-
-  {
     id: "bo-chm-9-ch02-nce-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
     marks: 1, estimatedTimeMinutes: 2,
@@ -252,13 +245,111 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── COMPETENCY (2 questions, t1) ─────────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-nce-013",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "ncert", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which of the following CORRECTLY matches a mixture with its type?\n(A) Milk — suspension\n(B) Muddy water — colloid\n(C) Brine (salt water) — homogeneous mixture\n(D) Soil — homogeneous mixture",
+    answer: "C. Brine (dissolved NaCl in water) is a true solution — a homogeneous mixture — because the salt is uniformly dispersed at ionic level throughout the water. Milk is a colloid (not a suspension). Muddy water is a suspension (not a colloid). Soil is a heterogeneous mixture (not homogeneous).",
+    options: ["A) Milk — suspension", "B) Muddy water — colloid", "C) Brine (salt water) — homogeneous mixture", "D) Soil — homogeneous mixture"],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "Analyse each option", explanation: "Milk = colloid (fat + protein dispersed). Muddy water = suspension (soil settles). Brine = solution = homogeneous ✓. Soil = heterogeneous (sand, clay, organic matter visible)." },
+    ],
+    hint: "A true solution is always a homogeneous mixture. A dissolved salt produces ions dispersed uniformly.",
+    keyConcepts: ["homogeneous mixture", "colloid", "suspension", "solution"],
+    conceptsCovered: ["chm:9:ch02:mixture-types"],
+    prerequisites: [],
+    commonErrors: ["Classifying muddy water as a colloid — clay and silt particles are large (>100 nm) and settle, making it a suspension."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "mixture-classification"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-014",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "State TWO characteristics by which a mixture differs from a pure substance.",
+    answer: "(1) Variable composition: A mixture can be prepared in any ratio of its components. For example, you can dissolve 5 g or 50 g of sugar in 100 g of water — both are still 'sugar solution'. A pure substance has a fixed, invariable composition (e.g. water is always H:O = 1:8 by mass).\n\n(2) Components retain their properties: In a mixture, each component retains its own physical and chemical properties. In common salt solution, NaCl (salty taste) and water (colourless liquid) both keep their properties. In a pure compound such as water, hydrogen and oxygen no longer show the properties of their elemental forms.",
+    steps: [
+      { stepNumber: 1, title: "Difference 1: Composition", explanation: "Mixture = variable composition. Pure substance = fixed, definite composition." },
+      { stepNumber: 2, title: "Difference 2: Properties", explanation: "Mixture = components retain individual properties. Compound = new properties emerge; original properties lost." },
+    ],
+    hint: "Think about whether the ratio can vary and whether each component still 'behaves like itself'.",
+    keyConcepts: ["mixture", "pure substance", "variable composition", "properties retained"],
+    conceptsCovered: ["chm:9:ch02:mixture-types"],
+    prerequisites: [],
+    commonErrors: ["Saying 'a mixture cannot be separated' — this is wrong. Mixtures are ALWAYS separable by physical methods."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "mixture-vs-pure-substance"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-015",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Classify the following substances as elements, compounds, or mixtures, and state whether each mixture is homogeneous or heterogeneous:\n(a) Oxygen gas\n(b) Sea water\n(c) Calcium carbonate (CaCO₃)\n(d) Steel\n(e) Smoke",
+    answer: "(a) Oxygen gas — Element. Oxygen consists of O₂ molecules (only one type of element).\n(b) Sea water — Mixture (homogeneous). Water + dissolved salts (NaCl, MgCl₂, etc.) uniformly mixed. Appears as one phase.\n(c) Calcium carbonate (CaCO₃) — Compound. Fixed chemical formula; Ca, C, O are chemically bonded in definite ratio.\n(d) Steel — Mixture (homogeneous). Iron + carbon in variable proportions; no chemical bonding between Fe and C; uniform appearance (alloy).\n(e) Smoke — Mixture (heterogeneous). Solid carbon particles dispersed in air; particles visible; more than one phase.",
+    steps: [
+      { stepNumber: 1, title: "O₂", explanation: "Only one element → element." },
+      { stepNumber: 2, title: "Sea water", explanation: "Water + dissolved salts → mixture. Looks uniform → homogeneous." },
+      { stepNumber: 3, title: "CaCO₃", explanation: "Fixed formula, chemically bonded → compound." },
+      { stepNumber: 4, title: "Steel", explanation: "Fe + C in variable ratio, atomic-level mixing → homogeneous mixture (alloy)." },
+      { stepNumber: 5, title: "Smoke", explanation: "Carbon particles in air → heterogeneous mixture (particles visible, settles)." },
+    ],
+    hint: "For each: (1) Is it one element, fixed compound, or mix of substances? (2) If a mixture, can you see distinct parts?",
+    keyConcepts: ["element", "compound", "homogeneous mixture", "heterogeneous mixture"],
+    conceptsCovered: ["chm:9:ch02:mixture-types"],
+    prerequisites: [],
+    commonErrors: ["Classifying steel as a compound — steel is a mixture because the ratio of Fe to C varies (mild steel 0.3% C; high-carbon steel 1% C) and no chemical bonding occurs."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "element-compound-mixture"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-016",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "ncert", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which property is variable in a mixture but fixed in a pure substance?\n(A) Melting point\n(B) Boiling point\n(C) Composition\n(D) Colour",
+    answer: "C. The composition (ratio of components) is variable in a mixture — you can dissolve more or less salt in water and still have a salt solution. In a pure substance, the composition is fixed and invariable (e.g. water is always 11.1% H and 88.9% O by mass). Both melting point and boiling point are also variable in mixtures (they differ from those of pure components) but 'composition' is the most direct and fundamental distinguishing property.",
+    options: ["A) Melting point", "B) Boiling point", "C) Composition", "D) Colour"],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "What makes a mixture a mixture?", explanation: "The defining feature of a mixture is that the ratio of components can vary continuously — no fixed composition." },
+      { stepNumber: 2, title: "Eliminate other options", explanation: "Melting/boiling points vary in mixtures but this is a consequence, not the definition. Colour is not always variable. Composition is the fundamental variable property." },
+    ],
+    hint: "The key word that defines a mixture is 'variable'. What is variable in a mixture?",
+    keyConcepts: ["mixture", "pure substance", "composition", "fixed ratio"],
+    conceptsCovered: ["chm:9:ch02:mixture-types"],
+    prerequisites: [],
+    commonErrors: ["Choosing melting point — while true, composition is the primary distinguishing variable property."],
+    tags: [STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "mixture-properties"],
+    source: "concept",
+  },
+
+  // ── COMPETENCY ───────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-cmp-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 5,
@@ -279,40 +370,223 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   },
 
   {
-    id: "bo-chm-9-ch02-cmp-002",
+    id: "bo-chm-9-ch02-cmp-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t1", topicName: "Types of Mixtures and Solutions",
-    questionType: "competency", questionFormat: "Numerical",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Reena makes lemonade by dissolving 15 g of sugar and squeezing half a lemon into 250 mL of water. She also adds a pinch of salt (about 1 g). Her friend says lemonade is a 'pure substance because it tastes the same every time.' Identify TWO scientific errors in this statement and classify lemonade correctly.",
+    answer: "Error 1 — 'Pure substance': Lemonade is a mixture, not a pure substance. It contains water, dissolved sugar, citric acid (from lemon), sodium ions and chloride ions (from salt), and various lemon flavour compounds — multiple different substances with no fixed ratio between them. A pure substance contains only one type of particle.\n\nError 2 — 'Tastes the same every time': The composition is variable — Reena uses 'half a lemon' and 'a pinch of salt', which are approximate. Different batches differ slightly in sourness, sweetness, and saltiness. Variable composition is a defining feature of mixtures.\n\nCorrect classification: Lemonade is a homogeneous mixture. All ingredients dissolve/disperse uniformly in the water; the lemonade appears as one phase with no visible boundaries.",
+    steps: [
+      { stepNumber: 1, title: "Is it a pure substance?", explanation: "No — contains multiple different dissolved substances in variable, non-fixed ratios." },
+      { stepNumber: 2, title: "Does it taste the same every time?", explanation: "No — 'half a lemon' is approximate. Composition varies batch to batch." },
+      { stepNumber: 3, title: "Correct classification", explanation: "Homogeneous mixture (solution-type) — all components uniformly dissolved in water, one apparent phase." },
+    ],
+    hint: "A pure substance has FIXED composition. Can lemonade have exactly the same ratio of all ingredients every time it is made?",
+    keyConcepts: ["mixture", "pure substance", "variable composition", "homogeneous"],
+    conceptsCovered: ["chm:9:ch02:mixture-types", "chm:9:ch02:homogeneous-heterogeneous"],
+    prerequisites: [],
+    commonErrors: ["Accepting 'tastes the same = pure substance' — taste similarity is a subjective observation, not chemical purity."],
+    tags: [STANDARD_TAGS.NEP_COMPETENCY, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "mixture-types"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-cmp-007",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
     marks: 3, estimatedTimeMinutes: 5,
-    question: "A pharmacist must prepare a standard saline solution containing exactly 0.9% (w/v) NaCl for intravenous use. How many grams of NaCl are needed to prepare 500 mL of this solution?",
-    answer: "Formula: w/v% = (mass of solute in g / volume of solution in mL) × 100\n\nRearranging: mass of solute = (w/v% × volume) ÷ 100\n= (0.9 × 500) ÷ 100\n= 450 ÷ 100\n= 4.5 g\n\n4.5 g of NaCl dissolved in water, made up to 500 mL, gives a 0.9% (w/v) saline solution.",
+    question: "A geologist picks up two rock samples. Rock A (white marble, uniform and shiny) and Rock B (granite, showing distinct speckled regions of different minerals). (a) Classify Rock A and Rock B as homogeneous or heterogeneous mixtures. (b) Give one property of each that supports your answer.",
+    answer: "(a) Rock A — Marble: Homogeneous mixture. Rock B — Granite: Heterogeneous mixture.\n\n(b) Supporting property:\n• Marble: Its composition is relatively uniform throughout — it is composed mainly of calcium carbonate crystals of similar size with no visible distinct regions or phases. You cannot distinguish one part from another with the naked eye.\n• Granite: Different minerals (quartz, feldspar, mica, hornblende) are visible as distinct, differently coloured specks or crystals. More than one phase is clearly visible, confirming heterogeneous classification.",
     steps: [
-      { stepNumber: 1, title: "Identify the formula", explanation: "w/v% = (mass of solute / volume of solution) × 100. Mass in grams; volume in mL.", formula: "w/v% = (m / V) × 100" },
-      { stepNumber: 2, title: "Rearrange for mass", explanation: "m = (w/v% × V) ÷ 100 = (0.9 × 500) ÷ 100." },
-      { stepNumber: 3, title: "Calculate", explanation: "m = 450 ÷ 100 = 4.5 g NaCl.", result: "4.5 g NaCl" },
+      { stepNumber: 1, title: "Marble", explanation: "Uniform appearance, one visible phase, mainly CaCO₃ crystals uniform throughout → homogeneous." },
+      { stepNumber: 2, title: "Granite", explanation: "Visible distinct mineral grains of different colours → more than one phase → heterogeneous." },
     ],
-    hint: "Rearrange w/v% = (mass/volume) × 100 to get mass = (w/v% × volume) ÷ 100.",
-    keyConcepts: ["concentration", "w/v percentage", "saline solution"],
-    conceptsCovered: ["chm:9:ch02:concentration-calculation"],
+    hint: "Homogeneous = uniform, one phase. Heterogeneous = distinct regions visible. Which rock has visible speckles or different-coloured areas?",
+    keyConcepts: ["homogeneous mixture", "heterogeneous mixture", "minerals", "rocks"],
+    conceptsCovered: ["chm:9:ch02:homogeneous-heterogeneous"],
     prerequisites: [],
-    commonErrors: ["Using w/w formula (dividing by total mass) instead of w/v (dividing by volume in mL)."],
-    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "concentration", "w-v-percent"],
+    commonErrors: ["Calling rocks 'pure substances' — rocks are geological mixtures of different minerals."],
+    tags: [STANDARD_TAGS.NEP_COMPETENCY, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "homogeneous-heterogeneous"],
+    source: "concept",
+  },
+
+  // ── HOTS ────────────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-hot-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "A student says: 'All homogeneous mixtures are solutions, so a solution and a homogeneous mixture mean exactly the same thing.' Evaluate this claim. Is it completely correct, partially correct, or wrong? Justify with an example.",
+    answer: "The claim is PARTIALLY correct — all solutions ARE homogeneous mixtures, but NOT all homogeneous mixtures are solutions.\n\nA solution is specifically defined as a homogeneous mixture of a solute dissolved in a solvent, where the solute particles are at the ionic or molecular level (< 1 nm). The term 'solution' is narrower — it implies a clear distinction between solute and solvent.\n\nHomogeneous mixture is the broader term: it includes not only solutions but also other uniformly mixed systems where a solute-solvent distinction may not apply. Examples:\n• Air — a homogeneous mixture of gases (N₂, O₂, Ar, CO₂). No clear 'solute' or 'solvent'. Not typically called a 'solution'.\n• An alloy (e.g. steel) — a homogeneous solid mixture of metals. Technically a solid solution, but commonly called an alloy.\n\nConclusion: Solution ⊂ Homogeneous mixture. 'Solution' and 'homogeneous mixture' are not synonyms.",
+    steps: [
+      { stepNumber: 1, title: "Is every solution a homogeneous mixture?", explanation: "YES — by definition, a solution is uniform throughout = homogeneous. ✓" },
+      { stepNumber: 2, title: "Is every homogeneous mixture a solution?", explanation: "NOT necessarily. Air is a uniform mixture of gases — no solute/solvent distinction. It is called a 'gaseous mixture', not typically a 'solution'." },
+      { stepNumber: 3, title: "Conclusion", explanation: "Solution is a subset of homogeneous mixture. The claim is partially correct." },
+    ],
+    hint: "Is air called a 'solution' or a 'gaseous mixture'? What does that tell you about the relationship between these two terms?",
+    keyConcepts: ["solution", "homogeneous mixture", "solute", "solvent", "subset"],
+    conceptsCovered: ["chm:9:ch02:mixture-types", "chm:9:ch02:solution-properties"],
+    prerequisites: [],
+    commonErrors: ["Treating 'solution' and 'homogeneous mixture' as identical — they are related but not synonymous."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "solution-vs-homogeneous", "hots"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-hot-006",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "Iron exists in two forms in the same test tube: iron filings (solid lumps of iron) and iron powder (very fine particles, also iron). Is this system a mixture? Is it a homogeneous or heterogeneous mixture? Justify your answer carefully.",
+    answer: "This is a thought-provoking edge case.\n\nIs it a mixture? By strict definition, a mixture contains two or more different types of substances. Iron filings and iron powder are both iron (Fe) — the same chemical substance. Therefore, by the strict chemical definition, this is NOT a mixture in the chemical sense — both components have the same chemical composition (pure iron). It is more accurately described as a single substance in different physical forms (different particle sizes).\n\nHowever, in a practical/physical sense: if we use the looser everyday definition of 'mixture' as any combination of separate physically distinct components, then the iron filings and fine powder ARE physically distinct (different sizes, different surface areas). Under this loose definition, it would be heterogeneous — you can visually distinguish the large filings from the fine powder.\n\nConclusion: Strictly speaking, NOT a chemical mixture (same substance). If the question demands a classification, it is physically heterogeneous because the two physical forms are visibly distinguishable and have different properties (settling rate, surface area).",
+    steps: [
+      { stepNumber: 1, title: "Are there two different substances?", explanation: "Both are iron (Fe). Same element. Strict chemistry says: NOT a mixture." },
+      { stepNumber: 2, title: "Physical perspective", explanation: "Different particle sizes → different physical properties (surface area, settling). They form distinguishable phases → physically heterogeneous." },
+      { stepNumber: 3, title: "Conclusion", explanation: "Strictly: not a chemical mixture. Loosely: physically heterogeneous." },
+    ],
+    hint: "A mixture usually requires two or more chemically different substances. What happens when both components are the same element but different sizes?",
+    keyConcepts: ["mixture", "pure substance", "element", "heterogeneous", "particle size"],
+    conceptsCovered: ["chm:9:ch02:mixture-types"],
+    prerequisites: [],
+    commonErrors: ["Saying 'iron filings + iron powder = mixture' without recognising they are the same substance."],
+    tags: [STANDARD_TAGS.TRICKY, "class9", "ch02", "mixture-edge-case", "hots"],
+    source: "concept",
+  },
+
+  // ── ASSERTION-REASON ─────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-asr-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): Brass is classified as a homogeneous mixture, not a compound.\nReason (R): In brass, the ratio of copper to zinc is fixed and the two metals are chemically bonded together.\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "C — A is true but R is false.\n\nA is TRUE: Brass is a homogeneous mixture (alloy) — the Cu and Zn are uniformly mixed at the atomic level, appearing as one phase. It is a mixture because its composition varies (common brass is 60–90% Cu and 10–40% Zn).\n\nR is FALSE: The ratio of Cu to Zn in brass is NOT fixed — it varies by application. And the metals are NOT chemically bonded; they are physically mixed (alloyed). If they were chemically bonded in a fixed ratio, brass would be a compound. The absence of chemical bonding and the variable composition are precisely what make brass a mixture.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "Evaluate Assertion", explanation: "Brass = homogeneous mixture (alloy). Uniform, variable composition. A is TRUE." },
+      { stepNumber: 2, title: "Evaluate Reason", explanation: "Ratio is NOT fixed (varies by use). Metals are NOT chemically bonded. R is FALSE." },
+    ],
+    hint: "What makes something a compound? Fixed ratio + chemical bonding. Does brass satisfy BOTH of these?",
+    keyConcepts: ["alloy", "brass", "homogeneous mixture", "compound", "chemical bonding"],
+    conceptsCovered: ["chm:9:ch02:alloys", "chm:9:ch02:mixture-types"],
+    prerequisites: [],
+    commonErrors: ["Thinking alloys have fixed compositions — alloy compositions vary by application and manufacturer's specifications."],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "alloys", "assertion-reason"],
+    source: "concept",
+  },
+
+  // ── PREVIOUS-YEAR ────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-pyq-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t1", topicName: "Types of Mixtures",
+    questionType: "previous-year", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Classify each of the following as an element, compound, or mixture. If it is a mixture, state whether it is homogeneous or heterogeneous:\n(a) Blood\n(b) Bronze (Cu + Sn)\n(c) Diamond\n(d) Vinegar",
+    answer: "(a) Blood — Mixture (heterogeneous). Blood contains plasma (water + dissolved salts + proteins) and formed elements (red blood cells, white blood cells, platelets). Different components are distinguishable (cells visible under microscope).\n(b) Bronze — Mixture (homogeneous). An alloy of copper and tin in variable proportions; components are uniformly mixed at the atomic level; no chemical bonding.\n(c) Diamond — Element. Diamond is a pure allotrope of carbon; every atom is carbon (C) bonded in a crystalline network. Single element, fixed composition.\n(d) Vinegar — Mixture (homogeneous). A solution of 5–8% acetic acid (CH₃COOH) dissolved in water; uniform throughout; single phase.",
+    steps: [
+      { stepNumber: 1, title: "Blood", explanation: "Contains plasma + blood cells → visually distinguishable components → heterogeneous mixture." },
+      { stepNumber: 2, title: "Bronze", explanation: "Cu + Sn alloy → variable composition, no bonding → homogeneous mixture." },
+      { stepNumber: 3, title: "Diamond", explanation: "Pure carbon, one element → element." },
+      { stepNumber: 4, title: "Vinegar", explanation: "Acetic acid dissolved in water → solution → homogeneous mixture." },
+    ],
+    hint: "Check: (1) Is it one kind of atom → element. (2) Fixed formula, bonded → compound. (3) Otherwise → mixture. Then: one phase or many phases?",
+    keyConcepts: ["element", "compound", "homogeneous mixture", "heterogeneous mixture"],
+    conceptsCovered: ["chm:9:ch02:mixture-types"],
+    prerequisites: [],
+    commonErrors: ["Calling vinegar a compound — acetic acid IS a compound but vinegar (acetic acid + water) is a mixture."],
+    tags: [STANDARD_TAGS.FREQUENTLY_ASKED, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "classification", "previous-year"],
     source: "original",
+    yearIfPreviousYear: 2022,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — Classification of substances, standard examination type",
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // TOPIC t2 — Colloids and Suspensions
+  // TOPIC t2 — Solutions, Suspensions and Colloids  (18 questions)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  // ── CONCEPT (1 question) ─────────────────────────────────────────────────
+  // ── CONCEPT ─────────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-con-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "State THREE properties of a true solution that distinguish it from a suspension.",
+    answer: "(1) Particle size: Solution particles (ions or molecules) are < 1 nm in diameter; suspension particles are > 100 nm and visible to the naked eye or under a microscope.\n(2) Stability: A solution is stable indefinitely — solute does not settle on standing. A suspension is unstable — particles settle over time.\n(3) Filterability: A solution cannot be filtered through ordinary filter paper (particles are too small to be retained). A suspension can be filtered — particles are trapped on the filter paper.",
+    steps: [
+      { stepNumber: 1, title: "Particle size", explanation: "Solution: < 1 nm (ions/molecules). Suspension: > 100 nm (visible on settling)." },
+      { stepNumber: 2, title: "Stability", explanation: "Solution: no settling. Suspension: particles settle on standing." },
+      { stepNumber: 3, title: "Filterability", explanation: "Solution: passes completely through filter paper. Suspension: particles retained on filter paper." },
+    ],
+    hint: "Think about particle size, whether particles settle, and whether they pass through filter paper.",
+    keyConcepts: ["solution", "suspension", "particle size", "stability", "filterability"],
+    conceptsCovered: ["chm:9:ch02:solution-properties", "chm:9:ch02:suspension-properties"],
+    prerequisites: [],
+    commonErrors: ["Saying solutions can be filtered — they cannot. Only suspensions (and coarse colloids with special membranes) are separated by filtration."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "solution-vs-suspension"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-con-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "concept", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 1,
+    question: "Which of the following is a correct example of a solid dissolved in a liquid (true solution)?\n(A) Fog\n(B) Sugar dissolved in water\n(C) Oil and water shaken together\n(D) Sand in water",
+    answer: "B. Sugar dissolved in water is a true solution — solid (sugar) dissolved in liquid (water), homogeneous, particle size < 1 nm. Fog is a colloid (liquid in gas). Oil + water is a heterogeneous mixture (two immiscible liquid phases). Sand in water is a suspension (undissolved solid settles).",
+    options: ["A) Fog", "B) Sugar dissolved in water", "C) Oil and water shaken together", "D) Sand in water"],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Check each option", explanation: "A: fog = colloid. B: sugar in water = true solution ✓. C: oil + water = heterogeneous/emulsion. D: sand = suspension." },
+    ],
+    hint: "A true solution is transparent and uniform — you cannot see the solute particles.",
+    keyConcepts: ["solution", "solute", "solvent"],
+    conceptsCovered: ["chm:9:ch02:solution-properties"],
+    prerequisites: [],
+    commonErrors: ["Choosing D — sand does not dissolve; it forms a suspension, not a solution."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, "class9", "ch02", "solution-examples"],
+    source: "concept",
+  },
 
   {
     id: "bo-chm-9-ch02-con-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t2", topicName: "Colloids and Suspensions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
     marks: 3, estimatedTimeMinutes: 4,
@@ -333,13 +607,63 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "concept",
   },
 
-  // ── NCERT-STYLE (3 questions, t2) ────────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-con-009",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "concept", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "What is the particle size range of colloidal particles?\n(A) Less than 1 nm\n(B) 1 nm to 100 nm\n(C) 100 nm to 1 mm\n(D) Greater than 1 mm",
+    answer: "B. Colloidal particles range from 1 nm to 100 nm in diameter. This intermediate size means they are: too small to settle quickly (giving colloids their stability), too small to be filtered by ordinary filter paper, but large enough to scatter visible light (Tyndall effect). True solution particles are < 1 nm; suspension particles are > 100 nm.",
+    options: ["A) Less than 1 nm", "B) 1 nm to 100 nm", "C) 100 nm to 1 mm", "D) Greater than 1 mm"],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Three ranges", explanation: "Solution: < 1 nm. Colloid: 1–100 nm. Suspension: > 100 nm." },
+    ],
+    hint: "Colloid particles are between solution and suspension sizes. Remember: 1 to 100 nm.",
+    examTip: "This particle size range (1–100 nm) is tested directly in CBSE. Memorise all three ranges together.",
+    keyConcepts: ["colloid", "particle size", "nanometre"],
+    conceptsCovered: ["chm:9:ch02:colloid-properties"],
+    prerequisites: [],
+    commonErrors: ["Saying colloids have particles < 1 nm — that is the solution range. Colloids are between solution and suspension."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "particle-size", "colloid"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-con-010",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "concept", questionFormat: "ShortAnswer",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Complete the comparison table for the three types of mixtures:\n\n| Property | True Solution | Colloid | Suspension |\n|---|---|---|---|\n| Particle size | ? | ? | ? |\n| Does it settle? | ? | ? | ? |\n| Can it be filtered? | ? | ? | ? |\n| Shows Tyndall effect? | ? | ? | ? |",
+    answer: "| Property | True Solution | Colloid | Suspension |\n|---|---|---|---|\n| Particle size | < 1 nm | 1–100 nm | > 100 nm |\n| Does it settle? | No (stable) | No (stable) | Yes (settles over time) |\n| Can it be filtered? | No | No (passes through ordinary filter paper) | Yes (particles retained on filter paper) |\n| Shows Tyndall effect? | No | Yes | Yes (but settles) |\n\nNote: Both colloids and suspensions can scatter light, but colloids are stable (no settling) while suspensions settle. The stability test + filterability together definitively separate colloid from suspension.",
+    steps: [
+      { stepNumber: 1, title: "Particle size row", explanation: "Solution < 1 nm; Colloid 1–100 nm; Suspension > 100 nm." },
+      { stepNumber: 2, title: "Settling row", explanation: "Solution and colloid: stable, no settling. Suspension: settles on standing." },
+      { stepNumber: 3, title: "Filterability row", explanation: "Solution and colloid: pass through ordinary filter paper. Suspension: retained on filter paper." },
+      { stepNumber: 4, title: "Tyndall effect row", explanation: "Solution: no. Colloid: yes. Suspension: yes (but unstable — particles settle)." },
+    ],
+    hint: "Fill in each row using the key distinguishing property. Particle size determines everything else.",
+    keyConcepts: ["solution", "colloid", "suspension", "Tyndall effect", "particle size", "filterability"],
+    conceptsCovered: ["chm:9:ch02:solution-properties", "chm:9:ch02:colloid-properties", "chm:9:ch02:suspension-properties"],
+    prerequisites: [],
+    commonErrors: ["Saying colloids can be filtered — they pass through ordinary filter paper (only retain on dialysis membrane). Suspensions are filtered by ordinary filter paper."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "comparison-table"],
+    source: "concept",
+  },
+
+  // ── NCERT-STYLE ──────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-nce-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t2", topicName: "Colloids and Suspensions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
     marks: 3, estimatedTimeMinutes: 4,
@@ -364,8 +688,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t2", topicName: "Colloids and Suspensions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 4,
@@ -387,8 +711,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t2", topicName: "Colloids and Suspensions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
     marks: 1, estimatedTimeMinutes: 2,
@@ -408,13 +732,62 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── COMPETENCY (1 question, t2) ─────────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-nce-017",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Define the following types of colloidal systems and give one example of each: (a) Sol, (b) Gel, (c) Aerosol, (d) Emulsion.",
+    answer: "(a) Sol — A colloidal dispersion of solid particles in a liquid medium. Example: ink (solid pigment dispersed in water), paint, starch solution.\n\n(b) Gel — A colloidal dispersion of a liquid in a solid medium; the solid forms a network that traps liquid. Example: jelly (gelatine + water), shoe polish.\n\n(c) Aerosol — A colloidal dispersion of solid or liquid particles in a gaseous medium. Example: smoke (solid in gas), fog (liquid in gas), hair spray.\n\n(d) Emulsion — A colloidal dispersion of one liquid in another immiscible liquid. Example: milk (fat in water), cream, mayonnaise, medicinal emulsions.",
+    steps: [
+      { stepNumber: 1, title: "Sol", explanation: "Solid dispersed in liquid. Phase: solid/liquid. Examples: ink, starch solution, paint." },
+      { stepNumber: 2, title: "Gel", explanation: "Liquid dispersed in solid (semi-solid network). Examples: jelly, cheese, shoe polish." },
+      { stepNumber: 3, title: "Aerosol", explanation: "Solid or liquid dispersed in gas. Examples: smoke (solid/gas), fog (liquid/gas), mist." },
+      { stepNumber: 4, title: "Emulsion", explanation: "Liquid in liquid (immiscible). Examples: milk, cream, mayonnaise." },
+    ],
+    hint: "The name of the colloidal type tells you the dispersed phase and dispersion medium: Aerosol → dispersed in air (gas).",
+    keyConcepts: ["sol", "gel", "aerosol", "emulsion", "colloid types"],
+    conceptsCovered: ["chm:9:ch02:colloid-types"],
+    prerequisites: [],
+    commonErrors: ["Confusing aerosol with suspension — aerosols have colloidal-size particles in a gas, not large settling particles."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "colloid-types"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-018",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "ncert", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which of the following is an example of a GEL?\n(A) Smoke\n(B) Fog\n(C) Jelly\n(D) Ink",
+    answer: "C. Jelly is a gel — a liquid (water) is dispersed within a solid network (gelatine protein network), giving a semi-solid structure that holds its shape. Smoke is an aerosol (solid/gas). Fog is an aerosol (liquid/gas). Ink is a sol (solid/liquid).",
+    options: ["A) Smoke", "B) Fog", "C) Jelly", "D) Ink"],
+    correctOption: "C",
+    steps: [
+      { stepNumber: 1, title: "Classify each", explanation: "Smoke: solid in gas = aerosol. Fog: liquid in gas = aerosol. Jelly: liquid in solid network = gel ✓. Ink: solid in liquid = sol." },
+    ],
+    hint: "A gel is semi-solid — liquid trapped in a solid framework. Think of how jelly wobbles but holds its shape.",
+    keyConcepts: ["gel", "aerosol", "sol", "colloid types"],
+    conceptsCovered: ["chm:9:ch02:colloid-types"],
+    prerequisites: [],
+    commonErrors: ["Confusing gel with sol — a sol is solid-in-liquid (flows freely); a gel is liquid-in-solid (semi-solid, does not flow)."],
+    tags: [STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "gel", "colloid-types"],
+    source: "concept",
+  },
+
+  // ── COMPETENCY ───────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-cmp-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t2", topicName: "Colloids and Suspensions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 5,
@@ -434,13 +807,62 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── ASSERTION-REASON (1 question, t2) ────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-cmp-008",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Aarav stirs a spoonful of cocoa powder into hot milk. He notices that the mixture appears uniformly brown but when he shines a torch through it in a dark room, he sees a glowing beam. After leaving it for one hour, he finds no sediment at the bottom. Classify the mixture Aarav made and explain, using the observations, why it is NOT a true solution.",
+    answer: "Classification: The cocoa-milk mixture is a COLLOID (specifically a sol — solid dispersed in liquid).\n\nWhy it is NOT a true solution:\n(1) Tyndall effect observed: A beam of light is visible through the mixture. True solutions do NOT scatter light (dissolved particles < 1 nm). The visible beam proves particles larger than molecular size are present.\n\n(2) No settling after 1 hour: The particles are not large enough to settle → they are not a suspension (suspension particles > 100 nm would settle). The combination of Tyndall effect + no settling = colloidal.\n\nThe cocoa solid particles are dispersed in the colloidal size range (1–100 nm) in the milk medium, producing a stable colloid that scatters light but does not settle.",
+    steps: [
+      { stepNumber: 1, title: "Analyse observations", explanation: "Glowing beam → Tyndall effect → particles > 1 nm present. No settling → particles stable, not large suspension." },
+      { stepNumber: 2, title: "Not a true solution", explanation: "True solution: no Tyndall effect (dissolved ions < 1 nm too small to scatter). This mixture shows Tyndall → not a solution." },
+      { stepNumber: 3, title: "Not a suspension", explanation: "No settling in 1 hour → particles too small to settle. Suspension would show sediment." },
+      { stepNumber: 4, title: "Conclusion", explanation: "Tyndall effect + no settling = colloid (sol: cocoa solid in milk liquid)." },
+    ],
+    hint: "Two key tests: Tyndall effect (eliminates true solution) + no settling (eliminates suspension). What's left?",
+    keyConcepts: ["colloid", "Tyndall effect", "settling", "true solution", "suspension"],
+    conceptsCovered: ["chm:9:ch02:tyndall-effect", "chm:9:ch02:colloid-properties"],
+    prerequisites: [],
+    commonErrors: ["Calling it a solution because it 'looks uniform' — uniformity is necessary but not sufficient to classify as a solution. Tyndall test reveals the true nature."],
+    tags: [STANDARD_TAGS.NEP_COMPETENCY, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "colloid-classification"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-cmp-009",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 4, estimatedTimeMinutes: 7,
+    question: "A sample of river water near a factory contains three types of dissolved/dispersed substances: (i) dissolved calcium ions and chloride ions from salts, (ii) very fine clay particles (1–100 nm range), and (iii) large sand particles that settle in 10 minutes on standing. For each component, (a) classify its type of dispersion and (b) name one laboratory method to separate it from water.",
+    answer: "(i) Dissolved Ca²⁺ and Cl⁻ ions — True solution. Particle size < 1 nm (ionic). Cannot be removed by filtration or settling. Separation method: Evaporation/crystallisation (evaporate water to recover dissolved salts) or reverse osmosis.\n\n(ii) Fine clay particles (1–100 nm) — Colloid (sol). Stable, passes through ordinary filter paper, shows Tyndall effect. Separation method: Coagulation + sedimentation (add electrolyte like alum/aluminium sulphate to destabilise the colloid — particles clump and settle, then filtered/decanted).\n\n(iii) Large sand particles (settling in 10 min) — Suspension. Particle size > 100 nm; settles on standing. Separation method: Filtration through ordinary filter paper (particles retained on paper).",
+    steps: [
+      { stepNumber: 1, title: "Ca²⁺ and Cl⁻ — ionic", explanation: "Ionic species dissolve fully; < 1 nm. True solution. Remove by evaporation of water." },
+      { stepNumber: 2, title: "Fine clay (1–100 nm)", explanation: "Colloidal size, stable. Colloid (sol). Remove by coagulation (alum) then filtration/sedimentation." },
+      { stepNumber: 3, title: "Sand (settles)", explanation: "> 100 nm, settles on standing. Suspension. Remove by filtration through filter paper." },
+    ],
+    hint: "Match particle size to type, then match type to the separation technique that exploits its key weakness (size, charge, settling).",
+    keyConcepts: ["solution", "colloid", "suspension", "coagulation", "filtration", "evaporation"],
+    conceptsCovered: ["chm:9:ch02:solution-properties", "chm:9:ch02:colloid-properties", "chm:9:ch02:suspension-properties", "chm:9:ch02:coagulation"],
+    prerequisites: [],
+    commonErrors: ["Trying to filter dissolved ions — filtration cannot remove dissolved species. Only evaporation/reverse osmosis can."],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NEP_COMPETENCY, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "water-treatment", "colloid"],
+    source: "concept",
+  },
+
+  // ── ASSERTION-REASON ─────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-asr-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t2", topicName: "Colloids and Suspensions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
     marks: 1, estimatedTimeMinutes: 3,
@@ -466,13 +888,44 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── HOTS (1 question, t2) ────────────────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-asr-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): A colloidal solution cannot be separated by filtering it through ordinary filter paper.\nReason (R): The particle size of a colloid (1–100 nm) is smaller than the pore size of ordinary filter paper (~1000 nm = 1 µm).\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "A — Both A and R are true and R is the correct explanation of A.\n\nA is TRUE: Ordinary filter paper cannot separate a colloid — colloidal particles pass through the pores freely.\n\nR is TRUE and EXPLAINS A: Colloid particle size (1–100 nm = 1–100 nm) is much smaller than the pore size of ordinary filter paper (approximately 1000 nm / 1 µm). Only particles larger than the pore size are retained. Since colloidal particles are smaller than the pores, they pass through along with the solvent. R directly and correctly explains why filtration fails for colloids.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "A",
+    steps: [
+      { stepNumber: 1, title: "Evaluate Assertion", explanation: "Colloid passes through ordinary filter paper — confirmed. A is TRUE." },
+      { stepNumber: 2, title: "Evaluate Reason", explanation: "Colloid particles (1–100 nm) < pore size (~1000 nm). Particles smaller than pores pass through. R is TRUE." },
+      { stepNumber: 3, title: "Does R explain A?", explanation: "Yes — R gives exactly the correct physical reason. Answer is A." },
+    ],
+    hint: "If the particle is smaller than the pore, it will pass through. Compare: colloid particle size vs. filter paper pore size.",
+    keyConcepts: ["colloid", "filtration", "particle size", "pore size"],
+    conceptsCovered: ["chm:9:ch02:colloid-properties", "chm:9:ch02:filtration"],
+    prerequisites: [],
+    commonErrors: ["Choosing C (A true, R false) — the pore size comparison is correct and directly explains why filtration fails."],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "colloid", "filtration", "assertion-reason"],
+    source: "concept",
+  },
+
+  // ── HOTS ────────────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-hot-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t2", topicName: "Colloids and Suspensions",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
     marks: 3, estimatedTimeMinutes: 6,
@@ -494,17 +947,619 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
+  {
+    id: "bo-chm-9-ch02-hot-007",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "Rivers carry fine clay particles as a colloidal dispersion. When river water meets the sea, large sand and silt deposits (deltas) form. Explain, using colloidal chemistry, WHY the clay particles suddenly deposit when river water enters the sea. What is this process called?",
+    answer: "The process is called COAGULATION (or flocculation).\n\nRiver water: Clay particles are in the colloidal size range (1–100 nm). They remain stably dispersed because the colloidal particles carry electric charges on their surfaces (all similar sign — they repel each other and cannot clump together). This electrostatic repulsion keeps them suspended indefinitely.\n\nSea water: Sea water contains high concentrations of dissolved electrolytes (salt ions — Na⁺, Cl⁻, Mg²⁺, SO₄²⁻, etc.). When the negatively charged clay colloid enters the high-ionic-strength sea water, the ions neutralise the surface charges on the clay particles. Without electrostatic repulsion, the particles can come together (coagulate) into larger aggregates that are heavy enough to settle under gravity.\n\nResult: Huge amounts of clay and silt deposit at the river mouth → delta formation.\n\nThis is the same principle used in water treatment plants: adding alum (Al₂(SO₄)₃) introduces Al³⁺ ions that neutralise colloidal impurity charges → coagulation → settlement → filtered out.",
+    steps: [
+      { stepNumber: 1, title: "Why clay stays dispersed in river", explanation: "Clay particles carry surface charges (same sign → mutual repulsion → stable colloid)." },
+      { stepNumber: 2, title: "Effect of sea water electrolytes", explanation: "High electrolyte concentration neutralises surface charges on clay particles." },
+      { stepNumber: 3, title: "Coagulation and settling", explanation: "Without repulsive charges, particles aggregate into large flocs that settle → delta formation." },
+    ],
+    hint: "Why do colloids stay dispersed? What do electrolytes (like sea salt) do to colloidal charges?",
+    hint2: "The same chemistry is used in water treatment plants with alum.",
+    hint3: "When the surface charge is neutralised, what prevents the particles from sticking together? Nothing — they coagulate.",
+    keyConcepts: ["coagulation", "colloid stability", "surface charge", "electrolytes", "delta formation"],
+    conceptsCovered: ["chm:9:ch02:coagulation", "chm:9:ch02:colloid-properties"],
+    prerequisites: [],
+    commonErrors: ["Saying the clay 'becomes heavier' in sea water — the key is charge neutralisation, not weight change."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "coagulation", "delta-formation", "hots"],
+    source: "concept",
+  },
+
+  // ── PREVIOUS-YEAR ────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-pyq-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
+    questionType: "previous-year", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A student makes a starch solution by mixing starch powder with water. She notices that the solution appears slightly translucent (milky-blue) but not completely clear.\n(a) What type of mixture has she prepared? Justify by naming one test she can perform to confirm it. [2 marks]\n(b) What will she observe if she passes a narrow beam of light through this starch mixture in a dark room? [1 mark]",
+    answer: "(a) The starch solution is a COLLOID (starch in water is a classic colloidal dispersion). Starch grains swell in water and disperse as large starch molecules in the colloidal size range (several nm to tens of nm).\n\nConfirming test: Tyndall effect test — shine a narrow beam of light (e.g. torch or laser) through the mixture in a dark room. A colloid will show a visible glowing beam (Tyndall effect). A true solution would show no visible beam.\n\n(Optional additional test: Standing test — allow to stand for 24 hours. Colloid: remains stable, no sediment. Suspension: would settle.)\n\n(b) The student will observe a glowing/visible beam of light through the starch solution (Tyndall effect). The path of the beam is made visible because the starch colloidal particles scatter the light sideways, illuminating the beam's path.",
+    steps: [
+      { stepNumber: 1, title: "Classify", explanation: "Starch in water = colloidal sol. Starch molecules swell to colloidal size; milky-blue appearance is characteristic of colloidal starch." },
+      { stepNumber: 2, title: "Confirming test", explanation: "Tyndall effect: shine beam in dark room. Colloid → visible glowing beam. True solution → no beam." },
+      { stepNumber: 3, title: "Observation with beam", explanation: "Glowing beam visible — colloidal starch particles scatter the light, making the path visible." },
+    ],
+    examTip: "Starch solution is the most common lab example used in NCERT for colloid identification. The milky-blue colour + Tyndall effect are its defining observations.",
+    keyConcepts: ["colloid", "starch solution", "Tyndall effect", "classification"],
+    conceptsCovered: ["chm:9:ch02:tyndall-effect", "chm:9:ch02:colloid-properties"],
+    prerequisites: [],
+    commonErrors: ["Calling starch solution a 'true solution' — starch molecules are too large to dissolve at ionic level; they form a colloid."],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "starch-colloid", "tyndall-effect", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2024,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — Tyndall effect and colloid identification, standard type",
+  },
+
   // ═══════════════════════════════════════════════════════════════════════════
-  // TOPIC t3 — Separation Techniques
+  // TOPIC t3 — Concentration, Solubility and Data Interpretation  (20 questions)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  // ── NCERT-STYLE (4 questions, t3) ────────────────────────────────────────
+  // ── CONCEPT ─────────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-con-011",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "concept", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "The solubility of a substance is defined as:\n(A) The amount of solute that dissolves in any amount of solvent at any temperature.\n(B) The maximum amount of solute (in grams) that dissolves in 100 g of solvent at a given temperature to form a saturated solution.\n(C) The rate at which a solute dissolves in a solvent.\n(D) The total mass of the solution formed.",
+    answer: "B. Solubility is defined as the maximum amount of solute (in grams) that can dissolve in 100 g of solvent at a specified temperature to produce a saturated solution. It is a characteristic property of the solute-solvent pair at a given temperature. Option A omits 'maximum' and 'given temperature'. Option C describes dissolution rate, not solubility. Option D describes total mass of solution.",
+    options: [
+      "A) Amount dissolving in any amount of solvent at any temperature",
+      "B) Maximum grams of solute per 100 g solvent at a given temperature",
+      "C) Rate at which solute dissolves",
+      "D) Total mass of solution formed",
+    ],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Key words in solubility definition", explanation: "MAXIMUM amount. Per 100 g SOLVENT. At a GIVEN TEMPERATURE. To form SATURATED solution." },
+    ],
+    hint: "Solubility refers to the MAXIMUM that can dissolve — not just any amount. Temperature must be specified.",
+    examTip: "Solubility is always expressed as g solute per 100 g solvent (or per 100 mL solvent) at a stated temperature.",
+    keyConcepts: ["solubility", "saturated solution", "temperature"],
+    conceptsCovered: ["chm:9:ch02:solubility"],
+    prerequisites: [],
+    commonErrors: ["Confusing solubility with the amount actually dissolved — solubility is the MAXIMUM, not whatever is dissolved in a given sample."],
+    tags: [STANDARD_TAGS.CONCEPTUAL, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "solubility-definition"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-con-012",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "concept", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "understand",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "If temperature is increased, the solubility of which type of substance in water generally INCREASES?\n(A) Gases (e.g. CO₂ in water)\n(B) Solid solutes (e.g. KNO₃ in water)\n(C) Both gases and solid solutes\n(D) Neither — temperature does not affect solubility",
+    answer: "B. For most solid solutes (e.g. KNO₃, sugar, copper sulphate), solubility in water increases with temperature. Higher temperature gives solvent molecules more kinetic energy to break down the solute lattice and dissolve more solute.\n\nFor gases (e.g. CO₂, O₂), the opposite is true — solubility DECREASES with increasing temperature. Higher temperature causes dissolved gas molecules to escape from solution (reduced solubility of gases with heat).",
+    options: [
+      "A) Gases (e.g. CO₂ in water)",
+      "B) Solid solutes (e.g. KNO₃ in water)",
+      "C) Both gases and solid solutes",
+      "D) Neither — temperature does not affect solubility",
+    ],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Solids in water + temperature", explanation: "Most solids: solubility increases with temperature (more energy → more lattice breaking → more dissolving)." },
+      { stepNumber: 2, title: "Gases in water + temperature", explanation: "Gases: solubility decreases with temperature (heat drives dissolved gas out — e.g. bubbles in heated water before boiling)." },
+    ],
+    hint: "Think about what happens to a fizzy drink when you heat it — bubbles of CO₂ escape. Does CO₂ become more or less soluble with heat?",
+    keyConcepts: ["solubility", "temperature", "solid solute", "gas", "KNO₃"],
+    conceptsCovered: ["chm:9:ch02:temperature-solubility"],
+    prerequisites: [],
+    commonErrors: ["Saying both solids and gases become more soluble with temperature — gases become LESS soluble with increasing temperature."],
+    tags: [STANDARD_TAGS.FREQUENTLY_ASKED, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "solubility-temperature"],
+    source: "concept",
+  },
+
+  // ── NCERT-STYLE ──────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-nce-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "Calculate the mass by mass percentage (w/w%) of a solution prepared by dissolving 10 g of common salt (NaCl) in 90 g of water.",
+    answer: "Mass of solute (NaCl) = 10 g\nMass of solvent (water) = 90 g\nMass of solution = 10 + 90 = 100 g\n\nw/w% = (mass of solute ÷ mass of solution) × 100\n= (10 ÷ 100) × 100\n= 10%\n\nThe solution is 10% (w/w) NaCl.",
+    steps: [
+      { stepNumber: 1, title: "Identify given quantities", explanation: "Mass of solute (NaCl) = 10 g; mass of solvent (water) = 90 g.", formula: "w/w% = (mass of solute / mass of solution) × 100" },
+      { stepNumber: 2, title: "Calculate mass of solution", explanation: "Mass of solution = 10 + 90 = 100 g." },
+      { stepNumber: 3, title: "Apply formula", explanation: "w/w% = (10 / 100) × 100 = 10%.", result: "10% (w/w) NaCl solution" },
+    ],
+    hint: "First add the masses to get total mass of solution, then: (mass of solute ÷ mass of solution) × 100.",
+    keyConcepts: ["concentration", "mass percentage", "w/w percent"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation", "chm:9:ch02:mass-percent"],
+    prerequisites: [],
+    commonErrors: ["Dividing mass of solute by mass of SOLVENT instead of mass of SOLUTION — gives (10/90) × 100 = 11.1%, which is wrong."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, STANDARD_TAGS.NUMERICALS, "class9", "ch02", "concentration"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-003",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "What is meant by a saturated solution? How does an unsaturated solution differ from a supersaturated solution? State one way to convert an unsaturated solution into a saturated one.",
+    answer: "Saturated solution: Contains the maximum amount of solute that can dissolve at a given temperature. If excess solute is added, it settles undissolved.\n\nUnsaturated solution: Contains less solute than the maximum that can dissolve at that temperature — more solute can be added and it will dissolve.\n\nSupersaturated solution: Contains more dissolved solute than a saturated solution at the same temperature. Prepared by dissolving solute at high temperature then cooling slowly — the excess stays dissolved in an unstable equilibrium and crystallises out on disturbance.\n\nConverting unsaturated to saturated: Add more solute with stirring at constant temperature until no more dissolves (excess solute remains at the bottom).",
+    steps: [
+      { stepNumber: 1, title: "Saturated solution", explanation: "Maximum dissolved solute at given T. Adding more: it settles undissolved." },
+      { stepNumber: 2, title: "Unsaturated vs supersaturated", explanation: "Unsaturated: below max capacity. Supersaturated: above normal max (metastable, crystallises on disturbance)." },
+      { stepNumber: 3, title: "Converting unsaturated → saturated", explanation: "Add solute with stirring at constant T until no more dissolves." },
+    ],
+    hint: "Think of saturation like a glass filled to the brim. Saturated = full; unsaturated = not full; supersaturated = temporarily overflowing.",
+    keyConcepts: ["saturated solution", "unsaturated solution", "supersaturated solution", "solubility"],
+    conceptsCovered: ["chm:9:ch02:solubility"],
+    prerequisites: [],
+    commonErrors: ["Confusing supersaturated with saturated — supersaturated has MORE solute than saturated at that temperature."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "solubility"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-019",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "A solution contains 5 g of glucose dissolved in 45 g of water. Calculate the mass by mass percentage (w/w%) of the glucose solution.",
+    answer: "Mass of solute (glucose) = 5 g\nMass of solvent (water) = 45 g\nMass of solution = 5 + 45 = 50 g\n\nw/w% = (mass of solute / mass of solution) × 100\n= (5 / 50) × 100\n= 10%\n\nThe solution is 10% (w/w) glucose.",
+    steps: [
+      { stepNumber: 1, title: "Find mass of solution", explanation: "Mass of solution = solute + solvent = 5 + 45 = 50 g.", formula: "w/w% = (mass of solute / mass of solution) × 100" },
+      { stepNumber: 2, title: "Apply formula", explanation: "w/w% = (5/50) × 100 = 10%.", result: "10% (w/w) glucose solution" },
+    ],
+    hint: "Total solution mass = mass of glucose + mass of water. Then apply the percentage formula.",
+    keyConcepts: ["w/w percent", "concentration", "mass of solution"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation", "chm:9:ch02:mass-percent"],
+    prerequisites: [],
+    commonErrors: ["Using 45 g (solvent only) as the denominator instead of 50 g (total solution)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, "class9", "ch02", "w-w-percent"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-020",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "How many grams of urea (NH₂CONH₂) must be dissolved in water to prepare 200 mL of a 2.5% (w/v) urea solution?",
+    answer: "Formula: w/v% = (mass of solute in g / volume of solution in mL) × 100\n\nRearranging for mass:\nmass = (w/v% × V) / 100\n= (2.5 × 200) / 100\n= 500 / 100\n= 5 g\n\n5 g of urea dissolved and made up to 200 mL gives a 2.5% (w/v) urea solution.",
+    steps: [
+      { stepNumber: 1, title: "Identify given values", explanation: "w/v% = 2.5, volume = 200 mL. Find mass of urea.", formula: "w/v% = (mass / volume) × 100" },
+      { stepNumber: 2, title: "Rearrange for mass", explanation: "mass = (w/v% × volume) / 100 = (2.5 × 200) / 100." },
+      { stepNumber: 3, title: "Calculate", explanation: "mass = 500/100 = 5 g urea.", result: "5 g urea" },
+    ],
+    hint: "Rearrange w/v% = (mass/volume) × 100 → mass = (w/v% × volume) ÷ 100.",
+    keyConcepts: ["w/v percent", "concentration", "urea"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation"],
+    prerequisites: [],
+    commonErrors: ["Using mass in kg or volume in L — the w/v% formula uses grams and mL."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.NCERT_DIRECT, "class9", "ch02", "w-v-percent"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-021",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 3,
+    question: "Calculate the volume by volume percentage (v/v%) of a solution prepared by mixing 20 mL of ethanol with 80 mL of water. Assume volumes are additive.",
+    answer: "Volume of solute (ethanol) = 20 mL\nVolume of solution = 20 + 80 = 100 mL\n\nv/v% = (volume of solute / volume of solution) × 100\n= (20 / 100) × 100\n= 20%\n\nThe solution is 20% (v/v) ethanol.",
+    steps: [
+      { stepNumber: 1, title: "Identify volumes", explanation: "Solute = ethanol = 20 mL. Solvent = water = 80 mL. Total = 100 mL.", formula: "v/v% = (volume of solute / volume of solution) × 100" },
+      { stepNumber: 2, title: "Apply formula", explanation: "v/v% = (20/100) × 100 = 20%.", result: "20% (v/v) ethanol solution" },
+    ],
+    hint: "Add the volumes (assuming additive) to find total solution volume, then apply the percentage formula.",
+    keyConcepts: ["v/v percent", "ethanol", "volume percentage"],
+    conceptsCovered: ["chm:9:ch02:volume-percent", "chm:9:ch02:concentration-calculation"],
+    prerequisites: [],
+    commonErrors: ["Dividing 20 mL by 80 mL (solvent volume) instead of 100 mL (total solution volume)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, "class9", "ch02", "v-v-percent"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-022",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "ncert", questionFormat: "Numerical",
+    difficulty: "Hard", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "A 400 g solution of sugar in water has a concentration of 15% (w/w). (a) Find the mass of sugar (solute) in the solution. (b) Find the mass of water (solvent). (c) If 50 g more sugar is dissolved in the same solution (without changing the volume/mass significantly), what is the new w/w% concentration?",
+    answer: "(a) Mass of sugar:\nw/w% = (mass of solute / mass of solution) × 100\n15 = (m_sugar / 400) × 100\nm_sugar = (15 × 400) / 100 = 60 g\n\n(b) Mass of water:\nm_water = mass of solution − mass of sugar = 400 − 60 = 340 g\n\n(c) New concentration after adding 50 g sugar:\nNew mass of sugar = 60 + 50 = 110 g\nNew mass of solution = 400 + 50 = 450 g\n\nNew w/w% = (110 / 450) × 100 = 24.4% (w/w)",
+    steps: [
+      { stepNumber: 1, title: "Part (a): Find mass of sugar", explanation: "15 = (m / 400) × 100 → m = 60 g.", formula: "w/w% = (solute mass / solution mass) × 100" },
+      { stepNumber: 2, title: "Part (b): Find mass of water", explanation: "water = total solution − solute = 400 − 60 = 340 g." },
+      { stepNumber: 3, title: "Part (c): New concentration", explanation: "New solute = 110 g; new solution = 450 g. New w/w% = (110/450) × 100 = 24.4%." },
+    ],
+    hint: "For (a): rearrange w/w% formula to find mass of solute. For (c): both numerator and denominator increase by 50 g.",
+    keyConcepts: ["w/w percent", "concentration", "multi-step calculation"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation", "chm:9:ch02:mass-percent"],
+    prerequisites: [],
+    commonErrors: ["In part (c): forgetting to add 50 g to the total solution mass as well as to the solute mass."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.TRICKY, "class9", "ch02", "concentration", "multi-step"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-023",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "The solubility of KNO₃ (potassium nitrate) at 30°C is 45 g and at 60°C is 110 g (per 100 g water). A student has 100 g of water with 50 g of KNO₃ dissolved in it at 60°C. What will happen if the solution is cooled to 30°C? Calculate the mass of crystals that will separate out.",
+    answer: "At 60°C, the solubility of KNO₃ = 110 g per 100 g water. The student has 50 g dissolved → the solution is unsaturated at 60°C (50 g < 110 g maximum).\n\nAt 30°C, the solubility of KNO₃ = 45 g per 100 g water. The maximum amount that can remain dissolved = 45 g.\n\nAmount dissolved = 50 g > solubility at 30°C (45 g)\n→ The solution becomes supersaturated at 30°C.\n→ Excess KNO₃ will crystallise out.\n\nMass of crystals = amount dissolved − solubility at 30°C\n= 50 − 45 = 5 g\n\nConclusion: 5 g of KNO₃ crystals will separate out when cooled from 60°C to 30°C.",
+    steps: [
+      { stepNumber: 1, title: "Check status at 60°C", explanation: "50 g dissolved < 110 g (solubility at 60°C) → unsaturated at 60°C." },
+      { stepNumber: 2, title: "Check status at 30°C", explanation: "50 g dissolved > 45 g (solubility at 30°C) → supersaturated on cooling → excess crystallises." },
+      { stepNumber: 3, title: "Mass of crystals", explanation: "Crystals = 50 − 45 = 5 g KNO₃ will precipitate." },
+    ],
+    hint: "Compare the amount actually dissolved with the solubility at each temperature. If dissolved amount > solubility → crystals form.",
+    keyConcepts: ["solubility", "crystallisation", "supersaturated", "temperature effect"],
+    conceptsCovered: ["chm:9:ch02:solubility", "chm:9:ch02:temperature-solubility", "chm:9:ch02:crystallisation"],
+    prerequisites: [],
+    commonErrors: ["Forgetting to compare actual dissolved amount (50 g) vs. new solubility (45 g) — the difference (5 g) is what crystallises out."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NUMERICALS, "class9", "ch02", "solubility", "crystallisation"],
+    source: "concept",
+  },
+
+  // ── COMPETENCY ───────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-cmp-002",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "competency", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A pharmacist must prepare a standard saline solution containing exactly 0.9% (w/v) NaCl for intravenous use. How many grams of NaCl are needed to prepare 500 mL of this solution?",
+    answer: "Formula: w/v% = (mass of solute in g / volume of solution in mL) × 100\n\nRearranging: mass of solute = (w/v% × volume) ÷ 100\n= (0.9 × 500) ÷ 100\n= 450 ÷ 100\n= 4.5 g\n\n4.5 g of NaCl dissolved in water, made up to 500 mL, gives a 0.9% (w/v) saline solution.",
+    steps: [
+      { stepNumber: 1, title: "Identify the formula", explanation: "w/v% = (mass of solute / volume of solution) × 100. Mass in grams; volume in mL.", formula: "w/v% = (m / V) × 100" },
+      { stepNumber: 2, title: "Rearrange for mass", explanation: "m = (w/v% × V) ÷ 100 = (0.9 × 500) ÷ 100." },
+      { stepNumber: 3, title: "Calculate", explanation: "m = 450 ÷ 100 = 4.5 g NaCl.", result: "4.5 g NaCl" },
+    ],
+    hint: "Rearrange w/v% = (mass/volume) × 100 to get mass = (w/v% × volume) ÷ 100.",
+    keyConcepts: ["concentration", "w/v percentage", "saline solution"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation"],
+    prerequisites: [],
+    commonErrors: ["Using w/w formula (dividing by total mass) instead of w/v (dividing by volume in mL)."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "concentration", "w-v-percent"],
+    source: "original",
+  },
+
+  {
+    id: "bo-chm-9-ch02-cmp-010",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "competency", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A hospital glucose drip bag contains a 5% (w/v) dextrose solution. (a) Calculate the mass of glucose present in 250 mL of this drip. (b) A nurse needs to give a patient 20 g of glucose. What volume of this drip solution must she administer?",
+    answer: "(a) Mass of glucose in 250 mL of 5% (w/v):\nw/v% = (mass / volume) × 100\nmass = (w/v% × volume) / 100 = (5 × 250) / 100 = 12.5 g\n\n(b) Volume needed to deliver 20 g:\nRearranging: volume = (mass × 100) / w/v%\n= (20 × 100) / 5 = 400 mL\n\nThe nurse must administer 400 mL of the 5% dextrose drip to deliver 20 g of glucose.",
+    steps: [
+      { stepNumber: 1, title: "Part (a): Find mass in 250 mL", explanation: "mass = (5 × 250)/100 = 12.5 g glucose.", formula: "mass = (w/v% × V)/100" },
+      { stepNumber: 2, title: "Part (b): Find volume for 20 g", explanation: "V = (mass × 100)/w/v% = (20 × 100)/5 = 400 mL." },
+    ],
+    hint: "The same formula rearranged: to find mass → mass = (% × V)/100; to find volume → V = (mass × 100)/%",
+    keyConcepts: ["w/v percent", "concentration", "glucose drip", "real-life application"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation"],
+    prerequisites: [],
+    commonErrors: ["Mixing up numerator and denominator when rearranging the w/v% formula."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.REAL_LIFE, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch02", "concentration", "hospital"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-cmp-011",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 4, estimatedTimeMinutes: 7,
+    question: "The table below shows solubility data (g per 100 g water) for two salts at different temperatures:\n\n| Temperature (°C) | KNO₃ (g) | NaCl (g) |\n|---|---|---|\n| 20 | 31 | 36 |\n| 40 | 63 | 37 |\n| 60 | 110 | 37 |\n| 80 | 169 | 38 |\n\n(a) Which salt shows a greater change in solubility between 20°C and 80°C? [1 mark]\n(b) At which temperature range do KNO₃ and NaCl have approximately the same solubility? [1 mark]\n(c) A student dissolves 60 g of KNO₃ in 100 g of hot water at 70°C. The solution is then cooled to 40°C. Will crystals form? If yes, how many grams? [2 marks]",
+    answer: "(a) KNO₃ shows greater change in solubility: at 20°C = 31 g; at 80°C = 169 g. Change = 169 − 31 = 138 g. NaCl change = 38 − 36 = 2 g. KNO₃ is far more temperature-sensitive.\n\n(b) From the table: at 20°C, KNO₃ = 31 g and NaCl = 36 g — these are closest. The crossover point (where both are approximately equal) is between 20°C and 40°C, close to 20°C. (Exact crossover is ~15°C, below the table range, but within the 20°C row, they are closest — accept 'around 20°C' or 'between 20°C and 40°C'.)\n\n(c) At 70°C, solubility of KNO₃ ≈ midpoint between 63 (40°C) and 110 (60°C) data — actually 70°C is beyond 60°C. Between 60°C and 80°C: solubility at 70°C ≈ (110+169)/2 = ~140 g. Student dissolved 60 g at 70°C → well below maximum at 70°C → unsaturated at 70°C.\n\nAt 40°C, solubility = 63 g per 100 g water. Student has 60 g dissolved → 60 g < 63 g (solubility at 40°C) → solution is still unsaturated at 40°C.\n\nConclusion: No crystals will form. The 60 g of KNO₃ remains fully dissolved at 40°C since 60 g < 63 g (the maximum at 40°C).",
+    steps: [
+      { stepNumber: 1, title: "Part (a): Compare changes", explanation: "KNO₃: 169 − 31 = 138 g change. NaCl: 38 − 36 = 2 g change. KNO₃ changes far more." },
+      { stepNumber: 2, title: "Part (b): Identify crossover", explanation: "At 20°C: KNO₃=31, NaCl=36 (closest). NaCl always higher below ~15°C; KNO₃ overtakes above ~15°C. The values are closest at 20°C in this table." },
+      { stepNumber: 3, title: "Part (c): Crystal formation", explanation: "60 g dissolved. Solubility at 40°C = 63 g. Since 60 < 63, solution remains unsaturated. No crystals form." },
+    ],
+    hint: "For (c): compare the amount dissolved (60 g) to the solubility AT the final temperature (40°C), not the starting temperature.",
+    keyConcepts: ["solubility", "temperature", "data interpretation", "crystallisation", "saturation"],
+    conceptsCovered: ["chm:9:ch02:solubility", "chm:9:ch02:temperature-solubility"],
+    prerequisites: [],
+    commonErrors: ["Thinking crystals form whenever you cool a solution — crystals form only if dissolved amount EXCEEDS solubility at the new temperature."],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.TRICKY, STANDARD_TAGS.NUMERICALS, "class9", "ch02", "solubility", "data-interpretation"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-cmp-012",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "competency", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "A student wants to prepare 200 mL of a 2% (w/v) copper sulphate solution for a titration experiment. How many grams of CuSO₄ (anhydrous) must she weigh out?",
+    answer: "w/v% = (mass of solute / volume of solution) × 100\n\nRearranging: mass = (w/v% × volume) / 100\n= (2 × 200) / 100\n= 400 / 100\n= 4 g\n\nThe student must weigh out 4 g of CuSO₄ (anhydrous), dissolve it in a small amount of water, and make up the solution to 200 mL in a volumetric flask.",
+    steps: [
+      { stepNumber: 1, title: "Identify formula", explanation: "w/v% = (mass/volume) × 100. Rearrange: mass = (w/v% × V)/100.", formula: "mass = (w/v% × V)/100" },
+      { stepNumber: 2, title: "Substitute values", explanation: "mass = (2 × 200)/100 = 4 g CuSO₄." },
+    ],
+    hint: "Rearrange the w/v% formula to find mass. Make sure to use the total final volume (200 mL), not the volume of solvent used during mixing.",
+    keyConcepts: ["w/v percent", "copper sulphate", "solution preparation"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation"],
+    prerequisites: [],
+    commonErrors: ["Weighing 2 g (confusing 2% with 2 g into any volume) — the volume must be used in the calculation."],
+    tags: [STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.NEP_COMPETENCY, "class9", "ch02", "w-v-percent", "solution-preparation"],
+    source: "concept",
+  },
+
+  // ── HOTS ────────────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-hot-008",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "A student prepares a saturated solution of KNO₃ at 60°C and then allows it to cool VERY SLOWLY to 30°C without disturbing it. He observes that the solution remains clear (no crystals appear). He scratches the glass with a glass rod, and suddenly a large mass of white crystals appears. Explain this sequence of observations using the concept of supersaturation and particle theory.",
+    answer: "At 60°C: Solubility of KNO₃ is ~110 g/100 g water. The student has exactly 110 g dissolved → saturated.\n\nOn very slow cooling to 30°C (solubility = 45 g/100 g): Normally, 65 g of KNO₃ should crystallise out (110 − 45). However, crystal formation requires nucleation — tiny crystal seeds (nuclei) must form first. If the solution is cooled slowly and carefully without disturbance, no nuclei form. The excess KNO₃ remains dissolved in a SUPERSATURATED state — more dissolved than the equilibrium solubility allows. This is metastable: the system is 'overloaded' but kinetically stable.\n\nScratch with glass rod: The scratch creates microscopic nucleation sites (tiny rough surfaces) and/or tiny glass particles. These provide surfaces on which KNO₃ ions can begin to form a crystal lattice. Nucleation begins instantly, triggering a rapid crystal cascade — almost all the excess solute crystallises simultaneously, forming a sudden large mass of white KNO₃ crystals.",
+    steps: [
+      { stepNumber: 1, title: "Saturated at 60°C", explanation: "110 g dissolved = maximum at 60°C = saturated." },
+      { stepNumber: 2, title: "Slow cooling → supersaturated", explanation: "Below 45 g/100 g (solubility at 30°C), 65 g is 'excess'. Without nuclei, it stays dissolved — supersaturated metastable state." },
+      { stepNumber: 3, title: "Scratch triggers nucleation", explanation: "Scratch provides nucleation sites. Crystal growth begins instantly; all excess KNO₃ crystallises simultaneously." },
+    ],
+    hint: "Why doesn't the excess crystallise automatically? Think about what is needed to START crystal growth (nucleation). What does scratching provide?",
+    keyConcepts: ["supersaturation", "nucleation", "crystallisation", "metastable state"],
+    conceptsCovered: ["chm:9:ch02:solubility", "chm:9:ch02:crystallisation"],
+    prerequisites: [],
+    commonErrors: ["Saying the scratch 'adds energy' to cause crystallisation — it provides nucleation SITES, not energy."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "supersaturation", "crystallisation", "hots"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-hot-009",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "analyse",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Carbonated cold drinks are manufactured by dissolving CO₂ gas in water under HIGH PRESSURE. When you open the bottle, bubbles fizz out vigorously. Using your knowledge of the effect of pressure on gas solubility, explain (a) why CO₂ is dissolved under high pressure, and (b) why it escapes when the bottle is opened. Also explain (c) why a cold drink fizzes MORE when poured into a warm glass than a cold glass.",
+    answer: "(a) High pressure increases gas solubility (Henry's Law: gas solubility is proportional to partial pressure of the gas above the liquid). Under high pressure in the sealed bottle, the CO₂ partial pressure is high → maximum CO₂ dissolves in water. This creates the highly carbonated drink.\n\n(b) When the bottle is opened, the pressure above the liquid drops suddenly to atmospheric pressure (much lower than bottling pressure). The CO₂ partial pressure falls → the solubility of CO₂ falls sharply. The water now holds far MORE CO₂ than its solubility at atmospheric pressure allows. The excess CO₂ escapes from solution as bubbles (effervescence).\n\n(c) Cold water holds more dissolved gas than warm water (gas solubility decreases with increasing temperature). A warm glass reduces the solubility of CO₂ further — even more CO₂ becomes 'excess' and escapes as bubbles. In a cold glass, solubility is higher → less CO₂ escapes → less fizzing.",
+    steps: [
+      { stepNumber: 1, title: "(a) High pressure dissolves more CO₂", explanation: "Higher pressure → higher CO₂ partial pressure → higher solubility (Henry's Law). Maximum carbonation achieved." },
+      { stepNumber: 2, title: "(b) Pressure drops on opening", explanation: "Atmospheric pressure << bottling pressure → CO₂ solubility falls → excess CO₂ escapes as bubbles." },
+      { stepNumber: 3, title: "(c) Warm glass → more fizzing", explanation: "Gas solubility decreases with temperature. Warm glass reduces CO₂ solubility further → more CO₂ forced out → more fizzing." },
+    ],
+    hint: "Two factors affect CO₂ solubility in water: pressure (up → more dissolved) and temperature (up → less dissolved). How does each change when you open the bottle?",
+    keyConcepts: ["gas solubility", "pressure", "temperature", "carbonated drinks", "Henry's Law"],
+    conceptsCovered: ["chm:9:ch02:solubility", "chm:9:ch02:temperature-solubility"],
+    prerequisites: [],
+    commonErrors: ["Saying gas 'decomposes' when bottle opens — CO₂ does not decompose, it simply becomes less soluble and escapes as gas."],
+    tags: [STANDARD_TAGS.REAL_LIFE, STANDARD_TAGS.TRICKY, "class9", "ch02", "gas-solubility", "carbonated-drink", "hots"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-hot-010",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "hots", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "evaluate",
+    marks: 3, estimatedTimeMinutes: 6,
+    question: "A mixture contains two solid salts, X and Y, both dissolved in 100 g of water at 80°C. The solubility data is: Salt X — 200 g at 80°C, 20 g at 20°C. Salt Y — 40 g at 80°C, 35 g at 20°C. You want to separate X from Y. Describe a method, explaining what happens at each step.",
+    answer: "Method: Fractional crystallisation (exploiting the large difference in temperature-dependence of solubility between X and Y).\n\nStep 1 — Dissolve both at 80°C: Dissolve both salts in 100 g water at 80°C. Both dissolve fully if amounts are within their solubility limits at 80°C.\n\nStep 2 — Cool slowly to 20°C: Cool the solution slowly to 20°C.\n• Salt X: Solubility drops dramatically from 200 g (at 80°C) to 20 g (at 20°C). Almost all X that was dissolved will crystallise out, because it far exceeds the 20 g limit at 20°C.\n• Salt Y: Solubility drops only slightly from 40 g to 35 g. Almost all Y remains dissolved in solution.\n\nStep 3 — Filter: Filter the cooled mixture. X crystals are trapped on the filter paper. The filtrate (mother liquor) contains mostly Y in solution.\n\nStep 4 — Evaporate/crystallise filtrate: Evaporate the filtrate to recover Y as pure crystals.\n\nResult: X (large temperature-dependent solubility) crystallises out in Step 2; Y (small temperature-dependent solubility) stays in solution and is recovered in Step 4.",
+    steps: [
+      { stepNumber: 1, title: "Key principle", explanation: "X has large solubility difference (200→20 g on cooling). Y has small difference (40→35 g). Cooling will precipitate mainly X." },
+      { stepNumber: 2, title: "Steps 1–2: Dissolve and cool", explanation: "80°C: both dissolve. 20°C: X mostly crystallises; Y mostly stays dissolved." },
+      { stepNumber: 3, title: "Step 3–4: Filter and evaporate", explanation: "Filter → X on paper; Y in filtrate. Evaporate filtrate → recover Y." },
+    ],
+    hint: "Look at which salt has the bigger solubility change with temperature. That one will crystallise preferentially on cooling.",
+    keyConcepts: ["fractional crystallisation", "solubility", "temperature dependence", "separation"],
+    conceptsCovered: ["chm:9:ch02:solubility", "chm:9:ch02:temperature-solubility", "chm:9:ch02:crystallisation"],
+    prerequisites: [],
+    commonErrors: ["Trying to use filtration immediately before cooling — both salts are dissolved at 80°C; filtration at 80°C separates nothing."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "fractional-crystallisation", "solubility", "hots"],
+    source: "concept",
+  },
+
+  // ── ASSERTION-REASON ─────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-asr-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): Fish and other aquatic animals can survive in water because of dissolved oxygen.\nReason (R): The solubility of oxygen in water decreases as the temperature of the water increases.\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "B — Both A and R are true but R is NOT the correct explanation of A.\n\nA is TRUE: Fish absorb dissolved oxygen (O₂) from water through their gills. Without dissolved O₂ in water, aquatic life cannot survive.\n\nR is TRUE: The solubility of gases (including O₂) in water decreases with increasing temperature. This is why warm river water holds less dissolved O₂ — a real environmental concern (thermal pollution).\n\nHowever, R does NOT explain A: A states WHY fish can survive (presence of dissolved O₂); R describes a temperature effect that REDUCES dissolved O₂ — this is actually a challenge to fish survival, not an explanation for it. R is a related fact about oxygen solubility, not the reason fish survive.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Evaluate Assertion", explanation: "Fish need dissolved O₂ from water to survive through gills. A is TRUE." },
+      { stepNumber: 2, title: "Evaluate Reason", explanation: "Gas solubility decreases with temperature — scientific fact. R is TRUE." },
+      { stepNumber: 3, title: "Does R explain A?", explanation: "R is about decreasing O₂ solubility with temperature — that's not the reason fish CAN survive. R describes a limitation, not the mechanism. Answer is B." },
+    ],
+    hint: "Both facts are correct, but does R's statement about temperature and O₂ explain WHY fish survive?",
+    keyConcepts: ["gas solubility", "temperature", "dissolved oxygen", "aquatic life"],
+    conceptsCovered: ["chm:9:ch02:solubility", "chm:9:ch02:temperature-solubility"],
+    prerequisites: [],
+    commonErrors: ["Choosing A — R is a true fact about gas solubility but it talks about DECREASING dissolved O₂, not about why fish can survive on dissolved O₂."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "gas-solubility", "assertion-reason"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-asr-006",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): Heating an unsaturated salt solution can convert it into a saturated solution.\nReason (R): For most solid solutes, solubility increases with increasing temperature.\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "D — A is false but R is true.\n\nA is FALSE: Heating an unsaturated solution does NOT make it more saturated — it makes it less saturated. Since solubility increases with temperature (R is correct), heating increases the MAXIMUM amount that can dissolve. An unsaturated solution heated to a higher temperature has even more room to dissolve more solute — it becomes MORE unsaturated, not saturated. To make an unsaturated solution saturated at a given temperature, you should ADD more solute (not heat it).\n\nR is TRUE: For most solid solutes (NaCl, KNO₃, sugar, CuSO₄), solubility increases with temperature — this is a correct general statement.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "D",
+    steps: [
+      { stepNumber: 1, title: "Evaluate Assertion", explanation: "Heating increases solubility → MORE solute can dissolve → solution becomes MORE unsaturated, not saturated. A is FALSE." },
+      { stepNumber: 2, title: "Evaluate Reason", explanation: "Most solid solutes: solubility increases with temperature. R is TRUE." },
+    ],
+    hint: "If solubility increases with temperature, and the solution was already unsaturated, what happens to the 'gap' between dissolved amount and maximum capacity when you heat it?",
+    keyConcepts: ["solubility", "saturation", "temperature effect", "unsaturated solution"],
+    conceptsCovered: ["chm:9:ch02:solubility", "chm:9:ch02:temperature-solubility"],
+    prerequisites: [],
+    commonErrors: ["Thinking heating makes a solution more concentrated — heating only increases CAPACITY; it does not add more solute."],
+    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "solubility", "saturation", "assertion-reason"],
+    source: "concept",
+  },
+
+  // ── PREVIOUS-YEAR ────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-pyq-004",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "previous-year", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "A solution is prepared by dissolving 25 g of sugar in 225 g of water. Calculate the concentration of the solution in terms of mass by mass percentage (w/w%).",
+    answer: "Mass of solute (sugar) = 25 g\nMass of solvent (water) = 225 g\nMass of solution = 25 + 225 = 250 g\n\nw/w% = (mass of solute / mass of solution) × 100\n= (25 / 250) × 100\n= 10%\n\nThe concentration of the solution is 10% (w/w).",
+    steps: [
+      { stepNumber: 1, title: "Find total solution mass", explanation: "25 + 225 = 250 g.", formula: "w/w% = (mass of solute / mass of solution) × 100" },
+      { stepNumber: 2, title: "Apply formula", explanation: "w/w% = (25/250) × 100 = 10%." },
+    ],
+    hint: "Always add solute mass + solvent mass = total solution mass first. Then use the percentage formula.",
+    keyConcepts: ["w/w percent", "concentration", "calculation"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation", "chm:9:ch02:mass-percent"],
+    prerequisites: [],
+    commonErrors: ["Dividing 25 by 225 (solvent mass) instead of 250 (solution mass) → gives 11.1%, which is wrong."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "concentration", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2023,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — concentration calculation, standard examination type",
+  },
+
+  {
+    id: "bo-chm-9-ch02-pyq-005",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
+    questionType: "previous-year", questionFormat: "Numerical",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 2, estimatedTimeMinutes: 4,
+    question: "How many grams of KCl (potassium chloride) must be dissolved in water to prepare 500 g of a 5% (w/w) solution?",
+    answer: "Let mass of KCl = m g.\nMass of solution = 500 g.\n\nw/w% = (mass of solute / mass of solution) × 100\n5 = (m / 500) × 100\nm = (5 × 500) / 100\nm = 25 g\n\n25 g of KCl dissolved in (500 − 25) = 475 g of water gives a 5% (w/w) KCl solution weighing 500 g total.",
+    steps: [
+      { stepNumber: 1, title: "Set up the equation", explanation: "5 = (m/500) × 100. Rearrange: m = (5 × 500)/100 = 25 g.", formula: "m = (w/w% × m_solution)/100" },
+      { stepNumber: 2, title: "Find mass of water needed", explanation: "Water = 500 − 25 = 475 g." },
+    ],
+    hint: "Here you know the TOTAL solution mass (500 g) and the percentage (5%). Rearrange the formula to find the solute mass.",
+    keyConcepts: ["w/w percent", "KCl", "reverse calculation"],
+    conceptsCovered: ["chm:9:ch02:concentration-calculation", "chm:9:ch02:mass-percent"],
+    prerequisites: [],
+    commonErrors: ["Calculating 5% of 500 g of SOLVENT (giving 26.3 g) instead of 5% of total SOLUTION mass (500 g)."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "concentration", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2022,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — reverse concentration calculation, standard examination type",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOPIC t4 — Separation Techniques and Applications  (19 questions)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ── CONCEPT ─────────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-con-013",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "concept", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "remember",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which separation technique exploits the DIFFERENCE IN BOILING POINTS of two miscible liquids?\n(A) Filtration\n(B) Distillation\n(C) Chromatography\n(D) Centrifugation",
+    answer: "B. Distillation (and fractional distillation) exploits the difference in boiling points of two or more miscible liquids. The mixture is heated; the component with the lower boiling point vaporises first, is condensed, and collected separately. Filtration separates solid-liquid. Chromatography separates by adsorption/solubility. Centrifugation separates by density/settling rate.",
+    options: ["A) Filtration", "B) Distillation", "C) Chromatography", "D) Centrifugation"],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Match property to technique", explanation: "Boiling point difference → distillation/fractional distillation. Different boiling points allow the more volatile liquid to be collected first." },
+    ],
+    hint: "Which technique involves converting a liquid to vapour and collecting it? What property governs which liquid vaporises first?",
+    keyConcepts: ["distillation", "boiling point", "separation"],
+    conceptsCovered: ["chm:9:ch02:distillation"],
+    prerequisites: [],
+    commonErrors: ["Choosing chromatography — chromatography separates on the basis of adsorption and solubility, not boiling point."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "distillation", "separation-principle"],
+    source: "concept",
+  },
+
+  // ── NCERT-STYLE ──────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-nce-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
     marks: 2, estimatedTimeMinutes: 3,
@@ -527,8 +1582,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
     marks: 3, estimatedTimeMinutes: 4,
@@ -551,8 +1606,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
     marks: 1, estimatedTimeMinutes: 2,
@@ -566,7 +1621,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     ],
     hint: "Iron has a unique property that sulfur does not — it is attracted to magnets.",
     keyConcepts: ["magnetic separation", "iron", "sulfur"],
-    conceptsCovered: ["chm:9:ch02:filtration"],
+    conceptsCovered: ["chm:9:ch02:magnetic-separation"],
     prerequisites: [],
     commonErrors: ["Choosing filtration — you cannot filter two dry solid powders by size using a filter."],
     tags: [STANDARD_TAGS.NCERT_DIRECT, "class9", "ch02", "magnetic-separation"],
@@ -576,8 +1631,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-011",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
     marks: 3, estimatedTimeMinutes: 4,
@@ -598,13 +1653,63 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── COMPETENCY (2 questions, t3) ─────────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-nce-024",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "ncert", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 4,
+    question: "Describe the process of simple distillation. Under what conditions is it effective? Give one example of a mixture that can be separated by simple distillation.",
+    answer: "Simple distillation: A mixture of liquids is heated in a distillation flask. The component with the lower boiling point vaporises first. The vapour travels through the condenser (a long, cold tube with cold water flowing around it), where it is cooled and condenses back to a liquid. The condensed liquid (distillate) is collected in the receiving flask. The higher-boiling component remains in the original flask.\n\nConditions for effectiveness:\n(1) The two liquids must be miscible (mix completely).\n(2) The boiling points must differ by at least 25°C. If they are too close, simple distillation cannot separate them cleanly — fractional distillation is needed.\n\nExample: Separating water from a salt solution (saline water). Water (BP 100°C) distils over and is collected pure; non-volatile salt remains in the flask. (Also: separating acetone (BP 56°C) from water (BP 100°C).)",
+    steps: [
+      { stepNumber: 1, title: "Setup and heating", explanation: "Mixture heated in flask → lower-BP liquid vaporises first." },
+      { stepNumber: 2, title: "Condensation", explanation: "Vapour passes through a water-cooled condenser → condenses to liquid → collected as distillate." },
+      { stepNumber: 3, title: "Conditions", explanation: "Miscible liquids with BP difference ≥ 25°C for effective separation." },
+      { stepNumber: 4, title: "Example", explanation: "Salt water → water (distillate) + salt (residue in flask)." },
+    ],
+    hint: "The condenser is key — it turns vapour back into liquid by cooling it. What condition must the boiling points satisfy for a clean separation?",
+    keyConcepts: ["distillation", "boiling point", "condenser", "distillate"],
+    conceptsCovered: ["chm:9:ch02:distillation"],
+    prerequisites: [],
+    commonErrors: ["Saying 'any two liquids can be separated by simple distillation' — boiling points must differ by at least 25°C; otherwise, fractions are impure."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "distillation"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-nce-025",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "ncert", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which of the following apparatus is used to separate two IMMISCIBLE liquids (liquids that do not mix, forming two visible layers)?\n(A) Condenser\n(B) Separating funnel\n(C) Chromatography strip\n(D) Buchner funnel",
+    answer: "B. A separating funnel (also called a tap funnel or separatory funnel) is specifically designed to separate two immiscible liquid layers. The denser liquid is run off first through the stopcock at the bottom; the lighter liquid remains in the funnel. Example: separating oil from water — the two form distinct layers due to immiscibility; the denser water layer is run off first.",
+    options: ["A) Condenser", "B) Separating funnel", "C) Chromatography strip", "D) Buchner funnel"],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "Match apparatus to technique", explanation: "Separating funnel → separates two immiscible liquids by allowing the denser layer to run off through the stopcock. ✓" },
+      { stepNumber: 2, title: "Eliminate other options", explanation: "Condenser: cools vapour in distillation. Chromatography strip: separates by adsorption/solubility. Buchner funnel: vacuum filtration." },
+    ],
+    hint: "Think of two liquids that form two layers (like oil and water). What funnel-shaped apparatus has a stopcock at the bottom to drain one layer at a time?",
+    keyConcepts: ["separating funnel", "immiscible liquids", "oil-water separation"],
+    conceptsCovered: ["chm:9:ch02:filtration"],
+    prerequisites: [],
+    commonErrors: ["Saying 'filtration' separates immiscible liquids — both liquids pass through filter paper since neither is solid. A separating funnel is needed."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "separating-funnel"],
+    source: "concept",
+  },
+
+  // ── COMPETENCY ───────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-cmp-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "apply",
     marks: 4, estimatedTimeMinutes: 6,
@@ -633,8 +1738,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
     marks: 2, estimatedTimeMinutes: 4,
@@ -654,13 +1759,66 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── HOTS (2 questions, t3) ───────────────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-cmp-013",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "For each of the following situations, name the MOST appropriate separation technique and give the physical property exploited:\n(a) A mixture of kerosene and water (two immiscible liquids of different densities).\n(b) A mixture of acetone (BP 56°C) and water (BP 100°C).\n(c) Identifying whether a food dye is pure or a mixture of multiple dyes.",
+    answer: "(a) Separating funnel — Exploits the difference in density of the two immiscible liquids. The denser liquid (water) sinks to the bottom and is drained off first through the stopcock; the lighter liquid (kerosene) remains in the funnel.\n\n(b) Simple distillation — Exploits the large difference in boiling points (56°C vs 100°C, difference ≈ 44°C > 25°C). Acetone vaporises first at 56°C, is condensed and collected as distillate; water remains in the flask.\n\n(c) Paper chromatography — Exploits the difference in adsorption on the stationary phase (paper) and solubility in the mobile phase (solvent). If the dye is pure, only one spot/band appears. If it is a mixture, multiple bands appear at different heights (different Rf values).",
+    steps: [
+      { stepNumber: 1, title: "(a) Kerosene + water", explanation: "Two immiscible layers → separating funnel. Property: density difference." },
+      { stepNumber: 2, title: "(b) Acetone + water", explanation: "Miscible liquids, BP differ by 44°C → simple distillation. Property: boiling point difference." },
+      { stepNumber: 3, title: "(c) Food dye purity check", explanation: "Chromatography reveals components by travel distance. Property: differential adsorption and solubility." },
+    ],
+    hint: "Match each to: immiscible layers → separating funnel; miscible liquids, different BPs → distillation; detect components → chromatography.",
+    keyConcepts: ["separating funnel", "distillation", "chromatography", "selection of technique"],
+    conceptsCovered: ["chm:9:ch02:distillation", "chm:9:ch02:chromatography"],
+    prerequisites: [],
+    commonErrors: ["Using distillation for kerosene+water — they are immiscible and form layers; separating funnel is correct. Distillation is for miscible liquids."],
+    tags: [STANDARD_TAGS.NEP_COMPETENCY, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "separation-techniques"],
+    source: "concept",
+  },
+
+  {
+    id: "bo-chm-9-ch02-cmp-014",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "competency", questionFormat: "ShortAnswer",
+    difficulty: "Hard", bloomsLevel: "apply",
+    marks: 4, estimatedTimeMinutes: 7,
+    question: "A student has a mixture containing: iodine (solid, sublimable), iron filings (solid, magnetic), and sand (solid, non-magnetic, non-sublimable). Design a step-by-step separation sequence to recover each component as purely as possible. Name the technique and property exploited at each step.",
+    answer: "Step 1 — Magnetic separation: Bring a magnet near the mixture. Iron filings are attracted and cling to the magnet; iodine and sand are not magnetic. Detach the iron filings from the magnet into a separate container. → Iron filings recovered.\n\nStep 2 — Sublimation: Gently heat the remaining mixture (iodine + sand) in a china dish with a funnel placed inverted over it (a cold wet pad placed on the funnel mouth). Iodine sublimes (solid → vapour) and the vapour rises into the funnel, where it condenses as solid purple-black iodine crystals on the cold surface. Sand does not sublime and remains in the china dish. → Iodine crystals recovered from funnel; sand remains in dish. → Sand recovered.\n\nOrder: Magnetic separation MUST come first because heating in Step 2 could fuse iron with sand or cause other complications. Sublimation is done on the iron-free mixture.",
+    steps: [
+      { stepNumber: 1, title: "Step 1 — Magnetic separation", explanation: "Iron: magnetic. Iodine + sand: not magnetic. Magnet removes iron cleanly. Property: magnetism." },
+      { stepNumber: 2, title: "Step 2 — Sublimation", explanation: "Iodine sublimes on gentle heating; sand does not. Iodine vapour condenses on cold funnel. Property: sublimability." },
+      { stepNumber: 3, title: "Why this order?", explanation: "Iron must be removed first to avoid contaminating the iodine crystals during heating and to avoid interference during sublimation." },
+    ],
+    hint: "Three components — three properties to exploit. Start with iron (magnetism), then separate the remaining two (one sublimes, one doesn't).",
+    hint2: "If you sublime first, the iron filings would still be in the mixture and contaminate the iodine condensate.",
+    hint3: "Sublimation separates iodine (sublimable) from sand (non-sublimable).",
+    keyConcepts: ["magnetic separation", "sublimation", "multi-step separation", "iodine", "iron filings", "sand"],
+    conceptsCovered: ["chm:9:ch02:magnetic-separation", "chm:9:ch02:sublimation"],
+    prerequisites: [],
+    commonErrors: [
+      "Subliming before removing iron — iron filings contaminate the iodine condensate.",
+      "Trying to use filtration for this mixture — all three are solids; filtration requires liquid.",
+    ],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NEP_COMPETENCY, STANDARD_TAGS.TRICKY, "class9", "ch02", "multi-step-separation", "hots"],
+    source: "concept",
+  },
+
+  // ── HOTS ────────────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-hot-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
     marks: 3, estimatedTimeMinutes: 6,
@@ -675,7 +1833,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     hint2: "What is special about a fractionating column that a simple distillation flask does not have?",
     hint3: "A temperature gradient along the column provides multiple condensation–re-evaporation steps — each step enriches the fraction.",
     keyConcepts: ["fractional distillation", "crude petroleum", "boiling point", "fractionating column"],
-    conceptsCovered: ["chm:9:ch02:distillation"],
+    conceptsCovered: ["chm:9:ch02:fractional-distillation", "chm:9:ch02:distillation"],
     prerequisites: [],
     commonErrors: ["Saying 'simple distillation works but is just slower' — it does not produce the same quality of separation regardless of time."],
     tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.REAL_LIFE, "class9", "ch02", "fractional-distillation", "crude-oil"],
@@ -685,8 +1843,8 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
     marks: 3, estimatedTimeMinutes: 5,
@@ -708,45 +1866,13 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── PREVIOUS-YEAR (1 question, t3) ───────────────────────────────────────
-
-  {
-    id: "bo-chm-9-ch02-pyq-001",
-    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
-    questionType: "previous-year", questionFormat: "ShortAnswer",
-    difficulty: "Medium", bloomsLevel: "apply",
-    marks: 3, estimatedTimeMinutes: 5,
-    question: "A paper chromatography experiment is performed on a mixture of two dyes, X and Y. The chromatography strip is 15 cm long. After the experiment:\n• The solvent front travels 12 cm from the baseline.\n• Dye X forms a spot 9 cm from the baseline.\n• Dye Y forms a spot 3 cm from the baseline.\n\n(a) Calculate the Rf value for each dye. [1 mark]\n(b) Which dye is more strongly adsorbed on the chromatography paper? Justify. [1 mark]\n(c) A pure sample of a known dye Z has Rf = 0.85 under the same conditions. Can dye X or dye Y be dye Z? [1 mark]",
-    answer: "(a) Rf = distance moved by dye / distance moved by solvent front\nRf(X) = 9 / 12 = 0.75\nRf(Y) = 3 / 12 = 0.25\n\n(b) Dye Y is more strongly adsorbed on the paper. A strongly adsorbed component spends more time bound to the stationary phase and less time moving with the solvent, so it travels a shorter distance. Dye Y (Rf = 0.25, 3 cm) barely moved compared to Dye X (Rf = 0.75, 9 cm), indicating Y has a much greater affinity for the paper (stationary phase).\n\n(c) Neither X nor Y is dye Z. Dye X has Rf = 0.75 and dye Y has Rf = 0.25, while dye Z has Rf = 0.85. Since Rf is a characteristic property of a substance under fixed conditions (same solvent, same paper, same temperature), a dye with a different Rf value is a different substance.",
-    steps: [
-      { stepNumber: 1, title: "Apply Rf formula", explanation: "Rf = (distance moved by component) / (distance moved by solvent). X: 9/12 = 0.75. Y: 3/12 = 0.25." },
-      { stepNumber: 2, title: "Interpret Rf for adsorption", explanation: "Lower Rf → less distance → more time on paper → more strongly adsorbed. Dye Y is more strongly adsorbed." },
-      { stepNumber: 3, title: "Identify using Rf", explanation: "Rf is a fingerprint for each substance under fixed conditions. X(0.75) ≠ 0.85 and Y(0.25) ≠ 0.85 → neither is Z." },
-    ],
-    examTip: "CBSE frequently asks Rf calculation and interpretation. Rf is always between 0 and 1; Rf close to 1 = weakly adsorbed/highly soluble in solvent; Rf close to 0 = strongly adsorbed/less soluble in solvent.",
-    keyConcepts: ["Rf value", "chromatography", "adsorption", "identification of substance"],
-    conceptsCovered: ["chm:9:ch02:chromatography"],
-    prerequisites: [],
-    commonErrors: [
-      "Dividing solvent distance by dye distance (inverting the Rf formula).",
-      "Thinking higher Rf means more strongly adsorbed — it is the opposite.",
-    ],
-    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "chromatography", "Rf-value", "previous-year"],
-    source: "original",
-    yearIfPreviousYear: 2023,
-    boardIfPreviousYear: "CBSE",
-    sourceReference: "CBSE Class 9 Science — Rf value calculation, standard board examination type",
-  },
-
-  // ── ASSERTION-REASON (1 question, t3) ────────────────────────────────────
+  // ── ASSERTION-REASON ─────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-asr-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
     marks: 1, estimatedTimeMinutes: 3,
@@ -773,13 +1899,130 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     source: "original",
   },
 
-  // ── CASE-STUDY (1 question, t3) ───────────────────────────────────────────
+  {
+    id: "bo-chm-9-ch02-asr-007",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "assertion-reason", questionFormat: "AssertionReason",
+    difficulty: "Medium", bloomsLevel: "analyse",
+    marks: 1, estimatedTimeMinutes: 3,
+    question: "Assertion (A): Sublimation can be used to purify iodine from a mixture of iodine and sodium chloride.\nReason (R): Iodine has a high vapour pressure and sublimes easily on gentle heating, whereas sodium chloride does not sublime at laboratory temperatures.\n\n(A) Both A and R are true and R is the correct explanation of A.\n(B) Both A and R are true but R is NOT the correct explanation of A.\n(C) A is true but R is false.\n(D) A is false but R is true.",
+    answer: "A — Both A and R are true and R is the correct explanation of A.\n\nA is TRUE: Sublimation is used to purify iodine from NaCl. Iodine is heated gently; it sublimes (solid → vapour) and the vapour is collected on a cold surface above. NaCl remains as a solid residue.\n\nR is TRUE and EXPLAINS A: Iodine has a significantly high vapour pressure even at room temperature (it smells!), and sublimes readily at around 113.7°C (melting point of I₂ is 113°C; it begins to sublime well below this). NaCl, by contrast, has a very high melting point (801°C) and does not show any significant vapour pressure or sublimation at lab temperatures. R provides the correct chemical reason for why the separation works.",
+    options: [
+      "A) Both A and R true; R explains A",
+      "B) Both A and R true; R does not explain A",
+      "C) A true; R false",
+      "D) A false; R true",
+    ],
+    correctOption: "A",
+    steps: [
+      { stepNumber: 1, title: "Evaluate Assertion", explanation: "Iodine is purified from NaCl by sublimation — this is a standard NCERT method. A is TRUE." },
+      { stepNumber: 2, title: "Evaluate Reason", explanation: "Iodine: high vapour pressure, sublimes easily. NaCl: high MP (801°C), no sublimation at lab T. R is TRUE." },
+      { stepNumber: 3, title: "Does R explain A?", explanation: "Yes — R directly explains WHY sublimation separates iodine from NaCl. Answer is A." },
+    ],
+    hint: "Is iodine known to sublime? What is the melting point of NaCl? Does R correctly explain the observation?",
+    keyConcepts: ["sublimation", "iodine", "sodium chloride", "vapour pressure", "purification"],
+    conceptsCovered: ["chm:9:ch02:sublimation"],
+    prerequisites: [],
+    commonErrors: ["Choosing B — R IS the direct and correct explanation of A. The purification works precisely because of the vapour pressure difference described in R."],
+    tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "sublimation", "assertion-reason"],
+    source: "concept",
+  },
+
+  // ── PREVIOUS-YEAR ────────────────────────────────────────────────────────
+
+  {
+    id: "bo-chm-9-ch02-pyq-001",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "previous-year", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "apply",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "A paper chromatography experiment is performed on a mixture of two dyes, X and Y. The chromatography strip is 15 cm long. After the experiment:\n• The solvent front travels 12 cm from the baseline.\n• Dye X forms a spot 9 cm from the baseline.\n• Dye Y forms a spot 3 cm from the baseline.\n\n(a) Calculate the Rf value for each dye. [1 mark]\n(b) Which dye is more strongly adsorbed on the chromatography paper? Justify. [1 mark]\n(c) A pure sample of a known dye Z has Rf = 0.85 under the same conditions. Can dye X or dye Y be dye Z? [1 mark]",
+    answer: "(a) Rf = distance moved by dye / distance moved by solvent front\nRf(X) = 9 / 12 = 0.75\nRf(Y) = 3 / 12 = 0.25\n\n(b) Dye Y is more strongly adsorbed on the paper. A strongly adsorbed component spends more time bound to the stationary phase and less time moving with the solvent, so it travels a shorter distance. Dye Y (Rf = 0.25, 3 cm) barely moved compared to Dye X (Rf = 0.75, 9 cm), indicating Y has a much greater affinity for the paper (stationary phase).\n\n(c) Neither X nor Y is dye Z. Dye X has Rf = 0.75 and dye Y has Rf = 0.25, while dye Z has Rf = 0.85. Since Rf is a characteristic property of a substance under fixed conditions (same solvent, same paper, same temperature), a dye with a different Rf value is a different substance.",
+    steps: [
+      { stepNumber: 1, title: "Apply Rf formula", explanation: "Rf = (distance moved by component) / (distance moved by solvent). X: 9/12 = 0.75. Y: 3/12 = 0.25." },
+      { stepNumber: 2, title: "Interpret Rf for adsorption", explanation: "Lower Rf → less distance → more time on paper → more strongly adsorbed. Dye Y is more strongly adsorbed." },
+      { stepNumber: 3, title: "Identify using Rf", explanation: "Rf is a fingerprint for each substance under fixed conditions. X(0.75) ≠ 0.85 and Y(0.25) ≠ 0.85 → neither is Z." },
+    ],
+    examTip: "CBSE frequently asks Rf calculation and interpretation. Rf is always between 0 and 1; Rf close to 1 = weakly adsorbed/highly soluble in solvent; Rf close to 0 = strongly adsorbed/less soluble in solvent.",
+    keyConcepts: ["Rf value", "chromatography", "adsorption", "identification of substance"],
+    conceptsCovered: ["chm:9:ch02:chromatography"],
+    prerequisites: [],
+    commonErrors: [
+      "Dividing solvent distance by dye distance (inverting the Rf formula).",
+      "Thinking higher Rf means more strongly adsorbed — it is the opposite.",
+    ],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.NUMERICALS, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "chromatography", "Rf-value", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2023,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — Rf value calculation, standard board examination type",
+  },
+
+  {
+    id: "bo-chm-9-ch02-pyq-006",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "previous-year", questionFormat: "ShortAnswer",
+    difficulty: "Medium", bloomsLevel: "understand",
+    marks: 3, estimatedTimeMinutes: 5,
+    question: "Describe the process you would use to obtain pure water from a sample of sea water using distillation. Draw a labelled diagram showing the main components of the apparatus. What physical property allows this separation?",
+    answer: "Process:\nSea water contains dissolved salts (NaCl, MgCl₂, etc.) that are non-volatile. Water (BP 100°C) is volatile. Distillation exploits this difference in boiling points.\n\n1. Pour sea water into the distillation flask. Heat with a Bunsen burner or heating mantle.\n2. Water evaporates (BP 100°C) and rises as vapour. Dissolved salts remain in the flask (non-volatile).\n3. Steam passes through the condenser — a long tube with cold water flowing in the opposite direction (countercurrent). The steam is cooled and condenses into liquid water (distillate).\n4. Pure water is collected in the receiving flask. The original flask retains concentrated brine.\n\nLabelled diagram components: distillation flask, thermometer (at side-arm to measure vapour temperature), condenser (with cold water in and out labels), receiving flask, Bunsen burner/heat source.\n\nPhysical property exploited: Difference in boiling points — water (100°C) vs. dissolved salts (non-volatile at distillation temperature).",
+    steps: [
+      { stepNumber: 1, title: "Physical property", explanation: "Water is volatile (BP 100°C); dissolved salts are non-volatile. Distillation separates volatile from non-volatile." },
+      { stepNumber: 2, title: "Heating", explanation: "Sea water in flask; heated → water evaporates; salts remain." },
+      { stepNumber: 3, title: "Condensation", explanation: "Steam → condenser → cooled by flowing cold water → liquid pure water collected." },
+    ],
+    examTip: "For the diagram: always include the thermometer at the side-arm junction and show cold water flow direction (countercurrent to vapour).",
+    keyConcepts: ["distillation", "sea water", "boiling point", "condenser", "pure water"],
+    conceptsCovered: ["chm:9:ch02:distillation"],
+    prerequisites: [],
+    commonErrors: ["Saying the salts 'evaporate' with the water — ionic salts are non-volatile and remain in the flask. Only water distils over."],
+    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "distillation", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2024,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — distillation of sea water, standard examination type",
+  },
+
+  {
+    id: "bo-chm-9-ch02-pyq-007",
+    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
+    questionType: "previous-year", questionFormat: "MCQ",
+    difficulty: "Easy", bloomsLevel: "apply",
+    marks: 1, estimatedTimeMinutes: 2,
+    question: "Which technique is used to separate two MISCIBLE liquids having CLOSE boiling points (difference < 25°C), such as the different fractions of petroleum?\n(A) Simple distillation\n(B) Fractional distillation\n(C) Crystallisation\n(D) Centrifugation",
+    answer: "B. Fractional distillation is used when two or more miscible liquids have boiling points that are too close for simple distillation to separate them effectively. The fractionating column provides multiple condensation–re-evaporation steps, allowing close-boiling components to be gradually separated. Crude petroleum (with hundreds of hydrocarbons of similar boiling points) is separated into fractions (LPG, petrol, kerosene, diesel, etc.) by fractional distillation.",
+    options: ["A) Simple distillation", "B) Fractional distillation", "C) Crystallisation", "D) Centrifugation"],
+    correctOption: "B",
+    steps: [
+      { stepNumber: 1, title: "When is fractional distillation used?", explanation: "Close boiling points (< 25°C difference) or complex mixture of many boiling points → simple distillation cannot separate cleanly → fractional distillation needed." },
+    ],
+    examTip: "CBSE frequently tests: simple distillation (BP difference > 25°C) vs. fractional distillation (close BPs). Know which situation requires which technique.",
+    keyConcepts: ["fractional distillation", "miscible liquids", "close boiling points", "petroleum fractions"],
+    conceptsCovered: ["chm:9:ch02:fractional-distillation"],
+    prerequisites: [],
+    commonErrors: ["Choosing simple distillation — it only works for large BP differences. Close BPs require fractional distillation's multi-step column."],
+    tags: [STANDARD_TAGS.FREQUENTLY_ASKED, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "fractional-distillation", "previous-year"],
+    source: "original",
+    yearIfPreviousYear: 2023,
+    boardIfPreviousYear: "CBSE",
+    sourceReference: "CBSE Class 9 Science — fractional distillation identification, standard examination type",
+  },
+
+  // ── CASE-STUDY ────────────────────────────────────────────────────────────
 
   {
     id: "bo-chm-9-ch02-cst-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t3", topicName: "Separation Techniques",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "case-study", questionFormat: "CaseStudy",
     difficulty: "Medium", bloomsLevel: "apply",
     marks: 4, estimatedTimeMinutes: 8,
@@ -798,90 +2041,6 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
     commonErrors: ["Saying treated water is pure because it is clean — chemical purity requires fixed, single-substance composition."],
     tags: [STANDARD_TAGS.BOARD_IMPORTANT, STANDARD_TAGS.REAL_LIFE, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "water-treatment", "case-study"],
     source: "original",
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // TOPIC t4 — Physical and Chemical Changes
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  {
-    id: "bo-chm-9-ch02-nce-012",
-    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t4", topicName: "Physical and Chemical Changes",
-    questionType: "ncert", questionFormat: "MCQ",
-    difficulty: "Easy", bloomsLevel: "apply",
-    marks: 1, estimatedTimeMinutes: 2,
-    question: "Which of the following is an example of a CHEMICAL change?\n(A) Melting of ice\n(B) Dissolution of sugar in water\n(C) Rusting of iron\n(D) Stretching of a rubber band",
-    answer: "C. Rusting of iron is a chemical change — iron reacts with oxygen and water to form iron(III) oxide (Fe₂O₃·xH₂O), a new substance with entirely different properties. The change is irreversible by simple physical means. Options A, B, and D are physical changes: no new substance is formed, and the original material can be recovered.",
-    options: ["A) Melting of ice", "B) Dissolution of sugar in water", "C) Rusting of iron", "D) Stretching of a rubber band"],
-    correctOption: "C",
-    steps: [
-      { stepNumber: 1, title: "Chemical change criterion", explanation: "A new substance with different properties is formed; typically irreversible." },
-      { stepNumber: 2, title: "Rusting of iron", explanation: "Iron + O₂ + H₂O → iron oxide (rust). New substance formed. Irreversible. ✓ Chemical change." },
-      { stepNumber: 3, title: "Others are physical", explanation: "Ice → water: reversible, same substance. Sugar solution: reversible by evaporation. Rubber stretching: reversible, no new substance." },
-    ],
-    hint: "A chemical change always produces a new substance with different properties. Ask: 'Is a new substance formed?'",
-    keyConcepts: ["chemical change", "physical change", "rusting", "irreversibility"],
-    conceptsCovered: ["chm:9:ch02:physical-chemical-change"],
-    prerequisites: [],
-    commonErrors: ["Choosing B — dissolving sugar is physical: sugar is recoverable unchanged by evaporation; no new substance forms."],
-    tags: [STANDARD_TAGS.NCERT_DIRECT, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "physical-chemical-change"],
-    source: "original",
-  },
-
-  {
-    id: "bo-chm-9-ch02-hot-004",
-    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t4", topicName: "Physical and Chemical Changes",
-    questionType: "hots", questionFormat: "ShortAnswer",
-    difficulty: "Hard", bloomsLevel: "evaluate",
-    marks: 3, estimatedTimeMinutes: 5,
-    question: "A student claims: 'Dissolving sugar in water is a chemical change because the sugar disappears and you can no longer see it as a solid.' Evaluate this claim using the characteristics of chemical changes, and classify the actual type of change.",
-    answer: "The student's claim is INCORRECT. Dissolving sugar in water is a PHYSICAL change.\n\n(1) No new substance formed: Sucrose molecules (C₁₂H₂₂O₁₁) remain chemically unchanged in solution. No bonds within sucrose are broken; the molecules are simply dispersed among water molecules. The solution still tastes sweet — sucrose is present.\n\n(2) Reversible by physical means: Evaporate the water from the sugar solution and solid sugar is recovered with the same properties (white, sweet, same melting point). A true chemical change cannot be reversed this simply.\n\n(3) No characteristic energy change of a chemical reaction: Only a negligible enthalpy change occurs on dissolving sugar — no dramatic heat, light, or sound release.\n\nThe 'disappearance' of visible sugar is due to molecular-scale dispersal among water molecules — not to chemical transformation. Visibility is not evidence of chemical change.",
-    steps: [
-      { stepNumber: 1, title: "Identify the student's error", explanation: "'Invisible' ≠ 'chemically changed'. Dispersal at molecular scale looks the same as disappearance." },
-      { stepNumber: 2, title: "Test 1 — new substance?", explanation: "No. Sucrose still present (solution tastes sweet); molecules unchanged." },
-      { stepNumber: 3, title: "Test 2 — reversibility?", explanation: "Evaporate water → white sugar crystals recovered unchanged. Cannot reverse a true chemical change this easily." },
-      { stepNumber: 4, title: "Conclusion", explanation: "Dissolution = physical change. Disappearance from sight = dispersal, not chemical transformation." },
-    ],
-    hint: "The key test: can you recover the original substance unchanged by a simple physical method? If yes → physical change.",
-    hint2: "Does the sugar water taste sweet? What does that tell you about whether the sugar molecules are still present?",
-    hint3: "Evaporate the water from sugar solution. What do you get back? If the same substance returns, it was never chemically changed.",
-    keyConcepts: ["physical change", "chemical change", "dissolution", "reversibility"],
-    conceptsCovered: ["chm:9:ch02:physical-chemical-change"],
-    prerequisites: [],
-    commonErrors: ["Agreeing with the student — visual disappearance of a solid is NOT sufficient evidence of a chemical change."],
-    tags: [STANDARD_TAGS.TRICKY, STANDARD_TAGS.FREQUENTLY_ASKED, "class9", "ch02", "physical-chemical-change", "dissolution"],
-    source: "original",
-  },
-
-  {
-    id: "bo-chm-9-ch02-pyq-002",
-    schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures",
-    topicId: "t4", topicName: "Physical and Chemical Changes",
-    questionType: "previous-year", questionFormat: "ShortAnswer",
-    difficulty: "Medium", bloomsLevel: "apply",
-    marks: 2, estimatedTimeMinutes: 3,
-    question: "Is making curd from milk a physical change or a chemical change? Give two reasons to support your answer.",
-    answer: "Making curd from milk is a CHEMICAL change.\n\nReason 1 (New substance formed): The protein casein in milk is coagulated and reorganised by lactic acid produced by bacteria. Curd has a different taste (sour vs mildly sweet), different texture (semi-solid vs liquid), and different chemical composition from milk — a new substance is formed.\n\nReason 2 (Irreversible): Curd cannot be converted back to fresh milk by any simple physical process (cooling, heating, filtering, etc.). Irreversibility confirms a chemical change.",
-    steps: [
-      { stepNumber: 1, title: "Type of change", explanation: "Milk → curd involves bacterial action and protein denaturation → new substance with different properties → chemical change." },
-      { stepNumber: 2, title: "Reason 1: New substance", explanation: "Curd has sour taste, different texture, different protein structure from milk." },
-      { stepNumber: 3, title: "Reason 2: Irreversibility", explanation: "Cannot convert curd back to milk by simple physical means." },
-    ],
-    examTip: "CBSE expects both 'new substance formed' (with evidence: different taste/texture/properties) and 'irreversibility'. Both reasons are needed for full marks.",
-    keyConcepts: ["chemical change", "irreversibility", "milk to curd", "new substance"],
-    conceptsCovered: ["chm:9:ch02:physical-chemical-change"],
-    prerequisites: [],
-    commonErrors: ["Saying milk to curd is physical because 'milk and curd are both dairy products' — the type of product is irrelevant; formation of a new chemical substance is the criterion."],
-    tags: [STANDARD_TAGS.FREQUENTLY_ASKED, STANDARD_TAGS.BOARD_IMPORTANT, "class9", "ch02", "chemical-change", "previous-year"],
-    source: "original",
-    yearIfPreviousYear: 2023,
-    boardIfPreviousYear: "CBSE",
-    sourceReference: "CBSE Class 9 Science board examination — recurring question type",
   },
 
 ];
