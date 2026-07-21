@@ -1,0 +1,81 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read target file → append questions → validate → freeze → next chapter.
+
+Do NOT modify:
+- frozen Mathematics chapters
+- completed Physics Chapters 1–3
+- UI
+- navigation
+- architecture
+- AI pipeline
+- prompts
+- LessonRenderer
+- unrelated files
+
+Current task:
+Class 9 Physics Chapter 4 — Work and Energy.
+
+Instructions:
+1. Locate only the Work and Energy question-bank file and directly required schema/type file.
+2. Do not scan the repository.
+3. Do not read unrelated chapter files.
+4. Retain all valid existing questions.
+5. Increase the chapter to a minimum of 50 strong, unique questions.
+6. Follow natural syllabus weightage and educational importance.
+7. Use only the latest authorised NCERT/CBSE Class 9 syllabus.
+8. No Class 10 leakage.
+9. Begin implementation immediately. Do not produce a plan.
+
+Cover comprehensively:
+- work and conditions for work
+- positive, negative and zero work
+- work done by constant force
+- SI unit of work
+- energy and forms of energy
+- kinetic energy
+- derivation and application of KE = ½mv²
+- potential energy
+- gravitational potential energy
+- derivation and application of PE = mgh
+- transformation of energy
+- law of conservation of energy
+- mechanical energy
+- power
+- commercial unit of energy
+- conceptual and numerical applications
+
+Question mix:
+- MCQ
+- short answer
+- long answer
+- numerical
+- assertion–reason where appropriate
+- HOTS
+- NCERT/PYQ-style questions where applicable
+
+Quality:
+- balanced Easy/Medium/Hard
+- scientifically and mathematically verified
+- correct formulas, units and calculations
+- realistic numerical values
+- complete explanations
+- no duplicate IDs
+- no duplicate questions
+
+Validation:
+- verify final count
+- verify topic coverage
+- check duplicate IDs/questions
+- run TypeScript typecheck
+- fix only confirmed errors
+- freeze the chapter
+
+Return only:
+- existing count
+- questions added
+- final count
+- topic coverage
+- validation result
+- files modified

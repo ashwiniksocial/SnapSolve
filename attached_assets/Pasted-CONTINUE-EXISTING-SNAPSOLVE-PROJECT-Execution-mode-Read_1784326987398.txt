@@ -1,0 +1,81 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Read target file → append questions → validate → freeze → next chapter.
+
+Do NOT modify:
+- frozen Mathematics chapters
+- completed Physics Chapters 1, 2 and 3
+- UI
+- navigation
+- architecture
+- AI pipeline
+- prompts
+- LessonRenderer
+- unrelated files
+
+Current task:
+Class 9 Physics Chapter 4 — Work and Energy.
+
+Instructions:
+1. Locate only the Work and Energy question-bank file and directly required schema/type file.
+2. Do not scan the repository.
+3. Do not read unrelated chapter files.
+4. Retain all valid existing questions.
+5. Increase the chapter to a minimum of 50 strong, unique questions.
+6. Follow natural syllabus weightage and educational importance.
+7. Use only authorised current NCERT/CBSE Class 9 content.
+8. No Class 10 leakage.
+9. Do not produce a plan. Begin implementation immediately.
+
+Cover adequately:
+- meaning and conditions of work
+- positive, negative and zero work
+- work done by a constant force
+- unit of work
+- energy and its forms
+- kinetic energy
+- derivation and application of KE = 1/2 mv²
+- potential energy
+- gravitational potential energy
+- derivation and application of PE = mgh
+- transformation of energy
+- law of conservation of energy
+- mechanical energy
+- power
+- commercial unit of energy
+- numerical and conceptual applications
+
+Question mix:
+- MCQ
+- short answer
+- long answer
+- numerical
+- assertion–reason where appropriate
+- HOTS
+- NCERT/PYQ-style questions where applicable
+
+Quality:
+- balanced Easy/Medium/Hard
+- scientifically and mathematically verified
+- correct formulas, units and calculations
+- realistic numerical values
+- complete explanations in the existing project format
+- no duplicate IDs
+- no duplicate questions
+- no cosmetic rewriting of valid existing questions
+
+Validation:
+- verify final count and topic counts
+- check duplicate IDs and duplicate questions
+- run TypeScript typecheck
+- fix only confirmed errors
+- freeze the chapter after validation
+
+Return only:
+- existing count
+- questions added
+- final count
+- topic coverage
+- validation result
+- files modified
