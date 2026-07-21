@@ -139,17 +139,26 @@ export default function Solution() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-5">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-slate-900">AI Solution</h1>
-            <p className="text-sm mt-0.5" style={{ color: cfg.color }}>
-              {cfg.icon} {session.subject}
-              {solution && <> · {solution.topic}</>}
-            </p>
+          <div className="flex items-center gap-3 min-w-0">
+            {practiceMode && session.practiceChapterId && (
+              <Link href="/practice">
+                <button className="flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-slate-500 border border-slate-200 bg-white rounded-xl px-3 py-2 hover:bg-slate-50 active:scale-95 transition-all">
+                  ← Chapter
+                </button>
+              </Link>
+            )}
+            <div className="min-w-0">
+              <h1 className="text-xl font-bold text-slate-900">SnapSolve Solution</h1>
+              <p className="text-sm mt-0.5 truncate" style={{ color: cfg.color }}>
+                {cfg.icon} {session.subject}
+                {solution && <> · {solution.topic}</>}
+              </p>
+            </div>
           </div>
           {pageState === "done" && (
             <button
               onClick={runSolver}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 border border-slate-200 bg-white rounded-xl px-3 py-2 hover:bg-slate-50 active:scale-95 transition-all"
+              className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-slate-500 border border-slate-200 bg-white rounded-xl px-3 py-2 hover:bg-slate-50 active:scale-95 transition-all"
             >
               ↻ Re-solve
             </button>
@@ -339,9 +348,9 @@ export default function Solution() {
                 {isTodayCompleted || marked ? "✓ Marked Done" : "✓ Mark Solved"}
               </button>
 
-              <Link href="/scan">
+              <Link href={practiceMode && session.practiceChapterId ? "/practice" : "/scan"}>
                 <button className="w-full py-3.5 rounded-2xl border-2 border-slate-200 text-sm font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
-                  ← New Question
+                  {practiceMode && session.practiceChapterId ? "← Back to Questions" : "← New Question"}
                 </button>
               </Link>
             </div>

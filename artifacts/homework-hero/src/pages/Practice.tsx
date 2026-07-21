@@ -13,6 +13,7 @@ import {
   getChapters,
   getTopics,
   getQuestions,
+  preloadQBank,
 } from "@/services/questionService";
 import type { Question, Difficulty, QuestionType } from "@/services/questionService";
 import {
@@ -245,6 +246,7 @@ export default function Practice() {
   const { getSubjectStats }                    = useProgress();
 
   const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
+  const [bankReady,      setBankReady]     = useState(false);
 
   const mastery      = useMasteryScore(session.subject, practiceClass);
   const cfg          = SUBJECTS[session.subject];
@@ -254,8 +256,8 @@ export default function Practice() {
   const chapterStats = useChapterStats(session.subject, practiceClass);
 
   const chapters = useMemo(
-    () => getChapters(practiceClass, session.subject),
-    [practiceClass, session.subject],
+    () => bankReady ? getChapters(practiceClass, session.subject) : [],
+    [bankReady, practiceClass, session.subject],
   );
 
   const questionMap = useMemo(() => {
@@ -338,6 +340,7 @@ export default function Practice() {
   );
 
   // ── Filter state ────────────────────────────────────────────────────────────
+  const [masteryOpen,       setMasteryOpen]       = useState(false);
   const [selectedChapterId, setSelectedChapterId] = useState<string>(chapters[0]?.id ?? "");
   const [drilldownOpen,     setDrilldownOpen]     = useState(false);
   const [selectedTopicId,   setSelectedTopicId]   = useState<string>("all");
@@ -369,8 +372,8 @@ export default function Practice() {
 
   // ── Subject helpers ─────────────────────────────────────────────────────────
   const availableSubjects = useMemo(
-    () => ALL_SUBJECTS.filter((s) => getChapters(practiceClass, s).length > 0),
-    [practiceClass],
+    () => bankReady ? ALL_SUBJECTS.filter((s) => getChapters(practiceClass, s).length > 0) : [],
+    [bankReady, practiceClass],
   );
 
   const handleSubjectChange = useCallback((s: Subject) => {
@@ -390,11 +393,18 @@ export default function Practice() {
   }, [availableSubjects, session.subject, handleSubjectChange]);
 
   useEffect(() => {
+    if (!bankReady) return;
     const next = getChapters(practiceClass, session.subject);
     setSelectedChapterId(next[0]?.id ?? "");
     setDrilldownOpen(false);
     setSelectedTopicId("all");
-  }, [practiceClass, session.subject]);
+  }, [bankReady, practiceClass, session.subject]);
+
+  // ── Preload question bank for the selected class ──────────────────────────
+  useEffect(() => {
+    setBankReady(false);
+    preloadQBank(practiceClass).then(() => setBankReady(true));
+  }, [practiceClass]);
 
   // ── Navigation ──────────────────────────────────────────────────────────────
   const [, navigate] = useLocation();
@@ -442,6 +452,21 @@ export default function Practice() {
   };
 
   const selectedStat = chapterStats.find((cs) => cs.chapterId === selectedChapterId);
+
+  // Show spinner while the question bank loads for the first time this session
+  if (!bankReady) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center space-y-2 px-6">
+          <div
+            className="w-8 h-8 border-2 rounded-full animate-spin mx-auto"
+            style={{ borderColor: `${cfg.color}25`, borderTopColor: cfg.color }}
+          />
+          <p className="text-sm font-medium text-slate-500">Loading questions…</p>
+        </div>
+      </div>
+    );
+  }
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
@@ -539,65 +564,89 @@ export default function Practice() {
 
       <div className="max-w-lg mx-auto px-5 py-5 space-y-5">
 
-        {/* ── 1. Mastery Progress Bar ── */}
-        <MasteryProgressBar score={mastery.score} label={mastery.label} color={mastery.color} />
+        {/* ── Mastery Overview — collapsed by default so chapters appear first ── */}
+        <div>
+          <button
+            onClick={() => setMasteryOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-50 active:scale-95 transition-all shadow-sm"
+          >
+            <span className="flex items-center gap-2">
+              <span>📊</span>
+              <span>Mastery Overview</span>
+              {mastery.score > 0 && (
+                <span
+                  className="text-xs font-bold px-2 py-0.5 rounded-full"
+                  style={{ backgroundColor: `${mastery.color}18`, color: mastery.color }}
+                >
+                  {mastery.score}/100
+                </span>
+              )}
+            </span>
+            <span className="text-xs text-slate-400">{masteryOpen ? "▲ Hide" : "▼ View"}</span>
+          </button>
 
-        {/* ── 2. Four metric cards ── */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Questions Solved */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Questions Solved</p>
-            <p className="text-2xl font-black" style={{ color: cfg.color }}>
-              {totalSolved > 0 ? totalSolved : "—"}
-            </p>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {totalSolved > 0 ? "attempts logged" : "Start practicing"}
-            </p>
-          </div>
+          {masteryOpen && (
+            <div className="mt-3 space-y-3">
+              <MasteryProgressBar score={mastery.score} label={mastery.label} color={mastery.color} />
 
-          {/* Accuracy */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Accuracy</p>
-            <p className="text-2xl font-black" style={{ color: cfg.color }}>
-              {totalSolved > 0 ? `${overallAcc}%` : "—"}
-            </p>
-            {totalSolved > 0 && (
-              <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full"
-                  style={{ width: `${overallAcc}%`, backgroundColor: cfg.color }}
-                />
+              <div className="grid grid-cols-2 gap-3">
+                {/* Questions Solved */}
+                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Questions Solved</p>
+                  <p className="text-2xl font-black" style={{ color: cfg.color }}>
+                    {totalSolved > 0 ? totalSolved : "—"}
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    {totalSolved > 0 ? "attempts logged" : "Start practicing"}
+                  </p>
+                </div>
+
+                {/* Accuracy */}
+                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Accuracy</p>
+                  <p className="text-2xl font-black" style={{ color: cfg.color }}>
+                    {totalSolved > 0 ? `${overallAcc}%` : "—"}
+                  </p>
+                  {totalSolved > 0 && (
+                    <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${overallAcc}%`, backgroundColor: cfg.color }}
+                      />
+                    </div>
+                  )}
+                  {totalSolved === 0 && <p className="text-[11px] text-slate-400 mt-0.5">No data yet</p>}
+                </div>
+
+                {/* Streak */}
+                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Streak</p>
+                  <div className="flex items-baseline gap-1">
+                    <p className="text-2xl font-black text-amber-500">
+                      {streak > 0 ? streak : "—"}
+                    </p>
+                    {streak > 0 && <span className="text-sm font-bold text-amber-400">🔥</span>}
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    {streak === 1 ? "day streak" : streak > 1 ? "day streak" : "Start today"}
+                  </p>
+                </div>
+
+                {/* Study Time */}
+                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Study Time</p>
+                  <p className="text-2xl font-black text-blue-500">
+                    {studyMinutes > 0
+                      ? studyMinutes < 60
+                        ? `${studyMinutes}m`
+                        : `${Math.floor(studyMinutes / 60)}h ${studyMinutes % 60}m`
+                      : "—"}
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">estimated total</p>
+                </div>
               </div>
-            )}
-            {totalSolved === 0 && <p className="text-[11px] text-slate-400 mt-0.5">No data yet</p>}
-          </div>
-
-          {/* Streak */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Streak</p>
-            <div className="flex items-baseline gap-1">
-              <p className="text-2xl font-black text-amber-500">
-                {streak > 0 ? streak : "—"}
-              </p>
-              {streak > 0 && <span className="text-sm font-bold text-amber-400">🔥</span>}
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              {streak === 1 ? "day streak" : streak > 1 ? "day streak" : "Start today"}
-            </p>
-          </div>
-
-          {/* Study Time */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Study Time</p>
-            <p className="text-2xl font-black text-blue-500">
-              {studyMinutes > 0
-                ? studyMinutes < 60
-                  ? `${studyMinutes}m`
-                  : `${Math.floor(studyMinutes / 60)}h ${studyMinutes % 60}m`
-                : "—"}
-            </p>
-            <p className="text-[11px] text-slate-400 mt-0.5">estimated total</p>
-          </div>
+          )}
         </div>
 
         {/* ── 3. Weak Areas (chapter-level) ── */}

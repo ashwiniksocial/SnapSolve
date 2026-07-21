@@ -370,6 +370,44 @@ export function toAIResponse(data: BackendLessonResponse, subject: Subject, ques
     confidenceBuilder: s(data.confidenceBuilder),
   };
 
+  // ── Normalise required sections ─────────────────────────────────────────────
+  // LessonRenderer.show flags are now mode-only (not data-dependent), so every
+  // mode-specific section must have at least placeholder content here.
+  if (lesson.keyConcepts.length === 0) {
+    lesson.keyConcepts = [lesson.topic];
+  }
+  if (!lesson.intuition.story && !lesson.intuition.visual && !lesson.intuition.everyday) {
+    lesson.intuition.story =
+      `${lesson.topic} connects to principles you already know — each step here builds on familiar ground.`;
+  }
+  if (!lesson.questionTranslation.plainEnglish) {
+    lesson.questionTranslation.plainEnglish =
+      question.length > 10 ? question.slice(0, 200).trim() : `Solve this ${lesson.topic} problem step by step.`;
+  }
+  if (lesson.commonMistakes.length === 0) {
+    lesson.commonMistakes = [{
+      mistake:      "Arithmetic or sign errors",
+      whyItHappens: "Rushing through calculations without checking each step",
+      howToAvoid:   "Write each step clearly and verify your working before moving on.",
+    }];
+  }
+  if (!lesson.simplerExample.problem) {
+    lesson.simplerExample = {
+      problem:  `Apply the same method to a simpler ${lesson.topic} question.`,
+      solution: "Follow the same guided steps shown in the solution above.",
+    };
+  }
+  if (!lesson.practiceQuestion.question) {
+    lesson.practiceQuestion = {
+      question: `Practise the same technique on a similar ${lesson.topic} problem.`,
+      hints:    ["Re-read the steps above", "Identify what you know and what you need to find", "Apply the same method."],
+      solution: "Follow the same guided reasoning shown in the solution.",
+    };
+  }
+  if (lesson.rememberThese.length === 0) {
+    lesson.rememberThese = lesson.keyConcepts.slice(0, 2).map((c) => `Key idea: ${c}`);
+  }
+
   // Flatten a few lesson fields onto AIResponse for backward-compat with
   // analytics, student model, and other engines that read these top-level fields.
   const mistakeStrings = lesson.commonMistakes.map(

@@ -60,6 +60,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          // Question bank: split by class so each student only parses their class's data
+          if (id.includes("/data/questions/class9-bundle")) return "qbank-class9";
+          if (id.includes("/data/questions/class678-bundle")) return "qbank-class678";
           // Vendor: React core — small, changes rarely, maximises cache hits
           if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/")) {
             return "vendor-react";

@@ -224,14 +224,13 @@ void ((_: number) => _);
 
 // ─── Full Lesson Renderer ─────────────────────────────────────────────────────
 //
-// Modes:
-//   Detailed (basic)  → Key Concept, Build Intuition, Understand Question,
-//                        Step-by-Step, Common Mistakes (all), Final Answer,
-//                        Similar Example, Practice Question, Remember This
-//   Standard          → Key Concept, Understand Question, Step-by-Step,
-//                        Common Mistake (1), Final Answer, Similar Example,
-//                        Practice Question
-//   Compact (advanced)→ Key Concept, Step-by-Step, Final Answer, Remember This
+// Mode section counts (exact — enforced by unconditional show flags below)
+//   Detailed (basic)  → 8: Key Concept, Build Intuition, Understand Question,
+//                        Step-by-Step, Common Mistakes, Final Answer,
+//                        One Similar Example, Practice Question
+//   Standard          → 5: Key Concept, Understand Question, Step-by-Step,
+//                        Final Answer, Practice Question
+//   Compact (advanced)→ 3: Step-by-Step, Final Answer, Remember This
 
 function LessonRenderer({ lesson, level, cfg }: {
   lesson: TeachingLesson;
@@ -241,17 +240,19 @@ function LessonRenderer({ lesson, level, cfg }: {
   const isDetailed = level === "basic";
   const isCompact  = level === "advanced";
 
-  // Pre-compute which sections will actually render (for sequential numbering)
+  // Section visibility is mode-only (not data-dependent).
+  // Fallback content is guaranteed by toAIResponse normalisation so no section
+  // ever renders empty.  Counts: Detailed=8, Standard=5, Compact=3.
   const show = {
-    concept:   !isCompact && lesson.keyConcepts.length > 0,
-    intuition: isDetailed && !!(lesson.intuition.story || lesson.intuition.visual || lesson.intuition.everyday),
-    translate: !isCompact && !!lesson.questionTranslation.plainEnglish,
-    steps:     lesson.guidedReasoning.length > 0,
-    mistakes:  isDetailed && lesson.commonMistakes.length > 0,
-    answer:    !!lesson.finalAnswer.answer,
-    similar:   isDetailed && !!lesson.simplerExample.problem,
-    practice:  !isCompact && !!lesson.practiceQuestion.question,
-    remember:  (isCompact || isDetailed) && lesson.rememberThese.length > 0,
+    concept:   !isCompact,
+    intuition: isDetailed,
+    translate: !isCompact,
+    steps:     true,
+    mistakes:  isDetailed,
+    answer:    true,
+    similar:   isDetailed,
+    practice:  !isCompact,
+    remember:  isCompact,
   };
 
   let _n = 0;

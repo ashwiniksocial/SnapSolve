@@ -7,10 +7,41 @@
  *   - Function signatures stay identical.
  */
 
-import { ALL_CHAPTERS, ALL_QUESTIONS } from "@/data/questions";
 import type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType } from "@/data/questions";
 
 export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType };
+
+// ── Module-level question bank cache ────────────────────────────────────────
+// Start empty; populated by preloadQBank().  Synchronous query functions below
+// return empty results until preloadQBank() resolves.  Pages other than
+// Practice will show empty lists if visited before Practice — acceptable beta
+// degradation given the normal navigation flow (Home → Practice → Solution).
+let ALL_CHAPTERS: ChapterMeta[] = [];
+let ALL_QUESTIONS: Question[] = [];
+
+type _BundleKey = "class9" | "class678";
+const _loaded = new Set<_BundleKey>();
+
+/** Lazily load the question bank for the given class into the module cache.
+ *  Safe to call multiple times — deduplicates by bundle key so each bundle
+ *  is fetched at most once per session.
+ */
+export async function preloadQBank(classNum: number): Promise<void> {
+  if (classNum === 9) {
+    if (_loaded.has("class9")) return;
+    const { CHAPTERS, QUESTIONS } = await import("@/data/questions/class9-bundle");
+    ALL_CHAPTERS  = [...ALL_CHAPTERS,  ...CHAPTERS];
+    ALL_QUESTIONS = [...ALL_QUESTIONS, ...QUESTIONS];
+    _loaded.add("class9");
+  } else {
+    // Classes 6, 7, 8 share a single bundle
+    if (_loaded.has("class678")) return;
+    const { CHAPTERS, QUESTIONS } = await import("@/data/questions/class678-bundle");
+    ALL_CHAPTERS  = [...ALL_CHAPTERS,  ...CHAPTERS];
+    ALL_QUESTIONS = [...ALL_QUESTIONS, ...QUESTIONS];
+    _loaded.add("class678");
+  }
+}
 
 // ─── Chapter / topic navigation ───────────────────────────────────────────────
 
@@ -71,7 +102,7 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
     if (filter.questionType && filter.questionType !== "All" && q.questionType !== filter.questionType) return false;
     return true;
   });
-  console.log(`[BANK:getQuestions] filter=${JSON.stringify(filter)} → ${results.length} questions from ALL_QUESTIONS (static local TypeScript import — no network, no DB, no API)`);
+  console.log(`[BANK:getQuestions] filter=${JSON.stringify(filter)} → ${results.length} questions (lazy bundle, no network — preloadQBank() must be called first)`);
   const sample = results[0];
   if (sample) {
     console.log(`[BANK:getQuestions] sample[0] id="${sample.id}" steps.length=${sample.steps.length} has_answer=${!!sample.answer} lesson=undefined (Question type has no lesson field)`);

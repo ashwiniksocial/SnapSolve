@@ -1,0 +1,207 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+Confirmed beta-defect repair only.
+
+DO NOT:
+- conduct a broad repository audit
+- add features
+- redesign the app
+- modify curriculum questions
+- alter branding, colours or general layout
+- refactor unrelated files
+- work on Classes 6–8
+- change architecture unless essential to fix a confirmed defect
+
+USER TEST RESULTS — TREAT AS CONFIRMED:
+1. First Class 9 Mathematics question took approximately 64 seconds.
+2. Later Medium/Hard questions took approximately 7–8 seconds.
+3. Mastery Score appears before questions and forces unnecessary scrolling.
+4. Solution page says “AI Solution”.
+5. No clear navigation back to the current chapter/question list.
+6. “New Question” incorrectly sends the user to Scan.
+7. Explanation mode labels and rendered section counts do not match.
+8. Detailed, Standard and Compact show different incorrect counts for different questions.
+9. Re-solve can regenerate a different number of sections.
+
+CURRENT TASK:
+Fix these confirmed defects with the smallest safe changes.
+
+==================================================
+P0 — EXPLANATION MODE CONTRACT
+==================================================
+
+Inspect only the direct files responsible for:
+- explanation mode definitions
+- mode section selection
+- TeachingLayout / LessonRenderer output
+- AI solution response normalization
+- Re-solve handling
+
+First establish the existing intended contract.
+
+The current UI advertises:
+- Detailed: 8 sections
+- Standard: 5 sections
+- Compact: 3 sections
+
+Unless an existing locked source-of-truth file explicitly defines otherwise, enforce exactly:
+- Detailed = 8 visible instructional sections
+- Standard = 5 visible instructional sections
+- Compact = 3 visible instructional sections
+
+Requirements:
+1. Each mode must always render its exact intended number of visible sections.
+2. Mode labels must match actual visible section counts.
+3. Changing mode must not regenerate a new answer.
+4. All three modes must derive from the same canonical solution.
+5. Re-solve must preserve the selected mode and still obey the same 8/5/3 contract.
+6. Question complexity must not reduce the required section count.
+7. Do not display empty section cards.
+8. Where generated fields are missing, normalize the response using existing solution content and safe deterministic fallbacks.
+9. Prefer fixing normalization/mapping/rendering rather than increasing AI calls.
+10. Modify AI prompts or response schema only if a confirmed root cause makes it essential.
+
+Regression-test these exact questions:
+
+A.
+“The following data shows the number of books read by 10 students:
+3, 7, 2, 5, 4, 7, 3, 8, 5, 7.
+Arrange this data in ascending order and prepare a frequency table.”
+
+Expected:
+- Detailed: exactly 8 visible sections
+- Standard: exactly 5
+- Compact: exactly 3
+
+B.
+“Verify by substitution that (x + a)(x + b) =
+x² + (a + b)x + ab.
+Use x = 2, a = 3, b = 5.”
+
+Expected:
+- Detailed: exactly 8 visible sections
+- Standard: exactly 5
+- Compact: exactly 3
+
+Also test Re-solve for both questions.
+
+==================================================
+P0 — SOLUTION NAVIGATION
+==================================================
+
+On the Solution page:
+
+1. Change the visible heading:
+   “AI Solution”
+   to:
+   “SnapSolve Solution”
+
+2. Add clear navigation:
+   - Back to Chapter
+   - Back to Questions
+
+Use the existing class, subject and chapter state/query parameters.
+Do not lose the student’s current selection.
+
+3. Fix “New Question”:
+   - It must return to the current chapter’s question list or load the next question from that chapter.
+   - It must NOT navigate to /scan.
+
+4. Browser Back must continue to work normally.
+
+==================================================
+P1 — PRACTICE PAGE QUESTION-FIRST UX
+==================================================
+
+Students must see chapters/questions immediately after opening Practice.
+
+Move the Mastery Score content behind a compact button or collapsible panel:
+“View Mastery”
+
+Requirements:
+- collapsed by default
+- remains on the same Practice page
+- does not remove or change mastery calculations
+- questions/chapters appear before the mastery details
+- no general redesign
+
+==================================================
+P1 — FIRST QUESTION LOAD PERFORMANCE
+==================================================
+
+Measure separately:
+
+- authentication completion to Home
+- beta-check API response
+- Practice route load
+- Class 9 Mathematics data load
+- first question rendering
+- later question rendering
+
+Confirmed problem:
+The deferred question-service chunk is approximately 6.1 MB and the first Practice question took approximately 64 seconds.
+
+Apply the smallest safe fix that prevents students from downloading all Classes 6–9 question banks before opening one Class 9 chapter.
+
+Preferred solution:
+- split question-bank loading by class and/or subject
+- initially load only the selected Class 9 subject data
+- retain existing question-service behaviour for callers
+- preserve all question IDs, progress and history
+- do not load Classes 6–8 during a Class 9 session unless selected
+
+Do not add dependencies.
+
+Performance acceptance:
+- no 60-second first-question wait
+- show a clear loading state while the required subject chunk loads
+- later questions must remain fast
+- Home must remain lightweight
+- no browser freeze or page-unresponsive state
+
+==================================================
+VALIDATION
+==================================================
+
+Test in Replit Preview at mobile viewport:
+
+1. Sign in.
+2. Open Class 9 Mathematics.
+3. Confirm questions/chapters appear before Mastery Score.
+4. Open Easy, Medium and Hard questions.
+5. Validate 8/5/3 mode counts.
+6. Switch repeatedly between all modes.
+7. Use Re-solve and recheck 8/5/3.
+8. Use Back to Chapter.
+9. Use Back to Questions.
+10. Use New Question and confirm it does not open Scan.
+11. Refresh the Solution page.
+12. Confirm Mathematics and Science remain visible.
+13. Confirm Economics remains hidden.
+14. Confirm progress/history are not lost.
+15. Run frontend and API TypeScript checks.
+16. Run production build.
+
+Do not modify anything outside the confirmed defect path.
+
+RETURN ONLY:
+
+- root cause for inconsistent mode counts
+- canonical mode contract found
+- explanation-mode fixes
+- exact section counts for both test questions before/after
+- Re-solve result
+- navigation fixes
+- New Question result
+- Practice question-first result
+- measured timing breakdown before/after
+- question-bank loading change
+- files modified
+- TypeScript results
+- production build result
+- remaining confirmed blockers
+
+FINAL STATUS:
+
+SNAPSOLVE BETA DEFECT REPAIR — PASS or BLOCKED
