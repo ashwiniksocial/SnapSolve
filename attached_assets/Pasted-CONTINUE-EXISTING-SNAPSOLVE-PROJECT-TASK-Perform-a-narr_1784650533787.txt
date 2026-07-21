@@ -1,0 +1,82 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+TASK:
+Perform a narrow Class 9 Mathematics Ganita Manjari Part I integration validation.
+
+IMPORTANT SOURCE RULE:
+Ganita Manjari Class 9 Part II has not yet been released.
+
+Therefore:
+- validate only currently confirmed Part I content
+- do not build or infer Area and Perimeter
+- do not modify Part II-related legacy chapters
+- keep Area and Perimeter marked:
+  PENDING — OFFICIAL GANITA MANJARI PART II SOURCE
+
+Scope only:
+- Class 9 Mathematics question files
+- Class 9 Mathematics index/registration
+- 9-Mathematics gateway entries
+- directly required schema/type files
+
+Do NOT:
+- generate questions
+- rewrite frozen question content
+- scan Classes 6–8
+- modify Physics, Chemistry, Biology or Economics
+- modify UI, architecture, AI pipeline, prompts or LessonRenderer
+- create governance documents
+
+Validate:
+
+1. Newly built chapters:
+   - Exploring Algebraic Identities — exactly 75
+   - Predicting What Comes Next: Exploring Sequences and Progressions — exactly 75
+
+2. Both chapters:
+   - imported exactly once
+   - registered exactly once
+   - have unique chapter IDs
+   - have unique slugs
+   - have no duplicate question IDs
+   - have no duplicate question text
+   - have topic totals matching actual counts
+   - use the exact official display titles
+   - are marked frozen
+
+3. Confirm gateway failures for both chapters are cleared.
+
+4. Confirm the only remaining Class 9 Mathematics source blocker is:
+   Area and Perimeter — PENDING OFFICIAL PART II RELEASE.
+
+5. Review the legacy Polynomials chapter only for integration impact:
+   - identify whether its old Algebraic Identities topic remains exposed to students
+   - quantify the remaining duplicated concept coverage
+   - do not delete or move questions in this task
+   - recommend the smallest future reconciliation after official curriculum mapping
+
+6. Confirm no active duplicate chapter registration exists.
+
+7. Confirm no broken imports or orphan files exist.
+
+8. Run TypeScript typecheck.
+
+9. Do not fail the Part I gate merely because Area and Perimeter is pending.
+
+Fix only confirmed low-risk registration, metadata or import defects.
+Do not modify frozen question content.
+
+Return only:
+- chapter counts
+- registration status
+- duplicate status
+- topic metadata status
+- gateway result
+- legacy Polynomials overlap finding
+- orphan/broken-import result
+- typecheck result
+- confirmed fixes
+- files modified
+- final status:
+  CLASS 9 MATHEMATICS PART I — COMPLETE AND FROZEN
+  PART II — PENDING OFFICIAL NCERT RELEASE
