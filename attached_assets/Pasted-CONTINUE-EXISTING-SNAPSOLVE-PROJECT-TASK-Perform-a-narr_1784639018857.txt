@@ -1,0 +1,60 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+TASK:
+Perform a narrow Class 9 Chemistry curriculum and duplicate-registration reconciliation.
+
+Scope only:
+- Class 9 Chemistry question-bank files
+- Class 9 Chemistry adapter/index
+- curriculumGateway.ts
+- existing official-source tracker or curriculum map, if already present
+
+Do NOT:
+- generate questions
+- modify valid question content
+- scan unrelated classes or subjects
+- modify Biology, Physics, Mathematics, UI, architecture, AI pipeline or prompts
+- create a new governance document
+- delete any file during this task
+
+Official source of truth:
+- NCERT Grade 9 Science textbook “Exploration”, 2026 edition
+- CBSE Science 086 syllabus for Class IX, 2026–27
+
+Inspect these entries:
+1. Matter in Our Surroundings — 75 questions
+2. Is Matter Around Us Pure? — 31 questions
+3. Exploring Mixtures and Their Separation — 50 questions
+4. Atoms and Molecules — 75 questions
+5. Structure of the Atom — 75 questions
+
+Determine:
+1. Which entries correspond to current official 2026–27 chapters.
+2. Whether “Is Matter Around Us Pure?” duplicates or substantially overlaps “Exploring Mixtures and Their Separation”.
+3. Whether its 31 questions are:
+   - exact/near duplicates,
+   - valid reusable questions within the new chapter,
+   - or obsolete/out-of-scope.
+4. Whether “Matter in Our Surroundings” corresponds to any current official chapter or has been superseded/reorganised.
+5. Whether Atoms and Molecules and Structure of the Atom require title/metadata remapping to current chapter numbers or titles.
+6. Whether any active chapter is incorrectly marked cbseDeleted.
+7. Whether duplicate registrations, slugs or adapters currently expose the same content twice.
+
+Rules:
+- Read only the listed Chemistry files and directly required registrations.
+- Do not change any code or content yet.
+- Do not rely on old repository notes where they conflict with current official sources.
+- Recommend the smallest safe reconciliation preserving valid authored questions.
+- Do not recommend deleting valid questions merely because a title changed.
+
+Return only:
+- concise table for all five entries
+- current official chapter mapping
+- overlap/duplicate verdict
+- reusable-question count where determinable
+- obsolete/out-of-scope count where determinable
+- incorrect gateway flags
+- duplicate registration findings
+- exact smallest recommended changes
+- recommended next build chapter
+- files modified: None
