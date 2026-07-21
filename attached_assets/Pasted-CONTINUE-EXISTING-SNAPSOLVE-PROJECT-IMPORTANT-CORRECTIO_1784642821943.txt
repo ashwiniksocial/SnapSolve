@@ -1,0 +1,76 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+IMPORTANT CORRECTION:
+The previous conclusion that the following gateway entries were stale was incorrect:
+
+- Exploring Algebraic Identities
+- Sequences and Progressions
+
+Official NCERT Grade 9 Ganita Manjari contains:
+- Chapter 4: Exploring Algebraic Identities
+- Chapter 8: Predicting What Comes Next: Exploring Sequences and Progressions
+
+Do NOT remove these gateway entries.
+
+TASK:
+Perform a narrow, read-only Class 9 Mathematics old-to-new curriculum mapping audit.
+
+Official sources:
+- Current NCERT Grade 9 Mathematics textbook Ganita Manjari, Part I
+- Current available Ganita Manjari Part II
+- CBSE Class IX Mathematics curriculum 2026–27
+- Existing official source tracker in the repository
+
+Scope only:
+- Class 9 Mathematics question files
+- Class 9 Mathematics adapter/index
+- 9-Mathematics entries in curriculumGateway.ts
+- existing Class 9 Mathematics official-source records
+
+Do NOT:
+- generate questions
+- delete gateway entries
+- rename or rewrite frozen files
+- modify code
+- scan other classes or subjects
+- rely on the previous claim that these chapters belong to Class 10–11
+
+Determine:
+
+1. The complete official current Grade 9 Mathematics chapter list available from NCERT.
+2. For each current chapter, identify:
+   - exact matching legacy question-bank file
+   - substantial reusable overlap
+   - partial overlap
+   - completely missing content
+3. Specifically inspect:
+   - Exploring Algebraic Identities
+   - Predicting What Comes Next: Exploring Sequences and Progressions
+   - Area and Perimeter
+4. Determine whether “Area and Perimeter” belongs to:
+   - released Part I
+   - released Part II
+   - announced but currently unavailable Part II
+   - or incorrect gateway metadata
+5. Do not infer absence merely because no old-style question file exists.
+6. Compare chapter concepts, not only chapter names.
+7. Identify legacy chapters that were reorganised, merged, split or renamed.
+8. Identify which existing questions can be safely reused under the new chapters.
+9. Identify the smallest build sequence needed to achieve current 2026–27 compliance.
+10. Separately confirm:
+   - Biology current title: “Patterns in Life: Diversity and Classification”
+   - gateway currently uses the older title
+   - recommend metadata-only correction, but do not modify it during this audit
+
+Return only:
+- official current Mathematics chapter list
+- old-to-new mapping table
+- reusable question counts where determinable
+- genuinely missing chapters
+- renamed/merged/split chapters
+- exact status of Area and Perimeter
+- gateway corrections required
+- recommended next Mathematics build
+- files modified: None
+- final status:
+  CLASS 9 MATHEMATICS CURRICULUM MAPPING — COMPLETE or SOURCE BLOCKED
