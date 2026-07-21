@@ -1,0 +1,85 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+Confirmed Practice-page defect repair only.
+
+DO NOT:
+- run a broad audit
+- add features
+- refactor unrelated code
+- modify question-bank content
+- modify other pages
+- redesign the Practice page
+- change architecture
+
+FIX ONLY THESE TWO CONFIRMED ISSUES:
+
+1. REMOVE WORKSPACE FROM PRACTICE PAGE
+
+Remove the visible “Workspace” button from:
+- artifacts/homework-hero/src/pages/Practice.tsx
+
+Do not delete or modify the underlying Workspace route/component.
+Do not change any other navigation.
+
+2. FIX SUBJECT-SWITCH CHAPTER MISMATCH
+
+Confirmed reproduction:
+- Open Class 9 Mathematics.
+- Click Science.
+- Science chapters load.
+- Click Mathematics again.
+- Science chapters remain displayed instead of Mathematics chapters.
+
+Required behaviour:
+- Mathematics selected → Mathematics chapters only.
+- Science selected → Science chapters only.
+- Switching repeatedly must always show the correct subject immediately after loading.
+- The selected class must remain unchanged.
+- No stale chapters from the previous subject may remain visible during loading.
+
+Inspect only the direct Practice data-flow files:
+- Practice.tsx
+- questionService.ts
+- useChapterStats.ts
+- any direct subject/chapter memo inside Practice.tsx
+
+Check specifically:
+- missing subject or bankReady dependencies in useMemo/useEffect
+- chapter state not being cleared when subject changes
+- asynchronous preload result from the previous subject overwriting the new selection
+- cached chapter arrays surviving subject changes
+
+Apply the smallest safe fix.
+
+During subject change:
+- immediately clear or hide the previous subject’s chapters
+- show the existing loading indicator
+- render chapters only after data for the currently selected subject is ready
+
+VALIDATE:
+
+Class 9:
+1. Mathematics → Science → Mathematics
+2. Science → Mathematics → Science
+3. Repeat switching five times quickly
+4. Confirm chapter title and chapter list always match selected subject
+5. Open one Mathematics chapter after switching
+6. Open one Science chapter after switching
+7. Confirm no Economics subject appears
+8. Confirm Mastery Overview remains collapsed
+9. Confirm questions still open correctly
+10. TypeScript passes
+11. Production build passes
+
+RETURN ONLY:
+- root cause
+- files modified
+- Workspace removal confirmation
+- Mathematics → Science → Mathematics result
+- rapid-switch result
+- TypeScript result
+- build result
+- final status:
+
+PRACTICE SUBJECT SWITCH — PASS or BLOCKED

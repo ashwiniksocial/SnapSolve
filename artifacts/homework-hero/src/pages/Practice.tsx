@@ -328,6 +328,9 @@ export default function Practice() {
   }, [chapterStats]);
 
   // ── Chapter progress sorted ─────────────────────────────────────────────────
+  // session.subject is included so sortedChapters immediately clears when the
+  // subject changes — even before chapterStats re-runs — preventing stale
+  // chapters from the previous subject ever appearing in the list.
   const sortedChapters = useMemo(
     () =>
       [...chapterStats].sort((a, b) => {
@@ -336,7 +339,7 @@ export default function Practice() {
         if (STATUS_ORDER[sa] !== STATUS_ORDER[sb]) return STATUS_ORDER[sa] - STATUS_ORDER[sb];
         return a.accuracy - b.accuracy;
       }),
-    [chapterStats],
+    [chapterStats, session.subject],
   );
 
   // ── Filter state ────────────────────────────────────────────────────────────
@@ -392,13 +395,18 @@ export default function Practice() {
     }
   }, [availableSubjects, session.subject, handleSubjectChange]);
 
+  // Fires only when the bank loads or the class changes.
+  // Subject changes are handled synchronously inside handleSubjectChange, so
+  // keeping session.subject in deps would create a second async write that races
+  // with the synchronous one and can pin the wrong chapter on rapid switching.
   useEffect(() => {
     if (!bankReady) return;
     const next = getChapters(practiceClass, session.subject);
     setSelectedChapterId(next[0]?.id ?? "");
     setDrilldownOpen(false);
     setSelectedTopicId("all");
-  }, [bankReady, practiceClass, session.subject]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bankReady, practiceClass]);
 
   // ── Preload question bank for the selected class ──────────────────────────
   useEffect(() => {
@@ -482,11 +490,6 @@ export default function Practice() {
                 Class {practiceClass} · {chapters.length} chapter{chapters.length !== 1 ? "s" : ""} · {session.subject}
               </p>
             </div>
-            <Link href="/challenge">
-              <button className="text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-all mt-1">
-                ✦ Workspace
-              </button>
-            </Link>
           </div>
 
           {/* Class selector */}
