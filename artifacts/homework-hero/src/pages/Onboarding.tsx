@@ -30,7 +30,7 @@ export default function Onboarding() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-4xl mb-3">🎓</div>
-          <h1 className="text-2xl font-bold text-slate-900">Welcome to StudyAI</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Welcome to SnapSolve</h1>
           <p className="text-sm text-slate-500 mt-2">Tell us about yourself so we can personalise your experience.</p>
         </div>
 

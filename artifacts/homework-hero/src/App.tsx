@@ -313,13 +313,13 @@ function ClerkProviderWithRoutes() {
       localization={{
         signIn: {
           start: {
-            title:    "Welcome back to StudyAI",
+            title:    "Welcome back to SnapSolve",
             subtitle: "Sign in to sync your progress across devices",
           },
         },
         signUp: {
           start: {
-            title:    "Join StudyAI",
+            title:    "Join SnapSolve",
             subtitle: "Create an account to save your progress",
           },
         },
