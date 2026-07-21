@@ -1,0 +1,69 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+BUDGET CONTROL MODE:
+USD 260 has already been spent.
+Do not perform broad audits, repository scans, refactors or content expansion.
+
+CURRENT OBJECTIVE:
+Verify that the completed Class 9 curriculum works end-to-end for a student.
+
+This is a READ-FIRST, FIX-CONFIRMED-BLOCKERS-ONLY task.
+
+Scope:
+- existing Class 9 subject/chapter selection flow
+- Practice question loading
+- question display
+- answer submission
+- explanation display
+- progress recording
+- only direct files required for confirmed failures
+
+Test one representative active chapter from each subject:
+1. Mathematics — Exploring Algebraic Identities
+2. Physics — Motion
+3. Chemistry — Exploring Mixtures and Their Separation
+4. Biology — Patterns in Life: Diversity and Classification
+5. Economics — one existing active chapter
+
+Also verify:
+- cbseDeleted chapters are not shown as active
+- Area and Perimeter is not presented as available content
+- all five subjects are reachable
+- selected chapter loads its correct questions
+- no blank page, missing import, duplicate chapter or console/runtime error
+- explanations render correctly
+- question navigation works
+- progress/attempt state is recorded if already implemented
+
+Do NOT:
+- generate questions
+- improve or rewrite existing content
+- redesign UI
+- add features
+- modify architecture
+- scan Classes 6–8
+- fix the unrelated Class 7 duplicate ID
+- create audit/governance documents
+- perform cosmetic changes
+- alter frozen content
+
+Execution:
+1. Inspect the direct student-facing Class 9 flow.
+2. Run the minimum targeted checks.
+3. Identify only confirmed launch blockers.
+4. Fix only confirmed blockers.
+5. Re-test the five representative chapters.
+6. Stop once the Class 9 learning path works.
+
+Return only:
+- five-chapter test table
+- subject/chapter visibility result
+- question-loading result
+- explanation-rendering result
+- progress-recording result
+- confirmed blockers found
+- exact fixes made
+- files modified
+- typecheck/build result
+- final status:
+  CLASS 9 STUDENT LEARNING FLOW — PASS or BLOCKED
