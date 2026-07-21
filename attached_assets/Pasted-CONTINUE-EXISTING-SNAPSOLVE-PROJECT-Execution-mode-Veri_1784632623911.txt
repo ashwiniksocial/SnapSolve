@@ -1,0 +1,87 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+Execution mode:
+Verify current chapter identity → build questions → validate → freeze.
+
+CURRENT TASK:
+Class 9 Biology — Patterns in Life: Diversity and Classification.
+
+IMPORTANT CURRICULUM RULE:
+Use the current official NCERT Grade 9 Science textbook “Exploration” and CBSE 2026–27 curriculum.
+
+The repository currently has an empty registered stub named:
+Diversity in Living Organisms
+ch03-diversity-in-living-organisms.ts
+
+Before building:
+1. Verify whether this stub is the intended adapter/file for the current chapter:
+   “Patterns in Life: Diversity and Classification”.
+2. If yes, retain the existing file and registration structure but update only the displayed chapter title/metadata where required.
+3. Do not create a duplicate chapter or second question-bank file.
+4. Do not use the discontinued old NCERT chapter structure blindly.
+
+Scope:
+- target chapter file
+- its direct adapter/registration
+- directly required schema/type file only
+
+Do NOT:
+- scan the full repository
+- modify completed Chemistry or Physics chapters
+- modify Biology Chapters 1–2
+- modify UI, navigation, architecture, AI pipeline, prompts or LessonRenderer
+- perform another audit
+- create governance documents
+
+Build requirements:
+1. Retain any valid existing content. Current count is reported as 0.
+2. Build exactly 75 strong, unique questions.
+3. Use natural syllabus weighting, not equal topic quotas.
+4. Cover only concepts present in the current authorised chapter.
+
+Cover comprehensively:
+- meaning and importance of biodiversity
+- need for classification
+- similarities and differences among organisms
+- observable characteristics used for grouping
+- hierarchical classification
+- major groups of organisms covered in the current textbook
+- distinguishing characteristics of major plant groups
+- distinguishing characteristics of major animal groups
+- vertebrates and invertebrates
+- classification keys, tables and flowcharts
+- ecological importance of biodiversity
+- application, observation and comparison-based questions
+
+Question quality:
+- optimized for weak Class 9 students
+- clear step-by-step explanations
+- balanced Easy, Medium and Hard
+- MCQ, short answer, long answer, HOTS, assertion–reason and observation-based questions
+- no Class 11 taxonomy leakage
+- no obsolete five-kingdom detail unless explicitly present in the current official chapter
+- no duplicate IDs
+- no duplicate or cosmetically rewritten questions
+- scientifically verified answers
+
+Validation:
+1. Final count exactly 75.
+2. Verify chapter title and metadata align with the current NCERT chapter.
+3. Verify no duplicate chapter registration was created.
+4. Verify topic counts match actual questions.
+5. Check duplicate IDs and question text.
+6. Run TypeScript typecheck.
+7. Fix only confirmed errors.
+8. Freeze the chapter.
+
+Return only:
+- official chapter identity confirmed
+- existing count
+- questions added
+- final count
+- topic distribution
+- question-type mix
+- registration/metadata changes, if any
+- validation result
+- files modified
+- final status
