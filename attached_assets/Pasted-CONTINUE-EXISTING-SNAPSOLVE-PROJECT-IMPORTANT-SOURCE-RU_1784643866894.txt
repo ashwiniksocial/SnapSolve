@@ -1,0 +1,100 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+IMPORTANT SOURCE RULE:
+Ganita Manjari Class 9 Part II has NOT yet been released.
+
+Therefore:
+- do not infer Part II chapters from gateway entries
+- do not build Area and Perimeter
+- do not remap legacy geometry chapters yet
+- do not delete or modify legacy Part II-related content
+- mark all Part II curriculum decisions as PENDING OFFICIAL SOURCE
+
+CURRENT TASK:
+Build Class 9 Mathematics — Exploring Algebraic Identities.
+
+Official source:
+Current NCERT Ganita Manjari Grade 9 Part I, Chapter 4.
+
+Target:
+Exactly 75 strong, unique questions.
+
+SOURCE REUSE:
+Inspect only the Algebraic Identities topic currently contained inside the legacy Polynomials chapter.
+
+Reuse valid questions from that topic, but:
+- do not remove them from the legacy file during this task
+- do not duplicate IDs
+- do not copy weak or near-duplicate questions
+- create the new official chapter in the existing Class 9 Mathematics question-bank structure
+- register it exactly once
+
+Scope only:
+- legacy Class 9 Polynomials file, for algebraic-identities seed questions
+- new Algebraic Identities chapter file
+- Class 9 Mathematics adapter/index
+- 9-Mathematics gateway entry
+- directly required schema/type files
+
+Do NOT:
+- scan the full repository
+- modify other Mathematics chapters
+- modify Physics, Chemistry, Biology or Economics
+- build any Ganita Manjari Part II chapter
+- alter UI, architecture, AI pipeline, prompts or LessonRenderer
+- create governance documents
+
+Cover strictly from the official chapter:
+- meaning and purpose of algebraic identities
+- geometrical interpretation of identities
+- (a + b)²
+- (a − b)²
+- (a + b)(a − b)
+- (x + a)(x + b)
+- (a + b + c)², only if present in the official chapter
+- cubes and related identities, only if present in the official chapter
+- verification by substitution
+- expansion using identities
+- simplification
+- factorisation using identities
+- mental calculation and numerical applications
+- error identification
+- competency-based and visual/geometrical applications
+
+Rules:
+1. Read the official uploaded/source chapter before determining final topic coverage.
+2. Do not add identities absent from the official chapter.
+3. Optimise explanations for weak Class 9 students.
+4. Include step-by-step working.
+5. Use balanced Easy, Medium and Hard questions.
+6. Include concept, NCERT-style, competency, HOTS, assertion–reason and previous-year style questions where appropriate.
+7. No Class 10 or Class 11 leakage.
+8. No duplicate or cosmetically rewritten questions.
+9. Begin implementation immediately.
+
+Validation:
+- exactly 75 questions
+- topic totals match
+- no duplicate IDs
+- no duplicate question text
+- single chapter registration
+- chapter title exactly:
+  “Exploring Algebraic Identities”
+- gateway entry correctly mapped
+- TypeScript passes
+- freeze chapter after validation
+
+Do not attempt to clear Part II gateway blockers.
+
+Return only:
+- reusable seed count
+- new questions added
+- final count
+- topic distribution
+- question-type mix
+- difficulty distribution
+- registration and gateway changes
+- validation result
+- files modified
+- final status:
+  EXPLORING ALGEBRAIC IDENTITIES — COMPLETE AND FROZEN
