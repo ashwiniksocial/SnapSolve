@@ -46,47 +46,66 @@ export async function preloadQBank(classNum: number): Promise<void> {
 // ─── Chapter / topic navigation ───────────────────────────────────────────────
 
 /** Internal domain labels that make up the student-facing "Science" subject. */
-const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology"];
+const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology", "Earth Science"];
 
 /**
- * Official NCERT Class 9 Science student-facing chapter display sequence.
- * Key: internal chapterId — Value: 1-based continuous display number shown in the student UI.
- *
- * Source: NCERT Class 9 Science textbook official interleaved chapter order.
- * Chemistry chapters (Ch.1–3) → Biology chapters (Ch.4–6) → Physics chapters (Ch.7–11)
- * → Biology conclusion (Ch.12 "Why Do We Fall Ill?").
- *
- * cbseDeleted chapters (chem-ch01 "Matter in Our Surroundings") are excluded;
- * the display count starts at 1 for the first active chapter.
+ * Official Class 9 Science student-facing chapter display sequence.
+ * Follows the official NCERT Exploration textbook order: iesc101 → iesc113.
+ * Key: internal chapterId — Value: 1-based continuous display number (Ch.1–13).
  */
 export const SCIENCE_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
-  "chem-ch02": 1,   // Exploring Mixtures and Their Separation
-  "chem-ch03": 2,   // Atoms and Molecules
-  "chem-ch04": 3,   // Structure of the Atom
-  "bio-ch01":  4,   // The Fundamental Unit of Life
-  "bio-ch02":  5,   // Tissues
-  "bio-ch03":  6,   // Diversity in Living Organisms
-  "phy-ch1":   7,   // Motion
-  "phy-ch2":   8,   // Force and Laws of Motion
-  "phy-ch3":   9,   // Gravitation
-  "phy-ch4":  10,   // Work, Energy and Simple Machines
-  "phy-ch5":  11,   // Sound
-  "bio-ch04": 12,   // Why Do We Fall Ill?
+  "chem-ch01":  1,  // iesc101 — Matter in Our Surroundings
+  "bio-ch01":   2,  // iesc102 — Cell — The Fundamental Unit of Life
+  "bio-ch02":   3,  // iesc103 — Tissues
+  "phy-ch1":    4,  // iesc104 — Motion
+  "chem-ch02":  5,  // iesc105 — Exploring Mixtures and Their Separation
+  "phy-ch2":    6,  // iesc106 — Force and Laws of Motion
+  "phy-ch4":    7,  // iesc107 — Work, Energy and Simple Machines
+  "chem-ch04":  8,  // iesc108 — Structure of an Atom
+  "chem-ch03":  9,  // iesc109 — Atoms and Molecules
+  "phy-ch5":   10,  // iesc110 — Sound
+  "bio-ch05":  11,  // iesc111 — Reproduction in Plants and Animals
+  "bio-ch03":  12,  // iesc112 — Diversity in Living Organisms
+  "esc-ch01":  13,  // iesc113 — Earth as a System: Energy, Matter and Life
 };
 
-/** All chapters for a given class + subject.
- *  "Science" resolves to the union of Physics, Chemistry, and Biology chapters
- *  (internal domain labels — never shown directly to students), sorted in the
- *  official NCERT textbook interleaved sequence.
+/**
+ * Official Class 9 Mathematics student-facing chapter display sequence.
+ * Follows the official NCERT Ganita Manjari Part I order: iemh101 → iemh108.
+ * Key: internal chapterId — Value: 1-based display number (Ch.1–8).
+ */
+export const MATHS_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
+  "ch3":  1,  // iemh101 — Orienting Yourself: The Use of Coordinates
+  "ch2":  2,  // iemh102 — Introduction to Linear Polynomials
+  "ch1":  3,  // iemh103 — The World of Numbers
+  "ch16": 4,  // iemh104 — Exploring Algebraic Identities
+  "ch4":  5,  // iemh105 — I'm Up and Down, and Round and Round
+  "ch18": 6,  // iemh106 — Measuring Space: Perimeter and Area
+  "ch15": 7,  // iemh107 — The Mathematics of Maybe: Introduction to Probability
+  "ch17": 8,  // iemh108 — Predicting What Comes Next: Exploring Sequences and Progressions
+};
+
+/**
+ * All chapters for a given class + subject, in official textbook order.
+ * "Science" resolves to the union of all Science domain chapters sorted by
+ * the official NCERT Exploration textbook sequence (iesc101–iesc113).
+ * Class 9 Mathematics is sorted by the official Ganita Manjari Part I sequence (iemh101–iemh108).
  */
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   if (subject === "Science") {
     const scienceChapters = ALL_CHAPTERS.filter(
       (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject) && !c.cbseDeleted
     );
-    // Sort by official NCERT textbook display order; unrecognised IDs fall to the end.
     return scienceChapters.sort(
       (a, b) => (SCIENCE_DISPLAY_ORDER_CLASS9[a.id] ?? 999) - (SCIENCE_DISPLAY_ORDER_CLASS9[b.id] ?? 999)
+    );
+  }
+  if (subject === "Mathematics" && classNum === 9) {
+    const mathChapters = ALL_CHAPTERS.filter(
+      (c) => c.classNum === classNum && c.subject === subject && !c.cbseDeleted
+    );
+    return mathChapters.sort(
+      (a, b) => (MATHS_DISPLAY_ORDER_CLASS9[a.id] ?? 999) - (MATHS_DISPLAY_ORDER_CLASS9[b.id] ?? 999)
     );
   }
   return ALL_CHAPTERS.filter(
@@ -216,6 +235,8 @@ export function getAllChapterStats(classNum: number, subject: string): ChapterSt
       chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
       displayChapterNumber: subject === "Science"
         ? SCIENCE_DISPLAY_ORDER_CLASS9[ch.id]
+        : subject === "Mathematics" && ch.classNum === 9
+        ? MATHS_DISPLAY_ORDER_CLASS9[ch.id]
         : undefined,
       totalQuestions: qs.length,
       byDifficulty: getDifficultyBreakdown({ classNum, subject: chSubject, chapterId: ch.id }),

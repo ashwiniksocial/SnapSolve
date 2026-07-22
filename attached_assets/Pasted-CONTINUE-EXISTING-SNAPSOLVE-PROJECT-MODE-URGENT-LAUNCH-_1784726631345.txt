@@ -1,0 +1,270 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+URGENT LAUNCH RECOVERY.
+SMALLEST SAFE PATCH ONLY.
+
+DO NOT:
+- redesign architecture
+- create a new curriculum engine
+- create a new registry system
+- refactor unrelated files
+- change AI pipeline
+- change TeachingLayout
+- change authentication
+- change navigation
+- touch Classes 6–8
+- perform another broad audit
+- author large new question banks
+- modify question text
+- rename question IDs
+
+The existing SnapSolve architecture remains frozen.
+
+OBJECTIVE:
+Correct only the student-facing Class 9 Mathematics and Science inventories
+so founder beta testing can continue immediately.
+
+==================================================
+OFFICIAL CURRENT TEXTBOOK SCOPE
+==================================================
+
+Founder-confirmed official NCERT files:
+
+CLASS 9 MATHEMATICS:
+- prelims: iemh1ps.pdf
+- chapters: iemh101.pdf through iemh108.pdf
+- EXACT STUDENT-FACING TOTAL: 8 CHAPTERS
+
+CLASS 9 SCIENCE:
+- prelims: iesc1ps.pdf
+- chapters: iesc101.pdf through iesc113.pdf
+- EXACT STUDENT-FACING TOTAL: 13 CHAPTERS
+
+Do not use old textbook chapter counts.
+Do not use the previous 17-Mathematics or 12-Science assumptions.
+Do not count the prelims PDF as a chapter.
+
+==================================================
+STEP 1 — REVERSE ONLY THE RECENT WRONG CHANGES
+==================================================
+
+Inspect the recent commits affecting:
+
+- SCIENCE_DISPLAY_ORDER_CLASS9
+- displayChapterNumber
+- Chemistry/Biology prefixed IDs
+- cbseDeleted flags added during the recent curriculum fixes
+- chapter sorting
+- visible chapter totals
+
+Preserve prefixed internal IDs if they fixed duplicate React keys.
+
+Reverse only incorrect curriculum assumptions, including:
+
+- the manually constructed 12-chapter Science sequence
+- any chapter hidden merely to force Science total to 12
+- any Mathematics total or visibility based on 17 chapters
+- any domain-grouped Science ordering
+
+Do not revert unrelated working fixes.
+
+==================================================
+STEP 2 — USE EXISTING CURRICULUM MECHANISM
+==================================================
+
+Use the existing curriculum gateway / chapter metadata mechanism.
+
+Do NOT create a new structural layer.
+
+For Class 9 only, establish these fixed student-facing lists:
+
+MATHEMATICS:
+- exactly 8 official chapters
+- source sequence: iemh101 → iemh108
+
+SCIENCE:
+- exactly 13 official chapters
+- source sequence: iesc101 → iesc113
+
+Use the exact official chapter titles already extracted from those PDFs
+or available from the official NCERT source records in the project.
+
+Do not infer titles from old chapter names.
+Do not substitute unrelated legacy chapters.
+
+==================================================
+STEP 3 — MAP EXISTING CONTENT SAFELY
+==================================================
+
+For every official chapter:
+
+A. If an existing SnapSolve chapter/question bank genuinely matches:
+- map it to the official chapter;
+- preserve all question IDs;
+- preserve the internal Physics/Chemistry/Biology solution domain;
+- change only student-facing title, number and visibility where required.
+
+B. If existing content only partially matches:
+- keep the official chapter card;
+- use only genuinely matching questions;
+- do not mix unrelated questions.
+
+C. If no matching content exists:
+- keep the official chapter visible in the correct position;
+- show a non-clickable “Content being prepared” state;
+- question count must show 0;
+- do not generate fake questions;
+- report it as a content gap.
+
+The student-facing chapter total must still be:
+- Mathematics: 8
+- Science: 13
+
+==================================================
+STEP 4 — STATIC ORDER
+==================================================
+
+Chapter order must remain permanently fixed by official textbook sequence.
+
+Remove any ordering based on:
+
+- used or unused
+- attempted or unattempted
+- recently opened
+- solved status
+- mastery
+- progress
+- weak chapter
+- recommendation
+- question count
+- completion percentage
+- local storage activity
+
+Usage may change badges or progress only.
+It must never change card position.
+
+==================================================
+STEP 5 — ALL STUDENT-FACING DEPENDENCIES
+==================================================
+
+Ensure the corrected Class 9 inventory is consistently used by:
+
+- Practice
+- Revision
+- Exam Mode
+- Progress
+- Analytics
+- chapter selectors
+- mastery calculations
+- recommendations
+
+Do this through the existing chapter metadata/filtering path.
+
+Do not create parallel chapter arrays in individual pages.
+
+Legacy chapters may remain internally preserved but must not appear in
+Class 9 student-facing counts, filters or analytics.
+
+==================================================
+STEP 6 — AUTOMATED LAUNCH CHECK
+==================================================
+
+Add or update one small validation script using the existing test setup.
+
+It must fail unless all are true:
+
+MATHEMATICS:
+- visible chapter count = 8
+- chapter numbers = 1 through 8
+- PDF codes correspond to iemh101 through iemh108
+- no duplicate visible chapter IDs
+- no legacy extra chapter visible
+
+SCIENCE:
+- visible chapter count = 13
+- chapter numbers = 1 through 13
+- PDF codes correspond to iesc101 through iesc113
+- no duplicate visible chapter IDs
+- no duplicate React keys
+- no domain-based numbering restart
+
+ORDER:
+- chapter sequence before activity equals sequence after simulated activity
+- progress/mastery/last-opened changes do not affect order
+
+TOTALS:
+- displayed chapter total equals rendered chapter-card total
+
+Run:
+- targeted curriculum validation
+- TypeScript
+- production build
+
+==================================================
+MANUAL PREVIEW VALIDATION
+==================================================
+
+In authenticated Preview:
+
+1. Open Mathematics.
+2. Confirm exactly 8 cards numbered 1–8.
+3. Open Chapter 1 and Chapter 8.
+4. Mark one question solved.
+5. Return and confirm order unchanged.
+
+6. Open Science.
+7. Confirm exactly 13 cards numbered 1–13.
+8. Open one available Physics, Chemistry and Biology chapter.
+9. Mark one question Needs Review.
+10. Return and confirm order unchanged.
+
+11. Switch:
+Mathematics → Science → Mathematics.
+
+12. Refresh.
+
+Confirm both sequences remain identical.
+
+==================================================
+RETURN ONLY
+==================================================
+
+1. Mathematics official 8-row table:
+   number | official PDF code | official title | internal ID |
+   question count | available/pending
+
+2. Science official 13-row table:
+   number | official PDF code | official title | internal domain |
+   internal ID | question count | available/pending
+
+3. Recent incorrect changes reversed
+
+4. Legacy chapters excluded from student-facing scope
+
+5. Static-order root cause and exact fix
+
+6. Visible UI totals:
+   Mathematics before → after
+   Science before → after
+
+7. Exact missing-content chapters
+
+8. Automated validation result
+
+9. Authenticated Preview result
+
+10. Files modified
+
+11. TypeScript result
+
+12. Production build result
+
+FINAL STATUS:
+
+CLASS 9 LAUNCH CURRICULUM PATCH — PASS or BLOCKED
+
+IMPORTANT:
+Do not claim PASS from code inspection alone.
+PASS requires actual authenticated Preview showing 8 Mathematics cards,
+13 Science cards and unchanged static order after activity.

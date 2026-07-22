@@ -3,6 +3,7 @@ import type { Question, ChapterMeta } from "./types";
 export const CHAPTER_META: ChapterMeta = {
   id: "ch14", name: "Statistics",
   classNum: 9, subject: "Mathematics",
+  cbseDeleted: true,
   topics: [
     { id: "t1", name: "Collection and Presentation of Data",  questionCount: 10 },
     { id: "t2", name: "Frequency Distribution Tables",        questionCount: 10 },

@@ -335,13 +335,7 @@ export default function Practice() {
   // selectedSubject is explicit here so sortedChapters invalidates in the same
   // render tick as the subject change, before chapterStats re-runs.
   const sortedChapters = useMemo(
-    () =>
-      [...chapterStats].sort((a, b) => {
-        const sa = getChapterStatus(a.accuracy, a.attempted, a.completionPct);
-        const sb = getChapterStatus(b.accuracy, b.attempted, b.completionPct);
-        if (STATUS_ORDER[sa] !== STATUS_ORDER[sb]) return STATUS_ORDER[sa] - STATUS_ORDER[sb];
-        return a.accuracy - b.accuracy;
-      }),
+    () => [...chapterStats],
     [chapterStats, selectedSubject],
   );
 
@@ -801,10 +795,13 @@ export default function Practice() {
                   <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`}>
                     <button
                       onClick={() => handleChapterRowClick(cs.chapterId)}
-                      className={`w-full text-left rounded-2xl border p-3.5 bg-white shadow-sm transition-all hover:border-slate-300 ${
-                        isSelected ? "border-2 shadow-md" : "border-slate-200"
+                      disabled={cs.totalQuestions === 0}
+                      className={`w-full text-left rounded-2xl border p-3.5 bg-white shadow-sm transition-all ${
+                        cs.totalQuestions === 0
+                          ? "opacity-60 cursor-not-allowed border-slate-200"
+                          : `hover:border-slate-300 ${isSelected ? "border-2 shadow-md" : "border-slate-200"}`
                       }`}
-                      style={isSelected ? { borderColor: cfg.color } : {}}
+                      style={isSelected && cs.totalQuestions > 0 ? { borderColor: cfg.color } : {}}
                     >
                       {/* Row top */}
                       <div className="flex items-center gap-2.5">
@@ -856,6 +853,8 @@ export default function Practice() {
                             </span>
                           </div>
                         </div>
+                      ) : cs.totalQuestions === 0 ? (
+                        <p className="text-[11px] text-amber-500 font-medium mt-1.5 ml-5">Content being prepared</p>
                       ) : (
                         <p className="text-[11px] text-slate-400 mt-1.5 ml-5">Not started yet</p>
                       )}

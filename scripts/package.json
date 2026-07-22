@@ -11,6 +11,7 @@
     "curriculum-check": "tsx ./src/curriculumGateway.ts",
     "generate-proof": "tsx ./src/generateMathQuestionProof.ts",
     "validate-proof": "tsx ./src/validateGeneratedProof.ts",
+    "validate-curriculum": "tsx ./src/validateCurriculum.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

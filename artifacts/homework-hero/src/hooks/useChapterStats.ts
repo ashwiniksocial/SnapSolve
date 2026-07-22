@@ -10,7 +10,7 @@
 
 import { useMemo } from "react";
 import { useProgress } from "./useProgress";
-import { getChapters, getQuestions, SCIENCE_DISPLAY_ORDER_CLASS9 } from "@/services/questionService";
+import { getChapters, getQuestions, SCIENCE_DISPLAY_ORDER_CLASS9, MATHS_DISPLAY_ORDER_CLASS9 } from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
 
 export interface TopicCompletion {
@@ -91,6 +91,8 @@ export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boo
         chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
         displayChapterNumber: subject === "Science"
           ? SCIENCE_DISPLAY_ORDER_CLASS9[ch.id]
+          : subject === "Mathematics" && ch.classNum === 9
+          ? MATHS_DISPLAY_ORDER_CLASS9[ch.id]
           : undefined,
         totalQuestions: chapterQuestions.length,
         attempted: chAttempted,

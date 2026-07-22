@@ -3,6 +3,7 @@ import type { Question, ChapterMeta } from "./types";
 export const CHAPTER_META: ChapterMeta = {
   id: "ch5", name: "Introduction to Euclid's Geometry",
   classNum: 9, subject: "Mathematics",
+  cbseDeleted: true,
   topics: [
     { id: "t1", name: "Euclid's Definitions and Axioms", questionCount: 10 },
     { id: "t2", name: "Euclid's Five Postulates",        questionCount: 10 },

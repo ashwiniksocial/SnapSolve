@@ -2,7 +2,7 @@ import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
   id: "ch2",
-  name: "Introduction to Polynomials",
+  name: "Introduction to Linear Polynomials",
   classNum: 9,
   subject: "Mathematics",
   topics: [

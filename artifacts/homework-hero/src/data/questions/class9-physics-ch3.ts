@@ -5,6 +5,7 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Gravitation",
   classNum: 9,
   subject: "Physics",
+  cbseDeleted: true,
   topics: [
     { id: "t1", name: "Universal Law of Gravitation",              questionCount: 12 },
     { id: "t2", name: "Free Fall and Acceleration due to Gravity", questionCount: 12 },

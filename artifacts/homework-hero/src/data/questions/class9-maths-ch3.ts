@@ -2,7 +2,7 @@ import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
   id: "ch3",
-  name: "Coordinate Geometry",
+  name: "Orienting Yourself: The Use of Coordinates",
   classNum: 9,
   subject: "Mathematics",
   topics: [

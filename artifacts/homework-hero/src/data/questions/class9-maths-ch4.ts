@@ -1,7 +1,7 @@
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
-  id: "ch4", name: "Linear Equations in Two Variables",
+  id: "ch4", name: "I'm Up and Down, and Round and Round",
   classNum: 9, subject: "Mathematics",
   topics: [
     { id: "t1", name: "Introduction and Standard Form",   questionCount: 10 },

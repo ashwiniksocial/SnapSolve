@@ -3,6 +3,7 @@ import type { Question, ChapterMeta } from "./types";
 export const CHAPTER_META: ChapterMeta = {
   id: "ch7", name: "Triangles",
   classNum: 9, subject: "Mathematics",
+  cbseDeleted: true,
   topics: [
     { id: "t1", name: "Congruence of Triangles",           questionCount: 10 },
     { id: "t2", name: "SAS and ASA Congruence",            questionCount: 10 },

@@ -3,6 +3,7 @@ import type { Question, ChapterMeta } from "./types";
 export const CHAPTER_META: ChapterMeta = {
   id: "ch10", name: "Circles",
   classNum: 9, subject: "Mathematics",
+  cbseDeleted: true,
   topics: [
     { id: "t1", name: "Circles and Their Parts",    questionCount: 10 },
     { id: "t2", name: "Chord Properties",            questionCount: 10 },
