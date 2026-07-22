@@ -1,0 +1,132 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+PERMANENT CURRICULUM AUTHORITY POLICY.
+
+This is a permanent governance rule for the entire SnapSolve codebase.
+
+Read carefully.
+
+==================================================
+CURRICULUM AUTHORITY POLICY
+==================================================
+
+Effective immediately, the uploaded official NCERT and CBSE textbook PDFs are the ONLY source of truth for curriculum.
+
+The following are authoritative ONLY if they exactly match the uploaded official PDFs:
+
+• curriculum structure
+• subject names
+• subject grouping
+• chapter names
+• chapter numbering
+• chapter order
+• topic boundaries
+• learning scope
+• student-facing curriculum
+
+==================================================
+LEGACY CONTENT POLICY
+==================================================
+
+Everything created before the adoption of the uploaded official NCERT/CBSE PDFs is permanently classified as LEGACY.
+
+This includes, but is not limited to:
+
+• curriculum assumptions
+• subject names
+• chapter names
+• chapter mappings
+• adapters
+• metadata
+• question-bank mappings
+• AI-generated curriculum
+• manually created curriculum
+• previous Replit implementations
+• previous ChatGPT implementations
+
+Legacy content has ZERO authority in determining the current curriculum.
+
+==================================================
+QUESTION BANK POLICY
+==================================================
+
+Legacy question banks are NOT deleted.
+
+They become candidate repositories only.
+
+A legacy question may be reused ONLY IF:
+
+1. it is individually verified against the uploaded official NCERT/CBSE PDFs;
+
+2. it belongs to the exact official subject;
+
+3. it belongs to the exact official chapter;
+
+4. it belongs to the correct topic within that chapter;
+
+5. it does not introduce concepts outside the official scope.
+
+If any doubt exists,
+
+DO NOT REUSE.
+
+Create new content instead.
+
+==================================================
+PRE-BUILD GATE
+==================================================
+
+Before creating ANY:
+
+• chapter
+• question bank
+• explanation
+• adapter
+• registration
+• analytics mapping
+• UI curriculum entry
+• practice module
+• revision module
+• exam module
+
+Replit MUST first verify against the uploaded official PDFs:
+
+✓ subject
+✓ chapter
+✓ title
+✓ numbering
+✓ order
+✓ topic scope
+
+Only after verification may implementation begin.
+
+==================================================
+CONFLICT RESOLUTION
+==================================================
+
+If legacy content conflicts with the uploaded official PDFs,
+
+the uploaded official PDFs ALWAYS WIN.
+
+Never preserve legacy assumptions.
+
+==================================================
+IMPLEMENTATION
+==================================================
+
+1. Save this permanently as a governance document inside the repository.
+
+2. Treat it as a mandatory rule for every future implementation.
+
+3. Do NOT modify any existing code now.
+
+4. Do NOT perform another audit.
+
+5. Simply record this as the permanent development policy.
+
+Return only:
+
+- governance file created
+- location
+- confirmation that all future curriculum work will follow this policy

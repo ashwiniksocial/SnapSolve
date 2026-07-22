@@ -1,0 +1,256 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+COMPLETE FOUR VERIFIED CLASS 9 PLACEHOLDER CHAPTERS.
+
+SMALLEST SAFE CONTENT PATCH ONLY.
+
+DO NOT MODIFY:
+
+- architecture
+- curriculum structure
+- chapter order
+- routing
+- UI
+- AI pipeline
+- teaching engine
+- existing verified chapters
+- existing question IDs
+- Classes 6–8
+
+==================================================
+OFFICIAL SOURCE OF TRUTH
+==================================================
+
+Use only these saved official NCERT PDFs:
+
+Mathematics:
+- iemh102.pdf
+- iemh106.pdf
+
+Science:
+- iesc111.pdf
+- iesc113.pdf
+
+The exact official chapter titles are:
+
+1. iemh102
+   Chapter 2
+   Introduction to Linear Polynomials
+
+2. iemh106
+   Chapter 6
+   Measuring Space: Perimeter and Area
+
+3. iesc111
+   Chapter 11
+   Reproduction: How Life Continues
+
+4. iesc113
+   Chapter 13
+   Earth as a System: Energy, Matter, and Life
+
+Correct the existing Science Chapter 11 placeholder title from
+“Reproduction in Plants and Animals”
+to the exact official title:
+
+“Reproduction: How Life Continues”
+
+Do not change any other chapter title unless the PDF itself proves it is wrong.
+
+==================================================
+BUILD ORDER
+==================================================
+
+Build and validate ONE chapter at a time:
+
+1. iemh102
+2. iemh106
+3. iesc111
+4. iesc113
+
+Do not proceed to the next chapter until the current chapter passes validation.
+
+==================================================
+FOR EACH CHAPTER
+==================================================
+
+1. Read the complete official PDF.
+
+2. Extract:
+- official sections
+- subtopics
+- definitions
+- concepts
+- formulas
+- examples
+- activities
+- diagrams that affect conceptual understanding
+- exercise patterns
+
+3. Create a strong question bank suitable for Class 9.
+
+Target:
+- 75 questions per chapter
+
+Use approximately:
+- 25 Easy
+- 30 Medium
+- 20 Hard
+
+Include a balanced mix of:
+- MCQ
+- concept questions
+- application questions
+- numerical questions where applicable
+- assertion/reasoning where suitable
+- case-based questions where suitable
+- common misconception questions
+- exam-style questions
+
+Do not create questions outside the scope of the PDF.
+
+4. Every question must include the existing required SnapSolve fields:
+- unique ID
+- chapter ID
+- topic
+- difficulty
+- question type
+- question
+- options where applicable
+- correct answer
+- detailed explanation
+- teaching steps
+- common mistake or misconception where supported by the existing format
+
+5. Explanations must:
+- teach the weakest student
+- be clear and descriptive
+- show each mathematical step
+- explain why the answer is correct
+- explain why incorrect options are wrong where applicable
+- avoid unsupported facts
+- follow the existing SnapSolve question schema exactly
+
+6. Replace the 0-question placeholder with the completed bank.
+
+7. Preserve:
+- official chapter number
+- official PDF code
+- fixed display order
+- existing internal domain
+- existing student-facing route behaviour
+
+8. Remove “Content being prepared” only after the chapter contains validated questions.
+
+==================================================
+SPECIAL CONTENT CHECKS
+==================================================
+
+iemh102:
+- linear polynomials only
+- do not include higher-degree polynomial scope unless explicitly present in the PDF
+- do not include Remainder Theorem or Factor Theorem unless the PDF explicitly teaches them
+
+iemh106:
+- cover the complete perimeter and area scope from the PDF
+- include diagrams, units, conversions and application problems where present
+
+iesc111:
+- follow the exact scope of “Reproduction: How Life Continues”
+- cover both plant and animal reproduction only as presented in the PDF
+- do not import unrelated legacy Biology content
+
+iesc113:
+- cover the complete Earth-system scope from the PDF
+- accurately handle interactions among energy, matter and life
+- do not add unsupported advanced environmental science content
+
+==================================================
+VALIDATION PER CHAPTER
+==================================================
+
+Run checks for:
+
+- official title exact match
+- official PDF code
+- 75 questions
+- no duplicate IDs
+- no duplicate question text
+- all questions assigned to a valid topic
+- difficulty totals correct
+- question-type totals reported
+- every correct answer present
+- every explanation present
+- no unrelated legacy content
+- placeholder flag removed
+- chapter clickable
+- static display order unchanged
+- TypeScript clean
+
+Inspect at least:
+- first 10 questions
+- 10 distributed questions
+- all hard questions
+- all numerical questions
+- all assertion/reasoning questions
+
+==================================================
+FINAL VALIDATION
+==================================================
+
+After all four chapters are complete:
+
+Confirm student-facing totals:
+
+Mathematics:
+- 8 visible chapters
+- 0 placeholders
+
+Science:
+- 13 visible chapters
+- 0 placeholders
+
+Also confirm:
+- no archived mismatched bank is exposed
+- no duplicate visible chapter IDs
+- no duplicate React keys
+- chapter order remains fixed
+- existing 88 curriculum checks still pass
+- update the validation script only where necessary to verify the new banks
+- frontend TypeScript passes
+- API TypeScript passes
+
+Do not perform another broad repository audit.
+
+==================================================
+RETURN ONLY
+==================================================
+
+For each chapter:
+
+1. Official title
+2. Topics created
+3. Question count
+4. Easy / Medium / Hard count
+5. Question-type breakdown
+6. Files created or modified
+7. Duplicate-ID result
+8. Content-scope validation
+9. TypeScript result
+10. Student-facing status
+
+Then return:
+
+11. Mathematics visible chapters and placeholders
+12. Science visible chapters and placeholders
+13. Curriculum validation result
+14. Remaining content gaps
+
+FINAL STATUS:
+
+CLASS 9 MATHEMATICS AND SCIENCE CONTENT COMPLETE
+
+or
+
+BLOCKED
