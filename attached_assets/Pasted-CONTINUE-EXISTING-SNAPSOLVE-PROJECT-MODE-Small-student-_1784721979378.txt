@@ -1,0 +1,79 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+Small student-facing Science numbering correction only.
+
+LOCKED RULE:
+Class 9 Science is one student-facing subject.
+
+Physics, Chemistry and Biology are internal domains only.
+Their chapter numbering must NOT restart separately in the student UI.
+
+CURRENT DEFECT:
+Science currently displays chapter numbers like:
+
+Physics: 1, 2, 3, 4, 5
+Chemistry: 1, 2, 3, 4
+Biology: 1, 2, 3, 4
+
+This is confusing and does not follow the single official NCERT Science textbook sequence.
+
+REQUIRED:
+
+1. Read the existing official Class 9 Science curriculum gateway / canonical chapter sequence already stored in the project.
+
+2. Assign every active Science chapter its correct continuous student-facing display number according to the official NCERT textbook order.
+
+3. Use a separate field such as:
+   displayChapterNumber
+   or the existing equivalent.
+
+4. Preserve all existing internal chapter IDs:
+   - phy-...
+   - chem-...
+   - bio-...
+
+5. Do NOT rename question IDs.
+6. Do NOT alter chapter content.
+7. Do NOT change question registration.
+8. Do NOT change the internal Physics/Chemistry/Biology domain values.
+9. Do NOT reorder chapters based merely on domain grouping.
+10. Do NOT use repository file order as the official chapter order.
+
+The Practice page must display one continuous sequence:
+
+Ch. 1
+Ch. 2
+Ch. 3
+...
+through the final active Science chapter,
+
+exactly matching the official canonical textbook order.
+
+IMPORTANT:
+Do not assume that all Physics chapters come first, followed by Chemistry and Biology. Use the official textbook sequence.
+
+VALIDATE:
+
+- Science chapter numbers are continuous.
+- No repeated chapter numbers.
+- Chapter titles match their official numbers.
+- Mathematics numbering remains unchanged.
+- Science chapter IDs and questions remain intact.
+- Mathematics ↔ Science switching still works.
+- One Physics, Chemistry and Biology chapter opens correctly.
+- TypeScript passes.
+- Production build passes.
+
+RETURN ONLY:
+
+- official Science chapter sequence used
+- display numbering before/after
+- files modified
+- confirmation internal IDs were unchanged
+- chapter-open result
+- TypeScript result
+- build result
+- final status:
+
+CLASS 9 SCIENCE OFFICIAL CHAPTER NUMBERING — PASS or BLOCKED

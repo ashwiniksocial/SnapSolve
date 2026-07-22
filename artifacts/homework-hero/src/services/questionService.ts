@@ -48,14 +48,45 @@ export async function preloadQBank(classNum: number): Promise<void> {
 /** Internal domain labels that make up the student-facing "Science" subject. */
 const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology"];
 
+/**
+ * Official NCERT Class 9 Science student-facing chapter display sequence.
+ * Key: internal chapterId — Value: 1-based continuous display number shown in the student UI.
+ *
+ * Source: NCERT Class 9 Science textbook official interleaved chapter order.
+ * Chemistry chapters (Ch.1–3) → Biology chapters (Ch.4–6) → Physics chapters (Ch.7–11)
+ * → Biology conclusion (Ch.12 "Why Do We Fall Ill?").
+ *
+ * cbseDeleted chapters (chem-ch01 "Matter in Our Surroundings") are excluded;
+ * the display count starts at 1 for the first active chapter.
+ */
+export const SCIENCE_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
+  "chem-ch02": 1,   // Exploring Mixtures and Their Separation
+  "chem-ch03": 2,   // Atoms and Molecules
+  "chem-ch04": 3,   // Structure of the Atom
+  "bio-ch01":  4,   // The Fundamental Unit of Life
+  "bio-ch02":  5,   // Tissues
+  "bio-ch03":  6,   // Diversity in Living Organisms
+  "phy-ch1":   7,   // Motion
+  "phy-ch2":   8,   // Force and Laws of Motion
+  "phy-ch3":   9,   // Gravitation
+  "phy-ch4":  10,   // Work, Energy and Simple Machines
+  "phy-ch5":  11,   // Sound
+  "bio-ch04": 12,   // Why Do We Fall Ill?
+};
+
 /** All chapters for a given class + subject.
  *  "Science" resolves to the union of Physics, Chemistry, and Biology chapters
- *  (internal domain labels — never shown directly to students).
+ *  (internal domain labels — never shown directly to students), sorted in the
+ *  official NCERT textbook interleaved sequence.
  */
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   if (subject === "Science") {
-    return ALL_CHAPTERS.filter(
+    const scienceChapters = ALL_CHAPTERS.filter(
       (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject) && !c.cbseDeleted
+    );
+    // Sort by official NCERT textbook display order; unrecognised IDs fall to the end.
+    return scienceChapters.sort(
+      (a, b) => (SCIENCE_DISPLAY_ORDER_CLASS9[a.id] ?? 999) - (SCIENCE_DISPLAY_ORDER_CLASS9[b.id] ?? 999)
     );
   }
   return ALL_CHAPTERS.filter(
@@ -152,7 +183,14 @@ export function getDifficultyBreakdown(filter: QuestionFilter): DifficultyCount 
 export interface ChapterStats {
   chapterId: string;
   chapterName: string;
+  /** Raw chapter number extracted from the chapter ID (unreliable for Science — use displayChapterNumber instead). */
   chapterNumber: number;
+  /**
+   * Student-facing continuous display number for Science chapters, following the
+   * official NCERT textbook interleaved order.  Always defined for active Science chapters.
+   * For Mathematics / Economics this is undefined — use chapterNumber instead.
+   */
+  displayChapterNumber?: number;
   totalQuestions: number;
   byDifficulty: DifficultyCount;
   byType: Record<QuestionType, number>;
@@ -176,6 +214,9 @@ export function getAllChapterStats(classNum: number, subject: string): ChapterSt
       chapterId: ch.id,
       chapterName: ch.name,
       chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
+      displayChapterNumber: subject === "Science"
+        ? SCIENCE_DISPLAY_ORDER_CLASS9[ch.id]
+        : undefined,
       totalQuestions: qs.length,
       byDifficulty: getDifficultyBreakdown({ classNum, subject: chSubject, chapterId: ch.id }),
       byType,

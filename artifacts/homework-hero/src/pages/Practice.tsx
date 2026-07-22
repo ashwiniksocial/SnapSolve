@@ -693,7 +693,9 @@ export default function Practice() {
             </div>
             <div className="divide-y divide-slate-100">
               {weakChapters.map((cs) => {
-                const chNum = cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const chNum = cs.displayChapterNumber !== undefined
+                  ? String(cs.displayChapterNumber)
+                  : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
                 return (
                   <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`} className="px-4 py-3 flex items-center gap-3">
                     <div className="flex-1 min-w-0">
@@ -791,7 +793,9 @@ export default function Practice() {
                 const status     = getChapterStatus(cs.accuracy, cs.attempted, cs.completionPct);
                 const isSelected = selectedChapterId === cs.chapterId;
                 const isOpen     = isSelected && drilldownOpen;
-                const chNum      = cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const chNum      = cs.displayChapterNumber !== undefined
+                  ? String(cs.displayChapterNumber)
+                  : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
 
                 return (
                   <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`}>

@@ -30,4 +30,10 @@ const RAW: QuestionV2Like[] = [
 ];
 
 export const CLASS9_CHEMISTRY_QUESTIONS: Question[]    = adaptV2Questions(RAW);
-export const CLASS9_CHEMISTRY_CHAPTERS:  ChapterMeta[] = buildChapterMeta(CLASS9_CHEMISTRY_QUESTIONS);
+
+// Mark chem-ch01 (Matter in Our Surroundings) as cbseDeleted — it was removed from
+// the CBSE board exam syllabus in 2022-23 (confirmed in the curriculum gateway).
+// Questions are preserved in CLASS9_CHEMISTRY_QUESTIONS for archival; the chapter
+// is hidden from the student-facing Science chapter list via getChapters().
+export const CLASS9_CHEMISTRY_CHAPTERS: ChapterMeta[] = buildChapterMeta(CLASS9_CHEMISTRY_QUESTIONS)
+  .map((ch) => ch.id === "chem-ch01" ? { ...ch, cbseDeleted: true as const } : ch);
