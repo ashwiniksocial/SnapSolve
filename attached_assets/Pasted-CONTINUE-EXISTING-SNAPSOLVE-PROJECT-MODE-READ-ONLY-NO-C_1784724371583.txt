@@ -1,0 +1,242 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+READ-ONLY.
+NO CODE MODIFICATIONS.
+NO FILE MODIFICATIONS.
+NO COMMITS.
+NO BUILDS.
+
+THIS IS A FOUNDER RECOVERY GATE.
+
+================================================
+
+STOP ALL IMPLEMENTATION.
+
+Do NOT modify anything until this gate is completed.
+
+================================================
+
+OBJECTIVE
+
+Create the permanent CANONICAL CURRICULUM REGISTRY
+for SnapSolve.
+
+This registry becomes the ONLY source of truth
+for all future development.
+
+================================================
+
+READ FIRST
+
+Read ONLY:
+
+AGENTS.md
+
+PROJECT_MEMORY
+
+PROJECT_STATUS
+
+DECISION_LOG
+
+CHECKPOINT_GATEWAYS
+
+ACADEMIC_LIBRARY_INDEX
+
+SYLLABUS_FREEZE
+
+SOURCE_EXTRACTION_TRACKER
+
+Curriculum Gateway
+
+Question Registry
+
+================================================
+
+OFFICIAL SOURCES ONLY
+
+Use ONLY:
+
+1.
+Current NCERT textbook portal
+
+2.
+Current uploaded official NCERT textbook PDFs already used by the project
+
+Never use repository assumptions.
+
+Never infer from filenames.
+
+Never infer from existing code.
+
+================================================
+
+FOR EVERY SUBJECT
+
+Produce a table.
+
+Columns:
+
+Official Subject
+
+Official Textbook
+
+Current Edition
+
+Official Chapter Count
+
+Official Chapter Numbers
+
+Official Chapter Titles
+
+Official PDF Code
+
+Present In Repository?
+
+Present In Question Bank?
+
+Present In Registry?
+
+Student Visible?
+
+Question Count
+
+AI Lesson Ready?
+
+Status
+
+================================================
+
+Then produce
+
+DIFFERENCE REPORT
+
+Official
+
+vs
+
+Current SnapSolve
+
+================================================
+
+Classify every difference as
+
+CORRECT
+
+OUTDATED
+
+MISSING
+
+EXTRA
+
+WRONG TITLE
+
+WRONG ORDER
+
+WRONG VISIBILITY
+
+WRONG CHAPTER COUNT
+
+QUESTION BANK MISSING
+
+QUESTION BANK OBSOLETE
+
+================================================
+
+Then produce
+
+DEPENDENCY REPORT
+
+If Mathematics changes
+
+Which files change?
+
+If Science changes
+
+Which files change?
+
+Estimate
+
+LOW
+
+MEDIUM
+
+HIGH
+
+================================================
+
+Then produce
+
+SAFE EXECUTION PLAN
+
+Phase 1
+
+Minimum changes
+
+Phase 2
+
+Validation
+
+Phase 3
+
+Freeze
+
+================================================
+
+IMPORTANT
+
+Do NOT modify
+
+Practice
+
+Question bank
+
+Curriculum
+
+Gateway
+
+UI
+
+Routes
+
+Sorting
+
+Nothing.
+
+This is REPORT ONLY.
+
+================================================
+
+RETURN ONLY
+
+1.
+Canonical Mathematics Registry
+
+2.
+Canonical Science Registry
+
+3.
+Difference Report
+
+4.
+Dependency Report
+
+5.
+Lowest-risk execution plan
+
+6.
+Estimated number of files requiring modification
+
+7.
+Estimated implementation time
+
+8.
+Estimated regression risk
+
+FINAL STATUS
+
+READY FOR IMPLEMENTATION
+
+or
+
+BLOCKED
