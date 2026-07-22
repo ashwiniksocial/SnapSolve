@@ -1,0 +1,62 @@
+{
+  "$schema": "https://snapsolve.internal/curriculum-manifest/v1",
+  "note": "Populate sourceFile and set sourceStatus to 'available' only after the official PDF or extracted text is present in curriculum/sources/. Do NOT invent or assume values.",
+  "chapters": [
+    {
+      "curriculumVersion": null,
+      "sourceAuthority": "NCERT",
+      "board": "CBSE",
+      "class": 9,
+      "subject": "Mathematics",
+      "chapterNumber": null,
+      "chapterTitle": "Measuring Space: Perimeter and Area",
+      "chapterId": "iemh106",
+      "questionBankFile": "artifacts/homework-hero/src/data/questions/class9-maths-ch18.ts",
+      "sourceFile": null,
+      "sourceStatus": "pending",
+      "lastVerified": null
+    },
+    {
+      "curriculumVersion": null,
+      "sourceAuthority": "NCERT",
+      "board": "CBSE",
+      "class": 9,
+      "subject": "Mathematics",
+      "chapterNumber": null,
+      "chapterTitle": "Polynomials",
+      "chapterId": "iemh102",
+      "questionBankFile": "artifacts/homework-hero/src/data/questions/class9-maths-iemh102.ts",
+      "sourceFile": null,
+      "sourceStatus": "pending",
+      "lastVerified": null
+    },
+    {
+      "curriculumVersion": null,
+      "sourceAuthority": "NCERT",
+      "board": "CBSE",
+      "class": 9,
+      "subject": "Science",
+      "chapterNumber": null,
+      "chapterTitle": "Reproduction: How Life Continues",
+      "chapterId": "iesc111",
+      "questionBankFile": "artifacts/homework-hero/src/data/questions/class9-science-placeholders.ts",
+      "sourceFile": null,
+      "sourceStatus": "pending",
+      "lastVerified": null
+    },
+    {
+      "curriculumVersion": null,
+      "sourceAuthority": "NCERT",
+      "board": "CBSE",
+      "class": 9,
+      "subject": "Earth Science",
+      "chapterNumber": null,
+      "chapterTitle": "Earth as a System: Energy, Matter and Life",
+      "chapterId": "iesc113",
+      "questionBankFile": "artifacts/homework-hero/src/data/questions/class9-science-placeholders.ts",
+      "sourceFile": null,
+      "sourceStatus": "pending",
+      "lastVerified": null
+    }
+  ]
+}

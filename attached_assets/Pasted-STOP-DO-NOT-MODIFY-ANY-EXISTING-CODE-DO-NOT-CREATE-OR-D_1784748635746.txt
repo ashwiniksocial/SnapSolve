@@ -1,0 +1,116 @@
+STOP.
+
+DO NOT MODIFY ANY EXISTING CODE.
+
+DO NOT CREATE OR DELETE ANY QUESTIONS.
+
+DO NOT PERFORM ANY CURRICULUM VERIFICATION.
+
+==================================================
+OBJECTIVE
+==================================================
+
+Establish a permanent Curriculum Source of Truth inside the SnapSolve project.
+
+No curriculum work is permitted until this is complete.
+
+==================================================
+TASK 1
+==================================================
+
+Create a folder:
+
+/curriculum
+
+Inside it create:
+
+/curriculum/README.md
+
+Explain that this folder is the permanent curriculum authority for SnapSolve.
+
+==================================================
+TASK 2
+==================================================
+
+Inside /curriculum create:
+
+manifest.json
+
+Fields:
+
+- curriculumVersion
+- sourceAuthority
+- board
+- class
+- subject
+- chapterNumber
+- chapterTitle
+- sourceFile
+- sourceStatus
+- lastVerified
+
+Populate only the schema if the official source files are not yet available.
+
+Do NOT invent values.
+
+==================================================
+TASK 3
+==================================================
+
+Create CURRICULUM_POLICY.md
+
+State:
+
+1. Uploaded official NCERT/CBSE curriculum files are the ONLY curriculum authority.
+
+2. Legacy curriculum has ZERO authority.
+
+3. Legacy question banks are candidate repositories only.
+
+4. Questions may be reused only after verification against the official curriculum files.
+
+5. If official curriculum files are unavailable or unreadable:
+
+STOP.
+
+Do not generate.
+
+Do not verify.
+
+Do not assume.
+
+==================================================
+TASK 4
+==================================================
+
+Search the entire repository.
+
+Report whether any official curriculum PDFs, extracted text files, markdown files or JSON curriculum files already exist.
+
+Return:
+
+- filename
+- location
+- readable (YES/NO)
+
+Do NOT download anything.
+
+Do NOT fetch anything from the internet.
+
+==================================================
+TASK 5
+==================================================
+
+If no official curriculum source exists in the repository,
+
+STOP.
+
+Do nothing further.
+
+==================================================
+
+Return only:
+
+1. Files created
+2. Existing curriculum files found
+3. Whether the project is READY to resume curriculum development
