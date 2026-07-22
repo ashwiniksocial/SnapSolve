@@ -5,6 +5,7 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Introduction to Linear Polynomials",
   classNum: 9,
   subject: "Mathematics",
+  cbseDeleted: true,
   topics: [
     { id: "t1", name: "Introduction to Polynomials", questionCount: 10 },
     { id: "t2", name: "Zeroes of a Polynomial",      questionCount: 10 },

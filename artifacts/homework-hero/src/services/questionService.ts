@@ -75,9 +75,9 @@ export const SCIENCE_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
  * Key: internal chapterId — Value: 1-based display number (Ch.1–8).
  */
 export const MATHS_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
-  "ch3":  1,  // iemh101 — Orienting Yourself: The Use of Coordinates
-  "ch2":  2,  // iemh102 — Introduction to Linear Polynomials
-  "ch1":  3,  // iemh103 — The World of Numbers
+  "ch3":    1,  // iemh101 — Orienting Yourself: The Use of Coordinates
+  "iemh102": 2, // iemh102 — Introduction to Linear Polynomials (placeholder; ch2 bank is general polynomials, archived)
+  "ch1":    3,  // iemh103 — The World of Numbers
   "ch16": 4,  // iemh104 — Exploring Algebraic Identities
   "ch4":  5,  // iemh105 — I'm Up and Down, and Round and Round
   "ch18": 6,  // iemh106 — Measuring Space: Perimeter and Area

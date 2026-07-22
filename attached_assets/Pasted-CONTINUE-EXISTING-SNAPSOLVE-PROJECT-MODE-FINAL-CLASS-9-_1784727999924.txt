@@ -1,0 +1,199 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+FINAL CLASS 9 LAUNCH CONTENT-INTEGRITY CHECK.
+
+NO ARCHITECTURE CHANGES.
+NO NEW REGISTRY.
+NO UI REDESIGN.
+NO AI PIPELINE CHANGES.
+NO NEW QUESTION AUTHORING.
+NO CLASSES 6–8.
+NO BROAD AUDIT.
+
+OBJECTIVE:
+Prove that every visible Class 9 Mathematics and Science chapter contains
+questions that genuinely belong to its official current NCERT chapter.
+
+A correct chapter title or chapter number alone is NOT sufficient.
+
+==================================================
+CRITICAL CONCERN
+==================================================
+
+Recent changes renamed and remapped legacy chapter files.
+
+Examples requiring specific investigation:
+
+- Mathematics official Chapter 1 is currently mapped to internal ch3.
+- Mathematics official Chapter 8 is currently mapped to internal ch17.
+- Earlier reports associated some of these internal files with different topics.
+- Existing files may have been renamed without their questions matching the
+  new official chapter.
+
+Do not trust filenames, current titles, comments or display maps.
+
+Inspect the actual question content and metadata.
+
+==================================================
+SOURCE OF TRUTH
+==================================================
+
+Use the official uploaded NCERT PDFs:
+
+Mathematics:
+iemh101.pdf through iemh108.pdf
+
+Science:
+iesc101.pdf through iesc113.pdf
+
+Use only their actual chapter content and extracted topic structure.
+
+==================================================
+STEP 1 — MATHEMATICS CONTENT MATCH
+==================================================
+
+For each of the 8 visible Mathematics chapters, report:
+
+- official chapter number
+- official PDF code
+- official title
+- official major topics
+- current internal chapter ID
+- original internal chapter title before recent renaming
+- current question count
+- concepts actually covered by the questions
+- MATCH / PARTIAL MATCH / MISMATCH / PLACEHOLDER
+
+Inspect:
+- every question’s concept/topic metadata;
+- at least the first 10 questions;
+- at least 10 distributed/random questions;
+- all questions where metadata conflicts with the official chapter.
+
+A chapter is MATCH only when its actual questions belong to that official
+chapter.
+
+Do not approve based only on renamed CHAPTER_META.
+
+==================================================
+STEP 2 — SCIENCE CONTENT MATCH
+==================================================
+
+For each of the 13 visible Science chapters, report:
+
+- official chapter number
+- official PDF code
+- official title
+- internal domain
+- internal chapter ID
+- original internal title
+- current question count
+- concepts actually covered
+- MATCH / PARTIAL MATCH / MISMATCH / PLACEHOLDER
+
+Confirm especially:
+
+- Science Chapter 1 contains the concepts from iesc101.
+- Science Chapters 11 and 13 are correctly shown as pending if they have no
+  question banks.
+- Gravitation and Why Do We Fall Ill? are not leaking into another official
+  chapter through remapping.
+- No old question bank has merely been renamed to a new chapter.
+
+==================================================
+STEP 3 — SMALLEST SAFE CORRECTION
+==================================================
+
+For every MISMATCH:
+
+1. Do not rewrite or delete questions.
+2. Do not rename the mismatched question bank again.
+3. Check whether another existing internal chapter genuinely matches the
+   official chapter.
+4. If a genuine match exists:
+   - map that existing bank to the correct official display chapter;
+   - preserve all question IDs;
+   - preserve the internal solution domain.
+5. If no genuine match exists:
+   - replace the incorrect student-facing mapping with a 0-question
+     “Content being prepared” placeholder.
+6. Preserve mismatched legacy content internally but keep it outside the
+   current student-facing Class 9 scope.
+
+For PARTIAL MATCH:
+- expose only questions that genuinely match the official chapter;
+- do not include unrelated questions merely to increase the count.
+
+==================================================
+STEP 4 — STATIC ORDER
+==================================================
+
+Do not alter the existing fixed official ordering:
+
+Mathematics:
+iemh101 → iemh108
+
+Science:
+iesc101 → iesc113
+
+Usage, solved status, mastery, progress and recent activity must never reorder
+chapter cards.
+
+==================================================
+STEP 5 — VALIDATION
+==================================================
+
+Update the existing launch validation so it checks:
+
+- 8 visible Mathematics chapters;
+- 13 visible Science chapters;
+- continuous official numbering;
+- no duplicate visible chapter IDs;
+- no duplicate React keys;
+- displayed total equals rendered cards;
+- placeholders have exactly 0 questions and are non-clickable;
+- every non-placeholder chapter has a verified content-match record;
+- no MISMATCH chapter is clickable;
+- chapter order remains static after simulated activity.
+
+Run:
+
+- targeted Class 9 curriculum validation;
+- targeted content-match validation;
+- TypeScript;
+- production build.
+
+In authenticated Preview:
+
+- open each available Mathematics chapter;
+- confirm its visible questions match the displayed chapter;
+- open at least one Chemistry, Biology and Physics Science chapter;
+- confirm their questions match;
+- confirm pending chapters cannot be opened;
+- solve one question and confirm the order remains unchanged.
+
+==================================================
+RETURN ONLY
+==================================================
+
+1. Mathematics 8-row content-match table
+2. Science 13-row content-match table
+3. Exact mismatches found
+4. Exact remappings corrected
+5. Chapters converted to placeholders
+6. Questions excluded because they were unrelated
+7. Static-order validation
+8. Visible chapter counts
+9. Authenticated Preview result
+10. Files modified
+11. TypeScript result
+12. Production build result
+13. Remaining content gaps
+
+FINAL STATUS:
+
+CLASS 9 CHAPTER-QUESTION CONTENT INTEGRITY — PASS or BLOCKED
+
+Do not claim PASS merely because titles, chapter counts, TypeScript or build
+are correct.
