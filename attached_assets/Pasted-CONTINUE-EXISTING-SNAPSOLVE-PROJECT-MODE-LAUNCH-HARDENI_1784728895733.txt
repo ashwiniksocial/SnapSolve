@@ -1,0 +1,189 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+LAUNCH HARDENING.
+
+THE CLASS 9 CURRICULUM STRUCTURE IS NOW FROZEN.
+
+DO NOT:
+
+- modify curriculum structure
+- rename chapters
+- change mappings
+- change display order
+- change question IDs
+- redesign architecture
+- create new registries
+- touch Classes 6–8
+
+==================================================
+
+OBJECTIVE
+
+Prepare SnapSolve for founder beta.
+
+==================================================
+
+STEP 1
+
+Freeze the current curriculum implementation.
+
+Prevent accidental edits by documenting the frozen Class 9 chapter mapping.
+
+==================================================
+
+STEP 2
+
+Search the entire repository for every TODO, FIXME, placeholder,
+temporary implementation, console.log, debug output,
+development bypass, mock data, dummy data,
+experimental flags and unfinished launch code.
+
+Produce a report.
+
+Automatically remove only items that are unquestionably safe to remove.
+
+Never remove anything affecting authentication,
+AI solving,
+question loading,
+curriculum,
+or teaching.
+
+==================================================
+
+STEP 3
+
+Run a launch-quality audit.
+
+Check:
+
+Practice
+
+Revision
+
+Exam
+
+Analytics
+
+Progress
+
+History
+
+Profile
+
+Navigation
+
+Question loading
+
+Teaching modes
+
+Bookmarks
+
+Needs Review
+
+Regenerate
+
+Question switching
+
+==================================================
+
+STEP 4
+
+Find only genuine launch blockers.
+
+Classify each as:
+
+P0
+(student cannot continue)
+
+P1
+(wrong educational behaviour)
+
+P2
+(major UX)
+
+P3
+(minor polish)
+
+==================================================
+
+STEP 5
+
+Fix ONLY P0 and P1.
+
+Do not fix P2 or P3.
+
+==================================================
+
+STEP 6
+
+Measure performance.
+
+Report:
+
+Login time
+
+Initial Practice load
+
+Question load
+
+AI lesson load
+
+Question switch
+
+Regenerate
+
+Revision load
+
+Exam load
+
+Memory usage
+
+Largest bundle
+
+Slowest page
+
+==================================================
+
+STEP 7
+
+Run
+
+TypeScript
+
+Production validation
+
+Existing launch validation
+
+==================================================
+
+RETURN ONLY
+
+1.
+P0 issues
+
+2.
+P1 issues
+
+3.
+Issues fixed
+
+4.
+Performance report
+
+5.
+Files modified
+
+6.
+TypeScript
+
+7.
+Launch validation
+
+FINAL STATUS
+
+READY FOR FOUNDER BETA
+
+or
+
+BLOCKED

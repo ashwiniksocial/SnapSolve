@@ -469,28 +469,11 @@ export async function solveWithOpenAI(
   question:    string,
   onProgress?: (message: string, percent: number) => void,
 ): Promise<AIResponse> {
-  console.log(`[PIPELINE:B1] solveWithOpenAI() — subject="${subject}" q="${question.slice(0, 80)}"`);
-
   // ── Dev audit path: bypass API key, return hardcoded fixture ──────────────
   // Must be checked BEFORE the min-length guard.
   if (question.trim() === "[AUDIT]") {
-    console.log("[PIPELINE:B2] AUDIT MODE — calling GET /api/devLesson (no API key needed)");
     const raw = await callDevLesson();
-    console.log("[PIPELINE:B3-RAW] devLesson raw JSON:", JSON.stringify(raw, null, 2));
     const mapped = toAIResponse(raw, subject, question.trim());
-    console.log(`[PIPELINE:B4-MAPPED] AIResponse after toAIResponse():
-  source   = "${mapped.source}"
-  topic    = "${mapped.topic}"
-  lesson   = ${!!mapped.lesson}
-  keyConcepts = [${mapped.lesson?.keyConcepts.join(", ")}]
-  guidedReasoning steps = ${mapped.lesson?.guidedReasoning.length}
-  confusionPoints = ${mapped.lesson?.confusionPoints.length}
-  commonMistakes  = ${mapped.lesson?.commonMistakes.length}
-  practiceQuestion present = ${!!mapped.lesson?.practiceQuestion.question}
-  confidenceCheck present  = ${!!mapped.lesson?.confidenceCheck.question}
-  retrievalPractice items  = ${mapped.lesson?.retrievalPractice.length}
-  rememberThese items      = ${mapped.lesson?.rememberThese.length}
-  confidenceBuilder present = ${!!mapped.lesson?.confidenceBuilder}`);
     return mapped;
   }
 
@@ -500,40 +483,19 @@ export async function solveWithOpenAI(
   // Client-side cache hit → instant, no network
   const cached = getCachedSolution(subject, question, mode);
   if (cached) {
-    console.log(`[PIPELINE:B2] HIT — localStorage cache (mode=${mode}) → returning cached AIResponse, no backend call`);
     return { ...cached, detectedQuestion: question };
   }
-  console.log(`[PIPELINE:B2] MISS — localStorage cache empty (mode=${mode}) → calling backend POST /api/solveQuestion`);
 
   // Build student context for personalised AI response
   const studentContext = buildStudentContext(subject);
-  console.log(`[PIPELINE:B3] studentContext built — length=${studentContext?.length ?? 0} chars`);
 
   // Backend call — passes mode so the server generates only the required sections
-  console.log("[PIPELINE:B4] START — fetch POST /api/solveQuestion");
   const data = await callBackend(subject, question, mode, studentContext || undefined, onProgress);
-  console.log(`[PIPELINE:B5-RAW] backend raw response:
-  topic            = "${data.topic}"
-  difficulty       = "${data.difficulty}"
-  keyConcepts      = [${data.keyConcepts?.join(", ")}]
-  guidedReasoning  = ${data.guidedReasoning?.length ?? 0} steps
-  confusionPoints  = ${data.confusionPoints?.length ?? 0}
-  commonMistakes   = ${data.commonMistakes?.length ?? 0}
-  practiceQuestion = "${data.practiceQuestion?.question?.slice(0, 60)}…"
-  confidenceCheck  = "${data.confidenceCheck?.question?.slice(0, 60)}…"
-  retrievalPractice= ${data.retrievalPractice?.length ?? 0} items
-  rememberThese    = ${data.rememberThese?.length ?? 0} items`);
 
   const result = toAIResponse(data, subject, question);
-  console.log(`[PIPELINE:B6-MAPPED] AIResponse after mapping:
-  source  = "${result.source}"
-  lesson  = ${!!result.lesson}
-  topic   = "${result.topic}"
-  guidedReasoning steps = ${result.lesson?.guidedReasoning.length ?? 0}`);
 
   // Store in client-side cache
   cacheSolution(subject, question, mode, result);
-  console.log("[PIPELINE:B7] response stored in localStorage cache");
 
   return result;
 }

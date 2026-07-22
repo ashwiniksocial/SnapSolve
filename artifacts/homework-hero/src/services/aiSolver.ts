@@ -67,8 +67,6 @@ export async function solve(
   onDetail?:     (message: string, percent: number) => void,
 ): Promise<AIResponse> {
 
-  console.log(`[PIPELINE:A1] solve() called — subject="${subject}" skipBank=${opts?.skipBank ?? false} requireLesson=${opts?.requireLesson ?? false} q="${question.slice(0, 60)}…"`);
-
   // Phase 0 — reading
   onPhase?.(PHASES_BANK[0], 0);
   await delay(280);
@@ -80,8 +78,6 @@ export async function solve(
   const { response: bankResp, score: bankScore } = matchSolutionWithScore(subject, question);
   const detectedQ  = question.trim() || bankResp.detectedQuestion;
 
-  console.log(`[PIPELINE:A2] question bank match score=${bankScore} — ${opts?.skipBank ? "skipBank=true → BYPASSING bank (Practice mode forces full AI pipeline)" : bankScore > 0 ? "MATCH FOUND → Path A (bank)" : "no match → checking OpenAI"}`);
-
   // Compute topic confidence once — used by all confidence paths
   const topicMatch = detectBestTopic(question, subject);
   const topicConf  = topicMatch?.confidence ?? 0;
@@ -90,7 +86,6 @@ export async function solve(
 
   // ── Path A: strong bank match (skipped when skipBank=true) ───────────────
   if (!opts?.skipBank && bankScore > 0) {
-    console.log(`[PIPELINE:A3] PATH A — returning bank solution, source="bank", renderer=LegacyRenderer`);
     onPhase?.(PHASES_BANK[2], 2);
     await delay(500);
     onPhase?.(PHASES_BANK[3], 3);
@@ -124,12 +119,10 @@ export async function solve(
 
   // ── Path B: OpenAI ────────────────────────────────────────────────────────
   if (isOpenAIAvailable()) {
-    console.log("[PIPELINE:A3] PATH B — isOpenAIAvailable()=true → calling solveWithOpenAI()");
     onPhase?.(PHASES_AI[2], 2);
 
     try {
       const aiResp = await solveWithOpenAI(subject, question, onDetail);
-      console.log(`[PIPELINE:A4] PATH B SUCCESS — source="${aiResp.source}" lesson=${!!aiResp.lesson} renderer=${aiResp.lesson ? "LessonRenderer" : "LegacyRenderer"}`);
 
       onPhase?.(PHASES_AI[3], 3);
       await delay(280);
@@ -163,8 +156,6 @@ export async function solve(
       console.warn(`[PIPELINE:A4] PATH B FAILED — error="${String(err)}" → falling through to Path C (fallback)`);
       // OpenAI failed — fall through to fallback
     }
-  } else {
-    console.log("[PIPELINE:A3] PATH B SKIPPED — isOpenAIAvailable()=false → going to Path C (fallback)");
   }
 
   // ── Path C: fallback (no key / OpenAI error / bank default) ──────────────
@@ -175,7 +166,6 @@ export async function solve(
     console.error(`[PIPELINE:A3] PATH C BLOCKED — requireLesson=true, reason="${reason}" → throwing to caller`);
     throw new Error(`teaching_pipeline_unavailable — ${reason}`);
   }
-  console.log("[PIPELINE:A3] PATH C — returning fallback solution, source=\"fallback\", renderer=LegacyRenderer");
   onPhase?.(PHASES_BANK[2], 2);
   await delay(480);
   onPhase?.(PHASES_BANK[3], 3);

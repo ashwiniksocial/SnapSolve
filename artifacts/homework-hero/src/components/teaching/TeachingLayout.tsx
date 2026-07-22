@@ -733,9 +733,6 @@ export default function TeachingLayout({ solution, level }: Props) {
   const cfg = SUBJECTS[solution.subject as Subject];
 
   if (solution.lesson) {
-    console.log(
-      `[PIPELINE:C1] RENDERER=LessonRenderer — source="${solution.source}" topic="${solution.lesson.topic}" keyConcepts=${solution.lesson.keyConcepts.length} guidedSteps=${solution.lesson.guidedReasoning.length} mode=${level}`
-    );
     return (
       <LessonRenderer
         lesson={solution.lesson}
@@ -745,9 +742,6 @@ export default function TeachingLayout({ solution, level }: Props) {
     );
   }
 
-  console.log(
-    `[PIPELINE:C1] RENDERER=LegacyRenderer — source="${solution.source}" steps=${(solution as { steps?: unknown[] }).steps?.length ?? 0} mode=${level}`
-  );
   return (
     <LegacyRenderer solution={solution} level={level} cfg={cfg} />
   );

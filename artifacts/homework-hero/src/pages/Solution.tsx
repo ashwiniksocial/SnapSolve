@@ -54,18 +54,11 @@ export default function Solution() {
     // ── Dev audit mode: ?audit=1 bypasses session/OpenAI, loads fixture direct ──
     const auditMode = new URLSearchParams(window.location.search).get("audit") === "1";
     if (auditMode) {
-      console.log("[AUDIT-PAGE] audit=1 detected → calling GET /api/devLesson");
       const raw = await callDevLesson();
       const mapped = toAIResponse(raw, "Mathematics", "Proof that √2 is Irrational");
-      console.log(`[AUDIT-PAGE] fixture mapped: topic="${mapped.topic}" lesson=${!!mapped.lesson} steps=${mapped.lesson?.guidedReasoning.length}`);
       setSolution(mapped);
       setPageState("done");
       return;
-    }
-
-    if (practiceMode) {
-      console.log(`[PRACTICE:PIPELINE] practiceMode=1 detected — calling solve() with skipBank=true requireLesson=true`);
-      console.log(`[PRACTICE:PIPELINE] subject="${session.subject}" q="${session.question.slice(0, 80)}"`);
     }
 
     try {
