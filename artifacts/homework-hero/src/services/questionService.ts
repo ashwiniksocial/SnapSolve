@@ -81,6 +81,17 @@ export interface QuestionFilter {
 }
 
 /**
+ * Infer a question's type from its text when the optional questionType
+ * metadata field was not set at authoring time.
+ * Multiple-choice questions are identified by the presence of lettered
+ * options "(a)" / "(b)".  Everything else defaults to ShortAnswer.
+ */
+function inferQuestionType(question: string): QuestionType {
+  if (/\([a-dA-D]\)/.test(question)) return "MCQ";
+  return "ShortAnswer";
+}
+
+/**
  * Returns questions matching ALL supplied filters.
  * Omitting a filter field means "any value is accepted".
  */
@@ -99,7 +110,12 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
     if (filter.topicId   !== undefined && q.topicId   !== filter.topicId)   return false;
     if (filter.topicName !== undefined && q.topicName !== filter.topicName) return false;
     if (filter.difficulty && filter.difficulty !== "All" && q.difficulty !== filter.difficulty) return false;
-    if (filter.questionType && filter.questionType !== "All" && q.questionType !== filter.questionType) return false;
+    if (filter.questionType && filter.questionType !== "All") {
+      // Some V1 chapters were authored without a questionType field.
+      // Infer the type from the question text so type filters work for them.
+      const effectiveType: QuestionType = q.questionType ?? inferQuestionType(q.question);
+      if (effectiveType !== filter.questionType) return false;
+    }
     return true;
   });
   return results;

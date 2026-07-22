@@ -1290,6 +1290,8 @@ router.post("/solveQuestion", async (req, res) => {
     return;
   }
   if (!SUBJECTS.includes(subject as Subject)) {
+    req.log.warn({ receivedSubject: subject },
+      "[PIPELINE:2] REJECTED — invalid_subject (expected one of: Mathematics, Physics, Chemistry, Biology, …)");
     res.status(400).json({ error: "invalid_subject", message: `subject must be one of: ${SUBJECTS.join(", ")}` });
     return;
   }

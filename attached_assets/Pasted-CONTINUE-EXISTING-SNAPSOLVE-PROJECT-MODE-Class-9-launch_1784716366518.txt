@@ -1,0 +1,270 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+Class 9 launch-blocker repair only.
+
+IMPORTANT:
+Read the permanent project memory/context files first and use the locked Class 9 curriculum status as the source of truth.
+
+Do not rediscover curriculum decisions.
+Do not use web research.
+Do not work on Classes 6–8.
+Do not add features.
+Do not redesign UI.
+Do not generate large new question banks.
+Do not modify frozen questions unless a confirmed data defect requires it.
+
+CONFIRMED DEFECTS:
+
+MATHEMATICS
+- UI reports 17 chapters, but Chapters 9, 11 and 12 are not visible.
+- Chapter 5 Introduction to Euclid’s Geometry shows 24 questions.
+- Chapter 16 does not populate MCQ, Short, Long, HOTS or PYQ filters.
+- Chapter 14 shows approximately:
+  MCQ 0, Short 1, Long 0, HOTS 8, PYQ 7.
+- Chapters 1, 2, 3 and 17 show zero across question-type filters.
+- Other chapters may have the same defect.
+
+SCIENCE
+- Chapter 1 shows only Long and HOTS questions, with other filters empty.
+- Other Science chapters may have the same defect.
+- Science questions fail to generate teaching answers and show:
+  “Teaching lesson generation failed — backend_400.”
+- Mathematics answers generate successfully.
+
+==================================================
+TASK 1 — CANONICAL CHAPTER INVENTORY
+==================================================
+
+Inspect only the existing Class 9 curriculum gateway, permanent project context and question-bank registrations.
+
+Produce the exact expected visible chapter list for:
+
+1. Mathematics
+2. Science, grouped internally as:
+   - Physics
+   - Chemistry
+   - Biology
+
+For every chapter classify it as:
+- ACTIVE AND VISIBLE
+- CBSE-DELETED AND HIDDEN
+- PENDING OFFICIAL SOURCE
+- REGISTERED BUT MISSING FROM UI
+- UNEXPECTEDLY VISIBLE
+
+Investigate Mathematics Chapters 9, 11 and 12 specifically.
+
+Do not assume they should be restored merely because the displayed numbering skips them.
+First compare them against the locked curriculum status.
+
+Fix only confirmed visibility or registration defects.
+
+==================================================
+TASK 2 — COMPLETE QUESTION INVENTORY
+==================================================
+
+Audit every ACTIVE Class 9 Mathematics and Science chapter.
+
+For every chapter report:
+
+- chapter ID
+- chapter title
+- total question count
+- Easy count
+- Medium count
+- Hard count
+- MCQ count
+- Short count
+- Long count
+- HOTS count
+- PYQ count
+- any unknown or invalid difficulty values
+- any unknown or invalid question-type values
+- duplicate question IDs
+- questions missing required metadata
+
+Do not rely on the UI count.
+Count directly from the registered question data.
+
+Determine whether zero filter results are caused by:
+
+A. questions genuinely absent
+B. inconsistent type values such as:
+   - "mcq" versus "MCQ"
+   - "short-answer" versus "Short"
+   - "long-answer" versus "Long"
+   - "hots" versus "HOTS"
+   - "pyq" versus "PYQ"
+C. adapter mapping failure
+D. chapter-ID mismatch
+E. subject mismatch
+F. filter implementation mismatch
+G. questions not registered
+H. duplicated or overwritten chapter IDs
+
+==================================================
+TASK 3 — NORMALISE FILTER METADATA
+==================================================
+
+Create one canonical question-type contract used by both data and UI.
+
+Required visible types:
+- MCQ
+- Short
+- Long
+- HOTS
+- PYQ
+
+Normalise legacy aliases at the adapter/service boundary rather than manually rewriting hundreds of frozen questions.
+
+Examples:
+- multiple-choice, objective, mcq → MCQ
+- short-answer, short → Short
+- long-answer, descriptive, long → Long
+- higher-order, hots → HOTS
+- previous-year, pyq → PYQ
+
+Also normalise difficulty values:
+- Easy
+- Medium
+- Hard
+
+Requirements:
+- Existing question meaning must not change.
+- Existing question IDs must remain stable.
+- Progress/history references must not break.
+- “All Types” must always show every registered question for that chapter.
+- Selecting a type must show exactly the questions mapped to that canonical type.
+- Do not fabricate type labels without evidence from existing metadata.
+
+If a chapter genuinely contains no questions of a particular type, report it accurately.
+Do not generate questions merely to make every filter non-zero.
+
+==================================================
+TASK 4 — SCIENCE ANSWER GENERATION
+==================================================
+
+Reproduce the `backend_400` failure using at least:
+
+- one Physics question
+- one Chemistry question
+- one Biology question
+
+Inspect only the direct solution path:
+
+- Practice question selection
+- navigation/query/session payload
+- Solution.tsx
+- question lookup
+- topic/chapter lookup
+- solution engine
+- OpenAI solver request validation
+- API solve route
+- new prefixed Science chapter IDs
+
+Check specifically whether the recent ID changes:
+
+- chem-ch01
+- bio-ch01
+- phy-ch1
+
+are being rejected or failing lookup because another part of the pipeline still expects:
+
+- ch01
+- ch1
+- old unprefixed IDs
+
+All internal lookups must use a consistent identity:
+
+class + student-facing subject + internal domain + chapterId + questionId
+
+Fix the smallest root cause.
+
+Do not remove the unique Science chapter prefixes.
+Do not revert to duplicate chapter IDs.
+
+The API must not return `backend_400` for a valid registered Science question.
+
+Add useful server-side error logging for the exact validation failure, but:
+- do not expose secrets
+- do not log full prompts
+- remove temporary debug logs after diagnosis
+
+==================================================
+TASK 5 — END-TO-END VALIDATION
+==================================================
+
+Validate every ACTIVE Class 9 chapter in Mathematics and Science.
+
+For each chapter:
+
+1. Open the chapter.
+2. Confirm “All Types” count equals the registered total.
+3. Click each type filter.
+4. Confirm displayed count matches direct inventory.
+5. Open at least one available question.
+6. Confirm the question belongs to the selected subject and chapter.
+7. Generate the SnapSolve teaching answer.
+8. Confirm no `backend_400`.
+9. Confirm Detailed/Standard/Compact still obey the locked mode contract.
+10. Return to the same chapter successfully.
+
+Minimum answer-generation test:
+- every Mathematics chapter: at least 1 question
+- every Physics chapter: at least 1 question
+- every Chemistry chapter: at least 1 question
+- every Biology chapter: at least 1 question
+
+For the user-reported chapters, test all available types:
+
+Mathematics:
+- Chapters 1, 2, 3, 5, 14, 16 and 17
+
+Science:
+- Chapter 1 and at least one chapter from each internal domain
+
+Also verify:
+- Mathematics ↔ Science switching remains correct
+- no Economics tab
+- no Workspace button
+- no duplicate React keys
+- no console errors
+- progress/history IDs remain valid
+- frontend TypeScript passes
+- API TypeScript passes
+- production build passes with required environment variables
+
+==================================================
+EXECUTION RULE
+==================================================
+
+1. Read locked context.
+2. Build the direct inventory.
+3. Identify exact root causes.
+4. Fix only confirmed defects.
+5. Validate against the direct inventory.
+6. Do not claim PASS from code inspection.
+7. Use authenticated browser interaction.
+8. Stop when Class 9 Mathematics and Science pass.
+
+RETURN ONLY:
+
+1. Canonical visible chapter list
+2. Missing/hidden chapter findings for Mathematics 9, 11 and 12
+3. Complete chapter-by-chapter inventory table
+4. Invalid metadata values found
+5. Question-filter root cause
+6. Filter normalisation applied
+7. Science `backend_400` root cause
+8. Science solution fix
+9. Chapter-by-chapter UI validation result
+10. Chapter-by-chapter answer-generation result
+11. Files modified
+12. TypeScript results
+13. Production build result
+14. Remaining confirmed blockers
+
+FINAL STATUS:
+
+CLASS 9 QUESTION AND SOLUTION INTEGRITY — PASS or BLOCKED

@@ -48,9 +48,11 @@ function mapDifficulty(d: string): Difficulty {
 }
 
 function mapQuestionType(qType: string, qFormat?: string): QuestionType | undefined {
-  if (qType === "hots")          return "HOTS";
-  if (qType === "previous-year") return "PYQ";
-  if (qFormat === "MCQ")         return "MCQ";
+  if (qType === "hots")                                           return "HOTS";
+  if (qType === "previous-year")                                  return "PYQ";
+  // Assertion-reason is a two-statement MCQ variant
+  if (qType === "assertion-reason" || qFormat === "AssertionReason") return "MCQ";
+  if (qFormat === "MCQ" || qFormat === "TrueOrFalse")             return "MCQ";
   if (qFormat === "LongAnswer" || qFormat === "Proof" || qFormat === "CaseStudy") return "LongAnswer";
   return "ShortAnswer";
 }

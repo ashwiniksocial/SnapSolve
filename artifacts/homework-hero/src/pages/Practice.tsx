@@ -424,7 +424,10 @@ export default function Practice() {
 
   const handleOpenQuestion = useCallback((q: Question) => {
     update({
-      subject:               selectedSubject,
+      // Use the question's native domain subject ("Physics", "Chemistry",
+      // "Biology", "Mathematics") rather than the student-facing "Science"
+      // umbrella so the backend API receives a subject it recognises.
+      subject:               q.subject as Subject,
       question:              q.question,
       practiceTopic:         q.topicName,
       practiceQuestionId:    q.id,
