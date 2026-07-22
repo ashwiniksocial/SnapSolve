@@ -270,13 +270,15 @@ export default function Analytics() {
                 </Link>{" "}
                 page to see your analytics here.
               </p>
-              <button
-                onClick={seedTestData}
-                disabled={seedDone}
-                className="mt-1 text-xs font-semibold px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 disabled:opacity-50 transition-all"
-              >
-                {seedDone ? "✓ Test data seeded" : "⚙ Seed test data"}
-              </button>
+              {import.meta.env.DEV && (
+                <button
+                  onClick={seedTestData}
+                  disabled={seedDone}
+                  className="mt-1 text-xs font-semibold px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 disabled:opacity-50 transition-all"
+                >
+                  {seedDone ? "✓ Test data seeded" : "⚙ Seed test data"}
+                </button>
+              )}
             </div>
           ) : (
             <>
@@ -334,16 +336,17 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Seed button (dev tool) */}
-              <div className="text-right mt-2">
-                <button
-                  onClick={seedTestData}
-                  disabled={seedDone}
-                  className="text-[10px] font-semibold px-3 py-1 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-400 disabled:opacity-40 transition-all"
-                >
-                  {seedDone ? "✓ Seeded" : "⚙ Seed more test data"}
-                </button>
-              </div>
+              {import.meta.env.DEV && (
+                <div className="text-right mt-2">
+                  <button
+                    onClick={seedTestData}
+                    disabled={seedDone}
+                    className="text-[10px] font-semibold px-3 py-1 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-400 disabled:opacity-40 transition-all"
+                  >
+                    {seedDone ? "✓ Seeded" : "⚙ Seed more test data"}
+                  </button>
+                </div>
+              )}
             </>
           )}
         </section>

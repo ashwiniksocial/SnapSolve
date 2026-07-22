@@ -189,11 +189,33 @@ function BetaPendingScreen({ email }: { email?: string }) {
   );
 }
 
+function BetaErrorScreen() {
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-sm text-center">
+        <div className="w-16 h-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-3xl mx-auto mb-5">
+          ⚠️
+        </div>
+        <h1 className="text-xl font-bold text-slate-900 mb-2">Unable to verify beta access</h1>
+        <p className="text-sm text-slate-500 mb-8">
+          Unable to verify beta access. Please try again.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="w-full py-3 rounded-2xl text-sm font-semibold text-indigo-600 border border-indigo-200 bg-white hover:bg-indigo-50 transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function RequireAuth({ children }: { children: ReactNode }) {
   const { isSignedIn, isLoaded, getToken } = useAuth();
   const { user }                           = useClerk();
   const [, navigate]                       = useLocation();
-  const [betaStatus, setBetaStatus]        = useState<"checking" | "approved" | "pending">("checking");
+  const [betaStatus, setBetaStatus]        = useState<"checking" | "approved" | "pending" | "error">("checking");
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -220,12 +242,16 @@ function RequireAuth({ children }: { children: ReactNode }) {
           const approved = data.approved;
           sessionStorage.setItem(BETA_CACHE_KEY, approved ? "1" : "0");
           setBetaStatus(approved ? "approved" : "pending");
+        } else if (res.status >= 500) {
+          // Server error — do NOT fail open; show retry screen.
+          setBetaStatus("error");
         } else {
+          // 4xx — user authenticated but not approved.
           setBetaStatus("pending");
         }
       } catch {
-        // Network error — fail open so server downtime doesn't lock out students.
-        setBetaStatus("approved");
+        // Network or API failure — do NOT fail open; show retry screen.
+        setBetaStatus("error");
       }
     });
   }, [isLoaded, isSignedIn, getToken, navigate]);
@@ -238,6 +264,30 @@ function RequireAuth({ children }: { children: ReactNode }) {
     return <BetaPendingScreen email={email} />;
   }
 
+  if (betaStatus === "error") {
+    return <BetaErrorScreen />;
+  }
+
+  return <>{children}</>;
+}
+
+function RequireAdminAuth({ children }: { children: ReactNode }) {
+  const { user }     = useClerk();
+  const [, navigate] = useLocation();
+
+  const adminList = (import.meta.env.VITE_ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e: string) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  const userEmail = (user?.primaryEmailAddress?.emailAddress ?? "").toLowerCase();
+  const isAdmin   = adminList.length > 0 && Boolean(userEmail) && adminList.includes(userEmail);
+
+  useEffect(() => {
+    if (!isAdmin) navigate("/");
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) return null;
   return <>{children}</>;
 }
 
@@ -255,11 +305,11 @@ function ProtectedSwitch() {
         <Route path="/revision"    component={Revision} />
         <Route path="/improvement" component={Improvement} />
         <Route path="/profile"     component={ProfilePage} />
-        <Route path="/admin"       component={Admin} />
-        <Route path="/teacher"     component={TeacherDashboard} />
+        <Route path="/admin">{() => <RequireAdminAuth><Admin /></RequireAdminAuth>}</Route>
+        <Route path="/teacher">{() => <RequireAdminAuth><TeacherDashboard /></RequireAdminAuth>}</Route>
         <Route path="/exam"        component={ExamMode} />
         <Route path="/analytics"   component={Analytics} />
-        <Route path="/dev/validate" component={DevTeachingValidator} />
+        {import.meta.env.DEV && <Route path="/dev/validate" component={DevTeachingValidator} />}
       </Switch>
     </RequireAuth>
   );

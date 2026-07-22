@@ -1,0 +1,166 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+FINAL PRE-BETA LOCKDOWN.
+
+SMALLEST SAFE PATCH ONLY.
+
+DO NOT:
+- audit the repository again
+- modify curriculum
+- modify question banks
+- modify AI pipeline
+- modify teaching layouts
+- redesign UI
+- add features
+- refactor architecture
+- touch Classes 6–8
+
+OBJECTIVE:
+Fix only the confirmed access-control and founder-beta issues found in the
+latest Founder Acceptance Test.
+
+==================================================
+P1 — CONTROLLED BETA MUST NOT BE OPEN
+==================================================
+
+The latest report states:
+
+“Beta gate: Open-beta mode — all authenticated users approved.”
+
+This is NOT acceptable.
+
+SnapSolve must remain a controlled beta.
+
+Requirements:
+
+1. Read APPROVED_BETA_EMAILS from Replit Secrets.
+2. Only emails listed there may access protected student pages.
+3. Email comparison must:
+   - trim whitespace
+   - be case-insensitive
+   - support comma-separated emails
+4. An authenticated but unapproved user must see the existing beta-access
+   denied/waiting screen.
+5. Never fail open when the beta-check API fails.
+6. A beta-check network/server failure must show:
+   “Unable to verify beta access. Please try again.”
+7. Do not expose the approved-email list to the frontend.
+8. Do not hardcode the founder email in source code.
+
+Confirm the founder email currently present in APPROVED_BETA_EMAILS is
+approved without printing the full email in the report.
+
+==================================================
+P2 — REMOVE STUDENT-EXPOSED DEVELOPMENT CONTROLS
+==================================================
+
+1. Hide or remove from production/student use:
+
+- “Seed test data”
+- “Seed more test data”
+
+They may remain available only when:
+
+import.meta.env.DEV === true
+
+and must never appear in deployment/production.
+
+2. Protect these routes:
+
+- /admin
+- /teacher
+- /dev/validate
+
+An ordinary approved student must not access them.
+
+Minimum safe behaviour:
+
+- /dev/validate available only in development.
+- /admin and /teacher require an explicit authorised-role check.
+- If no authorised role is configured, deny access and redirect safely.
+- Do not create a new role-management system.
+- Do not alter normal student routes.
+
+==================================================
+PROCESS CLEANUP
+==================================================
+
+Terminate duplicate API/server processes created by previous workflow
+restarts.
+
+Ensure the development workflow starts exactly:
+
+- one frontend process
+- one API process
+
+Confirm there is no EADDRINUSE error after a clean restart.
+
+Do not change production architecture merely to solve a local process issue.
+
+==================================================
+VALIDATION
+==================================================
+
+Test these exact cases:
+
+1. Signed out:
+   /practice → /sign-in
+
+2. Authenticated approved email:
+   /practice → allowed
+
+3. Authenticated unapproved email:
+   /practice → beta access denied
+
+4. Beta API unavailable:
+   show retry/error state
+   do NOT allow access
+
+5. Approved ordinary student:
+   /admin → denied
+   /teacher → denied
+   /dev/validate → denied in production
+
+6. Production build:
+   no seed-test-data controls visible
+
+7. Development:
+   dev validator may remain available only under the intended development
+   condition.
+
+Run:
+
+- TypeScript for frontend
+- TypeScript for API
+- existing 88 curriculum checks
+- clean workflow restart
+- API health check
+- beta access tests
+
+Do not repeat the entire Founder Acceptance Test.
+
+==================================================
+RETURN ONLY
+==================================================
+
+1. Root cause of open-beta behaviour
+2. Beta gate behaviour before → after
+3. Approved-email test result
+4. Unapproved-email test result
+5. API-failure test result
+6. Admin/teacher/dev route result
+7. Seed-button production result
+8. Running frontend/API process count
+9. EADDRINUSE status
+10. Files modified
+11. TypeScript results
+12. Curriculum validation result
+
+FINAL STATUS:
+
+CONTROLLED FOUNDER BETA — READY
+
+or
+
+BLOCKED
