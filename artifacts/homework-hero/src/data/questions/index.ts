@@ -105,4 +105,4 @@ export const ALL_QUESTIONS: Question[] = [
 ];
 
 export type { ChapterMeta, Question };
-export type { Difficulty, TopicMeta, SolutionStep, QuestionType } from "./types";
+export type { Difficulty, TopicMeta, SolutionStep, QuestionType, EffectiveQuestionType } from "./types";

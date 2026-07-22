@@ -7,9 +7,9 @@
  *   - Function signatures stay identical.
  */
 
-import type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType } from "@/data/questions";
+import type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType } from "@/data/questions";
 
-export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType };
+export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType };
 
 // ── Module-level question bank cache ────────────────────────────────────────
 // Start empty; populated by preloadQBank().  Synchronous query functions below
@@ -77,23 +77,18 @@ export interface QuestionFilter {
   topicId?: string;
   topicName?: string;
   difficulty?: Difficulty | "All";
-  questionType?: QuestionType | "All";
-}
-
-/**
- * Infer a question's type from its text when the optional questionType
- * metadata field was not set at authoring time.
- * Multiple-choice questions are identified by the presence of lettered
- * options "(a)" / "(b)".  Everything else defaults to ShortAnswer.
- */
-function inferQuestionType(question: string): QuestionType {
-  if (/\([a-dA-D]\)/.test(question)) return "MCQ";
-  return "ShortAnswer";
+  /** Accepts stored QuestionType values or the virtual "Unclassified" sentinel. */
+  questionType?: EffectiveQuestionType | "All";
 }
 
 /**
  * Returns questions matching ALL supplied filters.
  * Omitting a filter field means "any value is accepted".
+ *
+ * Questions without a questionType field (legacy V1 chapters) are treated as
+ * "Unclassified" at the filter boundary — they are always included in "All"
+ * and are matched by the explicit "Unclassified" filter value.
+ * They are never silently assigned a false type such as MCQ or ShortAnswer.
  */
 export function getQuestions(filter: QuestionFilter = {}): Question[] {
   const isScience = filter.subject === "Science";
@@ -111,9 +106,9 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
     if (filter.topicName !== undefined && q.topicName !== filter.topicName) return false;
     if (filter.difficulty && filter.difficulty !== "All" && q.difficulty !== filter.difficulty) return false;
     if (filter.questionType && filter.questionType !== "All") {
-      // Some V1 chapters were authored without a questionType field.
-      // Infer the type from the question text so type filters work for them.
-      const effectiveType: QuestionType = q.questionType ?? inferQuestionType(q.question);
+      // Map missing metadata → "Unclassified" so the filter works correctly.
+      // Never infer a specific type from question text alone.
+      const effectiveType: EffectiveQuestionType = q.questionType ?? "Unclassified";
       if (effectiveType !== filter.questionType) return false;
     }
     return true;

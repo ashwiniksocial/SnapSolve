@@ -10,8 +10,16 @@
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
-/** Type of question — used for filtering in Practice page */
+/** Stored question type — the five canonical values written into question data. */
 export type QuestionType = "MCQ" | "ShortAnswer" | "LongAnswer" | "HOTS" | "PYQ";
+
+/**
+ * Effective question type — extends QuestionType with the virtual
+ * "Unclassified" category used exclusively at the filter/UI layer for
+ * legacy questions that were authored before the questionType field existed.
+ * "Unclassified" is never written into Question objects.
+ */
+export type EffectiveQuestionType = QuestionType | "Unclassified";
 
 export interface SolutionStep {
   stepNumber: number;

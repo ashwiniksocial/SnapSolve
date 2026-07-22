@@ -15,7 +15,7 @@ import {
   getQuestions,
   preloadQBank,
 } from "@/services/questionService";
-import type { Question, Difficulty, QuestionType } from "@/services/questionService";
+import type { Question, Difficulty, QuestionType, EffectiveQuestionType } from "@/services/questionService";
 import {
   overallAccuracy,
   strongestChapter,
@@ -25,9 +25,9 @@ import {
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const DIFFICULTIES: (Difficulty | "All")[] = ["All", "Easy", "Medium", "Hard"];
-const QUESTION_TYPES: (QuestionType | "All")[] = ["All", "MCQ", "ShortAnswer", "LongAnswer", "HOTS", "PYQ"];
+const QUESTION_TYPES: (EffectiveQuestionType | "All")[] = ["All", "MCQ", "ShortAnswer", "LongAnswer", "HOTS", "PYQ", "Unclassified"];
 const TYPE_LABELS: Record<string, string> = {
-  All: "All Types", MCQ: "MCQ", ShortAnswer: "Short", LongAnswer: "Long", HOTS: "HOTS", PYQ: "PYQ",
+  All: "All Types", MCQ: "MCQ", ShortAnswer: "Short", LongAnswer: "Long", HOTS: "HOTS", PYQ: "PYQ", Unclassified: "Unclassified",
 };
 const ADAPTIVE_TIER_STYLE: Record<string, string> = {
   Easy:      "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -41,11 +41,12 @@ const diffStyle: Record<string, string> = {
   Hard:   "bg-red-50     text-red-700     border-red-200",
 };
 const typeStyle: Record<string, string> = {
-  MCQ:         "bg-blue-50   text-blue-700   border-blue-200",
-  ShortAnswer: "bg-teal-50   text-teal-700   border-teal-200",
-  LongAnswer:  "bg-violet-50 text-violet-700 border-violet-200",
-  HOTS:        "bg-orange-50 text-orange-700 border-orange-200",
-  PYQ:         "bg-rose-50   text-rose-700   border-rose-200",
+  MCQ:          "bg-blue-50   text-blue-700   border-blue-200",
+  ShortAnswer:  "bg-teal-50   text-teal-700   border-teal-200",
+  LongAnswer:   "bg-violet-50 text-violet-700 border-violet-200",
+  HOTS:         "bg-orange-50 text-orange-700 border-orange-200",
+  PYQ:          "bg-rose-50   text-rose-700   border-rose-200",
+  Unclassified: "bg-slate-50  text-slate-500  border-slate-300",
 };
 const CLASS_OPTIONS = [6, 7, 8, 9];
 const ALL_SUBJECTS: Subject[] = ["Mathematics", "Science"];
@@ -214,11 +215,9 @@ function QuestionCard({ q, cfg, onOpen }: { q: Question; cfg: SubjectConfig; onO
               <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[q.difficulty]}`}>
                 {q.difficulty}
               </span>
-              {q.questionType && (
-                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${typeStyle[q.questionType] ?? "bg-slate-50 text-slate-600 border-slate-200"}`}>
-                  {TYPE_LABELS[q.questionType] ?? q.questionType}
-                </span>
-              )}
+              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${typeStyle[q.questionType ?? "Unclassified"]}`}>
+                {TYPE_LABELS[q.questionType ?? "Unclassified"]}
+              </span>
             </div>
             <p className="text-sm font-medium text-slate-800 leading-relaxed">{q.question}</p>
           </div>
@@ -352,7 +351,7 @@ export default function Practice() {
   const [drilldownOpen,     setDrilldownOpen]     = useState(false);
   const [selectedTopicId,   setSelectedTopicId]   = useState<string>("all");
   const [selectedDiff,      setSelectedDiff]      = useState<Difficulty | "All">("All");
-  const [selectedType,      setSelectedType]      = useState<QuestionType | "All">("All");
+  const [selectedType,      setSelectedType]      = useState<EffectiveQuestionType | "All">("All");
 
   const topics = useMemo(() => getTopics(selectedChapterId), [selectedChapterId]);
 
@@ -367,6 +366,30 @@ export default function Practice() {
         questionType: selectedType,
       }),
     [practiceClass, selectedSubject, selectedChapterId, selectedTopicId, selectedDiff, selectedType],
+  );
+
+  // True when the currently visible chapter (and topic, if filtered) contains
+  // at least one legacy question with no questionType metadata.
+  // Used to conditionally show the "Unclassified" filter pill.
+  const chapterHasUnclassified = useMemo(
+    () =>
+      bankReady &&
+      getQuestions({
+        classNum:  practiceClass,
+        subject:   selectedSubject,
+        chapterId: selectedChapterId || undefined,
+        ...(selectedTopicId !== "all" ? { topicId: selectedTopicId } : {}),
+      }).some((q) => q.questionType === undefined),
+    [bankReady, practiceClass, selectedSubject, selectedChapterId, selectedTopicId],
+  );
+
+  // Only expose "Unclassified" pill when the chapter actually contains such
+  // questions — keeps the filter row clean for fully-typed chapters.
+  const visibleTypes = useMemo(
+    () => (chapterHasUnclassified
+      ? QUESTION_TYPES
+      : QUESTION_TYPES.filter((qt) => qt !== "Unclassified")),
+    [chapterHasUnclassified],
   );
 
   const drilldownAttempts = useMemo(
@@ -985,9 +1008,9 @@ export default function Practice() {
               })}
             </div>
 
-            {/* Question type filter */}
+            {/* Question type filter — "Unclassified" pill only shown for legacy chapters */}
             <div className="flex gap-2 flex-wrap">
-              {QUESTION_TYPES.map((qt) => {
+              {visibleTypes.map((qt) => {
                 const active = selectedType === qt;
                 return (
                   <button

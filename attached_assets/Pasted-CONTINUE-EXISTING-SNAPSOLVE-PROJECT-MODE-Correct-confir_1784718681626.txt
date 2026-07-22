@@ -1,0 +1,230 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+Correct confirmed Class 9 question-type metadata and display defects only.
+
+DO NOT:
+- run another broad curriculum audit
+- generate new questions
+- modify question wording, answers or explanations
+- change question IDs
+- redesign the Practice page
+- modify Classes 6–8
+- infer question type from superficial text patterns
+- classify every non-MCQ question as Short
+
+CONFIRMED PROBLEM:
+
+The previous fallback:
+
+inferQuestionType(text)
+- MCQ if option-like text is detected
+- otherwise ShortAnswer
+
+is NOT an acceptable classification system.
+
+It has produced misleading distributions such as:
+- Maths Ch1: 2 MCQ, 48 Short
+- Maths Ch2: 1 MCQ, 49 Short
+- Maths Ch3: 50 Short
+- Maths Ch17: 3 MCQ, 72 Short
+
+Also, question cards currently show only difficulty:
+- Easy
+- Medium
+- Hard
+
+They do not visibly show:
+- MCQ
+- Short
+- Long
+- HOTS
+- PYQ
+
+==================================================
+TASK 1 — REMOVE THE INVALID INFERENCE
+==================================================
+
+Inspect only:
+
+- artifacts/homework-hero/src/services/questionService.ts
+- Class 9 Mathematics question schemas/files
+- Class 9 Science adapters
+- Practice.tsx question filters and question cards
+- direct question type definitions
+
+Remove the simplistic fallback that classifies:
+- option-looking questions as MCQ
+- everything else as Short
+
+Do not use question text alone as the final type source.
+
+==================================================
+TASK 2 — ESTABLISH THE TRUE TYPE SOURCE
+==================================================
+
+Determine the actual available metadata for each Class 9 question.
+
+Check fields such as:
+- questionType
+- type
+- format
+- questionFormat
+- cognitiveLevel
+- source
+- tags
+- category
+- isHots
+- isPyq
+- marks
+- answer structure
+
+Create one canonical mapping to:
+
+- MCQ
+- Short
+- Long
+- HOTS
+- PYQ
+
+Rules:
+
+1. Use explicit stored metadata wherever available.
+2. HOTS and PYQ may be derived only from explicit tags/source/category flags.
+3. Do not infer HOTS merely because a question looks difficult.
+4. Do not infer PYQ without an explicit previous-year/source marker.
+5. Do not classify all descriptive questions as Short.
+6. If legacy Mathematics questions genuinely lack enough metadata, classify them as:
+   - Unclassified
+   rather than assigning a false type.
+
+Add “Unclassified” internally and visibly only where required for legacy questions.
+
+Preferred visible filters:
+- All Types
+- MCQ
+- Short
+- Long
+- HOTS
+- PYQ
+- Unclassified, only when the selected chapter contains such questions
+
+Do not hide questions merely because their type is unknown.
+
+“All Types” must always include them.
+
+==================================================
+TASK 3 — DISPLAY QUESTION-TYPE TAGS
+==================================================
+
+On every Practice question card, show both:
+
+- difficulty tag: Easy / Medium / Hard
+- question-type tag: MCQ / Short / Long / HOTS / PYQ / Unclassified
+
+Do not remove existing difficulty tags.
+
+Use existing badge styling.
+No layout redesign.
+
+Examples:
+
+Easy · MCQ
+Medium · Short
+Hard · HOTS
+Medium · Unclassified
+
+==================================================
+TASK 4 — REPORT THE REAL INVENTORY
+==================================================
+
+For every active Class 9 Mathematics and Science chapter, provide direct counts for:
+
+- total
+- MCQ
+- Short
+- Long
+- HOTS
+- PYQ
+- Unclassified
+
+The sum of all type counts must equal the chapter total.
+
+Do not force every chapter to contain every type.
+
+Specifically report Chapters:
+- Maths 1
+- Maths 2
+- Maths 3
+- Maths 5
+- Maths 14
+- Maths 16
+- Maths 17
+- Science Chapter 1
+- every Chemistry chapter
+- every Biology chapter
+
+==================================================
+TASK 5 — PRESERVE SCIENCE SOLUTION FIX
+==================================================
+
+Do not undo the Science native-domain fix:
+
+- Physics
+- Chemistry
+- Biology
+
+Valid Science questions must continue passing their native domain to the API.
+
+Test at least:
+- one Physics answer
+- one Chemistry answer
+- one Biology answer
+
+Confirm no backend_400.
+
+==================================================
+VALIDATION
+==================================================
+
+In authenticated Preview:
+
+1. Open Maths Chapter 1.
+2. Confirm the type counts match direct data.
+3. Confirm every question card displays difficulty + type.
+4. Repeat for Maths Chapters 2, 3, 5, 14, 16 and 17.
+5. Open Science Chapter 1.
+6. Confirm its filters and tags match direct data.
+7. Test one Physics, Chemistry and Biology solution.
+8. Confirm All Types count equals total.
+9. Confirm filter counts sum to total.
+10. Confirm no question disappears due to missing type metadata.
+11. Confirm Mathematics ↔ Science switching still works.
+12. Confirm no Economics tab.
+13. Run frontend TypeScript.
+14. Run API TypeScript.
+15. Run production build with required environment variables.
+
+IMPORTANT:
+
+Do not claim PASS merely because TypeScript passes.
+Validate the actual UI counts and visible tags.
+
+RETURN ONLY:
+
+- invalid inference removed
+- canonical type source used
+- chapters containing Unclassified questions
+- complete chapter-by-chapter type inventory
+- visible tag result
+- Maths Chapters 1, 2, 3, 5, 14, 16, 17 result
+- Science type result
+- Physics/Chemistry/Biology answer-generation result
+- files modified
+- TypeScript results
+- production build result
+- remaining blocker
+
+FINAL STATUS:
+
+CLASS 9 QUESTION TYPE INTEGRITY — PASS or BLOCKED
