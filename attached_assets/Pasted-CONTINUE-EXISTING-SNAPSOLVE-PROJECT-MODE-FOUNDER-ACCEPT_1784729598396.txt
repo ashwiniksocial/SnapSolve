@@ -1,0 +1,258 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+FOUNDER ACCEPTANCE TEST (FAT)
+
+NO NEW FEATURES.
+
+NO ARCHITECTURE.
+
+NO CURRICULUM CHANGES.
+
+NO QUESTION BANK CHANGES.
+
+NO REFACTORING.
+
+NO CODE CLEANUP.
+
+==================================================
+
+OBJECTIVE
+
+Execute a COMPLETE Founder Acceptance Test.
+
+The application must now be tested exactly like a first-time student.
+
+==================================================
+
+Create a guided Founder Test Mode.
+
+The test must verify the complete student journey.
+
+Do NOT inspect code.
+
+Actually execute the application.
+
+==================================================
+
+TEST FLOW
+
+1.
+
+Open homepage.
+
+Check:
+
+branding
+
+buttons
+
+responsiveness
+
+text overflow
+
+icons
+
+loading
+
+2.
+
+Create/Login account.
+
+3.
+
+Enter Practice.
+
+4.
+
+Choose Mathematics.
+
+5.
+
+Open every chapter.
+
+6.
+
+Open every difficulty.
+
+7.
+
+Generate questions.
+
+8.
+
+Open AI solution.
+
+9.
+
+Switch
+
+Basic
+
+Standard
+
+Detailed
+
+10.
+
+Mark
+
+Got it
+
+Needs Review
+
+11.
+
+Practice Similar.
+
+12.
+
+Back.
+
+13.
+
+Forward.
+
+14.
+
+Question history.
+
+15.
+
+Revision.
+
+16.
+
+Exam.
+
+17.
+
+Analytics.
+
+18.
+
+Profile.
+
+19.
+
+History.
+
+20.
+
+Logout.
+
+==================================================
+
+For every page record:
+
+loading time
+
+UI glitch
+
+broken button
+
+broken navigation
+
+wrong chapter
+
+blank page
+
+wrong icon
+
+overflow
+
+mobile issue
+
+desktop issue
+
+console error
+
+API error
+
+network error
+
+AI error
+
+==================================================
+
+Classify
+
+P0
+
+P1
+
+P2
+
+P3
+
+Fix ONLY
+
+P0
+
+P1
+
+Leave
+
+P2
+
+P3
+
+for after beta.
+
+==================================================
+
+Return ONLY
+
+1.
+
+Founder journey completed?
+
+YES / NO
+
+2.
+
+Screens actually tested
+
+3.
+
+P0 list
+
+4.
+
+P1 list
+
+5.
+
+P0/P1 fixes
+
+6.
+
+Remaining P2
+
+7.
+
+Remaining P3
+
+8.
+
+Performance timings
+
+9.
+
+Files modified
+
+10.
+
+TypeScript
+
+11.
+
+Production validation
+
+FINAL STATUS
+
+READY FOR HUMAN FOUNDER TESTING
+
+or
+
+BLOCKED
