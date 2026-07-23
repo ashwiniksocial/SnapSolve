@@ -1,0 +1,134 @@
+{
+  "chapters": [
+    {
+      "chapterId": "ch1",
+      "subject": "Mathematics",
+      "officialTitle": "The World of Numbers",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "ch3",
+      "subject": "Mathematics",
+      "officialTitle": "Orienting Yourself: The Use of Coordinates",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "ch4",
+      "subject": "Mathematics",
+      "officialTitle": "I'm Up and Down, and Round and Round",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "ch15",
+      "subject": "Mathematics",
+      "officialTitle": "The Mathematics of Maybe: Introduction to Probability",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "ch16",
+      "subject": "Mathematics",
+      "officialTitle": "Exploring Algebraic Identities",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "ch17",
+      "subject": "Mathematics",
+      "officialTitle": "Predicting What Comes Next: Exploring Sequences",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "ch18",
+      "subject": "Mathematics",
+      "officialTitle": "Measuring Space: Perimeter and Area",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "iemh102",
+      "subject": "Mathematics",
+      "officialTitle": "Introduction to Linear Polynomials",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "phy-ch1",
+      "subject": "Physics",
+      "officialTitle": "Motion",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "phy-ch2",
+      "subject": "Physics",
+      "officialTitle": "Force and Laws of Motion",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "phy-ch4",
+      "subject": "Physics",
+      "officialTitle": "Work, Energy and Simple Machines",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "phy-ch5",
+      "subject": "Physics",
+      "officialTitle": "Sound",
+      "questionCount": 50
+    },
+    {
+      "chapterId": "chem-ch01",
+      "subject": "Chemistry",
+      "officialTitle": "Matter in Our Surroundings",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "chem-ch02",
+      "subject": "Chemistry",
+      "officialTitle": "Exploring Mixtures and Their Separation",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "chem-ch03",
+      "subject": "Chemistry",
+      "officialTitle": "Atoms and Molecules",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "chem-ch04",
+      "subject": "Chemistry",
+      "officialTitle": "Structure of an Atom",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "bio-ch01",
+      "subject": "Biology",
+      "officialTitle": "Cell — The Fundamental Unit of Life",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "bio-ch02",
+      "subject": "Biology",
+      "officialTitle": "Tissues",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "bio-ch03",
+      "subject": "Biology",
+      "officialTitle": "Diversity in Living Organisms",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "bio-ch05",
+      "subject": "Biology",
+      "officialTitle": "Reproduction in Plants and Animals",
+      "questionCount": 75
+    },
+    {
+      "chapterId": "esc-ch01",
+      "subject": "Earth Science",
+      "officialTitle": "Earth as a System: Energy, Matter and Life",
+      "questionCount": 85
+    }
+  ],
+  "totalChapters": 21,
+  "totalQuestions": 1385,
+  "checkpoint": "c0fb6532",
+  "status": "FROZEN"
+}
