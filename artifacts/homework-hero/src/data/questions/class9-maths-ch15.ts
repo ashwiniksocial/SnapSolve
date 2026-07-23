@@ -16,7 +16,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 1: Introduction ─────────────────────────────────────────────────
   {
     id: "c9-m-ch15-t1-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Easy", questionType: "MCQ",
     question: "The probability of an event always lies between:\n(a) –1 and 1  (b) 0 and 1  (c) 0 and 10  (d) –∞ and +∞",
@@ -27,7 +27,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Define: (a) Experiment  (b) Event  (c) Sample space",
@@ -40,7 +40,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Write the sample space for: (a) Tossing a coin (b) Rolling a die (c) Tossing two coins",
@@ -55,7 +55,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Hard", questionType: "HOTS",
     question: "Is probability always a fraction? Can it be 0 or 1? Give examples.",
@@ -72,7 +72,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 2: Experimental Probability ────────────────────────────────────
   {
     id: "c9-m-ch15-t2-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Easy", questionType: "MCQ",
     question: "Experimental probability is based on:\n(a) Mathematical reasoning  (b) Actual observations  (c) Symmetry  (d) Assumptions",
@@ -83,7 +83,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A coin is tossed 200 times. Heads appears 110 times. Find the experimental probability of: (a) Heads (b) Tails",
@@ -97,12 +97,12 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "A die is thrown 400 times. Frequency of each outcome: 1→60, 2→72, 3→68, 4→50, 5→80, 6→70. Find experimental probability of: (a) getting 4 (b) getting even number (c) getting prime number",
     hint: "P(E) = frequency of event / total trials.",
-    answer: "(a) 50/400 = 1/8. (b) (72+50+70)/400 = 192/400 = 12/25. (c) (60+72+68+80)/400 = 280/400 = 7/10.",
+    answer: "(a) 50/400 = 1/8. (b) (72+50+70)/400 = 192/400 = 12/25. (c) (72+68+80)/400 = 220/400 = 11/20.",
     steps: [
       { stepNumber: 1, title: "(a) P(4)", explanation: "50/400 = 1/8." },
       { stepNumber: 2, title: "(b) P(even: 2,4,6)", explanation: "(72+50+70)/400 = 192/400 = 12/25." },
@@ -112,7 +112,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "In a class of 60 students, 24 like Mathematics. A student is chosen at random. Find the probability that the student likes Mathematics.",
@@ -123,7 +123,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Hard", questionType: "PYQ",
     question: "Out of 1000 families surveyed with 2 children each, the data is: 2 boys = 320, 1 boy 1 girl = 480, 2 girls = 200. Find the probability of a family having: (a) at least 1 girl (b) exactly 2 boys. [Board Style]",
@@ -137,7 +137,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Hard", questionType: "HOTS",
     question: "A bag contains 5 red, 3 blue, and 2 green balls. A ball is drawn. Based on frequency of draws in 200 trials (Red 92, Blue 61, Green 47), compare experimental with theoretical probability for each colour.",
@@ -154,7 +154,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 3: Events and Complementary Events ──────────────────────────────
   {
     id: "c9-m-ch15-t3-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "If P(E) = 0.35, find P(not E).",
@@ -165,7 +165,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "The probability that it rains tomorrow is 0.6. What is the probability that it does not rain?",
@@ -176,7 +176,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Hard", questionType: "HOTS",
     question: "Can P(E) + P(not E) be greater than 1? Explain with reasoning.",
@@ -192,7 +192,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 4: Probability Calculations ────────────────────────────────────
   {
     id: "c9-m-ch15-t4-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Easy", questionType: "MCQ",
     question: "A die is rolled once. Probability of getting an even number is:\n(a) 1/6  (b) 1/3  (c) 1/2  (d) 2/3",
@@ -203,7 +203,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A card is drawn from a well-shuffled pack of 52 cards. Find the probability of drawing: (a) A king (b) A red card (c) A spade",
@@ -218,7 +218,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "Two unbiased dice are rolled. Find the probability that: (a) Sum = 7 (b) Sum = 11 (c) Doubles (same number on both dice)",
@@ -234,7 +234,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A bag contains 4 red, 5 blue, and 6 white balls. A ball is drawn at random. Find the probability it is: (a) Red (b) Not blue (c) White or red",
@@ -250,7 +250,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Hard", questionType: "PYQ",
     question: "A number is selected at random from numbers 1 to 25. Find the probability it is: (a) A prime number (b) A perfect square (c) Divisible by both 2 and 3. [Board Style]",
@@ -265,7 +265,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Hard", questionType: "HOTS",
     question: "If P(A) = 1/3 and P(A ∪ B) = 2/3 and P(A ∩ B) = 1/9, find P(B) and P(B but not A).",
@@ -281,7 +281,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 1 additions (q05–q12) ───────────────────────────────────────────
   {
     id: "c9-m-ch15-t1-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Easy", questionType: "MCQ",
     question: "If P(E) = 0, the event E is called:\n(a) Certain  (b) Impossible  (c) Complementary  (d) Exhaustive",
@@ -292,7 +292,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Easy", questionType: "MCQ",
     question: "Which of the following cannot be the probability of an event?\n(a) 0.5  (b) 1/3  (c) 3/4  (d) 5/4",
@@ -303,7 +303,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "If a coin is tossed 3 times, how many outcomes are in the sample space? List them.",
@@ -317,7 +317,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A bag has 6 marbles: 2 red, 3 blue, 1 green. What is the probability of drawing each colour? Verify that the probabilities sum to 1.",
@@ -333,7 +333,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A single die is rolled. Find the probability of getting: (a) a number greater than 4  (b) a number less than 1.",
@@ -347,7 +347,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Differentiate between theoretical probability and experimental probability. When does experimental probability equal theoretical probability?",
@@ -362,7 +362,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q11", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Hard", questionType: "HOTS",
     question: "A student says \"The probability that I will pass the exam is 110%.\" What is mathematically wrong with this statement?",
@@ -377,7 +377,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t1-q12", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t1", topicName: "Introduction to Probability",
     difficulty: "Hard", questionType: "HOTS",
     question: "A letter is picked at random from the word PROBABILITY. Find: (a) P(letter is B)  (b) P(letter is a vowel)  (c) P(letter is not I).",
@@ -395,7 +395,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 2 additions (q07–q14) ───────────────────────────────────────────
   {
     id: "c9-m-ch15-t2-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "In 50 spins of a spinner with 4 equal sectors labelled A, B, C, D — A appeared 14 times, B 12 times, C 11 times, D 13 times. Find the experimental probability of landing on A.",
@@ -406,7 +406,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Easy", questionType: "MCQ",
     question: "As the number of trials in an experiment increases, the experimental probability:\n(a) Moves further from theoretical  (b) Becomes exactly equal to theoretical immediately  (c) Approaches the theoretical probability  (d) Becomes 0",
@@ -417,7 +417,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Out of 300 seeds sown, 240 germinated. Find: (a) P(a randomly selected seed germinates)  (b) P(it does not germinate).",
@@ -431,7 +431,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "A blood-group survey of 200 people gave: O = 72, A = 68, B = 40, AB = 20. A person is selected at random. Find: (a) P(blood group O)  (b) P(blood group AB)  (c) P(neither O nor AB).",
@@ -446,7 +446,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q11", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Medium", questionType: "PYQ",
     question: "A die was thrown 180 times. Results — Face 1: 30, Face 2: 35, Face 3: 28, Face 4: 32, Face 5: 27, Face 6: 28. Find: (a) P(getting 5)  (b) P(getting an odd number)  (c) P(getting ≤ 3). [Board Style]",
@@ -461,7 +461,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q12", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Hard", questionType: "HOTS",
     question: "A student recorded 50 throws of a die: Face 1→9, 2→8, 3→6, 4→11, 5→7, 6→9. A teacher says 'Your die may be biased.' Justify using experimental probability.",
@@ -476,7 +476,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q13", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "In a class of 200 students: 80 play cricket, 60 play football, 40 play both, 20 play neither. A student is chosen at random. Find: (a) P(plays only cricket)  (b) P(plays at least one sport)  (c) P(plays neither sport).",
@@ -491,7 +491,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t2-q14", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t2", topicName: "Experimental Probability",
     difficulty: "Hard", questionType: "PYQ",
     question: "A survey of 400 people: 150 watch news, 200 watch sports, 100 watch both. Find: (a) P(watches only news)  (b) P(watches only sports)  (c) P(watches neither). [Board Style]",
@@ -508,7 +508,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 3 additions (q04–q12) ───────────────────────────────────────────
   {
     id: "c9-m-ch15-t3-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Easy", questionType: "MCQ",
     question: "If P(E) = 7/10, then P(Ē) =\n(a) 7/10  (b) 3/10  (c) 10/7  (d) 0",
@@ -519,7 +519,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "One student says P(E) = 0.6. Another says P(not E) = 0.5. Can both be correct simultaneously? Explain.",
@@ -533,7 +533,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A letter is chosen at random from the word MATHEMATICS. Find: (a) P(it is a vowel)  (b) P(it is not a vowel).",
@@ -548,7 +548,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "In a class, P(student likes Maths) = 2/5. (a) Find P(student does not like Maths).  (b) If there are 40 students, how many like Maths?",
@@ -562,7 +562,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Events E and F are complementary. P(F) = 0.4 and P(E) = (3x – 1)/10. Find x.",
@@ -576,7 +576,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "Define with one example each: (a) Impossible event  (b) Certain event  (c) Complementary events  (d) Equally likely events.",
@@ -592,7 +592,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Hard", questionType: "HOTS",
     question: "P(A) = 2/3 and P(B) = 1/4. Can A and B be complementary events? Justify.",
@@ -607,7 +607,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q11", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Hard", questionType: "ShortAnswer",
     question: "A card is drawn from a deck of 52. Let E = 'the card is a heart'. Find P(E) and P(Ē). Verify P(E) + P(Ē) = 1.",
@@ -622,7 +622,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t3-q12", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t3", topicName: "Events and Complementary Events",
     difficulty: "Hard", questionType: "PYQ",
     question: "A number is selected at random from 1 to 20. Let E = 'selected number is divisible by 3'. Find P(E) and P(not E). Verify they sum to 1. [Board Style]",
@@ -640,7 +640,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 4 additions (q07–q12) ───────────────────────────────────────────
   {
     id: "c9-m-ch15-t4-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Easy", questionType: "MCQ",
     question: "A bag contains 3 red, 4 white, and 5 black balls. Probability of drawing a white ball is:\n(a) 1/4  (b) 1/3  (c) 5/12  (d) 3/12",
@@ -651,7 +651,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A month of the year is selected at random (non-leap year). Find the probability that the selected month has exactly 30 days.",
@@ -665,7 +665,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "Cards numbered 1 to 20 are placed in a box and one is drawn at random. Find the probability of drawing: (a) a number divisible by 4  (b) a perfect square  (c) a prime number.",
@@ -680,7 +680,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Medium", questionType: "PYQ",
     question: "From a well-shuffled pack of 52 cards, a card is drawn at random. Find the probability of drawing: (a) a face card  (b) a black queen  (c) neither a king nor a queen. [Board Style]",
@@ -695,7 +695,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q11", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Hard", questionType: "HOTS",
     question: "Two fair coins are tossed simultaneously. Find: (a) P(at least one Head)  (b) P(exactly one Head)  (c) P(both show the same face). Verify that (a) + P(no Head) = 1.",
@@ -712,7 +712,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch15-t4-q12", classNum: 9, subject: "Mathematics",
-    chapterId: "ch15", chapterName: "Probability",
+    chapterId: "ch15", chapterName: "The Mathematics of Maybe: Introduction to Probability",
     topicId: "t4", topicName: "Probability Calculations",
     difficulty: "Hard", questionType: "PYQ",
     question: "A box contains slips numbered 1 to 50. One slip is drawn at random. Find the probability that the number on the slip is: (a) divisible by 5  (b) a multiple of 3 but not of 6  (c) a prime number less than 15. [Board Style]",

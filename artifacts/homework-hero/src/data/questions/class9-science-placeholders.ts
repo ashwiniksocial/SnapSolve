@@ -1,3 +1,4 @@
+// @frozen — bio-ch05 (75 q, validated 2026-07-23, 0 defects) + esc-ch01 (85 q, validated 2026-07-23, 0 defects)
 import type { Question, ChapterMeta } from "./types";
 
 export const CLASS9_SCIENCE_PLACEHOLDER_CHAPTERS: ChapterMeta[] = [

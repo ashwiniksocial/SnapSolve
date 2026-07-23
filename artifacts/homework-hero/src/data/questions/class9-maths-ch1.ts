@@ -19,7 +19,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 1: Real Numbers and Their Types ────────────────────────────────────
   {
     id: "c9-m-ch1-t1-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Easy",
     question: "Which of the following is an irrational number? (a) 1/3  (b) √4  (c) √2  (d) 0.25",
@@ -33,7 +33,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Easy",
     question: "Is 0 a rational number? Justify your answer.",
@@ -47,7 +47,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Easy",
     question: "Express 0.75 as a rational number in p/q form.",
@@ -61,7 +61,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Easy",
     question: "Find a rational number between 1/3 and 1/2.",
@@ -75,7 +75,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Medium",
     question: "How many rational numbers lie between two distinct rational numbers? Give an example.",
@@ -89,7 +89,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Medium",
     question: "Is the sum of two irrational numbers always irrational? Justify with an example.",
@@ -103,7 +103,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Medium",
     question: "Classify the number π. Is it rational or irrational?",
@@ -117,7 +117,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Medium",
     question: "Find five rational numbers between 3/5 and 4/5.",
@@ -131,7 +131,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Hard",
     question: "Prove that √2 is irrational.",
@@ -147,7 +147,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t1-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t1", topicName: "Real Numbers and Their Types",
     difficulty: "Hard",
     question: "If a and b are rational numbers and a + b√2 = 3 + 2√2, find the values of a and b.",
@@ -163,7 +163,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 2: Irrational Numbers ───────────────────────────────────────────────
   {
     id: "c9-m-ch1-t2-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Easy",
     question: "Which of the following is an irrational number? (a) 0.101001… (b) 0.333… (c) 0.142857142857…",
@@ -177,7 +177,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Easy",
     question: "Is √9 rational or irrational? Justify.",
@@ -191,7 +191,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Easy",
     question: "Find an irrational number between 2 and 3.",
@@ -205,7 +205,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Easy",
     question: "True or False: Every irrational number is a real number.",
@@ -219,7 +219,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Medium",
     question: "Simplify: √12 + √75",
@@ -234,7 +234,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Medium",
     question: "Rationalise the denominator: 1/√5",
@@ -248,7 +248,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Medium",
     question: "Simplify: (√3 + √2)(√3 − √2)",
@@ -262,7 +262,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Medium",
     question: "Is 2.1010010001... rational or irrational? Justify.",
@@ -276,7 +276,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Hard",
     question: "Rationalise the denominator: (3+√7)/(3−√7)",
@@ -292,7 +292,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t2-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t2", topicName: "Irrational Numbers",
     difficulty: "Hard",
     question: "If x = 5 + 2√6 and y = 1/x, find x + y.",
@@ -308,7 +308,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 3: Laws of Exponents ────────────────────────────────────────────────
   {
     id: "c9-m-ch1-t3-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Easy",
     question: "Simplify: 2³ × 2⁴",
@@ -322,7 +322,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t3-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Easy",
     question: "Simplify: (3²)³",
@@ -336,7 +336,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t3-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Easy",
     question: "Find the value of (2/3)⁻²",
@@ -350,7 +350,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t3-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Easy",
     question: "Simplify: x⁵ / x³",
@@ -363,7 +363,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t3-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Medium",
     question: "If 2ˣ = 64, find x.",
@@ -377,7 +377,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t3-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Medium",
     question: "Simplify: 27^(1/3) × 32^(1/5)",
@@ -391,7 +391,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t3-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Medium",
     question: "Simplify: (a²b³)² / (a³b²)",
@@ -405,35 +405,35 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t3-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Medium",
     question: "Evaluate: (8^(1/3) × 16^(1/4)) / 2^(1/2)",
     hint: "Express 8 and 16 as powers of 2, then apply exponent rules.",
-    answer: "4",
+    answer: "2√2",
     steps: [
-      { stepNumber: 1, title: "Rewrite in terms of base 2", explanation: "8^(1/3) = (2³)^(1/3) = 2¹ = 2. 16^(1/4) = (2⁴)^(1/4) = 2¹ = 2.", formula: "2 × 2 / 2^(1/2) = 4 / 2^(1/2)" },
-      { stepNumber: 2, title: "Simplify", explanation: "4 / √2 = 4√2/2 = 2√2 — wait, let me recalc. Actually: 2×2 = 4 = 2². Then 2² / 2^(1/2) = 2^(2−1/2) = 2^(3/2) = 2√2.", result: "2√2 ≈ 2.828" },
+      { stepNumber: 1, title: "Rewrite in terms of base 2", explanation: "8^(1/3) = (2³)^(1/3) = 2¹ = 2. 16^(1/4) = (2⁴)^(1/4) = 2¹ = 2. Numerator = 2 × 2 = 4 = 2².", formula: "2² / 2^(1/2)" },
+      { stepNumber: 2, title: "Apply quotient rule", explanation: "2² / 2^(1/2) = 2^(2 − 1/2) = 2^(3/2) = 2^1 × 2^(1/2) = 2√2", result: "2√2" },
     ],
     keyConcepts: ["Fractional exponents", "Common base"],
   },
   {
     id: "c9-m-ch1-t3-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Hard",
-    question: "Simplify: [(x^a)^(a−b)] × [(x^b)^(b−c)] × [(x^c)^(c−a)]",
-    hint: "Apply power rule, then add all exponents (same base x).",
+    question: "Simplify: x^(a−b) × x^(b−c) × x^(c−a)",
+    hint: "When multiplying same bases, add all exponents.",
     answer: "1 (= x⁰)",
     steps: [
-      { stepNumber: 1, title: "Apply power rule to each factor", explanation: "= x^(a(a−b)) × x^(b(b−c)) × x^(c(c−a))", formula: "= x^[a²−ab + b²−bc + c²−ca]" },
-      { stepNumber: 2, title: "Simplify the exponent", explanation: "a²−ab + b²−bc + c²−ca = a²+b²+c²−ab−bc−ca. All terms cancel. Actually this does NOT simplify to 0 in general — the identity a²+b²+c²−ab−bc−ca ≠ 0. Correct exponent: a(a−b)+b(b−c)+c(c−a) = a²−ab+b²−bc+c²−ca. Each positive term pairs with a negative term: a²−ca, b²−ab, c²−bc... Sum = a²+b²+c²−ab−bc−ca. Not zero in general. The question needs a+b+c=0 constraint. Without it, the answer is x^(a²+b²+c²−ab−bc−ca).", result: "x^(a²+b²+c²−ab−bc−ca)" },
+      { stepNumber: 1, title: "Add the exponents", explanation: "All three factors share base x. Add the exponents: (a−b) + (b−c) + (c−a).", formula: "(a−b) + (b−c) + (c−a) = a−b+b−c+c−a = 0" },
+      { stepNumber: 2, title: "Apply zero-exponent rule", explanation: "x⁰ = 1 for any non-zero x.", result: "x⁰ = 1" },
     ],
     keyConcepts: ["Exponent laws", "Algebraic simplification"],
   },
   {
     id: "c9-m-ch1-t3-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t3", topicName: "Laws of Exponents",
     difficulty: "Hard",
     question: "If 4^x = 8^y, prove that 3y = 2x and hence find x:y.",
@@ -450,7 +450,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 4: Real Numbers on the Number Line ──────────────────────────────────
   {
     id: "c9-m-ch1-t4-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Easy",
     question: "Between which two consecutive integers does √10 lie?",
@@ -464,7 +464,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Easy",
     question: "What is the approximate decimal value of √2?",
@@ -477,7 +477,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Easy",
     question: "True or False: Every point on the number line represents a real number.",
@@ -490,7 +490,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Easy",
     question: "Describe the Pythagorean construction to locate √2 on the number line.",
@@ -505,7 +505,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Medium",
     question: "Describe how to locate √5 on the number line using successive right triangles.",
@@ -520,7 +520,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Medium",
     question: "Which is greater: √3/2 or 2/√3?",
@@ -535,21 +535,21 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Medium",
     question: "Arrange in ascending order: √5, 2.2, 9/4",
     hint: "Convert all to decimal form.",
-    answer: "2.2 < 9/4 < √5",
+    answer: "2.2 < √5 < 9/4",
     steps: [
-      { stepNumber: 1, title: "Convert to decimals", explanation: "√5 ≈ 2.236; 2.2 = 2.200; 9/4 = 2.250" },
-      { stepNumber: 2, title: "Order", explanation: "2.200 < 2.250 < 2.236? Wait: 2.250 > 2.236. So order is: 2.2 < √5 < 9/4.", result: "2.2 < √5 < 9/4" },
+      { stepNumber: 1, title: "Convert to decimals", explanation: "√5 ≈ 2.236; 2.2 = 2.200; 9/4 = 2.250." },
+      { stepNumber: 2, title: "Order", explanation: "2.200 < 2.236 < 2.250, so 2.2 < √5 < 9/4.", result: "2.2 < √5 < 9/4" },
     ],
     keyConcepts: ["Comparison", "Decimal approximation", "Number line ordering"],
   },
   {
     id: "c9-m-ch1-t4-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Medium",
     question: "Locate √3 on the number line using a geometric construction.",
@@ -564,7 +564,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Hard",
     question: "Using a number line and the concept of successive magnification, represent 4.2̄6̄ (4.2626…) approximately.",
@@ -579,7 +579,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t4-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t4", topicName: "Real Numbers on the Number Line",
     difficulty: "Hard",
     question: "Geometrically locate √7.5 on the number line.",
@@ -596,7 +596,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 5: Operations on Real Numbers ──────────────────────────────────────
   {
     id: "c9-m-ch1-t5-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Easy",
     question: "Simplify: 3√2 + 5√2",
@@ -609,7 +609,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Easy",
     question: "Multiply: √5 × √5",
@@ -622,7 +622,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Easy",
     question: "Divide: √12 / √3",
@@ -636,7 +636,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Easy",
     question: "Simplify: √45 − 3√20 + 4√5",
@@ -650,7 +650,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Medium",
     question: "Rationalise the denominator: 4/(√3 + 1)",
@@ -664,7 +664,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Medium",
     question: "If x = 2 + √3, find x + 1/x.",
@@ -678,7 +678,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Medium",
     question: "Simplify: (2 + √3)(2 − √3)",
@@ -691,7 +691,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Medium",
     question: "Find the value of: (5+√2)/(5−√2) − (5−√2)/(5+√2)",
@@ -706,7 +706,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Hard",
     question: "If x = 3 + 2√2, find √x + 1/√x.",
@@ -722,16 +722,16 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch1-t5-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch1", chapterName: "Number Systems",
+    chapterId: "ch1", chapterName: "The World of Numbers",
     topicId: "t5", topicName: "Operations on Real Numbers",
     difficulty: "Hard",
     question: "Find the values of a and b if (7+3√5)/(3+√5) − (7−3√5)/(3−√5) = a + b√5.",
     hint: "Rationalise both fractions separately, then subtract.",
-    answer: "a = 0, b = −2",
+    answer: "a = 0, b = 1",
     steps: [
-      { stepNumber: 1, title: "Rationalise first fraction", explanation: "(7+3√5)/(3+√5) × (3−√5)/(3−√5) = (7+3√5)(3−√5)/(9−5) = (21−7√5+9√5−15)/4 = (6+2√5)/4 = (3+√5)/2" },
-      { stepNumber: 2, title: "Rationalise second fraction", explanation: "(7−3√5)/(3−√5) × (3+√5)/(3+√5) = (7−3√5)(3+√5)/(9−5) = (21+7√5−9√5−15)/4 = (6−2√5)/4 = (3−√5)/2" },
-      { stepNumber: 3, title: "Subtract", explanation: "(3+√5)/2 − (3−√5)/2 = 2√5/2 = √5. Wait: first − second = (3+√5)/2 − (3−√5)/2 = 2√5/2 = √5.", result: "a = 0, b = 1 (Result = √5 = 0 + 1·√5)" },
+      { stepNumber: 1, title: "Rationalise first fraction", explanation: "(7+3√5)/(3+√5) × (3−√5)/(3−√5): numerator = (21−7√5+9√5−15) = 6+2√5; denominator = 9−5 = 4. Result = (6+2√5)/4 = (3+√5)/2.", formula: "(3+√5)/2" },
+      { stepNumber: 2, title: "Rationalise second fraction", explanation: "(7−3√5)/(3−√5) × (3+√5)/(3+√5): numerator = (21+7√5−9√5−15) = 6−2√5; denominator = 4. Result = (3−√5)/2.", formula: "(3−√5)/2" },
+      { stepNumber: 3, title: "Subtract", explanation: "(3+√5)/2 − (3−√5)/2 = 2√5/2 = √5 = 0 + 1·√5. Comparing with a + b√5: a = 0, b = 1.", result: "a = 0, b = 1" },
     ],
     keyConcepts: ["Rationalisation", "Comparing coefficients", "Conjugate"],
   },

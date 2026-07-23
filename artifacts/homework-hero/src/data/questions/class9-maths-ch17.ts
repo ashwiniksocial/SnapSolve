@@ -1,4 +1,4 @@
-// @frozen — Predicting What Comes Next: Exploring Sequences and Progressions (Ganita Manjari Part I, Ch 8) — 75 questions, validated 2026-07-21
+// @frozen — Predicting What Comes Next: Exploring Sequences and Progressions (Ganita Manjari Part I, Ch 8) — 75 questions, validated 2026-07-23 (1 defect fixed: t5-q14 answer field opened with wrong value)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
@@ -1059,7 +1059,7 @@ export const QUESTIONS: Question[] = [
     difficulty: "Hard",
     question: "A sequence begins 2, 5, 11, 23, 47, ... Each term = 2×(previous term) + 1. Find the 8th term.",
     hint: "Apply the rule repeatedly: 2×47+1=95, then continue.",
-    answer: "191. 6th: 2×47+1=95. 7th: 2×95+1=191. Wait: 8th: 2×191+1=383. Let me recount. Terms: 2,5,11,23,47,95,191,383. 8th = 383.",
+    answer: "383. Terms: 2, 5, 11, 23, 47, 95, 191, 383. The 8th term is 383.",
     steps: [
       { stepNumber: 1, title: "Verify rule and list terms", explanation: "2×2+1=5 ✓. 2×5+1=11 ✓. 2×11+1=23 ✓. 2×23+1=47 ✓. 2×47+1=95. 2×95+1=191. 2×191+1=383.", result: "Terms: 2,5,11,23,47,95,191,383" },
       { stepNumber: 2, title: "Identify 8th term", explanation: "Counting: 1st=2, 2nd=5, 3rd=11, 4th=23, 5th=47, 6th=95, 7th=191, 8th=383.", result: "8th term = 383" },

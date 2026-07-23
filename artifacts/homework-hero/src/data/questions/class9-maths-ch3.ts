@@ -19,7 +19,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 1: Cartesian Plane ──────────────────────────────────────────────────
   {
     id: "c9-m-ch3-t1-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Easy",
     question: "What is another name for the Cartesian plane?",
@@ -32,7 +32,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Easy",
     question: "What are the two axes of the Cartesian plane called?",
@@ -45,7 +45,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Easy",
     question: "What is the point where the x-axis and y-axis intersect called?",
@@ -58,7 +58,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Easy",
     question: "Into how many parts do the two axes divide the Cartesian plane?",
@@ -71,7 +71,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Medium",
     question: "On the Cartesian plane, which direction is positive along the x-axis and which is positive along the y-axis?",
@@ -84,7 +84,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Medium",
     question: "A point lies exactly on the x-axis. What can you say about its y-coordinate?",
@@ -97,7 +97,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Medium",
     question: "A point lies exactly on the y-axis. What can you say about its x-coordinate?",
@@ -110,7 +110,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Hard",
     question: "The Cartesian plane extends infinitely in all directions. True or False? Explain.",
@@ -123,7 +123,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Hard",
     question: "What is the difference between a number line and the Cartesian plane?",
@@ -136,7 +136,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t1-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t1", topicName: "Cartesian Plane",
     difficulty: "Hard",
     question: "How many points in the Cartesian plane have both coordinates equal to the same value (i.e., x = y)? Describe their location.",
@@ -151,7 +151,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 2: Coordinates of a Point ──────────────────────────────────────────
   {
     id: "c9-m-ch3-t2-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Easy",
     question: "What is the abscissa of a point?",
@@ -164,7 +164,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Easy",
     question: "What is the ordinate of a point?",
@@ -177,7 +177,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Easy",
     question: "Write the coordinates of the origin.",
@@ -190,7 +190,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Easy",
     question: "For point P = (−4, 7), state the abscissa and ordinate.",
@@ -203,7 +203,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Medium",
     question: "A point is 5 units to the right of the y-axis and 3 units above the x-axis. Write its coordinates.",
@@ -217,7 +217,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Medium",
     question: "A point is 4 units to the left of the y-axis and 6 units below the x-axis. Write its coordinates.",
@@ -231,7 +231,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Medium",
     question: "What is the distance of the point (3, 4) from the x-axis? From the y-axis?",
@@ -245,7 +245,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Hard",
     question: "Are (3, 4) and (4, 3) the same point? Explain why coordinates must be written in order.",
@@ -259,7 +259,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t2-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t2", topicName: "Coordinates of a Point",
     difficulty: "Hard",
     question: "A point P is equidistant from both axes. If it is in the second quadrant and its distance from each axis is 6 units, find P.",
@@ -275,7 +275,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 3: Quadrants ────────────────────────────────────────────────────────
   {
     id: "c9-m-ch3-t3-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Easy",
     question: "In which quadrant do both coordinates have positive values?",
@@ -288,7 +288,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Easy",
     question: "In which quadrant is x < 0 and y > 0?",
@@ -301,7 +301,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Easy",
     question: "In which quadrant are both coordinates negative?",
@@ -314,7 +314,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Easy",
     question: "In which quadrant is x > 0 and y < 0?",
@@ -327,7 +327,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Easy",
     question: "In which quadrant does the point (3, 5) lie?",
@@ -340,7 +340,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Medium",
     question: "In which quadrant does the point (−2, 7) lie?",
@@ -353,7 +353,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Medium",
     question: "In which quadrant does the point (−3, −8) lie?",
@@ -366,7 +366,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Medium",
     question: "In which quadrant does the point (5, −2) lie?",
@@ -379,7 +379,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Medium",
     question: "A point has negative abscissa and positive ordinate. In which quadrant does it lie?",
@@ -392,7 +392,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Hard",
     question: "If the point (2a − 3, b + 1) lies in Quadrant II, write the conditions on a and b.",
@@ -406,7 +406,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q11", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Hard",
     question: "The point (k, k) where k ≠ 0 lies in which quadrant when k > 0? In which quadrant when k < 0?",
@@ -420,7 +420,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t3-q12", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t3", topicName: "Quadrants",
     difficulty: "Hard",
     question: "If (a, b) is in Quadrant III, in which quadrant is (−a, b)? And (a, −b)?",
@@ -437,7 +437,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 4: Plotting Points ──────────────────────────────────────────────────
   {
     id: "c9-m-ch3-t4-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Easy",
     question: "Describe the steps to plot the point (4, 3) on the Cartesian plane.",
@@ -451,7 +451,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Easy",
     question: "Where does the point (0, 5) lie on the Cartesian plane?",
@@ -464,7 +464,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Easy",
     question: "Where does the point (−5, 0) lie on the Cartesian plane?",
@@ -477,7 +477,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Easy",
     question: "Plot the four points A(2, 0), B(0, 3), C(−2, 0), D(0, −3). What shape do they form?",
@@ -491,7 +491,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Easy",
     question: "What is the distance of the point (0, −7) from the origin?",
@@ -504,7 +504,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Medium",
     question: "Three vertices of a rectangle are (0, 0), (4, 0), and (4, 3). Find the fourth vertex. What is the area of the rectangle?",
@@ -519,7 +519,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Medium",
     question: "Three vertices of a square are (1, 1), (4, 1), (4, 4). Find the fourth vertex.",
@@ -533,7 +533,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Medium",
     question: "Describe the position of the point (−3, −5) relative to the origin.",
@@ -547,7 +547,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Medium",
     question: "Plot A(3, 4) and B(−3, 4). What is the distance AB?",
@@ -561,14 +561,14 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Hard",
-    question: "Three vertices of a rectangle are A(−2, 3), B(2, 3), B(2, −1). Find the fourth vertex D and the perimeter.",
+    question: "Three vertices of a rectangle are A(−2, 3), B(2, 3), C(2, −1). Find the fourth vertex D and the perimeter.",
     hint: "The fourth vertex completes the rectangle. Find length and width from the given vertices.",
-    answer: "D = (−2, −1). Length AB = 4, Width = 4 (height from y = −1 to y = 3). Perimeter = 2(4 + 4) = 16 units.",
+    answer: "D = (−2, −1). Length AB = 4, Width BC = 4 (height from y = −1 to y = 3). Perimeter = 2(4 + 4) = 16 units.",
     steps: [
-      { stepNumber: 1, title: "Identify vertices", explanation: "A=(−2,3), B=(2,3): top side, horizontal. B=(2,3) to C=(2,−1): right side, vertical (length 4)." },
+      { stepNumber: 1, title: "Identify vertices", explanation: "A=(−2,3), B=(2,3): top side, horizontal (length 4). B=(2,3) to C=(2,−1): right side, vertical (length 4)." },
       { stepNumber: 2, title: "Fourth vertex", explanation: "D must be directly below A and to the left of C: D = (−2, −1)." },
       { stepNumber: 3, title: "Perimeter", explanation: "AB = 4 (width), BC = 4 (height). Perimeter = 2(4 + 4) = 16 units.", result: "D=(−2,−1); Perimeter=16" },
     ],
@@ -576,7 +576,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t4-q11", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Hard",
     question: "Points A(3, 4), B(−3, 4), C(−3, −4), D(3, −4) form a rectangle. Find the area and the coordinates of the point where its diagonals intersect.",
@@ -593,7 +593,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 5: Reading Coordinates from a Graph ────────────────────────────────
   {
     id: "c9-m-ch3-t5-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "A flag post is at coordinates (0, 8) on a grid map. How far is it from the main road (the x-axis)?",
@@ -606,7 +606,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "A school is at (−6, 0) and a hospital is at (4, 0) on a coordinate map. Both are on the main road (x-axis). How far apart are they?",
@@ -619,7 +619,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "A tree is at (3, 0) and a lamp post is at (3, 5) on a map. How far apart are they vertically?",
@@ -632,7 +632,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Easy",
     question: "What are the coordinates of a point that is 9 units above the origin on the y-axis?",
@@ -645,7 +645,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "Two houses are at A(0, 0) and B(6, 0) on a straight road. A park is to be built equidistant from both houses, on the same road. What are the park's coordinates?",
@@ -658,7 +658,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "A bridge connects town A(1, 4) to town B(7, 4). A service point is placed at the centre of the bridge. Find its coordinates.",
@@ -671,7 +671,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "A rectangle-shaped garden has corners at (−3, 1), (5, 1), (5, −2), (−3, −2). Find the length, width, and area of the garden.",
@@ -686,7 +686,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch3-t5-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch3", chapterName: "Coordinate Geometry",
+    chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t5", topicName: "Reading Coordinates from a Graph",
     difficulty: "Medium",
     question: "A ship moves from port P(2, −3) to port Q(2, 5). How far did it travel? In which direction?",

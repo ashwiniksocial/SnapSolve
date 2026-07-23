@@ -1,3 +1,4 @@
+// @frozen — Tissues (bio-ch02) — 75 questions, validated 2026-07-23 (0 defects)
 // @ts-nocheck
 /**
  * Question Bank — Biology, Class 9, Chapter 2: Tissues

@@ -1,3 +1,4 @@
+// @frozen — Force and Laws of Motion (phy-ch2) — 50 questions, validated 2026-07-23 (0 defects)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {

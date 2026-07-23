@@ -1,3 +1,4 @@
+// @frozen — Atoms and Molecules (chem-ch03) — 75 questions, validated 2026-07-23 (0 defects)
 // @ts-nocheck
 /**
  * Question Bank — Chemistry, Class 9, Chapter 3 (file) / Official Ch9: Atoms and Molecules

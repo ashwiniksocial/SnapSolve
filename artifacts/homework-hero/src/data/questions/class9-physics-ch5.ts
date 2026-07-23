@@ -1,3 +1,4 @@
+// @frozen — Sound (phy-ch5) — 50 questions, validated 2026-07-23 (0 defects)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {

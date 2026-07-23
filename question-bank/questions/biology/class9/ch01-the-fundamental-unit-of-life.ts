@@ -1,3 +1,4 @@
+// @frozen — Cell — The Fundamental Unit of Life (bio-ch01) — 75 questions, validated 2026-07-23 (0 defects)
 // @ts-nocheck
 /**
  * Question Bank — Biology, Class 9, Chapter 1: The Fundamental Unit of Life

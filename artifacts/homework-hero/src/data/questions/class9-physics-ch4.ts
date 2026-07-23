@@ -1,3 +1,4 @@
+// @frozen — Work, Energy and Simple Machines (phy-ch4) — 50 questions, validated 2026-07-23 (1 defect fixed: t3-q05 answer/step had power 1666.7 W instead of correct 166.7 W)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
@@ -321,10 +322,10 @@ export const QUESTIONS: Question[] = [
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A motor pumps 500 kg of water to a height of 20 m in 10 minutes. Find the power of the motor. (g = 10 m/s²)",
     hint: "Work done = mgh. Power = W/t.",
-    answer: "Power = 1666.7 W ≈ 1.67 kW",
+    answer: "Power ≈ 166.7 W ≈ 0.167 kW",
     steps: [
       { stepNumber: 1, title: "Work done", explanation: "", formula: "W = mgh = 500 × 10 × 20 = 100,000 J", result: "W = 100,000 J" },
-      { stepNumber: 2, title: "Power", explanation: "", formula: "P = W/t = 100,000 / (10×60) = 100,000/600 ≈ 166.7 W", result: "Wait — P = 100000/600 = 166.7 W ≈ 167 W" },
+      { stepNumber: 2, title: "Power", explanation: "", formula: "P = W/t = 100,000 / (10×60) = 100,000/600 ≈ 166.7 W", result: "Power ≈ 166.7 W ≈ 0.167 kW" },
     ],
     keyConcepts: ["P = mgh/t", "Water pump", "Unit conversion"],
   },

@@ -1,3 +1,4 @@
+// @frozen — Motion (phy-ch1) — 50 questions, validated 2026-07-23 (3 defects fixed: t2-q08 speed/velocity answer header, t3-q07 acceleration answer header, t5-q03 half-revolution velocity answer header)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
@@ -300,7 +301,7 @@ export const QUESTIONS: Question[] = [
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A person walks 3 km North in 30 minutes, then 4 km East in 40 minutes. Find: (i) average speed for the whole journey, and (ii) average velocity (magnitude and direction).",
     hint: "Speed uses total distance; velocity uses total displacement.",
-    answer: "(i) Average speed = 7 km/h  (ii) Average velocity = 5 km/h at 53.1° East of North",
+    answer: "(i) Average speed = 6 km/h  (ii) Average velocity ≈ 4.29 km/h at 53.1° East of North",
     steps: [
       { stepNumber: 1, title: "Total distance and time", explanation: "Distance = 3 + 4 = 7 km. Time = 30 + 40 = 70 min = 7/6 h." },
       { stepNumber: 2, title: "Average speed", explanation: "", formula: "Speed = 7 / (7/6) = 7 × 6/7 = 6 km/h", result: "Average speed = 6 km/h" },
@@ -460,7 +461,7 @@ export const QUESTIONS: Question[] = [
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A body starts from rest and travels with uniform acceleration. It covers 18 m in the 3rd second. Find the acceleration.",
     hint: "Distance covered in nth second: sₙ = u + a(2n − 1)/2.",
-    answer: "a = 4 m/s²",
+    answer: "a = 7.2 m/s²",
     steps: [
       { stepNumber: 1, title: "Formula for nth second", explanation: "Distance covered in nth second = u + a(2n − 1)/2.", formula: "sₙ = u + a(2n − 1)/2" },
       { stepNumber: 2, title: "Substitute values", explanation: "u = 0, n = 3, s₃ = 18 m.", formula: "18 = 0 + a(2×3 − 1)/2 = a × 5/2", result: "a = 18 × 2/5 = 36/5 = 7.2 m/s²" },
@@ -750,7 +751,7 @@ export const QUESTIONS: Question[] = [
     difficulty: "Hard", questionType: "HOTS",
     question: "An athlete runs along the circumference of a circular ground of radius 70 m and completes one revolution in 40 s. Find: (i) the speed, (ii) the average velocity over one complete revolution, (iii) the average velocity for a half revolution. Why does the answer to (ii) differ from (iii)?",
     hint: "Velocity needs net displacement. One full revolution → displacement = 0. Half revolution → displacement = diameter.",
-    answer: "(i) Speed = 11 m/s  (ii) Average velocity = 0  (iii) Average velocity = 3.5 m/s",
+    answer: "(i) Speed = 11 m/s  (ii) Average velocity = 0  (iii) Average velocity = 7 m/s",
     steps: [
       { stepNumber: 1, title: "Speed", explanation: "Circumference = 2π × 70 = 2 × 22/7 × 70 = 440 m. Speed = 440 / 40 = 11 m/s.", result: "Speed = 11 m/s" },
       { stepNumber: 2, title: "Average velocity over one full revolution", explanation: "After one complete revolution the athlete returns to the starting point → net displacement = 0.", formula: "Average velocity = 0 / 40 = 0 m/s", result: "Average velocity = 0 m/s" },

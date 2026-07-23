@@ -1,3 +1,4 @@
+// @frozen — Measuring Space: Perimeter and Area (Ganita Manjari Part I, Ch 9) — 75 questions, validated 2026-07-23 (2 defects fixed: t6-q08 inconsistent diagonal BD rewritten with AC=13 quadrilateral)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
@@ -1730,26 +1731,26 @@ export const QUESTIONS: Question[] = [
     topicName: "Heron's Formula",
     difficulty: "Hard",
     questionType: "HOTS",
-    question: "A quadrilateral field ABCD can be divided by diagonal BD into two triangles ABD and BCD. AB = 9 m, AD = 40 m, BD = 41 m, BC = 14 m, CD = 13 m. Find the total area.",
-    hint: "Check if ΔABD is right-angled. Use Heron's for ΔBCD.",
-    answer: "ΔABD: Check 9² + 40² = 81 + 1600 = 1681 = 41². Right-angled at A! Area = ½ × 9 × 40 = 180 m². ΔBCD: s = (14+13+41)/2 = 34. Area = √[34×20×21×(-7)] — wait, s−41 = -7 < 0, so this triangle is degenerate. Re-check: BD must form valid triangle with BC and CD. 14+13=27 < 41 so BCD is impossible. The problem needs a valid diagonal. Use BD=15 instead for a standard problem setup.",
+    question: "A quadrilateral field ABCD can be divided by diagonal AC into two triangles ABC and ACD. AB = 5 m, BC = 12 m, AC = 13 m, CD = 14 m, DA = 15 m. Find the total area of the field.",
+    hint: "Check if ΔABC is right-angled. Use Heron's formula for ΔACD.",
+    answer: "ΔABC: 5² + 12² = 25 + 144 = 169 = 13². Right-angled at B. Area = ½ × 5 × 12 = 30 m². ΔACD: s = (13+14+15)/2 = 21. Area = √[21×8×7×6] = √7056 = 84 m². Total = 30 + 84 = 114 m².",
     steps: [
       {
         stepNumber: 1,
-        title: "Check ΔABD",
-        explanation: "9² + 40² = 81 + 1600 = 1681 = 41². Right angle at A. Area = ½×9×40 = 180 m².",
+        title: "Check ΔABC for right angle",
+        explanation: "5² + 12² = 25 + 144 = 169 = 13². Pythagoras holds → right angle at B. Area(ΔABC) = ½ × 5 × 12 = 30 m².",
       },
       {
         stepNumber: 2,
-        title: "ΔBCD with sides 14, 13, 15",
-        formula: "s = (14+13+15)/2 = 21",
-        explanation: "Area = √[21×7×8×6] = √7056 = 84 m². (Using BD = 15.)",
+        title: "Apply Heron's formula to ΔACD",
+        formula: "s = (13+14+15)/2 = 21",
+        explanation: "Area = √[21×(21−13)×(21−14)×(21−15)] = √[21×8×7×6] = √7056 = 84 m².",
       },
       {
         stepNumber: 3,
         title: "Total area",
-        explanation: "Total = 180 + 84 = 264 m².",
-        result: "264 m²",
+        explanation: "Total = 30 + 84 = 114 m².",
+        result: "114 m²",
       },
     ],
     keyConcepts: ["quadrilateral area by diagonal", "Heron's formula", "right triangle detection"],

@@ -17,7 +17,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 1: Introduction and Standard Form ────────────────────────────────
   {
     id: "c9-m-ch4-t1-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Easy", questionType: "MCQ",
     question: "Which of the following is a linear equation in two variables?\n(a) x² + y = 3  (b) 2x + 3y = 7  (c) xy = 5  (d) x² – y² = 0",
@@ -31,7 +31,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Write the equation 2x = 5 in the standard form ax + by + c = 0 and identify a, b, c.",
@@ -45,7 +45,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Easy", questionType: "MCQ",
     question: "The standard form of a linear equation in two variables is:\n(a) ax + b = 0  (b) ax + by + c = 0  (c) ax² + bx + c = 0  (d) ax + by = 0",
@@ -58,7 +58,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Express the equation 3x = 2y – 1 in standard form and state the values of a, b, c.",
@@ -72,7 +72,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Is y = 0 a linear equation in two variables? Write it in standard form.",
@@ -85,7 +85,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Hard", questionType: "HOTS",
     question: "Give two examples where a linear equation in two variables is used in real life. Write the equation for each.",
@@ -99,7 +99,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Easy", questionType: "PYQ",
     question: "Write the equation x – 4 = √3 y in the form ax + by + c = 0 and identify a, b, c. [Board Style]",
@@ -113,7 +113,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "How many solutions does a linear equation in two variables have? Justify with an example.",
@@ -127,7 +127,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "The cost of a notebook is twice the cost of a pen. Write a linear equation in two variables to represent this statement. Also, find two solutions of this equation.",
@@ -143,7 +143,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t1-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t1", topicName: "Introduction and Standard Form",
     difficulty: "Medium", questionType: "MCQ",
     question: "The equation 2x + 3y = 12 in standard form ax + by + c = 0 has c equal to:\n(a) 12  (b) –12  (c) 3  (d) 2",
@@ -158,7 +158,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 2: Solutions of a Linear Equation ────────────────────────────────
   {
     id: "c9-m-ch4-t2-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Check whether (2, 3) is a solution of the equation 2x + y = 7.",
@@ -172,7 +172,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Find two solutions of the equation 3x + 2y = 6.",
@@ -186,7 +186,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "If (k, 2) is a solution of the equation 3x – 2y = 1, find the value of k.",
@@ -200,7 +200,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium", questionType: "MCQ",
     question: "How many solutions does the equation 4x + 5y = 20 have?\n(a) One  (b) Two  (c) Finite  (d) Infinitely many",
@@ -213,7 +213,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Write four solutions of the equation x – y = 0.",
@@ -226,7 +226,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Hard", questionType: "HOTS",
     question: "If (a, b) is a solution of 2x + y = 5, write two other solutions in terms of a and b.",
@@ -241,7 +241,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Hard", questionType: "PYQ",
     question: "If x = 1, y = 1 is a solution of the equation 9ax + 12ay = 63, find the value of a. [Board Style]",
@@ -255,7 +255,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "Find five solutions of the equation 2x + y = 10 and represent them in a table.",
@@ -269,23 +269,23 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t2-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Easy", questionType: "MCQ",
-    question: "Which of the following is NOT a solution of x + 2y = 6?\n(a) (0, 3)  (b) (6, 0)  (c) (2, 2)  (d) (4, 1)",
-    hint: "Substitute each option into x + 2y and check if it equals 6.",
-    answer: "(c) (2, 2): 2 + 2(2) = 6 ✓ Wait — (c) IS a solution. Let me recheck (d): 4 + 2(1) = 6 ✓. Answer: none are excluded. But the intended trap is checking (2,2): 2+4=6 ✓. So the answer is none, but option intended as wrong: (d) if computed as 4+1=5≠6. Answer: (d) is NOT a solution if the student forgets to multiply: 4+2(1)=6 is correct. This question tests careful substitution. All options actually work except if we have a typo — correct answer intended: none wrong, but as a trick, (c) and (d) both work. Correct answer for well-posed: (a) is correct.",
+    question: "Which of the following is NOT a solution of x + 2y = 6?\n(a) (0, 3)  (b) (6, 0)  (c) (2, 2)  (d) (1, 3)",
+    hint: "Substitute each option into x + 2y and check if the result equals 6.",
+    answer: "(d) (1, 3) — because 1 + 2(3) = 1 + 6 = 7 ≠ 6",
     steps: [
-      { stepNumber: 1, title: "Test (a)", explanation: "0 + 2(3) = 6 ✓" },
-      { stepNumber: 2, title: "Test (b)", explanation: "6 + 2(0) = 6 ✓" },
-      { stepNumber: 3, title: "Test (c)", explanation: "2 + 2(2) = 2 + 4 = 6 ✓" },
-      { stepNumber: 4, title: "Test (d)", explanation: "4 + 2(1) = 4 + 2 = 6 ✓", result: "All are solutions — verify each carefully." },
+      { stepNumber: 1, title: "Test (a)", explanation: "x=0, y=3: 0 + 2(3) = 6 ✓ — solution." },
+      { stepNumber: 2, title: "Test (b)", explanation: "x=6, y=0: 6 + 2(0) = 6 ✓ — solution." },
+      { stepNumber: 3, title: "Test (c)", explanation: "x=2, y=2: 2 + 2(2) = 6 ✓ — solution." },
+      { stepNumber: 4, title: "Test (d)", explanation: "x=1, y=3: 1 + 2(3) = 1 + 6 = 7 ≠ 6 ✗ — NOT a solution.", result: "Answer: (d) (1, 3)" },
     ],
     keyConcepts: ["Verification", "Substitution", "Critical thinking"],
   },
   {
     id: "c9-m-ch4-t2-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t2", topicName: "Solutions of a Linear Equation",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Find the value of m if (m, m+1) is a solution of 4x – 3y + 1 = 0.",
@@ -301,7 +301,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 3: Graphical Representation ─────────────────────────────────────
   {
     id: "c9-m-ch4-t3-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Easy", questionType: "MCQ",
     question: "The graph of every linear equation in two variables is:\n(a) A curve  (b) A straight line  (c) A circle  (d) A parabola",
@@ -314,7 +314,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Find the x-intercept and y-intercept of the line 3x + 4y = 12.",
@@ -328,7 +328,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "Draw the graph of 2x + y = 6 by finding three solutions and plotting them.",
@@ -343,7 +343,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Hard", questionType: "HOTS",
     question: "The line 2x + 3y = 18 cuts the x-axis at A and y-axis at B. Find the area of triangle OAB, where O is the origin.",
@@ -358,7 +358,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Does the point (3, –2) lie on the line x + y = 1? Verify graphically and algebraically.",
@@ -371,7 +371,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Hard", questionType: "PYQ",
     question: "Draw the graph of 4x + 3y = 24. Find the area enclosed by the line and the two coordinate axes. [Board Style]",
@@ -386,7 +386,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Easy", questionType: "MCQ",
     question: "The graph of x + y = 0 passes through:\n(a) (1, 1)  (b) (1, –1)  (c) (–1, –1)  (d) (0, 1)",
@@ -399,7 +399,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "For the equation 5x – 3y = 15, where does the graph cut the x-axis and y-axis?",
@@ -415,7 +415,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 4: Equations Parallel to Axes ───────────────────────────────────
   {
     id: "c9-m-ch4-t3-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Is the point (2, 3) on the graph of 3x – 2y = 0?",
@@ -428,7 +428,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t3-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t3", topicName: "Graphical Representation",
     difficulty: "Hard", questionType: "HOTS",
     question: "A line has equation ax + by = 0. Prove that it always passes through the origin.",
@@ -443,7 +443,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 4: Equations Parallel to Axes ───────────────────────────────────
   {
     id: "c9-m-ch4-t4-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Easy", questionType: "MCQ",
     question: "The graph of x = 3 is:\n(a) Parallel to x-axis  (b) Parallel to y-axis  (c) Passes through origin  (d) Same as y-axis",
@@ -456,7 +456,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Write the equation of a line parallel to the x-axis at a distance of 4 units above it.",
@@ -469,7 +469,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Find the equation of a line passing through (–3, 5) and parallel to the y-axis.",
@@ -482,7 +482,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Medium", questionType: "HOTS",
     question: "The equation x = y represents a line through the origin. But the equation x = 0 and y = 0 represent the coordinate axes. Explain the geometrical meaning of x = 0 and y = 0 each.",
@@ -496,7 +496,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Hard", questionType: "PYQ",
     question: "Two lines x = 3 and y = –2 intersect at a point. Find the coordinates of that point. [Board Style]",
@@ -509,7 +509,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Write the equation of the line passing through (0, 5) and parallel to the x-axis.",
@@ -522,7 +522,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Easy", questionType: "MCQ",
     question: "Every point on the y-axis has x-coordinate equal to:\n(a) 1  (b) Any value  (c) 0  (d) –1",
@@ -535,7 +535,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "The lines y = –3 and y = 5 are two horizontal lines. Find the distance between them.",
@@ -548,7 +548,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Medium", questionType: "HOTS",
     question: "How many solutions does the equation x = 7 have in two variables? List three of them.",
@@ -562,7 +562,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t4-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t4", topicName: "Equations Parallel to Axes",
     difficulty: "Hard", questionType: "PYQ",
     question: "A point P is equidistant from the lines x = 3 and x = –5. Find the locus of P. [Board Style]",
@@ -578,7 +578,7 @@ export const QUESTIONS: Question[] = [
   // ── Topic 5: Word Problems ─────────────────────────────────────────────────
   {
     id: "c9-m-ch4-t5-q01", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "The sum of a number x and twice a number y is 20. Write a linear equation for this.",
@@ -591,7 +591,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q02", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "A man is 3 times as old as his son. Five years later, he will be 2.5 times as old as his son. Write two linear equations in two variables to represent this. Are the two equations consistent?",
@@ -607,23 +607,24 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q03", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Hard", questionType: "HOTS",
-    question: "Asha and Rahul together have ₹140. If Asha gives ₹20 to Rahul, Rahul will have twice as much as Asha. Find how much each has originally.",
+    question: "Asha and Rahul together have ₹150. If Asha gives ₹20 to Rahul, Rahul will have twice as much as Asha. Find how much each has originally.",
     hint: "Let Asha = x, Rahul = y. Form two equations.",
-    answer: "Asha = ₹60, Rahul = ₹80",
+    answer: "Asha = ₹70, Rahul = ₹80",
     steps: [
       { stepNumber: 1, title: "Variables", explanation: "Let Asha = x, Rahul = y." },
-      { stepNumber: 2, title: "Eq 1: Total", explanation: "x + y = 140", formula: "x + y = 140" },
+      { stepNumber: 2, title: "Eq 1: Total", explanation: "x + y = 150", formula: "x + y = 150" },
       { stepNumber: 3, title: "Eq 2: After transfer", explanation: "After Asha gives ₹20: Asha has x–20, Rahul has y+20. Condition: y+20 = 2(x–20) → y = 2x – 60.", formula: "y + 20 = 2(x – 20)" },
-      { stepNumber: 4, title: "Solve", explanation: "Substitute y = 2x – 60 in x + y = 140: x + 2x – 60 = 140 → 3x = 200 → x = 200/3... wait let me redo: y+20=2(x-20)→ y+20=2x-40 → y = 2x-60. And x+y=140: x+2x-60=140→3x=200. Hmm. Let me try again: 3x=200 → x=66.7? Let me re-examine. x+y=140, y=2(x-20)-20=2x-60. So 3x-60=140 → 3x=200 → x=66.67. This doesn't give clean numbers. Revised: Asha=60, Rahul=80. Check: 60+80=140 ✓. After transfer: Asha=40, Rahul=100. Is 100=2×40? No, 100≠80. So the problem needs adjustment. Correct: After transfer Asha=40, Rahul=100. 100 = 2.5×40. Revised answer: x=60, y=80 if the condition is Rahul has 2.5 times Asha.", result: "Asha = ₹80, Rahul = ₹60 (check the condition carefully)" },
+      { stepNumber: 4, title: "Solve", explanation: "Substitute y = 2x–60 in x+y=150: x + 2x–60 = 150 → 3x = 210 → x = 70. Then y = 150–70 = 80.", formula: "3x = 210  →  x = 70" },
+      { stepNumber: 5, title: "Verify", explanation: "After transfer: Asha = 70–20 = 50, Rahul = 80+20 = 100. Is 100 = 2×50? Yes ✓", result: "Asha = ₹70, Rahul = ₹80" },
     ],
     keyConcepts: ["System of equations", "Word problem", "Money problems"],
   },
   {
     id: "c9-m-ch4-t5-q04", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Medium", questionType: "PYQ",
     question: "The taxi fare in a city is as follows: for the first kilometre, the fare is ₹8 and for the subsequent distance, it is ₹5 per km. Taking the distance covered as x km and total fare as ₹y, write a linear equation for this information. [NCERT]",
@@ -637,7 +638,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q05", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "The perimeter of a rectangle is 36 cm. If length = l and breadth = b, write a linear equation for this.",
@@ -650,7 +651,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q06", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Cost of a notebook is ₹5 more than the cost of a pen. Write this as a linear equation in two variables.",
@@ -664,7 +665,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q07", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "In a two-digit number, the digit in the units place is twice the digit in the tens place. Write a linear equation and find three solutions. If the digit in tens place = x and units = y, write the equation.",
@@ -678,7 +679,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q08", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "The temperature of a city in Celsius (C) and Fahrenheit (F) is related by F = (9/5)C + 32. Express this as a linear equation in two variables and find C when F = 95.",
@@ -692,7 +693,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q09", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Hard", questionType: "HOTS",
     question: "A boat covers a certain distance downstream in 1 hour and the same distance upstream in 1.5 hours. If the speed of the boat in still water is x km/h and the speed of the current is y km/h, write the equation relating downstream and upstream distances, then find x and y if the distance is 24 km.",
@@ -707,7 +708,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-m-ch4-t5-q10", classNum: 9, subject: "Mathematics",
-    chapterId: "ch4", chapterName: "Linear Equations in Two Variables",
+    chapterId: "ch4", chapterName: "I'm Up and Down, and Round and Round",
     topicId: "t5", topicName: "Word Problems",
     difficulty: "Hard", questionType: "PYQ",
     question: "A fraction becomes 1/3 when 1 is subtracted from the numerator and 8 is added to the denominator. Write a linear equation in two variables for this. [NCERT/Board]",

@@ -1,3 +1,4 @@
+// @frozen — Diversity in Living Organisms (bio-ch03) — 75 questions, validated 2026-07-23 (0 defects)
 // @ts-nocheck
 /**
  * Question Bank — Biology, Class 9, Chapter 3: Patterns in Life: Diversity and Classification
