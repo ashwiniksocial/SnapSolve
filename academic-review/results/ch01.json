@@ -1,0 +1,39 @@
+{
+  "bo-bio-9-ch01-con-001": {
+    "questionId": "bo-bio-9-ch01-con-001",
+    "contentHash": "483aeb1ddf1345d5b7e5e46d5df319f199cbd8cac9111ef95162e4c48555f9e7",
+    "reviewedAt": "2026-07-23T14:27:37.173Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The question refers to a chapter on cell theory, which is not aligned with the specified chapter on cell structure."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "curriculum",
+        "issue": "Question relates to 'The Fundamental Unit of Life' while it should align with 'Cell: The Building Block of Life'.",
+        "required_fix": "Align topic with Chapter 2 of the NCERT syllabus."
+      },
+      {
+        "field": "answer",
+        "issue": "Factual error regarding the primary focus of the scientist's observation.",
+        "required_fix": "Clarify that Robert Hooke observed dead cork cells, not living contents."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1126,
+      "outputTokens": 210,
+      "estimatedCostUSD": 0.0002949
+    }
+  }
+}

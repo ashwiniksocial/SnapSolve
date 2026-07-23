@@ -1,0 +1,40 @@
+{
+  "c9-phy-ch4-t1-q01": {
+    "questionId": "c9-phy-ch4-t1-q01",
+    "contentHash": "84aea63ead44fc172d618494388b6b755d4291180646420867b938ad70f5c7a8",
+    "reviewedAt": "2026-07-23T14:27:31.542Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Question is not aligned with the correct chapter topic as per NCERT/CBSE curriculum.",
+      "Final answer is not clearly justified in the steps."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "curriculum",
+        "issue": "Question references a different chapter not matching the official NCERT curriculum.",
+        "required_fix": "Align with NCERT chapter 'Work Done by a Constant Force'."
+      },
+      {
+        "field": "steps",
+        "issue": "Steps do not clearly lead to the correct choice without confusion.",
+        "required_fix": "Clarify reasoning for why (b) is correct through an explanation of the work done being calculated."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1019,
+      "outputTokens": 212,
+      "estimatedCostUSD": 0.00028005
+    }
+  }
+}

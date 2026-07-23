@@ -1,0 +1,251 @@
+{
+  "auditedAt": "2026-07-23T14:25:32.127Z",
+  "chapterMapFile": "academic-review/chapter-context-map.json",
+  "curriculumIndex": "curriculum/generated/master-curriculum-index.json",
+  "totalQuestions": 1225,
+  "present": 1000,
+  "missing": 225,
+  "coveragePercent": "81.6%",
+  "byClass": {
+    "9": {
+      "present": 1000,
+      "missing": 225
+    }
+  },
+  "bySubject": {
+    "Mathematics": {
+      "present": 500,
+      "missing": 0
+    },
+    "Physics": {
+      "present": 200,
+      "missing": 0
+    },
+    "Biology": {
+      "present": 225,
+      "missing": 0
+    },
+    "Chemistry": {
+      "present": 75,
+      "missing": 225
+    }
+  },
+  "byChapter": [
+    {
+      "classNum": 9,
+      "subject": "Biology",
+      "chapterId": "ch01",
+      "chapterName": "The Fundamental Unit of Life",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Cell: The Building Block of Life"
+    },
+    {
+      "classNum": 9,
+      "subject": "Biology",
+      "chapterId": "ch02",
+      "chapterName": "Tissues",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Tissues in Action"
+    },
+    {
+      "classNum": 9,
+      "subject": "Biology",
+      "chapterId": "ch03",
+      "chapterName": "Patterns in Life: Diversity and Classification",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Patterns in Life: Diversity and Classification"
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch01",
+      "chapterName": "Matter in Our Surroundings",
+      "total": 75,
+      "present": 0,
+      "missing": 75,
+      "missReason": "chapterId 'ch01' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch02",
+      "chapterName": "Exploring Mixtures and Their Separation",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Exploring Mixtures and their Separation"
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch03",
+      "chapterName": "Atoms and Molecules",
+      "total": 75,
+      "present": 0,
+      "missing": 75,
+      "missReason": "chapterId 'ch03' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch04",
+      "chapterName": "Structure of the Atom",
+      "total": 75,
+      "present": 0,
+      "missing": 75,
+      "missReason": "chapterId 'ch04' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch1",
+      "chapterName": "The World of Numbers",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "The World of Numbers"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch15",
+      "chapterName": "The Mathematics of Maybe: Introduction to Probability",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "The Mathematics of Maybe: Introduction to Probability"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch16",
+      "chapterName": "Exploring Algebraic Identities",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Exploring Algebraic Identities"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch17",
+      "chapterName": "Predicting What Comes Next: Exploring Sequences and Progressions",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Predicting What Comes Next: Exploring Sequences and Progressions"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch18",
+      "chapterName": "Measuring Space: Perimeter and Area",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Measuring Space: Perimeter and Area"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch3",
+      "chapterName": "Orienting Yourself: The Use of Coordinates",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "Orienting Yourself: The Use of Coordinates"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch4",
+      "chapterName": "I'm Up and Down, and Round and Round",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "I'm Up and Down, and Round and Round"
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "iemh102",
+      "chapterName": "Introduction to Linear Polynomials",
+      "total": 75,
+      "present": 75,
+      "missing": 0,
+      "mappedTitle": "Introduction to Linear Polynomials"
+    },
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch1",
+      "chapterName": "Motion",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "Describing Motion Around Us"
+    },
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch2",
+      "chapterName": "Force and Laws of Motion",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "How Forces Affect Motion"
+    },
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch4",
+      "chapterName": "Work and Energy",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "Work, Energy, and Simple Machines"
+    },
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch5",
+      "chapterName": "Sound",
+      "total": 50,
+      "present": 50,
+      "missing": 0,
+      "mappedTitle": "Sound Waves: Characteristics and Applications"
+    }
+  ],
+  "unmatchedChapters": [
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch01",
+      "chapterName": "Matter in Our Surroundings",
+      "questions": 75,
+      "reason": "chapterId 'ch01' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch03",
+      "chapterName": "Atoms and Molecules",
+      "questions": 75,
+      "reason": "chapterId 'ch03' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch04",
+      "chapterName": "Structure of the Atom",
+      "questions": 75,
+      "reason": "chapterId 'ch04' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "bo-bio-9-ch02-con-001": {
+    "questionId": "bo-bio-9-ch02-con-001",
+    "contentHash": "393c4bea88d520561232094d663aa966f6e5b5891653fe1873f21478e9a7b6ae",
+    "reviewedAt": "2026-07-23T14:27:42.271Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Question does not align with the specified chapter 'Tissues in Action'.",
+      "Answer lacks depth required for full marks in a CBSE examination."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Insufficient detail in the explanation of tissues.",
+        "required_fix": "Expand the answer to include a more detailed definition and functions of different tissue types."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1131,
+      "outputTokens": 155,
+      "estimatedCostUSD": 0.00026265
+    }
+  },
+  "bo-chm-9-ch02-con-001": {
+    "questionId": "bo-chm-9-ch02-con-001",
+    "contentHash": "58cc7c301ea637c74dcaa5bce071e93a1b7de6b0d5bfe2d72c4af8fb43c7acd1",
+    "reviewedAt": "2026-07-23T14:27:45.669Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1124,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002118
+    }
+  }
+}

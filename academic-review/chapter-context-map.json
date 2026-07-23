@@ -1,0 +1,174 @@
+{
+  "description": "Explicit mapping from (classNum, subject, chapterId) to master-curriculum-index.json chapter_title. Used by academicReview.ts to resolve official curriculum context for each question. Only HIGH-confidence, objectively verified mappings are included. Ambiguous or unverified chapters are absent — the reviewer will return MISSING for those.",
+  "version": "1.0",
+  "rationale": "The question bank uses old NCERT chapter names (pre-2024-25 reform). The curriculum index uses new 2024-25 integrated-textbook names. Subject names also differ: QB stores Physics/Chemistry/Biology separately; the index records all as Science. Prefix matching was unsafe across these naming conventions, so this explicit map is used instead.",
+  "entries": [
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch1",
+      "indexSubject": "Science",
+      "curriculumTitle": "Describing Motion Around Us",
+      "confidence": "HIGH",
+      "notes": "QB: 'Motion' (old NCERT name). New 2024-25 Exploration textbook renames this to 'Describing Motion Around Us'. Same content: distance, displacement, speed, velocity, acceleration, equations of motion."
+    },
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch2",
+      "indexSubject": "Science",
+      "curriculumTitle": "How Forces Affect Motion",
+      "confidence": "HIGH",
+      "notes": "QB: 'Force and Laws of Motion'. New textbook title. Same content: Newton's three laws, inertia, momentum, conservation of momentum."
+    },
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch4",
+      "indexSubject": "Science",
+      "curriculumTitle": "Work, Energy, and Simple Machines",
+      "confidence": "HIGH",
+      "notes": "QB: 'Work and Energy'. New textbook adds 'Simple Machines' explicitly in title. Same core content with expanded scope. Index title matches the Exploration textbook chapter directly."
+    },
+    {
+      "classNum": 9,
+      "subject": "Physics",
+      "chapterId": "phy-ch5",
+      "indexSubject": "Science",
+      "curriculumTitle": "Sound Waves: Characteristics and Applications",
+      "confidence": "HIGH",
+      "notes": "QB: 'Sound'. New textbook expands the title. Same content: nature of sound, propagation, reflection, echo, SONAR, human ear."
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch02",
+      "indexSubject": "Science",
+      "curriculumTitle": "Exploring Mixtures and their Separation",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is already 'Exploring Mixtures and Their Separation' — differs from index only in capitalisation of 'their'. Same chapter. Matter purity, mixtures, solutions, separation techniques."
+    },
+    {
+      "classNum": 9,
+      "subject": "Biology",
+      "chapterId": "ch01",
+      "indexSubject": "Science",
+      "curriculumTitle": "Cell: The Building Block of Life",
+      "confidence": "HIGH",
+      "notes": "QB: 'The Fundamental Unit of Life'. New textbook retitles to 'Cell: The Building Block of Life'. Same content: cell theory, plant vs animal cells, organelles, cell membrane, nucleus."
+    },
+    {
+      "classNum": 9,
+      "subject": "Biology",
+      "chapterId": "ch02",
+      "indexSubject": "Science",
+      "curriculumTitle": "Tissues in Action",
+      "confidence": "HIGH",
+      "notes": "QB: 'Tissues'. New textbook adds 'in Action'. Same content: plant tissues (meristematic, permanent) and animal tissues (epithelial, connective, muscular, nervous)."
+    },
+    {
+      "classNum": 9,
+      "subject": "Biology",
+      "chapterId": "ch03",
+      "indexSubject": "Science",
+      "curriculumTitle": "Patterns in Life: Diversity and Classification",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is already 'Patterns in Life: Diversity and Classification' — exact match with index. Same chapter."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch1",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "The World of Numbers",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'The World of Numbers' — exact match with index."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch3",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "Orienting Yourself: The Use of Coordinates",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'Orienting Yourself: The Use of Coordinates' — exact match with index."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch4",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "I'm Up and Down, and Round and Round",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'I'm Up and Down, and Round and Round'. Same chapter in index. Trigonometry/circles chapter."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch15",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "The Mathematics of Maybe: Introduction to Probability",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'The Mathematics of Maybe: Introduction to Probability' — exact match with index."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch16",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "Exploring Algebraic Identities",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'Exploring Algebraic Identities' — exact match with index."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch17",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "Predicting What Comes Next: Exploring Sequences and Progressions",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'Predicting What Comes Next: Exploring Sequences and Progressions' — exact match with index."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "ch18",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "Measuring Space: Perimeter and Area",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'Measuring Space: Perimeter and Area' — exact match with index."
+    },
+    {
+      "classNum": 9,
+      "subject": "Mathematics",
+      "chapterId": "iemh102",
+      "indexSubject": "Mathematics",
+      "curriculumTitle": "Introduction to Linear Polynomials",
+      "confidence": "HIGH",
+      "notes": "QB chapterName is 'Introduction to Linear Polynomials' — exact match with index."
+    }
+  ],
+  "not_mapped": [
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch01",
+      "qbChapterName": "Matter in Our Surroundings",
+      "reason": "No unambiguous match in index. Old NCERT chapter on states of matter and physical/chemical changes. The new Exploration textbook has no chapter with a directly equivalent scope visible in the index."
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch03",
+      "qbChapterName": "Atoms and Molecules",
+      "reason": "Ambiguous: could map to 'Journey Inside the Atom' or 'Atomic Foundations of Matter'. Cannot determine without reading both new chapters. Leaving MISSING to avoid silent false-positive match."
+    },
+    {
+      "classNum": 9,
+      "subject": "Chemistry",
+      "chapterId": "ch04",
+      "qbChapterName": "Structure of the Atom",
+      "reason": "Ambiguous: 'Atomic Foundations of Matter' is a plausible match but not confirmed without reading the new textbook. Leaving MISSING."
+    }
+  ]
+}

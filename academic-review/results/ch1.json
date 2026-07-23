@@ -1,0 +1,34 @@
+{
+  "c9-m-ch1-t1-q01": {
+    "questionId": "c9-m-ch1-t1-q01",
+    "contentHash": "c515f46e47daf90048b053153229db007148f8046dc8f61ef41049a8c210abd0",
+    "reviewedAt": "2026-07-23T14:27:49.950Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [
+      "Answer states (c) √2 correctly, but there is a contradiction in the answer conclusion which is confusing."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "The conclusion states that the answer is (c) √2 but the 'Answer:' part in steps is incorrectly formatted as 'Result:  Answer: (c) √2'.",
+        "required_fix": "Maintain consistent formatting by correcting to 'Answer: (c) √2'"
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1093,
+      "outputTokens": 174,
+      "estimatedCostUSD": 0.00026835
+    }
+  }
+}

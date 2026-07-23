@@ -1,0 +1,114 @@
+STOP.
+
+Do not start bulk academic review.
+Do not review all 1,224 questions.
+Do not change question content.
+Do not create another architecture.
+Do not modify student-facing functionality.
+
+The one-question test returned PASS while official source context was MISSING. Therefore the reviewer is not yet ready for bulk use.
+
+Perform the following narrowly scoped validation.
+
+1. SOURCE-CONTEXT COVERAGE AUDIT
+
+Add a zero-API audit mode to the existing academicReview.ts script:
+
+--context-audit
+
+It must inspect every loaded question and report:
+
+- total questions
+- questions with matched curriculum context
+- questions with missing curriculum context
+- coverage percentage
+- breakdown by class
+- breakdown by subject
+- breakdown by chapter
+- exact unmatched chapter identifiers and chapter names
+- likely reason for each mismatch
+
+Save the report as:
+
+academic-review/context-audit.json
+
+Do not call OpenAI in this mode.
+
+2. FIX MATCHING ONLY
+
+Investigate why Class 9 Physics Motion did not match master-curriculum-index.json.
+
+Fix only the existing curriculum-context lookup or the existing generated curriculum index where objectively necessary.
+
+Requirements:
+
+- use class + normalised subject + chapter identity
+- avoid unsafe broad prefix matching
+- support harmless differences such as numbering, punctuation and known title formatting
+- do not silently match unrelated chapters
+- do not use general AI knowledge as a substitute for available official context
+- do not manually hard-code every question
+- do not introduce a database or new framework
+
+After fixing, rerun --context-audit.
+
+3. REVIEW SAFETY RULE
+
+Modify the academic reviewer result logic:
+
+- If official curriculum context is missing, the question must not receive final PASS.
+- Return status: REVIEW_BLOCKED_CONTEXT_MISSING
+- No PASS cache should be created for that question.
+- Clearly report the missing context.
+
+Remove or invalidate the existing PASS result for:
+
+c9-phy-ch1-t1-q01
+
+Then review it again only after official context matches.
+
+4. SMALL CALIBRATION RUN
+
+After context coverage is corrected, review only 10 representative existing questions:
+
+- different subjects
+- different difficulties
+- conceptual and numerical
+- questions with and without steps
+- V1 and V2 schemas where available
+
+Maximum: 10 API calls.
+
+Report for each:
+
+- question ID
+- context matched
+- final verdict
+- dimension results
+- reasons
+- token usage
+- estimated cost
+
+Do not modify failed questions yet.
+
+5. CURRICULUM-CHECK FAILURES
+
+Report the exact existing curriculum-check failures separately.
+
+Do not fix, add or remove chapters in this task.
+
+6. FINAL REPORT
+
+Provide:
+
+- context coverage before fix
+- context coverage after fix
+- unmatched chapters remaining
+- exact files changed
+- confirmation that no bulk review ran
+- result of the corrected Motion question review
+- results of the 10-question calibration
+- actual API cost
+- recommendation on whether the reviewer is safe for chapter-by-chapter use
+
+Do not proceed beyond this scope.

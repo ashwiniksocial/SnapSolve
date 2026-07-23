@@ -1,0 +1,26 @@
+{
+  "c9-m-ch3-t1-q01": {
+    "questionId": "c9-m-ch3-t1-q01",
+    "contentHash": "0015cd74b85cd1f94e0e816f39cfdc0bc7af55f75a4de716386cf23a8137d613",
+    "reviewedAt": "2026-07-23T14:27:53.695Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 974,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0001893
+    }
+  }
+}

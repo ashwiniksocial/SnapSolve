@@ -1,11 +1,12 @@
 {
+  "_invalidated": "2026-07-23 — stale PASS recorded before context-safety rule existed (sourceContextStatus was MISSING). All entries require re-review with context present.",
   "c9-phy-ch1-t1-q01": {
     "questionId": "c9-phy-ch1-t1-q01",
     "contentHash": "56526c7a4e0959ddc256d479e9f955328c2884ca80847393b23109cf8faa0725",
-    "reviewedAt": "2026-07-23T13:57:11.003Z",
+    "reviewedAt": "2026-07-23T14:27:21.704Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.0",
-    "sourceContextStatus": "MISSING",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
     "overall": "PASS",
     "dimensions": {
       "curriculum": "PASS",
@@ -16,6 +17,11 @@
       "exam_readiness": "PASS"
     },
     "reasons": [],
-    "fieldCorrections": []
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1041,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019935
+    }
   }
 }
