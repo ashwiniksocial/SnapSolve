@@ -1,0 +1,325 @@
+STOP.
+
+Do not create another architecture.
+
+The investigation is complete. Implement the smallest correct solution based on the actual repository structure.
+
+==================================================
+CONFIRMED ARCHITECTURE
+==================================================
+
+Existing questions are authored directly as TypeScript files in:
+
+- artifacts/homework-hero/src/data/questions/
+- question-bank/questions/
+
+The existing curriculum gateway performs fast structural validation.
+
+There is no automated question-generation pipeline to intercept.
+
+Therefore:
+
+- Do NOT attach the reviewer to the student solveQuestion flow.
+- Do NOT use POST /api/admin/generate for this requirement.
+- Do NOT place live OpenAI review calls inside every ordinary structural curriculum check.
+- Do NOT create or modify any frontend runtime flow.
+
+==================================================
+OBJECTIVE
+==================================================
+
+Create one separate, mandatory, offline academic-review command for:
+
+1. Reviewing all existing questions in controlled batches.
+2. Reviewing every new or modified question before a chapter is frozen or published.
+3. Avoiding repeat API review of unchanged questions.
+4. Producing a clear PASS/FAIL report.
+5. Regenerating only failed content fields where technically supported.
+
+==================================================
+STEP 1 — VERIFY CURRENT ANSWER FIELDS
+==================================================
+
+Before coding the reviewer logic, inspect both schemas:
+
+- V1 Question
+- QuestionV2
+
+Use the actual stored fields only.
+
+Do not invent Compact, Standard or Detailed fields.
+
+Map the reviewer to the real stored fields, such as:
+
+- question
+- answer
+- steps
+- hint
+- explanation
+
+Use only fields that genuinely exist in each schema.
+
+If Compact, Standard and Detailed are not currently stored, explicitly report that fact.
+
+Do not alter the schemas in this task.
+
+==================================================
+STEP 2 — CREATE A SEPARATE ACADEMIC REVIEW COMMAND
+==================================================
+
+Create a script command such as:
+
+pnpm --filter @workspace/scripts run academic-review
+
+This command must remain separate from the existing fast structural curriculum-check command.
+
+The academic-review command must:
+
+- load both V1 and V2 registered question sources;
+- normalize them into one internal review format;
+- review questions through the existing OpenAI configuration;
+- support subject, class, chapter and batch-size filters;
+- process only new, changed, failed or explicitly requested questions;
+- resume safely after interruption;
+- respect API rate limits;
+- stop cleanly on errors without losing completed results.
+
+==================================================
+STEP 3 — CONTENT HASH AND CACHE
+==================================================
+
+For every question, calculate a stable content hash from all academically relevant fields:
+
+- board
+- class
+- subject
+- chapter
+- topic
+- difficulty
+- question text
+- answer
+- steps
+- hint
+- any other existing explanatory content
+
+Store the review result outside the question source files.
+
+Suggested location:
+
+academic-review/results/
+
+or another existing appropriate generated-data directory.
+
+Each stored review result must contain:
+
+- question ID
+- content hash
+- reviewed timestamp
+- overall PASS or FAIL
+- curriculum result
+- question-quality result
+- correctness result
+- teaching-quality result
+- exam-readiness result
+- field-level results
+- reasons
+- exact corrections required
+- model used
+- reviewer prompt version
+
+If the content hash has not changed and the previous result is PASS:
+
+- do not call OpenAI again.
+
+If the content changes:
+
+- automatically require a fresh review.
+
+==================================================
+STEP 4 — REVIEW STANDARD
+==================================================
+
+Use ONE reviewer call per question.
+
+Under one academic-review header, assess:
+
+1. Official curriculum alignment
+2. Question clarity and relevance
+3. Complete factual and logical correctness
+4. Teaching quality for average and weak students
+5. CBSE final-examination readiness
+6. Quality of each actual stored answer field
+
+The reviewer must use structured JSON output.
+
+Automatic FAIL for:
+
+- incorrect answer;
+- wrong formula or calculation;
+- factual error;
+- wrong chapter or topic;
+- deleted or out-of-syllabus content;
+- hallucination;
+- ambiguity preventing a reliable answer.
+
+==================================================
+STEP 5 — OFFICIAL SOURCE GROUNDING
+==================================================
+
+Do not rely only on the model’s general knowledge.
+
+Where official curriculum metadata or extracted NCERT chapter content already exists in:
+
+- curriculum/generated/
+- curriculum/sources/
+
+provide the relevant chapter context to the reviewer.
+
+Do not send entire textbooks unnecessarily.
+
+Send only the relevant chapter/topic context required for the question being reviewed.
+
+If no reliable official context can be resolved for a question:
+
+- mark it as SOURCE_CONTEXT_MISSING;
+- do not silently pass it.
+
+==================================================
+STEP 6 — EXISTING QUESTION-BANK BATCH REVIEW
+==================================================
+
+Support commands equivalent to:
+
+- review one question;
+- review one chapter;
+- review one subject;
+- review all pending questions;
+- review failed questions again.
+
+Include configurable:
+
+- batch size;
+- maximum questions;
+- estimated API cost before execution;
+- dry-run mode;
+- progress output.
+
+Do not automatically start reviewing all existing questions during implementation.
+
+Implementation and bulk execution are separate steps.
+
+==================================================
+STEP 7 — FAILED CONTENT CORRECTION
+==================================================
+
+Do not regenerate the whole question when only one existing field fails.
+
+Examples:
+
+- answer fails → revise only answer;
+- steps fail → revise only steps;
+- hint fails → revise only hint.
+
+Never modify fields that passed.
+
+Maximum automatic correction attempt:
+
+ONE.
+
+After correction:
+
+- review the corrected question again;
+- if PASS, save the corrected source content;
+- if still FAIL, retain the original source and mark NEEDS_MANUAL_REVIEW.
+
+Before automatically writing any correction into question-bank source files:
+
+- create a backup or patch;
+- validate TypeScript;
+- preserve IDs and metadata;
+- show exactly which fields changed.
+
+If safe field-level source rewriting cannot be guaranteed for the current TypeScript format:
+
+- do not perform automatic rewriting;
+- instead generate a proposed correction report for manual/agent application.
+
+==================================================
+STEP 8 — FUTURE MANDATORY GATE
+==================================================
+
+A chapter may be considered academically frozen only when:
+
+1. Existing structural curriculum-check passes.
+2. Academic-review passes for every new or changed question in that chapter.
+
+Implement one combined freeze command or script sequence that runs:
+
+Structural Curriculum Check
+
+↓
+
+Academic Review of new/changed questions
+
+↓
+
+PASS → chapter may be frozen
+
+FAIL → chapter remains blocked
+
+Do not make ordinary development startup or every typecheck trigger paid AI reviews.
+
+==================================================
+STEP 9 — REMOVE THE INCORRECT PREVIOUS IMPLEMENTATION
+==================================================
+
+Inspect the previously created files:
+
+- api-server/src/lib/openai.ts
+- api-server/src/services/academicReviewer/
+- api-server/src/services/answerGenerator/
+- api-server/src/services/qaGenerationPipeline/
+- api-server/src/routes/generate.ts
+- route registration changes
+
+Determine whether any part is reusable for the offline academic-review command.
+
+Retain only genuinely reusable code.
+
+Remove the unused POST /api/admin/generate route and parallel question-generation pipeline if nothing depends on them.
+
+Do not remove shared utilities that are already used elsewhere.
+
+==================================================
+VALIDATION
+==================================================
+
+After implementation:
+
+1. Run typecheck.
+2. Run the existing structural curriculum check.
+3. Run academic-review in dry-run mode.
+4. Run an actual review on exactly ONE representative question.
+5. Confirm that a second run skips it because its unchanged hash already passed.
+6. Modify nothing in the question bank merely for testing.
+7. Confirm student-facing functionality remains unchanged.
+
+==================================================
+FINAL REPORT
+==================================================
+
+Provide:
+
+1. Actual V1 and V2 answer-field mapping.
+2. Files retained from the previous implementation.
+3. Files removed.
+4. Files created or modified.
+5. Exact commands available.
+6. How unchanged questions avoid repeat API cost.
+7. How official source context is supplied.
+8. Result of the one-question test.
+9. Estimated cost for reviewing all currently unreviewed questions.
+10. Confirmation that bulk review has NOT yet been started.
+11. Confirmation that no unrelated functionality changed.
+
+Do not perform the full-bank review yet.

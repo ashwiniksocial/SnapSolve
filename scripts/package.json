@@ -9,6 +9,8 @@
     "latency-audit": "tsx ./src/latencyAudit.ts",
     "curriculum-check": "tsx ./src/curriculumGateway.ts",
     "validate-curriculum": "tsx ./src/validateCurriculum.ts",
+    "academic-review": "tsx ./src/academicReview.ts",
+    "freeze": "pnpm run curriculum-check && pnpm run academic-review",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

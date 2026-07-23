@@ -1,0 +1,21 @@
+{
+  "c9-phy-ch1-t1-q01": {
+    "questionId": "c9-phy-ch1-t1-q01",
+    "contentHash": "56526c7a4e0959ddc256d479e9f955328c2884ca80847393b23109cf8faa0725",
+    "reviewedAt": "2026-07-23T13:57:11.003Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.0",
+    "sourceContextStatus": "MISSING",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": []
+  }
+}
