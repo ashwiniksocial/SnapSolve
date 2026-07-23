@@ -215,7 +215,8 @@
     "validation-report.md": "2d1e0fa2656aae19464f4fb06c1ff534015f13b02063b3362da7aeb688bedc04",
     "knowledge-graph.json": "e51262aea537f1fdb6d5c80734e2af2e8f2bee2b702058d0785e02b44fd4b09b",
     "topic-dependency-map.json": "8996fe61ee203c9dd2748012932f3ed574bb3c176655b0ab8503c042c8e4ad27",
-    "chapter-sequence-map.json": "c48d628044e7df50572b81f5c672f376d51e00d4af45d631b0f4792459294fa9",
-    "curriculum-lock.json": "6d816cd9600985c9f196d9b71369d68a686852f941beefad94d180fa7ceee0ec"
-  }
+    "chapter-sequence-map.json": "c48d628044e7df50572b81f5c672f376d51e00d4af45d631b0f4792459294fa9"
+  },
+  "selfChecksumMethod": "SHA256_CANONICAL_JSON_EXCLUDING_SELF_CHECKSUM_FIELD — computed as SHA256(json.dumps(lock, sort_keys=True, separators=(',',':'))) with selfChecksum and selfChecksumMethod absent from the input",
+  "selfChecksum": "836b12f14b26526f88924af006295bf0a003f1c883557f1565021277b5354006"
 }
