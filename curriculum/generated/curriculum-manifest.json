@@ -49,7 +49,11 @@
       "key_terms": [
         "Summary"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c1",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp102.pdf",
@@ -138,7 +142,11 @@
         "2.22",
         "2.23",
         "and Fig. 2.20."
-      ]
+      ],
+      "chapter_id": "6-mathematics-b1-c2",
+      "topicCount": 11,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp103.pdf",
@@ -208,7 +216,11 @@
       "key_terms": [
         "Summary"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c3",
+      "topicCount": 12,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp104.pdf",
@@ -254,7 +266,11 @@
       "key_terms": [
         "Summary"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c4",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp105.pdf",
@@ -307,7 +323,11 @@
       ],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c5",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp106.pdf",
@@ -345,7 +365,11 @@
       "key_terms": [
         "Summary"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c6",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp107.pdf",
@@ -412,7 +436,11 @@
       ],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c7",
+      "topicCount": 9,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp108.pdf",
@@ -467,7 +495,11 @@
       ],
       "figures": [
         "8.3) on a dot paper."
-      ]
+      ],
+      "chapter_id": "6-mathematics-b1-c8",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp109.pdf",
@@ -505,7 +537,11 @@
       "key_terms": [
         "Summary"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c9",
+      "topicCount": 2,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fegp110.pdf",
@@ -549,7 +585,11 @@
       "key_terms": [
         "Summary"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-mathematics-b1-c10",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu101.pdf",
@@ -574,7 +614,12 @@
       ],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-science-b1-c1",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "filename": "fecu102.pdf",
@@ -653,7 +698,11 @@
         "Some possible criteria of groupings of plants and animals",
         "Types of plants",
         "Types of roots"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c2",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu103.pdf",
@@ -746,7 +795,11 @@
         "Some sources of proteins",
         "Testing for the presence of protein in various food items",
         "Testing for the presence of starch in various food items"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c3",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu104.pdf",
@@ -819,7 +872,11 @@
         "Three bar magnets",
         "Two matchbox-magnet cars with",
         "Two ring magnets"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c4",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu105.pdf",
@@ -908,7 +965,11 @@
         "Rollercoaster track",
         "Types of motion observed in a children’s park",
         "Use of handspan"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c5",
+      "topicCount": 7,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu106.pdf",
@@ -997,7 +1058,11 @@
         "Weighing a paper",
         "What disappears, what does not?",
         "illustrates a variety of balls that are of the same size"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c6",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu107.pdf",
@@ -1064,7 +1129,11 @@
         "Room thermometer",
         "Set up to measure temperature of water and room temperature",
         "Three thermometers"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c7",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu108.pdf",
@@ -1149,7 +1218,11 @@
         "Evaporation of water in sunlight and in shade",
         "Provide your possible reasons explaining the appearance",
         "Steel plate with"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c8",
+      "topicCount": 7,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu109.pdf",
@@ -1199,7 +1272,12 @@
         "Sieving",
         "Threshing",
         "Winnowing"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c9",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "filename": "fecu110.pdf",
@@ -1284,7 +1362,11 @@
         "Life cycle of a mosquito",
         "Pot kept along the",
         "Set-up showing plants kept in different conditions"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c10",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu111.pdf",
@@ -1369,7 +1451,11 @@
         "Rocks used for roofing",
         "Soil preparation for",
         "shows items related to natural resources. Match"
-      ]
+      ],
+      "chapter_id": "6-science-b1-c11",
+      "topicCount": 8,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "fecu112.pdf",
@@ -1435,7 +1521,11 @@
         "The beauty of night sky from a very dark",
         "The rising Sun",
         "shows bright stars in one part of the night sky."
-      ]
+      ],
+      "chapter_id": "6-science-b1-c12",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp101.pdf",
@@ -1485,7 +1575,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b1-c1",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp102.pdf",
@@ -1522,7 +1616,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b1-c2",
+      "topicCount": 2,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp103.pdf",
@@ -1581,7 +1679,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b1-c3",
+      "topicCount": 8,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp104.pdf",
@@ -1637,7 +1739,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b1-c4",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp105.pdf",
@@ -1734,7 +1840,11 @@
         "5.7).",
         "has a pair of parallel lines l and m (what is the notation used",
         "shows how you can do it."
-      ]
+      ],
+      "chapter_id": "7-mathematics-b1-c5",
+      "topicCount": 8,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp106.pdf",
@@ -1786,7 +1896,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b1-c6",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp107.pdf",
@@ -1834,7 +1948,11 @@
       ],
       "figures": [
         "Circles intersecting each other at two points"
-      ]
+      ],
+      "chapter_id": "7-mathematics-b1-c7",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp108.pdf",
@@ -1878,7 +1996,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b1-c8",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp201.pdf",
@@ -1916,7 +2038,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b2-c1",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp202.pdf",
@@ -1952,7 +2078,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b2-c2",
+      "topicCount": 2,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp203.pdf",
@@ -1993,7 +2123,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b2-c3",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp204.pdf",
@@ -2041,7 +2175,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b2-c4",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp205.pdf",
@@ -2085,7 +2223,11 @@
         "summary and conclusion statements.",
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-mathematics-b2-c5",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp206.pdf",
@@ -2126,7 +2268,11 @@
         "6.12",
         "6.13",
         "6.14"
-      ]
+      ],
+      "chapter_id": "7-mathematics-b2-c6",
+      "topicCount": 2,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gegp207.pdf",
@@ -2177,7 +2323,11 @@
         "7.10.]",
         "7.11",
         "7.12"
-      ]
+      ],
+      "chapter_id": "7-mathematics-b2-c7",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu101.pdf",
@@ -2203,7 +2353,11 @@
       ],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-science-b1-c1",
+      "topicCount": 1,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu102.pdf",
@@ -2281,7 +2435,11 @@
         "Stinging eﬀect",
         "Test tube containing the red rose extract",
         "The most common acids present in some edible substances"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c2",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu103.pdf",
@@ -2383,7 +2541,11 @@
         "LEDs of different colours",
         "Making an LED glow",
         "Positive and negative"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c3",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu104.pdf",
@@ -2472,7 +2634,11 @@
         "Ironsmith making various items",
         "Metal and wooden spoons",
         "Testing the nature of"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c4",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu105.pdf",
@@ -2567,7 +2733,11 @@
         "Reaction of vinegar and baking soda",
         "Rusted",
         "What changes occur when a candle burns?"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c5",
+      "topicCount": 7,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu106.pdf",
@@ -2643,7 +2813,11 @@
         "Cyberbullying",
         "Physical activities for fitness",
         "Sanitary pad"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c6",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu107.pdf",
@@ -2726,7 +2900,11 @@
         "Two thermometers dipped in two test tubes",
         "Water cycle",
         "Water readily"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c7",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu108.pdf",
@@ -2793,7 +2971,11 @@
         "Huygens’",
         "Making a simple water clock",
         "Some common clocks and watches"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c8",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu109.pdf",
@@ -2862,7 +3044,11 @@
         "Movement of food in the food pipe",
         "Stomach",
         "The percentage of oxygen and carbon"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c9",
+      "topicCount": 2,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu110.pdf",
@@ -2953,7 +3139,11 @@
         "Stomata on the lower",
         "Testing the role of",
         "Transport of water"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c10",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu111.pdf",
@@ -3054,7 +3244,11 @@
         "Viewing candle ﬂame through",
         "Who can see the ﬂame?",
         "and select the correct"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c11",
+      "topicCount": 8,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "gecu112.pdf",
@@ -3131,7 +3325,11 @@
         "Rotation of the Earth",
         "Sunlight falls on half of the Earth’s surface",
         "Trying to cover a"
-      ]
+      ],
+      "chapter_id": "7-science-b1-c12",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp101.pdf",
@@ -3169,7 +3367,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b1-c1",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp102.pdf",
@@ -3215,7 +3417,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b1-c2",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp103.pdf",
@@ -3259,7 +3465,11 @@
       ],
       "figures": [
         "Abacus"
-      ]
+      ],
+      "chapter_id": "8-mathematics-b1-c3",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp104.pdf",
@@ -3319,7 +3529,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b1-c4",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp105.pdf",
@@ -3359,7 +3573,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b1-c5",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp106.pdf",
@@ -3410,7 +3628,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b1-c6",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp107.pdf",
@@ -3465,7 +3687,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b1-c7",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp201.pdf",
@@ -3509,7 +3735,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b2-c1",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp202.pdf",
@@ -3561,7 +3791,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b2-c2",
+      "topicCount": 7,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp203.pdf",
@@ -3611,7 +3845,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b2-c3",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp204.pdf",
@@ -3653,7 +3891,11 @@
       ],
       "figures": [
         "is a net of a cube."
-      ]
+      ],
+      "chapter_id": "8-mathematics-b2-c4",
+      "topicCount": 2,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp205.pdf",
@@ -3691,7 +3933,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b2-c5",
+      "topicCount": 2,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp206.pdf",
@@ -3743,7 +3989,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b2-c6",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hegp207.pdf",
@@ -3773,7 +4023,11 @@
       "key_terms": [
         "SUMMARY"
       ],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-mathematics-b2-c7",
+      "topicCount": 1,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu101.pdf",
@@ -3792,7 +4046,12 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-science-b1-c1",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "filename": "hecu102.pdf",
@@ -3878,7 +4137,11 @@
         "Recycling of nutrients by making",
         "Root nodules of Cowpea yeast), these bacteria produce",
         "Round-bottom flask"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c2",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu103.pdf",
@@ -3959,7 +4222,11 @@
         "Common methods of transmission of diseases",
         "How to be healthy",
         "Two different playgrounds"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c3",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu104.pdf",
@@ -4037,7 +4304,11 @@
         "Simple household electric heating appliances (a) Electric room heater;",
         "Simple representation of",
         "Typical rechargeable batteries used in (a) Laptops;"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c4",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu105.pdf",
@@ -4129,7 +4400,11 @@
         "Some objects falling towards the Earth",
         "Use of muscular force by living beings",
         "Use of muscular force of animals to assist with human tasks"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c5",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu106.pdf",
@@ -4214,7 +4489,11 @@
         "Strong winds going",
         "Winds blowing from",
         "b shows the boy standing vertically on a"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c6",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu107.pdf",
@@ -4300,7 +4579,11 @@
         "The syringe piston in different positions",
         "Variation in water levels",
         "Water placed in containers of different shapes"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c7",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu108.pdf",
@@ -4387,7 +4670,11 @@
         "Sprout salad",
         "Testing gases",
         "Testing the nature of gas (a) hydrogen; (b) oxygen"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c8",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu109.pdf",
@@ -4486,7 +4773,11 @@
         "Saturated",
         "Some objects float",
         "Two-pan balance"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c9",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu110.pdf",
@@ -4563,7 +4854,11 @@
         "Use of concave mirror (a) As a",
         "Use of convex mirror as a (a) Side-view mirror; (b) Road safety mirror;",
         "View of text"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c10",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu111.pdf",
@@ -4655,7 +4950,11 @@
         "The Moon takes about 50 minutes longer to",
         "The bright portion continues",
         "Waxing (Shukla Paksha) and waning period"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c11",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu112.pdf",
@@ -4759,7 +5058,11 @@
         "The red arrows represent",
         "Two types of habitats",
         "shows an overlap of different terrestrial and"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c12",
+      "topicCount": 9,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "hecu113.pdf",
@@ -4861,7 +5164,11 @@
         "The habitable zone",
         "Vegetative",
         "Water pollution"
-      ]
+      ],
+      "chapter_id": "8-science-b1-c13",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh101.pdf",
@@ -4909,7 +5216,11 @@
         "gives us a clue. The distance moved along the x-axis is given by CD.",
         "shows Reiaan’s room with points OABC marking its corners. The",
         "we can find the distances W1W2 and S1S2. What should we do if"
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c1",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh102.pdf",
@@ -4973,7 +5284,11 @@
         "shows all the three graphs on the same axes. Does this help",
         "shows the graphs of these linear equations without any",
         "shows this process as an input-output machine where the"
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c2",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh103.pdf",
@@ -5090,7 +5405,11 @@
         "Representation of the prime number tally",
         "Some integers and rational numbers on a number line",
         "which is referred to as the square root spiral."
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c3",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh104.pdf",
@@ -5165,7 +5484,11 @@
         "Using algebra tiles to represent (2x + 3) × (3x + 1)",
         "helps to visualise",
         "helps us to visualise two algebraic identities:"
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c4",
+      "topicCount": 7,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh105.pdf",
@@ -5280,7 +5603,11 @@
         "Points and the chord",
         "Right-angled triangle: Circumcentre O is at the",
         "The circumcircle of triangle ABC"
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c5",
+      "topicCount": 8,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh106.pdf",
@@ -5402,7 +5729,11 @@
         "Area of square and rectangle",
         "Athletes at the start of 4 × 100 m relay race",
         "Four quarter circles"
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c6",
+      "topicCount": 10,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh107.pdf",
@@ -5484,7 +5815,11 @@
         "Probabilities of picking a purple card",
         "Tree diagram showing possible",
         "to understand how probability is measured on a scale."
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c7",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iemh108.pdf",
@@ -5578,7 +5913,11 @@
         "Square numbers and",
         "Stages 0, 1, 2 and 3 of the Sierpiński square carpet",
         "The first five triangular numbers"
-      ]
+      ],
+      "chapter_id": "9-mathematics-b1-c8",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc101.pdf",
@@ -5604,7 +5943,12 @@
         "A total solar eclipse",
         "A vegetable seller using a pan balance",
         "Rice being"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c1",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "filename": "iesc102.pdf",
@@ -5693,7 +6037,11 @@
         "Structure of a light microscope",
         "Structure of a mitochondrion",
         "Structure of a nucleus"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c2",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc103.pdf",
@@ -5820,7 +6168,11 @@
         "Types of joints",
         "Various types of",
         "Vascular tissue: (a) xylem, and"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c3",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc104.pdf",
@@ -5945,7 +6297,11 @@
         "Top view",
         "Velocity-time graph",
         "Velocity-time graph of a moving car"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c4",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc105.pdf",
@@ -6072,7 +6428,11 @@
         "Steps followed in the salt manufacturing process",
         "Steps involved in the process of crystallization",
         "Sublimation of camphor"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c5",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc106.pdf",
@@ -6174,7 +6534,11 @@
         "Two similarly charged",
         "Two spring balances connected together are pulled in opposite directions",
         "Velocity-time graph for a"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c6",
+      "topicCount": 7,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc107.pdf",
@@ -6303,7 +6667,11 @@
         "Spring (a) in",
         "Work done by a force while displacing",
         "in a science park, where a ball is"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c7",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc108.pdf",
@@ -6413,7 +6781,11 @@
         "Symbols of some elements given by Dalton",
         "Thomson’s model of",
         "Watermelon"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c8",
+      "topicCount": 9,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc109.pdf",
@@ -6516,7 +6888,11 @@
         "Formation of sodium chloride by transfer of electron",
         "Ionic",
         "Sodium chloride: (a) crystals, (b) crystal structure, and (c) crystal lattice"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c9",
+      "topicCount": 8,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc110.pdf",
@@ -6646,7 +7022,11 @@
         "Transverse Wave",
         "Vibrating rubber",
         "Vocal cords in humans"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c10",
+      "topicCount": 7,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc111.pdf",
@@ -6782,7 +7162,11 @@
         "Understanding the segregation of characters",
         "Yeast with",
         "and share your observations with"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c11",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc112.pdf",
@@ -6899,7 +7283,11 @@
         "Three",
         "Timeline of the classification systems",
         "shows the diversity of animals in an ecosystem. Observe the image"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c12",
+      "topicCount": 10,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "iesc113.pdf",
@@ -7000,7 +7388,11 @@
         "Solar radiation and warming of",
         "Urban heat island effect in a city",
         "Water cycle"
-      ]
+      ],
+      "chapter_id": "9-science-b1-c13",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
@@ -7040,7 +7432,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-computational-thinking-and-ai-b2-c1",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
@@ -7080,7 +7476,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-computational-thinking-and-ai-b2-c2",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
@@ -7116,7 +7516,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-computational-thinking-and-ai-b2-c3",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
@@ -7156,7 +7560,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "6-computational-thinking-and-ai-b2-c4",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
@@ -7200,7 +7608,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-computational-thinking-and-ai-b2-c1",
+      "topicCount": 6,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
@@ -7240,7 +7652,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-computational-thinking-and-ai-b2-c2",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
@@ -7272,7 +7688,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-computational-thinking-and-ai-b2-c3",
+      "topicCount": 3,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
@@ -7308,7 +7728,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "7-computational-thinking-and-ai-b2-c4",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
@@ -7344,7 +7768,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-computational-thinking-and-ai-b2-c1",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
@@ -7380,7 +7808,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-computational-thinking-and-ai-b2-c2",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
@@ -7416,7 +7848,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-computational-thinking-and-ai-b2-c3",
+      "topicCount": 4,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
@@ -7456,7 +7892,11 @@
       "activities": [],
       "exercises": [],
       "key_terms": [],
-      "figures": []
+      "figures": [],
+      "chapter_id": "8-computational-thinking-and-ai-b2-c4",
+      "topicCount": 5,
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     }
   ]
 }

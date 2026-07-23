@@ -17460,5 +17460,36 @@
       "prerequisite_topic_ids": [],
       "dependent_topic_ids": []
     }
-  ]
+  ],
+  "zero_topic_chapters": [
+    {
+      "chapter_id": "6-science-b1-c1",
+      "topicCount": 0,
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true,
+      "reason": "This chapter exists in the uploaded CBSE curriculum PDF but contains no numbered section headings (N.M pattern). It is an introductory or orientation chapter written as continuous narrative. Topics cannot be extracted without inventing content not present in the source PDF."
+    },
+    {
+      "chapter_id": "6-science-b1-c9",
+      "topicCount": 0,
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true,
+      "reason": "This chapter exists in the uploaded CBSE curriculum PDF but contains no numbered section headings (N.M pattern). It is an introductory or orientation chapter written as continuous narrative. Topics cannot be extracted without inventing content not present in the source PDF."
+    },
+    {
+      "chapter_id": "8-science-b1-c1",
+      "topicCount": 0,
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true,
+      "reason": "This chapter exists in the uploaded CBSE curriculum PDF but contains no numbered section headings (N.M pattern). It is an introductory or orientation chapter written as continuous narrative. Topics cannot be extracted without inventing content not present in the source PDF."
+    },
+    {
+      "chapter_id": "9-science-b1-c1",
+      "topicCount": 0,
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true,
+      "reason": "This chapter exists in the uploaded CBSE curriculum PDF but contains no numbered section headings (N.M pattern). It is an introductory or orientation chapter written as continuous narrative. Topics cannot be extracted without inventing content not present in the source PDF."
+    }
+  ],
+  "total_zero_topic_chapters": 4
 }

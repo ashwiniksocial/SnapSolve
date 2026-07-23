@@ -17,7 +17,9 @@
       "topic_count": 5,
       "first_topic_id": "6-computational-thinking-and-ai-b2-c1-1.1",
       "last_topic_id": "6-computational-thinking-and-ai-b2-c1-1.5",
-      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-computational-thinking-and-ai-b2-c2",
@@ -34,7 +36,9 @@
       "topic_count": 5,
       "first_topic_id": "6-computational-thinking-and-ai-b2-c2-2.1",
       "last_topic_id": "6-computational-thinking-and-ai-b2-c2-2.5",
-      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-computational-thinking-and-ai-b2-c3",
@@ -51,7 +55,9 @@
       "topic_count": 4,
       "first_topic_id": "6-computational-thinking-and-ai-b2-c3-3.1",
       "last_topic_id": "6-computational-thinking-and-ai-b2-c3-3.4",
-      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-computational-thinking-and-ai-b2-c4",
@@ -68,7 +74,9 @@
       "topic_count": 5,
       "first_topic_id": "6-computational-thinking-and-ai-b2-c4-4.1",
       "last_topic_id": "6-computational-thinking-and-ai-b2-c4-4.5",
-      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c1",
@@ -85,7 +93,9 @@
       "topic_count": 6,
       "first_topic_id": "6-mathematics-b1-c1-1.1",
       "last_topic_id": "6-mathematics-b1-c1-1.6",
-      "source_filename": "fegp101.pdf"
+      "source_filename": "fegp101.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c2",
@@ -102,7 +112,9 @@
       "topic_count": 11,
       "first_topic_id": "6-mathematics-b1-c2-2.1",
       "last_topic_id": "6-mathematics-b1-c2-2.11",
-      "source_filename": "fegp102.pdf"
+      "source_filename": "fegp102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c3",
@@ -119,7 +131,9 @@
       "topic_count": 12,
       "first_topic_id": "6-mathematics-b1-c3-3.1",
       "last_topic_id": "6-mathematics-b1-c3-3.12",
-      "source_filename": "fegp103.pdf"
+      "source_filename": "fegp103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c4",
@@ -136,7 +150,9 @@
       "topic_count": 5,
       "first_topic_id": "6-mathematics-b1-c4-4.1",
       "last_topic_id": "6-mathematics-b1-c4-4.5",
-      "source_filename": "fegp104.pdf"
+      "source_filename": "fegp104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c5",
@@ -153,7 +169,9 @@
       "topic_count": 6,
       "first_topic_id": "6-mathematics-b1-c5-5.1",
       "last_topic_id": "6-mathematics-b1-c5-5.6",
-      "source_filename": "fegp105.pdf"
+      "source_filename": "fegp105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c6",
@@ -170,7 +188,9 @@
       "topic_count": 3,
       "first_topic_id": "6-mathematics-b1-c6-6.1",
       "last_topic_id": "6-mathematics-b1-c6-6.3",
-      "source_filename": "fegp106.pdf"
+      "source_filename": "fegp106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c7",
@@ -187,7 +207,9 @@
       "topic_count": 9,
       "first_topic_id": "6-mathematics-b1-c7-7.1",
       "last_topic_id": "6-mathematics-b1-c7-7.9",
-      "source_filename": "fegp107.pdf"
+      "source_filename": "fegp107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c8",
@@ -204,7 +226,9 @@
       "topic_count": 6,
       "first_topic_id": "6-mathematics-b1-c8-8.1",
       "last_topic_id": "6-mathematics-b1-c8-8.6",
-      "source_filename": "fegp108.pdf"
+      "source_filename": "fegp108.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c9",
@@ -221,7 +245,9 @@
       "topic_count": 2,
       "first_topic_id": "6-mathematics-b1-c9-9.1",
       "last_topic_id": "6-mathematics-b1-c9-9.2",
-      "source_filename": "fegp109.pdf"
+      "source_filename": "fegp109.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-mathematics-b1-c10",
@@ -238,7 +264,9 @@
       "topic_count": 5,
       "first_topic_id": "6-mathematics-b1-c10-10.1",
       "last_topic_id": "6-mathematics-b1-c10-10.5",
-      "source_filename": "fegp110.pdf"
+      "source_filename": "fegp110.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c1",
@@ -255,7 +283,11 @@
       "topic_count": 0,
       "first_topic_id": null,
       "last_topic_id": null,
-      "source_filename": "fecu101.pdf"
+      "source_filename": "fecu101.pdf",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c2",
@@ -272,7 +304,9 @@
       "topic_count": 6,
       "first_topic_id": "6-science-b1-c2-2.1",
       "last_topic_id": "6-science-b1-c2-2.6",
-      "source_filename": "fecu102.pdf"
+      "source_filename": "fecu102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c3",
@@ -289,7 +323,9 @@
       "topic_count": 11,
       "first_topic_id": "6-science-b1-c3-3.1",
       "last_topic_id": "6-science-b1-c3-3.6",
-      "source_filename": "fecu103.pdf"
+      "source_filename": "fecu103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c4",
@@ -306,7 +342,9 @@
       "topic_count": 5,
       "first_topic_id": "6-science-b1-c4-4.1",
       "last_topic_id": "6-science-b1-c4-4.5",
-      "source_filename": "fecu104.pdf"
+      "source_filename": "fecu104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c5",
@@ -323,7 +361,9 @@
       "topic_count": 7,
       "first_topic_id": "6-science-b1-c5-5.1",
       "last_topic_id": "6-science-b1-c5-5.7",
-      "source_filename": "fecu105.pdf"
+      "source_filename": "fecu105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c6",
@@ -340,7 +380,9 @@
       "topic_count": 9,
       "first_topic_id": "6-science-b1-c6-6.1",
       "last_topic_id": "6-science-b1-c6-6.4",
-      "source_filename": "fecu106.pdf"
+      "source_filename": "fecu106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c7",
@@ -357,7 +399,9 @@
       "topic_count": 5,
       "first_topic_id": "6-science-b1-c7-7.1",
       "last_topic_id": "6-science-b1-c7-7.3.3",
-      "source_filename": "fecu107.pdf"
+      "source_filename": "fecu107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c8",
@@ -374,7 +418,9 @@
       "topic_count": 7,
       "first_topic_id": "6-science-b1-c8-8.1",
       "last_topic_id": "6-science-b1-c8-8.7",
-      "source_filename": "fecu108.pdf"
+      "source_filename": "fecu108.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c9",
@@ -391,7 +437,11 @@
       "topic_count": 0,
       "first_topic_id": null,
       "last_topic_id": null,
-      "source_filename": "fecu109.pdf"
+      "source_filename": "fecu109.pdf",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c10",
@@ -408,7 +458,9 @@
       "topic_count": 7,
       "first_topic_id": "6-science-b1-c10-10.1",
       "last_topic_id": "6-science-b1-c10-10.5.2",
-      "source_filename": "fecu110.pdf"
+      "source_filename": "fecu110.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c11",
@@ -425,7 +477,9 @@
       "topic_count": 8,
       "first_topic_id": "6-science-b1-c11-11.1",
       "last_topic_id": "6-science-b1-c11-11.8",
-      "source_filename": "fecu111.pdf"
+      "source_filename": "fecu111.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "6-science-b1-c12",
@@ -442,7 +496,9 @@
       "topic_count": 5,
       "first_topic_id": "6-science-b1-c12-12.1",
       "last_topic_id": "6-science-b1-c12-12.5",
-      "source_filename": "fecu112.pdf"
+      "source_filename": "fecu112.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-computational-thinking-and-ai-b2-c1",
@@ -459,7 +515,9 @@
       "topic_count": 6,
       "first_topic_id": "7-computational-thinking-and-ai-b2-c1-1.1",
       "last_topic_id": "7-computational-thinking-and-ai-b2-c1-1.6",
-      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-computational-thinking-and-ai-b2-c2",
@@ -476,7 +534,9 @@
       "topic_count": 5,
       "first_topic_id": "7-computational-thinking-and-ai-b2-c2-2.1",
       "last_topic_id": "7-computational-thinking-and-ai-b2-c2-2.5",
-      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-computational-thinking-and-ai-b2-c3",
@@ -493,7 +553,9 @@
       "topic_count": 3,
       "first_topic_id": "7-computational-thinking-and-ai-b2-c3-3.1",
       "last_topic_id": "7-computational-thinking-and-ai-b2-c3-3.3",
-      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-computational-thinking-and-ai-b2-c4",
@@ -510,7 +572,9 @@
       "topic_count": 4,
       "first_topic_id": "7-computational-thinking-and-ai-b2-c4-4.1",
       "last_topic_id": "7-computational-thinking-and-ai-b2-c4-4.4",
-      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c1",
@@ -527,7 +591,9 @@
       "topic_count": 6,
       "first_topic_id": "7-mathematics-b1-c1-1.1",
       "last_topic_id": "7-mathematics-b1-c1-1.6",
-      "source_filename": "gegp101.pdf"
+      "source_filename": "gegp101.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c2",
@@ -544,7 +610,9 @@
       "topic_count": 2,
       "first_topic_id": "7-mathematics-b1-c2-2.1",
       "last_topic_id": "7-mathematics-b1-c2-2.2",
-      "source_filename": "gegp102.pdf"
+      "source_filename": "gegp102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c3",
@@ -561,7 +629,9 @@
       "topic_count": 8,
       "first_topic_id": "7-mathematics-b1-c3-3.1",
       "last_topic_id": "7-mathematics-b1-c3-3.8",
-      "source_filename": "gegp103.pdf"
+      "source_filename": "gegp103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c4",
@@ -578,7 +648,9 @@
       "topic_count": 4,
       "first_topic_id": "7-mathematics-b1-c4-4.1",
       "last_topic_id": "7-mathematics-b1-c4-4.5",
-      "source_filename": "gegp104.pdf"
+      "source_filename": "gegp104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c5",
@@ -595,7 +667,9 @@
       "topic_count": 8,
       "first_topic_id": "7-mathematics-b1-c5-5.1",
       "last_topic_id": "7-mathematics-b1-c5-5.9",
-      "source_filename": "gegp105.pdf"
+      "source_filename": "gegp105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c6",
@@ -612,7 +686,9 @@
       "topic_count": 5,
       "first_topic_id": "7-mathematics-b1-c6-6.1",
       "last_topic_id": "7-mathematics-b1-c6-6.5",
-      "source_filename": "gegp106.pdf"
+      "source_filename": "gegp106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c7",
@@ -629,7 +705,9 @@
       "topic_count": 3,
       "first_topic_id": "7-mathematics-b1-c7-7.1",
       "last_topic_id": "7-mathematics-b1-c7-7.5",
-      "source_filename": "gegp107.pdf"
+      "source_filename": "gegp107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b1-c8",
@@ -646,7 +724,9 @@
       "topic_count": 3,
       "first_topic_id": "7-mathematics-b1-c8-8.1",
       "last_topic_id": "7-mathematics-b1-c8-8.3",
-      "source_filename": "gegp108.pdf"
+      "source_filename": "gegp108.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b2-c1",
@@ -663,7 +743,9 @@
       "topic_count": 3,
       "first_topic_id": "7-mathematics-b2-c1-1.1",
       "last_topic_id": "7-mathematics-b2-c1-1.3",
-      "source_filename": "gegp201.pdf"
+      "source_filename": "gegp201.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b2-c2",
@@ -680,7 +762,9 @@
       "topic_count": 2,
       "first_topic_id": "7-mathematics-b2-c2-2.1",
       "last_topic_id": "7-mathematics-b2-c2-2.2",
-      "source_filename": "gegp202.pdf"
+      "source_filename": "gegp202.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b2-c3",
@@ -697,7 +781,9 @@
       "topic_count": 3,
       "first_topic_id": "7-mathematics-b2-c3-3.1",
       "last_topic_id": "7-mathematics-b2-c3-3.3",
-      "source_filename": "gegp203.pdf"
+      "source_filename": "gegp203.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b2-c4",
@@ -714,7 +800,9 @@
       "topic_count": 5,
       "first_topic_id": "7-mathematics-b2-c4-4.1",
       "last_topic_id": "7-mathematics-b2-c4-4.68",
-      "source_filename": "gegp204.pdf"
+      "source_filename": "gegp204.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b2-c5",
@@ -731,7 +819,9 @@
       "topic_count": 4,
       "first_topic_id": "7-mathematics-b2-c5-5.1",
       "last_topic_id": "7-mathematics-b2-c5-5.4",
-      "source_filename": "gegp205.pdf"
+      "source_filename": "gegp205.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b2-c6",
@@ -748,7 +838,9 @@
       "topic_count": 2,
       "first_topic_id": "7-mathematics-b2-c6-6.1",
       "last_topic_id": "7-mathematics-b2-c6-6.2",
-      "source_filename": "gegp206.pdf"
+      "source_filename": "gegp206.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-mathematics-b2-c7",
@@ -765,7 +857,9 @@
       "topic_count": 4,
       "first_topic_id": "7-mathematics-b2-c7-7.1",
       "last_topic_id": "7-mathematics-b2-c7-7.4",
-      "source_filename": "gegp207.pdf"
+      "source_filename": "gegp207.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c1",
@@ -782,7 +876,9 @@
       "topic_count": 1,
       "first_topic_id": "7-science-b1-c1-1.1",
       "last_topic_id": "7-science-b1-c1-1.1",
-      "source_filename": "gecu101.pdf"
+      "source_filename": "gecu101.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c2",
@@ -799,7 +895,9 @@
       "topic_count": 6,
       "first_topic_id": "7-science-b1-c2-2.1",
       "last_topic_id": "7-science-b1-c2-2.3",
-      "source_filename": "gecu102.pdf"
+      "source_filename": "gecu102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c3",
@@ -816,7 +914,9 @@
       "topic_count": 10,
       "first_topic_id": "7-science-b1-c3-3.1",
       "last_topic_id": "7-science-b1-c3-3.4",
-      "source_filename": "gecu103.pdf"
+      "source_filename": "gecu103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c4",
@@ -833,7 +933,9 @@
       "topic_count": 10,
       "first_topic_id": "7-science-b1-c4-4.1",
       "last_topic_id": "7-science-b1-c4-4.5",
-      "source_filename": "gecu104.pdf"
+      "source_filename": "gecu104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c5",
@@ -850,7 +952,9 @@
       "topic_count": 11,
       "first_topic_id": "7-science-b1-c5-5.1",
       "last_topic_id": "7-science-b1-c5-5.7.2",
-      "source_filename": "gecu105.pdf"
+      "source_filename": "gecu105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c6",
@@ -867,7 +971,9 @@
       "topic_count": 10,
       "first_topic_id": "7-science-b1-c6-6.1",
       "last_topic_id": "7-science-b1-c6-6.5",
-      "source_filename": "gecu106.pdf"
+      "source_filename": "gecu106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c7",
@@ -884,7 +990,9 @@
       "topic_count": 6,
       "first_topic_id": "7-science-b1-c7-7.1",
       "last_topic_id": "7-science-b1-c7-7.4.1",
-      "source_filename": "gecu107.pdf"
+      "source_filename": "gecu107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c8",
@@ -901,7 +1009,9 @@
       "topic_count": 7,
       "first_topic_id": "7-science-b1-c8-8.1",
       "last_topic_id": "7-science-b1-c8-8.4",
-      "source_filename": "gecu108.pdf"
+      "source_filename": "gecu108.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c9",
@@ -918,7 +1028,9 @@
       "topic_count": 6,
       "first_topic_id": "7-science-b1-c9-9.1",
       "last_topic_id": "7-science-b1-c9-9.2.2",
-      "source_filename": "gecu109.pdf"
+      "source_filename": "gecu109.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c10",
@@ -935,7 +1047,9 @@
       "topic_count": 10,
       "first_topic_id": "7-science-b1-c10-10.1",
       "last_topic_id": "7-science-b1-c10-10.4",
-      "source_filename": "gecu110.pdf"
+      "source_filename": "gecu110.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c11",
@@ -952,7 +1066,9 @@
       "topic_count": 10,
       "first_topic_id": "7-science-b1-c11-11.1",
       "last_topic_id": "7-science-b1-c11-11.8.2",
-      "source_filename": "gecu111.pdf"
+      "source_filename": "gecu111.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "7-science-b1-c12",
@@ -969,7 +1085,9 @@
       "topic_count": 7,
       "first_topic_id": "7-science-b1-c12-12.1",
       "last_topic_id": "7-science-b1-c12-12.3.2",
-      "source_filename": "gecu112.pdf"
+      "source_filename": "gecu112.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-computational-thinking-and-ai-b2-c1",
@@ -986,7 +1104,9 @@
       "topic_count": 4,
       "first_topic_id": "8-computational-thinking-and-ai-b2-c1-1.1",
       "last_topic_id": "8-computational-thinking-and-ai-b2-c1-1.4",
-      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-computational-thinking-and-ai-b2-c2",
@@ -1003,7 +1123,9 @@
       "topic_count": 4,
       "first_topic_id": "8-computational-thinking-and-ai-b2-c2-2.1",
       "last_topic_id": "8-computational-thinking-and-ai-b2-c2-2.4",
-      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-computational-thinking-and-ai-b2-c3",
@@ -1020,7 +1142,9 @@
       "topic_count": 4,
       "first_topic_id": "8-computational-thinking-and-ai-b2-c3-3.1",
       "last_topic_id": "8-computational-thinking-and-ai-b2-c3-3.4",
-      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-computational-thinking-and-ai-b2-c4",
@@ -1037,7 +1161,9 @@
       "topic_count": 5,
       "first_topic_id": "8-computational-thinking-and-ai-b2-c4-4.1",
       "last_topic_id": "8-computational-thinking-and-ai-b2-c4-4.5",
-      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf"
+      "source_filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b1-c1",
@@ -1054,7 +1180,9 @@
       "topic_count": 3,
       "first_topic_id": "8-mathematics-b1-c1-1.1",
       "last_topic_id": "8-mathematics-b1-c1-1.3",
-      "source_filename": "hegp101.pdf"
+      "source_filename": "hegp101.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b1-c2",
@@ -1071,7 +1199,9 @@
       "topic_count": 5,
       "first_topic_id": "8-mathematics-b1-c2-2.1",
       "last_topic_id": "8-mathematics-b1-c2-2.5",
-      "source_filename": "hegp102.pdf"
+      "source_filename": "hegp102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b1-c3",
@@ -1088,7 +1218,9 @@
       "topic_count": 3,
       "first_topic_id": "8-mathematics-b1-c3-3.1",
       "last_topic_id": "8-mathematics-b1-c3-3.3",
-      "source_filename": "hegp103.pdf"
+      "source_filename": "hegp103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b1-c4",
@@ -1105,7 +1237,9 @@
       "topic_count": 6,
       "first_topic_id": "8-mathematics-b1-c4-4.1",
       "last_topic_id": "8-mathematics-b1-c4-4.6",
-      "source_filename": "hegp104.pdf"
+      "source_filename": "hegp104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b1-c5",
@@ -1122,7 +1256,9 @@
       "topic_count": 3,
       "first_topic_id": "8-mathematics-b1-c5-5.1",
       "last_topic_id": "8-mathematics-b1-c5-5.3",
-      "source_filename": "hegp105.pdf"
+      "source_filename": "hegp105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b1-c6",
@@ -1139,7 +1275,9 @@
       "topic_count": 4,
       "first_topic_id": "8-mathematics-b1-c6-6.1",
       "last_topic_id": "8-mathematics-b1-c6-6.4",
-      "source_filename": "hegp106.pdf"
+      "source_filename": "hegp106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b1-c7",
@@ -1156,7 +1294,9 @@
       "topic_count": 6,
       "first_topic_id": "8-mathematics-b1-c7-7.1",
       "last_topic_id": "8-mathematics-b1-c7-7.6",
-      "source_filename": "hegp107.pdf"
+      "source_filename": "hegp107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b2-c1",
@@ -1173,7 +1313,9 @@
       "topic_count": 4,
       "first_topic_id": "8-mathematics-b2-c1-1.1",
       "last_topic_id": "8-mathematics-b2-c1-1.46",
-      "source_filename": "hegp201.pdf"
+      "source_filename": "hegp201.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b2-c2",
@@ -1190,7 +1332,9 @@
       "topic_count": 7,
       "first_topic_id": "8-mathematics-b2-c2-2.1",
       "last_topic_id": "8-mathematics-b2-c2-2.7",
-      "source_filename": "hegp202.pdf"
+      "source_filename": "hegp202.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b2-c3",
@@ -1207,7 +1351,9 @@
       "topic_count": 6,
       "first_topic_id": "8-mathematics-b2-c3-3.1",
       "last_topic_id": "8-mathematics-b2-c3-3.6",
-      "source_filename": "hegp203.pdf"
+      "source_filename": "hegp203.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b2-c4",
@@ -1224,7 +1370,9 @@
       "topic_count": 2,
       "first_topic_id": "8-mathematics-b2-c4-4.1",
       "last_topic_id": "8-mathematics-b2-c4-4.2",
-      "source_filename": "hegp204.pdf"
+      "source_filename": "hegp204.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b2-c5",
@@ -1241,7 +1389,9 @@
       "topic_count": 2,
       "first_topic_id": "8-mathematics-b2-c5-5.1",
       "last_topic_id": "8-mathematics-b2-c5-5.2",
-      "source_filename": "hegp205.pdf"
+      "source_filename": "hegp205.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b2-c6",
@@ -1258,7 +1408,9 @@
       "topic_count": 6,
       "first_topic_id": "8-mathematics-b2-c6-6.1",
       "last_topic_id": "8-mathematics-b2-c6-6.6",
-      "source_filename": "hegp206.pdf"
+      "source_filename": "hegp206.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-mathematics-b2-c7",
@@ -1275,7 +1427,9 @@
       "topic_count": 1,
       "first_topic_id": "8-mathematics-b2-c7-7.1",
       "last_topic_id": "8-mathematics-b2-c7-7.1",
-      "source_filename": "hegp207.pdf"
+      "source_filename": "hegp207.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c1",
@@ -1292,7 +1446,11 @@
       "topic_count": 0,
       "first_topic_id": null,
       "last_topic_id": null,
-      "source_filename": "hecu101.pdf"
+      "source_filename": "hecu101.pdf",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c2",
@@ -1309,7 +1467,9 @@
       "topic_count": 9,
       "first_topic_id": "8-science-b1-c2-2.1",
       "last_topic_id": "8-science-b1-c2-2.5",
-      "source_filename": "hecu102.pdf"
+      "source_filename": "hecu102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c3",
@@ -1326,7 +1486,9 @@
       "topic_count": 10,
       "first_topic_id": "8-science-b1-c3-3.1",
       "last_topic_id": "8-science-b1-c3-3.5.1",
-      "source_filename": "hecu103.pdf"
+      "source_filename": "hecu103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c4",
@@ -1343,7 +1505,9 @@
       "topic_count": 8,
       "first_topic_id": "8-science-b1-c4-4.1",
       "last_topic_id": "8-science-b1-c4-4.3.3",
-      "source_filename": "hecu104.pdf"
+      "source_filename": "hecu104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c5",
@@ -1360,7 +1524,9 @@
       "topic_count": 8,
       "first_topic_id": "8-science-b1-c5-5.1",
       "last_topic_id": "8-science-b1-c5-5.6",
-      "source_filename": "hecu105.pdf"
+      "source_filename": "hecu105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c6",
@@ -1377,7 +1543,9 @@
       "topic_count": 6,
       "first_topic_id": "8-science-b1-c6-6.1",
       "last_topic_id": "8-science-b1-c6-6.6",
-      "source_filename": "hecu106.pdf"
+      "source_filename": "hecu106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c7",
@@ -1394,7 +1562,9 @@
       "topic_count": 7,
       "first_topic_id": "8-science-b1-c7-7.1",
       "last_topic_id": "8-science-b1-c7-7.4",
-      "source_filename": "hecu107.pdf"
+      "source_filename": "hecu107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c8",
@@ -1411,7 +1581,9 @@
       "topic_count": 9,
       "first_topic_id": "8-science-b1-c8-8.1",
       "last_topic_id": "8-science-b1-c8-8.5",
-      "source_filename": "hecu108.pdf"
+      "source_filename": "hecu108.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c9",
@@ -1428,7 +1600,9 @@
       "topic_count": 9,
       "first_topic_id": "8-science-b1-c9-9.1",
       "last_topic_id": "8-science-b1-c9-9.5.3",
-      "source_filename": "hecu109.pdf"
+      "source_filename": "hecu109.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c10",
@@ -1445,7 +1619,9 @@
       "topic_count": 4,
       "first_topic_id": "8-science-b1-c10-10.1",
       "last_topic_id": "8-science-b1-c10-10.4",
-      "source_filename": "hecu110.pdf"
+      "source_filename": "hecu110.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c11",
@@ -1462,7 +1638,9 @@
       "topic_count": 11,
       "first_topic_id": "8-science-b1-c11-11.1",
       "last_topic_id": "8-science-b1-c11-11.4",
-      "source_filename": "hecu111.pdf"
+      "source_filename": "hecu111.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c12",
@@ -1479,7 +1657,9 @@
       "topic_count": 11,
       "first_topic_id": "8-science-b1-c12-12.1",
       "last_topic_id": "8-science-b1-c12-12.9.2",
-      "source_filename": "hecu112.pdf"
+      "source_filename": "hecu112.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "8-science-b1-c13",
@@ -1496,7 +1676,9 @@
       "topic_count": 15,
       "first_topic_id": "8-science-b1-c13-13.1",
       "last_topic_id": "8-science-b1-c13-13.6",
-      "source_filename": "hecu113.pdf"
+      "source_filename": "hecu113.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c1",
@@ -1513,7 +1695,9 @@
       "topic_count": 4,
       "first_topic_id": "9-mathematics-b1-c1-1.1",
       "last_topic_id": "9-mathematics-b1-c1-1.4",
-      "source_filename": "iemh101.pdf"
+      "source_filename": "iemh101.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c2",
@@ -1530,7 +1714,9 @@
       "topic_count": 5,
       "first_topic_id": "9-mathematics-b1-c2-2.1",
       "last_topic_id": "9-mathematics-b1-c2-2.6",
-      "source_filename": "iemh102.pdf"
+      "source_filename": "iemh102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c3",
@@ -1547,7 +1733,9 @@
       "topic_count": 19,
       "first_topic_id": "9-mathematics-b1-c3-3.1.1",
       "last_topic_id": "9-mathematics-b1-c3-3.7",
-      "source_filename": "iemh103.pdf"
+      "source_filename": "iemh103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c4",
@@ -1564,7 +1752,9 @@
       "topic_count": 7,
       "first_topic_id": "9-mathematics-b1-c4-4.1",
       "last_topic_id": "9-mathematics-b1-c4-4.8",
-      "source_filename": "iemh104.pdf"
+      "source_filename": "iemh104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c5",
@@ -1581,7 +1771,9 @@
       "topic_count": 10,
       "first_topic_id": "9-mathematics-b1-c5-5.1",
       "last_topic_id": "9-mathematics-b1-c5-5.8",
-      "source_filename": "iemh105.pdf"
+      "source_filename": "iemh105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c6",
@@ -1598,7 +1790,9 @@
       "topic_count": 12,
       "first_topic_id": "9-mathematics-b1-c6-6.1",
       "last_topic_id": "9-mathematics-b1-c6-6.10.1",
-      "source_filename": "iemh106.pdf"
+      "source_filename": "iemh106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c7",
@@ -1615,7 +1809,9 @@
       "topic_count": 11,
       "first_topic_id": "9-mathematics-b1-c7-7.1",
       "last_topic_id": "9-mathematics-b1-c7-7.4",
-      "source_filename": "iemh107.pdf"
+      "source_filename": "iemh107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-mathematics-b1-c8",
@@ -1632,7 +1828,9 @@
       "topic_count": 9,
       "first_topic_id": "9-mathematics-b1-c8-8.1",
       "last_topic_id": "9-mathematics-b1-c8-8.6.2",
-      "source_filename": "iemh108.pdf"
+      "source_filename": "iemh108.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c1",
@@ -1649,7 +1847,11 @@
       "topic_count": 0,
       "first_topic_id": null,
       "last_topic_id": null,
-      "source_filename": "iesc101.pdf"
+      "source_filename": "iesc101.pdf",
+      "topicCount": 0,
+      "topics": [],
+      "topicExtractionStatus": "NO_NUMBERED_SECTIONS_IN_SOURCE",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c2",
@@ -1666,7 +1868,9 @@
       "topic_count": 10,
       "first_topic_id": "9-science-b1-c2-2.1",
       "last_topic_id": "9-science-b1-c2-2.5.1",
-      "source_filename": "iesc102.pdf"
+      "source_filename": "iesc102.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c3",
@@ -1683,7 +1887,9 @@
       "topic_count": 18,
       "first_topic_id": "9-science-b1-c3-3.1",
       "last_topic_id": "9-science-b1-c3-3.6",
-      "source_filename": "iesc103.pdf"
+      "source_filename": "iesc103.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c4",
@@ -1700,7 +1906,9 @@
       "topic_count": 12,
       "first_topic_id": "9-science-b1-c4-4.1",
       "last_topic_id": "9-science-b1-c4-4.4.1",
-      "source_filename": "iesc104.pdf"
+      "source_filename": "iesc104.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c5",
@@ -1717,7 +1925,9 @@
       "topic_count": 15,
       "first_topic_id": "9-science-b1-c5-5.1",
       "last_topic_id": "9-science-b1-c5-5.5",
-      "source_filename": "iesc105.pdf"
+      "source_filename": "iesc105.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c6",
@@ -1734,7 +1944,9 @@
       "topic_count": 8,
       "first_topic_id": "9-science-b1-c6-6.1",
       "last_topic_id": "9-science-b1-c6-6.7",
-      "source_filename": "iesc106.pdf"
+      "source_filename": "iesc106.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c7",
@@ -1751,7 +1963,9 @@
       "topic_count": 14,
       "first_topic_id": "9-science-b1-c7-7.1",
       "last_topic_id": "9-science-b1-c7-7.6.3",
-      "source_filename": "iesc107.pdf"
+      "source_filename": "iesc107.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c8",
@@ -1768,7 +1982,9 @@
       "topic_count": 16,
       "first_topic_id": "9-science-b1-c8-8.1",
       "last_topic_id": "9-science-b1-c8-8.9.2",
-      "source_filename": "iesc108.pdf"
+      "source_filename": "iesc108.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c9",
@@ -1785,7 +2001,9 @@
       "topic_count": 12,
       "first_topic_id": "9-science-b1-c9-9.1",
       "last_topic_id": "9-science-b1-c9-9.8",
-      "source_filename": "iesc109.pdf"
+      "source_filename": "iesc109.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c10",
@@ -1802,7 +2020,9 @@
       "topic_count": 16,
       "first_topic_id": "9-science-b1-c10-10.1",
       "last_topic_id": "9-science-b1-c10-10.8.1",
-      "source_filename": "iesc110.pdf"
+      "source_filename": "iesc110.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c11",
@@ -1819,7 +2039,9 @@
       "topic_count": 21,
       "first_topic_id": "9-science-b1-c11-11.1",
       "last_topic_id": "9-science-b1-c11-11.5.10",
-      "source_filename": "iesc111.pdf"
+      "source_filename": "iesc111.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c12",
@@ -1836,7 +2058,9 @@
       "topic_count": 16,
       "first_topic_id": "9-science-b1-c12-12.1",
       "last_topic_id": "9-science-b1-c12-12.10",
-      "source_filename": "iesc112.pdf"
+      "source_filename": "iesc112.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     },
     {
       "chapter_id": "9-science-b1-c13",
@@ -1853,7 +2077,9 @@
       "topic_count": 14,
       "first_topic_id": "9-science-b1-c13-13.1",
       "last_topic_id": "9-science-b1-c13-13.4",
-      "source_filename": "iesc113.pdf"
+      "source_filename": "iesc113.pdf",
+      "topicExtractionStatus": "OK",
+      "sourceVerified": true
     }
   ]
 }

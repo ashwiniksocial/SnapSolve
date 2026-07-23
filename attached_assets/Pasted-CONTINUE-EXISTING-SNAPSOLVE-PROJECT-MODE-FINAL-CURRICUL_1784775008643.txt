@@ -1,0 +1,94 @@
+CONTINUE EXISTING SNAPSOLVE PROJECT.
+
+MODE:
+FINAL CURRICULUM FREEZE.
+
+DO NOT MODIFY:
+- official PDFs
+- chapter titles
+- topic extraction rules
+- question banks
+- UI
+- routing
+- AI pipeline
+
+The integrity check is accepted.
+
+The following four chapters are valid official chapters with zero numbered topic headings in their uploaded PDFs:
+
+- Class 6 Science Ch 1 — The Wonderful World of Science
+- Class 6 Science Ch 9 — Methods of Separation in Everyday Life
+- Class 8 Science Ch 1 — Exploring the Investigative World of Science
+- Class 9 Science Ch 1 — Exploration: Entering the World of Secondary Science
+
+Do not invent or infer topics for them.
+
+TASK 1 — RECORD EXCEPTION
+
+In the curriculum manifest and knowledge graph, ensure these chapters have:
+
+- topicCount: 0
+- topics: []
+- topicExtractionStatus: "NO_NUMBERED_SECTIONS_IN_SOURCE"
+- sourceVerified: true
+- chapterSequence preserved
+- previousChapter and nextChapter preserved
+
+TASK 2 — FINAL VALIDATION
+
+Verify:
+
+- 109 chapters present
+- 759 extracted topics
+- 4 source-verified zero-topic chapters
+- 0 orphan topics
+- 0 duplicate ownership
+- 0 dangling references
+- 0 unexplained chapters
+
+TASK 3 — CREATE CURRICULUM LOCK
+
+Create:
+
+curriculum/generated/curriculum-lock.json
+
+Include:
+
+- board
+- classes
+- total PDFs
+- total chapters
+- total extracted topics
+- zero-topic chapter IDs and reasons
+- checksum of every source PDF
+- checksum of every generated curriculum/graph file
+- generation timestamp
+- extractor script/version
+- validation status
+
+Set:
+
+status: "VERIFIED_AND_LOCKED"
+
+TASK 4 — FREEZE
+
+Mark these as frozen curriculum authority:
+
+- master-curriculum-index.json
+- master-topic-index.json
+- curriculum-manifest.json
+- validation-report.md
+- knowledge-graph.json
+- topic-dependency-map.json
+- chapter-sequence-map.json
+- curriculum-lock.json
+
+Do not begin legacy reconciliation yet.
+
+Return only:
+
+1. files changed
+2. 109-chapter validation
+3. four zero-topic exceptions recorded
+4. lock file created
+5. final status
