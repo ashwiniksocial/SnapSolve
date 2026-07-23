@@ -44,13 +44,13 @@ const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology", "Earth Science"];
  */
 export const SCIENCE_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
   "chem-ch01":  1,  // iesc101 — Matter in Our Surroundings
-  "bio-ch01":   2,  // iesc102 — Cell — The Fundamental Unit of Life
+  "bio-ch01":   2,  // iesc102 — The Fundamental Unit of Life
   "bio-ch02":   3,  // iesc103 — Tissues
   "phy-ch1":    4,  // iesc104 — Motion
   "chem-ch02":  5,  // iesc105 — Exploring Mixtures and Their Separation
   "phy-ch2":    6,  // iesc106 — Force and Laws of Motion
   "phy-ch4":    7,  // iesc107 — Work, Energy and Simple Machines
-  "chem-ch04":  8,  // iesc108 — Structure of an Atom
+  "chem-ch04":  8,  // iesc108 — Structure of the Atom
   "chem-ch03":  9,  // iesc109 — Atoms and Molecules
   "phy-ch5":   10,  // iesc110 — Sound
   "bio-ch05":  11,  // iesc111 — Reproduction in Plants and Animals
@@ -60,25 +60,25 @@ export const SCIENCE_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
 
 /**
  * Official Class 9 Mathematics student-facing chapter display sequence.
- * Follows the official NCERT Ganita Manjari Part I order: iemh101 → iemh108.
+ * Follows the official NCERT Mathematics (Ganita Manjari Part I) order: iemh101 → iemh108.
  * Key: internal chapterId — Value: 1-based display number (Ch.1–8).
  */
 export const MATHS_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
-  "ch3":    1,  // iemh101 — Orienting Yourself: The Use of Coordinates
-  "iemh102": 2, // iemh102 — Introduction to Linear Polynomials (placeholder; ch2 bank is general polynomials, archived)
-  "ch1":    3,  // iemh103 — The World of Numbers
-  "ch16": 4,  // iemh104 — Exploring Algebraic Identities
-  "ch4":  5,  // iemh105 — I'm Up and Down, and Round and Round
-  "ch18": 6,  // iemh106 — Measuring Space: Perimeter and Area
-  "ch15": 7,  // iemh107 — The Mathematics of Maybe: Introduction to Probability
-  "ch17": 8,  // iemh108 — Predicting What Comes Next: Exploring Sequences and Progressions
+  "ch3":     1,  // iemh101 — Coordinate Geometry
+  "iemh102": 2,  // iemh102 — Introduction to Polynomials (placeholder; ch2 bank is general polynomials, archived)
+  "ch1":     3,  // iemh103 — Number System
+  "ch16":    4,  // iemh104 — Exploring Algebraic Identities
+  "ch4":     5,  // iemh105 — Linear Equations in Two Variables
+  "ch18":    6,  // iemh106 — Area and Perimeter
+  "ch15":    7,  // iemh107 — Probability
+  "ch17":    8,  // iemh108 — Predicting What Comes Next: Exploring Sequences and Progressions
 };
 
 /**
  * All chapters for a given class + subject, in official textbook order.
  * "Science" resolves to the union of all Science domain chapters sorted by
  * the official NCERT Exploration textbook sequence (iesc101–iesc113).
- * Class 9 Mathematics is sorted by the official Ganita Manjari Part I sequence (iemh101–iemh108).
+ * Class 9 Mathematics is sorted by the official NCERT Mathematics (Ganita Manjari Part I) sequence (iemh101–iemh108).
  */
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   if (subject === "Science") {

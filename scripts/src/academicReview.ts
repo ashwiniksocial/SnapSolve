@@ -43,7 +43,6 @@ const HH_DATA           = join(ROOT, "artifacts/homework-hero/src/data/questions
 const QB_ROOT           = join(ROOT, "question-bank/questions");
 const RESULTS_DIR       = join(ROOT, "academic-review/results");
 const CURRICULUM_IDX    = join(ROOT, "curriculum/generated/master-curriculum-index.json");
-const CHAPTER_MAP_FILE  = join(ROOT, "academic-review/chapter-context-map.json");
 const CONTEXT_AUDIT_OUT = join(ROOT, "academic-review/context-audit.json");
 
 // ─── Model config ─────────────────────────────────────────────────────────────
@@ -123,34 +122,6 @@ interface ReviewRecord {
 
 type ChapterCache = Record<string, ReviewRecord>;
 
-// ─── Chapter context map ──────────────────────────────────────────────────────
-
-interface ChapterMapEntry {
-  classNum:       number;
-  subject:        string;
-  chapterId:      string;
-  indexSubject:   string;
-  curriculumTitle: string;
-  confidence:     string;
-  notes:          string;
-}
-
-interface ChapterContextMap {
-  entries: ChapterMapEntry[];
-}
-
-let _chapterContextMap: ChapterMapEntry[] | null = null;
-
-function loadChapterContextMap(): ChapterMapEntry[] {
-  if (_chapterContextMap) return _chapterContextMap;
-  if (!existsSync(CHAPTER_MAP_FILE)) { _chapterContextMap = []; return []; }
-  try {
-    const raw = JSON.parse(readFileSync(CHAPTER_MAP_FILE, "utf8")) as ChapterContextMap;
-    _chapterContextMap = raw.entries ?? [];
-    return _chapterContextMap;
-  } catch { _chapterContextMap = []; return []; }
-}
-
 // ─── Curriculum index ─────────────────────────────────────────────────────────
 
 interface CurriculumEntry {
@@ -196,15 +167,10 @@ function normTitle(s: string): string {
 /**
  * Resolve official NCERT curriculum context for a question.
  *
- * Resolution order:
- * 1. Explicit chapter map lookup by (classNum, subject, chapterId).
- *    Uses the exact curriculumTitle from the map to find the index entry.
- *    This handles all Science chapters (Physics/Chemistry/Biology) where
- *    the old QB chapter names diverge from the new 2024-25 textbook names.
- *
- * 2. Normalised exact-title match for Mathematics.
- *    QB Mathematics chapter names already match the index titles after
- *    normalisation. Uses exact match (not prefix) to avoid false positives.
+ * Looks up the question's chapterName (normalised) against the canonical
+ * master-curriculum-index.json. Science subjects (Physics, Chemistry, Biology,
+ * Earth Science) are also tried against the "Science" subject in the index,
+ * since the integrated Science textbook covers all three domains.
  *
  * Returns MISSING if no reliable match is found.
  * Questions with MISSING context are BLOCKED from review (no PASS recorded).
@@ -215,65 +181,36 @@ function resolveSourceContext(q: ReviewableQuestion): {
   mappedTitle?:  string;
   missReason?:   string;
 } {
-  const entries    = getCurriculumEntries();
-  const chapterMap = loadChapterContextMap();
+  const entries = getCurriculumEntries();
+  const qNorm   = normTitle(q.chapterName);
 
-  // ── Step 1: Explicit chapter map ──────────────────────────────────────────
-  const mapEntry = chapterMap.find(
-    e => e.classNum === q.classNum && e.subject === q.subject && e.chapterId === q.chapterId,
-  );
+  // Science subjects appear under "Science" in the integrated index,
+  // but may also appear under their specific subject name.
+  const subjectVariants: Record<string, string[]> = {
+    Mathematics:    ["Mathematics"],
+    Physics:        ["Science", "Physics"],
+    Chemistry:      ["Science", "Chemistry"],
+    Biology:        ["Science", "Biology"],
+    "Earth Science": ["Science", "Earth Science"],
+  };
+  const candidates = subjectVariants[q.subject] ?? [q.subject];
 
-  if (mapEntry) {
-    // Use normalised comparison to handle apostrophe encoding differences
-    // (e.g. Unicode U+2019 in index vs ASCII U+0027 in JSON map file).
-    // The match is still anchored by (classNum, indexSubject, exact-normalised-title)
-    // from the map — no false-positive risk.
-    const normMapped = normTitle(mapEntry.curriculumTitle);
+  for (const subj of candidates) {
     const idxEntry = entries.find(
       e => e.class === q.classNum
-        && e.subject === mapEntry.indexSubject
-        && normTitle(e.chapter_title) === normMapped
-        && e.is_chapter !== false,
-    );
-    if (idxEntry) {
-      return { status: "PRESENT", text: formatEntry(idxEntry), mappedTitle: mapEntry.curriculumTitle };
-    }
-    // Map entry exists but the curriculum index doesn't have that title
-    return {
-      status:      "MISSING",
-      text:        "",
-      mappedTitle: mapEntry.curriculumTitle,
-      missReason:  `chapter-context-map.json maps this to '${mapEntry.curriculumTitle}' but that title was not found in master-curriculum-index.json`,
-    };
-  }
-
-  // ── Step 2: Exact normalised-title match (Mathematics only) ───────────────
-  //    Only safe when subject matches directly (Mathematics → Mathematics).
-  //    Science subjects (Physics/Chemistry/Biology) must use the explicit map —
-  //    they cannot fall back here because the index uses "Science" for all three.
-  if (q.subject === "Mathematics") {
-    const qNorm = normTitle(q.chapterName);
-    const idxEntry = entries.find(
-      e => e.class === q.classNum
-        && e.subject === "Mathematics"
+        && e.subject === subj
         && normTitle(e.chapter_title) === qNorm
         && e.is_chapter !== false,
     );
     if (idxEntry) {
       return { status: "PRESENT", text: formatEntry(idxEntry), mappedTitle: idxEntry.chapter_title };
     }
-    return {
-      status:     "MISSING",
-      text:       "",
-      missReason: `normalised title '${qNorm}' not found in index under subject='Mathematics' class=${q.classNum}`,
-    };
   }
 
-  // ── Step 3: No match — chapter is not in the explicit map ─────────────────
   return {
     status:     "MISSING",
     text:       "",
-    missReason: `chapterId '${q.chapterId}' for subject '${q.subject}' class ${q.classNum} has no entry in chapter-context-map.json`,
+    missReason: `normalised chapter title '${qNorm}' not found in curriculum index for subject='${q.subject}' class=${q.classNum}`,
   };
 }
 
@@ -304,7 +241,6 @@ interface ChapterAuditRecord {
 
 interface ContextAuditReport {
   auditedAt:       string;
-  chapterMapFile:  string;
   curriculumIndex: string;
   totalQuestions:  number;
   present:         number;
@@ -387,12 +323,11 @@ function runContextAudit(questions: ReviewableQuestion[]): ContextAuditReport {
       chapterId:   r.chapterId,
       chapterName: r.chapterName,
       questions:   r.total,
-      reason:      r.missReason ?? "no entry in chapter-context-map.json",
+      reason:      r.missReason ?? "chapter not found in curriculum index",
     }));
 
   return {
     auditedAt:       new Date().toISOString(),
-    chapterMapFile:  "academic-review/chapter-context-map.json",
     curriculumIndex: "curriculum/generated/master-curriculum-index.json",
     totalQuestions:  total,
     present:         totalPresent,
@@ -965,9 +900,9 @@ function printSummary(
 
   if (summary.blocked > 0) {
     console.log(hr);
-    console.log("  NOTE: BLOCKED questions have no official source context in the curriculum");
-    console.log("  index. Run --context-audit to see which chapters are unmatched and why.");
-    console.log("  Update academic-review/chapter-context-map.json to establish context.");
+    console.log("  NOTE: BLOCKED questions have no match in the canonical curriculum index.");
+    console.log("  Run --context-audit to see which chapters are unmatched and why.");
+    console.log("  Ensure question chapterName values are canonical before reviewing.");
   }
 
   if (corrections.length > 0) {
@@ -1058,7 +993,7 @@ async function runReviews(
         sourceContextStatus: "MISSING",
         overall:             "REVIEW_BLOCKED_CONTEXT_MISSING",
         dimensions:          null,
-        reasons:             [ctx.missReason ?? "no entry in chapter-context-map.json"],
+        reasons:             [ctx.missReason ?? "chapter not found in curriculum index"],
         fieldCorrections:    [],
       };
 
@@ -1164,10 +1099,8 @@ async function main(): Promise<void> {
   console.log(`Model: ${MODEL}  |  Prompt version: ${PROMPT_VERSION}`);
   console.log(HR);
 
-  // ── Load chapter map and curriculum index at startup ──────────────────────
-  const mapEntries  = loadChapterContextMap();
+  // ── Load curriculum index at startup ─────────────────────────────────────
   const idxEntries  = getCurriculumEntries();
-  console.log(`Loaded chapter-context-map.json  : ${mapEntries.length} explicit mappings`);
   console.log(`Loaded master-curriculum-index   : ${idxEntries.length} index entries`);
 
   if (!args.contextAudit && !args.dryRun && !args.costEstimate && !apiKey) {

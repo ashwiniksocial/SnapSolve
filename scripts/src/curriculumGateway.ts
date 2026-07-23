@@ -168,7 +168,10 @@ function parseV1Meta(src: string): { id: string; name: string; classNum: number;
 function collectClass9V1(prefix: string, subject: string): ChapterRecord[] {
   const records: ChapterRecord[] = [];
   if (!existsSync(HH_DATA)) return records;
-  const pattern = new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
+  // Mathematics also has iemh-prefixed files (e.g. class9-maths-iemh102.ts)
+  const pattern = prefix === "maths"
+    ? new RegExp(`^class9-${prefix}-(ch\\d+|iemh\\d+)\\.ts$`)
+    : new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
   const files = readdirSync(HH_DATA)
     .filter(f => pattern.test(f))
     .sort((a, b) => {
@@ -390,7 +393,10 @@ function checkMissingExpected(): Finding[] {
           if (subject === "Physics")   prefix = "physics";
 
           if (existsSync(HH_DATA)) {
-            const pattern = new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
+            // Mathematics also has iemh-prefixed files (e.g. class9-maths-iemh102.ts)
+            const pattern = prefix === "maths"
+              ? new RegExp(`^class9-${prefix}-(ch\\d+|iemh\\d+)\\.ts$`)
+              : new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
             const files = readdirSync(HH_DATA).filter(f => pattern.test(f));
             found = files.some(f => {
               const src = read(join(HH_DATA, f));

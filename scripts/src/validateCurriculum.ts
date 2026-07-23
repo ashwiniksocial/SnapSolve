@@ -25,14 +25,14 @@ const SCIENCE_DISPLAY_ORDER_CLASS9: Record<string, number> = {
 };
 
 const MATHS_DISPLAY_ORDER_CLASS9: Record<string, number> = {
-  "ch3":     1,   // iemh101 — Orienting Yourself: The Use of Coordinates
-  "iemh102": 2,   // iemh102 — Introduction to Linear Polynomials (placeholder)
-  "ch1":     3,   // iemh103 — The World of Numbers
+  "ch3":     1,   // iemh101 — Coordinate Geometry
+  "iemh102": 2,   // iemh102 — Introduction to Polynomials (placeholder)
+  "ch1":     3,   // iemh103 — Number System
   "ch16":    4,   // iemh104 — Exploring Algebraic Identities
-  "ch4":     5,   // iemh105 — I'm Up and Down, and Round and Round
-  "ch18":    6,   // iemh106 — Measuring Space: Perimeter and Area (placeholder)
-  "ch15":    7,   // iemh107 — The Mathematics of Maybe: Introduction to Probability
-  "ch17":    8,   // iemh108 — Predicting What Comes Next: Sequences and Progressions
+  "ch4":     5,   // iemh105 — Linear Equations in Two Variables
+  "ch18":    6,   // iemh106 — Area and Perimeter (placeholder)
+  "ch15":    7,   // iemh107 — Probability
+  "ch17":    8,   // iemh108 — Predicting What Comes Next: Exploring Sequences and Progressions
 };
 
 // ── Content-match registry ─────────────────────────────────────────────────────
@@ -57,21 +57,21 @@ const MATHS_CONTENT_RECORDS: Record<string, ContentRecord> = {
   "ch3": {
     status: "MATCH",
     officialCode: "iemh101",
-    officialTitle: "Orienting Yourself: The Use of Coordinates",
+    officialTitle: "Coordinate Geometry",
     verifiedDate: "2026-07-22",
     note: "Cartesian plane, coordinates, quadrants, plotting, reading graphs — 50 q confirmed",
   },
   "iemh102": {
     status: "PLACEHOLDER",
     officialCode: "iemh102",
-    officialTitle: "Introduction to Linear Polynomials",
+    officialTitle: "Introduction to Polynomials",
     verifiedDate: "2026-07-22",
     note: "0-question placeholder. Internal ch2 bank covers general polynomials (degree 1–4) + Remainder/Factor Theorem — archived.",
   },
   "ch1": {
     status: "MATCH",
     officialCode: "iemh103",
-    officialTitle: "The World of Numbers",
+    officialTitle: "Number System",
     verifiedDate: "2026-07-22",
     note: "Rational/irrational numbers, surds, laws of exponents, operations on real numbers, number line — 50 q confirmed",
   },
@@ -85,21 +85,21 @@ const MATHS_CONTENT_RECORDS: Record<string, ContentRecord> = {
   "ch4": {
     status: "MATCH",
     officialCode: "iemh105",
-    officialTitle: "I'm Up and Down, and Round and Round",
+    officialTitle: "Linear Equations in Two Variables",
     verifiedDate: "2026-07-22",
     note: "Linear equations in two variables, solutions, graphing, equations parallel to axes, word problems — 50 q confirmed",
   },
   "ch18": {
     status: "PLACEHOLDER",
     officialCode: "iemh106",
-    officialTitle: "Measuring Space: Perimeter and Area",
+    officialTitle: "Area and Perimeter",
     verifiedDate: "2026-07-22",
-    note: "0-question placeholder. No existing question bank for this chapter.",
+    note: "Official source not yet released; build deferred. 75-question bank exists but pending verification.",
   },
   "ch15": {
     status: "MATCH",
     officialCode: "iemh107",
-    officialTitle: "The Mathematics of Maybe: Introduction to Probability",
+    officialTitle: "Probability",
     verifiedDate: "2026-07-22",
     note: "Probability basics, experimental probability, complementary events, probability calculations — 50 q confirmed",
   },
@@ -126,7 +126,7 @@ const SCIENCE_CONTENT_RECORDS: Record<string, ContentRecord> = {
   "bio-ch01": {
     status: "MATCH",
     officialCode: "iesc102",
-    officialTitle: "Cell — The Fundamental Unit of Life",
+    officialTitle: "The Fundamental Unit of Life",
     verifiedDate: "2026-07-22",
     note: "Cell structure, organelles, prokaryote/eukaryote, cell membrane, cell wall — V2 bank confirmed",
   },
@@ -168,9 +168,9 @@ const SCIENCE_CONTENT_RECORDS: Record<string, ContentRecord> = {
   "chem-ch04": {
     status: "MATCH",
     officialCode: "iesc108",
-    officialTitle: "Structure of an Atom",
+    officialTitle: "Structure of the Atom",
     verifiedDate: "2026-07-22",
-    note: "Previously titled 'Structure of the Atom'. Thomson model, Rutherford model, Bohr model, electrons/protons/neutrons, shells — V2 bank confirmed",
+    note: "Thomson model, Rutherford model, Bohr model, electrons/protons/neutrons, shells — V2 bank confirmed",
   },
   "chem-ch03": {
     status: "MATCH",
@@ -255,7 +255,7 @@ assert(mathDuplicates.length === 0, `No duplicate Math display numbers (found: $
 // ── 4. Anchor checks ─────────────────────────────────────────────────────────────
 assert(SCIENCE_DISPLAY_ORDER_CLASS9["chem-ch01"] === 1, "Science Ch.1 is chem-ch01 (Matter in Our Surroundings)");
 assert(SCIENCE_DISPLAY_ORDER_CLASS9["esc-ch01"] === 13, "Science Ch.13 is esc-ch01 (Earth as a System)");
-assert(MATHS_DISPLAY_ORDER_CLASS9["ch3"] === 1, "Math Ch.1 is ch3 (iemh101 Orienting Yourself: The Use of Coordinates)");
+assert(MATHS_DISPLAY_ORDER_CLASS9["ch3"] === 1, "Math Ch.1 is ch3 (iemh101 Coordinate Geometry)");
 assert(MATHS_DISPLAY_ORDER_CLASS9["ch17"] === 8, "Math Ch.8 is ch17 (iemh108 Predicting What Comes Next)");
 
 // ── 5. Content-match record coverage ─────────────────────────────────────────────

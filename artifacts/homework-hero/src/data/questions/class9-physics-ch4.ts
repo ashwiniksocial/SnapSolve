@@ -21,7 +21,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t1-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Easy", questionType: "MCQ",
     question: "Work done by a force is defined as: (a) Force × time  (b) Force × displacement in the direction of force  (c) Mass × acceleration  (d) Power × acceleration",
@@ -34,7 +34,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Easy", questionType: "MCQ",
     question: "The SI unit of work is: (a) Watt  (b) Newton  (c) Joule  (d) Pascal",
@@ -47,7 +47,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A force of 25 N moves an object 4 m in the direction of the force. Calculate the work done.",
@@ -60,7 +60,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A force of 50 N acts on an object at an angle of 60° to the displacement of 10 m. Find the work done.",
@@ -73,7 +73,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "When is work done by a force zero? Give two examples.",
@@ -87,7 +87,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Medium", questionType: "MCQ",
     question: "Negative work is done when the force and displacement are: (a) In the same direction  (b) Perpendicular  (c) In opposite directions  (d) Both zero",
@@ -100,7 +100,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A 10 kg block is pushed 5 m along a horizontal surface with a force of 60 N at 30° above horizontal. Friction force = 20 N. Find: (i) Work done by the 60 N force, (ii) Work done by friction, (iii) Net work done.",
@@ -115,7 +115,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Hard", questionType: "HOTS",
     question: "A spring is compressed by 0.1 m with a force that varies from 0 to 100 N. Estimate the work done (assume linear relationship).",
@@ -132,7 +132,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t2-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Easy", questionType: "MCQ",
     question: "Kinetic energy of an object depends on its: (a) Mass only  (b) Velocity only  (c) Mass and velocity  (d) Weight and height",
@@ -145,7 +145,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Calculate the kinetic energy of a 2 kg ball moving at 5 m/s.",
@@ -158,7 +158,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A book of mass 2 kg is placed on a shelf 3 m high. Find its gravitational potential energy. (g = 10 m/s²)",
@@ -171,7 +171,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "If the velocity of a car is doubled, what happens to its kinetic energy?",
@@ -184,7 +184,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Derive the work-energy theorem: show that work done = change in kinetic energy.",
@@ -199,7 +199,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A stone of mass 0.5 kg is dropped from a height of 20 m. Find its kinetic energy when it has fallen 12 m. (g = 10 m/s²)",
@@ -212,7 +212,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A 5 kg object is thrown upward with a velocity of 20 m/s from ground level. Find: (i) KE at launch, (ii) PE at maximum height, (iii) height reached. (g = 10 m/s²)",
@@ -227,7 +227,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Hard", questionType: "HOTS",
     question: "Two objects A (2 kg, 4 m/s) and B (8 kg, 1 m/s) have the same momentum? Verify. Which has more KE?",
@@ -243,7 +243,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A pendulum is released from rest at one end. At what point is its kinetic energy maximum and potential energy maximum?",
@@ -260,7 +260,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t3-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Easy", questionType: "MCQ",
     question: "The law of conservation of energy states that: (a) Energy can be created  (b) Energy can be destroyed  (c) Total energy of an isolated system remains constant  (d) All energy converts to heat",
@@ -273,7 +273,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Define power. Write its SI unit and formula.",
@@ -287,7 +287,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A machine does 6000 J of work in 2 minutes. Find its power.",
@@ -301,7 +301,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Show that the total mechanical energy (KE + PE) of a freely falling body is conserved at any point during the fall. (mass m, dropped from height H, at height h above ground)",
@@ -317,7 +317,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A motor pumps 500 kg of water to a height of 20 m in 10 minutes. Find the power of the motor. (g = 10 m/s²)",
@@ -331,7 +331,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Two bulbs are rated 60 W and 100 W respectively. Which consumes more energy if both are switched on for the same time?",
@@ -345,7 +345,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A 60 kg person climbs a staircase of 20 steps, each 20 cm high, in 20 s. Find: (i) total work done against gravity, (ii) power exerted. (g = 10 m/s²)",
@@ -360,7 +360,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Hard", questionType: "HOTS",
     question: "A pendulum of length 1 m is released from an angle. At the lowest point it has speed 2 m/s. Find the height from which it was released. (g = 10 m/s²) Does this illustrate conservation of energy?",
@@ -377,7 +377,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t1-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Easy", questionType: "MCQ",
     question: "Work is said to be done on a body when:\n(a) A force is applied on the body  (b) A force is applied and the body moves in the direction of the force  (c) The body moves at constant velocity  (d) A force is applied but the body does not move",
@@ -391,7 +391,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Define 1 Joule of work.",
@@ -405,7 +405,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Give one example each of: (i) positive work, (ii) negative work, and (iii) zero work done by a force.",
@@ -420,7 +420,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A ball of mass 2 kg is dropped from rest at a height of 5 m. Calculate the work done by the force of gravity as the ball falls to the ground. (g = 10 m/s²)",
@@ -434,7 +434,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t1-q13", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t1", topicName: "Work Done by a Force",
     difficulty: "Hard", questionType: "HOTS",
     question: "A block slides along a frictionless horizontal surface at constant velocity. Find: (i) work done by the normal force, (ii) work done by gravity, (iii) net work done on the block. How does this relate to Newton's First Law?",
@@ -452,7 +452,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t2-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Easy", questionType: "MCQ",
     question: "Gravitational potential energy of an object depends on:\n(a) Its mass only  (b) Its height above the ground only  (c) Its mass, height, and g  (d) Its velocity",
@@ -465,7 +465,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Derive the expression KE = ½mv² for an object of mass m accelerated from rest to velocity v by a net force F over displacement s.",
@@ -480,7 +480,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A bullet of mass 50 g has a kinetic energy of 1000 J. Find its speed.",
@@ -494,7 +494,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q13", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Define potential energy. Name its two common forms studied in Class 9. Give one example of each.",
@@ -509,7 +509,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t2-q14", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t2", topicName: "Kinetic and Potential Energy",
     difficulty: "Hard", questionType: "HOTS",
     question: "A body of mass m is dropped from height H above the ground. At what height h above the ground is the body's kinetic energy equal to its potential energy? (g = 10 m/s²)",
@@ -527,7 +527,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t3-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Easy", questionType: "MCQ",
     question: "The mechanical energy of a body is the sum of its:\n(a) Work done and power  (b) Kinetic energy and potential energy  (c) Heat energy and kinetic energy  (d) Potential energy and work done",
@@ -540,7 +540,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "What is the commercial unit of electrical energy? Define it and express it in joules.",
@@ -554,7 +554,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "An electric fan of power 80 W is used for 10 hours per day. Find the energy consumed in 30 days in (i) joules and (ii) kilowatt-hours.",
@@ -569,7 +569,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A stone of mass 2 kg is dropped from a height of 10 m. Verify the law of conservation of energy at the midpoint (height = 5 m) and just before impact. (g = 10 m/s²)",
@@ -584,7 +584,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t3-q13", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t3", topicName: "Conservation of Energy and Power",
     difficulty: "Hard", questionType: "HOTS",
     question: "A rubber ball is dropped from a height of 2 m and bounces back to only 1.6 m. Does this violate the law of conservation of energy? Where did the remaining energy go?",
@@ -602,7 +602,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t4-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t4", topicName: "Energy Transformations",
     difficulty: "Easy", questionType: "MCQ",
     question: "In an electric bulb, electrical energy is primarily converted to:\n(a) Chemical energy  (b) Mechanical energy  (c) Light and heat energy  (d) Sound energy",
@@ -615,7 +615,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t4-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t4", topicName: "Energy Transformations",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Trace the complete chain of energy transformations in a hydroelectric power plant from the stored water to the lit bulb in a home.",
@@ -631,7 +631,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t4-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t4", topicName: "Energy Transformations",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Name the energy transformation taking place in each of the following: (i) A green plant in sunlight, (ii) A microphone, (iii) A loudspeaker, (iv) A battery being charged.",
@@ -647,7 +647,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t4-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t4", topicName: "Energy Transformations",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "List five different forms of energy. For each, give one practical example.",
@@ -660,7 +660,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t4-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t4", topicName: "Energy Transformations",
     difficulty: "Hard", questionType: "HOTS",
     question: "When a moving car brakes to a stop, (i) where does the kinetic energy go? (ii) Is the total energy conserved? (iii) Can this energy be recovered? Explain the principle behind regenerative braking in electric vehicles.",
@@ -678,7 +678,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch4-t5-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t5", topicName: "Commercial Unit of Energy",
     difficulty: "Easy", questionType: "MCQ",
     question: "The commercial unit of electrical energy used in electricity billing is:\n(a) Joule  (b) Watt  (c) Kilowatt-hour (kWh)  (d) Newton-metre",
@@ -691,7 +691,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t5-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t5", topicName: "Commercial Unit of Energy",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Define 1 kilowatt-hour. Convert 1 kWh to joules. What does '1 unit' on an electricity bill represent?",
@@ -706,7 +706,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t5-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t5", topicName: "Commercial Unit of Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A household uses the following appliances in a day: a 1000 W air conditioner for 5 hours, a 100 W television for 6 hours, and a 40 W fan for 10 hours. Find the total energy consumed in kWh.",
@@ -722,7 +722,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t5-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t5", topicName: "Commercial Unit of Energy",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A 60 W electric bulb is used for 8 hours per day for 25 days. Find: (i) energy consumed in kWh, (ii) cost at ₹5 per unit.",
@@ -737,7 +737,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch4-t5-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch4", chapterName: "Work and Energy",
+    chapterId: "phy-ch4", chapterName: "Work, Energy and Simple Machines",
     topicId: "t5", topicName: "Commercial Unit of Energy",
     difficulty: "Hard", questionType: "HOTS",
     question: "Why is the kilowatt-hour used commercially instead of the joule for measuring electrical energy? A student argues that since joule is the SI unit, it should always be used. How would you respond?",

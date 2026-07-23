@@ -1,0 +1,120 @@
+STOP.
+
+The previous work is not acceptable because legacy curriculum references remain active despite the explicit requirement to delete the legacy curriculum completely.
+
+Do not create another audit framework.
+Do not create aliases.
+Do not create mappings.
+Do not preserve compatibility.
+Do not run academic review.
+Do not modify question wording or answers.
+
+EXECUTE THE LEGACY CURRICULUM REMOVAL NOW.
+
+TARGET STATE
+
+There must be exactly one active Class 9 curriculum: the current canonical official curriculum already stored in the repository.
+
+No active code, question metadata, registry, adapter, bundle, gateway, display label, reviewer prompt or temporary file may refer to the deleted legacy curriculum.
+
+1. REMOVE TEMPORARY COMPATIBILITY WORK
+
+Delete:
+
+- academic-review/chapter-context-map.json
+- all old-to-new chapter-title mapping logic
+- all alias or compatibility logic added to academicReview.ts
+- any cached review result produced using legacy-to-current mappings
+
+Retain only generic academic-review infrastructure that works directly with canonical curriculum IDs and metadata.
+
+2. MIGRATE ACTIVE QUESTION METADATA
+
+For every active Class 9 question:
+
+- replace legacy chapter IDs with canonical chapter IDs
+- replace legacy chapter titles with canonical titles
+- replace legacy topic IDs and topic names with canonical section/topic metadata
+- move questions to the correct canonical chapter where necessary
+- split chapters only where the canonical curriculum requires it
+- remove questions that are outside the current canonical curriculum
+
+Do not rewrite the educational content unless migration is impossible without correcting an objectively wrong curriculum reference.
+
+3. UPDATE ALL ACTIVE CONSUMERS
+
+Update every active dependency to use only canonical curriculum metadata, including:
+
+- question indexes
+- bundles
+- imports
+- adapters
+- curriculumGateway.ts
+- curriculum registries
+- frontend chapter labels
+- academicReview.ts
+- validation scripts
+
+Remove obsolete registries and imports rather than supporting both systems.
+
+4. ZERO-REFERENCE VALIDATION GATE
+
+Search the entire repository for every known legacy:
+
+- chapter title
+- chapter ID
+- topic ID
+- registry entry
+- compatibility keyword
+- alias mapping
+
+Classify results as:
+
+- ACTIVE_REFERENCE
+- HISTORICAL_NON_RUNTIME_REFERENCE
+
+Completion is permitted only when:
+
+- ACTIVE_REFERENCE count = 0
+- no legacy file is imported
+- no legacy registry is executed
+- no compatibility map remains
+- curriculumGateway validates only the canonical curriculum
+- all active questions resolve directly to canonical curriculum entries
+
+Historical notes may remain only if they are clearly non-runtime and contain no imports or executable use.
+
+5. VALIDATION
+
+Run:
+
+- TypeScript typecheck
+- question count validation
+- duplicate ID validation
+- import/registration validation
+- curriculum gateway validation
+- active runtime startup
+- repository-wide legacy-reference search
+
+Do not run OpenAI.
+Do not run academic review.
+Do not bulk-edit answers.
+
+6. FINAL REPORT
+
+Provide only:
+
+- files deleted
+- files modified
+- questions migrated
+- questions moved
+- questions removed
+- remaining historical non-runtime references
+- zero active legacy-reference confirmation
+- curriculumGateway result
+- typecheck result
+- runtime result
+- any unresolved blocker
+
+Do not declare completion if even one active legacy reference remains.
+Do not proceed to any other task.

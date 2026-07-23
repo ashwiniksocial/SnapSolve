@@ -26,8 +26,4 @@ const RAW: QuestionV2Like[] = [
 ];
 
 export const CLASS9_BIOLOGY_QUESTIONS: Question[]    = adaptV2Questions(RAW);
-export const CLASS9_BIOLOGY_CHAPTERS:  ChapterMeta[] = buildChapterMeta(CLASS9_BIOLOGY_QUESTIONS)
-  .map((ch) => {
-    if (ch.id === "bio-ch01") return { ...ch, name: "Cell \u2014 The Fundamental Unit of Life" };
-    return ch;
-  });
+export const CLASS9_BIOLOGY_CHAPTERS:  ChapterMeta[] = buildChapterMeta(CLASS9_BIOLOGY_QUESTIONS);

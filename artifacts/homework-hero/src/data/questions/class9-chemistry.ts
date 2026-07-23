@@ -30,13 +30,4 @@ const RAW: QuestionV2Like[] = [
 ];
 
 export const CLASS9_CHEMISTRY_QUESTIONS: Question[]    = adaptV2Questions(RAW);
-
-// Apply official 2026-27 NCERT Exploration chapter titles where the question bank
-// uses legacy names. chem-ch01 (Matter in Our Surroundings) is Ch.1 of the
-// official textbook and is student-facing (display order 1).
-export const CLASS9_CHEMISTRY_CHAPTERS: ChapterMeta[] = buildChapterMeta(CLASS9_CHEMISTRY_QUESTIONS)
-  .map((ch) => {
-    if (ch.id === "chem-ch02") return { ...ch, name: "Exploring Mixtures and Their Separation" };
-    if (ch.id === "chem-ch04") return { ...ch, name: "Structure of an Atom" };
-    return ch;
-  });
+export const CLASS9_CHEMISTRY_CHAPTERS:  ChapterMeta[] = buildChapterMeta(CLASS9_CHEMISTRY_QUESTIONS);
