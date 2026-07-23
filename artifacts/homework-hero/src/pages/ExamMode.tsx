@@ -11,7 +11,7 @@ import type { Subject } from "@/data/subjects";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const ALL_SUBJECTS: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+const ALL_SUBJECTS: Subject[] = ["Mathematics", "Science"];
 
 const MIN_DATE = new Date().toISOString().slice(0, 10);
 
@@ -572,14 +572,13 @@ export default function ExamMode() {
   const { getDueItems }     = useRevisionPlanner();
   const [bankReady, setBankReady] = useState(false);
 
-  const physChapters  = useChapterStats("Physics",     9, bankReady);
-  const chemChapters  = useChapterStats("Chemistry",   9, bankReady);
-  const mathChapters  = useChapterStats("Mathematics", 9, bankReady);
+  const sciChapters   = useChapterStats("Science",      9, bankReady);
+  const mathChapters  = useChapterStats("Mathematics",  9, bankReady);
 
   const chapterMap: Record<Subject, ReturnType<typeof useChapterStats>> = {
-    Science:            [],
-    Physics:            physChapters,
-    Chemistry:          chemChapters,
+    Science:            sciChapters,
+    Physics:            [],
+    Chemistry:          [],
     Mathematics:        mathChapters,
     Biology:            [],
     Economics:          [],
@@ -629,7 +628,7 @@ export default function ExamMode() {
       );
     }
     return out;
-  }, [physChapters, chemChapters, mathChapters]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [sciChapters, mathChapters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Build today's task plan
   const tasks = useMemo(() => {

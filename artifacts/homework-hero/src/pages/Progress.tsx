@@ -7,7 +7,7 @@ import { useStudyScore }  from "@/hooks/useStudyScore";
 import StudentProfileView from "@/components/tutor/StudentProfileView";
 import TutorDashboard    from "@/components/socratic/TutorDashboard";
 
-const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+const subjects: Subject[] = ["Mathematics", "Science"];
 
 function getLast7Days(): string[] {
   return Array.from({ length: 7 }, (_, i) => {

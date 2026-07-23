@@ -18,7 +18,7 @@ type Phase =
 
 type InputTab = "photo" | "type";
 
-const SUBJECTS_LIST: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+const SUBJECTS_LIST: Subject[] = ["Mathematics", "Science"];
 
 // ─── Loading bar ──────────────────────────────────────────────────────────────
 function ProgressBar({ pct, label }: { pct: number; label: string }) {

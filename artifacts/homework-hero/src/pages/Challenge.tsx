@@ -16,7 +16,8 @@ function persistSaved(s: Set<string>) {
 }
 
 // ─── Main page ─────────────────────────────────────────────────────────────────
-const SUBJECTS_LIST: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+const SUBJECTS_LIST: Subject[] = ["Mathematics", "Science"];
+const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology"];
 
 export default function QuestionWorkspace() {
   const { getSubjectStats, recordSolve, progress } = useProgress();
@@ -31,7 +32,9 @@ export default function QuestionWorkspace() {
   const [justUnderstood, setJustUnderstood] = useState(false);
 
   const cfg         = SUBJECTS[subject];
-  const bankEntries = SOLUTION_BANK.filter((e) => e.subject === subject);
+  const bankEntries = subject === "Science"
+    ? SOLUTION_BANK.filter((e) => SCIENCE_DOMAINS.includes(e.subject as string))
+    : SOLUTION_BANK.filter((e) => e.subject === subject);
   const entry: AIResponse = bankEntries[entryIdx % bankEntries.length] ?? SOLUTION_BANK[0];
 
   // Per-topic mastery from progress

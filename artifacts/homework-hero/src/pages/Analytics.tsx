@@ -64,7 +64,9 @@ export default function Analytics() {
 
   const classNum = profile.classLevel ?? 9;
 
-  const [subject, setSubject]               = useState<Subject>(session.subject);
+  const [subject, setSubject]               = useState<Subject>(
+    ["Physics", "Chemistry", "Biology"].includes(session.subject) ? "Science" : session.subject,
+  );
   const [selectedChapterId, setSelected]    = useState<string | null>(null);
   const [seedDone, setSeedDone]             = useState(false);
   const [bankReady, setBankReady]           = useState(false);
@@ -230,7 +232,7 @@ export default function Analytics() {
 
           {/* Subject tabs */}
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1 no-scrollbar">
-            {(["Mathematics", "Physics", "Chemistry"] as Subject[]).map((s) => {
+            {(["Mathematics", "Science"] as Subject[]).map((s) => {
               const c = SUBJECTS[s];
               return (
                 <button

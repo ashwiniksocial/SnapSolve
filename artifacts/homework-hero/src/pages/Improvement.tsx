@@ -15,8 +15,7 @@ import type { Subject }          from "@/data/subjects";
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 const CLR = {
-  physics:    SUBJECTS.Physics.color,
-  chemistry:  SUBJECTS.Chemistry.color,
+  science:    SUBJECTS.Science.color,
   maths:      SUBJECTS.Mathematics.color,
   overall:    "#4f46e5",
   confidence: "#7c3aed",
@@ -77,7 +76,7 @@ function TopicBar({ label, pct, color }: { label: string; pct: number; color: st
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
-const SUBJECTS_ARR: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+const SUBJECTS_ARR: Subject[] = ["Mathematics", "Science"];
 
 export default function Improvement() {
   const { snapshots, isSeeded, topPrediction, overallSlope } = useImprovementHistory();
@@ -200,9 +199,15 @@ export default function Improvement() {
         </Section>
 
         {/* ── 2. Accuracy by Subject ──────────────────────────────────────── */}
-        <Section emoji="🎯" title="Accuracy by Subject" subtitle="30-day accuracy for Physics, Chemistry & Mathematics">
+        <Section emoji="🎯" title="Accuracy by Subject" subtitle="30-day accuracy for Mathematics & Science">
           <ResponsiveContainer width="100%" height={185}>
-            <LineChart data={snapshots} margin={{ top: 4, right: 4, left: -10, bottom: 0 }}>
+            <LineChart
+              data={snapshots.map((s) => ({
+                ...s,
+                scienceAcc: Math.round((s.physicsAcc + s.chemAcc) / 2),
+              }))}
+              margin={{ top: 4, right: 4, left: -10, bottom: 0 }}
+            >
               <CartesianGrid {...GRID_PROPS} />
               <XAxis dataKey="label" tick={TICK_STYLE} interval={X_INTERVAL} />
               <YAxis {...Y_AXIS} tickFormatter={(v) => `${v}`} />
@@ -212,9 +217,8 @@ export default function Improvement() {
                 iconType="circle"
                 iconSize={7}
               />
-              <Line type="monotone" dataKey="physicsAcc"  name="Physics"     stroke={CLR.physics}   strokeWidth={2} dot={false} activeDot={{ r: 3 }} />
-              <Line type="monotone" dataKey="chemAcc"     name="Chemistry"   stroke={CLR.chemistry} strokeWidth={2} dot={false} activeDot={{ r: 3 }} />
-              <Line type="monotone" dataKey="mathAcc"     name="Mathematics" stroke={CLR.maths}     strokeWidth={2} dot={false} activeDot={{ r: 3 }} />
+              <Line type="monotone" dataKey="mathAcc"    name="Mathematics" stroke={CLR.maths}    strokeWidth={2} dot={false} activeDot={{ r: 3 }} />
+              <Line type="monotone" dataKey="scienceAcc" name="Science"     stroke={CLR.science}  strokeWidth={2} dot={false} activeDot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </Section>

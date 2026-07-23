@@ -36,7 +36,7 @@ function HeaderAuth() {
   );
 }
 
-const subjects: Subject[] = ["Physics", "Chemistry", "Mathematics"];
+const subjects: Subject[] = ["Mathematics", "Science"];
 
 export default function Home() {
   const { session, update } = useSession();
@@ -50,7 +50,7 @@ export default function Home() {
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">SnapSolve</h1>
-            <p className="text-sm text-slate-500 mt-0.5">Physics · Chemistry · Mathematics</p>
+            <p className="text-sm text-slate-500 mt-0.5">Mathematics · Science</p>
           </div>
           <div className="flex items-center gap-2">
             {streak > 0 && (
