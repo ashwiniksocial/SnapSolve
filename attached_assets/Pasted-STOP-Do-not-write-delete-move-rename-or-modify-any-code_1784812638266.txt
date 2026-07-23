@@ -1,0 +1,155 @@
+STOP.
+
+Do not write, delete, move, rename or modify any code.
+
+Do not roll back the checkpoint.
+
+This is a targeted implementation verification only.
+
+The previous instruction was insufficiently precise. Before any further coding, establish whether the implementation actually supports SnapSolve’s real requirement.
+
+==================================================
+EXACT BUSINESS REQUIREMENT
+==================================================
+
+SnapSolve must:
+
+1. Validate ALL existing stored question-bank questions and their existing answers.
+
+2. Review each question against:
+   - official curriculum alignment;
+   - question correctness and relevance;
+   - answer correctness;
+   - teaching quality;
+   - CBSE final-exam readiness;
+   - Compact answer quality;
+   - Standard answer quality;
+   - Detailed answer quality.
+
+3. Produce a report identifying:
+   - PASS questions;
+   - FAIL questions;
+   - failed sections;
+   - exact reasons;
+   - exact corrections required.
+
+4. Regenerate only failed answer section(s), never sections that passed.
+
+5. Make the same academic review mandatory for every FUTURE question-bank question before publication.
+
+6. This requirement concerns the stored curriculum/question-bank content.
+
+7. Do not attach this review to the student’s ordinary ad-hoc question-solving flow unless that flow is also used to create and publish question-bank content.
+
+==================================================
+VERIFY THE REAL EXISTING SYSTEM
+==================================================
+
+Inspect the repository and answer each question with exact file paths, functions and evidence.
+
+A. EXISTING QUESTION BANK
+
+1. Where are the existing approximately 1,500 questions stored?
+
+2. What is their actual data structure?
+
+3. Are Compact, Standard and Detailed answers already stored for every question?
+
+4. If not, what answer fields currently exist?
+
+5. How were these existing questions originally generated, imported or added?
+
+6. What process currently publishes or exposes them to students?
+
+B. FUTURE QUESTION CREATION
+
+7. Is there already an existing question-bank generation/import pipeline?
+
+8. Identify its exact entry point.
+
+9. Does `solveQuestion.ts` create permanent question-bank content, or does it only answer individual student queries?
+
+10. Is a new admin generation endpoint genuinely required, or can the existing question-bank process be extended safely?
+
+C. REVIEWER IMPLEMENTATION JUST CREATED
+
+11. Does the new implementation preserve and save all three answers:
+    - Compact
+    - Standard
+    - Detailed?
+
+12. It currently reports that Standard is saved in the existing `answer` field. Explain exactly where Compact and Detailed are permanently stored.
+
+13. If reviewer metadata is stored only in `tags`, explain how the system technically prevents a `Needs Review` question from being published or shown to students.
+
+14. Confirm whether “Needs Review = not published” is actually enforced in code, or merely represented by a tag.
+
+15. Can the new endpoint process the entire existing question bank in controlled batches?
+
+16. Does it currently support:
+    - resume after interruption;
+    - avoiding repeat review of completed questions;
+    - batch size control;
+    - progress counts;
+    - failed-question reporting;
+    - API rate-limit handling;
+    - cost control?
+
+17. Does the reviewer receive official curriculum source content or validated curriculum metadata, or does it rely only on the AI model’s general knowledge?
+
+18. Is the claimed partial re-review academically valid when curriculum, correctness, teaching or exam-readiness fails, or could those failures affect multiple answer sections?
+
+19. List every newly created or modified file. Resolve the inconsistency between the statement “4 new files” and the file list showing 5 new files.
+
+20. Confirm whether any duplicated OpenAI, retry, prompt or generation logic was introduced.
+
+==================================================
+ASSESSMENT
+==================================================
+
+After inspection, classify the implementation as exactly one of:
+
+A. Correct and usable with no changes.
+
+B. Mostly correct and requires small targeted corrections.
+
+C. Built for the wrong workflow and should not be used.
+
+Do not guess.
+
+For every deficiency, explain:
+
+- what is wrong;
+- why it prevents the stated business requirement;
+- the smallest safe correction;
+- which exact file would require modification.
+
+==================================================
+FINAL RESPONSE FORMAT
+==================================================
+
+Return only:
+
+1. Existing question-bank architecture
+
+2. Existing answer storage structure
+
+3. Existing question creation/import entry point
+
+4. Evaluation of the newly created implementation
+
+5. Answers to verification points 1–20
+
+6. Classification: A, B or C
+
+7. Minimum-change implementation plan
+
+8. Files that would be retained
+
+9. Files that would be modified
+
+10. Files that would be removed, if any
+
+11. Confirmation that no code was changed during this verification
+
+Do not implement anything yet.
