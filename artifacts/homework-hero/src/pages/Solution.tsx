@@ -177,13 +177,9 @@ export default function Solution() {
           <div className="fade-up space-y-4">
             <div className="bg-red-50 border border-red-200 rounded-2xl p-5 text-center space-y-3">
               <p className="text-3xl">⚠️</p>
-              <p className="font-bold text-red-700 text-base">Teaching lesson generation failed.</p>
-              <p className="text-xs text-red-600 leading-relaxed font-mono break-all">
-                {solveError ?? "Unknown error"}
-              </p>
+              <p className="font-bold text-red-700 text-base">Couldn't generate a solution</p>
               <p className="text-xs text-slate-500 leading-relaxed">
-                The AI teaching pipeline could not generate a lesson for this question.
-                {practiceMode && " No fallback is shown — this failure is intentional and visible."}
+                Something went wrong on our end. Please try again — if the problem continues, try a different question.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
