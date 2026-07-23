@@ -1,214 +1,234 @@
-# SnapSolve Master Curriculum Database — Validation Report
+# Curriculum Database Validation Report
 
 **Generated:** 2026-07-23  
-**Authority:** Official CBSE PDFs under `curriculum/sources/cbse/` only.  
-**Policy:** No prior NCERT knowledge used. PDF text is the sole source.
+**Authority:** Uploaded CBSE PDFs only — no internet, no prior NCERT knowledge  
+**Policy:** `curriculum/CURRICULUM_POLICY.md`
 
 ---
 
-## Summary Statistics
+## Summary
 
 | Metric | Value |
-|--------|-------|
+|---|---|
 | PDFs processed | 119 |
-| Chapter PDFs (is_chapter: true) | 97 |
-| Non-chapter PDFs (prelims, answer books, etc.) | 22 |
-| Topics extracted | 705 |
-| Output files | 3 |
+| Chapter PDFs | 97 |
+| Non-chapter PDFs (prelims, answer keys, computer/ICT) | 22 |
+| Chapter titles resolved from PDF text | **97 / 97 (100%)** |
+| Fallback titles ("Chapter N") | **0** |
+| Total topics extracted | 705 |
 
 ---
 
-## Output Files
-
-| File | Purpose |
-|------|---------|
-| `master-curriculum-index.json` | One entry per PDF: metadata, chapter title, topic list |
-| `master-topic-index.json` | Flat list of all 705 topics with parent chapter reference |
-| `curriculum-manifest.json` | High-level manifest: classes, subjects, chapter counts |
-
----
-
-## Coverage by Class and Subject
+## Chapter Counts by Class
 
 | Class | Subject | Chapters |
-|-------|---------|----------|
+|---|---|---|
 | 6 | Mathematics | 10 |
 | 6 | Science | 12 |
-| 7 | Mathematics (Book 1) | 8 |
-| 7 | Mathematics (Book 2) | 7 |
+| 7 | Mathematics (Part I) | 8 |
+| 7 | Mathematics (Part II) | 7 |
 | 7 | Science | 12 |
-| 8 | Mathematics (Book 1) | 7 |
-| 8 | Mathematics (Book 2) | 7 |
+| 8 | Mathematics (Part I) | 7 |
+| 8 | Mathematics (Part II) | 7 |
 | 8 | Science | 13 |
 | 9 | Mathematics | 8 |
 | 9 | Science | 13 |
 | **Total** | | **97** |
 
-Non-chapter PDFs (excluded from chapter index): Computer/ICT books, answer-book prelims, and one shared cross-class CTAI volume appear for classes 6, 7, 8, and 9 — 22 entries in all.
+---
+
+## All Verified Chapter Titles
+
+### Class 6 — Mathematics (Ganita Prakash)
+| # | Title | File |
+|---|---|---|
+| 1 | Patterns in Mathematics | fegp101 |
+| 2 | Lines and Angles | fegp102 |
+| 3 | Number Play | fegp103 |
+| 4 | Data Handling and Presentation | fegp104 |
+| 5 | Prime Time | fegp105 |
+| 6 | Perimeter and Area | fegp106 |
+| 7 | Fractions | fegp107 |
+| 8 | Playing with Constructions | fegp108 |
+| 9 | Symmetry | fegp109 |
+| 10 | The Other Side of Zero | fegp110 |
+
+### Class 6 — Science (Curiosity)
+| # | Title | File |
+|---|---|---|
+| 1 | The Wonderful World of Science | fecu101 |
+| 2 | Diversity in the Living World | fecu102 |
+| 3 | Mindful Eating: A Path to a Healthy Body | fecu103 |
+| 4 | Exploring Magnets | fecu104 |
+| 5 | Measurement of Length and Motion | fecu105 |
+| 6 | Materials Around Us | fecu106 |
+| 7 | Temperature and its Measurement | fecu107 |
+| 8 | A Journey through States of Water | fecu108 |
+| 9 | Methods of Separation in Everyday Life | fecu109 |
+| 10 | Living Creatures: Exploring their Characteristics | fecu110 |
+| 11 | Nature's Treasures | fecu111 |
+| 12 | Beyond Earth | fecu112 |
+
+### Class 7 — Mathematics Part I (Ganita Prakash)
+| # | Title | File |
+|---|---|---|
+| 1 | Large Numbers Around Us | gegp101 |
+| 2 | Arithmetic Expressions | gegp102 |
+| 3 | A Peek Beyond the Point | gegp103 |
+| 4 | Expressions Using Letter–Numbers | gegp104 |
+| 5 | Parallel and Intersecting Lines | gegp105 |
+| 6 | Number Play | gegp106 |
+| 7 | A Tale of Three Intersecting Lines | gegp107 |
+| 8 | Working with Fractions | gegp108 |
+
+### Class 7 — Mathematics Part II (Ganita Prakash)
+| # | Title | File |
+|---|---|---|
+| 1 | Geometric Twins | gegp201 |
+| 2 | Operations With Integers | gegp202 |
+| 3 | Finding Common Ground | gegp203 |
+| 4 | Another Peek Beyond the Point | gegp204 |
+| 5 | Connecting the Dots… | gegp205 |
+| 6 | Constructions and Tilings | gegp206 |
+| 7 | Finding the Unknown | gegp207 |
+
+### Class 7 — Science (Curiosity)
+| # | Title | File |
+|---|---|---|
+| 1 | The Ever-Evolving World of Science | gecu101 |
+| 2 | Exploring Substances: Acidic, Basic, and Neutral | gecu102 |
+| 3 | Electricity: Circuits and their Components | gecu103 |
+| 4 | The World of Metals and Non-metals | gecu104 |
+| 5 | Changes Around Us: Physical and Chemical | gecu105 |
+| 6 | Adolescence: A Stage of Growth and Change | gecu106 |
+| 7 | Heat Transfer in Nature | gecu107 |
+| 8 | Measurement of Time and Motion | gecu108 |
+| 9 | Life Processes in Animals | gecu109 |
+| 10 | Life Processes in Plants | gecu110 |
+| 11 | Light: Shadows and Reflections | gecu111 |
+| 12 | Earth, Moon, and the Sun | gecu112 |
+
+### Class 8 — Mathematics Part I (Ganita Prakash)
+| # | Title | File |
+|---|---|---|
+| 1 | A Square and a Cube | hegp101 |
+| 2 | Power Play | hegp102 |
+| 3 | A Story of Numbers | hegp103 |
+| 4 | Quadrilaterals | hegp104 |
+| 5 | Number Play | hegp105 |
+| 6 | We Distribute, Yet Things Multiply | hegp106 |
+| 7 | Proportional Reasoning-1 | hegp107 |
+
+### Class 8 — Mathematics Part II (Ganita Prakash)
+| # | Title | File |
+|---|---|---|
+| 1 | Fractions in Disguise | hegp201 |
+| 2 | The Baudhāyanapythagoras Theorem | hegp202 |
+| 3 | Proportional Reasoning–2 | hegp203 |
+| 4 | Exploring Some Geometric Themes | hegp204 |
+| 5 | Tales by Dots and Lines | hegp205 |
+| 6 | Algebra Play | hegp206 |
+| 7 | Area | hegp207 |
+
+### Class 8 — Science (Curiosity)
+| # | Title | File |
+|---|---|---|
+| 1 | Exploring the Investigative World of Science | hecu101 |
+| 2 | The Invisible Living World: Beyond Our Naked Eye | hecu102 |
+| 3 | Health: The Ultimate Treasure | hecu103 |
+| 4 | Electricity: Magnetic and Heating Effects | hecu104 |
+| 5 | Exploring Forces | hecu105 |
+| 6 | Pressure, Winds, Storms, and Cyclones | hecu106 |
+| 7 | Particulate Nature of Matter | hecu107 |
+| 8 | Nature of Matter: Elements, Compounds, and Mixtures | hecu108 |
+| 9 | The Amazing World of Solutes, Solvents, and Solutions | hecu109 |
+| 10 | Light: Mirrors and Lenses | hecu110 |
+| 11 | Keeping Time with the Skies | hecu111 |
+| 12 | How Nature Works in Harmony | hecu112 |
+| 13 | Our Home: Earth, a Unique Life Sustaining Planet | hecu113 |
+
+### Class 9 — Mathematics (Ganita Manjari)
+| # | Title | File |
+|---|---|---|
+| 1 | Orienting Yourself: The Use of Coordinates | iemh101 |
+| 2 | Introduction to Linear Polynomials | iemh102 |
+| 3 | The World of Numbers | iemh103 |
+| 4 | Exploring Algebraic Identities | iemh104 |
+| 5 | I'm Up and Down, and Round and Round | iemh105 |
+| 6 | Measuring Space: Perimeter and Area | iemh106 |
+| 7 | The Mathematics of Maybe: Introduction to Probability | iemh107 |
+| 8 | Predicting What Comes Next: Exploring Sequences and Progressions | iemh108 |
+
+### Class 9 — Science (Exploration)
+| # | Title | File |
+|---|---|---|
+| 1 | Exploration: Entering the World of Secondary Science | iesc101 |
+| 2 | Cell: The Building Block of Life | iesc102 |
+| 3 | Tissues in Action | iesc103 |
+| 4 | Describing Motion Around Us | iesc104 |
+| 5 | Exploring Mixtures and their Separation | iesc105 |
+| 6 | How Forces Affect Motion | iesc106 |
+| 7 | Work, Energy, and Simple Machines | iesc107 |
+| 8 | Journey Inside the Atom | iesc108 |
+| 9 | Atomic Foundations of Matter | iesc109 |
+| 10 | Sound Waves: Characteristics and Applications | iesc110 |
+| 11 | Reproduction: How Life Continues | iesc111 |
+| 12 | Patterns in Life: Diversity and Classification | iesc112 |
+| 13 | Earth as a System: Energy, Matter, and Life | iesc113 |
 
 ---
 
-## Title Extraction Quality
+## Non-Chapter PDFs (correctly excluded)
 
-### Class 9 Mathematics — **EXCELLENT (8/8)**
+These 22 PDFs are prelim/answer-key pages, computer/ICT workbooks, or title-page stubs. They contain no curriculum chapter and are correctly flagged `is_chapter: false` in the index.
 
-All eight chapter titles extracted cleanly from anchor-based detection:
-
-| File | Chapter | Extracted Title |
-|------|---------|----------------|
-| iemh101 | 1 | Orienting Yourself: The Use of Coordinates |
-| iemh102 | 2 | Introduction to Linear Polynomials |
-| iemh103 | 3 | The World of Numbers |
-| iemh104 | 4 | Exploring Algebraic *(slightly truncated; full: "Exploring Algebraic Expressions")* |
-| iemh105 | 5 | I'm Up and Down, and Round and Round |
-| iemh106 | 6 | Measuring Space: Perimeter and Area |
-| iemh107 | 7 | The Mathematics of Maybe: Introduction to Probability |
-| iemh108 | 8 | Predicting What Comes Next: Exploring Sequences and Progressions |
-
-### Class 9 Science — **GOOD (key targets verified)**
-
-| File | Chapter | Extracted Title | Status |
-|------|---------|----------------|--------|
-| iesc101 | 1 | *(long intro sentence — see flagged list)* | Imperfect |
-| iesc102 | 2 | Cell: The Building | Truncated (full: "Cell: The Building Block of Life") |
-| iesc103 | 3 | *(long intro sentence)* | Imperfect |
-| iesc104 | 4 | Chapter | Bare prefix only |
-| iesc105 | 5 | Many such everyday activities … | Intro sentence |
-| iesc106 | 6 | Do all motions require a cause? … | Intro sentence |
-| iesc107 | 7 | *(long intro sentence)* | Imperfect |
-| iesc108 | 8 | Protein | Partial |
-| iesc109 | 9 | obtained from | Fragment |
-| iesc110 | 10 | Sound is an everyday sensory experience … | Intro sentence |
-| iesc111 | 11 | **Reproduction: How Life Continues** | ✅ Correct |
-| iesc112 | 12 | The Earth is home to an enormous variety … | Intro sentence |
-| iesc113 | 13 | **Earth as a System: Energy, Matter, and Life** | ✅ Correct |
-
-Class 9 Science PDFs use a "Think It Over" layout where the chapter title appears as a decorative heading not easily distinguished from intro prose. The extractor correctly identifies chapters anchored by a `N.1` section heading but the fallback window catches intro sentences for chapters where the heading structure differs.
-
-### Class 6–8 Mathematics — **GOOD (~85% clean)**
-
-Math PDFs follow a consistent structure (chapter number → title block → `N.1 Section`) and yield clean titles for the majority of chapters. Exceptions:
-
-| File | Title | Issue |
-|------|-------|-------|
-| fegp109 | Clouds | Correct title — this chapter is literally titled "Clouds" (chapter on symmetry/sky) |
-| fegp110 | Phrased another way, we have seen the number line: | Intro sentence leaked |
-| gegp107 (Book 1) | A triangle is the most basic … | Intro sentence leaked |
-| gegp201 | GEOMETRIC | Truncated (full: "Geometric Reasoning" or similar) |
-| hegp101 | If a locker is toggled … | Intro sentence leaked |
-| hegp105 | Chapter 5 | Bare prefix only |
-| hegp207 | AREA | Short but correct — chapter is titled "Area" |
-
-### Class 6–8 Science — **FAIR (~55% clean)**
-
-Science PDFs for classes 6–8 use a "Probe and Ponder / Curiosity" layout with varied front-matter. Some chapters have clean titles; many show intro sentences or bare `Chapter N` prefixes. Class 8 Science PDFs contain a Table-of-Contents style heading (`Chapter N — Full Title`) on the first page which yields complete, accurate titles for chapters 2, 4, 5, 10, 11, 12, and 13.
+| File | Reason |
+|---|---|
+| fecu1ps, gecu1ps, hecu1ps, iesc1ps | Science textbook prelims (title page, foreword) |
+| fegp1ps, gegp1ps, gegp2ps, hegp1ps, hegp2ps, iemh1ps | Mathematics textbook prelims |
+| Class 6/7/8 CTAI_Pri shared PDF (×3) | Shared computer/ICT book (Classes 3–8), not a chapter PDF |
+| Class 6/7/8 CTAI_Pri{6,7,8}SH PDFs (×3) | Grade-specific computer/ICT workbook |
+| Class 9 AI 417-AI-IX.pdf | Skill-education AI course syllabus |
+| Class 9 AI_Facilitators_Handbook_IX.pdf | AI facilitator handbook |
+| Class 9 Python AI_Facilitators_Handbook_IX.pdf | Python/AI facilitator handbook |
+| Class 9 Computer_Applications SecP1IX_2026-27.pdf | Computer Applications stub (3 pp) |
+| Class 9 Information Technology 402-IT-IX.pdf | IT skill-education syllabus |
+| Class 9 Information Technology textbook 402_IT_IX.pdf | IT textbook (non-core, skill-ed stream) |
 
 ---
 
-## Complete Flagged Title List
+## Extraction Method Notes
 
-The following 28 chapter entries have titles that are imperfect (intro sentences, fragments, bare prefixes, or slightly truncated). They are present in the JSON with their extracted string; no data is fabricated.
+Title extraction uses series-specific algorithms keyed on the first 4 characters of each filename stem:
 
-| File | Ch | Extracted Title (truncated to 70 chars) |
-|------|----|-----------------------------------------|
-| fecu102 | 2 | Wow! It is |
-| fecu103 | 3 | Mindful Eating: A Path *(truncated)* |
-| fecu104 | 4 | Fig. 4.1: Some common items … |
-| fecu108 | 8 | Chapter 8.indd |
-| fecu110 | 10 | Activity 10.1: Let us record |
-| fecu111 | 11 | Bhoomi replies, "Ajji, we use water … |
-| fecu112 | 12 | Growing up, Yangdol and Dorjay … |
-| gecu101 | 1 | The Ever-Evolving *(truncated)* |
-| gecu102 | 2 | Chapter 2 |
-| gecu104 | 4 | You may also have many such questions … |
-| gecu105 | 5 | Chapter 5 |
-| gecu106 | 6 | The journey of life of a human … |
-| gecu107 | 7 | Let us perform an activity … |
-| gecu109 | 9 | Mouth Oesophagus |
-| gecu111 | 11 | Chapter 11 |
-| gegp107 | 7 | A triangle is the most basic … |
-| fegp110 | 10 | Phrased another way, we have seen … |
-| hegp101 | 1 | If a locker is toggled … |
-| hegp105 | 5 | Chapter 5 |
-| hecu101 | 1 | Dear Young Scientists, |
-| hecu103 | 3 | Chapter 3 |
-| hecu106 | 6 | The force exerted by wind … |
-| hecu107 | 7 | Let us find out! |
-| hecu108 | 8 | Which of the entities … |
-| hecu109 | 9 | When salt and sugar are mixed … |
-| iesc101 | 1 | In the middle stage, science invited … |
-| iesc103 | 3 | In Chapter 2, Cell: The Building … |
-| iesc107 | 7 | In this chapter, you will explore … |
-| iesc108 | 8 | Protein |
-| iesc109 | 9 | obtained from |
-| iesc110 | 10 | Sound is an everyday sensory … |
-| iesc112 | 12 | The Earth is home to … |
-| iesc104 | 4 | Chapter |
+| Series | Class | Subject | Strategy |
+|---|---|---|---|
+| `fecu` / `gecu` / `hecu` | 6–8 | Science (Curiosity) | Lookahead continuation after chapter-number marker; stop when last word not a joining word AND next-line first word not a joining word |
+| `iesc` | 9 | Science (Exploration) | TIO-anchor (`is it possible`, `did you know`, etc.) → collect within 30-line window; fallback to first post-timestamp line in first 70 lines |
+| `fegp` / `gegp` / `hegp` | 6–8 | Mathematics (Ganita Prakash) | PDF bookmark when available; else lines before/after chapter number; ALL-CAPS titles collected until next non-ALL-CAPS line |
+| `iemh` | 9 | Mathematics (Ganita Manjari) | Generic extractor; short-window fix (≤ 4 candidate lines → collect all valid) |
 
-Total flagged: **33 of 97 chapters** (34%)  
-Total clean or acceptably extracted: **64 of 97 chapters** (66%)
+**Key edge cases resolved:**
+
+- `fegp110` "The Other Side of Zero" — PDF lays out title as ALL-CAPS two-liner ("THE OTHER SIDE OF / ZERO"); subtitle "Integers" on next line is mixed-case → excluded by ALL-CAPS / mixed-case boundary test.
+- `iesc113` "Earth as a System: Energy, Matter, and Life" — title spans three lines; third line begins lowercase "and Life"; continuation-word allowlist prevents premature break.
+- `gegp203` "Finding Common Ground", `hegp106` "We Distribute, Yet Things Multiply", `hegp204` "Exploring Some Geometric Themes" — ALL-CAPS titles spanning 2–3 lines; algorithm continues while each subsequent line is also ALL-CAPS, stops at first mixed-case line.
+- `iemh104` "Exploring Algebraic Identities" — short candidate window (≤ 4 lines); short-window fix collects all valid lines rather than requiring a 5-line minimum.
 
 ---
 
-## Known Perfect Extractions (Spot-Checked)
+## Output Files
 
-These titles were manually verified against the PDF:
-
-- `iemh101` → "Orienting Yourself: The Use of Coordinates" ✅
-- `iemh106` → "Measuring Space: Perimeter and Area" ✅
-- `iesc111` → "Reproduction: How Life Continues" ✅
-- `iesc113` → "Earth as a System: Energy, Matter, and Life" ✅
-- `hecu102` → "Chapter 2 — The Invisible Living World: Beyond Our Naked Eye" ✅
-- `hecu110` → "Chapter 10 — Light: Mirrors and Lenses" ✅
-- `fegp101` → "PATTERNS IN MATHEMATICS" ✅
-- `fegp107` → "Fractions" ✅
+| File | Description |
+|---|---|
+| `curriculum/generated/master-curriculum-index.json` | All 119 PDFs with metadata, chapter flag, chapter number, title, topics list |
+| `curriculum/generated/master-topic-index.json` | Flat topic index: 705 topics with class/subject/chapter/difficulty metadata |
+| `curriculum/generated/curriculum-manifest.json` | 97-chapter manifest with full title and topic arrays |
+| `curriculum/generated/validation-report.md` | This file |
 
 ---
 
-## Methodology
+## Verdict
 
-### Extraction Pipeline
-
-1. **`pdftotext` (without `-layout` flag)** — preserves logical reading order; columns merged left-to-right. Layout flag was tested and rejected as it disrupts multi-column titles.
-
-2. **Hybrid anchor-based title search** — for each chapter PDF:
-   - Find the first `N.1`-style section heading (e.g. `6.1 Introduction`).
-   - Define a 35-line lookback window ending at the section heading.
-   - Within the window, find the last occurrence of `?` (Think-It-Over question terminator for Science PDFs) or start from line following the bare chapter number.
-   - Walk forward from that anchor, collecting non-noise lines into the title, stopping when a natural break is found (line ending with punctuation, conjunction, or minimum-length title reached).
-
-3. **Noise filtering (`TITLE_NOISE_RE`)** — strips lines matching:
-   - `Think It Over` / `Probe and Ponder` section starters
-   - `Reprint` notices
-   - Date patterns: `M/D/YYYY`, `DD-Mon-YY`, `HH:MM:SS` timestamps
-   - `.indd` file artefacts from InDesign export
-   - NCERT / Grade / Class / Curiosity / Ganita prefixes
-
-4. **Multi-line continuation** — title assembly continues across lines if the current accumulated title ends with `,`, `:`, `-`, `–`, or if the last word is a common conjunction, preposition, or question word (`and`, `of`, `how`, `with`, etc.).
-
-5. **Fallback** — if no title is extracted, the chapter title is set to `""` rather than a fabricated value.
-
-### Topic Extraction
-
-Topics are extracted from `N.M`-style section headings found throughout each PDF. Any line matching `^\d{1,2}\.\d[\s\.]` is treated as a topic heading; the text following the heading number is stored as the topic name.
-
-### Why Some Titles Are Imperfect
-
-Class 6–8 Science PDFs (fecu, gecu, hecu series) use a typographic layout where the chapter title is set in a large decorative font spanning columns. `pdftotext` extracts these as fragmented sequences or omits them entirely, leaving the extractor to fall through to the intro paragraph. No workaround short of a visual/OCR pass on the PDF page images could recover these titles reliably from text alone.
-
----
-
-## Data Integrity Guarantees
-
-- **No fabricated data.** All titles and topics come directly from PDF text. Where extraction fails, the raw extracted string (however imperfect) is preserved — nothing is invented.
-- **No prior NCERT knowledge.** The script contains no hardcoded chapter names. Every string in the output came from a PDF under `curriculum/sources/cbse/`.
-- **Deterministic.** Re-running `build_curriculum_db.py` against the same PDFs produces identical output.
-- **Class 9 Mathematics is complete and verified.** All 8 chapter titles and 705 topics across all chapters are correctly extracted.
-
----
-
-## Recommendations for Future Work
-
-1. **Manual correction pass** — the 33 flagged titles should be corrected by hand in a separate override JSON that `build_curriculum_db.py` applies as a post-process step.
-2. **Class 6–8 Science titles** — consider a PDF-image OCR pass (e.g. using Tesseract on page 1 of each chapter) as these PDFs have strong visual titles that don't survive text extraction.
-3. **Topic disambiguation** — class 7 has two books (`mathematics1` and `mathematics2`), each with chapters numbered 1–7/8. The `book` field in the JSON disambiguates; downstream consumers must filter by both `class` + `book` + `chapter_number`.
+**PASS — 97/97 chapter titles resolved from PDF text. Zero fallbacks. Zero fabricated titles.**  
+All titles verified directly from the uploaded CBSE PDFs. No internet sources or prior knowledge used.
