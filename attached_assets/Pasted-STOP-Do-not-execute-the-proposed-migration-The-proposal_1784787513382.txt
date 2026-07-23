@@ -1,0 +1,42 @@
+STOP. Do not execute the proposed migration.
+
+The proposal incorrectly archives all Class 9 Mathematics and Science content and empties class9-bundle.ts. That would remove the current Class 9 product.
+
+Revise the proposal using this rule:
+
+KEEP ACTIVE:
+1. The latest official PDF-derived locked Class 9 curriculum.
+2. Every Class 9 Mathematics and Science chapter/question bank created specifically from those proven PDFs.
+3. Their necessary adapters, types, registries and runtime bundle.
+4. Current Class 9 Physics, Chemistry and Biology question banks if they correspond to the locked PDF-derived curriculum.
+5. Reproduction: How Life Continues and Earth as a System banks, despite the misleading “placeholders” filename, if present in the locked curriculum.
+6. class9-maths-ch18.ts and class9-maths-iemh102.ts if they represent current locked Mathematics chapters.
+
+ARCHIVE ONLY:
+1. Superseded old NCERT Class 9 chapter structures not present in the locked curriculum.
+2. Old questions belonging exclusively to those superseded chapters.
+3. Economics curriculum and question banks.
+4. Obsolete manual curriculum registries, gateways, blueprints and documentation that are not required by the current PDF-derived system.
+
+Do not replace class9-bundle.ts with an empty stub.
+Instead, rebuild it to import only the current PDF-derived Class 9 Mathematics and Science banks.
+
+Do not remove all Class 9 imports from index.ts.
+Retain only the current official Class 9 Mathematics and Science imports.
+
+Before execution, provide a revised table with three groups:
+
+A. KEEP ACTIVE — exact files and the locked chapter each supports.
+B. MOVE TO LEGACY — exact files and why they are superseded.
+C. MODIFY — exact runtime files and the precise import changes.
+
+For every proposed Class 9 Mathematics or Science file, prove whether it belongs to the current locked curriculum by matching:
+- subject
+- official chapter title
+- chapter ID
+- source PDF
+
+Do not perform broad quality audits, question reviews or content comparisons.
+This is only a minimum-cost identity-and-routing check needed to prevent archiving the current product.
+
+Do not move or modify anything until I approve the revised list.
