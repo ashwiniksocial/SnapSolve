@@ -4,6 +4,8 @@ import { useProfile } from "@/hooks/useProfile";
 
 const BOARDS = ["CBSE", "ICSE", "State Board", "Other"] as const;
 const CLASSES = [6, 7, 8, 9] as const;
+// Only classes with an active question bank are selectable.
+const AVAILABLE_CLASSES: ReadonlyArray<number> = [9];
 
 export default function Onboarding() {
   const { profile, updateProfile } = useProfile();
@@ -58,19 +60,28 @@ export default function Onboarding() {
         <div className="mb-8">
           <p className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Your Class</p>
           <div className="grid grid-cols-4 gap-2">
-            {CLASSES.map(c => (
-              <button
-                key={c}
-                onClick={() => setClass(c)}
-                className={`py-3 rounded-2xl border-2 text-sm font-bold transition-all ${
-                  classLevel === c
-                    ? "border-indigo-600 bg-indigo-600 text-white"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+            {CLASSES.map(c => {
+              const available = AVAILABLE_CLASSES.includes(c);
+              return (
+                <button
+                  key={c}
+                  onClick={() => available ? setClass(c) : undefined}
+                  disabled={!available}
+                  className={`py-3 rounded-2xl border-2 text-sm font-bold transition-all relative ${
+                    classLevel === c && available
+                      ? "border-indigo-600 bg-indigo-600 text-white"
+                      : available
+                        ? "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                        : "border-slate-100 bg-slate-50 text-slate-400 cursor-default"
+                  }`}
+                >
+                  {c}
+                  {!available && (
+                    <span className="block text-[8px] font-semibold text-slate-400 leading-none mt-0.5">Soon</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
