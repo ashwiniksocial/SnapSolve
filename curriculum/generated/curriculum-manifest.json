@@ -1,6 +1,6 @@
 {
   "note": "Extracted exclusively from uploaded official PDFs. No external knowledge used.",
-  "total_chapters": 97,
+  "total_chapters": 109,
   "chapters": [
     {
       "filename": "fegp101.pdf",
@@ -7001,6 +7001,462 @@
         "Urban heat island effect in a city",
         "Water cycle"
       ]
+    },
+    {
+      "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 6,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 1,
+      "chapter_title": "Introduction to AI and Everyday Examples",
+      "is_chapter": true,
+      "page_count": 84,
+      "sections": [
+        {
+          "number": "1.1",
+          "title": "Meaning of AI"
+        },
+        {
+          "number": "1.2",
+          "title": "AI in Daily Life"
+        },
+        {
+          "number": "1.3",
+          "title": "AI and Automation"
+        },
+        {
+          "number": "1.4",
+          "title": "Human vs Machine Intelligence"
+        },
+        {
+          "number": "1.5",
+          "title": "Types of Learning in AI"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 6,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 2,
+      "chapter_title": "Basic Data Concepts",
+      "is_chapter": true,
+      "page_count": 84,
+      "sections": [
+        {
+          "number": "2.1",
+          "title": "Understanding Data"
+        },
+        {
+          "number": "2.2",
+          "title": "Types of Data"
+        },
+        {
+          "number": "2.3",
+          "title": "Collecting Data"
+        },
+        {
+          "number": "2.4",
+          "title": "Organising Data"
+        },
+        {
+          "number": "2.5",
+          "title": "Representing Data"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 6,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 3,
+      "chapter_title": "Simple Pattern Recognition and Decision Making",
+      "is_chapter": true,
+      "page_count": 84,
+      "sections": [
+        {
+          "number": "3.1",
+          "title": "Understanding Patterns"
+        },
+        {
+          "number": "3.2",
+          "title": "Identifying Patterns"
+        },
+        {
+          "number": "3.3",
+          "title": "Observations and Conclusions"
+        },
+        {
+          "number": "3.4",
+          "title": "Decision Making"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 6,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 4,
+      "chapter_title": "Ethics and Digital Responsibility",
+      "is_chapter": true,
+      "page_count": 84,
+      "sections": [
+        {
+          "number": "4.1",
+          "title": "Responsible Use of Technology"
+        },
+        {
+          "number": "4.2",
+          "title": "Online Safety"
+        },
+        {
+          "number": "4.3",
+          "title": "Privacy"
+        },
+        {
+          "number": "4.4",
+          "title": "Password Safety"
+        },
+        {
+          "number": "4.5",
+          "title": "Digital Footprints"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 7,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 1,
+      "chapter_title": "AI Domains and Applications",
+      "is_chapter": true,
+      "page_count": 86,
+      "sections": [
+        {
+          "number": "1.1",
+          "title": "AI Domains"
+        },
+        {
+          "number": "1.2",
+          "title": "Predictive Techniques"
+        },
+        {
+          "number": "1.3",
+          "title": "Small Datasets"
+        },
+        {
+          "number": "1.4",
+          "title": "Computer Vision"
+        },
+        {
+          "number": "1.5",
+          "title": "Natural Language Processing"
+        },
+        {
+          "number": "1.6",
+          "title": "Data Science"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 7,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 2,
+      "chapter_title": "AI in Industries",
+      "is_chapter": true,
+      "page_count": 86,
+      "sections": [
+        {
+          "number": "2.1",
+          "title": "AI in Healthcare"
+        },
+        {
+          "number": "2.2",
+          "title": "AI in Education"
+        },
+        {
+          "number": "2.3",
+          "title": "AI in Transport"
+        },
+        {
+          "number": "2.4",
+          "title": "AI in Communication"
+        },
+        {
+          "number": "2.5",
+          "title": "Benefits of AI"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 7,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 3,
+      "chapter_title": "Data Visualisation and Analysis",
+      "is_chapter": true,
+      "page_count": 86,
+      "sections": [
+        {
+          "number": "3.1",
+          "title": "Collecting and Organising Data"
+        },
+        {
+          "number": "3.2",
+          "title": "Data Visualisation"
+        },
+        {
+          "number": "3.3",
+          "title": "Interpreting Data"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 7,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 4,
+      "chapter_title": "Ethics and AI Bias Awareness",
+      "is_chapter": true,
+      "page_count": 86,
+      "sections": [
+        {
+          "number": "4.1",
+          "title": "Ethics in AI"
+        },
+        {
+          "number": "4.2",
+          "title": "Bias in AI"
+        },
+        {
+          "number": "4.3",
+          "title": "Responsible and Fair Use"
+        },
+        {
+          "number": "4.4",
+          "title": "Digital Citizenship"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 8,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 1,
+      "chapter_title": "AI Project Lifecycle",
+      "is_chapter": true,
+      "page_count": 75,
+      "sections": [
+        {
+          "number": "1.1",
+          "title": "What is Artificial Intelligence?"
+        },
+        {
+          "number": "1.2",
+          "title": "How AI Learns: Analyse, Recognise, Learn, Predict"
+        },
+        {
+          "number": "1.3",
+          "title": "AI Applications in Daily Life"
+        },
+        {
+          "number": "1.4",
+          "title": "Stages of the AI Project Lifecycle"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 8,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 2,
+      "chapter_title": "Artificial Intelligence and Its Applications",
+      "is_chapter": true,
+      "page_count": 75,
+      "sections": [
+        {
+          "number": "2.1",
+          "title": "AI for Environmental Problem Solving"
+        },
+        {
+          "number": "2.2",
+          "title": "AI and Automation"
+        },
+        {
+          "number": "2.3",
+          "title": "AI in Healthcare"
+        },
+        {
+          "number": "2.4",
+          "title": "AI in Education"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 8,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 3,
+      "chapter_title": "Data and Fairness in AI",
+      "is_chapter": true,
+      "page_count": 75,
+      "sections": [
+        {
+          "number": "3.1",
+          "title": "Role of Data in AI"
+        },
+        {
+          "number": "3.2",
+          "title": "Training Data"
+        },
+        {
+          "number": "3.3",
+          "title": "How AI Learns Patterns from Data"
+        },
+        {
+          "number": "3.4",
+          "title": "Fairness and Bias in Training Data"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
+    },
+    {
+      "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+      "board": "CBSE",
+      "class": 8,
+      "subject": "Computational Thinking and AI",
+      "series": "CTAI Student Handbook",
+      "book": 2,
+      "chapter_number": 4,
+      "chapter_title": "Ethics and Responsible AI",
+      "is_chapter": true,
+      "page_count": 75,
+      "sections": [
+        {
+          "number": "4.1",
+          "title": "What is AI Ethics?"
+        },
+        {
+          "number": "4.2",
+          "title": "Privacy in the Digital World"
+        },
+        {
+          "number": "4.3",
+          "title": "Bias and Fairness in AI Decisions"
+        },
+        {
+          "number": "4.4",
+          "title": "Misinformation and AI"
+        },
+        {
+          "number": "4.5",
+          "title": "Principles of Responsible AI"
+        }
+      ],
+      "subsections": [],
+      "activities": [],
+      "exercises": [],
+      "key_terms": [],
+      "figures": []
     }
   ]
 }

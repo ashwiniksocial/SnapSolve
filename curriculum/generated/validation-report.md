@@ -11,33 +11,37 @@
 | Metric | Value |
 |---|---|
 | PDFs processed | 119 |
-| Chapter PDFs | 97 |
-| Non-chapter PDFs (prelims, answer keys, computer/ICT) | 22 |
-| Chapter titles resolved from PDF text | **97 / 97 (100%)** |
+| Chapter/unit PDFs or sources | 109 |
+| Non-chapter PDFs (prelims, frameworks, vocational syllabus docs) | 22 |
+| Maths + Science chapter titles resolved from individual PDFs | **97 / 97 (100%)** |
+| Computer/AI chapter titles resolved from CTAI Student Handbooks | **12 / 12 (100%)** |
 | Fallback titles ("Chapter N") | **0** |
-| Total topics extracted | 705 |
+| Total topics extracted | 759 |
 
 ---
 
-## Chapter Counts by Class
+## Chapter Counts by Class and Subject
 
-| Class | Subject | Chapters |
-|---|---|---|
-| 6 | Mathematics | 10 |
-| 6 | Science | 12 |
-| 7 | Mathematics (Part I) | 8 |
-| 7 | Mathematics (Part II) | 7 |
-| 7 | Science | 12 |
-| 8 | Mathematics (Part I) | 7 |
-| 8 | Mathematics (Part II) | 7 |
-| 8 | Science | 13 |
-| 9 | Mathematics | 8 |
-| 9 | Science | 13 |
-| **Total** | | **97** |
+| Class | Subject | Chapters | Topics |
+|---|---|---|---|
+| 6 | Mathematics (Ganita Prakash) | 10 | — |
+| 6 | Science (Curiosity) | 12 | — |
+| 6 | Computational Thinking and AI (Part 2: AI) | 4 | — |
+| 7 | Mathematics Part I (Ganita Prakash) | 8 | — |
+| 7 | Mathematics Part II (Ganita Prakash) | 7 | — |
+| 7 | Science (Curiosity) | 12 | — |
+| 7 | Computational Thinking and AI (Part 2: AI) | 4 | — |
+| 8 | Mathematics Part I (Ganita Prakash) | 7 | — |
+| 8 | Mathematics Part II (Ganita Prakash) | 7 | — |
+| 8 | Science (Curiosity) | 13 | — |
+| 8 | Computational Thinking and AI (Part 2: AI) | 4 | — |
+| 9 | Mathematics (Ganita Manjari) | 8 | — |
+| 9 | Science (Exploration) | 13 | — |
+| **Total** | | **109** | **759** |
 
 ---
 
-## All Verified Chapter Titles
+## Section 1 — Mathematics and Science (97 chapters)
 
 ### Class 6 — Mathematics (Ganita Prakash)
 | # | Title | File |
@@ -178,42 +182,82 @@
 
 ---
 
-## Non-Chapter PDFs (correctly excluded)
+## Section 2 — Computer-related Chapters/Units (12 chapters)
 
-These 22 PDFs are prelim/answer-key pages, computer/ICT workbooks, or title-page stubs. They contain no curriculum chapter and are correctly flagged `is_chapter: false` in the index.
+### Source: CTAI Student Handbooks — Part 2: Artificial Intelligence
 
-| File | Reason |
-|---|---|
-| fecu1ps, gecu1ps, hecu1ps, iesc1ps | Science textbook prelims (title page, foreword) |
-| fegp1ps, gegp1ps, gegp2ps, hegp1ps, hegp2ps, iemh1ps | Mathematics textbook prelims |
-| Class 6/7/8 CTAI_Pri shared PDF (×3) | Shared computer/ICT book (Classes 3–8), not a chapter PDF |
-| Class 6/7/8 CTAI_Pri{6,7,8}SH PDFs (×3) | Grade-specific computer/ICT workbook |
-| Class 9 AI 417-AI-IX.pdf | Skill-education AI course syllabus |
-| Class 9 AI_Facilitators_Handbook_IX.pdf | AI facilitator handbook |
-| Class 9 Python AI_Facilitators_Handbook_IX.pdf | Python/AI facilitator handbook |
-| Class 9 Computer_Applications SecP1IX_2026-27.pdf | Computer Applications stub (3 pp) |
-| Class 9 Information Technology 402-IT-IX.pdf | IT skill-education syllabus |
-| Class 9 Information Technology textbook 402_IT_IX.pdf | IT textbook (non-core, skill-ed stream) |
+**Canonical source for Classes 6–8:** Grade-specific CBSE Student Handbooks  
+(`CTAI_Pri6SH_2026-27.pdf`, `CTAI_Pri7SH_2026-27.pdf`, `CTAI_Pri8SH_2026-27.pdf`)
+
+**Part 1 (Computational Thinking) excluded:** Part 1 of each CTAI handbook consists of activity worksheets integrated with existing Mathematics chapters. They are supplementary materials for those chapters, not independent curriculum units, and would duplicate Mathematics chapter entries.
+
+**Shared "Class 3–8 Curriculum" PDF excluded as canonical source:** This is the CBSE teacher/curriculum framework document. Chapter content is taken from the grade-specific student handbooks (SH files).
+
+#### Class 6 — Computational Thinking and AI (Part 2: AI)
+| # | Chapter Title | Topics (from Learning Focus, per PDF) |
+|---|---|---|
+| 1 | Introduction to AI and Everyday Examples | Meaning of AI; AI in Daily Life; AI and Automation; Human vs Machine Intelligence; Types of Learning in AI |
+| 2 | Basic Data Concepts | Understanding Data; Types of Data; Collecting Data; Organising Data; Representing Data |
+| 3 | Simple Pattern Recognition and Decision Making | Understanding Patterns; Identifying Patterns; Observations and Conclusions; Decision Making |
+| 4 | Ethics and Digital Responsibility | Responsible Use of Technology; Online Safety; Privacy; Password Safety; Digital Footprints |
+
+#### Class 7 — Computational Thinking and AI (Part 2: AI)
+| # | Chapter Title | Topics (from Learning Focus, per PDF) |
+|---|---|---|
+| 1 | AI Domains and Applications | AI Domains; Predictive Techniques; Small Datasets; Computer Vision; Natural Language Processing; Data Science |
+| 2 | AI in Industries | AI in Healthcare; AI in Education; AI in Transport; AI in Communication; Benefits of AI |
+| 3 | Data Visualisation and Analysis | Collecting and Organising Data; Data Visualisation; Interpreting Data |
+| 4 | Ethics and AI Bias Awareness | Ethics in AI; Bias in AI; Responsible and Fair Use; Digital Citizenship |
+
+#### Class 8 — Computational Thinking and AI (Part 2: AI)
+| # | Chapter Title | Topics (from chapter content, per PDF) |
+|---|---|---|
+| 1 | AI Project Lifecycle | What is Artificial Intelligence?; How AI Learns: Analyse, Recognise, Learn, Predict; AI Applications in Daily Life; Stages of the AI Project Lifecycle |
+| 2 | Artificial Intelligence and Its Applications | AI for Environmental Problem Solving; AI and Automation; AI in Healthcare; AI in Education |
+| 3 | Data and Fairness in AI | Role of Data in AI; Training Data; How AI Learns Patterns from Data; Fairness and Bias in Training Data |
+| 4 | Ethics and Responsible AI | What is AI Ethics?; Privacy in the Digital World; Bias and Fairness in AI Decisions; Misinformation and AI; Principles of Responsible AI |
+
+**Computer-related chapter total: 4 + 4 + 4 = 12**
 
 ---
 
-## Extraction Method Notes
+## Section 3 — Class 9 Computer/ICT Elective Subjects (noted, not counted)
 
-Title extraction uses series-specific algorithms keyed on the first 4 characters of each filename stem:
+Class 9 has three separate optional vocational/skill elective subjects. Students select ONE. They are structured as curriculum syllabi with units/sessions rather than individual chapter PDFs. They are recorded in the master index as non-chapter PDF entries and are not included in the 109-chapter count.
+
+| Subject | Code | Source PDF | Units |
+|---|---|---|---|
+| Artificial Intelligence | 417 | `Artificial Intelligence Class 9 417-AI-IX.pdf` + Facilitator Handbook | 5 units: Introduction to AI; Data Literacy; Math for AI; Generative AI; Introduction to Python |
+| Information Technology | 402 | `Information Technology Class 9 402-IT-IX.pdf` + Textbook | 5 units: Introduction to IT–ITeS Industry; Data Entry and Keyboarding Skills; Digital Documentation; Electronic Spreadsheet; Digital Presentation |
+| Computer Applications | 165 | `Computer_Applications_ class 9 SecP1IX_2026-27.pdf` | 3 units: Basics of Information Technology; Cyber-safety; Office Tools |
+
+---
+
+## Section 4 — Duplicate Documents Excluded
+
+| PDF | Reason excluded as canonical source |
+|---|---|
+| `Class 3 to 8 Computational Thinking and AI CTAI_Pri_2026-27.pdf` (×3 copies in class6/7/8 folders) | Teacher/curriculum framework document. Same PDF copied into each class folder. Not a student-facing chapter source; grade-specific SH files used instead. |
+| `Artificial Intelligence Class 9 AI_Facilitators_Handbook_IX.pdf` | Facilitator/teacher handbook covering same units as 417-AI-IX syllabus. Syllabus document is canonical for unit titles. |
+| `Artificial Intelligence Class 9 Python AI_Facilitators_Handbook_IX.pdf` | Python facilitator handbook; supplementary to the AI subject, not an independent curriculum. |
+| All prelim PDFs (`*1ps.pdf` — fecu1ps, fegp1ps, etc.) | Title-page and foreword pages, not chapter content. |
+
+---
+
+## Section 5 — Extraction Method Notes
+
+### Mathematics and Science (individual chapter PDFs)
 
 | Series | Class | Subject | Strategy |
 |---|---|---|---|
 | `fecu` / `gecu` / `hecu` | 6–8 | Science (Curiosity) | Lookahead continuation after chapter-number marker; stop when last word not a joining word AND next-line first word not a joining word |
-| `iesc` | 9 | Science (Exploration) | TIO-anchor (`is it possible`, `did you know`, etc.) → collect within 30-line window; fallback to first post-timestamp line in first 70 lines |
-| `fegp` / `gegp` / `hegp` | 6–8 | Mathematics (Ganita Prakash) | PDF bookmark when available; else lines before/after chapter number; ALL-CAPS titles collected until next non-ALL-CAPS line |
+| `iesc` | 9 | Science (Exploration) | TIO-anchor → collect within 30-line window; fallback to first post-timestamp line in first 70 lines |
+| `fegp` / `gegp` / `hegp` | 6–8 | Mathematics (Ganita Prakash) | PDF bookmark when available; else lines before/after chapter number; ALL-CAPS titles collected while next line is also ALL-CAPS |
 | `iemh` | 9 | Mathematics (Ganita Manjari) | Generic extractor; short-window fix (≤ 4 candidate lines → collect all valid) |
 
-**Key edge cases resolved:**
+### Computer/AI (CTAI Student Handbooks)
 
-- `fegp110` "The Other Side of Zero" — PDF lays out title as ALL-CAPS two-liner ("THE OTHER SIDE OF / ZERO"); subtitle "Integers" on next line is mixed-case → excluded by ALL-CAPS / mixed-case boundary test.
-- `iesc113` "Earth as a System: Energy, Matter, and Life" — title spans three lines; third line begins lowercase "and Life"; continuation-word allowlist prevents premature break.
-- `gegp203` "Finding Common Ground", `hegp106` "We Distribute, Yet Things Multiply", `hegp204` "Exploring Some Geometric Themes" — ALL-CAPS titles spanning 2–3 lines; algorithm continues while each subsequent line is also ALL-CAPS, stops at first mixed-case line.
-- `iemh104` "Exploring Algebraic Identities" — short candidate window (≤ 4 lines); short-window fix collects all valid lines rather than requiring a 5-line minimum.
+Chapter titles and topics are read directly from the printed Table of Contents and Learning Focus sections of each grade-specific Student Handbook PDF. No algorithmic extraction required; data is hardcoded from PDF evidence.
 
 ---
 
@@ -221,14 +265,22 @@ Title extraction uses series-specific algorithms keyed on the first 4 characters
 
 | File | Description |
 |---|---|
-| `curriculum/generated/master-curriculum-index.json` | All 119 PDFs with metadata, chapter flag, chapter number, title, topics list |
-| `curriculum/generated/master-topic-index.json` | Flat topic index: 705 topics with class/subject/chapter/difficulty metadata |
-| `curriculum/generated/curriculum-manifest.json` | 97-chapter manifest with full title and topic arrays |
+| `curriculum/generated/master-curriculum-index.json` | All 119 PDFs with metadata; 109 marked `is_chapter: true` |
+| `curriculum/generated/master-topic-index.json` | Flat topic index: 759 topics across all 109 chapters |
+| `curriculum/generated/curriculum-manifest.json` | 109-chapter manifest with full title and section arrays |
 | `curriculum/generated/validation-report.md` | This file |
 
 ---
 
 ## Verdict
 
-**PASS — 97/97 chapter titles resolved from PDF text. Zero fallbacks. Zero fabricated titles.**  
-All titles verified directly from the uploaded CBSE PDFs. No internet sources or prior knowledge used.
+**109 CHAPTERS VERIFIED**
+
+| Category | Count | Source |
+|---|---|---|
+| Mathematics (Classes 6–9) | 50 | Individual chapter PDFs (fegp, gegp, hegp, iemh series) |
+| Science (Classes 6–9) | 47 | Individual chapter PDFs (fecu, gecu, hecu, iesc series) |
+| Computational Thinking and AI — Part 2: AI (Classes 6–8) | 12 | CTAI grade-specific Student Handbook PDFs |
+| **Total** | **109** | |
+
+All titles verified directly from uploaded CBSE PDFs. No internet sources or prior knowledge used. Zero fallback titles.

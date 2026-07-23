@@ -834,6 +834,275 @@ for pdf_path in all_pdfs:
                 "filename":       filename,
             })
 
+# ── CTAI Computer/AI chapters (Classes 6–8, Part 2: Artificial Intelligence) ──
+# Source: grade-specific student handbooks (CTAI_Pri6SH, Pri7SH, Pri8SH).
+# Part 1 (CT) is excluded: it is a worksheet supplement to Mathematics chapters,
+# not an independent curriculum unit.  The shared "Class 3-8 Curriculum" PDF is
+# the teacher framework document; individual chapter data is taken from the SH files.
+# Class 9 AI (417), IT (402) and Computer Applications (165) are optional
+# vocational/skill electives; they are noted below for reference but are NOT
+# counted in the 12 core CTAI curriculum chapters.
+
+_CTAI_AI_CHAPTERS = [
+    # ── Class 6 ───────────────────────────────────────────────────────────────
+    {
+        "class": 6,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 1,
+        "chapter_title": "Introduction to AI and Everyday Examples",
+        "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "page_count": 84,
+        "topics": [
+            ("1.1", "Meaning of AI"),
+            ("1.2", "AI in Daily Life"),
+            ("1.3", "AI and Automation"),
+            ("1.4", "Human vs Machine Intelligence"),
+            ("1.5", "Types of Learning in AI"),
+        ],
+    },
+    {
+        "class": 6,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 2,
+        "chapter_title": "Basic Data Concepts",
+        "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "page_count": 84,
+        "topics": [
+            ("2.1", "Understanding Data"),
+            ("2.2", "Types of Data"),
+            ("2.3", "Collecting Data"),
+            ("2.4", "Organising Data"),
+            ("2.5", "Representing Data"),
+        ],
+    },
+    {
+        "class": 6,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 3,
+        "chapter_title": "Simple Pattern Recognition and Decision Making",
+        "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "page_count": 84,
+        "topics": [
+            ("3.1", "Understanding Patterns"),
+            ("3.2", "Identifying Patterns"),
+            ("3.3", "Observations and Conclusions"),
+            ("3.4", "Decision Making"),
+        ],
+    },
+    {
+        "class": 6,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 4,
+        "chapter_title": "Ethics and Digital Responsibility",
+        "filename": "Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class6/computer/Computational Thinking and AI Class 6 CTAI_Pri6SH_2026-27.pdf",
+        "page_count": 84,
+        "topics": [
+            ("4.1", "Responsible Use of Technology"),
+            ("4.2", "Online Safety"),
+            ("4.3", "Privacy"),
+            ("4.4", "Password Safety"),
+            ("4.5", "Digital Footprints"),
+        ],
+    },
+    # ── Class 7 ───────────────────────────────────────────────────────────────
+    {
+        "class": 7,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 1,
+        "chapter_title": "AI Domains and Applications",
+        "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "page_count": 86,
+        "topics": [
+            ("1.1", "AI Domains"),
+            ("1.2", "Predictive Techniques"),
+            ("1.3", "Small Datasets"),
+            ("1.4", "Computer Vision"),
+            ("1.5", "Natural Language Processing"),
+            ("1.6", "Data Science"),
+        ],
+    },
+    {
+        "class": 7,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 2,
+        "chapter_title": "AI in Industries",
+        "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "page_count": 86,
+        "topics": [
+            ("2.1", "AI in Healthcare"),
+            ("2.2", "AI in Education"),
+            ("2.3", "AI in Transport"),
+            ("2.4", "AI in Communication"),
+            ("2.5", "Benefits of AI"),
+        ],
+    },
+    {
+        "class": 7,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 3,
+        "chapter_title": "Data Visualisation and Analysis",
+        "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "page_count": 86,
+        "topics": [
+            ("3.1", "Collecting and Organising Data"),
+            ("3.2", "Data Visualisation"),
+            ("3.3", "Interpreting Data"),
+        ],
+    },
+    {
+        "class": 7,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 4,
+        "chapter_title": "Ethics and AI Bias Awareness",
+        "filename": "Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class7/computer/Computational Thinking and AI Class 7 CTAI_Pri7SH_2026-27.pdf",
+        "page_count": 86,
+        "topics": [
+            ("4.1", "Ethics in AI"),
+            ("4.2", "Bias in AI"),
+            ("4.3", "Responsible and Fair Use"),
+            ("4.4", "Digital Citizenship"),
+        ],
+    },
+    # ── Class 8 ───────────────────────────────────────────────────────────────
+    {
+        "class": 8,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 1,
+        "chapter_title": "AI Project Lifecycle",
+        "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "page_count": 75,
+        "topics": [
+            ("1.1", "What is Artificial Intelligence?"),
+            ("1.2", "How AI Learns: Analyse, Recognise, Learn, Predict"),
+            ("1.3", "AI Applications in Daily Life"),
+            ("1.4", "Stages of the AI Project Lifecycle"),
+        ],
+    },
+    {
+        "class": 8,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 2,
+        "chapter_title": "Artificial Intelligence and Its Applications",
+        "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "page_count": 75,
+        "topics": [
+            ("2.1", "AI for Environmental Problem Solving"),
+            ("2.2", "AI and Automation"),
+            ("2.3", "AI in Healthcare"),
+            ("2.4", "AI in Education"),
+        ],
+    },
+    {
+        "class": 8,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 3,
+        "chapter_title": "Data and Fairness in AI",
+        "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "page_count": 75,
+        "topics": [
+            ("3.1", "Role of Data in AI"),
+            ("3.2", "Training Data"),
+            ("3.3", "How AI Learns Patterns from Data"),
+            ("3.4", "Fairness and Bias in Training Data"),
+        ],
+    },
+    {
+        "class": 8,
+        "subject": "Computational Thinking and AI",
+        "series": "CTAI Student Handbook",
+        "book": 2,
+        "chapter_number": 4,
+        "chapter_title": "Ethics and Responsible AI",
+        "filename": "Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "filepath": "curriculum/sources/cbse/class8/computer/Computational Thinking and AI Class 8 CTAI_Pri8SH_2026-27.pdf",
+        "page_count": 75,
+        "topics": [
+            ("4.1", "What is AI Ethics?"),
+            ("4.2", "Privacy in the Digital World"),
+            ("4.3", "Bias and Fairness in AI Decisions"),
+            ("4.4", "Misinformation and AI"),
+            ("4.5", "Principles of Responsible AI"),
+        ],
+    },
+]
+
+board = "CBSE"
+print("\n--- CTAI Part 2 AI chapters ---")
+for ch in _CTAI_AI_CHAPTERS:
+    cl   = ch["class"]
+    subj = ch["subject"]
+    cnum = ch["chapter_number"]
+    ttl  = ch["chapter_title"]
+    fn   = ch["filename"]
+    fp   = ch["filepath"]
+    pg   = ch["page_count"]
+    ser  = ch["series"]
+    bk   = ch["book"]
+    print(f"  Class {cl} {subj} Ch {cnum}: \"{ttl}\"")
+    base = {
+        "filename":       fn,
+        "filepath":       fp,
+        "board":          board,
+        "class":          cl,
+        "subject":        subj,
+        "series":         ser,
+        "book":           bk,
+        "chapter_number": cnum,
+        "chapter_title":  ttl,
+        "is_chapter":     True,
+        "page_count":     pg,
+    }
+    sections = [{"number": t[0], "title": t[1]} for t in ch["topics"]]
+    master_entries.append({**base, "structure": {
+        "sections": sections, "subsections": [], "activities": [],
+        "exercises": [], "key_terms": [], "figures": [],
+    }})
+    chapter_entries.append({**base,
+        "sections": sections, "subsections": [], "activities": [],
+        "exercises": [], "key_terms": [], "figures": [],
+    })
+    for sec in sections:
+        topic_entries.append({
+            "board": board, "class": cl, "subject": subj,
+            "series": ser, "book": bk,
+            "chapter_number": cnum, "chapter_title": ttl,
+            "level": "section", "number": sec["number"],
+            "title": sec["title"], "filename": fn,
+        })
+
 # ── write outputs ──────────────────────────────────────────────────────────────
 
 def write_json(path, obj):

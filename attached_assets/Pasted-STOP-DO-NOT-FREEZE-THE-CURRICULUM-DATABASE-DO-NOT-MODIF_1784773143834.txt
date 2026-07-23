@@ -1,0 +1,105 @@
+STOP.
+
+DO NOT FREEZE THE CURRICULUM DATABASE.
+
+DO NOT MODIFY QUESTION BANKS, UI, ROUTING OR AI PIPELINE.
+
+The current total of 97 chapters is incomplete.
+
+The correct official curriculum total for Classes 6–9 is:
+
+- Mathematics and Science: 97 chapters
+- Computer-related subjects: 12 official chapters/units
+- TOTAL: 109
+
+ROOT CAUSE:
+
+The extractor indexed the individually separated Mathematics and Science chapter PDFs, but failed to create chapter/unit entries from the complete Computer, Computational Thinking, Artificial Intelligence, Information Technology and Computer Applications PDFs.
+
+==================================================
+TASK
+==================================================
+
+Read ONLY the uploaded official computer-related PDFs under:
+
+curriculum/sources/cbse/
+
+Cover Classes 6, 7, 8 and 9.
+
+Use the uploaded PDFs only.
+
+Do not use internet knowledge.
+Do not use model memory.
+Do not invent chapter names or counts.
+
+For each official computer-related subject/document:
+
+1. Locate its official table of contents, curriculum units, modules or chapters.
+
+2. Extract every official student-learning chapter/unit/module that forms part of the curriculum.
+
+3. Do not count:
+   - cover pages
+   - prelims
+   - acknowledgements
+   - teacher instructions
+   - assessment instructions
+   - duplicate curriculum and handbook entries
+   - repeated units appearing in more than one uploaded document
+
+4. Where a curriculum document and facilitator handbook cover the same units, create only ONE canonical curriculum entry per official unit.
+
+5. Preserve:
+   - class
+   - official subject name
+   - subject code, where applicable
+   - unit/chapter number
+   - exact printed unit/chapter title
+   - source PDF
+   - official section/topic headings
+
+==================================================
+EXPECTED VALIDATION
+==================================================
+
+Existing Mathematics and Science chapters: 97
+
+Expected unique Computer-related chapters/units: 12
+
+Expected combined total: 109
+
+Do not force the count by inventing or deleting entries.
+
+If the uploaded official PDFs genuinely produce a count different from 12, stop and provide the exact source-supported breakdown for founder review.
+
+==================================================
+REBUILD
+==================================================
+
+After extracting the computer-related curriculum, rebuild:
+
+- curriculum/generated/master-curriculum-index.json
+- curriculum/generated/master-topic-index.json
+- curriculum/generated/curriculum-manifest.json
+- curriculum/generated/validation-report.md
+
+Do not create curriculum-lock.json yet.
+
+==================================================
+RETURN ONLY
+==================================================
+
+1. Mathematics chapters
+2. Science chapters
+3. Computer-related chapters/units by class and subject
+4. Computer-related unique total
+5. Combined curriculum total
+6. Duplicate documents excluded
+7. Any unresolved ambiguity
+8. Final status:
+
+109 CHAPTERS VERIFIED
+
+or
+
+BLOCKED — FOUNDER REVIEW REQUIRED
