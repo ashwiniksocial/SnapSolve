@@ -8,6 +8,7 @@ import tutorRouter            from "./tutor";
 import devLessonRouter        from "./devLesson";
 import devEvaluateLessonRouter from "./devEvaluateLesson";
 import betaCheckRouter        from "./betaCheck";
+import generateRouter         from "./generate";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(tutorRouter);
 router.use(devLessonRouter);
 router.use(devEvaluateLessonRouter);
 router.use(betaCheckRouter);
+router.use(generateRouter);
 
 export default router;

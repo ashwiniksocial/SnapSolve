@@ -1,0 +1,398 @@
+STOP.
+
+Read the complete existing Q&A generation pipeline before making any changes.
+
+Understand the existing architecture first.
+
+Do NOT modify:
+
+- Architecture
+- Database schema
+- Existing Teaching Framework
+- Existing Curriculum Gates
+- Existing Quality Gates
+- Existing UI
+- Existing APIs
+- Existing Question Generation Flow
+- Existing Prompt Structure unless absolutely necessary.
+
+The implementation must be minimal, modular, reusable and cost-efficient.
+
+====================================================
+
+OBJECTIVE
+
+Implement one final Academic Review step after answer generation and before saving any generated content.
+
+This reviewer becomes the final academic quality gate for every generated Question & Answer.
+
+====================================================
+
+PIPELINE
+
+Generate Question
+
+↓
+
+Generate
+
+- Compact Answer
+- Standard Answer
+- Detailed Answer
+
+↓
+
+Run Academic Reviewer
+
+↓
+
+If Overall = PASS
+
+→ Save normally.
+
+↓
+
+If Overall = FAIL
+
+→ Regenerate ONLY the failed section(s) using the reviewer's corrections.
+
+↓
+
+Run Academic Reviewer again ONLY on the regenerated section(s).
+
+↓
+
+If Overall = PASS
+
+→ Save.
+
+↓
+
+If Overall = FAIL after one regeneration
+
+→ Mark as "Needs Review"
+
+→ Do NOT publish.
+
+====================================================
+
+IMPORTANT COST OPTIMISATION
+
+DO NOT regenerate the entire Question & Answer if only one section fails.
+
+Example
+
+Compact = PASS
+
+Standard = PASS
+
+Detailed = FAIL
+
+↓
+
+Regenerate ONLY the Detailed Answer.
+
+Leave Compact and Standard untouched.
+
+Similarly,
+
+if Compact fails
+
+↓
+
+Regenerate only Compact.
+
+if Standard fails
+
+↓
+
+Regenerate only Standard.
+
+If multiple sections fail
+
+↓
+
+Regenerate ONLY those failed sections.
+
+Never regenerate sections that have already passed.
+
+Reuse all approved content.
+
+====================================================
+
+ACADEMIC REVIEWER
+
+Create ONE reusable Academic Reviewer Prompt.
+
+Input
+
+- Board
+- Class
+- Subject
+- Chapter
+- Topic
+- Difficulty
+- Question
+- Compact Answer
+- Standard Answer
+- Detailed Answer
+
+====================================================
+
+The reviewer must evaluate
+
+1.
+
+CURRICULUM
+
+Verify
+
+- Latest official NCERT/CBSE curriculum
+- Correct chapter
+- Correct topic
+- Correct terminology
+- Correct learning outcome
+- No deleted syllabus
+- No out-of-syllabus content
+
+2.
+
+QUESTION QUALITY
+
+Verify
+
+- Correct concept
+- Appropriate difficulty
+- Clear
+- Unambiguous
+- Tests intended learning objective
+- Matches current CBSE style
+
+3.
+
+ANSWER CORRECTNESS
+
+Verify
+
+- Final answer
+- Formulae
+- Calculations
+- Units
+- Scientific facts
+- Definitions
+- Mathematical logic
+- Grammar
+- Internal consistency
+- No contradictions
+- No hallucinations
+
+4.
+
+TEACHING QUALITY
+
+Determine whether an average or weak student will genuinely understand the topic.
+
+Verify
+
+- WHY before HOW
+- Every reasoning step explained
+- No skipped logic
+- Simple English
+- Difficult words explained
+- Important concepts highlighted
+- Common mistakes addressed
+- Key takeaway present
+- Student can solve a similar question afterwards
+
+5.
+
+EXAM READINESS
+
+Determine whether the Standard Answer would receive FULL MARKS in the current CBSE Board Examination.
+
+Verify
+
+- Correct terminology
+- Covers all marking points
+- Appropriate structure
+- Appropriate detail
+- No unnecessary information
+
+6.
+
+COMPACT ANSWER
+
+Verify
+
+- Suitable for revision
+- Complete
+- Concise
+- Easy to revise quickly
+
+7.
+
+STANDARD ANSWER
+
+Verify
+
+- Ideal Board Examination answer
+- Balanced explanation
+- Examiner-friendly
+- Full-mark answer
+
+8.
+
+DETAILED ANSWER
+
+Verify
+
+- Complete teaching lesson
+- Builds intuition
+- Explains reasoning
+- Removes misconceptions
+- Deep conceptual understanding
+
+====================================================
+
+REVIEWER OUTPUT
+
+Return ONLY structured JSON.
+
+{
+  "overall":"PASS|FAIL",
+
+  "curriculum":"PASS|FAIL",
+
+  "question":"PASS|FAIL",
+
+  "correctness":"PASS|FAIL",
+
+  "teaching":"PASS|FAIL",
+
+  "exam":"PASS|FAIL",
+
+  "compact":"PASS|FAIL",
+
+  "standard":"PASS|FAIL",
+
+  "detailed":"PASS|FAIL",
+
+  "reasons":[...],
+
+  "corrections":[
+    {
+      "section":"Compact|Standard|Detailed",
+      "issue":"...",
+      "required_fix":"..."
+    }
+  ]
+}
+
+====================================================
+
+REGENERATION RULES
+
+If Overall = FAIL
+
+Use ONLY the reviewer corrections.
+
+Regenerate ONLY the failed section(s).
+
+Never regenerate approved sections.
+
+Maximum regeneration attempts:
+
+ONE
+
+After regeneration,
+
+run the reviewer again ONLY for the regenerated section(s).
+
+If they pass,
+
+reuse the previously approved sections and save the final Q&A.
+
+If they still fail,
+
+mark the Question as
+
+Needs Review
+
+Do NOT publish.
+
+Never enter infinite retry loops.
+
+====================================================
+
+LOGGING
+
+For every generated Question store
+
+- Question ID
+- Reviewer Status
+- Overall Result
+- Failed Sections
+- Failure Reasons
+- Regenerated Sections
+- Timestamp
+
+PASS
+
+↓
+
+Status = Approved
+
+FAIL twice
+
+↓
+
+Status = Needs Review
+
+====================================================
+
+COST OPTIMISATION
+
+Reuse
+
+- Existing OpenAI client
+- Existing metadata
+- Existing generation pipeline
+- Existing prompts wherever possible
+
+Avoid duplicate API calls.
+
+Avoid duplicate logic.
+
+Do NOT introduce new frameworks.
+
+Do NOT redesign the application.
+
+Minimise token consumption.
+
+====================================================
+
+DELIVERABLE
+
+After implementation provide
+
+1.
+
+Files modified
+
+2.
+
+Updated generation flow diagram
+
+3.
+
+Estimated additional token usage per generated question
+
+4.
+
+How much token usage is saved by partial regeneration compared to full regeneration
+
+5.
+
+Confirmation that all existing functionality remains unchanged.
+
+Do not modify any unrelated code.
