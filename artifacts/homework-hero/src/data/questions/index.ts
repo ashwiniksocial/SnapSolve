@@ -1,9 +1,8 @@
 /**
- * Central question bank registry — Classes 6–9 Mathematics; Class 9 Physics; Class 9 Chemistry; Class 9 Biology.
- * Class 9 Economics and superseded old-NCERT chapters are archived in /legacy.
+ * Central question bank registry — Class 9: Mathematics, Physics, Chemistry, Biology, Earth Science.
  *
- * Adding a new class/chapter:
- *  1. Create a class<N>-<subject>.ts file in this directory.
+ * Adding a new chapter:
+ *  1. Create a class9-<subject>-<ch>.ts file in this directory.
  *  2. Import and spread CHAPTERS + QUESTIONS below.
  *
  * Firebase migration path:
@@ -21,10 +20,6 @@ import { CHAPTER_META as CH16_META, QUESTIONS as CH16_QUESTIONS } from "./class9
 import { CHAPTER_META as CH17_META, QUESTIONS as CH17_QUESTIONS } from "./class9-maths-ch17";
 import { CHAPTER_META as CH18_META, QUESTIONS as CH18_QUESTIONS } from "./class9-maths-ch18";
 import { CHAPTER_META as IEMH102_META, QUESTIONS as IEMH102_QUESTIONS } from "./class9-maths-iemh102";
-
-import { CLASS6_MATHS_CHAPTERS, CLASS6_MATHS_QUESTIONS } from "./class6-maths";
-import { CLASS7_MATHS_CHAPTERS, CLASS7_MATHS_QUESTIONS } from "./class7-maths";
-import { CLASS8_MATHS_CHAPTERS, CLASS8_MATHS_QUESTIONS } from "./class8-maths";
 
 import { CHAPTER_META as PHY_CH1_META, QUESTIONS as PHY_CH1_QUESTIONS } from "./class9-physics-ch1";
 import { CHAPTER_META as PHY_CH2_META, QUESTIONS as PHY_CH2_QUESTIONS } from "./class9-physics-ch2";
@@ -56,9 +51,6 @@ const CLASS9_PHYSICS_QUESTIONS: Question[] = [
 ];
 
 export const ALL_CHAPTERS: ChapterMeta[] = [
-  ...CLASS6_MATHS_CHAPTERS,
-  ...CLASS7_MATHS_CHAPTERS,
-  ...CLASS8_MATHS_CHAPTERS,
   ...CLASS9_MATHS_CHAPTERS,
   ...CLASS9_PHYSICS_CHAPTERS,
   ...CLASS9_CHEMISTRY_CHAPTERS,
@@ -67,9 +59,6 @@ export const ALL_CHAPTERS: ChapterMeta[] = [
 ];
 
 export const ALL_QUESTIONS: Question[] = [
-  ...CLASS6_MATHS_QUESTIONS,
-  ...CLASS7_MATHS_QUESTIONS,
-  ...CLASS8_MATHS_QUESTIONS,
   ...CLASS9_MATHS_QUESTIONS,
   ...CLASS9_PHYSICS_QUESTIONS,
   ...CLASS9_CHEMISTRY_QUESTIONS,

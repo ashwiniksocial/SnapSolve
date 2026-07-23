@@ -19,28 +19,17 @@ export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, Effect
 let ALL_CHAPTERS: ChapterMeta[] = [];
 let ALL_QUESTIONS: Question[] = [];
 
-type _BundleKey = "class9" | "class678";
-const _loaded = new Set<_BundleKey>();
+let _loaded = false;
 
-/** Lazily load the question bank for the given class into the module cache.
- *  Safe to call multiple times — deduplicates by bundle key so each bundle
- *  is fetched at most once per session.
+/** Lazily load the Class 9 question bank into the module cache.
+ *  Safe to call multiple times — deduplicates so the bundle is fetched at most once per session.
  */
-export async function preloadQBank(classNum: number): Promise<void> {
-  if (classNum === 9) {
-    if (_loaded.has("class9")) return;
-    const { CHAPTERS, QUESTIONS } = await import("@/data/questions/class9-bundle");
-    ALL_CHAPTERS  = [...ALL_CHAPTERS,  ...CHAPTERS];
-    ALL_QUESTIONS = [...ALL_QUESTIONS, ...QUESTIONS];
-    _loaded.add("class9");
-  } else {
-    // Classes 6, 7, 8 share a single bundle
-    if (_loaded.has("class678")) return;
-    const { CHAPTERS, QUESTIONS } = await import("@/data/questions/class678-bundle");
-    ALL_CHAPTERS  = [...ALL_CHAPTERS,  ...CHAPTERS];
-    ALL_QUESTIONS = [...ALL_QUESTIONS, ...QUESTIONS];
-    _loaded.add("class678");
-  }
+export async function preloadQBank(_classNum?: number): Promise<void> {
+  if (_loaded) return;
+  const { CHAPTERS, QUESTIONS } = await import("@/data/questions/class9-bundle");
+  ALL_CHAPTERS  = [...ALL_CHAPTERS,  ...CHAPTERS];
+  ALL_QUESTIONS = [...ALL_QUESTIONS, ...QUESTIONS];
+  _loaded = true;
 }
 
 // ─── Chapter / topic navigation ───────────────────────────────────────────────

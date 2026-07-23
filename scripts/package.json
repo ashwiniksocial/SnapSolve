@@ -6,11 +6,8 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "status": "tsx ./src/statusReport.ts",
-    "bank-audit": "tsx ./src/questionBankAudit.ts",
     "latency-audit": "tsx ./src/latencyAudit.ts",
     "curriculum-check": "tsx ./src/curriculumGateway.ts",
-    "generate-proof": "tsx ./src/generateMathQuestionProof.ts",
-    "validate-proof": "tsx ./src/validateGeneratedProof.ts",
     "validate-curriculum": "tsx ./src/validateCurriculum.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

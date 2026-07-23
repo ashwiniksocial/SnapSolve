@@ -1,0 +1,82 @@
+STOP ALL DEVELOPMENT.
+
+This is a ONE-TIME CANONICAL CLEANUP.
+
+Objective:
+Permanently eliminate every source of curriculum conflict from SnapSolve.
+
+NON-NEGOTIABLE RULES
+
+1. The ONLY canonical source of curriculum, chapters, subjects and question banks is the latest uploaded official PDF-derived curriculum.
+
+2. From this point onward, NOTHING outside the PDF-derived curriculum may exist in the active project.
+
+3. Completely ignore previous assumptions, legacy curriculum, legacy chapters, legacy questions, legacy adapters and legacy artifacts.
+
+TASK
+
+Perform a complete dependency analysis first.
+
+Identify every file, folder, adapter, registry, import, route, question bank, generated artifact, cache, index and configuration that originates from or references legacy content.
+
+Then permanently remove ALL legacy material, including but not limited to:
+
+• legacy folders
+• legacy chapters
+• legacy question banks
+• legacy adapters
+• legacy registries
+• legacy generated artifacts
+• legacy curriculum definitions
+• legacy mappings
+• legacy references
+• legacy imports
+• unused legacy utilities
+• unused legacy tests
+
+After deletion:
+
+1. Verify there are ZERO imports or references to legacy anywhere.
+
+2. Verify every active subject, chapter and question comes ONLY from the latest uploaded official PDF-derived curriculum.
+
+3. Rebuild every active registry/index ONLY from the latest uploaded PDF-derived curriculum.
+
+4. Remove dead code created only to support legacy.
+
+5. Run:
+   - typecheck
+   - build
+   - import validation
+   - orphan file detection
+   - unused dependency detection
+
+REPORT
+
+Produce ONLY:
+
+1. Files deleted
+2. Files modified
+3. Active curriculum summary
+4. Active subjects
+5. Active chapter count
+6. Active question count
+7. Confirmation that ALL active content originates ONLY from the latest uploaded official PDFs.
+8. Confirmation that ZERO legacy references remain.
+9. Checkpoint.
+
+IMPORTANT
+
+This is intended to be irreversible.
+
+Do NOT archive.
+Do NOT preserve.
+Do NOT move to another folder.
+Do NOT keep compatibility layers.
+Do NOT keep fallback code.
+Do NOT create new architecture.
+Do NOT perform any optimisation unrelated to this cleanup.
+
+The objective is ONE curriculum, ONE question bank, ONE source of truth.
+
+Stop after the report.

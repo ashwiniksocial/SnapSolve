@@ -17,7 +17,6 @@ import { execSync } from "child_process";
 
 const ROOT  = resolve(import.meta.dirname, "../../");
 const HH    = join(ROOT, "artifacts/homework-hero/src");
-const QB    = join(ROOT, "question-bank/questions/mathematics");
 
 const HR  = "=".repeat(52);
 const HR2 = "-".repeat(52);
@@ -34,58 +33,30 @@ function run(cmd: string, fallback = "N/A"): string {
   catch { return fallback; }
 }
 
-// ─── Count questions in a Class 6/7/8 file (V2 format: count "id:" keys) ────
-function countQsInFile(path: string): number {
-  if (!existsSync(path)) return 0;
-  const content = readFileSync(path, "utf8");
-  return (content.match(/\bid:\s*["']/g) ?? []).length;
-}
-
 // ─── Chapter + question counts from source (never hardcoded) ─────────────────
-function classStats(classNum: number): { chapters: number; questions: number; names: string[] } {
+function classStats(): { chapters: number; questions: number; names: string[] } {
   const chapterNames: string[] = [];
   let totalQ = 0;
 
-  if (classNum <= 8) {
-    // question-bank/questions/mathematics/class{N}/ch{NN}-*.ts
-    const dir = join(QB, `class${classNum}`);
-    if (!existsSync(dir)) return { chapters: 0, questions: 0, names: [] };
-    const files = readdirSync(dir).filter((f) => f.endsWith(".ts") && f.startsWith("ch"));
-    files.sort();
-    for (const f of files) {
-      totalQ += countQsInFile(join(dir, f));
-      // Extract chapter name from filename: ch01-knowing-our-numbers.ts → Knowing Our Numbers
-      const name = f.replace(/^ch\d+-/, "").replace(/\.ts$/, "").replace(/-/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-      chapterNames.push(name);
-    }
-    return { chapters: files.length, questions: totalQ, names: chapterNames };
+  // artifacts/homework-hero/src/data/questions/class9-maths-ch*.ts
+  const dir = join(HH, "data/questions");
+  if (!existsSync(dir)) return { chapters: 0, questions: 0, names: [] };
+  const files = readdirSync(dir).filter((f) => /^class9-maths-ch\d+\.ts$/.test(f));
+  files.sort((a, b) => {
+    const na = parseInt(a.match(/ch(\d+)/)?.[1] ?? "0");
+    const nb = parseInt(b.match(/ch(\d+)/)?.[1] ?? "0");
+    return na - nb;
+  });
+  for (const f of files) {
+    const path = join(dir, f);
+    const content = readFileSync(path, "utf8");
+    const qCount = (content.match(/\bid:\s*["']/g) ?? []).length;
+    totalQ += qCount;
+    const nameMatch = content.match(/chapterName:\s*["']([^"']+)["']/);
+    const name = nameMatch?.[1] ?? f.replace(/^class9-maths-/, "").replace(/\.ts$/, "");
+    chapterNames.push(name);
   }
-
-  if (classNum === 9) {
-    // artifacts/homework-hero/src/data/questions/class9-maths-ch*.ts
-    const dir = join(HH, "data/questions");
-    if (!existsSync(dir)) return { chapters: 0, questions: 0, names: [] };
-    const files = readdirSync(dir).filter((f) => /^class9-maths-ch\d+\.ts$/.test(f));
-    files.sort((a, b) => {
-      const na = parseInt(a.match(/ch(\d+)/)?.[1] ?? "0");
-      const nb = parseInt(b.match(/ch(\d+)/)?.[1] ?? "0");
-      return na - nb;
-    });
-    for (const f of files) {
-      const path = join(dir, f);
-      const content = readFileSync(path, "utf8");
-      const qCount = (content.match(/\bid:\s*["']/g) ?? []).length;
-      totalQ += qCount;
-      // Extract chapter name from CHAPTER_META or file header comment
-      const nameMatch = content.match(/chapterName:\s*["']([^"']+)["']/);
-      const name = nameMatch?.[1] ?? f.replace(/^class9-maths-/, "").replace(/\.ts$/, "");
-      chapterNames.push(name);
-    }
-    return { chapters: files.length, questions: totalQ, names: chapterNames };
-  }
-
-  return { chapters: 0, questions: 0, names: [] };
+  return { chapters: files.length, questions: totalQ, names: chapterNames };
 }
 
 // ─── Parse routes from App.tsx ────────────────────────────────────────────────
@@ -188,24 +159,14 @@ if (navItems.length) {
 }
 
 // Content counts (computed from source, never hardcoded)
-section("CONTENT — MATHEMATICS (computed from source files)");
-const CLASSES = [6, 7, 8, 9];
-let grandChapters = 0;
-let grandQuestions = 0;
-
-CLASSES.forEach((cn) => {
-  const { chapters, questions, names } = classStats(cn);
-  grandChapters  += chapters;
-  grandQuestions += questions;
-  console.log(`\n  Class ${cn} Mathematics`);
-  console.log(`    Chapters:  ${chapters}`);
-  console.log(`    Questions: ${questions}`);
-  if (names.length) {
-    names.forEach((n, i) => console.log(`      Ch${String(i + 1).padStart(2, "0")}. ${n}`));
-  }
-});
-
-console.log(`\n  TOTAL  —  ${grandChapters} chapters  ·  ${grandQuestions} questions`);
+section("CONTENT — CLASS 9 MATHEMATICS (computed from source files)");
+const { chapters: mathChapters, questions: mathQuestions, names: mathNames } = classStats();
+console.log(`\n  Class 9 Mathematics`);
+console.log(`    Chapters:  ${mathChapters}`);
+console.log(`    Questions: ${mathQuestions}`);
+if (mathNames.length) {
+  mathNames.forEach((n, i) => console.log(`      Ch${String(i + 1).padStart(2, "0")}. ${n}`));
+}
 
 // AI Modes
 section("AI MODES");

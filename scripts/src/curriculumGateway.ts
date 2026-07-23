@@ -27,7 +27,6 @@ import { resolve, join } from "path";
 
 const ROOT    = resolve(import.meta.dirname, "../../");
 const HH_DATA = join(ROOT, "artifacts/homework-hero/src/data/questions");
-const QB_MATH = join(ROOT, "question-bank/questions/mathematics");
 const QB_CHEM = join(ROOT, "question-bank/questions/chemistry");
 const QB_BIO  = join(ROOT, "question-bank/questions/biology");
 
@@ -55,55 +54,6 @@ interface ExpectedChapter {
 }
 
 const EXPECTED: Record<string, ExpectedChapter[]> = {
-  "6-Mathematics": [
-    { name: "Knowing Our Numbers",              slug: "knowing-our-numbers" },
-    { name: "Whole Numbers",                    slug: "whole-numbers" },
-    { name: "Playing with Numbers",             slug: "playing-with-numbers" },
-    { name: "Basic Geometrical Ideas",          slug: "basic-geometrical-ideas" },
-    { name: "Understanding Elementary Shapes",  slug: "understanding-elementary-shapes" },
-    { name: "Integers",                         slug: "integers" },
-    { name: "Fractions",                        slug: "fractions" },
-    { name: "Decimals",                         slug: "decimals" },
-    { name: "Data Handling",                    slug: "data-handling" },
-    { name: "Mensuration",                      slug: "mensuration" },
-    { name: "Algebra",                          slug: "algebra" },
-    { name: "Ratio and Proportion",             slug: "ratio-and-proportion" },
-    { name: "Symmetry",                         slug: "symmetry" },
-    { name: "Practical Geometry",               slug: "practical-geometry" },
-  ],
-  "7-Mathematics": [
-    { name: "Integers",                         slug: "integers" },
-    { name: "Fractions and Decimals",           slug: "fractions-and-decimals" },
-    { name: "Data Handling",                    slug: "data-handling" },
-    { name: "Simple Equations",                 slug: "simple-equations" },
-    { name: "Lines and Angles",                 slug: "lines-and-angles" },
-    { name: "The Triangle and Its Properties",  slug: "triangle-and-its-properties" },
-    { name: "Congruence of Triangles",          slug: "congruence-of-triangles" },
-    { name: "Comparing Quantities",             slug: "comparing-quantities" },
-    { name: "Rational Numbers",                 slug: "rational-numbers" },
-    { name: "Practical Geometry",               slug: "practical-geometry", cbseDeleted: true },
-    { name: "Perimeter and Area",               slug: "perimeter-and-area" },
-    { name: "Algebraic Expressions",            slug: "algebraic-expressions" },
-    { name: "Exponents and Powers",             slug: "exponents-and-powers" },
-    { name: "Symmetry",                         slug: "symmetry" },
-    { name: "Visualising Solid Shapes",         slug: "visualising-solid-shapes" },
-  ],
-  "8-Mathematics": [
-    { name: "Rational Numbers",                         slug: "rational-numbers" },
-    { name: "Linear Equations in One Variable",         slug: "linear-equations" },
-    { name: "Understanding Quadrilaterals",             slug: "understanding-quadrilaterals" },
-    { name: "Data Handling",                            slug: "data-handling" },
-    { name: "Squares and Square Roots",                 slug: "squares-and-square-roots" },
-    { name: "Cubes and Cube Roots",                     slug: "cubes-and-cube-roots" },
-    { name: "Comparing Quantities",                     slug: "comparing-quantities" },
-    { name: "Algebraic Expressions and Identities",     slug: "algebraic-expressions-and-identities" },
-    { name: "Mensuration",                              slug: "mensuration" },
-    { name: "Visualising Solid Shapes",                 slug: "visualising-solid-shapes" },
-    { name: "Exponents and Powers",                     slug: "exponents-and-powers" },
-    { name: "Direct and Inverse Proportions",           slug: "direct-and-inverse-proportions" },
-    { name: "Factorisation",                            slug: "factorisation" },
-    { name: "Introduction to Graphs",                   slug: "introduction-to-graphs" },
-  ],
   "9-Mathematics": [
     { name: "Number System",                            slug: "number-system" },
     { name: "Introduction to Polynomials",              slug: "introduction-to-polynomials" },
@@ -153,8 +103,7 @@ const EXPECTED: Record<string, ExpectedChapter[]> = {
 
 // Minimum question count before W1 fires
 const MIN_Q: Record<string, number> = {
-  "6-Mathematics": 50, "7-Mathematics": 50, "8-Mathematics": 50,
-  "9-Mathematics": 20, "9-Economics": 15,   "9-Physics": 15,
+  "9-Mathematics": 20, "9-Economics": 15, "9-Physics": 15,
   "9-Chemistry":   15, "9-Biology":   15,
 };
 
@@ -193,11 +142,6 @@ function countDiff(src: string, label: "Easy" | "Medium" | "Hard"): number {
   return (src.match(new RegExp(`difficulty:\\s*["']${label}["']`, "g")) ?? []).length;
 }
 
-/** Convert a chapter name to a filename slug for Class 6-8 lookup. */
-function toSlug(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
 /** Read CHAPTER_META fields from a V1 file.
  *
  *  Strategy: extract the text from the opening { of CHAPTER_META up to (but
@@ -218,30 +162,6 @@ function parseV1Meta(src: string): { id: string; name: string; classNum: number;
   const subject = block.match(/\bsubject:\s*"([^"]+)"/)?.[1];
   if (!id || !name || !cls || !subject) return null;
   return { id, name, classNum: parseInt(cls, 10), subject };
-}
-
-// ─── Collect all chapters: Class 6-8 (V2) ─────────────────────────────────────
-function collectClass678(): ChapterRecord[] {
-  const records: ChapterRecord[] = [];
-  for (const cls of [6, 7, 8]) {
-    const dir = join(QB_MATH, `class${cls}`);
-    if (!existsSync(dir)) continue;
-    const files = readdirSync(dir).filter(f => f.endsWith(".ts") && /^ch\d+/.test(f)).sort();
-    for (const f of files) {
-      const filePath = join(dir, f);
-      const src = read(filePath);
-      const chId = f.match(/^(ch\d+)/)?.[1] ?? f;
-      const rawName = f.replace(/^ch\d+-/, "").replace(/\.ts$/, "").replace(/-/g, " ");
-      const name = rawName.replace(/\b\w/g, c => c.toUpperCase());
-      records.push({
-        key: `${cls}-Mathematics`, classNum: cls, subject: "Mathematics",
-        id: chId, name, filePath,
-        questions: countV2Questions(src),
-        easy: countDiff(src, "Easy"), medium: countDiff(src, "Medium"), hard: countDiff(src, "Hard"),
-      });
-    }
-  }
-  return records;
 }
 
 /** Collect Class 9 V1 chapter files for a given subject prefix (e.g. "maths", "economics", "physics"). */
@@ -281,18 +201,6 @@ function indexImports(pattern: RegExp): string[] {
   let m: RegExpExecArray | null;
   while ((m = re.exec(src)) !== null) {
     if (pattern.test(m[1])) imports.push(m[1]);
-  }
-  return imports;
-}
-
-/** Return all relative import paths inside a class{N}-maths.ts adapter. */
-function adapterImports(classNum: number): string[] {
-  const src = read(join(HH_DATA, `class${classNum}-maths.ts`));
-  const imports: string[] = [];
-  const re = /from\s+["']([^"']+)["']/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(src)) !== null) {
-    if (m[1].includes(`class${classNum}/ch`)) imports.push(m[1]);
   }
   return imports;
 }
@@ -384,48 +292,6 @@ function checkRegistration(): Finding[] {
   const findings: Finding[] = [];
   const fail = (code: string, message: string) => findings.push({ level: "FAIL", code, message });
 
-  // ── Class 6, 7, 8: adapter-level checks ─────────────────────────────────────
-  for (const cls of [6, 7, 8]) {
-    const adapterFile = join(HH_DATA, `class${cls}-maths.ts`);
-    const adapterImported = indexImports(/class\d+-maths/).some(p => p.includes(`class${cls}-maths`));
-
-    // F4: adapter exists in index.ts but adapter file missing
-    if (adapterImported && !existsSync(adapterFile)) {
-      fail("F4", `index.ts imports class${cls}-maths but file is missing: ${adapterFile}`);
-    }
-
-    // F5: adapter file exists but not imported in index.ts
-    if (existsSync(adapterFile) && !adapterImported) {
-      fail("F5", `class${cls}-maths.ts exists but is not imported in index.ts`);
-    }
-
-    if (!existsSync(adapterFile)) continue;
-
-    // F4 (adapter level): adapter imports a chapter file that doesn't exist
-    const imports = adapterImports(cls);
-    for (const imp of imports) {
-      // imp looks like "../../../../../question-bank/questions/mathematics/class6/ch01-knowing-our-numbers"
-      const filename = imp.split("/").pop()!;
-      const srcPath = join(QB_MATH, `class${cls}`, filename + ".ts");
-      if (!existsSync(srcPath)) {
-        fail("F4", `class${cls}-maths.ts imports "${filename}" but file is missing: ${srcPath}`);
-      }
-    }
-
-    // F5 (chapter level): a chapter file exists in question-bank but adapter doesn't import it
-    const dir = join(QB_MATH, `class${cls}`);
-    if (existsSync(dir)) {
-      const chFiles = readdirSync(dir).filter(f => f.endsWith(".ts") && /^ch\d+/.test(f));
-      for (const f of chFiles) {
-        const stem = f.replace(/\.ts$/, "");
-        const isImported = imports.some(imp => imp.includes(stem));
-        if (!isImported) {
-          fail("F5", `question-bank class${cls}/${f} exists but is not imported in class${cls}-maths.ts`);
-        }
-      }
-    }
-  }
-
   // ── Class 9: direct index.ts import checks ───────────────────────────────────
   const class9Pattern = /class9-/;
   const class9Imports = indexImports(class9Pattern);
@@ -499,14 +365,7 @@ function checkMissingExpected(): Finding[] {
 
       let found = false;
 
-      if (cls <= 8 && subject === "Mathematics") {
-        const dir = join(QB_MATH, `class${cls}`);
-        if (existsSync(dir)) {
-          const files = readdirSync(dir);
-          // Match by slug — any file whose name contains the slug
-          found = files.some(f => f.includes(exp.slug));
-        }
-      } else if (cls === 9) {
+      if (cls === 9) {
         if (subject === "Chemistry") {
           // Chemistry uses the V2 adapter; scan question-bank per-chapter files
           const dir = join(QB_CHEM, "class9");
@@ -559,7 +418,6 @@ function checkMissingExpected(): Finding[] {
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
 const chapters: ChapterRecord[] = [
-  ...collectClass678(),
   ...collectClass9V1("maths",     "Mathematics"),
   ...collectClass9V1("economics", "Economics"),
   ...collectClass9V1("physics",   "Physics"),
