@@ -1,7 +1,7 @@
 // @generated — DO NOT EDIT MANUALLY.
 // Source of truth: scripts/src/canonicalCurriculum.ts
 // Regenerate    : pnpm --filter @workspace/scripts run generate-canonical-registry
-// Checksum      : 628953f7c71ba66e
+// Checksum      : 1f98774050a7aee1
 
 import type { CurriculumStatus } from "./types";
 
@@ -38,6 +38,7 @@ export const CANONICAL_CHAPTER_REGISTRY: Readonly<Record<string, CanonicalRegist
   "chem-ch04": { canonicalChapterId: "iesc108", curriculumStatus: "ACTIVE", subjectId: "Chemistry", classId: 9, boardId: "CBSE", displayOrder: 8 },
   "esc-ch01": { canonicalChapterId: "iesc113", curriculumStatus: "ACTIVE", subjectId: "Earth Science", classId: 9, boardId: "CBSE", displayOrder: 13 },
   "iemh102": { canonicalChapterId: "iemh102", curriculumStatus: "ACTIVE", subjectId: "Mathematics", classId: 9, boardId: "CBSE", displayOrder: 2 },
+  "iemh105": { canonicalChapterId: "iemh105", curriculumStatus: "ACTIVE", subjectId: "Mathematics", classId: 9, boardId: "CBSE", displayOrder: 5 },
   "phy-ch1": { canonicalChapterId: "iesc104", curriculumStatus: "ACTIVE", subjectId: "Physics", classId: 9, boardId: "CBSE", displayOrder: 4 },
   "phy-ch2": { canonicalChapterId: "iesc106", curriculumStatus: "ACTIVE", subjectId: "Physics", classId: 9, boardId: "CBSE", displayOrder: 6 },
   "phy-ch4": { canonicalChapterId: "iesc107", curriculumStatus: "ACTIVE", subjectId: "Physics", classId: 9, boardId: "CBSE", displayOrder: 7 },
@@ -59,7 +60,6 @@ export const CLASS9_DISPLAY_ORDER: Readonly<Record<string, number>> = {
   "bio-ch02": 3,
   "bio-ch05": 11,
   "bio-ch03": 12,
-  "chem-ch01": 1,
   "chem-ch02": 5,
   "chem-ch04": 8,
   "chem-ch03": 9,
@@ -68,7 +68,7 @@ export const CLASS9_DISPLAY_ORDER: Readonly<Record<string, number>> = {
   "iemh102": 2,
   "ch1": 3,
   "ch16": 4,
-  "ch4": 5,
+  "iemh105": 5,
   "ch18": 6,
   "ch15": 7,
   "ch17": 8,

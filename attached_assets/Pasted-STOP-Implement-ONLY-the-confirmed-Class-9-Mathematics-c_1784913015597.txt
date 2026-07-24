@@ -1,0 +1,113 @@
+STOP.
+
+Implement ONLY the confirmed Class 9 Mathematics curriculum correction.
+
+Do NOT mark ch4 as OFFICIALLY_DELETED.
+
+Ganita Manjari Part II has not yet been officially released. Therefore,
+Linear Equations in Two Variables must remain SOURCE_UNRESOLVED until an
+official Government source resolves its status.
+
+Do NOT delete its 50 questions.
+
+Do NOT modify unrelated chapters, teaching architecture, UI design, API server,
+official PDFs or generated extraction data.
+
+PERMANENT END STATE
+
+1. Released chapter iemh105:
+   “I'm Up and Down, and Round and Round”
+
+   - status: ACTIVE
+   - displayOrder: 5
+   - visible to students
+   - official source: iemh105.pdf
+
+2. Existing ch4:
+   “Linear Equations in Two Variables”
+
+   - retain status: SOURCE_UNRESOLVED
+   - preserve all 50 questions internally
+   - remove from the active student display sequence
+   - do not label cbseDeleted
+   - do not expose through Practice, Revision, Exam or chapter statistics
+
+IMPLEMENTATION
+
+1. Update scripts/src/canonicalCurriculum.ts:
+
+   - Add iemh105 with:
+     internalId: "iemh105"
+     bookId: "iemh105"
+     status: "ACTIVE"
+     displayOrder: 5
+
+   - Keep ch4 as SOURCE_UNRESOLVED.
+   - Ensure only ACTIVE chapters participate in the student-facing display-order
+     output.
+   - Do not classify ch4 as officially deleted.
+
+2. Regenerate:
+
+   - canonicalChapterRegistry.gen.ts
+   - canonical-registry-checksum.json
+   - relevant derived freeze data
+
+3. Update the existing runtime filtering centrally so that student-facing
+   chapter services return only curriculumStatus === "ACTIVE".
+
+   Apply this through the existing question service/data path rather than
+   adding separate page-specific filters.
+
+4. Confirm this automatically hides both known SOURCE_UNRESOLVED chapters:
+
+   - ch4
+   - chem-ch01
+
+   Their question files and questions must remain preserved internally.
+
+5. Create:
+
+   artifacts/homework-hero/src/data/questions/class9-maths-iemh105.ts
+
+   Include only:
+
+   - accurate CHAPTER_META
+   - id: "iemh105"
+   - canonicalChapterId: "iemh105"
+   - curriculumStatus: "ACTIVE"
+   - official extracted chapter title
+   - empty QUESTIONS array
+
+   Do not fabricate questions in this task.
+
+6. Register the chapter in the existing question-bank index.
+
+7. Confirm the existing zero-question behaviour displays:
+
+   “Content being prepared”
+
+   Do not redesign the UI.
+
+VALIDATE
+
+- iemh105 appears at Mathematics position 5
+- ch4 is absent from all student-facing chapter lists
+- chem-ch01 is absent from all student-facing chapter lists
+- all 50 ch4 questions remain in the repository
+- no chapter is incorrectly marked cbseDeleted or OFFICIALLY_DELETED
+- all other Mathematics and Science ordering is unchanged
+- canonical registry generation passes
+- both TypeScript typechecks pass
+- validate-curriculum passes
+- curriculum gateway passes
+- no unrelated file or behaviour changes
+
+Return only:
+
+1. Files changed
+2. Canonical status before and after
+3. Student-facing Mathematics order before and after
+4. Confirmation that unresolved question banks were preserved
+5. Validation results
+6. Confirmation that no official status was invented

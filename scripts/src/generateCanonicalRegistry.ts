@@ -94,9 +94,10 @@ function run(): void {
   lines.push(` */`);
   lines.push(`export const CLASS9_DISPLAY_ORDER: Readonly<Record<string, number>> = {`);
 
-  // Emit only Class 9 entries, sorted by subjectId then displayOrder for readability.
+  // Emit only Class 9 ACTIVE entries — SOURCE_UNRESOLVED chapters are excluded
+  // from the student-facing display sequence, sorted by subjectId then displayOrder.
   const class9 = entries
-    .filter(e => e.classId === 9 && e.boardId === "CBSE")
+    .filter(e => e.classId === 9 && e.boardId === "CBSE" && e.status === "ACTIVE")
     .sort((a, b) => a.subjectId.localeCompare(b.subjectId) || a.displayOrder - b.displayOrder);
 
   for (const e of class9) {

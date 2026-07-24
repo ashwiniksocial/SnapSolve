@@ -138,7 +138,10 @@ const INTERNAL_TO_CANONICAL: Record<string, RegistryEntry> = {
   "iemh102": { bookId: "iemh102",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 2  },
   "ch1":     { bookId: "iemh103",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 3  },
   "ch16":    { bookId: "iemh104",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 4  },
-  // ch4: questions cover old-NCERT linear equations; iemh105 in 2026-27 is circles — mismatch confirmed.
+  // iemh105: "I'm Up and Down, and Round and Round" (Circles) — official Ganita Manjari Part I Chapter 5.
+  "iemh105": { bookId: "iemh105",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 5  },
+  // ch4: questions cover old-NCERT linear equations; Ganita Manjari Part II not yet officially released.
+  // Retained as SOURCE_UNRESOLVED; excluded from the active display sequence until resolved.
   "ch4":     { bookId: "SOURCE_UNRESOLVED", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "SOURCE_UNRESOLVED", displayOrder: 5  },
   "ch18":    { bookId: "iemh106",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 6  },
   "ch15":    { bookId: "iemh107",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 7  },
@@ -361,6 +364,9 @@ export function getClass9DisplayOrder(): {
   const science: Record<string, number> = {};
   for (const [internalId, reg] of Object.entries(INTERNAL_TO_CANONICAL)) {
     if (reg.classId !== 9 || reg.boardId !== "CBSE") continue;
+    // Only ACTIVE chapters participate in the student-facing display sequence.
+    // SOURCE_UNRESOLVED and other statuses are excluded here.
+    if (reg.status !== "ACTIVE") continue;
     if (reg.indexSubjectId === "Mathematics") {
       math[internalId] = reg.displayOrder;
     } else {

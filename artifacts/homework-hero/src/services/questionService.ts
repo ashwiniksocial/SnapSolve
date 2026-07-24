@@ -50,7 +50,8 @@ const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology", "Earth Science"];
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   if (subject === "Science") {
     const scienceChapters = ALL_CHAPTERS.filter(
-      (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject) && !c.cbseDeleted
+      (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject)
+        && !c.cbseDeleted && c.curriculumStatus === "ACTIVE"
     );
     return scienceChapters.sort(
       (a, b) => (CLASS9_DISPLAY_ORDER[a.id] ?? 999) - (CLASS9_DISPLAY_ORDER[b.id] ?? 999)
@@ -58,14 +59,16 @@ export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   }
   if (subject === "Mathematics" && classNum === 9) {
     const mathChapters = ALL_CHAPTERS.filter(
-      (c) => c.classNum === classNum && c.subject === subject && !c.cbseDeleted
+      (c) => c.classNum === classNum && c.subject === subject
+        && !c.cbseDeleted && c.curriculumStatus === "ACTIVE"
     );
     return mathChapters.sort(
       (a, b) => (CLASS9_DISPLAY_ORDER[a.id] ?? 999) - (CLASS9_DISPLAY_ORDER[b.id] ?? 999)
     );
   }
   return ALL_CHAPTERS.filter(
-    (c) => c.classNum === classNum && c.subject === subject && !c.cbseDeleted
+    (c) => c.classNum === classNum && c.subject === subject
+      && !c.cbseDeleted && c.curriculumStatus === "ACTIVE"
   );
 }
 

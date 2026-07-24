@@ -12,14 +12,15 @@
 
 import type { ChapterMeta, Question } from "./types";
 
-import { CHAPTER_META as CH1_META,  QUESTIONS as CH1_QUESTIONS  } from "./class9-maths-ch1";
-import { CHAPTER_META as CH3_META,  QUESTIONS as CH3_QUESTIONS  } from "./class9-maths-ch3";
-import { CHAPTER_META as CH4_META,  QUESTIONS as CH4_QUESTIONS  } from "./class9-maths-ch4";
-import { CHAPTER_META as CH15_META, QUESTIONS as CH15_QUESTIONS } from "./class9-maths-ch15";
-import { CHAPTER_META as CH16_META, QUESTIONS as CH16_QUESTIONS } from "./class9-maths-ch16";
-import { CHAPTER_META as CH17_META, QUESTIONS as CH17_QUESTIONS } from "./class9-maths-ch17";
-import { CHAPTER_META as CH18_META, QUESTIONS as CH18_QUESTIONS } from "./class9-maths-ch18";
+import { CHAPTER_META as CH1_META,     QUESTIONS as CH1_QUESTIONS     } from "./class9-maths-ch1";
+import { CHAPTER_META as CH3_META,     QUESTIONS as CH3_QUESTIONS     } from "./class9-maths-ch3";
+import { CHAPTER_META as CH4_META,     QUESTIONS as CH4_QUESTIONS     } from "./class9-maths-ch4";
+import { CHAPTER_META as CH15_META,    QUESTIONS as CH15_QUESTIONS    } from "./class9-maths-ch15";
+import { CHAPTER_META as CH16_META,    QUESTIONS as CH16_QUESTIONS    } from "./class9-maths-ch16";
+import { CHAPTER_META as CH17_META,    QUESTIONS as CH17_QUESTIONS    } from "./class9-maths-ch17";
+import { CHAPTER_META as CH18_META,    QUESTIONS as CH18_QUESTIONS    } from "./class9-maths-ch18";
 import { CHAPTER_META as IEMH102_META, QUESTIONS as IEMH102_QUESTIONS } from "./class9-maths-iemh102";
+import { CHAPTER_META as IEMH105_META, QUESTIONS as IEMH105_QUESTIONS } from "./class9-maths-iemh105";
 
 import { CHAPTER_META as PHY_CH1_META, QUESTIONS as PHY_CH1_QUESTIONS } from "./class9-physics-ch1";
 import { CHAPTER_META as PHY_CH2_META, QUESTIONS as PHY_CH2_QUESTIONS } from "./class9-physics-ch2";
@@ -33,12 +34,13 @@ import { CLASS9_SCIENCE_PLACEHOLDER_CHAPTERS, CLASS9_SCIENCE_PLACEHOLDER_QUESTIO
 const CLASS9_MATHS_CHAPTERS: ChapterMeta[] = [
   CH1_META, CH3_META, CH4_META, CH15_META,
   CH16_META, CH17_META, CH18_META, IEMH102_META,
+  IEMH105_META,
 ];
 
 const CLASS9_MATHS_QUESTIONS: Question[] = [
-  ...CH1_QUESTIONS,  ...CH3_QUESTIONS,  ...CH4_QUESTIONS,
-  ...CH15_QUESTIONS, ...CH16_QUESTIONS, ...CH17_QUESTIONS,
-  ...CH18_QUESTIONS, ...IEMH102_QUESTIONS,
+  ...CH1_QUESTIONS,    ...CH3_QUESTIONS,    ...CH4_QUESTIONS,
+  ...CH15_QUESTIONS,   ...CH16_QUESTIONS,   ...CH17_QUESTIONS,
+  ...CH18_QUESTIONS,   ...IEMH102_QUESTIONS, ...IEMH105_QUESTIONS,
 ];
 
 const CLASS9_PHYSICS_CHAPTERS: ChapterMeta[] = [

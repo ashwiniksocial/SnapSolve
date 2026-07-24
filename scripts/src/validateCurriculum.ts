@@ -41,14 +41,16 @@ const scienceNums = Object.values(SCIENCE_DISPLAY_ORDER_CLASS9);
 const mathIds     = Object.keys(MATHS_DISPLAY_ORDER_CLASS9);
 const mathNums    = Object.values(MATHS_DISPLAY_ORDER_CLASS9);
 
-assert(scienceIds.length === 13, `Science chapter count must be 13 (got ${scienceIds.length})`);
+// Science ACTIVE count is 12: chem-ch01 is SOURCE_UNRESOLVED and excluded from the display sequence.
+assert(scienceIds.length === 12, `Science chapter count must be 12 (got ${scienceIds.length})`);
 assert(mathIds.length    === 8,  `Math chapter count must be 8 (got ${mathIds.length})`);
 
 // ── 2. Contiguous numbering ───────────────────────────────────────────────────
 const scienceSeq = [...scienceNums].sort((a, b) => a - b);
+// Active science positions run 2–13 (position 1 is held by SOURCE_UNRESOLVED chem-ch01; excluded).
 assert(
-  scienceSeq.join(",") === Array.from({ length: 13 }, (_, i) => i + 1).join(","),
-  "Science display numbers must be contiguous 1–13",
+  scienceSeq.join(",") === Array.from({ length: 12 }, (_, i) => i + 2).join(","),
+  "Science display numbers must be contiguous 2–13 (12 ACTIVE chapters; position 1 reserved for SOURCE_UNRESOLVED chem-ch01)",
 );
 const mathSeq = [...mathNums].sort((a, b) => a - b);
 assert(
@@ -63,7 +65,9 @@ const mathDuplicates = mathNums.filter((n, i) => mathNums.indexOf(n) !== i);
 assert(mathDuplicates.length === 0, `No duplicate Math display numbers (found: ${mathDuplicates})`);
 
 // ── 4. Anchor checks (by stable internalId — not by title) ───────────────────
-assert(SCIENCE_DISPLAY_ORDER_CLASS9["chem-ch01"] === 1,  "Science Ch.1 is chem-ch01 (SOURCE_UNRESOLVED states-of-matter)");
+// chem-ch01 is SOURCE_UNRESOLVED — excluded from ACTIVE display sequence; not in this map.
+assert(!("chem-ch01" in SCIENCE_DISPLAY_ORDER_CLASS9), "Science chem-ch01 (SOURCE_UNRESOLVED) is absent from ACTIVE display sequence");
+assert(SCIENCE_DISPLAY_ORDER_CLASS9["bio-ch01"]  === 2,  "Science first ACTIVE chapter is bio-ch01 at position 2 (iesc102)");
 assert(SCIENCE_DISPLAY_ORDER_CLASS9["esc-ch01"]  === 13, "Science Ch.13 is esc-ch01 (iesc113)");
 assert(MATHS_DISPLAY_ORDER_CLASS9["ch3"]         === 1,  "Math Ch.1 is ch3 (iemh101)");
 assert(MATHS_DISPLAY_ORDER_CLASS9["ch17"]        === 8,  "Math Ch.8 is ch17 (iemh108)");
@@ -131,9 +135,10 @@ assert(
   `Math order is stable: first='${mathOrder[0]}' last='${mathOrder[7]}' (expected ch3, ch17)`,
 );
 const scienceOrder = scienceIds.slice().sort((a, b) => SCIENCE_DISPLAY_ORDER_CLASS9[a] - SCIENCE_DISPLAY_ORDER_CLASS9[b]);
+// 12 ACTIVE science chapters: first=bio-ch01 (pos 2), last=esc-ch01 (pos 13).
 assert(
-  scienceOrder[0] === "chem-ch01" && scienceOrder[12] === "esc-ch01",
-  `Science order is stable: first='${scienceOrder[0]}' last='${scienceOrder[12]}' (expected chem-ch01, esc-ch01)`,
+  scienceOrder[0] === "bio-ch01" && scienceOrder[11] === "esc-ch01",
+  `Science order is stable: first='${scienceOrder[0]}' last='${scienceOrder[11]}' (expected bio-ch01, esc-ch01)`,
 );
 
 // ── 8. iemh102 is in display position 2 (not the archived ch2 polynomials bank) ──
