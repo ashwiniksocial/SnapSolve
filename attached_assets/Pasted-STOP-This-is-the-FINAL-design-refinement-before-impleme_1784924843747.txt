@@ -1,0 +1,127 @@
+STOP.
+
+This is the FINAL design refinement before implementation.
+
+Do NOT redesign the architecture.
+Do NOT rewrite the specification.
+Do NOT add new sections unless required below.
+Do NOT create new governance files.
+Do NOT modify academicReview.ts.
+Do NOT modify question banks.
+Do NOT modify curriculum.
+Do NOT implement anything.
+
+Objective:
+
+Perform ONLY the following five targeted refinements to
+.local/governance/GOLD_STANDARD_QA_SPEC.md.
+
+────────────────────────────────────────
+
+1. CONFIGURATION
+
+Do not hard-code review values such as confidence thresholds.
+
+Move every tunable parameter into one configuration section.
+
+Examples:
+
+REVIEW_CONFIDENCE_THRESHOLD
+REVIEWER_MODEL
+CACHE_VERSION
+CHECKLIST_VERSION
+
+The review engine must read configuration rather than embed constants.
+
+────────────────────────────────────────
+
+2. CHECKLIST STRUCTURE
+
+Do not make the engine depend on there being exactly 10 criteria.
+
+The engine must iterate over the checklist definition.
+
+Future criteria may be added or removed without changing review logic.
+
+────────────────────────────────────────
+
+3. DEFECT EVIDENCE
+
+A CONFIRMED_DEFECT requires ALL of the following:
+
+• exact defective text
+• reason for failure
+• expected correction
+• supporting evidence
+
+Confidence alone must never create a confirmed defect.
+
+Confidence is supporting metadata only.
+
+────────────────────────────────────────
+
+4. AUTOMATION-FIRST
+
+Human review is NOT the default workflow.
+
+Default order:
+
+Review
+↓
+
+Possible Defect
+↓
+
+Second AI verification (when required)
+
+↓
+
+Agreement
+
+↓
+
+Confirmed Defect
+
+Otherwise:
+
+Reviewer Uncertainty
+
+Human review is reserved only for exceptional situations such as:
+
+• conflicting Government sources
+• persistent AI disagreement
+• missing review context
+
+────────────────────────────────────────
+
+5. FREEZE DESIGN
+
+After applying the above refinements:
+
+Review the entire specification once.
+
+Remove any duplicate wording.
+
+Remove any unused sections.
+
+Remove speculative future architecture that is not required before launch.
+
+Ensure the specification remains the minimum architecture required for production.
+
+────────────────────────────────────────
+
+OUTPUT
+
+Return ONLY:
+
+1. Files changed
+2. Exact refinements made
+3. Confirmation that no architecture redesign occurred
+4. Confirmation that the specification is now implementation-ready
+5. Any remaining blocker (if one truly exists)
+
+Write the report to:
+
+curriculum/generated/LATEST_REPLIT_REPORT.md
+
+Overwrite the previous report and display the same report in the Agent response.
