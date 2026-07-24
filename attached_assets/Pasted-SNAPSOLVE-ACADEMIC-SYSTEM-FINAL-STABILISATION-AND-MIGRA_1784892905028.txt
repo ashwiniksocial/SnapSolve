@@ -1,0 +1,299 @@
+SNAPSOLVE ACADEMIC SYSTEM — FINAL STABILISATION AND MIGRATION
+
+This is a bounded implementation task, not another open-ended audit.
+
+OBJECTIVE
+
+Create one permanent canonical academic system for SnapSolve covering official syllabus, curriculum, chapters, topics, question banks, answers, teaching content, validation, academic review, runtime consumers and freeze gates.
+
+The completed system must make legacy or duplicate curriculum truth impossible to reintroduce through any existing code path.
+
+Do not run OpenAI.
+Do not bulk-review questions.
+Do not rewrite questions, answers, explanations, steps or hints in this task.
+Do not add new product features.
+Do not create a database.
+Do not create aliases, compatibility maps or fuzzy title matching.
+Do not redesign unrelated UI or application architecture.
+
+==================================================
+STAGE 1 — PREFLIGHT IMPACT CAPTURE
+==================================================
+
+Before editing, locate every active academic producer and consumer.
+
+Inspect the repository for:
+
+1. Official source files, manifests, generated indexes and provenance.
+2. Curriculum definitions, gateways and validators.
+3. Question schemas, files, adapters, bundles, indexes and imports.
+4. Question services and runtime loaders.
+5. Academic review, review caches and source-context resolution.
+6. Teaching answer, lesson and explanation systems.
+7. Practice, revision, progress, analytics, exam, teacher and admin consumers.
+8. Import, extraction or generation scripts.
+9. Freeze markers and chapter-completion logic.
+10. Tests and scripts containing chapter, topic or subject expectations.
+11. Hardcoded titles, chapter lists, aliases, prefix matching and duplicate registries.
+12. Logic deriving chapter meaning from filenames, display titles or question IDs.
+
+Create a temporary in-memory implementation checklist.
+
+If an active academic branch is discovered that cannot be safely migrated within this task, STOP before editing and report the exact blocker.
+
+Do not create another permanent audit framework or planning document.
+
+==================================================
+STAGE 2 — CANONICAL ACADEMIC CONTRACT
+==================================================
+
+Use the official uploaded source provenance and:
+
+curriculum/generated/master-curriculum-index.json
+
+as the current curriculum authority.
+
+Implement one lightweight canonical academic contract using the existing TypeScript/JSON architecture.
+
+Each canonical curriculum entity must support, where available:
+
+- board
+- academic session
+- class
+- book/series
+- official book code
+- canonical subject ID
+- canonical chapter ID
+- exact official chapter title
+- canonical topic/section ID
+- exact official topic/section title
+- official source path
+- source hash/provenance
+- status:
+  - ACTIVE
+  - SOURCE_PENDING
+  - SOURCE_UNRESOLVED
+  - OFFICIALLY_DELETED
+
+Do not create a second curriculum database.
+
+Extend or normalise the existing master index only as minimally required.
+
+Canonical IDs must be stable and independent of display-title wording.
+
+==================================================
+STAGE 3 — REMOVE DUPLICATE CURRICULUM TRUTH
+==================================================
+
+Modify every active academic consumer so curriculum truth flows from the canonical contract.
+
+A. curriculumGateway.ts
+
+- Remove independent hardcoded Class 9 curriculum title truth.
+- Derive expected chapters and statuses from the canonical contract.
+- It may contain validation rules, but not a duplicate curriculum list.
+- SOURCE_UNRESOLVED and SOURCE_PENDING must block false validation without being treated as valid resolved chapters.
+
+B. validateCurriculum.ts
+
+- Remove duplicate officialTitle authority.
+- Validate question metadata against canonical IDs and derived canonical titles.
+- Do not maintain another manually edited chapter registry.
+
+C. Question bank
+
+For every active question:
+
+- attach or confirm canonical subject ID;
+- attach or confirm canonical chapter ID;
+- attach or confirm canonical topic ID where official topic resolution exists;
+- derive/display chapter titles from the canonical contract where practical;
+- preserve educational content unchanged;
+- preserve stable question IDs unless runtime integrity requires a metadata-only migration.
+
+Legacy names may not remain as active relational metadata.
+
+D. Adapters, bundles and imports
+
+- Remove chapter-title overrides.
+- Remove compatibility translations.
+- Ensure every active question is registered exactly once.
+- Identify and block orphan bundles/files.
+- Do not silently import duplicate versions.
+
+E. Runtime consumers
+
+Update all active academic consumers to use canonical IDs:
+
+- questionService
+- Practice
+- Revision
+- Progress
+- Analytics
+- Exam
+- Teacher/Admin
+- AI topic matching
+- academic review
+- teaching content lookup
+- chapter navigation and filters
+
+UI may display canonical titles derived from the contract.
+
+Do not redesign UI.
+
+F. Academic reviewer
+
+- Resolve curriculum context only by canonical IDs.
+- No aliases.
+- No prefix/fuzzy title matching.
+- No old-to-new mapping.
+- Questions with missing canonical context must return:
+  REVIEW_BLOCKED_CONTEXT_MISSING
+- Invalidate only caches created from obsolete mappings or changed content hashes.
+- Retain hash-based cost saving.
+
+G. Import/generation scripts
+
+Any active script capable of creating curriculum or question metadata must:
+
+- consume canonical IDs;
+- reject unknown chapter/topic IDs;
+- never generate independent chapter titles as authority;
+- block SOURCE_UNRESOLVED content from automatic review/freeze.
+
+H. Freeze gate
+
+A chapter may be marked frozen only when:
+
+- canonical source resolves;
+- every question resolves to canonical chapter/topic metadata;
+- zero duplicate question IDs;
+- zero orphan imports;
+- structural validation passes;
+- academic review status is available or explicitly pending under the approved workflow;
+- no unresolved legacy or compatibility dependency remains.
+
+Do not unfreeze already frozen educational content unless a confirmed structural defect requires it.
+
+==================================================
+STAGE 4 — SOURCE-UNRESOLVED SAFETY
+==================================================
+
+Do not force-map any unresolved chapter.
+
+Known unresolved groups currently include:
+
+- Mathematics iemh105 / current ch4 group if official mapping remains unresolved
+- Chemistry Matter in Our Surroundings group
+
+For every unresolved group:
+
+- retain questions without rewriting them;
+- classify them SOURCE_UNRESOLVED;
+- block academic review and freeze;
+- report exact question count;
+- state the exact missing official-source evidence required.
+
+Also verify Chemistry ch03 and ch04 directly against canonical source IDs. Do not infer from title similarity.
+
+==================================================
+STAGE 5 — REGRESSION PREVENTION
+==================================================
+
+Add the smallest necessary automated checks to prevent recurrence.
+
+Checks must fail when:
+
+- an active academic consumer introduces an unknown canonical chapter/topic ID;
+- a duplicate independent Class 9 curriculum registry is added;
+- a compatibility/alias map is used;
+- approximate title matching is used for curriculum resolution;
+- an active question has no canonical chapter resolution;
+- an active import/generator emits legacy chapter metadata;
+- a frozen chapter contains unresolved curriculum references;
+- stale academic-review cache does not match its content/context hash;
+- a question file exists but is not registered, or is registered more than once.
+
+Do not create a large governance framework.
+
+Use existing validation scripts and tests wherever possible.
+
+==================================================
+STAGE 6 — VALIDATION
+==================================================
+
+Run zero-API validation only:
+
+1. TypeScript typecheck for all affected packages.
+2. Canonical contract integrity check.
+3. Official source/provenance resolution check.
+4. Direct question-to-canonical-chapter resolution.
+5. Direct question-to-canonical-topic resolution.
+6. Duplicate question ID check.
+7. Duplicate curriculum registry check.
+8. Active import/registration check.
+9. Orphan file/bundle check.
+10. Legacy active-reference search.
+11. Alias/compatibility/fuzzy-match search.
+12. Academic-review resolver dry run without API calls.
+13. Freeze-gate validation.
+14. Runtime startup or relevant smoke test.
+15. Existing curriculum gateway and validator tests after conversion.
+
+Report separately:
+
+- RESOLVED
+- SOURCE_PENDING
+- SOURCE_UNRESOLVED
+- OFFICIALLY_DELETED
+- NO_MATCH
+- AMBIGUOUS
+- ORPHANED
+- DUPLICATE
+
+==================================================
+COMPLETION GATES
+==================================================
+
+Do not declare completion unless all are true:
+
+- one active canonical academic contract exists;
+- official source provenance is preserved;
+- gateway and validator derive from it;
+- no duplicate active curriculum truth remains;
+- all runtime academic consumers use canonical IDs;
+- no aliases or fuzzy mappings remain;
+- no legacy title acts as an identifier;
+- every active question is either canonically resolved or explicitly SOURCE_UNRESOLVED;
+- unresolved questions cannot be reviewed or frozen;
+- no educational content was changed;
+- typechecks and runtime smoke tests pass;
+- all active recreation paths have been blocked.
+
+==================================================
+FINAL REPORT — CONCISE AND EVIDENCE-BASED
+==================================================
+
+Provide only:
+
+1. Files added, modified and deleted.
+2. Canonical contract location and structure.
+3. Every academic subsystem migrated.
+4. Total active questions.
+5. Canonically resolved questions.
+6. Topic-resolved questions.
+7. SOURCE_PENDING questions.
+8. SOURCE_UNRESOLVED questions, grouped by chapter.
+9. NO_MATCH and AMBIGUOUS counts.
+10. Duplicate and orphan counts.
+11. Remaining hardcoded curriculum references, if any.
+12. Exact F5/F7 or successor validation failures.
+13. Freeze-gate results.
+14. Typecheck and runtime results.
+15. Confirmation that no OpenAI call ran.
+16. Confirmation that question/answer/teaching content was untouched.
+17. Any blocker preventing the target state.
+
+Do not continue into academic content review.
+Do not add questions.
+Do not proceed to another task.
