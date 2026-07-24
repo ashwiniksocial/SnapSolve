@@ -475,9 +475,9 @@ function checkGeneratedRegistrySync(): Finding[] {
     return findings;
   }
 
-  // Recompute from current canonical contract
+  // Recompute from current canonical contract — must match the 4-field form used by generateCanonicalRegistry.ts
   const entries = getRawRegistryEntries()
-    .map(e => ({ internalId: e.internalId, canonicalChapterId: e.canonicalChapterId, status: e.status }))
+    .map(e => ({ internalId: e.internalId, canonicalChapterId: e.canonicalChapterId, status: e.status, displayOrder: e.displayOrder }))
     .sort((a, b) => a.internalId.localeCompare(b.internalId));
   const currentChecksum = createHash("sha256").update(JSON.stringify(entries)).digest("hex").slice(0, 16);
 

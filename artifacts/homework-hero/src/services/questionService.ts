@@ -8,6 +8,7 @@
  */
 
 import type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType } from "@/data/questions";
+import { CLASS9_DISPLAY_ORDER } from "@/data/questions/canonicalChapterRegistry.gen";
 
 export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType };
 
@@ -38,47 +39,13 @@ export async function preloadQBank(_classNum?: number): Promise<void> {
 const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology", "Earth Science"];
 
 /**
- * Official Class 9 Science student-facing chapter display sequence.
- * Follows the official NCERT Exploration textbook order: iesc101 → iesc113.
- * Key: internal chapterId — Value: 1-based continuous display number (Ch.1–13).
- */
-export const SCIENCE_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
-  "chem-ch01":  1,  // iesc101 — Matter in Our Surroundings
-  "bio-ch01":   2,  // iesc102 — The Fundamental Unit of Life
-  "bio-ch02":   3,  // iesc103 — Tissues
-  "phy-ch1":    4,  // iesc104 — Motion
-  "chem-ch02":  5,  // iesc105 — Exploring Mixtures and Their Separation
-  "phy-ch2":    6,  // iesc106 — Force and Laws of Motion
-  "phy-ch4":    7,  // iesc107 — Work, Energy and Simple Machines
-  "chem-ch04":  8,  // iesc108 — Structure of the Atom
-  "chem-ch03":  9,  // iesc109 — Atoms and Molecules
-  "phy-ch5":   10,  // iesc110 — Sound
-  "bio-ch05":  11,  // iesc111 — Reproduction in Plants and Animals
-  "bio-ch03":  12,  // iesc112 — Diversity in Living Organisms
-  "esc-ch01":  13,  // iesc113 — Earth as a System: Energy, Matter and Life
-};
-
-/**
- * Official Class 9 Mathematics student-facing chapter display sequence.
- * Follows the official NCERT Mathematics (Ganita Manjari Part I) order: iemh101 → iemh108.
- * Key: internal chapterId — Value: 1-based display number (Ch.1–8).
- */
-export const MATHS_DISPLAY_ORDER_CLASS9: Readonly<Record<string, number>> = {
-  "ch3":     1,  // iemh101 — Coordinate Geometry
-  "iemh102": 2,  // iemh102 — Introduction to Polynomials (placeholder; ch2 bank is general polynomials, archived)
-  "ch1":     3,  // iemh103 — Number System
-  "ch16":    4,  // iemh104 — Exploring Algebraic Identities
-  "ch4":     5,  // iemh105 — Linear Equations in Two Variables
-  "ch18":    6,  // iemh106 — Area and Perimeter
-  "ch15":    7,  // iemh107 — Probability
-  "ch17":    8,  // iemh108 — Predicting What Comes Next: Exploring Sequences and Progressions
-};
-
-/**
  * All chapters for a given class + subject, in official textbook order.
  * "Science" resolves to the union of all Science domain chapters sorted by
  * the official NCERT Exploration textbook sequence (iesc101–iesc113).
  * Class 9 Mathematics is sorted by the official NCERT Mathematics (Ganita Manjari Part I) sequence (iemh101–iemh108).
+ *
+ * Display order is derived from CLASS9_DISPLAY_ORDER (generated from
+ * scripts/src/canonicalCurriculum.ts). No manual order map is maintained here.
  */
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   if (subject === "Science") {
@@ -86,7 +53,7 @@ export function getChapters(classNum: number, subject: string): ChapterMeta[] {
       (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject) && !c.cbseDeleted
     );
     return scienceChapters.sort(
-      (a, b) => (SCIENCE_DISPLAY_ORDER_CLASS9[a.id] ?? 999) - (SCIENCE_DISPLAY_ORDER_CLASS9[b.id] ?? 999)
+      (a, b) => (CLASS9_DISPLAY_ORDER[a.id] ?? 999) - (CLASS9_DISPLAY_ORDER[b.id] ?? 999)
     );
   }
   if (subject === "Mathematics" && classNum === 9) {
@@ -94,7 +61,7 @@ export function getChapters(classNum: number, subject: string): ChapterMeta[] {
       (c) => c.classNum === classNum && c.subject === subject && !c.cbseDeleted
     );
     return mathChapters.sort(
-      (a, b) => (MATHS_DISPLAY_ORDER_CLASS9[a.id] ?? 999) - (MATHS_DISPLAY_ORDER_CLASS9[b.id] ?? 999)
+      (a, b) => (CLASS9_DISPLAY_ORDER[a.id] ?? 999) - (CLASS9_DISPLAY_ORDER[b.id] ?? 999)
     );
   }
   return ALL_CHAPTERS.filter(
@@ -222,10 +189,8 @@ export function getAllChapterStats(classNum: number, subject: string): ChapterSt
       chapterId: ch.id,
       chapterName: ch.name,
       chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
-      displayChapterNumber: subject === "Science"
-        ? SCIENCE_DISPLAY_ORDER_CLASS9[ch.id]
-        : subject === "Mathematics" && ch.classNum === 9
-        ? MATHS_DISPLAY_ORDER_CLASS9[ch.id]
+      displayChapterNumber: (subject === "Science" || (subject === "Mathematics" && ch.classNum === 9))
+        ? CLASS9_DISPLAY_ORDER[ch.id]
         : undefined,
       totalQuestions: qs.length,
       byDifficulty: getDifficultyBreakdown({ classNum, subject: chSubject, chapterId: ch.id }),

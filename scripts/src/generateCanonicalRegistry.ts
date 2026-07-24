@@ -32,12 +32,13 @@ function run(): void {
   // Deterministic sort for stable output (and stable checksum).
   entries.sort((a, b) => a.internalId.localeCompare(b.internalId));
 
-  // ── Checksum — computed from the compact 3-field form stored in the JSON ──
+  // ── Checksum — computed from the compact 4-field form stored in the JSON ──
   // The gateway re-derives the same compact form; both must match exactly.
   const compactEntries = entries.map(e => ({
     internalId:         e.internalId,
     canonicalChapterId: e.canonicalChapterId,
     status:             e.status,
+    displayOrder:       e.displayOrder,
   }));
   const checksum = createHash("sha256").update(JSON.stringify(compactEntries)).digest("hex").slice(0, 16);
 
@@ -57,6 +58,8 @@ function run(): void {
     `  subjectId:          string;`,
     `  classId:            number;`,
     `  boardId:            string;`,
+    `  /** Student-facing 1-based ordinal position within the subject group. */`,
+    `  displayOrder:       number;`,
     `}`,
     ``,
     `/**`,
@@ -69,7 +72,7 @@ function run(): void {
   for (const e of entries) {
     const cid = e.canonicalChapterId === null ? "null" : `"${e.canonicalChapterId}"`;
     lines.push(
-      `  "${e.internalId}": { canonicalChapterId: ${cid}, curriculumStatus: "${e.status}", subjectId: "${e.subjectId}", classId: ${e.classId}, boardId: "${e.boardId}" },`,
+      `  "${e.internalId}": { canonicalChapterId: ${cid}, curriculumStatus: "${e.status}", subjectId: "${e.subjectId}", classId: ${e.classId}, boardId: "${e.boardId}", displayOrder: ${e.displayOrder} },`,
     );
   }
 
@@ -79,6 +82,28 @@ function run(): void {
   lines.push(`export function lookupCanonical(internalId: string): CanonicalRegistryEntry | undefined {`);
   lines.push(`  return CANONICAL_CHAPTER_REGISTRY[internalId];`);
   lines.push(`}`);
+  lines.push(``);
+
+  // ── CLASS9_DISPLAY_ORDER — single source of chapter ordering for Class 9 ──
+  // Replaces manually maintained SCIENCE_DISPLAY_ORDER_CLASS9 and
+  // MATHS_DISPLAY_ORDER_CLASS9 in questionService.ts.
+  lines.push(`/**`);
+  lines.push(` * Student-facing display order for all Class 9 chapters.`);
+  lines.push(` * Maps internalId → 1-based ordinal position within its subject group.`);
+  lines.push(` * Generated from scripts/src/canonicalCurriculum.ts. DO NOT edit manually.`);
+  lines.push(` */`);
+  lines.push(`export const CLASS9_DISPLAY_ORDER: Readonly<Record<string, number>> = {`);
+
+  // Emit only Class 9 entries, sorted by subjectId then displayOrder for readability.
+  const class9 = entries
+    .filter(e => e.classId === 9 && e.boardId === "CBSE")
+    .sort((a, b) => a.subjectId.localeCompare(b.subjectId) || a.displayOrder - b.displayOrder);
+
+  for (const e of class9) {
+    lines.push(`  "${e.internalId}": ${e.displayOrder},`);
+  }
+
+  lines.push(`} as const;`);
   lines.push(``); // trailing newline
 
   writeFileSync(FRONTEND_OUT, lines.join("\n"), "utf8");
@@ -93,6 +118,7 @@ function run(): void {
       internalId:         e.internalId,
       canonicalChapterId: e.canonicalChapterId,
       status:             e.status,
+      displayOrder:       e.displayOrder,
     })),
   };
   writeFileSync(CHECKSUM_OUT, JSON.stringify(checksumData, null, 2) + "\n", "utf8");

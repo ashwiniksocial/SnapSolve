@@ -1,0 +1,84 @@
+STOP.
+
+Implement ONLY the Class 9 display-order Single Source of Truth correction.
+
+Do NOT modify:
+
+- official PDFs
+- chapter titles
+- chapter IDs
+- curriculum statuses
+- question content
+- question-bank counts
+- teaching engine
+- UI design
+- navigation behaviour
+- API server
+- unrelated architecture
+
+Confirmed issue:
+
+Class 9 Mathematics and Science display order is manually duplicated in:
+
+1. scripts/src/validateCurriculum.ts
+2. artifacts/homework-hero/src/services/questionService.ts
+
+Do NOT add an F12 check merely comparing two duplicate maps.
+
+Objective:
+
+Make scripts/src/canonicalCurriculum.ts the sole maintained source of Class 9
+chapter display order, while preserving the exact current student-facing order.
+
+Required implementation:
+
+1. Add one explicit display-order value to each applicable Class 9 canonical
+   registry entry in scripts/src/canonicalCurriculum.ts.
+
+2. Preserve every existing internalId → position exactly as it is today.
+
+3. Propagate display order through the existing generator:
+
+   scripts/src/generateCanonicalRegistry.ts
+
+   into:
+
+   artifacts/homework-hero/src/data/questions/
+   canonicalChapterRegistry.gen.ts
+
+4. Update questionService.ts so runtime Mathematics and Science ordering is
+   derived from canonicalChapterRegistry.gen.ts.
+
+5. Remove the manually maintained Class 9 display-order maps from
+   questionService.ts.
+
+6. Update validateCurriculum.ts so it validates display order directly from
+   canonicalCurriculum.ts.
+
+7. Remove its independently maintained duplicate display-order maps.
+
+8. Validate:
+
+   - all 21 current canonical entries retain their existing positions
+   - student-facing Mathematics order is unchanged
+   - student-facing Science order is unchanged
+   - ACTIVE, SOURCE_PENDING, SOURCE_UNRESOLVED and OFFICIALLY_DELETED behaviour
+     is unchanged
+   - canonical registry regeneration succeeds
+   - checksum regenerates correctly
+   - typecheck passes
+   - curriculum validation passes
+   - curriculum gateway passes
+   - no duplicate Class 9 display-order map remains anywhere in active code
+
+Do not change stale comments unless they are inside the exact lines being
+modified.
+
+Return only:
+
+1. Files changed
+2. Single authoritative display-order location
+3. Duplicate maps removed
+4. Before-versus-after displayed chapter order
+5. Validation results
+6. Confirmation that no student-facing behaviour changed

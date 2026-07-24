@@ -74,6 +74,8 @@ export interface CanonicalChapter {
 
   // ── Display — derived from official source; NOT relational keys ───────────
 
+  /** Student-facing 1-based ordinal position within the subject group. Derived from canonical contract. */
+  displayOrder:     number;
   /** Exact official chapter title from master-curriculum-index. */
   chapterTitle:     string;
 
@@ -117,51 +119,53 @@ interface MasterIndexEntry {
 // SOURCE_UNRESOLVED = question bank exists but no 2026-27 chapter confirmed.
 
 interface RegistryEntry {
-  bookId:       string;           // "iemh101" | "SOURCE_UNRESOLVED"
-  classId:      number;
-  boardId:      string;
+  bookId:          string;           // "iemh101" | "SOURCE_UNRESOLVED"
+  classId:         number;
+  boardId:         string;
   academicSession: string;
-  subjectId:    string;
-  indexSubjectId: string;
-  bookSeries:   string;
-  status:       CanonicalStatus;
+  subjectId:       string;
+  indexSubjectId:  string;
+  bookSeries:      string;
+  status:          CanonicalStatus;
+  /** Student-facing 1-based ordinal position within the subject group for this class. */
+  displayOrder:    number;
 }
 
 const INTERNAL_TO_CANONICAL: Record<string, RegistryEntry> = {
 
   // ── Class 9 Mathematics: Ganita Manjari Part I (iemh101–iemh108) ──────────
-  "ch3":     { bookId: "iemh101", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE"            },
-  "iemh102": { bookId: "iemh102", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE"            },
-  "ch1":     { bookId: "iemh103", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE"            },
-  "ch16":    { bookId: "iemh104", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE"            },
+  "ch3":     { bookId: "iemh101",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 1  },
+  "iemh102": { bookId: "iemh102",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 2  },
+  "ch1":     { bookId: "iemh103",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 3  },
+  "ch16":    { bookId: "iemh104",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 4  },
   // ch4: questions cover old-NCERT linear equations; iemh105 in 2026-27 is circles — mismatch confirmed.
-  "ch4":     { bookId: "SOURCE_UNRESOLVED", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "SOURCE_UNRESOLVED" },
-  "ch18":    { bookId: "iemh106", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE"            },
-  "ch15":    { bookId: "iemh107", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE"            },
-  "ch17":    { bookId: "iemh108", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE"            },
+  "ch4":     { bookId: "SOURCE_UNRESOLVED", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",   indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "SOURCE_UNRESOLVED", displayOrder: 5  },
+  "ch18":    { bookId: "iemh106",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 6  },
+  "ch15":    { bookId: "iemh107",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 7  },
+  "ch17":    { bookId: "iemh108",          classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Mathematics",    indexSubjectId: "Mathematics", bookSeries: "Ganita Manjari Part I", status: "ACTIVE",            displayOrder: 8  },
 
   // ── Class 9 Science: Curiosity Book 1 — Physics (iesc104, 106, 107, 110) ──
-  "phy-ch1":  { bookId: "iesc104", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "phy-ch2":  { bookId: "iesc106", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "phy-ch4":  { bookId: "iesc107", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "phy-ch5":  { bookId: "iesc110", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
+  "phy-ch1":  { bookId: "iesc104",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",        indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 4  },
+  "phy-ch2":  { bookId: "iesc106",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",        indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 6  },
+  "phy-ch4":  { bookId: "iesc107",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",        indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 7  },
+  "phy-ch5":  { bookId: "iesc110",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Physics",        indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 10 },
 
   // ── Class 9 Science: Curiosity Book 1 — Chemistry (iesc105, 108, 109) ─────
   // chem-ch01: questions cover states of matter; iesc101 in 2026-27 is the
   // intro chapter "Exploration: Entering the World of Secondary Science" — mismatch confirmed.
-  "chem-ch01": { bookId: "SOURCE_UNRESOLVED", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",    indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "SOURCE_UNRESOLVED" },
-  "chem-ch02": { bookId: "iesc105", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",    indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "chem-ch03": { bookId: "iesc109", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",    indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "chem-ch04": { bookId: "iesc108", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",    indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
+  "chem-ch01": { bookId: "SOURCE_UNRESOLVED", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",   indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "SOURCE_UNRESOLVED", displayOrder: 1  },
+  "chem-ch02": { bookId: "iesc105",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",    indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 5  },
+  "chem-ch03": { bookId: "iesc109",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",    indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 9  },
+  "chem-ch04": { bookId: "iesc108",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Chemistry",    indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 8  },
 
   // ── Class 9 Science: Curiosity Book 1 — Biology (iesc102, 103, 111, 112) ──
-  "bio-ch01":  { bookId: "iesc102", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "bio-ch02":  { bookId: "iesc103", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "bio-ch03":  { bookId: "iesc112", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
-  "bio-ch05":  { bookId: "iesc111", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",      indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
+  "bio-ch01":  { bookId: "iesc102",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",       indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 2  },
+  "bio-ch02":  { bookId: "iesc103",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",       indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 3  },
+  "bio-ch03":  { bookId: "iesc112",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",       indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 12 },
+  "bio-ch05":  { bookId: "iesc111",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",       indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 11 },
 
   // ── Class 9 Science: Curiosity Book 1 — Earth Science (iesc113) ──────────
-  "esc-ch01":  { bookId: "iesc113", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Earth Science", indexSubjectId: "Science",    bookSeries: "Curiosity Book 1",      status: "ACTIVE"            },
+  "esc-ch01":  { bookId: "iesc113",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Earth Science", indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 13 },
 };
 
 // ─── Index loader (cached, lazy) ──────────────────────────────────────────────
@@ -208,6 +212,7 @@ function buildChapter(internalId: string, reg: RegistryEntry): CanonicalChapter 
       indexSubjectId:  reg.indexSubjectId,
       bookSeries:      reg.bookSeries,
       status:          "SOURCE_UNRESOLVED",
+      displayOrder:    reg.displayOrder,
       chapterTitle:    "(source unresolved — no canonical 2026-27 chapter confirmed)",
       sourcePath:      "",
       pageCount:       0,
@@ -227,6 +232,7 @@ function buildChapter(internalId: string, reg: RegistryEntry): CanonicalChapter 
     indexSubjectId:  reg.indexSubjectId,
     bookSeries:      reg.bookSeries,
     status:          reg.status,
+    displayOrder:    reg.displayOrder,
     chapterTitle:    entry?.chapter_title ?? "(title not found in master index)",
     sourcePath:      entry?.filepath ?? "",
     pageCount:       entry?.page_count ?? 0,
@@ -323,17 +329,45 @@ export function getRawRegistryEntries(): Array<{
   subjectId:           string;
   classId:             number;
   boardId:             string;
+  displayOrder:        number;
 }> {
   return Object.entries(INTERNAL_TO_CANONICAL).map(([internalId, reg]) => ({
     internalId,
     canonicalChapterId: (reg.bookId === "SOURCE_UNRESOLVED" || reg.status !== "ACTIVE")
       ? null
       : reg.bookId,
-    status:    reg.status,
-    subjectId: reg.subjectId,
-    classId:   reg.classId,
-    boardId:   reg.boardId,
+    status:       reg.status,
+    subjectId:    reg.subjectId,
+    classId:      reg.classId,
+    boardId:      reg.boardId,
+    displayOrder: reg.displayOrder,
   }));
+}
+
+/**
+ * Student-facing display order for Class 9, derived directly from the canonical contract.
+ * Returns two maps: math (8 entries) and science (13 entries).
+ * Each maps an internalId to its 1-based ordinal position within its subject group.
+ *
+ * This is the authoritative source consumed by:
+ *   - generateCanonicalRegistry.ts → canonicalChapterRegistry.gen.ts → questionService.ts
+ *   - validateCurriculum.ts (validation)
+ */
+export function getClass9DisplayOrder(): {
+  math:    Readonly<Record<string, number>>;
+  science: Readonly<Record<string, number>>;
+} {
+  const math:    Record<string, number> = {};
+  const science: Record<string, number> = {};
+  for (const [internalId, reg] of Object.entries(INTERNAL_TO_CANONICAL)) {
+    if (reg.classId !== 9 || reg.boardId !== "CBSE") continue;
+    if (reg.indexSubjectId === "Mathematics") {
+      math[internalId] = reg.displayOrder;
+    } else {
+      science[internalId] = reg.displayOrder;
+    }
+  }
+  return { math, science };
 }
 
 /**

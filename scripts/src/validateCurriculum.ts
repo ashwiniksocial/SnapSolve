@@ -10,38 +10,13 @@
  * Exits 1 with a clear message if any invariant fails.
  */
 
-import { getCanonicalChapter } from "./canonicalCurriculum.js";
+import { getCanonicalChapter, getClass9DisplayOrder } from "./canonicalCurriculum.js";
 
-// ── Display-order maps (internal routing ID → ordinal position) ──────────────
-// These control textbook ordering in the UI. They are NOT curriculum truth.
+// ── Display-order maps — derived from the canonical contract ─────────────────
+// Single source of truth: scripts/src/canonicalCurriculum.ts → INTERNAL_TO_CANONICAL.
 // Do not add chapter names or titles here — use canonicalCurriculum.ts for that.
 
-const SCIENCE_DISPLAY_ORDER_CLASS9: Record<string, number> = {
-  "chem-ch01":  1,   // SOURCE_UNRESOLVED: states-of-matter content; iesc101 is intro chapter
-  "bio-ch01":   2,   // iesc102 — Cell: The Building Block of Life
-  "bio-ch02":   3,   // iesc103 — Tissues in Action
-  "phy-ch1":    4,   // iesc104 — Describing Motion Around Us
-  "chem-ch02":  5,   // iesc105 — Exploring Mixtures and their Separation
-  "phy-ch2":    6,   // iesc106 — How Forces Affect Motion
-  "phy-ch4":    7,   // iesc107 — Work, Energy, and Simple Machines
-  "chem-ch04":  8,   // iesc108 — Journey Inside the Atom
-  "chem-ch03":  9,   // iesc109 — Atomic Foundations of Matter
-  "phy-ch5":   10,   // iesc110 — Sound Waves: Characteristics and Applications
-  "bio-ch05":  11,   // iesc111 — Reproduction: How Life Continues
-  "bio-ch03":  12,   // iesc112 — Patterns in Life: Diversity and Classification
-  "esc-ch01":  13,   // iesc113 — Earth as a System: Energy, Matter, and Life
-};
-
-const MATHS_DISPLAY_ORDER_CLASS9: Record<string, number> = {
-  "ch3":     1,   // iemh101 — Orienting Yourself: The Use of Coordinates
-  "iemh102": 2,   // iemh102 — Introduction to Linear Polynomials
-  "ch1":     3,   // iemh103 — The World of Numbers
-  "ch16":    4,   // iemh104 — Exploring Algebraic Identities
-  "ch4":     5,   // SOURCE_UNRESOLVED: old-NCERT linear equations; iemh105 is circles
-  "ch18":    6,   // iemh106 — Measuring Space: Perimeter and Area
-  "ch15":    7,   // iemh107 — The Mathematics of Maybe: Introduction to Probability
-  "ch17":    8,   // iemh108 — Predicting What Comes Next: Exploring Sequences and Progressions
-};
+const { math: MATHS_DISPLAY_ORDER_CLASS9, science: SCIENCE_DISPLAY_ORDER_CLASS9 } = getClass9DisplayOrder();
 
 // Archived chapters — must NOT appear in student-facing display order
 const MATHS_ARCHIVED_IDS   = ["ch2"];
