@@ -1,0 +1,1202 @@
+{
+  "c9-math-iemh105-t1-q01": {
+    "questionId": "c9-math-iemh105-t1-q01",
+    "contentHash": "9171139a88f7ce504b63374da91a347855884b7a0351e6a169e5de10ab0c42e8",
+    "reviewedAt": "2026-07-24T18:25:40.516Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1115,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021045
+    }
+  },
+  "c9-math-iemh105-t1-q02": {
+    "questionId": "c9-math-iemh105-t1-q02",
+    "contentHash": "9da8d3cdbb5ee93222d07bf45d1b0ecbd8b2802c85b619f36c431b2bd490d859",
+    "reviewedAt": "2026-07-24T18:25:44.378Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1095,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020745
+    }
+  },
+  "c9-math-iemh105-t1-q03": {
+    "questionId": "c9-math-iemh105-t1-q03",
+    "contentHash": "7ead53755a9e75e91e61a9eba08c9a6499ff16473461c1bdd0e8165a8f498e8c",
+    "reviewedAt": "2026-07-24T18:25:46.168Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1035,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019844999999999997
+    }
+  },
+  "c9-math-iemh105-t1-q04": {
+    "questionId": "c9-math-iemh105-t1-q04",
+    "contentHash": "812aa779db13be73a4368854a06d481c34f94ef6b33ff72dda36f06fd827c2d8",
+    "reviewedAt": "2026-07-24T18:25:48.229Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1105,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020895
+    }
+  },
+  "c9-math-iemh105-t1-q05": {
+    "questionId": "c9-math-iemh105-t1-q05",
+    "contentHash": "5b02a2b2b84e778cb41b975e8d7cd48b9fae55a295d12710eb96feae77170e10",
+    "reviewedAt": "2026-07-24T18:25:50.030Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1160,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002172
+    }
+  },
+  "c9-math-iemh105-t1-q06": {
+    "questionId": "c9-math-iemh105-t1-q06",
+    "contentHash": "6edb98dc5808a78e1deff4f843075ac959f0c771491de5cfe88d1419e895bda5",
+    "reviewedAt": "2026-07-24T18:25:51.730Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1137,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021375
+    }
+  },
+  "c9-math-iemh105-t2-q01": {
+    "questionId": "c9-math-iemh105-t2-q01",
+    "contentHash": "09f7ffff0f55fb245ac0cf542acbf0b2a802a4a8bb004d7eaa43d29cf2540a2f",
+    "reviewedAt": "2026-07-24T18:25:53.427Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1108,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002094
+    }
+  },
+  "c9-math-iemh105-t2-q02": {
+    "questionId": "c9-math-iemh105-t2-q02",
+    "contentHash": "8d82e2315e8be881086c5ee1b3fe3ab42e2000e56d8afcf7f24af327e8a2964d",
+    "reviewedAt": "2026-07-24T18:25:55.510Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1087,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020625
+    }
+  },
+  "c9-math-iemh105-t2-q03": {
+    "questionId": "c9-math-iemh105-t2-q03",
+    "contentHash": "8e87ff1f2ea6d37fac6da666ac6a5af0338097207060e1865106c724c5bdf5bf",
+    "reviewedAt": "2026-07-24T18:25:57.144Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1136,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002136
+    }
+  },
+  "c9-math-iemh105-t2-q04": {
+    "questionId": "c9-math-iemh105-t2-q04",
+    "contentHash": "494c1c6eba8d87819c6c853f678c4c8253b6791a3e159cf2a36e7c6e8471c1d3",
+    "reviewedAt": "2026-07-24T18:25:58.874Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1168,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002184
+    }
+  },
+  "c9-math-iemh105-t2-q05": {
+    "questionId": "c9-math-iemh105-t2-q05",
+    "contentHash": "0ccec830196b4b494bfe10656c0c8d35293c684d47d768c8a809361f11e2fac9",
+    "reviewedAt": "2026-07-24T18:26:00.270Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1149,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021555
+    }
+  },
+  "c9-math-iemh105-t2-q06": {
+    "questionId": "c9-math-iemh105-t2-q06",
+    "contentHash": "ff15c8123bd31db2dd994af323b44512a34cc4e155a960407c224f52cf41c08a",
+    "reviewedAt": "2026-07-24T18:26:01.885Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1199,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00022304999999999997
+    }
+  },
+  "c9-math-iemh105-t3-q01": {
+    "questionId": "c9-math-iemh105-t3-q01",
+    "contentHash": "194336a07651c7b15c000b738bf153b7e764e4b73244161108e8dd6ac64abb49",
+    "reviewedAt": "2026-07-24T18:26:03.416Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1103,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020865
+    }
+  },
+  "c9-math-iemh105-t3-q02": {
+    "questionId": "c9-math-iemh105-t3-q02",
+    "contentHash": "1f687b4cf792c452764e2536774f1c90e9561dc7698e904e8203066a5db696b6",
+    "reviewedAt": "2026-07-24T18:26:05.488Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1152,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.000216
+    }
+  },
+  "c9-math-iemh105-t3-q03": {
+    "questionId": "c9-math-iemh105-t3-q03",
+    "contentHash": "f1b857d1ca1a35e7f8fab25131e47514d99cd2f7825b88f644ebc7effc9a360b",
+    "reviewedAt": "2026-07-24T18:26:07.010Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1140,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021419999999999998
+    }
+  },
+  "c9-math-iemh105-t3-q04": {
+    "questionId": "c9-math-iemh105-t3-q04",
+    "contentHash": "e3455ecd7da4f81e61bd107a8a145cb337e18f26a2ced101758779690ae763cc",
+    "reviewedAt": "2026-07-24T18:26:08.624Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1144,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002148
+    }
+  },
+  "c9-math-iemh105-t3-q05": {
+    "questionId": "c9-math-iemh105-t3-q05",
+    "contentHash": "7919bd481cd6a237c1b0a97a8fa1d68eebe50534f722d2f0c8fd640bbaae382c",
+    "reviewedAt": "2026-07-24T18:26:10.399Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1153,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021614999999999997
+    }
+  },
+  "c9-math-iemh105-t3-q06": {
+    "questionId": "c9-math-iemh105-t3-q06",
+    "contentHash": "6b795739da6dbcb497d937837889b6b0f93824433effdb3a304baa7f3c45d019",
+    "reviewedAt": "2026-07-24T18:26:11.910Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1163,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021764999999999998
+    }
+  },
+  "c9-math-iemh105-t4-q01": {
+    "questionId": "c9-math-iemh105-t4-q01",
+    "contentHash": "c41ed752eb3b20665e4b1400494c98b0583fdbce6169ad9373d84137aa1e8357",
+    "reviewedAt": "2026-07-24T18:26:13.401Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1140,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021419999999999998
+    }
+  },
+  "c9-math-iemh105-t4-q02": {
+    "questionId": "c9-math-iemh105-t4-q02",
+    "contentHash": "b7cb97fe557de66a620d27b011a611f2636ace82951fdaf2a66752700795bc92",
+    "reviewedAt": "2026-07-24T18:26:18.686Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1103,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020865
+    }
+  },
+  "c9-math-iemh105-t4-q03": {
+    "questionId": "c9-math-iemh105-t4-q03",
+    "contentHash": "19bc1e7f312202233b754fc9694ca6fcc6e53b7ddc7caa1b6f5c5e86654fb8a1",
+    "reviewedAt": "2026-07-24T18:26:20.349Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1123,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021165
+    }
+  },
+  "c9-math-iemh105-t4-q04": {
+    "questionId": "c9-math-iemh105-t4-q04",
+    "contentHash": "195d6353f79071de0513cd1759849f28f4cf3628350b2186707d0286b6d6781b",
+    "reviewedAt": "2026-07-24T18:32:23.440Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1154,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002163
+    }
+  },
+  "c9-math-iemh105-t4-q05": {
+    "questionId": "c9-math-iemh105-t4-q05",
+    "contentHash": "1d575da6298aad2ac643fa2a3c1846292f23fb02976bd53ba4d5c6118dae430f",
+    "reviewedAt": "2026-07-24T18:26:25.448Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1180,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00022019999999999999
+    }
+  },
+  "c9-math-iemh105-t4-q06": {
+    "questionId": "c9-math-iemh105-t4-q06",
+    "contentHash": "8c1f9beefc755944ed98bad201920d1ad5fe246ce80315e7a87fc09bafe56542",
+    "reviewedAt": "2026-07-24T18:26:27.004Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1170,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002187
+    }
+  },
+  "c9-math-iemh105-t4-q07": {
+    "questionId": "c9-math-iemh105-t4-q07",
+    "contentHash": "15b3e1f0aed5e0d7fbe205fa6677ee814a725579117e430eb77c566dda0d9e78",
+    "reviewedAt": "2026-07-24T18:26:29.045Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1164,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002178
+    }
+  },
+  "c9-math-iemh105-t5-q01": {
+    "questionId": "c9-math-iemh105-t5-q01",
+    "contentHash": "d526eefdb699d17dc79f6302bbb3575e94d94df51657be65a715fa97f12c4575",
+    "reviewedAt": "2026-07-24T18:26:30.756Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1121,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021135
+    }
+  },
+  "c9-math-iemh105-t5-q02": {
+    "questionId": "c9-math-iemh105-t5-q02",
+    "contentHash": "5279e09e9664d32d7491230a66a2608ce70817d3b12518db76a2039c1fa730ac",
+    "reviewedAt": "2026-07-24T18:26:32.553Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1094,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020729999999999997
+    }
+  },
+  "c9-math-iemh105-t5-q03": {
+    "questionId": "c9-math-iemh105-t5-q03",
+    "contentHash": "91479823a849a34f9f396104450d31ef6211da62a43472cd9ddeae53f56b942d",
+    "reviewedAt": "2026-07-24T18:26:34.364Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1151,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021584999999999996
+    }
+  },
+  "c9-math-iemh105-t5-q04": {
+    "questionId": "c9-math-iemh105-t5-q04",
+    "contentHash": "3a0953863ae2e16060eb826ad9541a52326f89f30df1ef4e12ebba3b09fbc531",
+    "reviewedAt": "2026-07-24T18:26:36.180Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1092,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.000207
+    }
+  },
+  "c9-math-iemh105-t5-q05": {
+    "questionId": "c9-math-iemh105-t5-q05",
+    "contentHash": "db5857816d2905524c13dd6ffe5b067b2d28286f77a971e78bd0b7890aa7aea3",
+    "reviewedAt": "2026-07-24T18:26:38.492Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1191,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00022185
+    }
+  },
+  "c9-math-iemh105-t5-q06": {
+    "questionId": "c9-math-iemh105-t5-q06",
+    "contentHash": "834e8e83d2260cfb972f5fe03faad05b3fdb9f7482497c9a57b3392a42deb07e",
+    "reviewedAt": "2026-07-24T18:26:40.258Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1176,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021959999999999997
+    }
+  },
+  "c9-math-iemh105-t6-q01": {
+    "questionId": "c9-math-iemh105-t6-q01",
+    "contentHash": "3e4c7433a40766d4c8cdbe56e6c4473f77c27097f0ce97609d788b004e5b6bdb",
+    "reviewedAt": "2026-07-24T18:29:55.407Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1293,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00023715
+    }
+  },
+  "c9-math-iemh105-t6-q02": {
+    "questionId": "c9-math-iemh105-t6-q02",
+    "contentHash": "5d5acda3ae80ea4582adee20cdbc8efb63e1572436918db976e62afaa9aeecda",
+    "reviewedAt": "2026-07-24T18:26:44.800Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1142,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021449999999999998
+    }
+  },
+  "c9-math-iemh105-t6-q03": {
+    "questionId": "c9-math-iemh105-t6-q03",
+    "contentHash": "6ee0793be86dc37b56cd88aa3f6242063321c4b657df05b65d3fd8345d55e50c",
+    "reviewedAt": "2026-07-24T18:26:47.174Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1145,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021495
+    }
+  },
+  "c9-math-iemh105-t6-q04": {
+    "questionId": "c9-math-iemh105-t6-q04",
+    "contentHash": "dcae48fc885ffe948dbfa8522620459c361b59b96bb176bbf19953aeae3139c0",
+    "reviewedAt": "2026-07-24T18:26:48.892Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1086,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020609999999999997
+    }
+  },
+  "c9-math-iemh105-t6-q05": {
+    "questionId": "c9-math-iemh105-t6-q05",
+    "contentHash": "f8fc6b71ad8f9864c069ff7782553f89a679a0104c7112e8e98e00694a3c116f",
+    "reviewedAt": "2026-07-24T18:29:56.819Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1175,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021945
+    }
+  },
+  "c9-math-iemh105-t6-q06": {
+    "questionId": "c9-math-iemh105-t6-q06",
+    "contentHash": "320f12a44e59a2b66fe285e8ebf11f90bb4d6d17306580da2edcc49d07e46646",
+    "reviewedAt": "2026-07-24T18:26:53.070Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1210,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002247
+    }
+  },
+  "c9-math-iemh105-t7-q01": {
+    "questionId": "c9-math-iemh105-t7-q01",
+    "contentHash": "4be5f12d144f6c5217809652eaea47a0bd245148e90c297b410cffb735b47686",
+    "reviewedAt": "2026-07-24T18:26:54.637Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1149,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021555
+    }
+  },
+  "c9-math-iemh105-t7-q02": {
+    "questionId": "c9-math-iemh105-t7-q02",
+    "contentHash": "5f79a1988960870abdc4e3f3aaed19719413d1f00fb3f94d9c84369267654d44",
+    "reviewedAt": "2026-07-24T18:26:56.358Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1137,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021375
+    }
+  },
+  "c9-math-iemh105-t7-q03": {
+    "questionId": "c9-math-iemh105-t7-q03",
+    "contentHash": "5c5eaec26cb969a2d5e527b5bd0b1aeb8db3fbe27f6d8b67db6e609e9223ed63",
+    "reviewedAt": "2026-07-24T18:26:57.889Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1086,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020609999999999997
+    }
+  },
+  "c9-math-iemh105-t7-q04": {
+    "questionId": "c9-math-iemh105-t7-q04",
+    "contentHash": "807a44fbf399eadd5bb9e42725dabbd78c9f0ceef6d7b6fc96919b129a8c55d0",
+    "reviewedAt": "2026-07-24T18:26:59.654Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1106,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002091
+    }
+  },
+  "c9-math-iemh105-t7-q05": {
+    "questionId": "c9-math-iemh105-t7-q05",
+    "contentHash": "aa6eaed60cec83a447389e31cf316f1047a27a7afeafc18576bc16b0c6e90b76",
+    "reviewedAt": "2026-07-24T18:27:01.558Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1167,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021825
+    }
+  },
+  "c9-math-iemh105-t7-q06": {
+    "questionId": "c9-math-iemh105-t7-q06",
+    "contentHash": "02170c8d8e7e6e8f7d8e2901003b7b239540673b4901ecd2f81c07f118504833",
+    "reviewedAt": "2026-07-24T18:29:58.375Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1167,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021825
+    }
+  },
+  "c9-math-iemh105-t7-q07": {
+    "questionId": "c9-math-iemh105-t7-q07",
+    "contentHash": "0686ccbf726649462d33112fff548f5080d0e0cb4c694a708e6dc05fbd9d1ba2",
+    "reviewedAt": "2026-07-24T18:27:07.356Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1159,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021705
+    }
+  },
+  "c9-math-iemh105-t8-q01": {
+    "questionId": "c9-math-iemh105-t8-q01",
+    "contentHash": "c87a52c70968d8b8e0287f9a01cbf7a53c2954712066a92297b67abebf724920",
+    "reviewedAt": "2026-07-24T18:27:08.904Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1108,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002094
+    }
+  },
+  "c9-math-iemh105-t8-q02": {
+    "questionId": "c9-math-iemh105-t8-q02",
+    "contentHash": "74998d43822c329c6ed344a7343b72c9aca2e602aa22b4c98365507dc2aa1f29",
+    "reviewedAt": "2026-07-24T18:27:10.501Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1113,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021014999999999999
+    }
+  },
+  "c9-math-iemh105-t8-q03": {
+    "questionId": "c9-math-iemh105-t8-q03",
+    "contentHash": "f04ae552aea54b35521c009fc067f55613bff43f1583a1ce2dda890c180fa8cb",
+    "reviewedAt": "2026-07-24T18:27:15.397Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1069,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020355
+    }
+  },
+  "c9-math-iemh105-t8-q04": {
+    "questionId": "c9-math-iemh105-t8-q04",
+    "contentHash": "e0a1f412078c1273e4a17a57a4a3128fb31f8c6504ec794c293673c3dd7e71aa",
+    "reviewedAt": "2026-07-24T18:27:16.944Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1257,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00023175
+    }
+  },
+  "c9-math-iemh105-t8-q05": {
+    "questionId": "c9-math-iemh105-t8-q05",
+    "contentHash": "28ffa90ac857cfa9b201dac0f5a53d3a570ba4f4f1cac7d3c0810d8d15e40a01",
+    "reviewedAt": "2026-07-24T18:27:18.348Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1246,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00023009999999999998
+    }
+  },
+  "c9-math-iemh105-t8-q06": {
+    "questionId": "c9-math-iemh105-t8-q06",
+    "contentHash": "6ec2c688f46406ea719fb09345a154d8013c4cd0b9e70087ff5975b929f83a83",
+    "reviewedAt": "2026-07-24T18:27:19.931Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1189,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00022155
+    }
+  }
+}

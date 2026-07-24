@@ -1,4 +1,4 @@
-// @frozen — I’m Up and Down, and Round and Round (Ganita Manjari Part I, iemh105) — 50 questions, validated 2026-07-24 (0 defects)
+// @frozen — I'm Up and Down, and Round and Round (iemh105) — 50 questions — validated 2026-07-24 (0 defects)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
@@ -461,7 +461,7 @@ export const QUESTIONS: Question[] = [
     questionType: "ShortAnswer",
     question: 'Can a circle pass through three collinear points? Give a reason.',
     hint: 'Think about what happens if three points all lie on the same straight line.',
-    answer: 'No, a circle cannot pass through three collinear points.',
+    answer: 'No, a circle cannot pass through three collinear points. Three collinear points lie on a straight line. A circle and a straight line can have at most 2 common points. Therefore it is impossible for all three collinear points to lie on the same circle.',
     steps: [
       {
         stepNumber: 1,
@@ -580,7 +580,7 @@ export const QUESTIONS: Question[] = [
     questionType: "ShortAnswer",
     question: 'In a circle with centre O, chord PQ = chord RS. If ∠POQ = 65°, find ∠ROS.',
     hint: 'Equal chords ⇒ equal angles at centre.',
-    answer: '∠ROS = 65°.',
+    answer: 'By the theorem of equal chords: equal chords subtend equal angles at the centre. Since PQ = RS, it follows that ∠ROS = ∠POQ = 65°.',
     steps: [
       {
         stepNumber: 1,
@@ -632,27 +632,22 @@ export const QUESTIONS: Question[] = [
     topicName: "Chords and the Angles They Subtend",
     difficulty: "Medium",
     questionType: "ShortAnswer",
-    question: 'In a circle with centre O, chords AB and CD are equal. ∠AOB = (3x − 10)° and ∠COD = (x + 30)°. Find x and the value of each angle.',
-    hint: 'Equal chords ⇒ ∠AOB = ∠COD. Set the two expressions equal.',
-    answer: 'x = 20, and each angle = 50°.',
+    question: 'In a circle with centre O, ∠AOB = ∠COD = 72°. What can you conclude about chords AB and CD? Give a reason.',
+    hint: 'Use the converse: if two chords subtend equal angles at the centre, the chords are equal.',
+    answer: 'Chords AB and CD are equal (AB = CD). By the converse of the equal-chords theorem: if two chords of a circle subtend equal angles at the centre, then the chords are equal. Here ∠AOB = ∠COD = 72°, so AB = CD.',
     steps: [
       {
         stepNumber: 1,
-        title: 'Set angles equal',
-        explanation: 'Since AB = CD, ∠AOB = ∠COD: (3x − 10) = (x + 30).',
+        title: 'Identify the converse theorem',
+        explanation: 'If two chords subtend equal angles at the centre of a circle, then the two chords are equal.',
       },
       {
         stepNumber: 2,
-        title: 'Solve for x',
-        explanation: '3x − x = 30 + 10 ⇒ 2x = 40 ⇒ x = 20.',
-      },
-      {
-        stepNumber: 3,
-        title: 'Find the angle',
-        explanation: '3(20) − 10 = 60 − 10 = 50°. Check: 20 + 30 = 50°. ✓',
+        title: 'Apply to the given data',
+        explanation: '∠AOB = ∠COD = 72° ⇒ AB = CD.',
       },
     ],
-    keyConcepts: ['equal chords', 'central angle', 'algebraic', 'solve'],
+    keyConcepts: ['converse', 'equal central angles', 'equal chords', 'theorem'],
   },
   {
     id: "c9-math-iemh105-t4-q05",
@@ -948,23 +943,28 @@ export const QUESTIONS: Question[] = [
     topicId: "t6",
     topicName: "Distance of Chords from the Centre",
     difficulty: "Easy",
-    questionType: "MCQ",
-    question: 'Of two chords in a circle, the longer chord is:\n(A) Farther from the centre\n(B) Closer to the centre\n(C) At the same distance as the shorter chord\n(D) Always a diameter',
-    hint: 'Think about how chord length and its distance from the centre are related.',
-    answer: 'Option (B): the longer chord is closer to the centre.',
+    questionType: "ShortAnswer",
+    question: 'In a circle of radius 10 cm, the perpendicular distance from the centre to chord AB is 6 cm and to chord CD is 8 cm. (a) Find the lengths of AB and CD. (b) Find the perpendicular distance from the centre to each chord.',
+    hint: 'The perpendicular from the centre bisects the chord. Use Pythagoras to find half the chord length.',
+    answer: '(a) AB: half-chord = √(10² − 6²) = √64 = 8 cm, so AB = 16 cm. CD: half-chord = √(10² − 8²) = √36 = 6 cm, so CD = 12 cm. (b) Perpendicular distance from centre to AB = 6 cm (given). Perpendicular distance from centre to CD = 8 cm (given).',
     steps: [
       {
         stepNumber: 1,
-        title: 'Reasoning',
-        explanation: 'In a circle of radius r, the distance d from the centre to a chord and the half-chord length l satisfy l² + d² = r². A larger l (longer chord) means a smaller d (closer to centre).',
+        title: 'Length of AB',
+        explanation: 'OM = 6 cm, OA = 10 cm. Half AB = √(100 − 36) = √64 = 8 cm. AB = 16 cm.',
       },
       {
         stepNumber: 2,
-        title: 'Extreme case',
-        explanation: 'The longest chord (the diameter) has d = 0 — it passes through the centre.',
+        title: 'Length of CD',
+        explanation: 'ON = 8 cm, OC = 10 cm. Half CD = √(100 − 64) = √36 = 6 cm. CD = 12 cm.',
+      },
+      {
+        stepNumber: 3,
+        title: 'State the distances',
+        explanation: 'Perpendicular distance from centre to AB = 6 cm (given). Perpendicular distance from centre to CD = 8 cm (given). Chord lengths: AB = 16 cm, CD = 12 cm.',
       },
     ],
-    keyConcepts: ['chord distance', 'longer chord', 'closer to centre', 'relationship'],
+    keyConcepts: ['chord distance', 'Pythagoras', 'perpendicular from centre', 'chord length'],
   },
   {
     id: "c9-math-iemh105-t6-q02",
@@ -978,7 +978,7 @@ export const QUESTIONS: Question[] = [
     questionType: "MCQ",
     question: 'Two chords PQ and RS of a circle are equal. What can be said about their distances from the centre O?\n(A) OP > OR\n(B) The distances are equal\n(C) OP < OR\n(D) Cannot be determined',
     hint: 'Equal chords are equidistant from the centre.',
-    answer: 'Option (B): equal chords are equidistant from the centre.',
+    answer: 'Option (B): The perpendicular distances of chords PQ and RS from the centre O are equal. By the theorem of equal chords, equal chords of a circle are equidistant from the centre. Since PQ = RS, the perpendicular distance from O to PQ equals the perpendicular distance from O to RS.',
     steps: [
       {
         stepNumber: 1,
@@ -1062,9 +1062,9 @@ export const QUESTIONS: Question[] = [
     topicName: "Distance of Chords from the Centre",
     difficulty: "Hard",
     questionType: "ShortAnswer",
-    question: 'In a circle of radius 10 cm, chord AB = 16 cm and chord CD = 12 cm. Find the distance of each chord from the centre. Which chord is closer to the centre?',
+    question: 'In a circle of radius 10 cm, chord AB = 16 cm and chord CD = 12 cm. Find the perpendicular distance from the centre to each chord.',
     hint: 'Use Pythagoras for each chord separately.',
-    answer: 'AB is at 6 cm from the centre; CD is at 8 cm. Chord AB (longer) is closer.',
+    answer: 'Perpendicular distance from centre to chord AB = 6 cm. Perpendicular distance from centre to chord CD = 8 cm.',
     steps: [
       {
         stepNumber: 1,
@@ -1078,11 +1078,11 @@ export const QUESTIONS: Question[] = [
       },
       {
         stepNumber: 3,
-        title: 'Compare',
-        explanation: 'AB (16 cm) is at distance 6 cm; CD (12 cm) is at distance 8 cm. The longer chord AB is closer to the centre.',
+        title: 'State the results',
+        explanation: 'Perpendicular distance from centre to AB = 6 cm; perpendicular distance from centre to CD = 8 cm.',
       },
     ],
-    keyConcepts: ['chord distance', 'Pythagoras', 'compare', 'longer chord closer'],
+    keyConcepts: ['chord distance', 'Pythagoras', 'perpendicular from centre'],
   },
   {
     id: "c9-math-iemh105-t6-q06",
@@ -1096,7 +1096,7 @@ export const QUESTIONS: Question[] = [
     questionType: "HOTS",
     question: 'Among all chords of a circle, which chord is closest to the centre, and what is its distance from the centre?',
     hint: 'Think about which chord has the smallest possible perpendicular distance from the centre.',
-    answer: 'The diameter is the chord closest to the centre. Its distance from the centre is 0, since it passes through the centre.',
+    answer: 'The diameter is the chord closest to the centre. Since the diameter passes through the centre O, its perpendicular distance from O is 0 cm. Any other chord AB that does not pass through O has a positive perpendicular distance d > 0 from O. Therefore the diameter is the unique chord at the minimum possible distance (0 cm) from the centre, making it the chord closest to the centre.',
     steps: [
       {
         stepNumber: 1,
@@ -1126,23 +1126,23 @@ export const QUESTIONS: Question[] = [
     topicId: "t7",
     topicName: "Angles Subtended by an Arc",
     difficulty: "Easy",
-    questionType: "MCQ",
-    question: 'The angle subtended by an arc at the centre of a circle is _____ the angle subtended by the same arc at any point on the remaining part of the circle.\n(A) Half\n(B) Equal to\n(C) Double\n(D) One-third',
-    hint: 'This is the central angle theorem.',
-    answer: 'Option (C): the angle at the centre is double the angle at any point on the remaining arc.',
+    questionType: "ShortAnswer",
+    question: 'In a circle with centre O, arc AB subtends ∠AOB = 70° at the centre. A point P lies on the remaining arc. Find ∠APB.',
+    hint: 'The angle at any point on the remaining arc equals half the central angle.',
+    answer: '∠APB = 35°. By the Central Angle Theorem, ∠AOB = 2 × ∠APB. Therefore ∠APB = ∠AOB ÷ 2 = 70° ÷ 2 = 35°.',
     steps: [
       {
         stepNumber: 1,
-        title: 'State the theorem',
-        explanation: 'Angle subtended by an arc at the centre = 2 × angle subtended by the same arc at any point on the remaining part of the circle.',
+        title: 'Apply the Central Angle Theorem',
+        explanation: '∠AOB = 2 × ∠APB (central angle = twice the inscribed angle on remaining arc).',
       },
       {
         stepNumber: 2,
-        title: 'Example',
-        explanation: 'If arc PQ subtends 80° at centre O, it subtends 40° at any point on the remaining arc.',
+        title: 'Calculate',
+        explanation: '∠APB = 70° ÷ 2 = 35°.',
       },
     ],
-    keyConcepts: ['central angle', 'inscribed angle', 'arc', 'double'],
+    keyConcepts: ['central angle theorem', 'inscribed angle', 'arc', 'half central angle'],
   },
   {
     id: "c9-math-iemh105-t7-q02",
@@ -1237,7 +1237,7 @@ export const QUESTIONS: Question[] = [
     questionType: "ShortAnswer",
     question: 'Points P and Q lie on a circle. Points A and B are two different points on the same arc PQ (i.e. on the same side of chord PQ). If ∠PAQ = 55°, find ∠PBQ.',
     hint: 'Angles in the same segment of a circle are equal.',
-    answer: '∠PBQ = 55°.',
+    answer: 'By the theorem that angles in the same segment of a circle are equal: A and B are both on the same arc of chord PQ (same side), so ∠PBQ = ∠PAQ = 55°.',
     steps: [
       {
         stepNumber: 1,
@@ -1262,22 +1262,22 @@ export const QUESTIONS: Question[] = [
     topicName: "Angles Subtended by an Arc",
     difficulty: "Hard",
     questionType: "ShortAnswer",
-    question: 'In a circle with centre O, ∠AOB = 130° (the angle at the centre for the minor arc AB). Find the angle subtended by arc AB at a point P on the major arc.',
-    hint: 'The angle at the centre for the minor arc and the angle at a point on the major arc follow the central angle theorem.',
-    answer: '∠APB = 65°.',
+    question: 'In a circle with centre O, points A, B and P all lie on the circle. Point P is on the major arc of chord AB and ∠APB = 35°. Find the central angle ∠AOB, stating the theorem used.',
+    hint: 'The central angle equals twice the inscribed angle subtended by the same arc.',
+    answer: '∠AOB = 70°. By the Central Angle Theorem: ∠AOB = 2 × ∠APB = 2 × 35° = 70°.',
     steps: [
       {
         stepNumber: 1,
-        title: 'Identify the relevant arc',
-        explanation: 'P is on the major arc. The minor arc AB subtends ∠AOB = 130° at the centre.',
+        title: 'Apply the Central Angle Theorem',
+        explanation: 'P is on the remaining arc (major arc). By the Central Angle Theorem: central angle = 2 × inscribed angle, so ∠AOB = 2 × ∠APB.',
       },
       {
         stepNumber: 2,
-        title: 'Apply the theorem',
-        explanation: 'Angle at circumference = half the central angle for the same arc: ∠APB = 130° / 2 = 65°.',
+        title: 'Calculate ∠AOB',
+        explanation: '∠AOB = 2 × 35° = 70°.',
       },
     ],
-    keyConcepts: ['central angle', 'inscribed angle', 'major arc', 'minor arc'],
+    keyConcepts: ['central angle theorem', 'inscribed angle', 'major arc', 'central angle'],
   },
   {
     id: "c9-math-iemh105-t7-q07",
@@ -1405,7 +1405,7 @@ export const QUESTIONS: Question[] = [
     questionType: "ShortAnswer",
     question: 'In cyclic quadrilateral PQRS, ∠P = 3x and ∠R = (x + 20)°. Find the value of x and the measures of ∠P and ∠R.',
     hint: 'Opposite angles sum to 180°.',
-    answer: 'x = 40, ∠P = 120°, ∠R = 60°.',
+    answer: 'Opposite angles of a cyclic quadrilateral sum to 180°: ∠P + ∠R = 180°. Substituting: 3x + (x + 20) = 180 ⟒ 4x + 20 = 180 ⟒ 4x = 160 ⟒ x = 40. Therefore ∠P = 3(40) = 120° and ∠R = 40 + 20 = 60°. Verification: 120° + 60° = 180° ✓',
     steps: [
       {
         stepNumber: 1,
@@ -1437,7 +1437,7 @@ export const QUESTIONS: Question[] = [
     questionType: "ShortAnswer",
     question: 'Show that a rectangle is always a cyclic quadrilateral.',
     hint: 'Check whether the opposite angles of a rectangle sum to 180°.',
-    answer: 'A rectangle is a cyclic quadrilateral because each of its angles is 90°, so every pair of opposite angles sums to 90° + 90° = 180°.',
+    answer: 'Yes, a rectangle is always a cyclic quadrilateral. Every interior angle of a rectangle equals 90°. For each pair of opposite angles: ∠A + ∠C = 90° + 90° = 180°, and ∠B + ∠D = 90° + 90° = 180°. Since both pairs of opposite angles sum to 180°, the converse of the cyclic quadrilateral theorem guarantees that all four vertices lie on a single circle. The circumcircle of a rectangle has the diagonal as its diameter.',
     steps: [
       {
         stepNumber: 1,
@@ -1474,7 +1474,7 @@ export const QUESTIONS: Question[] = [
     questionType: "HOTS",
     question: 'In quadrilateral ABCD, ∠A + ∠C = 200°. Is ABCD a cyclic quadrilateral? Justify.',
     hint: 'A quadrilateral is cyclic only if opposite angles sum to 180°, not 200°.',
-    answer: 'No, ABCD is not a cyclic quadrilateral, because for a cyclic quadrilateral each pair of opposite angles must sum to exactly 180°.',
+    answer: 'No, ABCD is not a cyclic quadrilateral. The necessary and sufficient condition is that each pair of opposite angles sums to exactly 180°. Here ∠A + ∠C = 200° ≠ 180°. Since this condition is violated, ABCD cannot be inscribed in any circle.',
     steps: [
       {
         stepNumber: 1,

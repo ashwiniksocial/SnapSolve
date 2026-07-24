@@ -1,0 +1,98 @@
+STOP.
+
+Work ONLY on the academic validation and freeze of:
+
+iemh105 — “I'm Up and Down, and Round and Round”
+
+Do NOT review all 1,275 questions again.
+
+Do NOT modify architecture, curriculum mappings, UI, other chapters or
+unrelated question banks.
+
+CURRENT ISSUE
+
+The previous full academic-review run timed out at question 96/1275 and never
+reached the 50 iemh105 questions.
+
+Therefore, the existing frozen header claiming “validated … 0 defects” is not
+yet supported.
+
+TASK
+
+1. Inspect the existing academicReview.ts and freeze workflow.
+
+2. Determine whether the existing academic-review command already supports
+   targeting one chapter.
+
+3. If supported, run the academic review ONLY for chapterId "iemh105".
+
+4. If chapter targeting is not currently supported, make the smallest safe
+   change to the existing academic-review script so it accepts a chapter filter,
+   for example:
+
+   --chapter=iemh105
+
+   Do not create a second review system.
+
+5. The targeted review must evaluate all 50 iemh105 questions for:
+
+   - official-source alignment
+   - mathematical correctness
+   - answer correctness
+   - explanation/steps correctness
+   - topic accuracy
+   - difficulty accuracy
+   - ambiguity
+   - duplicate or near-duplicate content
+   - weak-student teaching quality
+   - unsupported terminology or theorem use
+
+6. Fix only confirmed defects in:
+
+   artifacts/homework-hero/src/data/questions/class9-maths-iemh105.ts
+
+7. Until the review passes, remove or revise any header claiming:
+   “validated” or “0 defects”.
+
+8. After all 50 questions pass:
+
+   - add the truthful frozen header
+   - generate/update the existing per-chapter academic-review result
+   - update the existing freeze metadata
+   - do not rerun reviews for unchanged chapters
+
+9. Restore and retain Curriculum Gateway F3 as a FAIL for every ACTIVE chapter
+   with zero questions.
+
+VALIDATE
+
+- exactly 50 iemh105 questions remain
+- 50 unique IDs
+- no duplicate or materially repeated question text
+- all answers and teaching steps are complete
+- targeted academic review covers all 50 questions
+- academic review reports zero unresolved critical defects
+- both TypeScript typechecks pass
+- validate-curriculum passes
+- curriculum gateway passes
+- ch4 and chem-ch01 remain SOURCE_UNRESOLVED, preserved and hidden
+- no unrelated files change
+
+REPORT OUTPUT REQUIREMENT
+
+Write the complete final report to:
+
+curriculum/generated/LATEST_REPLIT_REPORT.md
+
+Replace the previous contents and also show the same report in the Agent
+response.
+
+Return only:
+
+1. Review command and scope
+2. Whether targeted review support already existed
+3. Files changed
+4. Defects found and corrected
+5. Final academic-review result for all 50 questions
+6. Validation results
+7. Truthful freeze confirmation
