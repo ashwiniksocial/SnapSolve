@@ -3,7 +3,7 @@ import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
   id: "phy-ch2",
-  name: "Force and Laws of Motion",
+  name: "How Forces Affect Motion",
   classNum: 9,
   subject: "Physics",
   topics: [
@@ -21,7 +21,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t1-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "Newton's First Law of Motion is also called the Law of: (a) Acceleration  (b) Inertia  (c) Action–Reaction  (d) Conservation of Momentum",
@@ -35,7 +35,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "Newton's Second Law states that F = ma. What does 'a' represent when F is the NET force?",
@@ -49,7 +49,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "State Newton's Third Law of Motion. Give one example from daily life.",
@@ -63,7 +63,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A net force of 20 N acts on a body of mass 5 kg. What is the acceleration? If the force is doubled, what happens to the acceleration?",
@@ -77,7 +77,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A fielder pulls his hands backward while catching a fast cricket ball. Explain this using Newton's Second Law.",
@@ -91,7 +91,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Medium", questionType: "MCQ",
     question: "A book lies on a table. The table exerts a normal force N on the book and the book's weight W acts downward. Which Newton's Law do N and W illustrate?",
@@ -105,7 +105,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "Prove that Newton's First Law is a special case of Newton's Second Law.",
@@ -120,7 +120,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Hard", questionType: "HOTS",
     question: "Two forces of 6 N and 8 N act on a body of mass 2 kg at right angles to each other. Find the magnitude of acceleration.",
@@ -137,7 +137,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t2-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Easy", questionType: "MCQ",
     question: "Inertia of a body depends on its: (a) Velocity  (b) Mass  (c) Shape  (d) Temperature",
@@ -150,7 +150,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Easy", questionType: "MCQ",
     question: "When a bus brakes suddenly, passengers lurch forward. Which type of inertia is demonstrated?",
@@ -164,7 +164,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Why is it harder to push a loaded cart than an empty one?",
@@ -178,7 +178,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "When a carpet is beaten with a stick, dust particles fall off. Explain using Newton's First Law.",
@@ -192,7 +192,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A stone of mass 0.5 kg is tied to a string and whirled in a circle. When the string is cut, which way does the stone travel? Explain using inertia.",
@@ -206,7 +206,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Two bodies A (mass 5 kg) and B (mass 20 kg) are acted upon by equal forces. Compare their accelerations.",
@@ -220,7 +220,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "Explain with examples the three types of inertia. Which has the greatest practical significance in road safety?",
@@ -236,7 +236,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Hard", questionType: "HOTS",
     question: "An astronaut in deep space (no gravity, no friction) pushes on a wall. She moves backward. If her mass is 60 kg and she pushes with a force of 120 N for 0.5 s, find her final speed.",
@@ -250,7 +250,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Why do athletes run a few steps before taking a long jump?",
@@ -267,7 +267,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t3-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Easy", questionType: "MCQ",
     question: "The SI unit of momentum is: (a) N  (b) kg·m/s  (c) J  (d) N·s²",
@@ -280,7 +280,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Calculate the momentum of a 1500 kg car moving at 20 m/s.",
@@ -293,7 +293,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Easy", questionType: "MCQ",
     question: "The law of conservation of momentum states that in the absence of external forces, the total momentum of a system: (a) Increases  (b) Decreases  (c) Remains constant  (d) Becomes zero",
@@ -306,7 +306,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A gun of mass 3 kg fires a bullet of mass 30 g at 300 m/s. Find the recoil velocity of the gun.",
@@ -320,7 +320,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A 5 kg ball moving at 4 m/s collides with and sticks to a 3 kg ball at rest. Find the velocity of the combined system.",
@@ -334,7 +334,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A force of 100 N acts on a body for 0.1 s. Find the impulse and the change in momentum.",
@@ -348,7 +348,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "Derive Newton's Second Law from the concept of momentum. Show F = ma as a special case.",
@@ -363,7 +363,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Hard", questionType: "HOTS",
     question: "Two balls A (1 kg, 6 m/s) and B (2 kg, 3 m/s) move toward each other and collide. After collision, A bounces back at 2 m/s. Find B's velocity after collision. Is momentum conserved?",
@@ -381,7 +381,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t1-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "A force F acts on a body of mass m, producing acceleration a. If the mass is doubled while the force remains the same, the new acceleration is:\n(a) 2a  (b) a/2  (c) a  (d) 4a",
@@ -395,7 +395,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Define force. State its SI unit and give its dimensional formula.",
@@ -409,7 +409,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A car of mass 1200 kg moving at 15 m/s is brought to rest in 6 s by braking. Find the average braking force applied.",
@@ -423,7 +423,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A cricket ball (mass 0.16 kg) and a tennis ball (mass 0.06 kg) are bowled at the same speed of 25 m/s and caught in the same time of 0.1 s. Which one exerts greater force on the catcher's hand? Calculate both forces.",
@@ -438,7 +438,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t1-q13", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t1", topicName: "Newton's Laws of Motion",
     difficulty: "Hard", questionType: "HOTS",
     question: "A spaceship far from any planet has its engines switched off. It moves at 500 m/s. (a) What is the net force on it? (b) Will it ever stop on its own? (c) How does this illustrate Newton's First Law?",
@@ -456,7 +456,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t2-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Easy", questionType: "MCQ",
     question: "Which of the following has the greatest inertia?\n(a) A table tennis ball of mass 3 g  (b) A rubber ball of mass 60 g  (c) A cricket ball of mass 160 g  (d) A tennis ball of mass 58 g",
@@ -469,7 +469,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A coin is placed on a piece of card resting on top of a glass. The card is flicked away quickly. The coin falls into the glass instead of moving with the card. Explain this experiment using Newton's First Law.",
@@ -483,7 +483,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t2-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t2", topicName: "Inertia and Mass",
     difficulty: "Hard", questionType: "HOTS",
     question: "An ocean liner of mass 50,000 tonnes takes 3 km to stop after its engines are cut, while a speedboat of mass 2 tonnes stops in 200 m under the same water resistance per unit mass. Explain this difference qualitatively and quantitatively using the concept of inertia.",
@@ -501,7 +501,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t3-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Easy", questionType: "MCQ",
     question: "Momentum is:\n(a) A scalar quantity  (b) A vector quantity  (c) A dimensionless quantity  (d) Always a positive quantity",
@@ -514,7 +514,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Object A has mass 2 kg and velocity 6 m/s (East). Object B has mass 6 kg and velocity 2 m/s (East). (i) Compare their momenta. (ii) Which requires a greater force to stop in the same time?",
@@ -528,7 +528,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A ball of mass 0.4 kg moving at 10 m/s is brought to rest by a player in 0.2 s. Find the average force exerted by the player on the ball.",
@@ -542,7 +542,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "Toy car A (mass 200 g, velocity 5 m/s) collides with toy car B (mass 300 g, at rest). After collision they stick together. Find: (i) common velocity after collision, (ii) initial KE, (iii) final KE, (iv) loss in KE.",
@@ -558,7 +558,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t3-q13", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t3", topicName: "Momentum and Impulse",
     difficulty: "Hard", questionType: "HOTS",
     question: "A stationary bomb explodes into two fragments: fragment X (mass 3 kg) and fragment Y (mass 5 kg). Fragment X moves at 20 m/s. Find the velocity of Y. Is momentum conserved? Justify.",
@@ -576,7 +576,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t4-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t4", topicName: "Balanced and Unbalanced Forces",
     difficulty: "Easy", questionType: "MCQ",
     question: "When balanced forces act on a body, the body:\n(a) Accelerates in the direction of the larger force  (b) Does not change its state of rest or motion  (c) Starts moving  (d) Experiences a net force",
@@ -589,7 +589,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t4-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t4", topicName: "Balanced and Unbalanced Forces",
     difficulty: "Easy", questionType: "MCQ",
     question: "A body is in equilibrium. Which of the following is necessarily true?\n(a) The body is at rest  (b) The body moves at increasing speed  (c) The net force on the body is zero  (d) No forces act on the body",
@@ -602,7 +602,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t4-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t4", topicName: "Balanced and Unbalanced Forces",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Give two everyday examples of balanced forces and two of unbalanced forces.",
@@ -616,7 +616,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t4-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t4", topicName: "Balanced and Unbalanced Forces",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "In a tug of war, Team A pulls with 500 N and Team B with 500 N. (i) What is the net force? (ii) What happens to the rope? (iii) If Team A increases their pull to 700 N, what happens?",
@@ -630,7 +630,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t4-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t4", topicName: "Balanced and Unbalanced Forces",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A book of mass 2 kg rests on a table. (i) List all forces acting on it. (ii) Show it is in equilibrium. (iii) If someone pushes down on the book with an extra 5 N, what is the new normal force? (g = 10 m/s²)",
@@ -645,7 +645,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t4-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t4", topicName: "Balanced and Unbalanced Forces",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Three horizontal forces act on a body: 10 N East, 6 N West, and 4 N West. Find the net force on the body and determine whether it accelerates.",
@@ -659,7 +659,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t4-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t4", topicName: "Balanced and Unbalanced Forces",
     difficulty: "Hard", questionType: "HOTS",
     question: "A skydiver jumps from a plane and eventually reaches a constant 'terminal velocity'. (i) What can you say about the forces on the skydiver at terminal velocity? (ii) Is the skydiver in equilibrium? (iii) Why does the skydiver not keep accelerating?",
@@ -677,7 +677,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch2-t5-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t5", topicName: "Newton's Third Law — Applications",
     difficulty: "Easy", questionType: "MCQ",
     question: "According to Newton's Third Law, action and reaction forces:\n(a) Act on the same body in the same direction  (b) Act on different bodies and are equal and opposite  (c) Are equal and in the same direction  (d) Cancel each other out",
@@ -691,7 +691,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t5-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t5", topicName: "Newton's Third Law — Applications",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Explain how Newton's Third Law enables a person to walk on the ground.",
@@ -706,7 +706,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t5-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t5", topicName: "Newton's Third Law — Applications",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "How does a rocket work in outer space where there is no air to push against? Use Newton's Third Law to explain.",
@@ -720,7 +720,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t5-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t5", topicName: "Newton's Third Law — Applications",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A man of mass 80 kg stands on a weighing scale in a lift accelerating upward at 2 m/s². Find: (i) the weight of the man, (ii) the normal force (reading on scale), (iii) state the Third Law pair of the normal force. (g = 10 m/s²)",
@@ -735,7 +735,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch2-t5-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch2", chapterName: "Force and Laws of Motion",
+    chapterId: "phy-ch2", chapterName: "How Forces Affect Motion",
     topicId: "t5", topicName: "Newton's Third Law — Applications",
     difficulty: "Hard", questionType: "HOTS",
     question: "If action and reaction are always equal and opposite (Newton's Third Law), why don't they cancel out and prevent any object from ever accelerating?",

@@ -64,7 +64,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -94,7 +94,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "TrueOrFalse",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -118,7 +118,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -149,7 +149,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -173,7 +173,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -199,7 +199,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -224,7 +224,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -249,7 +249,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-013",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -273,7 +273,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-014",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -296,7 +296,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-015",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -322,7 +322,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-016",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -349,7 +349,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -373,7 +373,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -397,7 +397,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -422,7 +422,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -446,7 +446,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -472,7 +472,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-asr-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -504,7 +504,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-pyq-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t1", topicName: "Types of Mixtures",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -538,7 +538,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -562,7 +562,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -586,7 +586,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -611,7 +611,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -636,7 +636,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -663,7 +663,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -689,7 +689,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -712,7 +712,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -736,7 +736,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-017",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -761,7 +761,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-018",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -787,7 +787,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -811,7 +811,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -836,7 +836,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -862,7 +862,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-asr-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -892,7 +892,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-asr-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -925,7 +925,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -951,7 +951,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -979,7 +979,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-pyq-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t2", topicName: "Solutions, Suspensions and Colloids",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1012,7 +1012,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-011",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1042,7 +1042,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-012",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1074,7 +1074,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "ncert", questionFormat: "Numerical",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1098,7 +1098,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1122,7 +1122,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-019",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "ncert", questionFormat: "Numerical",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1145,7 +1145,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-020",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "ncert", questionFormat: "Numerical",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1169,7 +1169,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-021",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "ncert", questionFormat: "Numerical",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1192,7 +1192,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-022",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "ncert", questionFormat: "Numerical",
     difficulty: "Hard", bloomsLevel: "apply",
@@ -1216,7 +1216,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-023",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1242,7 +1242,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "competency", questionFormat: "Numerical",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1266,7 +1266,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "competency", questionFormat: "Numerical",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1289,7 +1289,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-011",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1313,7 +1313,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-012",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "competency", questionFormat: "Numerical",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1338,7 +1338,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1362,7 +1362,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1386,7 +1386,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1412,7 +1412,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-asr-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1443,7 +1443,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-asr-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1475,7 +1475,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-pyq-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "previous-year", questionFormat: "Numerical",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1501,7 +1501,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-pyq-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t3", topicName: "Concentration, Solubility and Data Interpretation",
     questionType: "previous-year", questionFormat: "Numerical",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1533,7 +1533,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-con-013",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "concept", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1559,7 +1559,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1583,7 +1583,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1607,7 +1607,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1632,7 +1632,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-011",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1657,7 +1657,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-024",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1682,7 +1682,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-nce-025",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1709,7 +1709,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "apply",
@@ -1739,7 +1739,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1763,7 +1763,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-013",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1787,7 +1787,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cmp-014",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "apply",
@@ -1818,7 +1818,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1844,7 +1844,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-hot-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1872,7 +1872,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-asr-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1903,7 +1903,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-asr-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1936,7 +1936,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-pyq-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1966,7 +1966,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-pyq-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1993,7 +1993,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-pyq-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "previous-year", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -2022,7 +2022,7 @@ export const CH02_IS_MATTER_AROUND_US_PURE: QuestionV2[] = [
   {
     id: "bo-chm-9-ch02-cst-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch02", chapterName: "Exploring Mixtures and Their Separation",
+    chapterId: "ch02", chapterName: "Exploring Mixtures and their Separation",
     topicId: "t4", topicName: "Separation Techniques and Applications",
     questionType: "case-study", questionFormat: "CaseStudy",
     difficulty: "Medium", bloomsLevel: "apply",

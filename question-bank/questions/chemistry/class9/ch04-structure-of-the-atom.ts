@@ -47,7 +47,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -71,7 +71,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -100,7 +100,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -128,7 +128,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -151,7 +151,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -177,7 +177,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -200,7 +200,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -223,7 +223,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -251,7 +251,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -276,7 +276,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -301,7 +301,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -331,7 +331,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -356,7 +356,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -381,7 +381,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -415,7 +415,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -439,7 +439,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -463,7 +463,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -489,7 +489,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-001",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "previous-year", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -517,7 +517,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -546,7 +546,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -570,7 +570,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -594,7 +594,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -618,7 +618,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-011",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -647,7 +647,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -675,7 +675,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -703,7 +703,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -727,7 +727,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -751,7 +751,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -775,7 +775,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -802,7 +802,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -825,7 +825,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-012",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -855,7 +855,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-013",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -880,7 +880,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -904,7 +904,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-002",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -935,7 +935,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "previous-year", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -962,7 +962,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t1", topicName: "Charged Particles in Matter",
     questionType: "previous-year", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -993,7 +993,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1016,7 +1016,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-014",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1046,7 +1046,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-015",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1069,7 +1069,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-016",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1092,7 +1092,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1116,7 +1116,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1139,7 +1139,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-003",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1170,7 +1170,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "previous-year", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1197,7 +1197,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t2", topicName: "Thomson's and Rutherford's Atomic Models",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1228,7 +1228,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1253,7 +1253,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-017",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1277,7 +1277,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-018",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1301,7 +1301,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-019",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1325,7 +1325,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-020",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1350,7 +1350,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1374,7 +1374,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1399,7 +1399,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1423,7 +1423,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1447,7 +1447,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-004",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1478,7 +1478,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1509,7 +1509,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t3", topicName: "Bohr's Model and Electron Distribution",
     questionType: "previous-year", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1540,7 +1540,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-con-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1564,7 +1564,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-021",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1593,7 +1593,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-022",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1618,7 +1618,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-023",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1642,7 +1642,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1667,7 +1667,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-011",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1691,7 +1691,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-cmp-012",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1714,7 +1714,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1738,7 +1738,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1762,7 +1762,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-006",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1793,7 +1793,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-007",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1824,7 +1824,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-009",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "previous-year", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1851,7 +1851,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-010",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t4", topicName: "Atomic Number, Mass Number, and Valency",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1882,7 +1882,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-nce-024",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "ncert", questionFormat: "MCQ",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1911,7 +1911,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-asr-008",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1942,7 +1942,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-011",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1969,7 +1969,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-pyq-012",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "CBSE",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1995,7 +1995,7 @@ export const CH04_STRUCTURE_OF_THE_ATOM: QuestionV2[] = [
   {
     id: "bo-chm-9-ch04-hot-005",
     schemaVersion: 2, classNum: 9, subject: "Chemistry", board: "Both",
-    chapterId: "ch04", chapterName: "Structure of the Atom",
+    chapterId: "ch04", chapterName: "Journey Inside the Atom",
     topicId: "t5", topicName: "Isotopes and Isobars",
     questionType: "hots", questionFormat: "ShortAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",

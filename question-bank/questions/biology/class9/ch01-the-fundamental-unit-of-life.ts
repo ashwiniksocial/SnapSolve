@@ -58,7 +58,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-001",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -83,7 +83,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-002",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -107,7 +107,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-003",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -130,7 +130,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-004",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -157,7 +157,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-001",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -181,7 +181,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-002",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -205,7 +205,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-003",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -229,7 +229,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-004",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -254,7 +254,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-001",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -278,7 +278,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-002",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -302,7 +302,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-003",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "competency", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -332,7 +332,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-001",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Easy", bloomsLevel: "evaluate",
@@ -358,7 +358,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-002",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -384,7 +384,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-003",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "evaluate",
@@ -412,7 +412,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-001",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -438,7 +438,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-002",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -467,7 +467,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-001",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -495,7 +495,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-002",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -522,7 +522,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-003",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -549,7 +549,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-004",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t1", topicName: "Cell Theory and Cell Discovery",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "create",
@@ -586,7 +586,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-005",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -610,7 +610,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-006",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -634,7 +634,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-007",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -658,7 +658,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-008",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -681,7 +681,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-009",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -707,7 +707,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-005",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -731,7 +731,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-006",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -755,7 +755,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-007",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -781,7 +781,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-008",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "ncert", questionFormat: "LongAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -805,7 +805,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-009",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "ncert", questionFormat: "LongAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -831,7 +831,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-010",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -859,7 +859,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-004",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -883,7 +883,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-005",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "competency", questionFormat: "LongAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -907,7 +907,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-006",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -931,7 +931,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-007",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "competency", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -961,7 +961,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-004",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Easy", bloomsLevel: "evaluate",
@@ -987,7 +987,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-005",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Easy", bloomsLevel: "evaluate",
@@ -1013,7 +1013,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-006",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1039,7 +1039,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-007",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "evaluate",
@@ -1067,7 +1067,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-003",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1093,7 +1093,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-004",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1122,7 +1122,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-005",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1151,7 +1151,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-006",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1179,7 +1179,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-007",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1208,7 +1208,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-008",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t2", topicName: "Cell Membrane and Cell Wall",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1244,7 +1244,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-010",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1267,7 +1267,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-011",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1291,7 +1291,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-012",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1314,7 +1314,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-013",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1338,7 +1338,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-con-014",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "concept", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1364,7 +1364,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-011",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1387,7 +1387,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-012",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1411,7 +1411,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-013",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "understand",
@@ -1435,7 +1435,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-014",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "apply",
@@ -1458,7 +1458,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-015",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1481,7 +1481,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-nce-016",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "ncert", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1506,7 +1506,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-008",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "apply",
@@ -1530,7 +1530,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-009",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "competency", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "analyse",
@@ -1554,7 +1554,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-010",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "competency", questionFormat: "LongAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1579,7 +1579,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-011",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "competency", questionFormat: "LongAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1604,7 +1604,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-cmp-012",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "competency", questionFormat: "LongAnswer",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1631,7 +1631,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-008",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Easy", bloomsLevel: "evaluate",
@@ -1657,7 +1657,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-009",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "evaluate",
@@ -1683,7 +1683,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-asr-010",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "assertion-reason", questionFormat: "AssertionReason",
     difficulty: "Medium", bloomsLevel: "analyse",
@@ -1711,7 +1711,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-005",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Easy", bloomsLevel: "remember",
@@ -1736,7 +1736,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-006",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1762,7 +1762,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-007",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "remember",
@@ -1789,7 +1789,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-008",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1815,7 +1815,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-009",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "remember",
@@ -1842,7 +1842,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-pyq-010",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "previous-year", questionFormat: "ShortAnswer",
     difficulty: "Medium", bloomsLevel: "understand",
@@ -1870,7 +1870,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-009",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1899,7 +1899,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-010",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1927,7 +1927,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-011",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "evaluate",
@@ -1955,7 +1955,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-012",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "analyse",
@@ -1984,7 +1984,7 @@ export const CH01_THE_FUNDAMENTAL_UNIT_OF_LIFE: QuestionV2[] = [
   {
     id: "bo-bio-9-ch01-hot-013",
     schemaVersion: 2, classNum: 9, subject: "Biology", board: "Both",
-    chapterId: "ch01", chapterName: "The Fundamental Unit of Life",
+    chapterId: "ch01", chapterName: "Cell: The Building Block of Life",
     topicId: "t3", topicName: "Cell Organelles",
     questionType: "hots", questionFormat: "LongAnswer",
     difficulty: "Hard", bloomsLevel: "create",

@@ -3,7 +3,7 @@ import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
   id: "phy-ch5",
-  name: "Sound",
+  name: "Sound Waves: Characteristics and Applications",
   classNum: 9,
   subject: "Physics",
   topics: [
@@ -21,7 +21,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t1-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Easy", questionType: "MCQ",
     question: "Sound waves are: (a) Transverse waves  (b) Electromagnetic waves  (c) Longitudinal waves  (d) Surface waves",
@@ -35,7 +35,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Easy", questionType: "MCQ",
     question: "Sound cannot travel through: (a) Air  (b) Water  (c) Steel  (d) Vacuum",
@@ -49,7 +49,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "What are compressions and rarefactions in a sound wave?",
@@ -63,7 +63,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "The speed of sound in air at 0°C is about 332 m/s. It increases at higher temperatures. What is the approximate speed of sound in air at 20°C?",
@@ -77,7 +77,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Why does sound travel faster in solids than in liquids and gases?",
@@ -91,7 +91,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A thunderclap is heard 3 seconds after a lightning flash. How far away is the lightning? (speed of sound = 340 m/s, speed of light ≈ instantaneous)",
@@ -105,7 +105,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A boy fires a gun near a cliff. He hears the echo after 2 s. If the speed of sound is 340 m/s, find the distance of the cliff from the boy.",
@@ -119,7 +119,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Hard", questionType: "HOTS",
     question: "Explain how bats use echolocation to navigate in complete darkness. What property of sound do they exploit?",
@@ -137,7 +137,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t2-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Easy", questionType: "MCQ",
     question: "The pitch of a sound depends on its: (a) Amplitude  (b) Frequency  (c) Speed  (d) Wavelength and speed equally",
@@ -150,7 +150,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Easy", questionType: "MCQ",
     question: "Loudness of sound depends on: (a) Frequency  (b) Speed  (c) Amplitude  (d) Wavelength",
@@ -163,7 +163,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Define: (i) Frequency, (ii) Time period, (iii) Wavelength of a sound wave.",
@@ -178,7 +178,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A sound wave has a frequency of 500 Hz and a speed of 340 m/s. Find its wavelength.",
@@ -191,7 +191,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "What is the audible range of frequency for humans? Define infrasound and ultrasound with examples.",
@@ -206,7 +206,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A tuning fork vibrates 440 times per second. Find its time period and wavelength if the speed of sound is 340 m/s.",
@@ -220,7 +220,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "Distinguish between loudness, pitch, and quality (timbre) of a sound. How do musicians use these properties?",
@@ -235,7 +235,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Hard", questionType: "HOTS",
     question: "A dolphin emits an ultrasonic pulse of frequency 100,000 Hz. The echo from a fish returns in 0.02 s. Find: (i) wavelength of the pulse in water (speed of sound in water = 1500 m/s), (ii) distance of the fish.",
@@ -249,7 +249,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Easy", questionType: "MCQ",
     question: "The frequency range of ultrasound is: (a) Below 20 Hz  (b) 20–20,000 Hz  (c) Above 20,000 Hz  (d) Exactly 20,000 Hz",
@@ -265,7 +265,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t3-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Easy", questionType: "MCQ",
     question: "An echo is heard when sound is reflected from a surface at least how far away?",
@@ -279,7 +279,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "What is reverberation? How is it different from an echo?",
@@ -293,7 +293,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "What is SONAR? State one application.",
@@ -307,7 +307,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A ship sends a SONAR pulse and receives the echo after 4 s. If the speed of sound in water is 1500 m/s, find the depth of the seabed.",
@@ -321,7 +321,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "List three applications of ultrasound in medicine.",
@@ -336,7 +336,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Why is the ceiling of a concert hall curved? What material is used on walls to reduce reverberation?",
@@ -350,7 +350,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "Explain how doctors use ultrasound for medical imaging (ultrasonography). Why is ultrasound preferred over X-rays for prenatal scans?",
@@ -365,7 +365,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Hard", questionType: "HOTS",
     question: "A submarine A emits a sonar pulse toward submarine B which is moving toward A. Will the echo frequency be higher, lower, or equal to the emitted frequency? Explain using the Doppler effect.",
@@ -383,7 +383,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t1-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "How is sound produced? Give two examples of objects that produce sound by vibration.",
@@ -397,7 +397,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Medium", questionType: "MCQ",
     question: "A vibrating tuning fork is placed inside a glass jar. As air is gradually pumped out, the sound:\n(a) Becomes louder  (b) Becomes shriller  (c) Gradually fades until inaudible  (d) Remains unchanged",
@@ -411,7 +411,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "The speed of sound in air is 340 m/s. A sound wave has a wavelength of 0.85 m. Find: (i) its frequency, (ii) its time period.",
@@ -425,7 +425,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t1-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t1", topicName: "Nature and Propagation of Sound",
     difficulty: "Hard", questionType: "HOTS",
     question: "Two astronauts on a spacewalk cannot hear each other shouting, even when face-to-face, but can communicate through their helmet radios. A student claims 'sound can travel if the wave is strong enough.' Is this correct? Explain.",
@@ -443,7 +443,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t2-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Define amplitude of a sound wave. How does it affect the sound we hear?",
@@ -457,7 +457,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A sound wave travels at 330 m/s in air. Its wavelength is 1.65 m. Find: (i) frequency, (ii) time period.",
@@ -471,7 +471,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Animals like dogs, elephants, and cattle often show unusual behaviour before earthquakes. How does infrasound explain this observation?",
@@ -486,7 +486,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t2-q13", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t2", topicName: "Characteristics of Sound Waves",
     difficulty: "Hard", questionType: "HOTS",
     question: "Assertion (A): A guitar and a sitar playing the same musical note at the same loudness can still be distinguished by a trained musician.\nReason (R): Different instruments produce sound at the same fundamental frequency but with different mixtures of overtones (harmonics), giving each a unique quality (timbre).\n\n(a) Both A and R are true, and R is the correct explanation of A\n(b) Both A and R are true, but R is not the correct explanation of A\n(c) A is true, but R is false\n(d) A is false, but R is true",
@@ -504,7 +504,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t3-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Easy", questionType: "MCQ",
     question: "A megaphone (speaking tube) is designed based on the principle of:\n(a) Diffraction of sound  (b) Multiple reflection of sound  (c) Resonance  (d) Doppler effect",
@@ -518,7 +518,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A person standing between two parallel walls claps once. The first echo is heard after 0.2 s and the second echo after 0.6 s. Speed of sound = 340 m/s. Find the distance from the person to each wall.",
@@ -532,7 +532,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Name four devices or structures that use multiple reflection of sound. Briefly explain how multiple reflection is used in any two of them.",
@@ -548,7 +548,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t3-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t3", topicName: "Reflection and Applications of Sound",
     difficulty: "Hard", questionType: "HOTS",
     question: "A new concert hall has a reverberation time of 4 seconds — speech is reported as very unclear. (i) Explain why excessive reverberation makes speech difficult to understand. (ii) Suggest three measures to reduce reverberation without silencing the hall completely.",
@@ -567,7 +567,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t4-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t4", topicName: "Human Ear and Range of Hearing",
     difficulty: "Easy", questionType: "MCQ",
     question: "The part of the inner ear that converts mechanical vibrations into electrical nerve signals is:\n(a) Eardrum  (b) Pinna  (c) Cochlea  (d) Semicircular canal",
@@ -581,7 +581,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t4-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t4", topicName: "Human Ear and Range of Hearing",
     difficulty: "Easy", questionType: "MCQ",
     question: "Sound waves in air are converted to mechanical vibrations inside the ear by the:\n(a) Cochlea  (b) Auditory nerve  (c) Eardrum (tympanic membrane)  (d) Pinna",
@@ -594,7 +594,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t4-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t4", topicName: "Human Ear and Range of Hearing",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "State the audible frequency range for humans. What happens to this range as a person ages?",
@@ -608,7 +608,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t4-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t4", topicName: "Human Ear and Range of Hearing",
     difficulty: "Medium", questionType: "LongAnswer",
     question: "Describe the structure of the human ear and explain, step by step, how it enables us to hear a sound.",
@@ -624,7 +624,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t4-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t4", topicName: "Human Ear and Range of Hearing",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Why can we not hear infrasound or ultrasound even though these waves pass through the air around us?",
@@ -638,7 +638,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t4-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t4", topicName: "Human Ear and Range of Hearing",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "How does prolonged exposure to very loud sounds (above 85 dB) damage hearing? Why is the damage often permanent?",
@@ -652,7 +652,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t4-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t4", topicName: "Human Ear and Range of Hearing",
     difficulty: "Hard", questionType: "HOTS",
     question: "A young person can hear from 20 Hz to 20,000 Hz. Calculate the wavelength range of sounds they can hear. (Speed of sound in air = 340 m/s) What does this range tell us about the physical size of sound sources they can detect?",
@@ -670,7 +670,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch5-t5-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t5", topicName: "Multiple Reflections and Ultrasound Applications",
     difficulty: "Easy", questionType: "MCQ",
     question: "Ultrasound is used to clean delicate instruments such as electronic components because:\n(a) It is louder than audible sound  (b) High-frequency vibrations dislodge dirt from hard-to-reach crevices without physical contact  (c) Its large wavelength spreads through the whole component  (d) It is inaudible so it does not disturb workers",
@@ -683,7 +683,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t5-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t5", topicName: "Multiple Reflections and Ultrasound Applications",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Name three industrial (non-medical) applications of ultrasound.",
@@ -696,7 +696,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t5-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t5", topicName: "Multiple Reflections and Ultrasound Applications",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Explain how ultrasound is used to detect cracks inside a metal block. Why is ultrasound preferred over audible sound for this purpose?",
@@ -711,7 +711,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t5-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t5", topicName: "Multiple Reflections and Ultrasound Applications",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A ship's SONAR system emits a pulse and receives the echo after 6 s. The speed of sound in seawater is 1500 m/s. Find: (i) the depth of the seabed directly below. (ii) If a second pulse returns after only 1.5 s from a different direction, what is the distance to that object?",
@@ -725,7 +725,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t5-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t5", topicName: "Multiple Reflections and Ultrasound Applications",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "Explain how a stethoscope uses the principle of multiple reflection of sound to help a doctor clearly hear a patient's faint heartbeat.",
@@ -741,7 +741,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch5-t5-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch5", chapterName: "Sound",
+    chapterId: "phy-ch5", chapterName: "Sound Waves: Characteristics and Applications",
     topicId: "t5", topicName: "Multiple Reflections and Ultrasound Applications",
     difficulty: "Hard", questionType: "HOTS",
     question: "Compare bat echolocation and a ship's SONAR system. Identify three similarities and three key differences.",

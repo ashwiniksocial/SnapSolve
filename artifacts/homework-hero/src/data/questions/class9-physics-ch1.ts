@@ -3,7 +3,7 @@ import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
   id: "phy-ch1",
-  name: "Motion",
+  name: "Describing Motion Around Us",
   classNum: 9,
   subject: "Physics",
   topics: [
@@ -21,7 +21,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch1-t1-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Easy", questionType: "MCQ",
     question: "Displacement is defined as: (a) Total path length covered  (b) Shortest distance from initial to final position  (c) Speed multiplied by time  (d) Area under velocity-time graph",
@@ -35,7 +35,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Easy", questionType: "MCQ",
     question: "A boy walks 4 m East and then 3 m North. What is his displacement from the starting point?",
@@ -49,7 +49,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Easy", questionType: "MCQ",
     question: "A body completes one full revolution along a circular track of radius r. What is its displacement?",
@@ -63,7 +63,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A car travels 60 km North, then 80 km East. Find (i) the total distance covered, and (ii) the magnitude of displacement.",
@@ -77,7 +77,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Under what condition is the magnitude of displacement equal to the distance travelled?",
@@ -91,7 +91,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Can displacement be negative? Explain with an example.",
@@ -105,7 +105,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "An athlete runs along a rectangular track of length 100 m and width 60 m. She starts at corner A and runs clockwise. (i) She completes one full lap and returns to A. Calculate the distance covered and displacement. (ii) She stops at the midpoint of the far long side (having run along the full bottom side, up the full right side, and halfway along the top side). Calculate the distance covered and displacement from A.",
@@ -124,7 +124,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Hard", questionType: "HOTS",
     question: "Can distance covered by a body be less than the magnitude of its displacement? Can they be equal? Justify.",
@@ -138,7 +138,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Easy", questionType: "MCQ",
     question: "An odometer in a vehicle measures:\n(a) Speed  (b) Velocity  (c) Distance travelled  (d) Displacement",
@@ -151,7 +151,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Easy", questionType: "MCQ",
     question: "Which of the following is an example of non-uniform motion?\n(a) A car moving at constant 60 km/h on a straight road\n(b) A stone dropped freely from rest\n(c) A train moving with uniform speed between two stations\n(d) A satellite at fixed orbital speed",
@@ -164,7 +164,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "An object covers 20 m in the first 4 s and 30 m in the next 5 s. (i) Is this motion uniform or non-uniform? Justify. (ii) Find the average speed for the whole journey.",
@@ -179,7 +179,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t1-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t1", topicName: "Distance and Displacement",
     difficulty: "Hard", questionType: "HOTS",
     question: "A person walks 2 km North in 30 min, rests for 10 min, then walks 1 km South in 15 min. Find: (i) total distance, (ii) net displacement, (iii) average speed, (iv) average velocity magnitude for the entire journey. Take North as positive.",
@@ -198,7 +198,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch1-t2-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Easy", questionType: "MCQ",
     question: "The SI unit of speed is: (a) km/h  (b) m/s  (c) cm/s  (d) m/min",
@@ -211,7 +211,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Easy", questionType: "MCQ",
     question: "Average speed is defined as: (a) displacement / time  (b) total distance / total time  (c) final speed / initial speed  (d) distance / acceleration",
@@ -225,7 +225,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "A car travels 120 km in 2 hours. What is its average speed in m/s?",
@@ -239,7 +239,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Easy", questionType: "MCQ",
     question: "Velocity differs from speed in that velocity: (a) Is always greater than speed  (b) Has direction  (c) Is measured in m/s  (d) Cannot be negative",
@@ -253,7 +253,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A bus travels the first 50 km at 25 km/h and the next 50 km at 50 km/h. Find its average speed for the entire journey.",
@@ -267,7 +267,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "An object moves along a semicircle of diameter 10 m in 5 seconds. Find its (i) speed, and (ii) velocity.",
@@ -282,7 +282,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Convert 54 km/h to m/s. Show the conversion factor.",
@@ -296,7 +296,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A person walks 3 km North in 30 minutes, then 4 km East in 40 minutes. Find: (i) average speed for the whole journey, and (ii) average velocity (magnitude and direction).",
@@ -312,7 +312,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Hard", questionType: "HOTS",
     question: "An object in uniform circular motion has constant speed but changing velocity. Explain why, and what this implies about acceleration.",
@@ -327,7 +327,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch1-t2-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Easy", questionType: "MCQ",
     question: "A speedometer in a vehicle measures:\n(a) Average speed  (b) Instantaneous speed  (c) Average velocity  (d) Instantaneous velocity",
@@ -340,7 +340,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A body covers half its journey at 20 m/s and the other half at 30 m/s. Calculate the average speed for the entire trip.",
@@ -355,7 +355,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t2-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t2", topicName: "Speed and Velocity",
     difficulty: "Hard", questionType: "HOTS",
     question: "Can the average velocity of a body be zero while its average speed is non-zero? Give a specific example to justify your answer.",
@@ -372,7 +372,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch1-t3-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "Acceleration is defined as the rate of change of: (a) Distance  (b) Speed  (c) Velocity  (d) Displacement",
@@ -385,7 +385,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Easy", questionType: "ShortAnswer",
     question: "Write the three equations of uniformly accelerated motion and name the quantities in each.",
@@ -400,7 +400,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "The slope of a velocity-time graph gives: (a) Distance  (b) Speed  (c) Acceleration  (d) Displacement",
@@ -413,7 +413,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A car starts from rest and reaches a speed of 20 m/s in 10 seconds. Find its acceleration and the distance covered.",
@@ -428,7 +428,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A train moving at 90 km/h is brought to rest in 100 m. Find the retardation.",
@@ -442,7 +442,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A ball is thrown vertically upward with an initial velocity of 20 m/s. How high does it go? (g = 10 m/s²)",
@@ -456,7 +456,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A body starts from rest and travels with uniform acceleration. It covers 18 m in the 3rd second. Find the acceleration.",
@@ -471,7 +471,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Hard", questionType: "HOTS",
     question: "Two trains A and B start simultaneously from rest at stations 200 m apart on the same track and move toward each other. Train A accelerates at 2 m/s² and Train B at 3 m/s². Where do they meet?",
@@ -486,7 +486,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q09", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A stone is dropped from the top of a tower. It reaches the ground in 4 s. Find: (i) the height of the tower, and (ii) the velocity of the stone just before hitting the ground. (g = 10 m/s²)",
@@ -501,7 +501,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q10", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A bicycle initially moving at 10 m/s is uniformly decelerated and comes to rest in 5 s. Find: (i) the deceleration, and (ii) the braking distance.",
@@ -516,7 +516,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q11", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A car accelerates uniformly from 36 km/h to 72 km/h in 10 s. Find the distance covered during this period.",
@@ -530,7 +530,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q12", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Distinguish between uniform acceleration and non-uniform acceleration with one example of each.",
@@ -544,7 +544,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q13", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A ball is thrown vertically upward with velocity 30 m/s. Find: (i) the time to reach the highest point, (ii) the maximum height, (iii) the total time of flight, and (iv) the velocity when it returns to the starting point. (g = 10 m/s²)",
@@ -560,7 +560,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q14", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A car starts from rest, accelerates at 4 m/s² for 5 s, then moves at constant speed for 10 s, then decelerates at 2 m/s² until it stops. Find: (i) the maximum speed, (ii) the distance in each phase, and (iii) the total distance.",
@@ -576,7 +576,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t3-q15", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t3", topicName: "Acceleration and Equations of Motion",
     difficulty: "Hard", questionType: "HOTS",
     question: "A body starting from rest is uniformly accelerated. Show that the ratio of distances covered in successive seconds (1st, 2nd, 3rd, … nth second) is 1 : 3 : 5 : 7 : … (2n−1). What pattern is this, and why does it arise?",
@@ -594,7 +594,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch1-t4-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "The area under a velocity-time (v-t) graph represents:\n(a) Acceleration  (b) Speed  (c) Distance/Displacement  (d) Momentum",
@@ -608,7 +608,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t4-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "The slope of a distance-time (s-t) graph gives:\n(a) Acceleration  (b) Speed  (c) Displacement  (d) Force",
@@ -621,7 +621,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t4-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "A horizontal straight line on a velocity-time graph indicates that the object is:\n(a) At rest  (b) Moving with uniform velocity  (c) Accelerating uniformly  (d) Decelerating",
@@ -635,7 +635,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t4-q04", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "A v-t graph shows an object's velocity increasing uniformly from 0 to 24 m/s in 6 s, then remaining constant for 4 s. Find: (i) the acceleration in the first phase, and (ii) the total displacement.",
@@ -651,7 +651,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t4-q05", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "From a v-t graph, a body moves at 10 m/s for 5 s, then decelerates uniformly to rest in 5 s. Find: (i) the deceleration, (ii) the total distance, and (iii) describe the shape of the v-t graph.",
@@ -667,7 +667,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t4-q06", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "Sketch and describe the shape of the distance-time graph for: (i) a body at rest, (ii) a body moving with uniform speed, (iii) a body with uniformly increasing speed.",
@@ -682,7 +682,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t4-q07", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Hard", questionType: "LongAnswer",
     question: "A v-t graph shows: Phase 1 (0–4 s): velocity increases uniformly from 0 to 20 m/s. Phase 2 (4–8 s): velocity remains at 20 m/s. Phase 3 (8–12 s): velocity decreases uniformly to 0. Find: (i) acceleration in Phase 1, (ii) retardation in Phase 3, (iii) distance in each phase, (iv) total distance.",
@@ -700,7 +700,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t4-q08", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t4", topicName: "Graphical Representation of Motion",
     difficulty: "Hard", questionType: "HOTS",
     question: "Two objects A and B start from the same point at t = 0 on a distance-time graph. Object A's graph is a straight line; Object B's graph is a curve that starts below A and then crosses and goes above A. What can you conclude about their motion? At the crossing point, what is true about their speeds?",
@@ -718,7 +718,7 @@ export const QUESTIONS: Question[] = [
 
   {
     id: "c9-phy-ch1-t5-q01", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t5", topicName: "Uniform Circular Motion",
     difficulty: "Easy", questionType: "MCQ",
     question: "In uniform circular motion, which of the following remains constant?\n(a) Velocity  (b) Speed  (c) Acceleration  (d) Direction of motion",
@@ -731,7 +731,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t5-q02", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t5", topicName: "Uniform Circular Motion",
     difficulty: "Medium", questionType: "ShortAnswer",
     question: "An object moves in a circle of radius 7 m and completes 5 revolutions in 22 s. Find: (i) the time period, (ii) the speed of the object.",
@@ -746,7 +746,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: "c9-phy-ch1-t5-q03", classNum: 9, subject: "Physics",
-    chapterId: "phy-ch1", chapterName: "Motion",
+    chapterId: "phy-ch1", chapterName: "Describing Motion Around Us",
     topicId: "t5", topicName: "Uniform Circular Motion",
     difficulty: "Hard", questionType: "HOTS",
     question: "An athlete runs along the circumference of a circular ground of radius 70 m and completes one revolution in 40 s. Find: (i) the speed, (ii) the average velocity over one complete revolution, (iii) the average velocity for a half revolution. Why does the answer to (ii) differ from (iii)?",

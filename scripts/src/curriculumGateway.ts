@@ -51,53 +51,65 @@ interface ExpectedChapter {
   cbseDeleted?: true;
   /** Official source not yet released; skip F7 and emit an INFO note instead of FAIL. */
   sourcePending?: true;
+  /**
+   * Content exists in the question bank but has no matching chapter in the
+   * 2026-27 canonical index (master-curriculum-index.json). Questions are
+   * retained; mapping is blocked until a canonical chapter is confirmed.
+   * Skip F7 and emit a W4 note instead of FAIL.
+   */
+  sourceUnresolved?: true;
 }
 
+// ─── Authoritative chapter list — derived from master-curriculum-index.json ───
+// Extracted exclusively from uploaded official NCERT 2026-27 PDFs.
+// Ganita Manjari Part I (iemh-series) for Mathematics; Curiosity Book 1
+// (iesc-series) for Science (Physics / Chemistry / Biology / Earth Science).
+// sourceUnresolved = question bank exists but no 2026-27 chapter covers the
+// content; canonical mapping blocked until confirmed.
+
 const EXPECTED: Record<string, ExpectedChapter[]> = {
+  // ── Ganita Manjari Part I, 2026-27 (iemh101–iemh108) ──────────────────────
   "9-Mathematics": [
-    { name: "Number System",                            slug: "number-system" },
-    { name: "Introduction to Polynomials",              slug: "introduction-to-polynomials" },
-    { name: "Predicting What Comes Next: Exploring Sequences and Progressions", slug: "sequences-and-progressions" },
-    { name: "Exploring Algebraic Identities",           slug: "exploring-algebraic-identities" },
-    { name: "Coordinate Geometry",                      slug: "coordinate-geometry" },
-    { name: "Linear Equations in Two Variables",        slug: "linear-equations-in-two-variables" },
-    { name: "Introduction to Euclid's Geometry",        slug: "euclids-geometry" },
-    { name: "Lines and Angles",                         slug: "lines-and-angles" },
-    { name: "Triangles",                                slug: "triangles" },
-    { name: "Quadrilaterals",                           slug: "quadrilaterals" },
-    { name: "Circles",                                  slug: "circles" },
-    { name: "Constructions",                            slug: "constructions",              cbseDeleted: true },
-    { name: "Areas of Parallelograms and Triangles",    slug: "areas-of-parallelograms",   cbseDeleted: true },
-    { name: "Heron's Formula",                          slug: "herons-formula",             cbseDeleted: true },
-    { name: "Area and Perimeter",                       slug: "area-and-perimeter",             sourcePending: true },
-    { name: "Surface Areas and Volumes",                slug: "surface-areas-and-volumes" },
-    { name: "Statistics",                               slug: "statistics" },
-    { name: "Probability",                              slug: "probability" },
+    { name: "Orienting Yourself: The Use of Coordinates",                slug: "orienting-yourself-use-of-coordinates" },   // iemh101
+    { name: "Introduction to Linear Polynomials",                        slug: "introduction-to-linear-polynomials"    },   // iemh102
+    { name: "The World of Numbers",                                      slug: "the-world-of-numbers"                  },   // iemh103
+    { name: "Exploring Algebraic Identities",                            slug: "exploring-algebraic-identities"        },   // iemh104
+    { name: "I'm Up and Down, and Round and Round",                      slug: "im-up-and-down-and-round-and-round"    },   // iemh105
+    { name: "Measuring Space: Perimeter and Area",                       slug: "measuring-space-perimeter-and-area"    },   // iemh106
+    { name: "The Mathematics of Maybe: Introduction to Probability",     slug: "mathematics-of-maybe-probability"      },   // iemh107
+    { name: "Predicting What Comes Next: Exploring Sequences and Progressions", slug: "sequences-and-progressions"     },   // iemh108
+    // SOURCE_UNRESOLVED: ch4 questions cover linear equations (old NCERT).
+    // iemh105 in 2026-27 Ganita Manjari is circles — content mismatch confirmed.
+    { name: "Linear Equations in Two Variables",                         slug: "linear-equations-in-two-variables",         sourceUnresolved: true },
   ],
   "9-Economics": [
-    { name: "The Story of Village Palampur",  slug: "palampur" },
-    { name: "People as Resource",             slug: "people-as-resource" },
-    { name: "Poverty as a Challenge",         slug: "poverty" },
-    { name: "Food Security in India",         slug: "food-security" },
+    { name: "The Story of Village Palampur",  slug: "palampur"         },
+    { name: "People as Resource",             slug: "people-as-resource"},
+    { name: "Poverty as a Challenge",         slug: "poverty"          },
+    { name: "Food Security in India",         slug: "food-security"    },
   ],
+  // ── Curiosity Book 1, 2026-27 — Physics chapters (iesc104, 106, 107, 110) ─
   "9-Physics": [
-    { name: "Motion",                              slug: "motion" },
-    { name: "Force and Laws of Motion",            slug: "force" },
-    { name: "Gravitation",                         slug: "gravitation" },
-    { name: "Work, Energy and Simple Machines",    slug: "work-energy-simple-machines" },
-    { name: "Sound",                               slug: "sound" },
+    { name: "Describing Motion Around Us",             slug: "describing-motion-around-us"    },   // iesc104
+    { name: "How Forces Affect Motion",                slug: "how-forces-affect-motion"       },   // iesc106
+    { name: "Work, Energy, and Simple Machines",       slug: "work-energy-and-simple-machines"},   // iesc107
+    { name: "Sound Waves: Characteristics and Applications", slug: "sound-waves-characteristics"},  // iesc110
   ],
+  // ── Curiosity Book 1, 2026-27 — Chemistry chapters (iesc105, 108, 109) ────
   "9-Chemistry": [
-    { name: "Matter in Our Surroundings",          slug: "matter-in-our-surroundings",  cbseDeleted: true },
-    { name: "Exploring Mixtures and Their Separation", slug: "exploring-mixtures-and-their-separation" },
-    { name: "Structure of the Atom",               slug: "structure-of-the-atom" },
-    { name: "Atoms and Molecules",                 slug: "atoms-and-molecules" },
+    // SOURCE_UNRESOLVED: chem-ch01 questions cover states of matter (old NCERT).
+    // iesc101 in 2026-27 Curiosity is "Exploration: Entering the World of
+    // Secondary Science" (intro chapter) — content mismatch confirmed.
+    { name: "Matter in Our Surroundings",                slug: "matter-in-our-surroundings",            sourceUnresolved: true },
+    { name: "Exploring Mixtures and their Separation",   slug: "exploring-mixtures-and-their-separation"},  // iesc105
+    { name: "Journey Inside the Atom",                   slug: "journey-inside-the-atom"               },   // iesc108
+    { name: "Atomic Foundations of Matter",              slug: "atomic-foundations-of-matter"          },   // iesc109
   ],
+  // ── Curiosity Book 1, 2026-27 — Biology chapters (iesc102, 103, 112) ──────
   "9-Biology": [
-    { name: "The Fundamental Unit of Life",  slug: "fundamental-unit-of-life" },
-    { name: "Tissues",                       slug: "tissues" },
-    { name: "Patterns in Life: Diversity and Classification", slug: "diversity-in-living-organisms" },
-    { name: "Why Do We Fall Ill?",           slug: "why-do-we-fall-ill" },
+    { name: "Cell: The Building Block of Life",                 slug: "cell-the-building-block-of-life"       },  // iesc102
+    { name: "Tissues in Action",                                slug: "tissues-in-action"                     },  // iesc103
+    { name: "Patterns in Life: Diversity and Classification",   slug: "patterns-in-life-diversity"            },  // iesc112
   ],
 };
 
@@ -366,6 +378,16 @@ function checkMissingExpected(): Finding[] {
         continue;
       }
 
+      // Content exists but has no canonical 2026-27 chapter — skip F7
+      if (exp.sourceUnresolved) {
+        findings.push({
+          level: "WARN",
+          code:  "W4",
+          message: `Source unresolved: "${exp.name}" (${key}) — no matching chapter in 2026-27 canonical index; questions retained, mapping blocked`,
+        });
+        continue;
+      }
+
       let found = false;
 
       if (cls === 9) {
@@ -380,11 +402,14 @@ function checkMissingExpected(): Finding[] {
             });
           }
         } else if (subject === "Biology") {
-          // Biology uses V2 adapter; detect by slug match in question-bank file names
+          // Biology uses V2 adapter; detect by chapterName match (same as Chemistry)
           const dir = join(QB_BIO, "class9");
           if (existsSync(dir)) {
             const files = readdirSync(dir).filter(f => f.endsWith(".ts"));
-            found = files.some(f => f.includes(exp.slug));
+            found = files.some(f => {
+              const src = read(join(dir, f));
+              return src.includes(`chapterName: "${exp.name}"`) || src.includes(`chapterName: '${exp.name}'`);
+            });
           }
         } else {
           // V1 format: scan CHAPTER_META.name in matching prefix files

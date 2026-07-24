@@ -1,0 +1,161 @@
+STOP.
+
+The authoritative curriculum source has now been confirmed:
+
+curriculum/generated/master-curriculum-index.json
+
+It was extracted from the uploaded official NCERT Class 9 PDFs.
+
+The existing curriculumGateway.ts EXPECTED table is obsolete and must not remain authoritative.
+
+Execute one narrow canonical curriculum metadata correction.
+
+Do not run academic review.
+Do not change question wording, answers, hints or steps.
+Do not create aliases or compatibility mappings.
+Do not create another curriculum system.
+Do not add missing chapters.
+Do not fix F5 or content-count gaps in this task.
+
+TARGET
+
+All active Class 9 curriculum metadata must directly match master-curriculum-index.json.
+
+1. CORRECT THE GATEWAY FIRST
+
+Replace obsolete Class 9 chapter titles in curriculumGateway.ts with the exact canonical titles and identifiers from master-curriculum-index.json.
+
+Do not manually infer titles.
+
+For every entry derive:
+
+- class
+- canonical subject
+- official PDF/book code
+- exact chapter title
+- source status
+- deletion/pending status only where already supported by official metadata
+
+Remove obsolete EXPECTED entries that do not exist in the canonical index.
+
+Do not retain old titles as aliases.
+
+2. CORRECT VALIDATION METADATA
+
+Update validateCurriculum.ts so every Class 9 officialTitle exactly matches master-curriculum-index.json.
+
+Reverse the incorrect title changes made in commit 6513e62.
+
+Do not use gateway titles as the source.
+
+3. CORRECT ACTIVE QUESTION METADATA
+
+Update only curriculum metadata in active Class 9 question files:
+
+- chapterName
+- CHAPTER_META.name
+- canonical chapter identifier where objectively required
+- subject metadata where the canonical index uses integrated Science
+
+Do not change:
+
+- question
+- answer
+- steps
+- hint
+- difficulty
+- question IDs unless an ID directly embeds an obsolete chapter reference and causes validation failure
+
+Preserve Physics, Chemistry and Biology as student-facing categories if required by the current UI, but curriculum resolution must link directly to the canonical Science chapter entry without title aliases.
+
+4. CRITICAL CHEMISTRY SAFETY
+
+Do not automatically map:
+
+Matter in Our Surroundings
+
+to:
+
+Exploration: Entering the World of Secondary Science
+
+The previous report identified this as a likely incorrect mapping.
+
+For Chemistry ch01:
+
+- inspect the canonical index sections
+- determine whether an exact official chapter supports the existing questions
+- if no exact chapter exists, mark the chapter SOURCE_UNRESOLVED
+- do not force a false mapping
+- do not delete or rewrite its questions in this task
+
+Apply the same evidence requirement to Chemistry ch03 and ch04.
+
+5. REMOVE REMAINING LEGACY MECHANISMS
+
+Confirm that these do not exist:
+
+- chapter-context-map.json
+- old-to-new title mappings
+- title alias prompts
+- prefix-based chapter matching
+- duplicate curriculum registries for Class 9
+
+Academic review must resolve context by canonical identifier or exact canonical metadata only.
+
+6. VALIDATE
+
+Run:
+
+- TypeScript typecheck
+- validate-curriculum
+- curriculum gateway
+- duplicate question ID check
+- active import/registration check
+- direct question-to-master-index resolution check
+
+The direct resolution report must show:
+
+- total active Class 9 questions
+- resolved directly to canonical index
+- SOURCE_UNRESOLVED
+- no-match
+- ambiguous match
+
+Do not call OpenAI.
+
+7. F5 AND F7 REPORTING
+
+Do not fix F5 or F7.
+
+Run the gateway and provide the exact raw list of every remaining F5 and F7 failure.
+
+Do not estimate, infer or summarise an unverified count.
+
+8. COMPLETION GATE
+
+Do not declare completion unless:
+
+- gateway titles match master-curriculum-index.json
+- validation titles match master-curriculum-index.json
+- active question chapter titles match canonical titles
+- no alias or compatibility map remains
+- no question is silently matched by approximate title
+- unresolved Chemistry chapters are explicitly blocked rather than falsely mapped
+- typechecks pass
+
+FINAL REPORT — CONCISE
+
+Provide only:
+
+- files modified
+- exact canonical title corrections
+- number of questions whose metadata changed
+- direct canonical resolution count
+- unresolved chapters
+- exact F5 failures
+- exact F7 failures
+- typecheck result
+- confirmation that question educational content was untouched
+- confirmation that academic review was not run
+
+Do not proceed beyond this task.

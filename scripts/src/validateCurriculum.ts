@@ -25,13 +25,13 @@ const SCIENCE_DISPLAY_ORDER_CLASS9: Record<string, number> = {
 };
 
 const MATHS_DISPLAY_ORDER_CLASS9: Record<string, number> = {
-  "ch3":     1,   // iemh101 — Coordinate Geometry
-  "iemh102": 2,   // iemh102 — Introduction to Polynomials (placeholder)
-  "ch1":     3,   // iemh103 — Number System
+  "ch3":     1,   // iemh101 — Orienting Yourself: The Use of Coordinates
+  "iemh102": 2,   // iemh102 — Introduction to Linear Polynomials (placeholder)
+  "ch1":     3,   // iemh103 — The World of Numbers
   "ch16":    4,   // iemh104 — Exploring Algebraic Identities
-  "ch4":     5,   // iemh105 — Linear Equations in Two Variables
-  "ch18":    6,   // iemh106 — Area and Perimeter (placeholder)
-  "ch15":    7,   // iemh107 — Probability
+  "ch4":     5,   // iemh105 — SOURCE_UNRESOLVED: iemh105 is "I'm Up and Down, and Round and Round" (circles); ch4 questions cover old-NCERT linear equations
+  "ch18":    6,   // iemh106 — Measuring Space: Perimeter and Area (placeholder)
+  "ch15":    7,   // iemh107 — The Mathematics of Maybe: Introduction to Probability
   "ch17":    8,   // iemh108 — Predicting What Comes Next: Exploring Sequences and Progressions
 };
 
@@ -43,7 +43,12 @@ const MATHS_DISPLAY_ORDER_CLASS9: Record<string, number> = {
 // MISMATCH     — questions do not match official chapter (must NOT be visible)
 // ARCHIVED     — cbseDeleted; kept for future reference, not student-facing
 
-type ContentStatus = "MATCH" | "PARTIAL_MATCH" | "PLACEHOLDER" | "MISMATCH" | "ARCHIVED";
+/**
+ * SOURCE_UNRESOLVED: question bank content exists but no chapter in the
+ * 2026-27 canonical index (master-curriculum-index.json) covers this topic.
+ * Content is retained; mapping is blocked until confirmed.
+ */
+type ContentStatus = "MATCH" | "PARTIAL_MATCH" | "PLACEHOLDER" | "MISMATCH" | "ARCHIVED" | "SOURCE_UNRESOLVED";
 
 interface ContentRecord {
   status: ContentStatus;
@@ -57,58 +62,58 @@ const MATHS_CONTENT_RECORDS: Record<string, ContentRecord> = {
   "ch3": {
     status: "MATCH",
     officialCode: "iemh101",
-    officialTitle: "Coordinate Geometry",
-    verifiedDate: "2026-07-22",
-    note: "Cartesian plane, coordinates, quadrants, plotting, reading graphs — 50 q confirmed",
+    officialTitle: "Orienting Yourself: The Use of Coordinates",
+    verifiedDate: "2026-07-24",
+    note: "Cartesian plane, coordinates, quadrants, plotting, reading graphs — 50 q confirmed. Content matches iemh101 (Ganita Manjari Part I, Ch 1).",
   },
   "iemh102": {
     status: "PLACEHOLDER",
     officialCode: "iemh102",
-    officialTitle: "Introduction to Polynomials",
-    verifiedDate: "2026-07-22",
-    note: "0-question placeholder. Internal ch2 bank covers general polynomials (degree 1–4) + Remainder/Factor Theorem — archived.",
+    officialTitle: "Introduction to Linear Polynomials",
+    verifiedDate: "2026-07-24",
+    note: "0-question placeholder. Internal ch2 bank covers general polynomials (degree 1–4) + Remainder/Factor Theorem — archived. iemh102 canonical title is 'Introduction to Linear Polynomials'.",
   },
   "ch1": {
     status: "MATCH",
     officialCode: "iemh103",
-    officialTitle: "Number System",
-    verifiedDate: "2026-07-22",
-    note: "Rational/irrational numbers, surds, laws of exponents, operations on real numbers, number line — 50 q confirmed",
+    officialTitle: "The World of Numbers",
+    verifiedDate: "2026-07-24",
+    note: "Rational/irrational numbers, surds, laws of exponents, operations on real numbers, number line — 50 q confirmed. Content matches iemh103 (Ganita Manjari Part I, Ch 3).",
   },
   "ch16": {
     status: "MATCH",
     officialCode: "iemh104",
     officialTitle: "Exploring Algebraic Identities",
-    verifiedDate: "2026-07-22",
-    note: "(a+b)², (a-b)², (a+b)(a-b), (x+a)(x+b), (a+b+c)², factorisation — 75 q confirmed",
+    verifiedDate: "2026-07-24",
+    note: "(a+b)², (a-b)², (a+b)(a-b), (x+a)(x+b), (a+b+c)², factorisation — 75 q confirmed. Content matches iemh104 (Ganita Manjari Part I, Ch 4).",
   },
   "ch4": {
-    status: "MATCH",
+    status: "SOURCE_UNRESOLVED",
     officialCode: "iemh105",
     officialTitle: "Linear Equations in Two Variables",
-    verifiedDate: "2026-07-22",
-    note: "Linear equations in two variables, solutions, graphing, equations parallel to axes, word problems — 50 q confirmed",
+    verifiedDate: "2026-07-24",
+    note: "SOURCE_UNRESOLVED: ch4 questions cover linear equations in two variables (old NCERT content). iemh105 in 2026-27 Ganita Manjari Part I is 'I'm Up and Down, and Round and Round' (circles — Symmetries, Chords, Arcs) — content mismatch confirmed via master-curriculum-index.json. No 2026-27 chapter exists for this content. Questions retained; canonical mapping blocked.",
   },
   "ch18": {
     status: "PLACEHOLDER",
     officialCode: "iemh106",
-    officialTitle: "Area and Perimeter",
-    verifiedDate: "2026-07-22",
-    note: "Official source not yet released; build deferred. 75-question bank exists but pending verification.",
+    officialTitle: "Measuring Space: Perimeter and Area",
+    verifiedDate: "2026-07-24",
+    note: "75-question bank exists. Content matches iemh106 (Ganita Manjari Part I, Ch 6: perimeter, area of circles and shapes). Previously labelled 'Area and Perimeter' — corrected to canonical title.",
   },
   "ch15": {
     status: "MATCH",
     officialCode: "iemh107",
-    officialTitle: "Probability",
-    verifiedDate: "2026-07-22",
-    note: "Probability basics, experimental probability, complementary events, probability calculations — 50 q confirmed",
+    officialTitle: "The Mathematics of Maybe: Introduction to Probability",
+    verifiedDate: "2026-07-24",
+    note: "Probability basics, experimental probability, complementary events, probability calculations — 50 q confirmed. Content matches iemh107 (Ganita Manjari Part I, Ch 7).",
   },
   "ch17": {
     status: "MATCH",
     officialCode: "iemh108",
     officialTitle: "Predicting What Comes Next: Exploring Sequences and Progressions",
-    verifiedDate: "2026-07-22",
-    note: "Number sequences, arithmetic patterns, multiplicative patterns, visual patterns — 75 q confirmed",
+    verifiedDate: "2026-07-24",
+    note: "Number sequences, arithmetic patterns, multiplicative patterns, visual patterns — 75 q confirmed. Content matches iemh108 (Ganita Manjari Part I, Ch 8).",
   },
 };
 
@@ -117,95 +122,95 @@ const MATHS_ARCHIVED_IDS = ["ch2"];
 
 const SCIENCE_CONTENT_RECORDS: Record<string, ContentRecord> = {
   "chem-ch01": {
-    status: "MATCH",
+    status: "SOURCE_UNRESOLVED",
     officialCode: "iesc101",
     officialTitle: "Matter in Our Surroundings",
-    verifiedDate: "2026-07-22",
-    note: "States of matter, evaporation, sublimation, condensation, latent heat — V2 bank confirmed",
+    verifiedDate: "2026-07-24",
+    note: "SOURCE_UNRESOLVED: chem-ch01 questions cover states of matter, change of state, evaporation (old NCERT content). iesc101 in 2026-27 Curiosity Book 1 is 'Exploration: Entering the World of Secondary Science' (introductory chapter, no sections) — content mismatch confirmed via master-curriculum-index.json. No 2026-27 chapter exists for states-of-matter content. Questions retained; canonical mapping blocked.",
   },
   "bio-ch01": {
     status: "MATCH",
     officialCode: "iesc102",
-    officialTitle: "The Fundamental Unit of Life",
-    verifiedDate: "2026-07-22",
-    note: "Cell structure, organelles, prokaryote/eukaryote, cell membrane, cell wall — V2 bank confirmed",
+    officialTitle: "Cell: The Building Block of Life",
+    verifiedDate: "2026-07-24",
+    note: "Cell structure, organelles, prokaryote/eukaryote, cell membrane, cell wall — V2 bank confirmed. Content matches iesc102 (Curiosity Book 1, Ch 2).",
   },
   "bio-ch02": {
     status: "MATCH",
     officialCode: "iesc103",
-    officialTitle: "Tissues",
-    verifiedDate: "2026-07-22",
-    note: "Plant tissues (meristematic, permanent), animal tissues (epithelial, connective, muscular, nervous) — V2 bank confirmed",
+    officialTitle: "Tissues in Action",
+    verifiedDate: "2026-07-24",
+    note: "Plant tissues (meristematic, permanent), animal tissues (epithelial, connective, muscular, nervous) — V2 bank confirmed. Content matches iesc103 (Curiosity Book 1, Ch 3).",
   },
   "phy-ch1": {
     status: "MATCH",
     officialCode: "iesc104",
-    officialTitle: "Motion",
-    verifiedDate: "2026-07-22",
-    note: "Distance, displacement, velocity, speed, acceleration, equations of motion, distance-time graphs — 50 q confirmed",
+    officialTitle: "Describing Motion Around Us",
+    verifiedDate: "2026-07-24",
+    note: "Distance, displacement, velocity, speed, acceleration, equations of motion, distance-time graphs — 50 q confirmed. Content matches iesc104 (Curiosity Book 1, Ch 4).",
   },
   "chem-ch02": {
     status: "MATCH",
     officialCode: "iesc105",
-    officialTitle: "Exploring Mixtures and Their Separation",
-    verifiedDate: "2026-07-22",
-    note: "Previously titled 'Is Matter Around Us Pure?'. Same chapter content: pure substances, mixtures, methods of separation, colloids, solutions — V2 bank confirmed",
+    officialTitle: "Exploring Mixtures and their Separation",
+    verifiedDate: "2026-07-24",
+    note: "Pure substances, mixtures, methods of separation, colloids, solutions, Tyndall effect — V2 bank confirmed. Content matches iesc105 (Curiosity Book 1, Ch 5). Canonical title uses lowercase 'their'.",
   },
   "phy-ch2": {
     status: "MATCH",
     officialCode: "iesc106",
-    officialTitle: "Force and Laws of Motion",
-    verifiedDate: "2026-07-22",
-    note: "Newton's three laws, inertia, momentum, conservation of momentum — 50 q confirmed",
+    officialTitle: "How Forces Affect Motion",
+    verifiedDate: "2026-07-24",
+    note: "Newton's three laws, inertia, momentum, conservation of momentum — 50 q confirmed. Content matches iesc106 (Curiosity Book 1, Ch 6).",
   },
   "phy-ch4": {
     status: "PARTIAL_MATCH",
     officialCode: "iesc107",
-    officialTitle: "Work, Energy and Simple Machines",
-    verifiedDate: "2026-07-22",
-    note: "Work, KE, PE (gravitational PE = mgh is correct here, NOT a leakage from Gravitation chapter), conservation of energy, power, commercial unit — 50 q confirmed. 'Simple Machines' subtopic (levers, pulleys, inclined planes) absent from question bank — content gap only, no wrong questions.",
+    officialTitle: "Work, Energy, and Simple Machines",
+    verifiedDate: "2026-07-24",
+    note: "Work, KE, PE, conservation of energy, power, commercial unit — 50 q confirmed. 'Simple Machines' subtopic (levers, pulleys, inclined planes) absent from question bank — content gap only, no wrong questions. Content matches iesc107 (Curiosity Book 1, Ch 7). Canonical title has Oxford comma.",
   },
   "chem-ch04": {
     status: "MATCH",
     officialCode: "iesc108",
-    officialTitle: "Structure of the Atom",
-    verifiedDate: "2026-07-22",
-    note: "Thomson model, Rutherford model, Bohr model, electrons/protons/neutrons, shells — V2 bank confirmed",
+    officialTitle: "Journey Inside the Atom",
+    verifiedDate: "2026-07-24",
+    note: "Thomson model, Rutherford model, Bohr model, electrons/protons/neutrons, shells, atomic number, mass number — V2 bank confirmed. Content matches iesc108 (Curiosity Book 1, Ch 8).",
   },
   "chem-ch03": {
     status: "MATCH",
     officialCode: "iesc109",
-    officialTitle: "Atoms and Molecules",
-    verifiedDate: "2026-07-22",
-    note: "Law of conservation of mass, law of constant proportions, Dalton's atomic theory, chemical formulas, Avogadro's number — V2 bank confirmed",
+    officialTitle: "Atomic Foundations of Matter",
+    verifiedDate: "2026-07-24",
+    note: "Law of conservation of mass, law of constant proportions, Dalton's atomic theory, chemical formulas, Avogadro's number — V2 bank confirmed. Content matches iesc109 (Curiosity Book 1, Ch 9).",
   },
   "phy-ch5": {
     status: "MATCH",
     officialCode: "iesc110",
-    officialTitle: "Sound",
-    verifiedDate: "2026-07-22",
-    note: "Wave motion, longitudinal waves, frequency, amplitude, speed of sound, reflection, SONAR, human ear — 50 q confirmed",
+    officialTitle: "Sound Waves: Characteristics and Applications",
+    verifiedDate: "2026-07-24",
+    note: "Wave motion, longitudinal waves, frequency, amplitude, speed of sound, reflection, SONAR, human ear — 50 q confirmed. Content matches iesc110 (Curiosity Book 1, Ch 10).",
   },
   "bio-ch05": {
     status: "PLACEHOLDER",
     officialCode: "iesc111",
-    officialTitle: "Reproduction in Plants and Animals",
-    verifiedDate: "2026-07-22",
-    note: "0-question placeholder. No existing question bank for this chapter.",
+    officialTitle: "Reproduction: How Life Continues",
+    verifiedDate: "2026-07-24",
+    note: "0-question placeholder. No existing question bank for this chapter. Content matches iesc111 (Curiosity Book 1, Ch 11).",
   },
   "bio-ch03": {
     status: "MATCH",
     officialCode: "iesc112",
-    officialTitle: "Diversity in Living Organisms",
-    verifiedDate: "2026-07-22",
-    note: "Classification hierarchy, kingdoms (Monera, Protista, Fungi, Plantae, Animalia), vertebrates — V2 bank confirmed",
+    officialTitle: "Patterns in Life: Diversity and Classification",
+    verifiedDate: "2026-07-24",
+    note: "Classification hierarchy, kingdoms (Monera, Protista, Fungi, Plantae, Animalia), vertebrates — V2 bank confirmed. Content matches iesc112 (Curiosity Book 1, Ch 12).",
   },
   "esc-ch01": {
     status: "PLACEHOLDER",
     officialCode: "iesc113",
-    officialTitle: "Earth as a System",
-    verifiedDate: "2026-07-22",
-    note: "0-question placeholder. No existing question bank for this chapter.",
+    officialTitle: "Earth as a System: Energy, Matter, and Life",
+    verifiedDate: "2026-07-24",
+    note: "0-question placeholder. No existing question bank for this chapter. Content matches iesc113 (Curiosity Book 1, Ch 13).",
   },
 };
 
@@ -253,10 +258,10 @@ const mathDuplicates = mathNums.filter((n, i) => mathNums.indexOf(n) !== i);
 assert(mathDuplicates.length === 0, `No duplicate Math display numbers (found: ${mathDuplicates})`);
 
 // ── 4. Anchor checks ─────────────────────────────────────────────────────────────
-assert(SCIENCE_DISPLAY_ORDER_CLASS9["chem-ch01"] === 1, "Science Ch.1 is chem-ch01 (Matter in Our Surroundings)");
-assert(SCIENCE_DISPLAY_ORDER_CLASS9["esc-ch01"] === 13, "Science Ch.13 is esc-ch01 (Earth as a System)");
-assert(MATHS_DISPLAY_ORDER_CLASS9["ch3"] === 1, "Math Ch.1 is ch3 (iemh101 Coordinate Geometry)");
-assert(MATHS_DISPLAY_ORDER_CLASS9["ch17"] === 8, "Math Ch.8 is ch17 (iemh108 Predicting What Comes Next)");
+assert(SCIENCE_DISPLAY_ORDER_CLASS9["chem-ch01"] === 1, "Science Ch.1 is chem-ch01 (SOURCE_UNRESOLVED: old-NCERT states-of-matter content; iesc101 is intro chapter)");
+assert(SCIENCE_DISPLAY_ORDER_CLASS9["esc-ch01"] === 13, "Science Ch.13 is esc-ch01 (iesc113 Earth as a System: Energy, Matter, and Life)");
+assert(MATHS_DISPLAY_ORDER_CLASS9["ch3"] === 1, "Math Ch.1 is ch3 (iemh101 Orienting Yourself: The Use of Coordinates)");
+assert(MATHS_DISPLAY_ORDER_CLASS9["ch17"] === 8, "Math Ch.8 is ch17 (iemh108 Predicting What Comes Next: Exploring Sequences and Progressions)");
 
 // ── 5. Content-match record coverage ─────────────────────────────────────────────
 for (const id of mathIds) {
