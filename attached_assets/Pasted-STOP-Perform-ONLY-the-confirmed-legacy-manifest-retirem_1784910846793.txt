@@ -1,0 +1,97 @@
+STOP.
+
+Perform ONLY the confirmed legacy-manifest retirement described below.
+
+Do NOT modify:
+
+- curriculum architecture
+- official PDFs
+- generated curriculum files
+- extraction scripts
+- canonicalCurriculum.ts
+- canonical registry
+- gateways
+- validators
+- question banks
+- teaching engine
+- UI
+- runtime code
+
+Confirmed facts:
+
+- curriculum/manifest.json has no producer.
+- curriculum/manifest.json has no code consumer.
+- It is a stale LEGACY ORPHAN.
+- Only curriculum/README.md and curriculum/CURRICULUM_POLICY.md refer to it.
+- The active authoritative sources already exist.
+
+Tasks:
+
+1. Create an archive location only if an existing appropriate archive/history
+   location already exists in the repository.
+
+2. Move:
+
+   curriculum/manifest.json
+
+   to that existing archive/history location.
+
+3. If no appropriate archive/history location already exists:
+
+   delete curriculum/manifest.json instead.
+
+   Do NOT create a new governance or archive system merely to preserve this file.
+
+4. Update ONLY:
+
+   curriculum/README.md
+   curriculum/CURRICULUM_POLICY.md
+
+5. Remove every instruction or policy statement that treats
+   curriculum/manifest.json, sourceStatus, or sourceFile as authoritative.
+
+6. Replace those references with the correct existing sources:
+
+   Official source availability and extracted chapter inventory:
+   curriculum/generated/master-curriculum-index.json
+
+   Generated chapter manifest:
+   curriculum/generated/curriculum-manifest.json
+
+   Class 9 question-bank curriculum status and mapping:
+   scripts/src/canonicalCurriculum.ts
+
+   Generated validation and lock evidence:
+   curriculum/generated/curriculum-lock.json
+   curriculum/generated/validation-report.md
+
+7. Preserve the existing policy intent:
+
+   - official Government sources only
+   - unavailable or unresolved chapters must remain blocked
+   - no chapter may be treated as active without authoritative source evidence
+   - Ganita Manjari Part II remains Pending Official Release and must never be
+     described as missing or requested for upload
+
+8. Search the entire repository after the change for:
+
+   - curriculum/manifest.json
+   - sourceStatus
+   - sourceFile
+
+9. Confirm:
+
+   - no active documentation, policy or code still relies on the legacy file
+   - generated curriculum files were not changed
+   - canonical checksum was not changed
+   - application behaviour was not changed
+   - typecheck and existing curriculum validation still pass
+
+Return only:
+
+1. File archived or deleted
+2. Exact documentation/policy lines changed
+3. New authoritative references
+4. Remaining legacy references, if any
+5. Validation results
+6. Confirmation that no architecture, content or runtime behaviour changed

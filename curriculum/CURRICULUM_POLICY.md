@@ -29,7 +29,7 @@ Legacy chapter numberings, topic lists, textbook content, and exam patterns from
 
 Existing question bank files in `artifacts/homework-hero/src/data/questions/` are **candidate repositories only**.
 
-Questions in those files may not be treated as verified or compliant until each question has been individually checked against the official curriculum source file for its chapter (as listed in `manifest.json`).
+Questions in those files may not be treated as verified or compliant until each question has been individually checked against the official curriculum source file for its chapter. The authoritative record of which chapters have confirmed official sources is `scripts/src/canonicalCurriculum.ts`.
 
 ---
 
@@ -37,8 +37,8 @@ Questions in those files may not be treated as verified or compliant until each 
 
 A question from a legacy question bank may only be marked as verified and retained if:
 
-1. The chapter's `sourceStatus` in `manifest.json` is `"available"`.
-2. The source file named in `sourceFile` is present and readable in `curriculum/sources/`.
+1. The chapter's entry in `scripts/src/canonicalCurriculum.ts` carries status `"ACTIVE"`.
+2. The PDF named in that entry's `sourcePath` is present and readable in `curriculum/sources/`.
 3. Every topic and concept tested by the question can be traced to a specific section of that source file.
 4. The trace is recorded explicitly — not assumed or inferred from memory.
 
@@ -48,8 +48,8 @@ A question from a legacy question bank may only be marked as verified and retain
 
 If any of the following is true, **STOP immediately**:
 
-- The official source file for the chapter being worked on is absent from `curriculum/sources/`
-- The chapter's `sourceStatus` in `manifest.json` is `"pending"` or `null`
+- The official source PDF for the chapter being worked on is absent from `curriculum/sources/`
+- The chapter's entry in `scripts/src/canonicalCurriculum.ts` carries status other than `"ACTIVE"` (i.e. `"SOURCE_UNRESOLVED"`, `"SOURCE_PENDING"`, or `"OFFICIALLY_DELETED"`)
 - The source file is present but unreadable (e.g., scanned image PDF with no text layer)
 
 When halted:
@@ -59,6 +59,8 @@ When halted:
 - Do **not** assume topic coverage from memory or training data
 - Do **not** fetch or download anything from the internet
 - **Report the halt condition** and wait for the official source file to be provided
+
+**Special case — Ganita Manjari Part II (Class 9 Mathematics):** This textbook has not yet been officially released by NCERT/Government of India. It must never be described as missing or requested for upload. Chapters dependent on it remain `SOURCE_UNRESOLVED` and blocked until an official release occurs.
 
 ---
 
