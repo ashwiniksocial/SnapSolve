@@ -1,0 +1,76 @@
+STOP.
+
+Do not run academic review.
+Do not rename more chapters.
+Do not add questions.
+Do not fix F5 or F7 yet.
+Do not treat curriculumGateway.ts, validateCurriculum.ts or existing question files as authoritative merely because validation passes.
+
+There is a serious contradiction in the completed migration.
+
+Earlier findings stated that master-curriculum-index.json contains newer official chapter titles such as:
+
+- Describing Motion Around Us
+- How Forces Affect Motion
+- Cell: The Building Block of Life
+- Tissues in Action
+
+But the migration later renamed active question files to titles expected by curriculumGateway.ts, including:
+
+- Number System
+- Coordinate Geometry
+- Linear Equations in Two Variables
+- Probability
+- Work, Energy and Simple Machines
+
+Passing the gateway does not prove these are the current canonical titles. It may only prove that active content was changed to satisfy a legacy gateway.
+
+Perform a READ-ONLY SOURCE-OF-TRUTH VERIFICATION.
+
+1. For every Class 9 chapter, report the title stored in:
+
+- master-curriculum-index.json
+- curriculumGateway.ts
+- validateCurriculum.ts
+- active question files
+- official source metadata or manifest
+- source PDF filename/title, where available
+
+2. For each source, report:
+
+- source document name
+- publication/session year
+- NCERT book code
+- stored official URL or provenance
+- extraction date
+- whether the source is current, superseded, pending or unknown
+
+3. Produce one comparison table:
+
+subject | chapter ID | master index title | gateway title | active question title | official source evidence | true canonical title | conflict
+
+4. Specifically determine whether the recent migration:
+
+- removed legacy references, or
+- renamed new-curriculum question metadata back to old-curriculum titles.
+
+5. Do not infer authority from code usage.
+
+Authority must come only from official NCERT/CBSE source provenance.
+
+6. Report every file changed in the recent migration that may need reversal if the gateway was obsolete.
+
+7. Explain F5 and all 17 F7 failures individually, but do not fix them.
+
+8. Make zero file changes and zero API calls.
+
+Final output must state only:
+
+- confirmed authoritative curriculum source
+- confirmed academic session/year
+- number of title conflicts
+- whether the recent migration was correct, partially wrong or wrong
+- exact reversals required, if any
+- smallest safe next action
+
+Do not proceed beyond verification.
