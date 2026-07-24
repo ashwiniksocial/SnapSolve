@@ -4,8 +4,9 @@
  *
  * Run:  pnpm --filter @workspace/scripts run curriculum-check
  *
- * Validates every registered chapter against the authoritative NCERT/CBSE
- * curriculum definition. Exits 1 on any FAIL condition.
+ * Validates every registered chapter against the canonical academic contract
+ * (scripts/src/canonicalCurriculum.ts → master-curriculum-index.json).
+ * Exits 1 on any FAIL condition.
  *
  * ── FAIL conditions (exit 1) ─────────────────────────────────────────────────
  * F1  Duplicate chapter IDs within the same class+subject
@@ -13,17 +14,30 @@
  * F3  Zero-question chapters
  * F4  Chapter imported in index.ts / adapter whose source file is missing on disk
  * F5  Source file exists on disk but is not imported in index.ts / adapter
- * F6  CHAPTER_META.name in a V1 file does not match the curriculum definition
- * F7  Curriculum-expected chapter has no corresponding source file
+ * F6  CHAPTER_META.name in a V1 file does not match the canonical title
+ * F7  Canonical-contract chapter has no corresponding source file
+ * F8  V1 CHAPTER_META is missing canonicalId field
+ * F9  V1 CHAPTER_META.id is not registered in canonicalCurriculum.ts
+ * F10 Independent curriculum registry detected (duplicate of canonical contract)
+ * F11 canonicalChapterRegistry.gen.ts is stale (out of sync with canonicalCurriculum.ts)
  *
  * ── WARNING conditions (report only, no exit) ────────────────────────────────
  * W1  Question count below minimum target for the subject
  * W2  Difficulty imbalance — Easy >60 % or Hard >40 % of chapter questions
  * W3  Chapter question count is >3× the smallest chapter in the same class+subject
+ * W4  SOURCE_UNRESOLVED or SOURCE_PENDING chapter — mapping deferred
  */
 
 import { readFileSync, readdirSync, existsSync } from "fs";
 import { resolve, join } from "path";
+import {
+  getClass9Chapters,
+  getCanonicalChapter,
+  getKnownInternalIds,
+  getRawRegistryEntries,
+  type CanonicalChapter,
+} from "./canonicalCurriculum.js";
+import { createHash } from "crypto";
 
 const ROOT    = resolve(import.meta.dirname, "../../");
 const HH_DATA = join(ROOT, "artifacts/homework-hero/src/data/questions");
@@ -40,78 +54,10 @@ const B = "\x1b[1m";  const D = "\x1b[2m";  const X = "\x1b[0m";
 
 const SFX = { FAIL: `${R}${B}[FAIL]${X}`, WARN: `${Y}[WARN]${X}`, PASS: `${G}[PASS]${X}` };
 
-// ─── Authoritative NCERT/CBSE expected chapters ──────────────────────────────
-// Ground truth for FAIL 7 (missing expected chapter) and FAIL 6 (name mismatch).
-// Class 8: 14 CBSE-active chapters (Ch4 Practical Geometry + Ch16 Playing with Numbers deleted).
-// cbseDeleted: present in NCERT textbook but excluded from CBSE board exam since 2022-23.
-
-interface ExpectedChapter {
-  name: string;
-  slug: string;
-  cbseDeleted?: true;
-  /** Official source not yet released; skip F7 and emit an INFO note instead of FAIL. */
-  sourcePending?: true;
-  /**
-   * Content exists in the question bank but has no matching chapter in the
-   * 2026-27 canonical index (master-curriculum-index.json). Questions are
-   * retained; mapping is blocked until a canonical chapter is confirmed.
-   * Skip F7 and emit a W4 note instead of FAIL.
-   */
-  sourceUnresolved?: true;
-}
-
-// ─── Authoritative chapter list — derived from master-curriculum-index.json ───
-// Extracted exclusively from uploaded official NCERT 2026-27 PDFs.
-// Ganita Manjari Part I (iemh-series) for Mathematics; Curiosity Book 1
-// (iesc-series) for Science (Physics / Chemistry / Biology / Earth Science).
-// sourceUnresolved = question bank exists but no 2026-27 chapter covers the
-// content; canonical mapping blocked until confirmed.
-
-const EXPECTED: Record<string, ExpectedChapter[]> = {
-  // ── Ganita Manjari Part I, 2026-27 (iemh101–iemh108) ──────────────────────
-  "9-Mathematics": [
-    { name: "Orienting Yourself: The Use of Coordinates",                slug: "orienting-yourself-use-of-coordinates" },   // iemh101
-    { name: "Introduction to Linear Polynomials",                        slug: "introduction-to-linear-polynomials"    },   // iemh102
-    { name: "The World of Numbers",                                      slug: "the-world-of-numbers"                  },   // iemh103
-    { name: "Exploring Algebraic Identities",                            slug: "exploring-algebraic-identities"        },   // iemh104
-    { name: "I'm Up and Down, and Round and Round",                      slug: "im-up-and-down-and-round-and-round"    },   // iemh105
-    { name: "Measuring Space: Perimeter and Area",                       slug: "measuring-space-perimeter-and-area"    },   // iemh106
-    { name: "The Mathematics of Maybe: Introduction to Probability",     slug: "mathematics-of-maybe-probability"      },   // iemh107
-    { name: "Predicting What Comes Next: Exploring Sequences and Progressions", slug: "sequences-and-progressions"     },   // iemh108
-    // SOURCE_UNRESOLVED: ch4 questions cover linear equations (old NCERT).
-    // iemh105 in 2026-27 Ganita Manjari is circles — content mismatch confirmed.
-    { name: "Linear Equations in Two Variables",                         slug: "linear-equations-in-two-variables",         sourceUnresolved: true },
-  ],
-  "9-Economics": [
-    { name: "The Story of Village Palampur",  slug: "palampur"         },
-    { name: "People as Resource",             slug: "people-as-resource"},
-    { name: "Poverty as a Challenge",         slug: "poverty"          },
-    { name: "Food Security in India",         slug: "food-security"    },
-  ],
-  // ── Curiosity Book 1, 2026-27 — Physics chapters (iesc104, 106, 107, 110) ─
-  "9-Physics": [
-    { name: "Describing Motion Around Us",             slug: "describing-motion-around-us"    },   // iesc104
-    { name: "How Forces Affect Motion",                slug: "how-forces-affect-motion"       },   // iesc106
-    { name: "Work, Energy, and Simple Machines",       slug: "work-energy-and-simple-machines"},   // iesc107
-    { name: "Sound Waves: Characteristics and Applications", slug: "sound-waves-characteristics"},  // iesc110
-  ],
-  // ── Curiosity Book 1, 2026-27 — Chemistry chapters (iesc105, 108, 109) ────
-  "9-Chemistry": [
-    // SOURCE_UNRESOLVED: chem-ch01 questions cover states of matter (old NCERT).
-    // iesc101 in 2026-27 Curiosity is "Exploration: Entering the World of
-    // Secondary Science" (intro chapter) — content mismatch confirmed.
-    { name: "Matter in Our Surroundings",                slug: "matter-in-our-surroundings",            sourceUnresolved: true },
-    { name: "Exploring Mixtures and their Separation",   slug: "exploring-mixtures-and-their-separation"},  // iesc105
-    { name: "Journey Inside the Atom",                   slug: "journey-inside-the-atom"               },   // iesc108
-    { name: "Atomic Foundations of Matter",              slug: "atomic-foundations-of-matter"          },   // iesc109
-  ],
-  // ── Curiosity Book 1, 2026-27 — Biology chapters (iesc102, 103, 112) ──────
-  "9-Biology": [
-    { name: "Cell: The Building Block of Life",                 slug: "cell-the-building-block-of-life"       },  // iesc102
-    { name: "Tissues in Action",                                slug: "tissues-in-action"                     },  // iesc103
-    { name: "Patterns in Life: Diversity and Classification",   slug: "patterns-in-life-diversity"            },  // iesc112
-  ],
-};
+// ─── No independent chapter list here ────────────────────────────────────────
+// All Class 9 chapter identity is derived from canonicalCurriculum.ts.
+// To add, remove, or correct a chapter, edit canonicalCurriculum.ts — not this file.
+// ─────────────────────────────────────────────────────────────────────────────
 
 // Minimum question count before W1 fires
 const MIN_Q: Record<string, number> = {
@@ -159,10 +105,14 @@ function countDiff(src: string, label: "Easy" | "Medium" | "Hard"): number {
  *  Strategy: extract the text from the opening { of CHAPTER_META up to (but
  *  not including) the first nested { in the value, which is always the opening
  *  brace of the first topics entry.  This keeps the extracted block to the
- *  chapter-level scalar fields (id, name, classNum, subject) and avoids
- *  accidentally capturing topic-level id/name values.
+ *  chapter-level scalar fields (id, name, classNum, subject, canonicalChapterId,
+ *  curriculumStatus) and avoids accidentally capturing topic-level values.
  */
-function parseV1Meta(src: string): { id: string; name: string; classNum: number; subject: string } | null {
+function parseV1Meta(src: string): {
+  id: string; name: string; classNum: number; subject: string;
+  hasCanonicalChapterId: boolean;   // true if the field is present (string or null)
+  canonicalChapterId?: string;      // set only when the value is a string literal
+} | null {
   // Capture everything between "CHAPTER_META ... {" and the next nested "{"
   const headMatch = src.match(/CHAPTER_META[^=]*=\s*\{([^{]*)/s);
   const block = headMatch?.[1] ?? "";
@@ -172,8 +122,11 @@ function parseV1Meta(src: string): { id: string; name: string; classNum: number;
   const name    = block.match(/\bname:\s*"([^"]+)"/)?.[1];
   const cls     = block.match(/\bclassNum:\s*(\d+)/)?.[1];
   const subject = block.match(/\bsubject:\s*"([^"]+)"/)?.[1];
+  // Field may be: canonicalChapterId: "iemh101"  OR  canonicalChapterId: null
+  const hasCanonicalChapterId = /\bcanonicalChapterId\s*:/.test(block);
+  const canonicalChapterId    = block.match(/\bcanonicalChapterId:\s*"([^"]+)"/)?.[1];
   if (!id || !name || !cls || !subject) return null;
-  return { id, name, classNum: parseInt(cls, 10), subject };
+  return { id, name, classNum: parseInt(cls, 10), subject, hasCanonicalChapterId, canonicalChapterId };
 }
 
 /** Collect Class 9 V1 chapter files for a given subject prefix (e.g. "maths", "economics", "physics"). */
@@ -337,112 +290,223 @@ function checkRegistration(): Finding[] {
 
 // ─── F6: Chapter name mismatch (V1 files vs curriculum definition) ────────────
 
+// ─── F6: V1 CHAPTER_META.name must match the canonical title ─────────────────
+// For SOURCE_UNRESOLVED chapters there is no canonical title to match — skip F6.
+// For ACTIVE chapters the name must match the exact canonical chapterTitle.
+
 function checkNameMatch(chapters: ChapterRecord[]): Finding[] {
   const findings: Finding[] = [];
   const class9Chapters = chapters.filter(ch => ch.classNum === 9);
 
   for (const ch of class9Chapters) {
-    const expected = EXPECTED[ch.key];
-    if (!expected) continue;
-    // Check if file's chapter name appears anywhere in the expected list (case-insensitive)
-    const match = expected.some(e => e.name.toLowerCase() === ch.name.toLowerCase());
-    if (!match) {
+    const canonical = getCanonicalChapter(ch.id);
+    if (!canonical) {
+      // Unknown internal ID — not registered in the canonical contract
       findings.push({
         level: "FAIL",
-        code: "F6",
-        message: `"${ch.name}" (${ch.key}) is not in the curriculum definition. ` +
-                 `File: ${ch.filePath.split("/").pop()}`,
+        code:  "F9",
+        message: `Chapter id "${ch.id}" (subject: ${ch.key}) is not registered in canonicalCurriculum.ts. File: ${ch.filePath.split("/").pop()}`,
+      });
+      continue;
+    }
+    if (canonical.status === "SOURCE_UNRESOLVED" || canonical.status === "SOURCE_PENDING") {
+      // No confirmed canonical title — skip name-match for this entry
+      continue;
+    }
+    if (ch.name !== canonical.chapterTitle) {
+      findings.push({
+        level: "FAIL",
+        code:  "F6",
+        message: `"${ch.name}" (${ch.id}) does not match canonical title "${canonical.chapterTitle}" [${canonical.bookId}]. File: ${ch.filePath.split("/").pop()}`,
       });
     }
   }
   return findings;
 }
 
-// ─── F7: Expected chapter has no source file ──────────────────────────────────
+// ─── F7 / W4: Canonical-contract chapter has no source file ──────────────────
+// Iterates the canonical academic contract rather than a hardcoded list.
+// SOURCE_UNRESOLVED / SOURCE_PENDING → W4 instead of F7.
 
 function checkMissingExpected(): Finding[] {
   const findings: Finding[] = [];
+  const canonical9 = getClass9Chapters();
 
-  for (const [key, expected] of Object.entries(EXPECTED)) {
-    const [clsStr, subject] = key.split("-", 2) as [string, string];
-    const cls = parseInt(clsStr, 10);
+  for (const ch of canonical9) {
+    if (ch.status === "SOURCE_UNRESOLVED") {
+      findings.push({
+        level: "WARN",
+        code:  "W4",
+        message: `Source unresolved: "${ch.internalId}" (9-${ch.subjectId}) — no matching 2026-27 canonical chapter; questions retained, mapping blocked`,
+      });
+      continue;
+    }
+    if (ch.status === "SOURCE_PENDING") {
+      findings.push({
+        level: "WARN",
+        code:  "W4",
+        message: `Source pending: "${ch.internalId}" (9-${ch.subjectId}) — official source not yet released; build deferred`,
+      });
+      continue;
+    }
 
-    for (const exp of expected) {
-      // Official source not yet released — skip F7 entirely for this entry
-      if (exp.sourcePending) {
-        findings.push({
-          level: "WARN",
-          code:  "W4",
-          message: `Source pending: "${exp.name}" (${key}) — OFFICIAL SOURCE NOT YET RELEASED; build deferred`,
+    let found = false;
+    const { subjectId, internalId, chapterTitle } = ch;
+
+    if (subjectId === "Chemistry") {
+      const dir = join(QB_CHEM, "class9");
+      if (existsSync(dir)) {
+        found = readdirSync(dir).filter(f => f.endsWith(".ts")).some(f => {
+          const src = read(join(dir, f));
+          return src.includes(`chapterName: "${chapterTitle}"`) || src.includes(`chapterName: '${chapterTitle}'`);
         });
-        continue;
       }
-
-      // Content exists but has no canonical 2026-27 chapter — skip F7
-      if (exp.sourceUnresolved) {
-        findings.push({
-          level: "WARN",
-          code:  "W4",
-          message: `Source unresolved: "${exp.name}" (${key}) — no matching chapter in 2026-27 canonical index; questions retained, mapping blocked`,
+    } else if (subjectId === "Biology") {
+      const dir = join(QB_BIO, "class9");
+      if (existsSync(dir)) {
+        found = readdirSync(dir).filter(f => f.endsWith(".ts")).some(f => {
+          const src = read(join(dir, f));
+          return src.includes(`chapterName: "${chapterTitle}"`) || src.includes(`chapterName: '${chapterTitle}'`);
         });
-        continue;
       }
-
-      let found = false;
-
-      if (cls === 9) {
-        if (subject === "Chemistry") {
-          // Chemistry uses the V2 adapter; scan question-bank per-chapter files
-          const dir = join(QB_CHEM, "class9");
-          if (existsSync(dir)) {
-            const files = readdirSync(dir).filter(f => f.endsWith(".ts"));
-            found = files.some(f => {
-              const src = read(join(dir, f));
-              return src.includes(`chapterName: "${exp.name}"`) || src.includes(`chapterName: '${exp.name}'`);
-            });
-          }
-        } else if (subject === "Biology") {
-          // Biology uses V2 adapter; detect by chapterName match (same as Chemistry)
-          const dir = join(QB_BIO, "class9");
-          if (existsSync(dir)) {
-            const files = readdirSync(dir).filter(f => f.endsWith(".ts"));
-            found = files.some(f => {
-              const src = read(join(dir, f));
-              return src.includes(`chapterName: "${exp.name}"`) || src.includes(`chapterName: '${exp.name}'`);
-            });
-          }
-        } else {
-          // V1 format: scan CHAPTER_META.name in matching prefix files
-          let prefix = "maths";
-          if (subject === "Economics") prefix = "economics";
-          if (subject === "Physics")   prefix = "physics";
-
-          if (existsSync(HH_DATA)) {
-            // Mathematics also has iemh-prefixed files (e.g. class9-maths-iemh102.ts)
-            const pattern = prefix === "maths"
-              ? new RegExp(`^class9-${prefix}-(ch\\d+|iemh\\d+)\\.ts$`)
-              : new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
-            const files = readdirSync(HH_DATA).filter(f => pattern.test(f));
-            found = files.some(f => {
-              const src = read(join(HH_DATA, f));
-              const meta = parseV1Meta(src);
-              return meta?.name.toLowerCase() === exp.name.toLowerCase();
-            });
-          }
-        }
-      }
-
+      // Biology placeholders also checked
       if (!found) {
-        const cbseNote = exp.cbseDeleted ? " [deleted from CBSE exam — may still be needed for NCERT completeness]" : "";
-        findings.push({
-          level: "FAIL",
-          code:  "F7",
-          message: `Missing: "${exp.name}" (${key})${cbseNote}`,
+        const ph = join(HH_DATA, "class9-science-placeholders.ts");
+        if (existsSync(ph)) found = read(ph).includes(`id: "${internalId}"`);
+      }
+    } else if (subjectId === "Earth Science") {
+      const ph = join(HH_DATA, "class9-science-placeholders.ts");
+      if (existsSync(ph)) found = read(ph).includes(`id: "${internalId}"`);
+    } else {
+      // Mathematics, Physics, Economics: V1 format
+      const prefixMap: Record<string, string> = { Mathematics: "maths", Physics: "physics", Economics: "economics" };
+      const prefix = prefixMap[subjectId] ?? subjectId.toLowerCase();
+      if (existsSync(HH_DATA)) {
+        const pattern = prefix === "maths"
+          ? new RegExp(`^class9-${prefix}-(ch\\d+|iemh\\d+)\\.ts$`)
+          : new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
+        found = readdirSync(HH_DATA).filter(f => pattern.test(f)).some(f => {
+          const src = read(join(HH_DATA, f));
+          const meta = parseV1Meta(src);
+          return meta?.id === internalId;
         });
       }
     }
+
+    if (!found) {
+      findings.push({
+        level: "FAIL",
+        code:  "F7",
+        message: `Missing: "${chapterTitle}" [${ch.bookId}] (9-${subjectId}, internalId: ${internalId})`,
+      });
+    }
   }
 
+  // NOTE: Economics is not yet in the canonical contract — no F7 check.
+  // Add Economics chapters to canonicalCurriculum.ts when question files are created.
+
+  return findings;
+}
+
+// ─── F8: V1 CHAPTER_META missing canonicalChapterId field ────────────────────
+// Every active V1 chapter must declare its canonical chapter ID field.
+// Value is a bookId string (e.g. "iemh101") or null for SOURCE_UNRESOLVED.
+// STATUS STRINGS (e.g. "SOURCE_UNRESOLVED") must never be used as ID values.
+
+function checkCanonicalIds(): Finding[] {
+  const findings: Finding[] = [];
+  if (!existsSync(HH_DATA)) return findings;
+  const knownIds = getKnownInternalIds();
+  const v1Files  = readdirSync(HH_DATA).filter(f =>
+    /^class9-(maths|physics)-(ch\d+|iemh\d+)\.ts$/.test(f),
+  );
+  for (const f of v1Files) {
+    const src = read(join(HH_DATA, f));
+    const meta = parseV1Meta(src);
+    if (!meta) continue;
+    if (!meta.hasCanonicalChapterId) {
+      findings.push({
+        level: "FAIL",
+        code:  "F8",
+        message: `${f}: CHAPTER_META is missing canonicalChapterId field (string bookId or null for SOURCE_UNRESOLVED)`,
+      });
+    }
+    // Detect old pattern: canonicalChapterId set to a status string instead of null
+    if (meta.canonicalChapterId &&
+        ["SOURCE_UNRESOLVED", "SOURCE_PENDING", "OFFICIALLY_DELETED"].includes(meta.canonicalChapterId)) {
+      findings.push({
+        level: "FAIL",
+        code:  "F8",
+        message: `${f}: canonicalChapterId must be null (not the status string "${meta.canonicalChapterId}") for unresolved chapters`,
+      });
+    }
+    if (meta.id && !knownIds.has(meta.id)) {
+      findings.push({
+        level: "FAIL",
+        code:  "F9",
+        message: `${f}: CHAPTER_META.id "${meta.id}" is not registered in canonicalCurriculum.ts`,
+      });
+    }
+  }
+  return findings;
+}
+
+// ─── F11: Generated canonical registry out of sync ────────────────────────────
+// canonicalChapterRegistry.gen.ts must be in sync with canonicalCurriculum.ts.
+// If these diverge, the frontend uses stale canonical IDs.
+
+function checkGeneratedRegistrySync(): Finding[] {
+  const findings: Finding[] = [];
+  const CHECKSUM_PATH = join(ROOT, "curriculum/generated/canonical-registry-checksum.json");
+  if (!existsSync(CHECKSUM_PATH)) {
+    findings.push({
+      level: "FAIL",
+      code:  "F11",
+      message: "curriculum/generated/canonical-registry-checksum.json not found — run: pnpm --filter @workspace/scripts run generate-canonical-registry",
+    });
+    return findings;
+  }
+
+  let stored: { checksum?: string; entryCount?: number } = {};
+  try {
+    stored = JSON.parse(readFileSync(CHECKSUM_PATH, "utf8")) as typeof stored;
+  } catch {
+    findings.push({ level: "FAIL", code: "F11", message: "canonical-registry-checksum.json is malformed" });
+    return findings;
+  }
+
+  // Recompute from current canonical contract
+  const entries = getRawRegistryEntries()
+    .map(e => ({ internalId: e.internalId, canonicalChapterId: e.canonicalChapterId, status: e.status }))
+    .sort((a, b) => a.internalId.localeCompare(b.internalId));
+  const currentChecksum = createHash("sha256").update(JSON.stringify(entries)).digest("hex").slice(0, 16);
+
+  if (currentChecksum !== stored.checksum) {
+    findings.push({
+      level: "FAIL",
+      code:  "F11",
+      message: `canonicalChapterRegistry.gen.ts is STALE (checksum mismatch: stored=${stored.checksum ?? "?"}, current=${currentChecksum}). Regenerate: pnpm --filter @workspace/scripts run generate-canonical-registry`,
+    });
+  }
+  return findings;
+}
+
+// ─── F10: Independent curriculum registry guard ───────────────────────────────
+// Prevents re-introduction of hardcoded title lists that duplicate the contract.
+
+function checkNoDuplicateRegistry(): Finding[] {
+  const findings: Finding[] = [];
+  const gatewaySrc = read(join(ROOT, "scripts/src/curriculumGateway.ts"));
+  if (/^const EXPECTED\s*=\s*\{/m.test(gatewaySrc)) {
+    findings.push({ level: "FAIL", code: "F10", message: "curriculumGateway.ts has an independent EXPECTED curriculum table — remove it; use canonicalCurriculum.ts" });
+  }
+  const valSrc = read(join(ROOT, "scripts/src/validateCurriculum.ts"));
+  if (/const MATHS_CONTENT_RECORDS\s*=/m.test(valSrc)) {
+    findings.push({ level: "FAIL", code: "F10", message: "validateCurriculum.ts still has MATHS_CONTENT_RECORDS — remove and use canonicalCurriculum.ts" });
+  }
+  if (/const SCIENCE_CONTENT_RECORDS\s*=/m.test(valSrc)) {
+    findings.push({ level: "FAIL", code: "F10", message: "validateCurriculum.ts still has SCIENCE_CONTENT_RECORDS — remove and use canonicalCurriculum.ts" });
+  }
   return findings;
 }
 
@@ -459,6 +523,9 @@ const allFindings: Finding[] = [
   ...checkRegistration(),
   ...checkNameMatch(chapters),
   ...checkMissingExpected(),
+  ...checkCanonicalIds(),
+  ...checkNoDuplicateRegistry(),
+  ...checkGeneratedRegistrySync(),
 ];
 
 const failures = allFindings.filter(f => f.level === "FAIL");

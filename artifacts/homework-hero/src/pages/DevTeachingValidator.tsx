@@ -11,6 +11,7 @@
  */
 
 import { useState, useRef, useCallback } from "react";
+import { ALL_CHAPTERS }         from "@/data/questions";
 import type { Subject }         from "@/data/subjects";
 import type { AIResponse }      from "@/data/solutionBank";
 import type { ReadingLevel }    from "@/services/explanation/readingModeEngine";
@@ -71,44 +72,22 @@ const CHAPTER_MAP: Record<Subject, Record<ClassNum, string[]>> = {
       "Factorisation",
       "Introduction to Graphs",
     ],
-    9: [
-      "Number Systems",
-      "Polynomials",
-      "Coordinate Geometry",
-      "Linear Equations in Two Variables",
-      "Introduction to Euclid's Geometry",
-      "Lines and Angles",
-      "Triangles",
-      "Quadrilaterals",
-      "Areas of Parallelograms and Triangles",
-      "Circles",
-      "Heron's Formula",
-      "Surface Areas and Volumes",
-      "Statistics",
-    ],
+    // Class 9 derived at runtime from the question bank — see `getClass9Chapters` below.
+    9: [],
   },
   Physics: {
     6: ["Motion and Measurement", "Light Shadows and Reflections", "Electricity and Circuits", "Magnets"],
     7: ["Heat", "Light", "Electric Current", "Motion and Time"],
     8: ["Force and Pressure", "Friction", "Sound", "Chemical Effects of Electric Current", "Light"],
-    9: [
-      "Motion",
-      "Force and Laws of Motion",
-      "Gravitation",
-      "Work and Energy",
-      "Sound",
-    ],
+    // Class 9 derived at runtime from the question bank — see `getClass9Chapters` below.
+    9: [],
   },
   Chemistry: {
     6: ["Sorting Materials", "Changes Around Us", "Water"],
     7: ["Acids, Bases and Salts", "Physical and Chemical Changes", "Fibres to Fabric"],
     8: ["Synthetic Fibres and Plastics", "Coal and Petroleum", "Combustion and Flame", "Pollution of Air and Water"],
-    9: [
-      "Matter in Our Surroundings",
-      "Is Matter Around Us Pure",
-      "Atoms and Molecules",
-      "Structure of the Atom",
-    ],
+    // Class 9 derived at runtime from the question bank — see `getClass9Chapters` below.
+    9: [],
   },
   Science: { 6: [], 7: [], 8: [], 9: [] },
   Biology: { 6: [], 7: [], 8: [], 9: [] },
@@ -274,7 +253,13 @@ export default function DevTeachingValidator() {
 
   const sessionId = useRef<string>(`dev-${Date.now().toString(36)}`);
 
-  const chapters = CHAPTER_MAP[subject]?.[classNum] ?? [];
+  // Class 9: derive chapter display names from the question bank (single maintained source).
+  // Other classes: use the static CHAPTER_MAP (no question-bank coverage yet).
+  const chapters: string[] = classNum === 9
+    ? ALL_CHAPTERS
+        .filter(ch => ch.classNum === 9 && ch.subject === subject)
+        .map(ch => ch.name)
+    : (CHAPTER_MAP[subject]?.[classNum] ?? []);
 
   const handleGenerate = useCallback(async () => {
     if (!question.trim() || question.trim().length < 10) {

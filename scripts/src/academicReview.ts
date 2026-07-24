@@ -35,6 +35,7 @@
 import { createHash }                                                      from "crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { resolve, join }                                                    from "path";
+import { getCanonicalChapter, formatChapterContext }                       from "./canonicalCurriculum.js";
 
 // ─── Paths ────────────────────────────────────────────────────────────────────
 
@@ -122,121 +123,79 @@ interface ReviewRecord {
 
 type ChapterCache = Record<string, ReviewRecord>;
 
-// ─── Curriculum index ─────────────────────────────────────────────────────────
-
-interface CurriculumEntry {
-  class:          number;
-  subject:        string;
-  chapter_title:  string;
-  is_chapter?:    boolean;
-  structure?: {
-    sections?:  { number?: string; title: string }[];
-    key_terms?: string[];
-  };
-}
-
-let _curriculumEntries: CurriculumEntry[] | null = null;
-
-function getCurriculumEntries(): CurriculumEntry[] {
-  if (_curriculumEntries) return _curriculumEntries;
-  if (!existsSync(CURRICULUM_IDX)) { _curriculumEntries = []; return []; }
-  try {
-    const raw = JSON.parse(readFileSync(CURRICULUM_IDX, "utf8")) as { entries?: CurriculumEntry[] };
-    _curriculumEntries = (raw.entries ?? []) as CurriculumEntry[];
-    return _curriculumEntries;
-  } catch { _curriculumEntries = []; return []; }
-}
-
-/**
- * Normalise a title for comparison: lowercase, strip punctuation, collapse spaces.
- * Used for exact-normalised matching of Mathematics chapters (whose QB names
- * already match the index titles after normalisation).
- */
-function normTitle(s: string): string {
-  return s.toLowerCase()
-    // Strip all apostrophe/quote variants before general punctuation removal.
-    // U+0027 = ASCII apostrophe, U+2018/2019 = curly single quotes (used in the
-    // NCERT curriculum index), U+02bc = modifier letter apostrophe, U+0060 = backtick.
-    // Without this, U+2019 would become a space → "I'm" → "I m" (no match with "Im").
-    .replace(/['\u2018\u2019\u02bc`]/g, "")
-    .replace(/[^a-z0-9 ]/g, " ")  // other punctuation → space
-    .replace(/\s+/g, " ")
-    .trim();
-}
+// ─── Curriculum context resolution via canonical academic contract ────────────
+//
+// Uses the canonical chapter registry (canonicalCurriculum.ts → master index)
+// for exact, ID-based lookup. No fuzzy/prefix/normalised matching.
+// SOURCE_UNRESOLVED and SOURCE_PENDING chapters block review (no PASS recorded).
 
 /**
  * Resolve official NCERT curriculum context for a question.
  *
- * Looks up the question's chapterName (normalised) against the canonical
- * master-curriculum-index.json. Science subjects (Physics, Chemistry, Biology,
- * Earth Science) are also tried against the "Science" subject in the index,
- * since the integrated Science textbook covers all three domains.
+ * Looks up the question's chapterId in the canonical academic contract.
+ * MISSING is returned for:
+ *   - Unknown chapterId (not registered in the canonical contract)
+ *   - SOURCE_UNRESOLVED (chapter exists but has no confirmed 2026-27 source)
+ *   - SOURCE_PENDING (official source not yet released)
  *
- * Returns MISSING if no reliable match is found.
  * Questions with MISSING context are BLOCKED from review (no PASS recorded).
+ * PRESENT is returned only for ACTIVE chapters with a confirmed bookId.
  */
 function resolveSourceContext(q: ReviewableQuestion): {
-  status:        "PRESENT" | "MISSING";
-  text:          string;
-  mappedTitle?:  string;
-  missReason?:   string;
+  status:                "PRESENT" | "MISSING";
+  text:                  string;
+  canonicalChapterId:    string | null;  // bookId string (ACTIVE) or null (unresolved/pending/unknown)
+  missReason?:           string;
 } {
-  const entries = getCurriculumEntries();
-  const qNorm   = normTitle(q.chapterName);
+  const canonical = getCanonicalChapter(q.chapterId);
 
-  // Science subjects appear under "Science" in the integrated index,
-  // but may also appear under their specific subject name.
-  const subjectVariants: Record<string, string[]> = {
-    Mathematics:    ["Mathematics"],
-    Physics:        ["Science", "Physics"],
-    Chemistry:      ["Science", "Chemistry"],
-    Biology:        ["Science", "Biology"],
-    "Earth Science": ["Science", "Earth Science"],
-  };
-  const candidates = subjectVariants[q.subject] ?? [q.subject];
-
-  for (const subj of candidates) {
-    const idxEntry = entries.find(
-      e => e.class === q.classNum
-        && e.subject === subj
-        && normTitle(e.chapter_title) === qNorm
-        && e.is_chapter !== false,
-    );
-    if (idxEntry) {
-      return { status: "PRESENT", text: formatEntry(idxEntry), mappedTitle: idxEntry.chapter_title };
-    }
+  if (!canonical) {
+    return {
+      status:             "MISSING",
+      text:               "",
+      canonicalChapterId: null,
+      missReason:         `chapterId "${q.chapterId}" is not registered in the canonical academic contract`,
+    };
   }
 
-  return {
-    status:     "MISSING",
-    text:       "",
-    missReason: `normalised chapter title '${qNorm}' not found in curriculum index for subject='${q.subject}' class=${q.classNum}`,
-  };
-}
+  if (canonical.status === "SOURCE_UNRESOLVED") {
+    return {
+      status:             "MISSING",
+      text:               "",
+      canonicalChapterId: null,   // unresolved — no canonical ID confirmed
+      missReason:         `SOURCE_UNRESOLVED: chapter "${q.chapterId}" has no confirmed 2026-27 canonical source`,
+    };
+  }
 
-function formatEntry(e: CurriculumEntry): string {
-  const sections = (e.structure?.sections ?? [])
-    .map(s => `  ${s.number ? s.number + ". " : ""}${s.title}`)
-    .join("\n");
-  const keyTerms = (e.structure?.key_terms ?? []).slice(0, 20).join(", ");
-  let text = `Official NCERT chapter: "${e.chapter_title}"`;
-  if (sections) text += `\nChapter sections:\n${sections}`;
-  if (keyTerms) text += `\nKey terms: ${keyTerms}`;
-  return text;
+  if (canonical.status === "SOURCE_PENDING") {
+    return {
+      status:             "MISSING",
+      text:               "",
+      canonicalChapterId: null,   // pending release — no canonical ID yet
+      missReason:         `SOURCE_PENDING: official source not yet released for chapter "${q.chapterId}"`,
+    };
+  }
+
+  // ACTIVE: build context from the canonical contract (no fuzzy matching)
+  return {
+    status:             "PRESENT",
+    text:               formatChapterContext(canonical),
+    canonicalChapterId: canonical.bookId,
+  };
 }
 
 // ─── Context audit ────────────────────────────────────────────────────────────
 
 interface ChapterAuditRecord {
-  classNum:      number;
-  subject:       string;
-  chapterId:     string;
-  chapterName:   string;
-  total:         number;
-  present:       number;
-  missing:       number;
-  mappedTitle?:  string;
-  missReason?:   string;
+  classNum:            number;
+  subject:             string;
+  chapterId:           string;
+  chapterName:         string;
+  total:               number;
+  present:             number;
+  missing:             number;
+  canonicalChapterId:  string | null;  // bookId or null for unresolved/unknown
+  missReason?:         string;
 }
 
 interface ContextAuditReport {
@@ -284,8 +243,8 @@ function runContextAudit(questions: ReviewableQuestion[]): ContextAuditReport {
         total:        0,
         present:      0,
         missing:      0,
-        mappedTitle:  ctx.mappedTitle,
-        missReason:   ctx.missReason,
+        canonicalChapterId: ctx.canonicalChapterId,
+        missReason:         ctx.missReason,
       });
     }
     const rec = byChapterMap.get(key)!;
@@ -375,8 +334,8 @@ function printContextAudit(report: ContextAuditReport): void {
   for (const r of report.byChapter) {
     const status = r.missing === 0 ? "✓ PRESENT" : "✗ MISSING";
     console.log(`  ${status}  Cl.${r.classNum} ${r.subject.padEnd(12)} ${r.chapterId.padEnd(10)} ${r.chapterName}`);
-    if (r.mappedTitle && r.missing === 0) {
-      console.log(`            → '${r.mappedTitle}'`);
+    if (r.canonicalChapterId && r.missing === 0) {
+      console.log(`            → '${r.canonicalChapterId}'`);
     }
     if (r.missing > 0 && r.missReason) {
       console.log(`            Reason: ${r.missReason}`);
@@ -513,14 +472,23 @@ function normalizeV1(q: AnyObj): ReviewableQuestion {
   };
 }
 
+/** Mirror of v2adapter.ts prefixChapterId — subject-based chapterId normalisation. */
+function prefixChapterId(subject: string, raw: string): string {
+  if (subject === "Chemistry") return `chem-${raw}`;
+  if (subject === "Biology")   return `bio-${raw}`;
+  return raw; // Physics uses phy-ch1 etc. already in the V2 source files
+}
+
 function normalizeV2(q: AnyObj): ReviewableQuestion {
+  const subject   = String(q["subject"]   ?? "");
+  const chapterId = prefixChapterId(subject, String(q["chapterId"] ?? ""));
   return {
     id:          String(q["id"]          ?? ""),
     schema:      "v2",
     classNum:    Number(q["classNum"]    ?? 0),
-    subject:     String(q["subject"]     ?? ""),
+    subject,
     board:       String(q["board"]       ?? "Both"),
-    chapterId:   String(q["chapterId"]   ?? ""),
+    chapterId,
     chapterName: String(q["chapterName"] ?? ""),
     topicId:     String(q["topicId"]     ?? ""),
     topicName:   String(q["topicName"]   ?? ""),
@@ -566,7 +534,7 @@ async function loadV2File(filePath: string): Promise<ReviewableQuestion[]> {
 }
 
 const V1_EXCLUDED = new Set([
-  "types.ts", "index.ts", "v2adapter.ts", "class9-bundle.ts",
+  "types.ts", "index.ts", "v2adapter.ts", "canonicalChapterRegistry.gen.ts",
   "class9-chemistry.ts", "class9-biology.ts", "class9-science-placeholders.ts",
 ]);
 
@@ -979,7 +947,7 @@ async function runReviews(
     process.stdout.write(`\n[${done}/${total}] ${q.id}\n`);
     process.stdout.write(`  ${q.subject} Cl.${q.classNum} · ${q.chapterId} · ${q.topicName}\n`);
     process.stdout.write(`  Context: ${ctx.status}`);
-    if (ctx.mappedTitle) process.stdout.write(` → '${ctx.mappedTitle}'`);
+    if (ctx.canonicalChapterId) process.stdout.write(` → '${ctx.canonicalChapterId}'`);
     process.stdout.write("\n");
 
     // ── SAFETY RULE: block review when official context is missing ────────
@@ -1099,9 +1067,9 @@ async function main(): Promise<void> {
   console.log(`Model: ${MODEL}  |  Prompt version: ${PROMPT_VERSION}`);
   console.log(HR);
 
-  // ── Load curriculum index at startup ─────────────────────────────────────
-  const idxEntries  = getCurriculumEntries();
-  console.log(`Loaded master-curriculum-index   : ${idxEntries.length} index entries`);
+  // ── Confirm canonical contract is available ───────────────────────────────
+  // Resolution now uses getCanonicalChapter() — no direct index loading at startup.
+  console.log("Canonical contract: loaded (scripts/src/canonicalCurriculum.ts)");
 
   if (!args.contextAudit && !args.dryRun && !args.costEstimate && !apiKey) {
     console.error("\nERROR: OPENAI_API_KEY is not set.");

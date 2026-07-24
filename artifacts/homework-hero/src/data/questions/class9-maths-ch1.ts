@@ -5,6 +5,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "The World of Numbers",
   classNum: 9,
   subject: "Mathematics",
+  canonicalChapterId: "iemh103",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Real Numbers and Their Types",          questionCount: 10 },
     { id: "t2", name: "Irrational Numbers",                    questionCount: 10 },

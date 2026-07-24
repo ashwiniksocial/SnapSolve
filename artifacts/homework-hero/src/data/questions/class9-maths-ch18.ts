@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Measuring Space: Perimeter and Area",
   classNum: 9,
   subject: "Mathematics",
+  canonicalChapterId: "iemh106",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Perimeter of Plane Figures", questionCount: 12 },
     { id: "t2", name: "Circumference and π", questionCount: 11 },

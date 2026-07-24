@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Sound Waves: Characteristics and Applications",
   classNum: 9,
   subject: "Physics",
+  canonicalChapterId: "iesc110",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Nature and Propagation of Sound",                  questionCount: 12 },
     { id: "t2", name: "Characteristics of Sound Waves",                   questionCount: 13 },

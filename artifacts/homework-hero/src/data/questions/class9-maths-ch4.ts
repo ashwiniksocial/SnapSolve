@@ -3,6 +3,8 @@ import type { Question, ChapterMeta } from "./types";
 export const CHAPTER_META: ChapterMeta = {
   id: "ch4", name: "Linear Equations in Two Variables",
   classNum: 9, subject: "Mathematics",
+  canonicalChapterId: null,
+  curriculumStatus: "SOURCE_UNRESOLVED",
   topics: [
     { id: "t1", name: "Introduction and Standard Form",   questionCount: 10 },
     { id: "t2", name: "Solutions of a Linear Equation",   questionCount: 10 },

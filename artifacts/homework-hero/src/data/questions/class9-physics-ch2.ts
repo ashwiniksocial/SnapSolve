@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "How Forces Affect Motion",
   classNum: 9,
   subject: "Physics",
+  canonicalChapterId: "iesc106",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Newton's Laws of Motion",          questionCount: 13 },
     { id: "t2", name: "Inertia and Mass",                  questionCount: 12 },

@@ -1,134 +1,180 @@
 {
+  "_comment": "GENERATED OUTPUT \u2014 DO NOT EDIT MANUALLY. Derives from scripts/src/canonicalCurriculum.ts + question counts.",
+  "_generatedAt": "2026-07-24T12:54:38Z",
+  "_authority": "scripts/src/canonicalCurriculum.ts is the single maintained source. This file is derived output.",
+  "_regenerate": "pnpm --filter @workspace/scripts run generate-canonical-registry",
+  "academicSession": "2026-27",
+  "board": "CBSE",
+  "classNum": 9,
   "chapters": [
     {
       "chapterId": "ch1",
+      "canonicalChapterId": "iemh103",
       "subject": "Mathematics",
-      "officialTitle": "The World of Numbers",
-      "questionCount": 50
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 56
     },
     {
       "chapterId": "ch3",
+      "canonicalChapterId": "iemh101",
       "subject": "Mathematics",
-      "officialTitle": "Orienting Yourself: The Use of Coordinates",
-      "questionCount": 50
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 56
     },
     {
       "chapterId": "ch4",
+      "canonicalChapterId": null,
       "subject": "Mathematics",
-      "officialTitle": "I'm Up and Down, and Round and Round",
-      "questionCount": 50
+      "canonicalStatus": "SOURCE_UNRESOLVED",
+      "questionCount": 56,
+      "blocked": {
+        "academicReview": true,
+        "freeze": true,
+        "reason": "No confirmed canonical 2026-27 chapter; questions retained"
+      }
     },
     {
       "chapterId": "ch15",
+      "canonicalChapterId": "iemh107",
       "subject": "Mathematics",
-      "officialTitle": "The Mathematics of Maybe: Introduction to Probability",
-      "questionCount": 50
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 55
     },
     {
       "chapterId": "ch16",
+      "canonicalChapterId": "iemh104",
       "subject": "Mathematics",
-      "officialTitle": "Exploring Algebraic Identities",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 81
     },
     {
       "chapterId": "ch17",
+      "canonicalChapterId": "iemh108",
       "subject": "Mathematics",
-      "officialTitle": "Predicting What Comes Next: Exploring Sequences",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 81
     },
     {
       "chapterId": "ch18",
+      "canonicalChapterId": "iemh106",
       "subject": "Mathematics",
-      "officialTitle": "Measuring Space: Perimeter and Area",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 83
     },
     {
       "chapterId": "iemh102",
+      "canonicalChapterId": "iemh102",
       "subject": "Mathematics",
-      "officialTitle": "Introduction to Linear Polynomials",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 82
     },
     {
       "chapterId": "phy-ch1",
+      "canonicalChapterId": "iesc104",
       "subject": "Physics",
-      "officialTitle": "Motion",
-      "questionCount": 50
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 56
     },
     {
       "chapterId": "phy-ch2",
+      "canonicalChapterId": "iesc106",
       "subject": "Physics",
-      "officialTitle": "Force and Laws of Motion",
-      "questionCount": 50
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 56
     },
     {
       "chapterId": "phy-ch4",
+      "canonicalChapterId": "iesc107",
       "subject": "Physics",
-      "officialTitle": "Work, Energy and Simple Machines",
-      "questionCount": 50
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 56
     },
     {
       "chapterId": "phy-ch5",
+      "canonicalChapterId": "iesc110",
       "subject": "Physics",
-      "officialTitle": "Sound",
-      "questionCount": 50
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 56
     },
     {
       "chapterId": "chem-ch01",
+      "canonicalChapterId": null,
       "subject": "Chemistry",
-      "officialTitle": "Matter in Our Surroundings",
-      "questionCount": 75
+      "canonicalStatus": "SOURCE_UNRESOLVED",
+      "questionCount": 79,
+      "blocked": {
+        "academicReview": true,
+        "freeze": true,
+        "reason": "No confirmed canonical 2026-27 chapter; questions retained"
+      }
     },
     {
       "chapterId": "chem-ch02",
+      "canonicalChapterId": "iesc105",
       "subject": "Chemistry",
-      "officialTitle": "Exploring Mixtures and Their Separation",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 84
     },
     {
       "chapterId": "chem-ch03",
+      "canonicalChapterId": "iesc109",
       "subject": "Chemistry",
-      "officialTitle": "Atoms and Molecules",
+      "canonicalStatus": "ACTIVE",
       "questionCount": 75
     },
     {
       "chapterId": "chem-ch04",
+      "canonicalChapterId": "iesc108",
       "subject": "Chemistry",
-      "officialTitle": "Structure of an Atom",
+      "canonicalStatus": "ACTIVE",
       "questionCount": 75
     },
     {
       "chapterId": "bio-ch01",
+      "canonicalChapterId": "iesc102",
       "subject": "Biology",
-      "officialTitle": "Cell — The Fundamental Unit of Life",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 77
     },
     {
       "chapterId": "bio-ch02",
+      "canonicalChapterId": "iesc103",
       "subject": "Biology",
-      "officialTitle": "Tissues",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 76
     },
     {
       "chapterId": "bio-ch03",
+      "canonicalChapterId": "iesc112",
       "subject": "Biology",
-      "officialTitle": "Diversity in Living Organisms",
-      "questionCount": 75
+      "canonicalStatus": "ACTIVE",
+      "questionCount": 78
     },
     {
       "chapterId": "bio-ch05",
+      "canonicalChapterId": "iesc111",
       "subject": "Biology",
-      "officialTitle": "Reproduction in Plants and Animals",
+      "canonicalStatus": "ACTIVE",
       "questionCount": 75
     },
     {
       "chapterId": "esc-ch01",
+      "canonicalChapterId": "iesc113",
       "subject": "Earth Science",
-      "officialTitle": "Earth as a System: Energy, Matter and Life",
+      "canonicalStatus": "ACTIVE",
       "questionCount": 85
     }
   ],
   "totalChapters": 21,
-  "totalQuestions": 1385,
-  "checkpoint": "c0fb6532",
+  "totalQuestions": 1478,
+  "sourceUnresolvedChapters": [
+    "ch4",
+    "chem-ch01"
+  ],
+  "reviewBlocked": [
+    "ch4",
+    "chem-ch01"
+  ],
+  "checkpoint": "8ae47003",
   "status": "FROZEN"
 }

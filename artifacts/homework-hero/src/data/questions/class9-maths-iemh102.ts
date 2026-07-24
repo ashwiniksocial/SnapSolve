@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Introduction to Linear Polynomials",
   classNum: 9,
   subject: "Mathematics",
+  canonicalChapterId: "iemh102",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "What Is a Polynomial?", questionCount: 12 },
     { id: "t2", name: "Degree and Types of Polynomials", questionCount: 13 },

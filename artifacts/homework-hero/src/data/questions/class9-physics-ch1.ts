@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Describing Motion Around Us",
   classNum: 9,
   subject: "Physics",
+  canonicalChapterId: "iesc104",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Distance and Displacement",            questionCount: 12 },
     { id: "t2", name: "Speed and Velocity",                   questionCount: 12 },

@@ -20,7 +20,17 @@ export interface ConceptNode {
   subject:                    Subject;
   board:                      Board;
   class:                      number;       // 6–12
+  /**
+   * Display-only chapter label. NOT a relational key.
+   * For relational joins with the question bank, use `chapterId` instead.
+   */
   chapter:                    string;
+  /**
+   * Question-bank internal chapter routing ID (e.g. "ch15", "phy-ch1", "bio-ch01").
+   * Use this — not `chapter` — for relational joins with ChapterMeta and question data.
+   * Populated for Class 9 entries; undefined for other classes (no question bank).
+   */
+  chapterId?:                 string;
   topic:                      string;
   concept:                    string;       // specific concept within the topic
   difficulty:                 Difficulty;
@@ -141,7 +151,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "math-linear-equations-two-var", subject: "Mathematics", board: "Both", class: 9,
-    chapter: "Linear Equations in Two Variables", topic: "Linear Equations", concept: "Linear equations in two variables and their graphs",
+    chapter: "Linear Equations in Two Variables", chapterId: "ch4",
+    topic: "Linear Equations", concept: "Linear equations in two variables and their graphs",
     difficulty: 3, importance: 4, estimatedLearningTimeMinutes: 60,
     commonMisconceptions: [
       "A linear equation in two variables has exactly one solution",
@@ -173,7 +184,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "math-polynomials", subject: "Mathematics", board: "Both", class: 9,
-    chapter: "Polynomials", topic: "Polynomials", concept: "Polynomials: degree, zeros and factor theorem",
+    chapter: "Polynomials", chapterId: "iemh102",
+    topic: "Polynomials", concept: "Polynomials: degree, zeros and factor theorem",
     difficulty: 3, importance: 5, estimatedLearningTimeMinutes: 75,
     commonMisconceptions: [
       "A polynomial of degree n always has n distinct real roots",
@@ -286,7 +298,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "math-probability", subject: "Mathematics", board: "Both", class: 9,
-    chapter: "Probability", topic: "Probability", concept: "Basic probability and experimental probability",
+    chapter: "The Mathematics of Maybe: Introduction to Probability", chapterId: "ch15",
+    topic: "Probability", concept: "Basic probability and experimental probability",
     difficulty: 3, importance: 5, estimatedLearningTimeMinutes: 60,
     commonMisconceptions: [
       "Probability can be greater than 1",
@@ -318,7 +331,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "math-coordinate-geometry", subject: "Mathematics", board: "Both", class: 9,
-    chapter: "Coordinate Geometry", topic: "Coordinate Geometry", concept: "Cartesian plane, distance and section formula",
+    chapter: "Orienting Yourself: The Use of Coordinates", chapterId: "ch3",
+    topic: "Coordinate Geometry", concept: "Cartesian plane, distance and section formula",
     difficulty: 3, importance: 4, estimatedLearningTimeMinutes: 60,
     commonMisconceptions: [
       "Distance formula gives a negative value for some points",
@@ -336,7 +350,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "phys-motion-basics", subject: "Physics", board: "CBSE", class: 9,
-    chapter: "Motion", topic: "Motion", concept: "Distance, displacement, speed and velocity",
+    chapter: "Describing Motion Around Us", chapterId: "phy-ch1",
+    topic: "Motion", concept: "Distance, displacement, speed and velocity",
     difficulty: 2, importance: 5, estimatedLearningTimeMinutes: 60,
     commonMisconceptions: [
       "Speed and velocity are the same thing",
@@ -352,7 +367,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "phys-equations-of-motion", subject: "Physics", board: "CBSE", class: 9,
-    chapter: "Motion", topic: "Equations of Motion", concept: "Three equations of motion under uniform acceleration",
+    chapter: "Describing Motion Around Us", chapterId: "phy-ch1",
+    topic: "Equations of Motion", concept: "Three equations of motion under uniform acceleration",
     difficulty: 3, importance: 5, estimatedLearningTimeMinutes: 75,
     commonMisconceptions: [
       "v = u + at applies even when acceleration changes",
@@ -368,7 +384,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "phys-forces", subject: "Physics", board: "CBSE", class: 9,
-    chapter: "Force and Laws of Motion", topic: "Newton's Laws", concept: "Newton's three laws of motion",
+    chapter: "How Forces Affect Motion", chapterId: "phy-ch2",
+    topic: "Newton's Laws", concept: "Newton's three laws of motion",
     difficulty: 3, importance: 5, estimatedLearningTimeMinutes: 90,
     commonMisconceptions: [
       "A heavier object falls faster",
@@ -385,7 +402,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "phys-work-energy", subject: "Physics", board: "CBSE", class: 9,
-    chapter: "Work and Energy", topic: "Work, Energy and Power", concept: "Work, energy, power and conservation",
+    chapter: "Work and Energy", chapterId: "phy-ch4",
+    topic: "Work, Energy and Power", concept: "Work, energy, power and conservation",
     difficulty: 3, importance: 5, estimatedLearningTimeMinutes: 75,
     commonMisconceptions: [
       "Work is done whenever a force is applied",
@@ -468,7 +486,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "chem-matter-basics", subject: "Chemistry", board: "CBSE", class: 9,
-    chapter: "Matter in Our Surroundings", topic: "States of Matter", concept: "States of matter and change of state",
+    chapter: "Matter in Our Surroundings", chapterId: "chem-ch01",
+    topic: "States of Matter", concept: "States of matter and change of state",
     difficulty: 1, importance: 4, estimatedLearningTimeMinutes: 45,
     commonMisconceptions: [
       "Evaporation and boiling are the same process",
@@ -484,7 +503,8 @@ export const CONCEPT_NODES: ConceptNode[] = [
 
   {
     id: "chem-atomic-structure", subject: "Chemistry", board: "Both", class: 9,
-    chapter: "Structure of the Atom", topic: "Atomic Structure", concept: "Atomic models, subatomic particles and electron configuration",
+    chapter: "Structure of the Atom", chapterId: "chem-ch04",
+    topic: "Atomic Structure", concept: "Atomic models, subatomic particles and electron configuration",
     difficulty: 3, importance: 5, estimatedLearningTimeMinutes: 90,
     commonMisconceptions: [
       "Electrons orbit the nucleus like planets",

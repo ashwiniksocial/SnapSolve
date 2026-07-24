@@ -1,21 +1,20 @@
 {
-  "auditedAt": "2026-07-23T14:25:32.127Z",
-  "chapterMapFile": "academic-review/chapter-context-map.json",
+  "auditedAt": "2026-07-24T12:31:28.313Z",
   "curriculumIndex": "curriculum/generated/master-curriculum-index.json",
   "totalQuestions": 1225,
-  "present": 1000,
-  "missing": 225,
-  "coveragePercent": "81.6%",
+  "present": 1100,
+  "missing": 125,
+  "coveragePercent": "89.8%",
   "byClass": {
     "9": {
-      "present": 1000,
-      "missing": 225
+      "present": 1100,
+      "missing": 125
     }
   },
   "bySubject": {
     "Mathematics": {
-      "present": 500,
-      "missing": 0
+      "present": 450,
+      "missing": 50
     },
     "Physics": {
       "present": 200,
@@ -26,80 +25,81 @@
       "missing": 0
     },
     "Chemistry": {
-      "present": 75,
-      "missing": 225
+      "present": 225,
+      "missing": 75
     }
   },
   "byChapter": [
     {
       "classNum": 9,
       "subject": "Biology",
-      "chapterId": "ch01",
-      "chapterName": "The Fundamental Unit of Life",
+      "chapterId": "bio-ch01",
+      "chapterName": "Cell: The Building Block of Life",
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Cell: The Building Block of Life"
+      "canonicalId": "iesc102"
     },
     {
       "classNum": 9,
       "subject": "Biology",
-      "chapterId": "ch02",
-      "chapterName": "Tissues",
+      "chapterId": "bio-ch02",
+      "chapterName": "Tissues in Action",
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Tissues in Action"
+      "canonicalId": "iesc103"
     },
     {
       "classNum": 9,
       "subject": "Biology",
-      "chapterId": "ch03",
+      "chapterId": "bio-ch03",
       "chapterName": "Patterns in Life: Diversity and Classification",
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Patterns in Life: Diversity and Classification"
+      "canonicalId": "iesc112"
     },
     {
       "classNum": 9,
       "subject": "Chemistry",
-      "chapterId": "ch01",
+      "chapterId": "chem-ch01",
       "chapterName": "Matter in Our Surroundings",
       "total": 75,
       "present": 0,
       "missing": 75,
-      "missReason": "chapterId 'ch01' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+      "canonicalId": "SOURCE_UNRESOLVED",
+      "missReason": "SOURCE_UNRESOLVED: chapter \"chem-ch01\" has no confirmed 2026-27 canonical source"
     },
     {
       "classNum": 9,
       "subject": "Chemistry",
-      "chapterId": "ch02",
-      "chapterName": "Exploring Mixtures and Their Separation",
+      "chapterId": "chem-ch02",
+      "chapterName": "Exploring Mixtures and their Separation",
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Exploring Mixtures and their Separation"
+      "canonicalId": "iesc105"
     },
     {
       "classNum": 9,
       "subject": "Chemistry",
-      "chapterId": "ch03",
-      "chapterName": "Atoms and Molecules",
+      "chapterId": "chem-ch03",
+      "chapterName": "Atomic Foundations of Matter",
       "total": 75,
-      "present": 0,
-      "missing": 75,
-      "missReason": "chapterId 'ch03' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+      "present": 75,
+      "missing": 0,
+      "canonicalId": "iesc109"
     },
     {
       "classNum": 9,
       "subject": "Chemistry",
-      "chapterId": "ch04",
-      "chapterName": "Structure of the Atom",
+      "chapterId": "chem-ch04",
+      "chapterName": "Journey Inside the Atom",
       "total": 75,
-      "present": 0,
-      "missing": 75,
-      "missReason": "chapterId 'ch04' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+      "present": 75,
+      "missing": 0,
+      "canonicalId": "iesc108"
     },
     {
       "classNum": 9,
@@ -109,7 +109,7 @@
       "total": 50,
       "present": 50,
       "missing": 0,
-      "mappedTitle": "The World of Numbers"
+      "canonicalId": "iemh103"
     },
     {
       "classNum": 9,
@@ -119,7 +119,7 @@
       "total": 50,
       "present": 50,
       "missing": 0,
-      "mappedTitle": "The Mathematics of Maybe: Introduction to Probability"
+      "canonicalId": "iemh107"
     },
     {
       "classNum": 9,
@@ -129,7 +129,7 @@
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Exploring Algebraic Identities"
+      "canonicalId": "iemh104"
     },
     {
       "classNum": 9,
@@ -139,7 +139,7 @@
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Predicting What Comes Next: Exploring Sequences and Progressions"
+      "canonicalId": "iemh108"
     },
     {
       "classNum": 9,
@@ -149,7 +149,7 @@
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Measuring Space: Perimeter and Area"
+      "canonicalId": "iemh106"
     },
     {
       "classNum": 9,
@@ -159,17 +159,18 @@
       "total": 50,
       "present": 50,
       "missing": 0,
-      "mappedTitle": "Orienting Yourself: The Use of Coordinates"
+      "canonicalId": "iemh101"
     },
     {
       "classNum": 9,
       "subject": "Mathematics",
       "chapterId": "ch4",
-      "chapterName": "I'm Up and Down, and Round and Round",
+      "chapterName": "Linear Equations in Two Variables",
       "total": 50,
-      "present": 50,
-      "missing": 0,
-      "mappedTitle": "I'm Up and Down, and Round and Round"
+      "present": 0,
+      "missing": 50,
+      "canonicalId": "SOURCE_UNRESOLVED",
+      "missReason": "SOURCE_UNRESOLVED: chapter \"ch4\" has no confirmed 2026-27 canonical source"
     },
     {
       "classNum": 9,
@@ -179,73 +180,65 @@
       "total": 75,
       "present": 75,
       "missing": 0,
-      "mappedTitle": "Introduction to Linear Polynomials"
+      "canonicalId": "iemh102"
     },
     {
       "classNum": 9,
       "subject": "Physics",
       "chapterId": "phy-ch1",
-      "chapterName": "Motion",
+      "chapterName": "Describing Motion Around Us",
       "total": 50,
       "present": 50,
       "missing": 0,
-      "mappedTitle": "Describing Motion Around Us"
+      "canonicalId": "iesc104"
     },
     {
       "classNum": 9,
       "subject": "Physics",
       "chapterId": "phy-ch2",
-      "chapterName": "Force and Laws of Motion",
+      "chapterName": "How Forces Affect Motion",
       "total": 50,
       "present": 50,
       "missing": 0,
-      "mappedTitle": "How Forces Affect Motion"
+      "canonicalId": "iesc106"
     },
     {
       "classNum": 9,
       "subject": "Physics",
       "chapterId": "phy-ch4",
-      "chapterName": "Work and Energy",
+      "chapterName": "Work, Energy, and Simple Machines",
       "total": 50,
       "present": 50,
       "missing": 0,
-      "mappedTitle": "Work, Energy, and Simple Machines"
+      "canonicalId": "iesc107"
     },
     {
       "classNum": 9,
       "subject": "Physics",
       "chapterId": "phy-ch5",
-      "chapterName": "Sound",
+      "chapterName": "Sound Waves: Characteristics and Applications",
       "total": 50,
       "present": 50,
       "missing": 0,
-      "mappedTitle": "Sound Waves: Characteristics and Applications"
+      "canonicalId": "iesc110"
     }
   ],
   "unmatchedChapters": [
     {
       "classNum": 9,
       "subject": "Chemistry",
-      "chapterId": "ch01",
+      "chapterId": "chem-ch01",
       "chapterName": "Matter in Our Surroundings",
       "questions": 75,
-      "reason": "chapterId 'ch01' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+      "reason": "SOURCE_UNRESOLVED: chapter \"chem-ch01\" has no confirmed 2026-27 canonical source"
     },
     {
       "classNum": 9,
-      "subject": "Chemistry",
-      "chapterId": "ch03",
-      "chapterName": "Atoms and Molecules",
-      "questions": 75,
-      "reason": "chapterId 'ch03' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
-    },
-    {
-      "classNum": 9,
-      "subject": "Chemistry",
-      "chapterId": "ch04",
-      "chapterName": "Structure of the Atom",
-      "questions": 75,
-      "reason": "chapterId 'ch04' for subject 'Chemistry' class 9 has no entry in chapter-context-map.json"
+      "subject": "Mathematics",
+      "chapterId": "ch4",
+      "chapterName": "Linear Equations in Two Variables",
+      "questions": 50,
+      "reason": "SOURCE_UNRESOLVED: chapter \"ch4\" has no confirmed 2026-27 canonical source"
     }
   ]
 }

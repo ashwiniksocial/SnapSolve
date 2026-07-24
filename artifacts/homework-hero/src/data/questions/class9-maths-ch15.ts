@@ -3,6 +3,8 @@ import type { Question, ChapterMeta } from "./types";
 export const CHAPTER_META: ChapterMeta = {
   id: "ch15", name: "The Mathematics of Maybe: Introduction to Probability",
   classNum: 9, subject: "Mathematics",
+  canonicalChapterId: "iemh107",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Introduction to Probability",     questionCount: 12 },
     { id: "t2", name: "Experimental Probability",        questionCount: 14 },

@@ -44,6 +44,14 @@ export function getConceptsByChapter(chapter: string, subject?: Subject): Concep
   );
 }
 
+/**
+ * Relational lookup by question-bank internal chapter ID (e.g. "ch15", "phy-ch1").
+ * Prefer this over `getConceptsByChapter` for programmatic joins with ChapterMeta.
+ */
+export function getConceptsByChapterId(chapterId: string): ConceptNode[] {
+  return CONCEPT_NODES.filter((n) => n.chapterId === chapterId);
+}
+
 export { getConceptsBySubject, getConceptsByClass };
 
 // ── Adjacency ─────────────────────────────────────────────────────────────────

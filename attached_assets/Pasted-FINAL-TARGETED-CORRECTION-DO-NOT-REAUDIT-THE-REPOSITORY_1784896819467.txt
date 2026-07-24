@@ -1,0 +1,136 @@
+FINAL TARGETED CORRECTION — DO NOT REAUDIT THE REPOSITORY
+
+The prior migration delivered major progress, but four structural acceptance failures remain. Correct only these items and validate them. Do not modify educational content, UI, features or unrelated files. Do not call OpenAI.
+
+1. REMOVE THE CANONICAL MIRROR
+
+There must be exactly one maintained canonical curriculum dataset.
+
+Currently:
+- scripts/src/canonicalCurriculum.ts
+- canonicalIdLookup.ts browser-safe mirror
+
+Replace this with one shared browser-and-server-safe canonical data module or generated artefact that both scripts and frontend import.
+
+No manually maintained ID/title mirror may remain.
+
+Add a regression check ensuring canonical curriculum IDs are defined in only one maintained source.
+
+2. MAKE CANONICAL IDENTITY STRUCTURALLY SAFE
+
+Do not use:
+
+canonicalId?: string
+
+as the final active metadata contract.
+
+Every active question/chapter record must have a stable internal chapter identity.
+
+Use separate fields such as:
+
+- chapterId: required stable internal ID
+- canonicalChapterId: official chapter ID when resolved, otherwise null
+- curriculumStatus:
+  ACTIVE | SOURCE_PENDING | SOURCE_UNRESOLVED | OFFICIALLY_DELETED
+
+Do not use SOURCE_UNRESOLVED, SOURCE_PENDING or any status value as an ID.
+
+Migrate every affected record accordingly.
+
+3. ELIMINATE REMAINING HARDCODED CONSUMERS
+
+conceptGraph.ts:
+- use canonical/internal chapter IDs as relational keys;
+- derive display titles from the canonical contract;
+- do not keep chapter titles as relationship identifiers.
+
+DevTeachingValidator.tsx:
+- remove the maintained Class 9 CHAPTER_MAP;
+- derive chapter options and titles from the shared canonical contract;
+- do not merely update the hardcoded titles.
+
+Search only these related paths for any remaining title-keyed joins introduced or retained by the migration and correct them.
+
+4. ENFORCE UNRESOLVED BLOCKING
+
+SOURCE_UNRESOLVED and SOURCE_PENDING chapters must:
+
+- retain unique stable internal chapter IDs;
+- have canonicalChapterId = null;
+- be blocked from academic review;
+- be blocked from freeze;
+- return an explicit blocked status rather than merely a warning.
+
+Verify Mathematics ch4 and Chemistry chem-ch01 behave this way.
+
+5. FREEZE DATA
+
+Confirm class9-active-freeze.json is generated output only and not curriculum authority.
+
+Its generation must derive from:
+canonical contract + question resolution + structural validation + review eligibility.
+
+Add a generated-file notice or equivalent protection. Do not create another registry.
+
+6. COUNT RECONCILIATION
+
+Explain and reconcile:
+
+- 700 questions reported by curriculum-check
+- 1,100 questions represented in context-audit
+
+Report counts separately by:
+- V1
+- V2
+- placeholders
+- total active registered questions
+
+Confirm no question is omitted or double-counted.
+
+7. ECONOMICS SAFETY
+
+Class 9 Economics was previously completed.
+
+Confirm whether it is currently registered and active.
+
+Do not silently exclude it because it is absent from the canonical contract.
+
+If official source evidence is not currently in the contract:
+- retain its questions;
+- assign stable internal identities;
+- mark curriculum status accurately;
+- do not invent official canonical IDs;
+- report the exact state.
+
+VALIDATION
+
+Run zero-API checks only:
+
+- all affected TypeScript packages typecheck;
+- one maintained canonical dataset only;
+- zero status strings used as IDs;
+- zero optional chapter identity on active records;
+- conceptGraph uses IDs internally;
+- DevTeachingValidator has no maintained Class 9 chapter registry;
+- unresolved chapters are blocked from review and freeze;
+- freeze file is derived output;
+- counts reconcile;
+- Economics state is explicitly reported;
+- no educational content changed;
+- zero OpenAI calls.
+
+FINAL REPORT — CONCISE
+
+Return:
+1. Files modified/deleted.
+2. Location of the single canonical dataset.
+3. Evidence that the browser mirror was removed.
+4. Final metadata schema.
+5. Unresolved chapter identities and statuses.
+6. Review/freeze blocking test results.
+7. V1/V2/placeholders/total counts.
+8. Economics status.
+9. Typecheck results.
+10. Confirmation of zero content changes and zero OpenAI calls.
+
+Stop after this correction. Do not begin another architecture task.

@@ -1,0 +1,367 @@
+APPROVE THE EXISTING TASK PLAN WITH THE FOLLOWING FINAL MANDATORY AMENDMENTS.
+
+Do not perform another broad audit.
+Do not create another framework.
+Do not add features.
+Do not run OpenAI.
+Do not modify question wording, answers, explanations, hints, teaching content or UI design.
+
+OBJECTIVE
+
+Implement one permanent, board-independent canonical academic contract for SnapSolve.
+
+The final system must support:
+
+Board
+→ Class
+→ Subject
+→ Book
+→ Chapter
+→ Topic
+
+Class 9 is the first migrated dataset, but the architecture must not be Class 9-specific.
+
+Use:
+
+curriculum/generated/master-curriculum-index.json
+
+and the official source PDFs in:
+
+curriculum/sources/cbse/class9/
+
+as the current curriculum authority.
+
+Where official NCERT chapter/book codes such as iemh101 or iesc101 already exist and are stable, use them as canonical chapter IDs. Do not invent a parallel unrelated identifier system.
+
+==================================================
+1. CANONICAL ACADEMIC CONTRACT
+==================================================
+
+Create one lightweight canonical contract within the existing TypeScript/JSON architecture.
+
+Each academic entity must support, where applicable:
+
+- boardId
+- classId
+- subjectId
+- bookId/bookCode
+- chapterId
+- chapterTitle
+- topicId
+- topicTitle
+- academicSession/version
+- official source path
+- source hash/provenance
+- status:
+  - ACTIVE
+  - SOURCE_PENDING
+  - SOURCE_UNRESOLVED
+  - OFFICIALLY_DELETED
+
+Titles are display data only.
+
+Canonical IDs must be the relational authority throughout the project.
+
+Do not create a database or a second curriculum index.
+
+Existing question-bank topic labels must not be represented as official canonical topics unless official source evidence exists. Retain unverified topic labels as INTERNAL_TOPIC metadata.
+
+==================================================
+2. REMOVE ALL DUPLICATE CURRICULUM TRUTH
+==================================================
+
+Completely remove independent curriculum authority from:
+
+- curriculumGateway.ts
+- validateCurriculum.ts
+- class9-active-freeze.json
+- conceptGraph.ts
+- DevTeachingValidator.tsx
+- academicReview.ts
+- any other hardcoded curriculum registry found during implementation
+
+All active consumers must derive from the canonical contract.
+
+Do not leave old registries:
+
+- commented out;
+- retained as fallback;
+- stored as compatibility maps;
+- renamed but still active;
+- duplicated in generated files.
+
+==================================================
+3. QUESTION METADATA MIGRATION
+==================================================
+
+Extend the existing question schema minimally so every active question has:
+
+- canonical subjectId
+- canonical chapterId
+- canonical topicId where genuinely resolved
+- curriculum status/context
+
+chapterName may remain temporarily for display or migration compatibility, but it must not remain the relational key.
+
+Preserve:
+
+- question IDs;
+- wording;
+- options;
+- answers;
+- explanations;
+- hints;
+- teaching content.
+
+Every active question must end as either:
+
+- canonically resolved; or
+- explicitly SOURCE_PENDING/SOURCE_UNRESOLVED.
+
+No silent guessing.
+
+==================================================
+4. ACADEMIC REVIEW
+==================================================
+
+Remove:
+
+- normTitle-based curriculum resolution;
+- fuzzy matching;
+- prefix matching;
+- title aliases;
+- old-to-new chapter maps.
+
+Academic review must resolve curriculum context only through canonical IDs.
+
+Missing canonical context must return:
+
+REVIEW_BLOCKED_CONTEXT_MISSING
+
+Review-cache identity must include:
+
+- canonical chapter ID;
+- canonical source/version;
+- content hash.
+
+Invalidate caches created using old title/fuzzy mappings or obsolete curriculum context.
+
+Do not run any paid academic review in this task.
+
+==================================================
+5. CONCEPT GRAPH AND RUNTIME CONSUMERS
+==================================================
+
+conceptGraph.ts must use canonical IDs internally.
+
+Review all active consumers, including:
+
+- questionService
+- Practice
+- Revision
+- Progress
+- Analytics
+- Exam
+- Teacher/Admin
+- chapter navigation/filtering
+- AI topic matcher
+- teaching-content lookup
+- browser/local persisted academic records
+
+Display titles may be derived from the contract.
+
+Grouping, joins, persistence and relations must use canonical IDs.
+
+Where browser/local data is stored under old title keys, implement one deterministic one-time migration to canonical IDs.
+
+Do not create a permanent title alias layer.
+
+==================================================
+6. FREEZE SYSTEM
+==================================================
+
+class9-active-freeze.json must no longer act as manually maintained curriculum truth.
+
+Freeze status must be derived from:
+
+Canonical curriculum
+→ Question resolution
+→ Structural validation
+→ Academic-review status
+→ Freeze eligibility
+
+Regenerate freeze metadata using canonical IDs.
+
+A chapter may be frozen only when:
+
+- source context resolves;
+- all active questions resolve to canonical chapter identity;
+- zero duplicate IDs exist;
+- zero orphan imports exist;
+- structural validation passes;
+- required academic-review status exists;
+- no legacy/compatibility dependency remains.
+
+SOURCE_PENDING or SOURCE_UNRESOLVED chapters must not be frozen.
+
+Preserve frozen educational content, but remove incorrect or stale freeze metadata.
+
+==================================================
+7. ORPHAN BUNDLES
+==================================================
+
+Resolve class9-bundle.ts permanently:
+
+- delete it if obsolete or duplicate;
+- register it exactly once if required;
+- move it outside active source/runtime paths if archival.
+
+Do not leave an active orphan behind an orphan guard indefinitely.
+
+Also identify any other active question files or bundles that are:
+
+- unregistered;
+- registered more than once;
+- obsolete duplicates;
+- reachable only through legacy imports.
+
+==================================================
+8. GENERATORS AND IMPORTERS
+==================================================
+
+Any active importer or generator capable of producing academic/question metadata must:
+
+- consume canonical IDs;
+- reject unknown IDs;
+- reject title-only relational metadata;
+- not emit independent curriculum lists;
+- not freeze unresolved content;
+- not recreate legacy chapter names as keys.
+
+Do not modify PDF extraction behaviour unrelated to metadata identity.
+
+==================================================
+9. REGRESSION PREVENTION
+==================================================
+
+Add only the smallest necessary automated checks.
+
+Validation must fail when:
+
+- an unknown canonical chapter/topic ID is introduced;
+- a hardcoded curriculum registry is added;
+- title-based curriculum joins are used;
+- fuzzy/prefix matching is used;
+- aliases/compatibility maps are introduced;
+- an active question has no canonical chapter identity;
+- a frozen chapter contains unresolved references;
+- an active question file is unregistered or multiply registered;
+- stale review caches do not match canonical context/content hash;
+- a generator emits title-only or legacy academic metadata.
+
+Checks must detect both:
+
+- known legacy titles;
+- architectural recurrence patterns.
+
+Do not create a large governance subsystem.
+
+==================================================
+10. VALIDATION
+==================================================
+
+Run zero-API validation only:
+
+1. TypeScript typecheck.
+2. Canonical-contract integrity.
+3. Official source/provenance resolution.
+4. Question-to-chapter canonical resolution.
+5. Topic resolution classification.
+6. Duplicate question-ID check.
+7. Duplicate curriculum-registry check.
+8. Registration/import check.
+9. Orphan file/bundle check.
+10. Legacy title-reference search.
+11. Title-based/fuzzy/alias resolution search.
+12. Academic-review resolver dry run.
+13. Freeze-gate validation.
+14. Persisted-data migration test.
+15. Runtime smoke test.
+16. Existing gateway/validator tests after conversion.
+
+Report separately:
+
+- RESOLVED
+- INTERNAL_TOPIC
+- SOURCE_PENDING
+- SOURCE_UNRESOLVED
+- OFFICIALLY_DELETED
+- NO_MATCH
+- AMBIGUOUS
+- ORPHANED
+- DUPLICATE
+
+==================================================
+EXECUTION METHOD
+==================================================
+
+Execute this as one task with internal checkpoints:
+
+A. Canonical contract
+B. Schema and question metadata migration
+C. All producers and consumers
+D. Freeze/cache/persistence correction
+E. Regression checks and zero-API validation
+
+Do not stop between checkpoints unless there is a genuine blocker involving unavailable official evidence, data-loss risk or unresolved duplicate content.
+
+Do not restart discovery work already completed in the task plan.
+
+==================================================
+FINAL ACCEPTANCE GATES
+==================================================
+
+Do not declare completion unless:
+
+- one active canonical academic contract remains;
+- it is board/class independent;
+- official stable codes are used where available;
+- all active Class 9 questions have canonical chapter identity or explicit unresolved status;
+- no independent curriculum registries remain;
+- no fuzzy/title/alias curriculum resolution remains;
+- conceptGraph uses canonical IDs;
+- runtime and persisted grouping use canonical IDs;
+- freeze state is derived, not manually authoritative;
+- zero active orphan bundles remain;
+- stale freeze and review-cache data is removed;
+- generators cannot recreate legacy metadata;
+- regression checks pass;
+- typecheck and runtime smoke tests pass;
+- no OpenAI calls ran;
+- no educational content changed.
+
+FINAL REPORT — KEEP CONCISE
+
+Return only:
+
+1. Files added, modified and deleted.
+2. Canonical-contract location and schema.
+3. Academic subsystems migrated.
+4. Total active questions.
+5. Canonically resolved questions.
+6. INTERNAL_TOPIC count.
+7. SOURCE_PENDING count.
+8. SOURCE_UNRESOLVED count by chapter.
+9. NO_MATCH and AMBIGUOUS counts.
+10. Duplicate and orphan counts.
+11. Remaining hardcoded curriculum references.
+12. Remaining title-based/fuzzy/alias references.
+13. Freeze-gate result.
+14. Review-cache migration result.
+15. Persisted-data migration result.
+16. Typecheck and runtime results.
+17. Confirmation of zero OpenAI calls.
+18. Confirmation that educational content was unchanged.
+19. Exact blockers, if any.
+
+Do not proceed to content review, question generation or another architecture task after completion.

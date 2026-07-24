@@ -7,6 +7,8 @@ export const CLASS9_SCIENCE_PLACEHOLDER_CHAPTERS: ChapterMeta[] = [
     name: "Reproduction: How Life Continues",
     classNum: 9,
     subject: "Biology",
+    canonicalChapterId: "iesc111",
+    curriculumStatus: "ACTIVE" as const,
     topics: [
       { id: "t1", name: "Asexual Reproduction", questionCount: 12 },
       { id: "t2", name: "Vegetative Propagation", questionCount: 10 },
@@ -22,6 +24,8 @@ export const CLASS9_SCIENCE_PLACEHOLDER_CHAPTERS: ChapterMeta[] = [
     name: "Earth as a System: Energy, Matter and Life",
     classNum: 9,
     subject: "Earth Science",
+    canonicalChapterId: "iesc113",
+    curriculumStatus: "ACTIVE" as const,
     topics: [
       { id: "t1", name: "Earth's Spheres", questionCount: 10 },
       { id: "t2", name: "Solar Radiation and Insolation", questionCount: 10 },

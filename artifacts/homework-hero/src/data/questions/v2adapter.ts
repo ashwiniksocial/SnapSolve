@@ -6,8 +6,9 @@
  * (bloomsLevel, marks, source, etc.) are intentionally dropped.
  */
 
-import type { Question, ChapterMeta } from "./types";
+import type { Question, ChapterMeta, CurriculumStatus } from "./types";
 import type { Difficulty, QuestionType } from "./types";
+import { lookupCanonical } from "./canonicalChapterRegistry.gen";
 
 /**
  * Minimal interface covering the V2 fields we actually read.
@@ -94,6 +95,12 @@ export function adaptV2Questions(qs: QuestionV2Like[]): Question[] {
 /**
  * Derive ChapterMeta[] from an already-adapted Question[].
  * Topic questionCounts are computed from the array, so they are always accurate.
+ *
+ * Populates canonicalChapterId and curriculumStatus by looking up each chapterId
+ * in the canonical chapter registry (canonicalChapterRegistry.gen.ts), which is
+ * generated from the single maintained source: scripts/src/canonicalCurriculum.ts.
+ *
+ * SOURCE_UNRESOLVED and SOURCE_PENDING chapters get canonicalChapterId = null.
  */
 export function buildChapterMeta(qs: Question[]): ChapterMeta[] {
   const chMap = new Map<
@@ -117,15 +124,22 @@ export function buildChapterMeta(qs: Question[]): ChapterMeta[] {
     ch.topics.get(q.topicId)!.count++;
   }
 
-  return Array.from(chMap.entries()).map(([id, ch]) => ({
-    id,
-    name:     ch.name,
-    classNum: ch.classNum,
-    subject:  ch.subject,
-    topics:   Array.from(ch.topics.entries()).map(([tid, t]) => ({
-      id:            tid,
-      name:          t.name,
-      questionCount: t.count,
-    })),
-  }));
+  return Array.from(chMap.entries()).map(([id, ch]) => {
+    const reg = lookupCanonical(id);
+    const canonicalChapterId: string | null   = reg?.canonicalChapterId ?? null;
+    const curriculumStatus:   CurriculumStatus = reg?.curriculumStatus   ?? "SOURCE_UNRESOLVED";
+    return {
+      id,
+      name:        ch.name,
+      classNum:    ch.classNum,
+      subject:     ch.subject,
+      canonicalChapterId,
+      curriculumStatus,
+      topics:      Array.from(ch.topics.entries()).map(([tid, t]) => ({
+        id:            tid,
+        name:          t.name,
+        questionCount: t.count,
+      })),
+    };
+  });
 }

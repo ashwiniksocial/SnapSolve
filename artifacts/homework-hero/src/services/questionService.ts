@@ -26,7 +26,7 @@ let _loaded = false;
  */
 export async function preloadQBank(_classNum?: number): Promise<void> {
   if (_loaded) return;
-  const { CHAPTERS, QUESTIONS } = await import("@/data/questions/class9-bundle");
+  const { ALL_CHAPTERS: CHAPTERS, ALL_QUESTIONS: QUESTIONS } = await import("@/data/questions/index");
   ALL_CHAPTERS  = [...ALL_CHAPTERS,  ...CHAPTERS];
   ALL_QUESTIONS = [...ALL_QUESTIONS, ...QUESTIONS];
   _loaded = true;

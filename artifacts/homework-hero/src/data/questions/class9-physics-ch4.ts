@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Work, Energy, and Simple Machines",
   classNum: 9,
   subject: "Physics",
+  canonicalChapterId: "iesc107",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Work Done by a Force",              questionCount: 13 },
     { id: "t2", name: "Kinetic and Potential Energy",      questionCount: 14 },

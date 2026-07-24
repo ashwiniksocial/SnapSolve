@@ -5,6 +5,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Orienting Yourself: The Use of Coordinates",
   classNum: 9,
   subject: "Mathematics",
+  canonicalChapterId: "iemh101",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Cartesian Plane",                 questionCount: 10 },
     { id: "t2", name: "Coordinates of a Point",          questionCount: 9  },

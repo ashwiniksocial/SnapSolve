@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Exploring Algebraic Identities",
   classNum: 9,
   subject: "Mathematics",
+  canonicalChapterId: "iemh104",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Understanding Algebraic Identities",         questionCount: 15 },
     { id: "t2", name: "(a+b)² and (a−b)² Identities",              questionCount: 18 },

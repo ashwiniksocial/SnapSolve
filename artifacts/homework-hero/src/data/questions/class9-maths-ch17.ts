@@ -6,6 +6,8 @@ export const CHAPTER_META: ChapterMeta = {
   name: "Predicting What Comes Next: Exploring Sequences and Progressions",
   classNum: 9,
   subject: "Mathematics",
+  canonicalChapterId: "iemh108",
+  curriculumStatus: "ACTIVE",
   topics: [
     { id: "t1", name: "Recognising and Describing Number Sequences",   questionCount: 15 },
     { id: "t2", name: "Arithmetic Patterns and Common Difference",     questionCount: 18 },
