@@ -1,0 +1,154 @@
+STOP.
+
+Do NOT implement the Gold Standard Question & Answer Acceptance Checklist yet.
+
+This task is DESIGN ONLY.
+
+Objective:
+
+Produce the definitive implementation specification so the checklist can be built once, validated once, and frozen once without future redesign.
+
+Create:
+
+.local/governance/GOLD_STANDARD_QA_SPEC.md
+
+This document will become the single authoritative engineering specification for implementing the SnapSolve Gold Standard Question & Answer Acceptance Checklist.
+
+DO NOT write code.
+DO NOT modify academicReview.ts.
+DO NOT modify runtime behaviour.
+DO NOT modify question banks.
+DO NOT modify curriculum.
+DO NOT create any new review engine.
+
+────────────────────────────────────────
+For EVERY checklist criterion define:
+
+1. Criterion Name
+2. Purpose
+3. Why it exists
+4. PASS definition
+5. FAIL definition
+6. Evidence required
+7. Can it be objectively automated?
+   - YES
+   - PARTIALLY
+   - NO
+8. If partially automated:
+   - which parts are objective
+   - which require AI judgement
+9. False-positive risks
+10. False-negative risks
+11. Cost impact
+12. Priority:
+   - Mandatory
+   - Conditional
+   - Informational
+13. Whether failure blocks GOLD_STANDARD_PASS
+
+────────────────────────────────────────
+For every AI judgement criterion define:
+
+- exact prompt objective
+- expected evidence
+- confidence threshold
+- uncertainty handling
+- reviewer disagreement handling
+
+────────────────────────────────────────
+Define the complete review workflow:
+
+Generation
+↓
+
+Single Gold Standard Review
+↓
+
+PASS
+or
+CONFIRMED_DEFECT
+or
+POSSIBLE_DEFECT_REQUIRES_VERIFICATION
+or
+REVIEWER_UNCERTAINTY
+
+↓
+
+If defect:
+Correct ONLY failed criteria
+↓
+
+Re-review ONLY modified Q&A
+↓
+
+Freeze
+
+────────────────────────────────────────
+Define caching precisely:
+
+- what is cached
+- content hash strategy
+- checklist version strategy
+- when cache invalidates
+- when PASS remains valid
+- when re-review is mandatory
+
+────────────────────────────────────────
+Define legacy transition:
+
+New Q&A
+Modified Q&A
+Legacy Q&A
+Deleted Q&A
+Merged Q&A
+
+Specify exactly how each is handled.
+
+────────────────────────────────────────
+Define measurable rules for subjective concepts:
+
+Teacher Approval
+Examiner Approval
+Important Question
+Exam-worthy
+Ample Depth
+Weak Student Friendly
+Complete Marking Points
+Conceptual Understanding
+Not Trivial
+Worth Student Time
+
+Where objective measurement is impossible,
+explicitly state why.
+
+Do NOT invent fake precision.
+
+────────────────────────────────────────
+Create a final implementation roadmap:
+
+Phase 1
+Phase 2
+Phase 3
+
+Estimate:
+
+- implementation complexity
+- engineering risk
+- token cost
+- future maintenance cost
+
+Recommend the cheapest architecture that still satisfies every approved governance rule.
+
+────────────────────────────────────────
+Output ONLY:
+
+1. GOLD_STANDARD_QA_SPEC.md
+2. Executive summary
+3. Open design questions (if any)
+4. Recommendation for final implementation
+
+Write the report to:
+
+curriculum/generated/LATEST_REPLIT_REPORT.md
+
+Show the same report in the Agent response.
