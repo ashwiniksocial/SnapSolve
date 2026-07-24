@@ -1,0 +1,112 @@
+FINAL HOUSEKEEPING — ACADEMIC ARCHITECTURE FREEZE
+
+Do NOT perform another audit.
+Do NOT search for new issues.
+Do NOT modify architecture.
+Do NOT modify question banks.
+Do NOT modify educational content.
+Do NOT modify UI.
+Do NOT call OpenAI.
+
+OBJECTIVE
+
+Complete the final housekeeping before permanently freezing the academic architecture.
+
+==================================================
+TASKS
+==================================================
+
+1. FIX GENERATED FREEZE METADATA
+
+Regenerate class9-active-freeze.json using the authoritative actual question-object counts.
+
+Correct every affected aggregate field, including (where applicable):
+
+- totalQuestions
+- per-subject totals
+- per-chapter totals
+- review-eligible totals
+- blocked totals
+
+Do not modify runtime behaviour.
+
+==================================================
+
+2. VERIFY GENERATED OUTPUTS
+
+Verify every generated artifact matches the current canonical contract.
+
+Specifically verify:
+
+- canonicalChapterRegistry.gen.ts
+- canonical-registry-checksum.json
+- class9-active-freeze.json
+
+Regenerate only if necessary.
+
+==================================================
+
+3. FINAL CONSISTENCY CHECK
+
+Confirm:
+
+- canonical contract checksum matches
+- generated registry checksum matches
+- freeze metadata matches actual question counts
+- runtime totals match registered totals
+- no generated artifact is stale
+
+==================================================
+
+4. CREATE ARCHITECTURE VERSION MARKER
+
+Create one small internal version marker documenting:
+
+Academic Architecture v1.0
+Status: FROZEN
+
+Include:
+
+- creation date
+- canonical contract version
+- checksum version
+- note:
+
+"Architecture changes are permitted only for:
+1. verified software defects;
+2. official curriculum changes;
+3. new board/class support."
+
+This is internal documentation only.
+
+==================================================
+
+VALIDATION
+
+Run only:
+
+- TypeScript typecheck
+- generated artifact verification
+- checksum verification
+- freeze metadata verification
+
+No repository-wide audit.
+
+==================================================
+
+FINAL REPORT
+
+Return only:
+
+1. Files modified.
+2. Freeze totals before and after.
+3. Final actual question totals by subject.
+4. Generated artifact status.
+5. Typecheck result.
+6. Confirmation that no educational content changed.
+7. Confirmation that no architecture changed.
+8. Confirmation that Academic Architecture v1.0 is now frozen.
+
+Stop after this task.
+No further recommendations.
+No additional implementation.
