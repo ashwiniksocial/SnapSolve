@@ -12,6 +12,7 @@
     "academic-review": "tsx ./src/academicReview.ts",
     "freeze": "pnpm run curriculum-check && pnpm run academic-review",
     "generate-canonical-registry": "tsx ./src/generateCanonicalRegistry.ts",
+    "test:academic-review": "node --import tsx/esm --test src/academicReview.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

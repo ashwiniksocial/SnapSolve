@@ -1,0 +1,255 @@
+STOP.
+
+Implement the frozen:
+
+.local/governance/GOLD_STANDARD_QA_SPEC.md v1.1
+
+inside the EXISTING:
+
+scripts/src/academicReview.ts
+
+This is an implementation task, not another design task.
+
+Do NOT rewrite or restructure the specification.
+Do NOT create a parallel review engine.
+Do NOT create another checklist or governance file.
+Do NOT modify question banks.
+Do NOT review any chapter in this task.
+Do NOT modify curriculum, UI or runtime Teaching Quality.
+Do NOT change:
+artifacts/api-server/src/services/teachingQuality/qualityChecklist.ts
+
+BUILD IMPACT GATE
+
+Make only the minimum changes required to implement the frozen specification.
+Preserve all working targeted-review, content-hash, caching and CLI behaviour.
+
+────────────────────────────────────────
+IMPLEMENTATION REQUIREMENTS
+────────────────────────────────────────
+
+1. CONFIGURATION
+
+Implement one centralized Gold Standard configuration containing:
+
+- CHECKLIST_VERSION
+- REVIEWER_MODEL
+- ESCALATION_MODEL
+- REVIEW_CONFIDENCE_THRESHOLD
+- MAX_UNCERTAINTY_RETRIES
+- LEGACY_VERSION
+
+Do not scatter tunable constants through the code.
+
+Model rule:
+
+- First review: REVIEWER_MODEL
+- Automatic second verification: REVIEWER_MODEL
+- ESCALATION_MODEL: only for persistent disagreement or REVIEWER_UNCERTAINTY,
+  and never by default
+
+Confidence remains metadata only.
+Confidence must never independently determine a defect.
+
+2. DYNAMIC CHECKLIST
+
+The review logic must iterate over the authoritative checklist definition.
+
+Do not hard-code:
+
+- a fixed number of criteria
+- fixed criterion keys in decision logic
+- assumptions that exactly 10 dimensions exist
+
+Adding or removing a criterion later must require only:
+
+- updating the checklist definition
+- incrementing CHECKLIST_VERSION
+
+3. SINGLE FORMAL REVIEW PATH
+
+Preserve one formal Gold Standard path:
+
+Generate Q&A using only the concise embedded quality instruction
+→
+Run one formal Gold Standard review
+→
+Determine outcome
+→
+Correct confirmed defects only
+→
+Re-review modified Q&A only
+→
+Freeze only after GOLD_STANDARD_PASS
+
+Do not implement a separate authoring-stage checklist evaluation.
+
+4. REVIEW OUTCOMES
+
+Implement only:
+
+- GOLD_STANDARD_PASS
+- CONFIRMED_DEFECT
+- POSSIBLE_DEFECT_REQUIRES_VERIFICATION
+- REVIEWER_UNCERTAINTY
+
+Outcome routing must be determined by code, not by the reviewer’s own overall
+verdict.
+
+5. CONFIRMED DEFECT EVIDENCE
+
+A failure may become CONFIRMED_DEFECT only when all four are present:
+
+- exact_defective_text
+- reason
+- expected_correction
+- supporting_evidence
+
+Supporting evidence must be an official-source reference, demonstrable
+calculation, logical contradiction or directly verifiable curriculum fact.
+
+If any required evidence field is absent, vague, contradictory or unsupported,
+do not classify it as CONFIRMED_DEFECT.
+
+6. AUTOMATIC SECOND VERIFICATION
+
+For POSSIBLE_DEFECT_REQUIRES_VERIFICATION:
+
+- run one automatic second verification using REVIEWER_MODEL
+- provide the original Q&A and the first reviewer’s exact evidence
+- ask the second reviewer to independently confirm or reject the alleged defect
+
+Routing:
+
+- second reviewer confirms the same defect with complete evidence
+  → CONFIRMED_DEFECT
+
+- second reviewer disagrees, changes the allegation, or provides incomplete
+  evidence
+  → REVIEWER_UNCERTAINTY
+
+Do not send possible defects to human review by default.
+
+7. FALSE-POSITIVE PROTECTION
+
+Implement all frozen false-positive guards, including:
+
+- proposed correction restates the existing correct value
+- ShortAnswer review incorrectly refers to MCQ option letters
+- correctness or curriculum failure lacks specific evidence
+- reviewer output is malformed or internally contradictory
+- claimed defect does not identify exact defective text
+- proposed correction is identical in meaning to existing content
+
+Such cases must not trigger automatic content modification.
+
+8. CACHING AND TARGETED REVIEW
+
+Preserve:
+
+- --chapter=<chapterId>
+- content-hash caching
+- skipping unchanged Gold Standard PASS content
+- re-review only when content hash changes
+- re-review when CHECKLIST_VERSION changes
+- re-review failed or uncertain content
+- no repeated review of unchanged PASS content
+
+Store with each review record:
+
+- content hash
+- checklist version
+- reviewer model
+- outcome
+- criterion-level results
+- defect evidence
+- timestamp
+
+A PASS under an older checklist version must not count as
+GOLD_STANDARD_PASS under the current version.
+
+9. LEGACY TRANSITION
+
+Implement status handling:
+
+- new Q&A → Gold Standard review required
+- modified Q&A → Gold Standard review required
+- legacy unchanged Q&A → GOLD_STANDARD_PENDING until audited
+- deleted Q&A → no review
+- merged Q&A → treated as modified and reviewed
+
+Do not run the legacy audit now.
+
+10. FREEZING RULE
+
+Only GOLD_STANDARD_PASS under the current CHECKLIST_VERSION permits freezing.
+
+No averaging.
+No partial certification.
+No bypass based on aggregate score.
+One failed mandatory applicable criterion blocks PASS.
+
+────────────────────────────────────────
+VALIDATION
+────────────────────────────────────────
+
+Add or update focused tests for:
+
+1. Dynamic criterion iteration
+2. All-pass result
+3. Failure with complete evidence
+4. Failure with incomplete evidence
+5. Reviewer contradiction
+6. Second-review agreement
+7. Second-review disagreement
+8. Identical proposed correction false-positive guard
+9. ShortAnswer/MCQ-option false-positive guard
+10. Cache hit with matching hash and version
+11. Cache invalidation after content change
+12. Cache invalidation after checklist-version change
+13. Legacy content remains pending
+14. Old-rubric PASS is not accepted as current Gold Standard PASS
+15. Targeted chapter filtering remains functional
+
+Run:
+
+- scripts TypeScript typecheck
+- homework-hero TypeScript typecheck
+- api-server TypeScript typecheck
+- focused academic-review tests
+- validate-curriculum
+- curriculum-check
+
+Do not run a full repository academic review.
+Do not spend API tokens reviewing question banks.
+
+────────────────────────────────────────
+DOCUMENTATION
+────────────────────────────────────────
+
+Update academic-review/README.md only where required to reflect the actual
+implemented behaviour.
+
+Do not duplicate the complete specification in additional files.
+
+────────────────────────────────────────
+REPORT
+────────────────────────────────────────
+
+Write the final report to:
+
+curriculum/generated/LATEST_REPLIT_REPORT.md
+
+Overwrite the previous report and show the same report in the Agent response.
+
+Return only:
+
+1. Files changed
+2. Minimum implementation completed
+3. Review outcomes and evidence routing
+4. Automatic second-verification behaviour
+5. Caching and targeted-review preservation
+6. Legacy transition implementation
+7. Confirmation that no question bank was reviewed or modified
+8. Test and validation results
+9. Any genuine blocker

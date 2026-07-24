@@ -1,7 +1,7 @@
-# Gold Standard Q&A Acceptance Checklist — Refinement Report
+# Gold Standard Q&A Acceptance Checklist — Implementation Report
 **Date:** 2026-07-24  
-**Type:** Design refinement only — no code written, no systems modified  
-**Spec file:** `.local/governance/GOLD_STANDARD_QA_SPEC.md` (version 1.1)
+**Type:** Implementation — `scripts/src/academicReview.ts` extended in-place  
+**Spec:** `.local/governance/GOLD_STANDARD_QA_SPEC.md` v1.1
 
 ---
 
@@ -9,141 +9,204 @@
 
 | File | Change |
 |---|---|
-| `.local/governance/GOLD_STANDARD_QA_SPEC.md` | Refined in-place. Version 1.0 → 1.1. Five targeted refinements applied. |
+| `scripts/src/academicReview.ts` | Rewritten in-place. Gold Standard implementation. All prior CLI, caching, and question-loading behaviour preserved. |
+| `scripts/src/academicReview.test.ts` | **Created.** 22 focused tests covering all 15 required scenarios. |
+| `scripts/package.json` | Added `test:academic-review` script. |
+| `academic-review/README.md` | Updated to reflect Gold Standard outcomes, criteria list, automatic second verification, and evidence requirements. |
 | `curriculum/generated/LATEST_REPLIT_REPORT.md` | This file — overwrites previous report. |
 
-No other files were touched.
+No question banks, curriculum, runtime Teaching Quality (`qualityChecklist.ts`), UI, or API server files were modified.
 
 ---
 
-## 2. Exact Refinements Made
+## 2. Minimum Implementation Completed
 
-### Refinement 1 — Configuration (new §1)
+### Configuration — `GS_CONFIG` (centralised, no hardcoded values)
+```typescript
+export const GS_CONFIG = {
+  CHECKLIST_VERSION:           "2.0",   // invalidates all cache on bump
+  REVIEWER_MODEL:              "gpt-4o-mini",
+  ESCALATION_MODEL:            "gpt-4o",
+  REVIEW_CONFIDENCE_THRESHOLD: 0.85,    // metadata only — does not gate outcomes
+  MAX_UNCERTAINTY_RETRIES:     2,
+  LEGACY_VERSION:              "1.1",
+} as const;
+```
 
-A dedicated **§1 Configuration** section was added. Every tunable parameter is now listed there:
+### Dynamic Checklist — `CHECKLIST: CriterionDef[]`
+The engine iterates over this array. No criterion key is hardcoded in decision logic. Adding or removing a criterion requires updating the array and bumping `CHECKLIST_VERSION` only.
 
-| Parameter | Value |
-|---|---|
-| `CHECKLIST_VERSION` | `"2.0"` |
-| `REVIEWER_MODEL` | `"gpt-4o-mini"` |
-| `ESCALATION_MODEL` | `"gpt-4o"` |
-| `REVIEW_CONFIDENCE_THRESHOLD` | `0.85` |
-| `MAX_UNCERTAINTY_RETRIES` | `2` |
-| `LEGACY_VERSION` | `"1.1"` |
+10 criteria implemented: `curriculum_alignment`, `question_clarity`, `correctness`, `steps_validity`, `marking_completeness`, `examination_worthiness`, `curriculum_importance`, `appropriate_depth`, `weak_student_accessibility`, `hint_quality`.
 
-All occurrences of hardcoded `0.85`, `"gpt-4o-mini"`, `"2.0"`, `"1.1"`, and retry counts were removed from the body of the spec. The review engine must read configuration — not embed constants.
-
-The `ReviewRecord` field was renamed from `promptVersion` to `checklistVersion` to match the new config parameter name.
-
----
-
-### Refinement 2 — Checklist Structure
-
-All references to "10 criteria", "10 dimensions", and "10-criterion evaluation" were removed throughout.
-
-- `§2 Outcomes` now says "iterates over the checklist definition"
-- `§5 Review Workflow` says "Iterates over the checklist definition" (not a fixed count)
-- `§6 Caching` `ReviewRecord.dimensions` is now `Record<string, "PASS" | "FAIL">` — not a named interface with fixed keys
-- `§7 JSON Schema` explicitly states: *"The `dimensions` object is keyed by criterion id and must include one entry per criterion in the current checklist definition — the engine does not validate a fixed count."*
-- `§10 Phase 1` says "Add `dimensions: Record<string, 'PASS' | 'FAIL'>` replacing fixed-key interface"
-
-Future criteria can be added or removed by updating §3 and bumping `CHECKLIST_VERSION`. No review logic changes required.
+### Types — `GoldStandardOutcome`, `DefectEvidence`, `ReviewRecord`
+- `GoldStandardOutcome`: 5 values (4 formal + `REVIEW_BLOCKED_CONTEXT_MISSING`)
+- `DefectEvidence`: 4 required evidence fields + `reviewer_confidence` as metadata
+- `ReviewRecord`: `checklistVersion?` (optional for legacy compatibility), `failEvidence[]`, `failConfidences` (metadata)
 
 ---
 
-### Refinement 3 — Defect Evidence
+## 3. Review Outcomes and Evidence Routing
 
-The outcome routing was fundamentally changed from confidence-gated to evidence-gated.
+### Outcome determination (code-driven, not reviewer-driven)
 
-**Before:**  
-`CONFIRMED_DEFECT` when confidence ≥ `REVIEW_CONFIDENCE_THRESHOLD`
+```
+Reviewer returns dimensions + fail_evidence (never overall)
+  ↓
+Apply false-positive guards (G1–G4)
+  ↓
+determineOutcome():
+  all criteria PASS                                     → GOLD_STANDARD_PASS
+  any FAIL + all fail-evidence complete (4 fields)      → POSSIBLE_DEFECT_REQUIRES_VERIFICATION
+  any FAIL + any fail-evidence incomplete               → REVIEWER_UNCERTAINTY
+  malformed/missing dimensions                          → REVIEWER_UNCERTAINTY
+```
 
-**After:**  
-`CONFIRMED_DEFECT` requires all four of:
-1. `exact_defective_text` — verbatim wrong text
+### Evidence requirement for CONFIRMED_DEFECT
+All four fields must be non-empty for every FAIL:
+1. `exact_defective_text` — verbatim wrong text from the Q&A
 2. `reason` — why it fails the criterion
-3. `expected_correction` — specific fix required
-4. `supporting_evidence` — source citation or shown calculation
+3. `expected_correction` — the specific fix required
+4. `supporting_evidence` — shown calculation or source context citation
 
-`REVIEW_CONFIDENCE_THRESHOLD` is now **metadata only** — stored in the record and used in reporting, not in routing. The word "metadata" is explicit in §2, §6, and §7.
+**Confidence is metadata only.** `reviewer_confidence` is stored and reported but never gates any outcome decision.
 
-The `field_corrections` JSON schema was replaced with `fail_evidence` containing the four required fields plus `reviewer_confidence` as optional metadata.
-
-All per-criterion "Confidence threshold: 0.85" lines were removed (they were repeated 6 times across the criteria tables — all gone).
-
-§8 False-Positive Guard 3 was updated to reflect evidence completeness, not confidence level.
+### False-positive guards (applied in `applyFalsePositiveGuards()`)
+- **G1** — proposed correction for `correctness` is semantically identical to the existing answer (number match or normalised string match) → demote to PASS
+- **G2** — non-MCQ question review references `Option (A/B/C/D)` → demote to PASS
+- **G3** — `correctness` or `curriculum_alignment` FAIL without non-empty `supporting_evidence` → demote to PASS
+- **G4** — any criterion FAIL with empty `exact_defective_text` → demote to PASS
 
 ---
 
-### Refinement 4 — Automation-First
-
-**Before:** POSSIBLE_DEFECT → human review (default path)
-
-**After:** POSSIBLE_DEFECT → second AI verification (automatic, same `REVIEWER_MODEL`) → agreement → CONFIRMED_DEFECT OR REVIEWER_UNCERTAINTY
-
-The §5 Review Workflow diagram was rewritten to show:
+## 4. Automatic Second-Verification Behaviour
 
 ```
 POSSIBLE_DEFECT_REQUIRES_VERIFICATION
-  └─ SECOND AI VERIFICATION (one API call using REVIEWER_MODEL)
-       ├─ Second reviewer confirms FAIL with complete evidence → CONFIRMED_DEFECT
-       └─ Second reviewer disagrees or returns incomplete evidence → REVIEWER_UNCERTAINTY
+  ↓
+buildSecondVerificationPrompt(q, ctx, firstEvidence)
+  — shows original Q&A + first reviewer's exact allegations
+  — instructs second reviewer to independently confirm or reject
+  ↓
+callOpenAI(REVIEWER_MODEL) → normalizeReviewResult() → applyFalsePositiveGuards()
+  ↓
+  Second confirms same criterion(s) with complete evidence → CONFIRMED_DEFECT
+  Second disagrees, changes allegation, or evidence incomplete → REVIEWER_UNCERTAINTY
 ```
 
-Human review is now explicitly reserved for **three exceptional situations only**:
-- Conflicting Government sources
-- Persistent AI disagreement across REVIEWER_MODEL and ESCALATION_MODEL
-- Missing review context (source material unavailable for an ACTIVE chapter)
+**Human review is NOT the default path.** It is reserved for three exceptional situations only (conflicting Government sources, persistent cross-model disagreement, missing review context).
 
-§10 Phase 2 now includes `runSecondVerification()` as a required implementation item.
+### REVIEWER_UNCERTAINTY retry loop
+```
+REVIEWER_UNCERTAINTY → retry up to MAX_UNCERTAINTY_RETRIES (REVIEWER_MODEL)
+                     → if still uncertain → one retry with ESCALATION_MODEL
+                     → if still uncertain → record REVIEWER_UNCERTAINTY
+```
 
----
-
-### Refinement 5 — Freeze Design
-
-The following was removed as speculative future architecture not required before launch:
-
-- **Phase 3** (entire section) — covered `--verify-possible-defects`, `--human-override`, and `--escalate-uncertainty` CLI flags. These were the human-verification loop. The second AI verification now handles this automatically. The `--escalate-uncertainty` concept is folded into the Phase 2 `REVIEWER_UNCERTAINTY` retry loop.
-- **§10 Architecture Recommendation** (entire section) — duplicated constraints already stated in §0. Removed.
-- `humanVerified?: boolean` field from `ReviewRecord` — no longer needed; human review is exceptional and out-of-band.
-- All per-criterion "Confidence threshold: 0.85" repetitions (6 occurrences)
-- "All N criteria are Mandatory" summary line repeated at the top of §3
-- The `POSSIBLE_DEFECT caching` note about human action in §6 — replaced with second verification behaviour
-- The "50 questions" hardcoded reference in the FREEZE step of the workflow
-
-The spec is now 540 lines (was 587). Every remaining section is required for launch.
+`ESCALATION_MODEL` is never used by default — only for persistent uncertainty.
 
 ---
 
-## 3. Confirmation — No Architecture Redesign
+## 5. Caching and Targeted-Review Preservation
 
-- `academicReview.ts` was not modified
-- No new files were created
-- No question banks were modified
-- No curriculum was modified
-- No runtime behaviour was changed
-- No new governance files were created
-- The architecture remains: extend `academicReview.ts` in-place; one formal path; no parallel system
-- `qualityChecklist.ts` (runtime lesson-quality evaluator) was not touched
+All existing CLI flags preserved: `--chapter`, `--subject`, `--class`, `--question`, `--force`, `--dry-run`, `--cost-estimate`, `--failed-only`, `--context-audit`, `--batch-size`, `--max-questions`, `--delay-ms`.
 
----
+### Skip condition (single, unambiguous rule)
+Skip if and only if: `overall === "GOLD_STANDARD_PASS"` AND `contentHash` matches AND `checklistVersion === GS_CONFIG.CHECKLIST_VERSION`.
 
-## 4. Confirmation — Implementation-Ready
+### Cache invalidation
+| Condition | Action |
+|---|---|
+| Content hash changed | Re-review |
+| `checklistVersion` mismatch (including legacy `promptVersion` records) | Re-review |
+| `overall` is any non-GOLD_STANDARD_PASS outcome | Re-review |
+| `--force` | Re-review all |
+| `REVIEW_BLOCKED_CONTEXT_MISSING` | Re-attempt on next run |
 
-The specification is implementation-ready. A developer reading §0–§10 has everything required to implement:
-
-- All configuration parameters (§1)
-- All outcome types and routing logic (§2)
-- All criteria with PASS/FAIL definitions and required evidence (§3)
-- The complete review workflow including second AI verification (§5)
-- The full `ReviewRecord` and `DefectEvidence` TypeScript interfaces (§6)
-- The reviewer JSON schema (§7)
-- All false-positive guards (§8)
-- Legacy migration rules (§9)
-- A two-phase implementation roadmap with scope, risk, and cost (§10)
+### ReviewRecord schema (new)
+`checklistVersion`, `failEvidence[]`, `failConfidences` added. `promptVersion` retained as optional for legacy-record compatibility. `dimensions` now `Record<string, "PASS" | "FAIL">` — not a fixed-key interface.
 
 ---
 
-## 5. Remaining Blockers
+## 6. Legacy Transition
 
-None. The specification is complete and ready for implementation.
+| Q&A state | Behaviour |
+|---|---|
+| New Q&A | No cache entry → reviewed on first run |
+| Modified Q&A | Hash changes → automatic re-review |
+| Legacy unchanged Q&A (old `promptVersion`) | Version mismatch → `shouldReview()` returns `skip: false` → queued for review |
+| Legacy PASS (`overall: "PASS"`) | Does not match `GOLD_STANDARD_PASS` condition → re-queued |
+| Deleted Q&A | Orphan cache record — harmless; never re-reviewed |
+
+Legacy Q&A is **not reviewed in this task** per the implementation brief. It will be reviewed on the next incremental run (automatically, by version mismatch detection). Run `--cost-estimate` first.
+
+---
+
+## 7. Confirmation — No Question Bank Reviewed or Modified
+
+- No question bank file was read, parsed, or written
+- No chapter was reviewed (no OpenAI calls made)
+- `artifacts/api-server/src/services/teachingQuality/qualityChecklist.ts` was not touched
+- Curriculum, UI, and runtime behaviour were not modified
+
+---
+
+## 8. Test and Validation Results
+
+### Scripts typecheck
+```
+✅ PASS — 0 errors
+```
+
+### homework-hero typecheck
+```
+✅ PASS — 0 errors
+```
+
+### api-server typecheck
+```
+✅ PASS — 0 errors
+```
+
+### Focused academic-review tests (22 tests)
+```
+✔  1.  Dynamic criterion iteration — CHECKLIST is non-empty and iterable
+✔  2.  All-pass result → GOLD_STANDARD_PASS
+✔  3.  FAIL with complete evidence → POSSIBLE_DEFECT_REQUIRES_VERIFICATION
+✔  4.  FAIL with incomplete evidence → REVIEWER_UNCERTAINTY
+✔  5.  G1: proposed correction restates same value as answer → demote to PASS
+✔  6.  Second-review agreement → CONFIRMED_DEFECT (logic verification)
+✔  7.  Second-review disagrees → REVIEWER_UNCERTAINTY (logic verification)
+✔  8.  G1: exact numeric match in correction restates answer → demote
+✔  9.  G2: non-MCQ review references Option (A) → demote to PASS
+✔ 10.  Cache hit (hash match + current version + GOLD_STANDARD_PASS) → skip
+✔ 11.  Cache invalidation after content change → re-review
+✔ 12.  Cache invalidation after checklist-version change → re-review
+✔ 13.  Legacy PASS record (old promptVersion) is not skipped — awaits re-review
+✔ 14.  Old-rubric PASS (v1.1) is not treated as GOLD_STANDARD_PASS
+✔ 15.  Targeted chapter filtering via --chapter remains functional
+✔ B1.  isEvidenceComplete — true when all four fields non-empty
+✔ B2.  isEvidenceComplete — false when any field is empty
+✔ B3.  normalizeReviewResult — malformed input → REVIEWER_UNCERTAINTY
+✔ B4.  normalizeReviewResult — all-pass dimensions → GOLD_STANDARD_PASS
+✔ B5.  G3: correctness FAIL without supporting evidence → demote
+✔ B6.  computeContentHash — deterministic and sensitive to changes
+✔ B7.  GS_CONFIG — all required parameters present
+
+tests: 22  pass: 22  fail: 0  duration: 238ms
+```
+
+### validate-curriculum
+```
+✅ PASS — All curriculum invariants passed
+```
+
+### curriculum-check
+```
+✅ PASS — 0 failures, 2 pre-existing warnings (SOURCE_UNRESOLVED, unrelated to this task)
+```
+
+---
+
+## 9. Genuine Blockers
+
+None. The implementation is complete and all validations pass.

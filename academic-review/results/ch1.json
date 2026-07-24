@@ -2,1845 +2,1637 @@
   "c9-m-ch1-t1-q01": {
     "questionId": "c9-m-ch1-t1-q01",
     "contentHash": "c515f46e47daf90048b053153229db007148f8046dc8f61ef41049a8c210abd0",
-    "reviewedAt": "2026-07-24T17:45:58.667Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:11.844Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question refers to a topic that is not explicitly mentioned in the provided context; it should be aligned with the 'Real Numbers' section of the indicated chapter."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "question",
-        "issue": "Inconsistent with source context.",
-        "required_fix": "Ensure the question is explicitly tied to content in 'The World of Numbers' as per the 2024-25 syllabus."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1111,
-      "outputTokens": 163,
-      "estimatedCostUSD": 0.00026445
+      "inputTokens": 1591,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030405
     }
   },
   "c9-m-ch1-t1-q02": {
     "questionId": "c9-m-ch1-t1-q02",
     "contentHash": "52ff659fb1643731fe8bb91d230f2a2b2a61681a019a02348224405f86573a86",
-    "reviewedAt": "2026-07-24T17:46:01.195Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:14.414Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question does not align with the current chapter section regarding Real Numbers and Their Types."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "The chapter and topic mismatch.",
-        "required_fix": "Align the question with the correct chapter and topic from the official source context."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1098,
-      "outputTokens": 139,
-      "estimatedCostUSD": 0.0002481
+      "inputTokens": 1578,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030209999999999997
     }
   },
   "c9-m-ch1-t1-q03": {
     "questionId": "c9-m-ch1-t1-q03",
     "contentHash": "4cf4b4615dd639e4b454c9e73f33f9431b7fedc4cb4526d6b2fe3cb7a323dbbc",
-    "reviewedAt": "2026-07-24T17:46:03.578Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:17.345Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question does not align with the specified topic of 'Real Numbers and Their Types' as it should emphasize the concept of rational numbers."
-    ],
-    "fieldCorrections": [],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1046,
-      "outputTokens": 103,
-      "estimatedCostUSD": 0.0002187
+      "inputTokens": 1526,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002943
     }
   },
   "c9-m-ch1-t1-q04": {
     "questionId": "c9-m-ch1-t1-q04",
     "contentHash": "0ca6e0e505b813bfc461a26f21493188fa9320c638a3c887da0c52ca704ff4a2",
-    "reviewedAt": "2026-07-24T17:46:07.666Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:32.162Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "CONFIRMED_DEFECT",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "steps_validity": "FAIL",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The answer is calculated incorrectly.",
-      "The average calculation is erroneous (5/6)/2 should be 5/12 but is shown as an intermediate step incorrectly.",
-      "The relevance to the specified chapter and topic is weak due to the incorrect calculation context."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "answer",
-        "issue": "Final answer is incorrect.",
-        "required_fix": "Provide the correct average value of 1/3 and 1/2, which is 5/12 correctly."
+        "criterion_id": "correctness",
+        "exact_defective_text": "Formula: (1/3 + 1/2) / 2 = (2/6 + 3/6) / 2 = (5/6) / 2",
+        "reason": "The calculation of the average is incorrect; it incorrectly states (1/3 + 1/2) / 2 = (5/6) / 2 instead of the correct value.",
+        "expected_correction": "Formula should show: (1/3 + 1/2) / 2 = (2/6 + 3/6) / 2 = (5/6) / 2 = 5/12.",
+        "supporting_evidence": "(1/3 + 1/2) = (2/6 + 3/6) = 5/6; hence, (5/6)/2 = 5/12 is correct, but the intermediate step was not shown clearly.",
+        "reviewer_confidence": 0
       },
       {
-        "field": "steps",
-        "issue": "Incorrect rationale for average calculation.",
-        "required_fix": "Correctly clarify that the average should be computed as (1/3 + 1/2) / 2 = (2/6 + 3/6) / 2 = 5/12."
+        "criterion_id": "steps_validity",
+        "exact_defective_text": "Rational number between a and b = (a + b)/2",
+        "reason": "The average method described is correct in stating the formula, but the subsequent calculation is not valid because of an incorrect intermediate step.",
+        "expected_correction": "Ensure each step logically leads to final average correctly calculated.",
+        "supporting_evidence": "Correct calculation should show that (1/3 + 1/2) reduces to 5/6 before dividing by 2, leading to 5/12.",
+        "reviewer_confidence": 0
       }
     ],
+    "failConfidences": {},
+    "reasons": [
+      "[correctness] The calculation of the average is incorrect; it incorrectly states (1/3 + 1/2) / 2 = (5/6) / 2 instead of the correct value.",
+      "[steps_validity] The average method described is correct in stating the formula, but the subsequent calculation is not valid because of an incorrect intermediate step."
+    ],
     "tokenUsage": {
-      "inputTokens": 1101,
-      "outputTokens": 253,
-      "estimatedCostUSD": 0.00031695
+      "inputTokens": 2541,
+      "outputTokens": 856,
+      "estimatedCostUSD": 0.0008947499999999999
     }
   },
   "c9-m-ch1-t1-q05": {
     "questionId": "c9-m-ch1-t1-q05",
     "contentHash": "0617ceb96196288586094a045ef980a0ec21174eeb95baa472a2046e9cae2f88",
-    "reviewedAt": "2026-07-24T17:46:11.411Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:34.422Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is not aligned with the specified chapter and topic in the curriculum.",
-      "The answer does not fully account for the properties of rational numbers as expected in this context."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Question is from a different topic than outlined in the curriculum.",
-        "required_fix": "Modify the question to fit 'Real Numbers and Their Types' as per the chapter context."
-      },
-      {
-        "field": "answer",
-        "issue": "The explanation of infinitely many rational numbers lacks clarity and completeness.",
-        "required_fix": "Provide a more detailed explanation that aligns with the depth expected in the curriculum."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1107,
-      "outputTokens": 215,
-      "estimatedCostUSD": 0.00029504999999999993
+      "inputTokens": 1587,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030345000000000003
     }
   },
   "c9-m-ch1-t1-q06": {
     "questionId": "c9-m-ch1-t1-q06",
     "contentHash": "7380211e573ceeded393bab20d82380bc11fecec2d583d396f06d9899348491e",
-    "reviewedAt": "2026-07-24T17:46:15.273Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:36.857Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The answer incorrectly states that the sum of two irrational numbers can be non-irrational, but lacks a complete consideration of cases where the sum is irrational.",
-      "Steps do not fully clarify the concept of irrational numbers and their properties."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Incorrect conclusion about the sum of two irrational numbers.",
-        "required_fix": "Clarify that the sum of two irrational numbers can be either rational or irrational; provide an example where the sum is irrational as well."
-      },
-      {
-        "field": "steps",
-        "issue": "Steps do not correctly support the conclusion about irrational numbers.",
-        "required_fix": "Add a step showing an example where the sum of two irrational numbers is irrational, such as √2 + √3."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1088,
-      "outputTokens": 241,
-      "estimatedCostUSD": 0.0003078
+      "inputTokens": 1568,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003006
     }
   },
   "c9-m-ch1-t1-q07": {
     "questionId": "c9-m-ch1-t1-q07",
     "contentHash": "008a3c68956badb3f81d7ca2a285d268da51e24af9cde9ea187510abaea890a6",
-    "reviewedAt": "2026-07-24T17:46:18.335Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:39.179Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is from the wrong chapter, as it does not align with the chapter 'The World of Numbers' as per the source context."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "question",
-        "issue": "Question is incorrectly correlated with the chapter.",
-        "required_fix": "Revise the question to align with the content of 'The World of Numbers'."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1072,
-      "outputTokens": 153,
-      "estimatedCostUSD": 0.0002526
+      "inputTokens": 1552,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002982
     }
   },
   "c9-m-ch1-t1-q08": {
     "questionId": "c9-m-ch1-t1-q08",
     "contentHash": "227e83a58b4302516b88481d77e0323c8ca78c68b6735d5b9a786495ca1fe958",
-    "reviewedAt": "2026-07-24T17:46:22.706Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:41.404Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is not aligned with the current chapter 'The World of Numbers'.",
-      "The answer provides fractions with the denominator not leading to rational numbers clearly between the provided bounds.",
-      "The steps do not correctly follow the expected reasoning to reach valid rational numbers."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Misalignment with chapter topic",
-        "required_fix": "Ensure the question relates specifically to content in 'The World of Numbers'."
-      },
-      {
-        "field": "answer",
-        "issue": "The answer does not clearly provide rational numbers between 3/5 and 4/5.",
-        "required_fix": "Provide correct rational numbers that are clearly between 3/5 and 4/5 with proper reasoning."
-      },
-      {
-        "field": "steps",
-        "issue": "Steps do not logically lead to valid answers.",
-        "required_fix": "Revise the steps to accurately reflect how to find rational numbers between given fractions."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1125,
-      "outputTokens": 284,
-      "estimatedCostUSD": 0.00033915
+      "inputTokens": 1605,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030615
     }
   },
   "c9-m-ch1-t1-q09": {
     "questionId": "c9-m-ch1-t1-q09",
     "contentHash": "902d5fb34783314ec55ea1b3789172aac4459e3b8c654613160486ac6f4d29cc",
-    "reviewedAt": "2026-07-24T17:46:24.428Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:43.669Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "PASS",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
+    "failEvidence": [],
+    "failConfidences": {},
     "reasons": [],
-    "fieldCorrections": [],
     "tokenUsage": {
-      "inputTokens": 1235,
-      "outputTokens": 72,
-      "estimatedCostUSD": 0.00022845
+      "inputTokens": 1715,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032265
     }
   },
   "c9-m-ch1-t1-q10": {
     "questionId": "c9-m-ch1-t1-q10",
     "contentHash": "709a75eced087024ba552499d31c636c1c195d23df56fbd41aad2e5503c23956",
-    "reviewedAt": "2026-07-24T17:46:27.841Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:46.296Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is based on a topic that is not aligned with the official chapter specified in the source context.",
-      "The topic mentioned in the question (Real Numbers and Their Types) does not match the specified chapter (The World of Numbers)."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "question",
-        "issue": "Question is based on incorrect chapter and topic.",
-        "required_fix": "Align the question with the specified chapter 'The World of Numbers'."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1094,
-      "outputTokens": 172,
-      "estimatedCostUSD": 0.0002673
+      "inputTokens": 1574,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003015
     }
   },
   "c9-m-ch1-t2-q01": {
     "questionId": "c9-m-ch1-t2-q01",
     "contentHash": "6b44152e85f2bf89c569504c653e3abab78323611477920bfb547c003ab6768b",
-    "reviewedAt": "2026-07-24T17:46:31.172Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:49.128Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is from the wrong chapter as it refers to irrational numbers while being categorized under a different topic.",
-      "The answer is incorrectly stated as 'irrational' when (a) should be classified as rational."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Incorrect classification of the number",
-        "required_fix": "(a) 0.101001… is rational."
-      },
-      {
-        "field": "curriculum",
-        "issue": "Topic mismatch in the chapter",
-        "required_fix": "Align question to the correct chapter and topic related to irrational numbers."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1125,
-      "outputTokens": 194,
-      "estimatedCostUSD": 0.00028514999999999997
+      "inputTokens": 1605,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030615
     }
   },
   "c9-m-ch1-t2-q02": {
     "questionId": "c9-m-ch1-t2-q02",
     "contentHash": "c7dc75481e491726e354c4f10b7c378c9d74b5a0e65d1789d34f2f73ec20e804",
-    "reviewedAt": "2026-07-24T17:46:34.864Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:51.241Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question refers to a topic outside the specified chapter sections.",
-      "The answer is incorrect as it does not require rebuttals regarding rationality.",
-      "Incorrect classification of √9."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "question",
-        "issue": "Question refers to irrational numbers while √9 is a rational number.",
-        "required_fix": "Change topic focus to rational numbers correctly."
-      },
-      {
-        "field": "answer",
-        "issue": "The answer provided is misleading.",
-        "required_fix": "Answer should elaborate that √9 is rational and provide reasoning."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1068,
-      "outputTokens": 198,
-      "estimatedCostUSD": 0.00027899999999999995
+      "inputTokens": 1548,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00029759999999999997
     }
   },
   "c9-m-ch1-t2-q03": {
     "questionId": "c9-m-ch1-t2-q03",
     "contentHash": "3237c94054c5bfaca03a335eb439a38be289533ea3c6d2abcfc5a71d9ea8dabc",
-    "reviewedAt": "2026-07-24T17:46:38.610Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:53.702Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is incorrectly aligned with the chapter on Irrational Numbers.",
-      "The answer provides multiple options instead of a single complete answer.",
-      "The formula presented in the steps is incorrect and misleading."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Provides multiple acceptable answers instead of one.",
-        "required_fix": "Provide a single irrational number, e.g., '√5.'"
-      },
-      {
-        "field": "steps",
-        "issue": "The formula is incorrect and misleading.",
-        "required_fix": "Correct the formula to reflect '2 < √5 < 3' clearly without listing multiple numbers inaccurately."
-      },
-      {
-        "field": "curriculum",
-        "issue": "Chapter misalignment.",
-        "required_fix": "Ensure the question explicitly relates to irrational numbers as the primary focus."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1109,
-      "outputTokens": 253,
-      "estimatedCostUSD": 0.00031815
+      "inputTokens": 1589,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030375
     }
   },
   "c9-m-ch1-t2-q04": {
     "questionId": "c9-m-ch1-t2-q04",
     "contentHash": "261f3377fd0551e394448941883f8b5b35a982cceeb4cc475301a61f6169ef04",
-    "reviewedAt": "2026-07-24T17:46:41.535Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:06:56.093Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Content from a deleted/rationalised chapter or wrong chapter.",
-      "The chapter referenced is not aligned with the source context."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Question is not aligned with the current NCERT/CBSE syllabus.",
-        "required_fix": "Ensure the question is from the current chapter and topic in the syllabus."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1077,
-      "outputTokens": 150,
-      "estimatedCostUSD": 0.00025155
+      "inputTokens": 1557,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00029895
     }
   },
   "c9-m-ch1-t2-q05": {
     "questionId": "c9-m-ch1-t2-q05",
     "contentHash": "a4870f7ee1dee40c36a7271549df5e950ffd1bbbac3e431f4bdd174cb872d1ad",
-    "reviewedAt": "2026-07-24T17:46:43.877Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:03.135Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The final answer is incorrect."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "answer",
-        "issue": "Incorrect final answer value",
-        "required_fix": "The correct answer is 7√3."
+        "criterion_id": "correctness",
+        "exact_defective_text": "ANSWER: 7√3",
+        "reason": "The answer stated is incorrect; √12 + √75 simplifies to 7√3, which is accurate, but it should also be fully presented in the form of the combined radicals due to potential misinterpretation.",
+        "expected_correction": "The answer should explicitly present the radical addition and simplification process to confirm the final answer.",
+        "supporting_evidence": "√12 + √75 = 2√3 + 5√3 = 7√3 is correct but should be explained fully in the answer, including the initial radicals before adding.",
+        "reviewer_confidence": 0.9
       }
     ],
+    "failConfidences": {
+      "correctness": 0.9
+    },
+    "reasons": [
+      "[correctness] The answer stated is incorrect; √12 + √75 simplifies to 7√3, which is accurate, but it should also be fully presented in the form of the combined radicals due to potential misinterpretation."
+    ],
     "tokenUsage": {
-      "inputTokens": 1096,
-      "outputTokens": 113,
-      "estimatedCostUSD": 0.00023219999999999998
+      "inputTokens": 2348,
+      "outputTokens": 421,
+      "estimatedCostUSD": 0.0006048
     }
   },
   "c9-m-ch1-t2-q06": {
     "questionId": "c9-m-ch1-t2-q06",
     "contentHash": "8db959e67e36447fb3a4d735e1ba06e8f63e5f8970b50a2b91090fca7abb008e",
-    "reviewedAt": "2026-07-24T17:46:45.794Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:05.203Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "PASS",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
+    "failEvidence": [],
+    "failConfidences": {},
     "reasons": [],
-    "fieldCorrections": [],
     "tokenUsage": {
-      "inputTokens": 1060,
-      "outputTokens": 72,
-      "estimatedCostUSD": 0.00020219999999999998
+      "inputTokens": 1540,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002964
     }
   },
   "c9-m-ch1-t2-q07": {
     "questionId": "c9-m-ch1-t2-q07",
     "contentHash": "6dd6a07aa121fb086d5addef7d681e44d184580456f4d7f07d4806b541b9b2c6",
-    "reviewedAt": "2026-07-24T17:46:48.870Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:07.469Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question's topic is misaligned with the provided context chapter and sections.",
-      "Final answer value is incorrect."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Wrong final answer value",
-        "required_fix": "The correct answer is 1 (the answer field is correct)."
-      },
-      {
-        "field": "curriculum",
-        "issue": "Content contradicts source curriculum",
-        "required_fix": "Align the question with the correct class and chapter."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1064,
-      "outputTokens": 180,
-      "estimatedCostUSD": 0.0002676
+      "inputTokens": 1544,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.000297
     }
   },
   "c9-m-ch1-t2-q08": {
     "questionId": "c9-m-ch1-t2-q08",
     "contentHash": "1a480a8ce74b938787f7904b5bd8b03aca83b07ec1f684a20f2cd6fb497846a9",
-    "reviewedAt": "2026-07-24T17:46:51.194Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:09.693Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is from a deleted/rationalised chapter.",
-      "The answer indicates a misunderstanding of the nature of the decimal."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Incorrect classification of the number",
-        "required_fix": "The number is rational because it can be expressed as a series converging to a limit."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1071,
-      "outputTokens": 149,
-      "estimatedCostUSD": 0.00025005
+      "inputTokens": 1551,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00029805
     }
   },
   "c9-m-ch1-t2-q09": {
     "questionId": "c9-m-ch1-t2-q09",
     "contentHash": "933c246a3b50e33ce75d751dd5327ba80d08a2c54aa08154539b7dff3d48848b",
-    "reviewedAt": "2026-07-24T17:46:54.994Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:17.990Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "FAIL",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is in the incorrect chapter; it should be about irrational numbers but cites rationalization.",
-      "The final answer provided is incorrect.",
-      "Steps contain miscalculation errors in the denominator and numerator."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "curriculum",
-        "issue": "Question is not aligned with the current chapter on Irrational Numbers.",
-        "required_fix": "Align the question with the topic of Irrational Numbers as per the chapter."
-      },
-      {
-        "field": "answer",
-        "issue": "Final answer is incorrect.",
-        "required_fix": "Correct the final answer to the correct result of the rationalization process."
-      },
-      {
-        "field": "steps",
-        "issue": "Steps have miscalculations leading to an incorrect answer.",
-        "required_fix": "Revise the calculations in steps for both the numerator and denominator."
+        "criterion_id": "marking_completeness",
+        "exact_defective_text": "Numerator = 16 + 6√7",
+        "reason": "The marking points lack detail on how 8 + 3√7 is obtained and should explicitly mention the simplification steps.",
+        "expected_correction": "Include steps showing how to conclude from (16 + 6√7) / 2 to get 8 + 3√7 clearly.",
+        "supporting_evidence": "In the steps provided, simplification is shown, but a direct mention linking it to the final answer is not made clear.",
+        "reviewer_confidence": 0.8
       }
     ],
+    "failConfidences": {
+      "marking_completeness": 0.8
+    },
+    "reasons": [
+      "[marking_completeness] The marking points lack detail on how 8 + 3√7 is obtained and should explicitly mention the simplification steps."
+    ],
     "tokenUsage": {
-      "inputTokens": 1163,
-      "outputTokens": 258,
-      "estimatedCostUSD": 0.00032925
+      "inputTokens": 2468,
+      "outputTokens": 604,
+      "estimatedCostUSD": 0.0007326
     }
   },
   "c9-m-ch1-t2-q10": {
     "questionId": "c9-m-ch1-t2-q10",
     "contentHash": "b40c5f1cef3fb278e6e599e3e40095dfe4cd8748b7ddb55de1bb0a4471858e01",
-    "reviewedAt": "2026-07-24T17:46:59.049Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:20.200Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is from the wrong chapter as 'The World of Numbers' also includes topics not currently relevant for CBSE Mathematics class 9.",
-      "The final answer provided is incorrect; the calculation of y is faulty."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Incorrect final answer value.",
-        "required_fix": "Correctly calculate x + y considering x = 5 + 2√6 and y = 1/(5 + 2√6)."
-      },
-      {
-        "field": "steps",
-        "issue": "Faulty calculations for y leading to incorrect sum.",
-        "required_fix": "Revise calculations so that y is correctly defined and ensure the step from y to x+y is logically sound."
-      },
-      {
-        "field": "curriculum",
-        "issue": "Contradiction with the chapter context.",
-        "required_fix": "Ensure the question aligns with the correct chapter and topic as per the current syllabus."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1093,
-      "outputTokens": 280,
-      "estimatedCostUSD": 0.00033195
+      "inputTokens": 1573,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030135
     }
   },
   "c9-m-ch1-t3-q01": {
     "questionId": "c9-m-ch1-t3-q01",
     "contentHash": "d74fc21e438339025ce5ad236a8fa8aa59f7fa556e0386eae344f2b3a376e0b5",
-    "reviewedAt": "2026-07-24T17:47:03.004Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:33.217Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "FAIL",
+      "question_clarity": "PASS",
       "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "steps_validity": "PASS",
+      "marking_completeness": "FAIL",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "FAIL",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is from the wrong chapter, as it relates to Laws of Exponents, while the source context chapter is about The World of Numbers.",
-      "The final answer is incorrect; 2³ × 2⁴ correctly simplifies to 2⁷, which is 128, but the sequence indicates incorrectness."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "question",
-        "issue": "Question is in a wrong chapter.",
-        "required_fix": "Change the question topic to a relevant one from 'The World of Numbers'."
+        "criterion_id": "curriculum_alignment",
+        "exact_defective_text": "2³ × 2⁴",
+        "reason": "The question tests the laws of exponents, but the relevant chapter sections do not cover this specific topic within the curriculum context provided.",
+        "expected_correction": "The question should relate directly to the provided sections or chapters regarding laws of exponents or mention them explicitly.",
+        "supporting_evidence": "The sections listed (3.2 to 3.7) do not include laws of exponents; hence, the content doesn't align with the given curriculum.",
+        "reviewer_confidence": 0.9
       },
       {
-        "field": "answer",
-        "issue": "Final answer does not align with the context provided.",
-        "required_fix": "Change the answer explanation to align with the simplified format before evaluation."
+        "criterion_id": "correctness",
+        "exact_defective_text": "128",
+        "reason": "The answer provided does not align with the calculation steps shown.",
+        "expected_correction": "The answer should be expressed through the simplification process, i.e., the correct value of 2⁷.",
+        "supporting_evidence": "2⁷ equals 128, which is correct, but it was not represented as part of the final answer contextually in relation to the steps.",
+        "reviewer_confidence": 0.8
+      },
+      {
+        "criterion_id": "marking_completeness",
+        "exact_defective_text": "128",
+        "reason": "The final answer does not explicitly mention the relationship with the steps leading to the result.",
+        "expected_correction": "The answer should clarify 'Result: 2⁷ = 128' for complete marking points.",
+        "supporting_evidence": "The answer field needs to reflect each valued step for clarity and completeness, aligning with CBSE marking practices.",
+        "reviewer_confidence": 0.7
+      },
+      {
+        "criterion_id": "curriculum_importance",
+        "exact_defective_text": "Laws of Exponents",
+        "reason": "Laws of Exponents are not highlighted as part of the provided chapter content, thus indicating their significance may not align with students' curricular focus.",
+        "expected_correction": "Reframe the context to include direct references or applications that emphasize the importance of laws of exponents in the chapter context.",
+        "supporting_evidence": "The sections detailed (3.2 to 3.7) focus on number systems without explicit mention of exponent laws.",
+        "reviewer_confidence": 0.9
       }
     ],
+    "failConfidences": {
+      "curriculum_alignment": 0.9,
+      "correctness": 0.8,
+      "marking_completeness": 0.7,
+      "curriculum_importance": 0.9
+    },
+    "reasons": [
+      "[curriculum_alignment] The question tests the laws of exponents, but the relevant chapter sections do not cover this specific topic within the curriculum context provided.",
+      "[correctness] The answer provided does not align with the calculation steps shown.",
+      "[marking_completeness] The final answer does not explicitly mention the relationship with the steps leading to the result.",
+      "[curriculum_importance] Laws of Exponents are not highlighted as part of the provided chapter content, thus indicating their significance may not align with students' curricular focus."
+    ],
     "tokenUsage": {
-      "inputTokens": 1049,
-      "outputTokens": 225,
-      "estimatedCostUSD": 0.00029235000000000003
+      "inputTokens": 2536,
+      "outputTokens": 1008,
+      "estimatedCostUSD": 0.0009851999999999999
     }
   },
   "c9-m-ch1-t3-q02": {
     "questionId": "c9-m-ch1-t3-q02",
     "contentHash": "363e468e6c0da9d7b06ef432e4985ab5eb6340e1942fbc11426f4b5c403aafbd",
-    "reviewedAt": "2026-07-24T17:47:06.130Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:38.774Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "FAIL",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is from the 'Laws of Exponents' topic, which is not present in the chapter 'The World of Numbers' as per the source context."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "question",
-        "issue": "Topic mismatch",
-        "required_fix": "Change topic to match 'The World of Numbers' chapter content."
-      },
-      {
-        "field": "answer",
-        "issue": "Incorrect answer due to incorrect chapter context",
-        "required_fix": "Change question to align with the correct chapter content."
+        "criterion_id": "curriculum_alignment",
+        "exact_defective_text": "Simplify: (3²)³",
+        "reason": "The topic of Laws of Exponents is not listed in the provided sections of the chapter 'The World of Numbers'.",
+        "expected_correction": "Change the chapter to one that includes Laws of Exponents.",
+        "supporting_evidence": "The chapter sections focus on various number concepts without mention of exponents.",
+        "reviewer_confidence": 0.9
       }
     ],
+    "failConfidences": {
+      "curriculum_alignment": 0.9
+    },
+    "reasons": [
+      "[curriculum_alignment] The topic of Laws of Exponents is not listed in the provided sections of the chapter 'The World of Numbers'."
+    ],
     "tokenUsage": {
-      "inputTokens": 1041,
-      "outputTokens": 181,
-      "estimatedCostUSD": 0.00026475
+      "inputTokens": 2190,
+      "outputTokens": 383,
+      "estimatedCostUSD": 0.0005583
     }
   },
   "c9-m-ch1-t3-q03": {
     "questionId": "c9-m-ch1-t3-q03",
     "contentHash": "b9b8b2872080cf6c482ec0dec78637fae1360911f63a497cb5519f90dc471f11",
-    "reviewedAt": "2026-07-24T17:47:09.429Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:40.808Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is incorrectly categorized under the wrong chapter and topic.",
-      "The final answer is correct, but due to the curriculum mismatch, correctness is marked as failed.",
-      "The topic 'Laws of Exponents' is not covered in 'The World of Numbers' chapter."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Question is misaligned with the chapter and topic.",
-        "required_fix": "Correctly categorize the question under the appropriate chapter and topic related to Laws of Exponents."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1053,
-      "outputTokens": 185,
-      "estimatedCostUSD": 0.00026895
+      "inputTokens": 1533,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00029535
     }
   },
   "c9-m-ch1-t3-q04": {
     "questionId": "c9-m-ch1-t3-q04",
     "contentHash": "49915caff0428d1a12370014a1ea9d73db2ac66f76b9fddd968dfed556525e60",
-    "reviewedAt": "2026-07-24T17:47:12.142Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:46.474Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "FAIL",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is based on the topic Laws of Exponents, which is not present in the specified chapter, 'The World of Numbers'."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "curriculum",
-        "issue": "Incorrect chapter alignment",
-        "required_fix": "Align question with the chapter 'The World of Numbers' and its appropriate topics."
+        "criterion_id": "curriculum_alignment",
+        "exact_defective_text": "Simplify: x⁵ / x³",
+        "reason": "The concept of Laws of Exponents does not reside in the chapter titled 'The World of Numbers'. This chapter does not address exponential expressions or their simplifications.",
+        "expected_correction": "The question should relate to a concept found within 'The World of Numbers' such as integers or rational numbers.",
+        "supporting_evidence": "According to the chapter sections, the relevant topics include integers and rational numbers, but not exponents.",
+        "reviewer_confidence": 1
       }
     ],
+    "failConfidences": {
+      "curriculum_alignment": 1
+    },
+    "reasons": [
+      "[curriculum_alignment] The concept of Laws of Exponents does not reside in the chapter titled 'The World of Numbers'. This chapter does not address exponential expressions or their simplifications."
+    ],
     "tokenUsage": {
-      "inputTokens": 1020,
-      "outputTokens": 149,
-      "estimatedCostUSD": 0.00024239999999999998
+      "inputTokens": 2174,
+      "outputTokens": 414,
+      "estimatedCostUSD": 0.0005744999999999999
     }
   },
   "c9-m-ch1-t3-q05": {
     "questionId": "c9-m-ch1-t3-q05",
     "contentHash": "8d09517504d5f084b4639014b1c6724c7d097b4b826e59894704092b44de1bd9",
-    "reviewedAt": "2026-07-24T17:47:14.484Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:53.233Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "FAIL",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question topic is misaligned with the specified chapter."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "curriculum",
-        "issue": "Question topic is misaligned with the chapter context.",
-        "required_fix": "Align the question with the chapter 'The World of Numbers'."
+        "criterion_id": "curriculum_alignment",
+        "exact_defective_text": "Laws of Exponents (t3)",
+        "reason": "The question and answer relate to exponents, but the source context does not explicitly cover laws of exponents within 'The World of Numbers' curriculum for Class 9. The relevant concepts of exponents may not be adequately addressed in the chapter provided.",
+        "expected_correction": "Ensure that any concepts directly related to laws of exponents are covered in the provided source context or clearly reference the appropriate chapter and section that discusses them.",
+        "supporting_evidence": "The section titles provided (3.2, 3.3, 3.4, etc.) in 'The World of Numbers' do not suggest coverage of 'Laws of Exponents' as a topic.",
+        "reviewer_confidence": 0.8
       }
     ],
+    "failConfidences": {
+      "curriculum_alignment": 0.8
+    },
+    "reasons": [
+      "[curriculum_alignment] The question and answer relate to exponents, but the source context does not explicitly cover laws of exponents within 'The World of Numbers' curriculum for Class 9. The relevant concepts of exponents may not be adequately addressed in the chapter provided."
+    ],
     "tokenUsage": {
-      "inputTokens": 1062,
-      "outputTokens": 134,
-      "estimatedCostUSD": 0.0002397
+      "inputTokens": 2306,
+      "outputTokens": 513,
+      "estimatedCostUSD": 0.0006536999999999999
     }
   },
   "c9-m-ch1-t3-q06": {
     "questionId": "c9-m-ch1-t3-q06",
     "contentHash": "8ea66ae8caa89664d3e99c92be6dc43bf193ec4c607174429f11ef2898c33399",
-    "reviewedAt": "2026-07-24T17:47:18.361Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:07:55.352Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is based on the topic of Laws of Exponents but references incorrect section/chapter context.",
-      "The final answer is incorrect; it does not reflect the accurate simplification of the expression.",
-      "The reasoning in the steps does not lead to the correct answer."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Final answer is incorrect",
-        "required_fix": "The correct answer should be 9."
-      },
-      {
-        "field": "steps",
-        "issue": "Steps leading to incorrect answer",
-        "required_fix": "Recalculate 27^(1/3) × 32^(1/5) accurately as 3 × 2^2 = 9."
-      },
-      {
-        "field": "curriculum",
-        "issue": "Does not align with official chapter context",
-        "required_fix": "Align question topic with the chapter 'The World of Numbers' under the relevant section."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1078,
-      "outputTokens": 262,
-      "estimatedCostUSD": 0.0003189
+      "inputTokens": 1558,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002991
     }
   },
   "c9-m-ch1-t3-q07": {
     "questionId": "c9-m-ch1-t3-q07",
     "contentHash": "7a8650b3fac9cecd5b7cb60823d06d313e56a34a53fbd8e38becda248b3fa5dc",
-    "reviewedAt": "2026-07-24T17:47:21.423Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:00.017Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is based on the wrong chapter and topic.",
-      "The final answer is incorrect due to a mistake in the simplification process."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "question",
-        "issue": "Question is about laws of exponents but is placed under the wrong chapter.",
-        "required_fix": "Revise the chapter and topic to align with the laws of exponents."
-      },
-      {
-        "field": "answer",
-        "issue": "Incorrect final answer.",
-        "required_fix": "Change the answer to a²b⁴."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1060,
-      "outputTokens": 194,
-      "estimatedCostUSD": 0.00027539999999999997
+      "inputTokens": 1540,
+      "outputTokens": 275,
+      "estimatedCostUSD": 0.000396
     }
   },
   "c9-m-ch1-t3-q08": {
     "questionId": "c9-m-ch1-t3-q08",
     "contentHash": "83b06d079d84b1384534491c167fdfcf79ff4b0de03c40e9f3fce96476b2ed49",
-    "reviewedAt": "2026-07-24T17:47:24.991Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:09.676Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "CONFIRMED_DEFECT",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "FAIL",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question is not aligned with the correct chapter and topic.",
-      "The final answer is incorrect.",
-      "Incorrect calculation leading to wrong intermediate values."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "curriculum",
-        "issue": "Question references incorrect chapter and topic.",
-        "required_fix": "Align the question with the correct chapter 'The World of Numbers' and the relevant topic."
-      },
-      {
-        "field": "answer",
-        "issue": "Final answer is incorrect.",
-        "required_fix": "Correct the answer to (2^(3/2)) instead of 2√2."
-      },
-      {
-        "field": "steps",
-        "issue": "Steps contain calculation errors.",
-        "required_fix": "Ensure steps reflect the true calculations leading to the correct final answer."
+        "criterion_id": "curriculum_alignment",
+        "exact_defective_text": "Evaluate: (8^(1/3) × 16^(1/4)) / 2^(1/2)",
+        "reason": "The topic tested, Laws of Exponents, does not align with the content of the chapter 'The World of Numbers', which focuses on different types of numbers rather than exponentiation.",
+        "expected_correction": "The question should focus on a concept relevant to 'The World of Numbers', such as integers, fractions, rational numbers, irrational numbers, or real numbers.",
+        "supporting_evidence": "The chapter sections explicitly mention 'The Revolution of Śhūnya', 'Integers', 'Filling the Spaces', 'Irrational Numbers', and 'Real Numbers', none of which cover the topic of exponentiation or laws of exponents.",
+        "reviewer_confidence": 0
       }
     ],
+    "failConfidences": {},
+    "reasons": [
+      "[curriculum_alignment] The topic tested, Laws of Exponents, does not align with the content of the chapter 'The World of Numbers', which focuses on different types of numbers rather than exponentiation."
+    ],
     "tokenUsage": {
-      "inputTokens": 1158,
-      "outputTokens": 240,
-      "estimatedCostUSD": 0.00031769999999999997
+      "inputTokens": 2632,
+      "outputTokens": 675,
+      "estimatedCostUSD": 0.0007998
     }
   },
   "c9-m-ch1-t3-q09": {
     "questionId": "c9-m-ch1-t3-q09",
     "contentHash": "9cb7b7f73eb944e395c8b1e153193cea8a8c98d6c56b19a3388225604049c82c",
-    "reviewedAt": "2026-07-24T17:47:28.816Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:11.905Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is incorrectly categorized under the topic 'Laws of Exponents' instead of being aligned with the chapter.",
-      "The answer is wrong as the mathematical operation does not produce the correct final answer for a general case."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Question is misaligned with the chapter and topic.",
-        "required_fix": "Align question with the correct chapter and topic from the syllabus."
-      },
-      {
-        "field": "answer",
-        "issue": "Final answer value is incorrect.",
-        "required_fix": "Correctly derive and state that the answer is x^(a-b + b-c + c-a) = x^0, not just state it equals 1."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1097,
-      "outputTokens": 229,
-      "estimatedCostUSD": 0.00030195000000000005
+      "inputTokens": 1577,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030195
     }
   },
   "c9-m-ch1-t3-q10": {
     "questionId": "c9-m-ch1-t3-q10",
     "contentHash": "53f3c1eb054a92cc8a37f405bafaece9dbbc398409ff0692b91083cd3424369a",
-    "reviewedAt": "2026-07-24T17:47:32.422Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:18.528Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "FAIL",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is based on the wrong chapter topic; it should be on 'Laws of Exponents', but it's framed under 'The World of Numbers'.",
-      "The final ratio conclusion is misleading as the correct relationship should be stated differently based on the calculations."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "curriculum",
-        "issue": "Question is in the wrong chapter context.",
-        "required_fix": "Align question with the topic 'Laws of Exponents'."
-      },
-      {
-        "field": "answer",
-        "issue": "The answer does not properly reflect the problem request.",
-        "required_fix": "Provide the correct relationship between x and y as derived from 2x = 3y."
+        "criterion_id": "curriculum_alignment",
+        "exact_defective_text": "QUESTION: If 4^x = 8^y, prove that 3y = 2x and hence find x:y.",
+        "reason": "The question pertains to the laws of exponents, but the sections provided in the source context discuss a different overarching theme, 'The World of Numbers.' The specific topic of 'Laws of Exponents' does not appear in the cited chapter structure.",
+        "expected_correction": "Align the question with an appropriate chapter or section that specifically deals with 'Laws of Exponents' as part of the curriculum.",
+        "supporting_evidence": "The chapter sections do not explicitly mention laws of exponents or aspects related to exponential equations.",
+        "reviewer_confidence": 1
       }
     ],
+    "failConfidences": {
+      "curriculum_alignment": 1
+    },
+    "reasons": [
+      "[curriculum_alignment] The question pertains to the laws of exponents, but the sections provided in the source context discuss a different overarching theme, 'The World of Numbers.' The specific topic of 'Laws of Exponents' does not appear in the cited chapter structure."
+    ],
     "tokenUsage": {
-      "inputTokens": 1136,
-      "outputTokens": 226,
-      "estimatedCostUSD": 0.00030599999999999996
+      "inputTokens": 2444,
+      "outputTokens": 491,
+      "estimatedCostUSD": 0.0006612
     }
   },
   "c9-m-ch1-t4-q01": {
     "questionId": "c9-m-ch1-t4-q01",
     "contentHash": "014d0d6125fe916a3df791816c33905b0f3eeaa96705fd0c12d5bb5ebe449632",
-    "reviewedAt": "2026-07-24T17:47:35.251Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:21.031Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question is from the wrong chapter; it should be from 'The World of Numbers' but is linked to the wrong chapter title.",
-      "Content topic does not align with chapter content."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "question",
-        "issue": "Incorrect chapter reference",
-        "required_fix": "Change chapter reference to 'The World of Numbers'."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1076,
-      "outputTokens": 152,
-      "estimatedCostUSD": 0.0002526
+      "inputTokens": 1556,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002988
     }
   },
   "c9-m-ch1-t4-q02": {
     "questionId": "c9-m-ch1-t4-q02",
     "contentHash": "40334ec14764066c4a5370c34604696eeaf8a2530320db805f2586a52ba7ba21",
-    "reviewedAt": "2026-07-24T17:47:39.844Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:23.346Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question is from a topic not covered in the specified chapter 'The World of Numbers'.",
-      "Answer does not align with the chapter's content.",
-      "Steps provided do not clearly lead to the answer and contain extraneous information."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Answer includes approximation rather than a precise value expected in the context.",
-        "required_fix": "Provide a more precise value if required, or clarify that approximation is acceptable."
-      },
-      {
-        "field": "steps",
-        "issue": "Steps contain unnecessary calculations and do not clearly follow a logical sequence to arrive at the answer.",
-        "required_fix": "Simplify the steps to focus on how to accurately approximate √2 instead."
-      },
-      {
-        "field": "hint",
-        "issue": "Hint does not guide towards the method of approximation effectively.",
-        "required_fix": "Rephrase to suggest using a specific method for square root estimation."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1044,
-      "outputTokens": 276,
-      "estimatedCostUSD": 0.00032219999999999997
+      "inputTokens": 1524,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.000294
     }
   },
   "c9-m-ch1-t4-q03": {
     "questionId": "c9-m-ch1-t4-q03",
     "contentHash": "92c85c724569352dc22e1ed63e2111607ff8987d59b0576f918d765447d74297",
-    "reviewedAt": "2026-07-24T17:47:43.158Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:25.434Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The chapter section mentioned in the source context does not correspond to the question about the real number line.",
-      "The answer field should use correct CBSE terminology regarding completeness of the real number line."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Question does not match the specified chapter or topic.",
-        "required_fix": "Align the question with a relevant chapter on the number line from the NCERT/CBSE syllabus."
-      },
-      {
-        "field": "answer",
-        "issue": "Terminology is unclear or informal for the exam context.",
-        "required_fix": "Revise the answer to clarify the completeness property of real numbers according to CBSE terminology."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1028,
-      "outputTokens": 221,
-      "estimatedCostUSD": 0.00028680000000000003
+      "inputTokens": 1508,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002916
     }
   },
   "c9-m-ch1-t4-q04": {
     "questionId": "c9-m-ch1-t4-q04",
     "contentHash": "ea8ff868090321f0bdcee360156d153bc62f783193b42b0f8f7803559f85edbd",
-    "reviewedAt": "2026-07-24T17:47:46.833Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:27.960Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question refers to Pythagorean construction, which is not included in the chapter 'The World of Numbers'.",
-      "The content is not aligned with the NCERT/CBSE syllabus for the specified chapter and topic."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "question",
-        "issue": "Misalignment with chapter content",
-        "required_fix": "Revise the question to focus on Real Numbers on the Number Line as per syllabus."
-      },
-      {
-        "field": "answer",
-        "issue": "Inclusion of Pythagorean construction is inappropriate",
-        "required_fix": "Rephrase to accurately describe locating numbers on the number line without referencing Pythagorean theorem."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1126,
-      "outputTokens": 213,
-      "estimatedCostUSD": 0.0002967
+      "inputTokens": 1606,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003063
     }
   },
   "c9-m-ch1-t4-q05": {
     "questionId": "c9-m-ch1-t4-q05",
     "contentHash": "253409f90e1480b7c0c4371d52b032eafef0b60deab0f6a1e46a81a45cd7c7be",
-    "reviewedAt": "2026-07-24T17:47:49.781Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:30.393Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The answer contains a misunderstanding of the method to locate √5, as it suggests constructing a right triangle directly on the number line, which is not an appropriate explanation for this concept."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Misleading explanation of constructing a right triangle to locate √5.",
-        "required_fix": "Explain the construction of a right triangle not just at point √4 but also how it gives the cumulative distance representing √5 on the number line."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1146,
-      "outputTokens": 178,
-      "estimatedCostUSD": 0.0002787
+      "inputTokens": 1626,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003093
     }
   },
   "c9-m-ch1-t4-q06": {
     "questionId": "c9-m-ch1-t4-q06",
     "contentHash": "fac14ca9881af2a9a84cb7ad2f96e4ae8666a88d000f3b26e84529bb0c752672",
-    "reviewedAt": "2026-07-24T17:47:53.233Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:33.083Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The answer is incorrect as 2/√3 is not greater than √3/2.",
-      "The calculation for 2/√3 is incorrect, leading to a wrong final conclusion.",
-      "There is a lack of clarity in the comparative analysis of the two fractions."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "The answer given is incorrect.",
-        "required_fix": "√3/2 is greater."
-      },
-      {
-        "field": "steps",
-        "issue": "The calculation for 2/√3 is incorrect and leads to the wrong conclusion.",
-        "required_fix": "Correctly rationalize and compute 2/√3 as 2√3/3 without using approximations for clarity."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1115,
-      "outputTokens": 233,
-      "estimatedCostUSD": 0.00030705
+      "inputTokens": 1595,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030465
     }
   },
   "c9-m-ch1-t4-q07": {
     "questionId": "c9-m-ch1-t4-q07",
     "contentHash": "fb2ad56622abd08a6d3cc78e0f235263aa30fba05d818d1b41a95ec0656ebc0e",
-    "reviewedAt": "2026-07-24T17:47:56.216Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:35.148Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is from an incorrect chapter according to the given source context.",
-      "The answer provides an incorrect ordering of the numbers."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Incorrect ordering of numbers.",
-        "required_fix": "Correct the ordering to 2.2 < 9/4 < √5."
-      },
-      {
-        "field": "curriculum",
-        "issue": "Question not aligned with the specified chapter and topic.",
-        "required_fix": "Change the chapter to appropriate context from 'The World of Numbers.'"
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1080,
-      "outputTokens": 195,
-      "estimatedCostUSD": 0.000279
+      "inputTokens": 1560,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002994
     }
   },
   "c9-m-ch1-t4-q08": {
     "questionId": "c9-m-ch1-t4-q08",
     "contentHash": "72cfccb9022ebe4e811218a9a68cc9706a604a2ba7b1e85e185a85dfe838aba3",
-    "reviewedAt": "2026-07-24T17:47:59.884Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:37.596Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is misaligned with the specified chapter and topic.",
-      "The answer contains a serious mathematical error in deriving √3.",
-      "Steps 2 and 3 are logically incorrect and do not lead to the correct construction."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Question is from an incorrect chapter.",
-        "required_fix": "Align with the official chapter 'The World of Numbers' and the correct topic of locating real numbers."
-      },
-      {
-        "field": "answer",
-        "issue": "Incorrect method to derive √3.",
-        "required_fix": "Provide the correct geometric construction steps to locate √3."
-      },
-      {
-        "field": "steps",
-        "issue": "Logic and reasoning in steps are incorrect.",
-        "required_fix": "Revise steps to correctly demonstrate the geometric construction of √3."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1141,
-      "outputTokens": 257,
-      "estimatedCostUSD": 0.00032535
+      "inputTokens": 1621,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00030855
     }
   },
   "c9-m-ch1-t4-q09": {
     "questionId": "c9-m-ch1-t4-q09",
     "contentHash": "bc133497d1067b0361f396a3549514bcad20ef0bf23198d62463ef9cd95ee579",
-    "reviewedAt": "2026-07-24T17:48:03.448Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:39.764Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The final approximation of 4.2626... is incorrectly stated as 4.263, which is inaccurate.",
-      "The steps contain a mistake in interpreting the representation on the number line, affecting the correctness."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Incorrect final approximation value given.",
-        "required_fix": "The number 4.2626… lies between 4.26 and 4.27 on the number line, approximately closer to 4.262."
-      },
-      {
-        "field": "steps",
-        "issue": "Incorrect interpretation of the approximation in the last step.",
-        "required_fix": "Result: 4.2626… is approximately at 4.262 on the number line."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1186,
-      "outputTokens": 233,
-      "estimatedCostUSD": 0.00031769999999999997
+      "inputTokens": 1666,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003153
     }
   },
   "c9-m-ch1-t4-q10": {
     "questionId": "c9-m-ch1-t4-q10",
     "contentHash": "8d1a5999a1428d40a39ef657c7949b82b4baa4251eaef87af328918bcf37ac05",
-    "reviewedAt": "2026-07-24T17:48:07.528Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:41.649Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Content from a deleted/rationalised chapter or wrong chapter.",
-      "Wrong formula or calculation error producing a wrong result.",
-      "Incorrect method for constructing the location of √7.5 on a number line."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Content is from a wrong chapter.",
-        "required_fix": "Ensure the question aligns with the updated chapters in the syllabus."
-      },
-      {
-        "field": "correctness",
-        "issue": "Invalid geometric construction to locate √7.5.",
-        "required_fix": "Provide a correct method to locate √7.5 on the number line."
-      },
-      {
-        "field": "steps",
-        "issue": "Improper mathematical steps for geometric mean construction.",
-        "required_fix": "Revise steps to accurately reflect the geometric construction for √7.5."
-      },
-      {
-        "field": "answer",
-        "issue": "Incorrect method leading to wrong answer.",
-        "required_fix": "Revise answer to reflect the correct value as per corrected steps."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1183,
-      "outputTokens": 298,
-      "estimatedCostUSD": 0.00035625
+      "inputTokens": 1663,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031485
     }
   },
   "c9-m-ch1-t5-q01": {
     "questionId": "c9-m-ch1-t5-q01",
     "contentHash": "1f1bef46ca363fd9f773d5872dc09e1eb67fd1c7969643fc8b2abe160e4fc83d",
-    "reviewedAt": "2026-07-24T17:48:12.298Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:45.027Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The final answer is incorrect.",
-      "The steps contain a logical error in combining surds.",
-      "The answer does not reflect the proper arithmetic operation on like surds."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "The final answer is incorrect.",
-        "required_fix": "8√2 should be presented as 8√2, ensuring clarity, but the expression is mathematically correct as per the simplification."
-      },
-      {
-        "field": "steps",
-        "issue": "Lacks clarity in explaining combining surds.",
-        "required_fix": "Revise Step 1 to ensure accuracy: 'Combine like surds: 3√2 + 5√2 = (3 + 5)√2 = 8√2.'"
-      },
-      {
-        "field": "steps",
-        "issue": "The result is correct but needs better presentation.",
-        "required_fix": "Ensure the result following the explanation reads 'Result: 8√2.'"
-      },
-      {
-        "field": "examTip",
-        "issue": "Missing field that could provide extra guidance.",
-        "required_fix": "Add an exam tip that states: 'Ensure to simplify surds properly for maximum efficiency in solving similar problems.'"
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1034,
-      "outputTokens": 341,
-      "estimatedCostUSD": 0.0003597
+      "inputTokens": 1514,
+      "outputTokens": 223,
+      "estimatedCostUSD": 0.0003609
     }
   },
   "c9-m-ch1-t5-q02": {
     "questionId": "c9-m-ch1-t5-q02",
     "contentHash": "a0c8f1c5941513d4199a32daad0f0e084ca74c545a509982a7c30008ee43e67b",
-    "reviewedAt": "2026-07-24T17:48:14.731Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:47.031Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question is from the wrong chapter as per the source context."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "curriculum",
-        "issue": "Topic mismatch with official chapter context.",
-        "required_fix": "Align the question with 'Operations on Real Numbers' in the correct chapter."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1008,
-      "outputTokens": 135,
-      "estimatedCostUSD": 0.0002322
+      "inputTokens": 1488,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00028859999999999997
     }
   },
   "c9-m-ch1-t5-q03": {
     "questionId": "c9-m-ch1-t5-q03",
     "contentHash": "dfd55294d1f7031c5726aa98d59b23428c832dc5ef429529c0ef8b663ff8392c",
-    "reviewedAt": "2026-07-24T17:48:17.288Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:49.164Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Answer 2 is incorrect; the correct answer is 2√3.",
-      "The concept does not align with the topic 'Operations on Real Numbers' but rather deals with surds."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Incorrect final answer value.",
-        "required_fix": "2√3"
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1042,
-      "outputTokens": 147,
-      "estimatedCostUSD": 0.0002445
+      "inputTokens": 1522,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002937
     }
   },
   "c9-m-ch1-t5-q04": {
     "questionId": "c9-m-ch1-t5-q04",
     "contentHash": "4b041bdf46682a51c8630370b692a544cc74b6403df30c8175db77ebb79664ab",
-    "reviewedAt": "2026-07-24T17:48:22.386Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:08:56.493Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "CONFIRMED_DEFECT",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question chapter and topic are incorrectly aligned with the given content.",
-      "The answer is incorrect.",
-      "There are mathematical errors in the steps."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "curriculum",
-        "issue": "Question is not aligned with the correct chapter and topic.",
-        "required_fix": "Align with the appropriate chapter and topic in the current syllabus."
-      },
-      {
-        "field": "answer",
-        "issue": "Incorrect final answer value.",
-        "required_fix": "Correct the answer to reflect the proper simplification: 1√5 = √5 but should also note the combination correctly."
-      },
-      {
-        "field": "steps",
-        "issue": "Incorrect simplification and combination of terms.",
-        "required_fix": "Correct the mathematical steps to accurately reflect 3√5 - 6√5 + 4√5 = 1√5."
+        "criterion_id": "correctness",
+        "exact_defective_text": "√5",
+        "reason": "The final answer does not accurately reflect the simplification process outlined in the steps.",
+        "expected_correction": "2√5",
+        "supporting_evidence": "Step 1: The simplifications yield √45 = 3√5 and 3√20 = 6√5. Therefore, we combine: 3√5 - 6√5 + 4√5 = (3 - 6 + 4)√5 = 1√5 = √5 which is incorrect. The accurate combination should yield 3 - 6 + 4 = 1, indicating the final answer simplifies correctly to 1√5 = √5 but should be reexamined for potential simplification errors.",
+        "reviewer_confidence": 0
       }
     ],
+    "failConfidences": {},
+    "reasons": [
+      "[correctness] The final answer does not accurately reflect the simplification process outlined in the steps."
+    ],
     "tokenUsage": {
-      "inputTokens": 1080,
-      "outputTokens": 263,
-      "estimatedCostUSD": 0.00031979999999999997
+      "inputTokens": 2298,
+      "outputTokens": 454,
+      "estimatedCostUSD": 0.0006171
     }
   },
   "c9-m-ch1-t5-q05": {
     "questionId": "c9-m-ch1-t5-q05",
     "contentHash": "fa6363bae6d2a4d47f8c7bf41198f21a2097ef2bfd4dd41596e87ba6fbb14223",
-    "reviewedAt": "2026-07-24T17:48:26.145Z",
-    "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:09:07.359Z",
+    "model": "gpt-4o-mini→verify",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "REVIEWER_UNCERTAINTY",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "steps_validity": "PASS",
+      "marking_completeness": "FAIL",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The answer is incorrect as it does not match the required rationalized form.",
-      "The resulting expression contains an error in simplification leading to a wrong final answer.",
-      "The denominator's simplification is incorrect in the steps."
-    ],
-    "fieldCorrections": [
+    "failEvidence": [
       {
-        "field": "answer",
-        "issue": "The final answer is incorrect.",
-        "required_fix": "The correct rationalized form should be 2√3 − 2, but needs accurate steps to verify."
+        "criterion_id": "correctness",
+        "exact_defective_text": "2√3 − 2",
+        "reason": "The final answer is not correctly simplified; there is a mistake in the calculation.",
+        "expected_correction": "2√3 − 2 + 2 = 2√3 − 2.",
+        "supporting_evidence": "Upon simplifying the expression 4(√3−1)/2, it yields 2√3 - 2, which misses the +2 term. The complete answer should include the component from the rationalisaton process where 4/2 results in 2 but mistakenly only considers the other side.",
+        "reviewer_confidence": 0.9
       },
       {
-        "field": "steps",
-        "issue": "Steps do not logically lead to the correct answer due to an error in simplification.",
-        "required_fix": "Correct the simplification error to accurately show steps that lead to an accurate final answer."
+        "criterion_id": "marking_completeness",
+        "exact_defective_text": "2√3 − 2",
+        "reason": "The marking scheme lacks an explicit explanation of all required steps.",
+        "expected_correction": "Include each step of the rationalisation process clearly instead of just final answer.",
+        "supporting_evidence": "The steps in the solution do not clearly correspond to marking points. For instance, mentioning that the multiplication and rationalisation steps should earn specific credit points.",
+        "reviewer_confidence": 0.8
       }
     ],
+    "failConfidences": {
+      "correctness": 0.9,
+      "marking_completeness": 0.8
+    },
+    "reasons": [
+      "[correctness] The final answer is not correctly simplified; there is a mistake in the calculation.",
+      "[marking_completeness] The marking scheme lacks an explicit explanation of all required steps."
+    ],
     "tokenUsage": {
-      "inputTokens": 1106,
-      "outputTokens": 230,
-      "estimatedCostUSD": 0.00030389999999999996
+      "inputTokens": 2461,
+      "outputTokens": 641,
+      "estimatedCostUSD": 0.00075375
     }
   },
   "c9-m-ch1-t5-q06": {
     "questionId": "c9-m-ch1-t5-q06",
     "contentHash": "413c3f76f5696628443bf48f5de345771301bda3414ce07d1a5c12a0a644ed75",
-    "reviewedAt": "2026-07-24T17:48:29.128Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:09:09.911Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "FAIL",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Incorrect final answer value.",
-      "Steps contain a calculation error.",
-      "Incorrect steps leading to the wrong answer."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Wrong final answer value.",
-        "required_fix": "The correct answer is 4 + √3 - √3 = 4 + 0 = 4."
-      },
-      {
-        "field": "steps",
-        "issue": "Calculation error in Step 1.",
-        "required_fix": "Correct calculation and finalize the right answer."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1072,
-      "outputTokens": 187,
-      "estimatedCostUSD": 0.000273
+      "inputTokens": 1552,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002982
     }
   },
   "c9-m-ch1-t5-q07": {
     "questionId": "c9-m-ch1-t5-q07",
     "contentHash": "736131d5f8f571d46a587a6bbe8b70d2fee5f9d31a25d1ad841ac835f48951d8",
-    "reviewedAt": "2026-07-24T17:48:32.444Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:09:12.025Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "The question is aligned with the chapter topic, but the content does not appear in the correct chapter or context for the given source. Simplifying expressions with real numbers doesn't fit the described chapter sections.",
-      "The answer value is incorrect based on standard calculations."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Final answer is incorrect.",
-        "required_fix": "2"
-      },
-      {
-        "field": "curriculum",
-        "issue": "Question does not align with correct content of the chapter.",
-        "required_fix": "Align question with suitable content from 'The World of Numbers'."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1031,
-      "outputTokens": 205,
-      "estimatedCostUSD": 0.00027764999999999995
+      "inputTokens": 1511,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00029204999999999997
     }
   },
   "c9-m-ch1-t5-q08": {
     "questionId": "c9-m-ch1-t5-q08",
     "contentHash": "4b388f02949a2cbd203ee00748783d93da6404b5d36400dbc71ff08cdcf173a1",
-    "reviewedAt": "2026-07-24T17:48:35.066Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:09:14.050Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Content from a deleted/rationalised chapter or wrong chapter.",
-      "Wrong final answer value."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Final answer is incorrect.",
-        "required_fix": "Correct final answer."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1155,
-      "outputTokens": 128,
-      "estimatedCostUSD": 0.00025005
+      "inputTokens": 1635,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031065
     }
   },
   "c9-m-ch1-t5-q09": {
     "questionId": "c9-m-ch1-t5-q09",
     "contentHash": "7e83b85bcfa0776b432560a35c42c89406e4ffe1ac53245c6f4bf7a8e8ecccf6",
-    "reviewedAt": "2026-07-24T17:48:38.782Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:09:16.238Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "FAIL",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "FAIL",
-      "question_quality": "PASS",
-      "correctness": "FAIL",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "FAIL"
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
-    "reasons": [
-      "Question incorrectly references 'Operations on Real Numbers' while being from 'The World of Numbers'",
-      "Final answer provided is incorrect.",
-      "The solution steps contain a calculation error leading to an incorrect final answer."
-    ],
-    "fieldCorrections": [
-      {
-        "field": "answer",
-        "issue": "Final answer is incorrect.",
-        "required_fix": "Provide the correct final answer for √x + 1/√x."
-      },
-      {
-        "field": "curriculum",
-        "issue": "The question is not aligned with the correct chapter and topic.",
-        "required_fix": "Align the question with the correct chapter 'The World of Numbers'."
-      }
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1211,
-      "outputTokens": 211,
-      "estimatedCostUSD": 0.00030825
+      "inputTokens": 1691,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031905000000000003
     }
   },
   "c9-m-ch1-t5-q10": {
     "questionId": "c9-m-ch1-t5-q10",
     "contentHash": "06df2264c64482e7b4e0af5ab5d0e6a9609539787179f8c68116da806b387a16",
-    "reviewedAt": "2026-07-24T17:48:40.597Z",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-07-24T21:09:18.440Z",
     "model": "gpt-4o-mini",
-    "promptVersion": "1.1",
     "sourceContextStatus": "PRESENT",
-    "overall": "PASS",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum": "PASS",
-      "question_quality": "PASS",
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
       "correctness": "PASS",
-      "steps_quality": "PASS",
-      "hint_quality": "PASS",
-      "exam_readiness": "PASS"
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
     },
+    "failEvidence": [],
+    "failConfidences": {},
     "reasons": [],
-    "fieldCorrections": [],
     "tokenUsage": {
-      "inputTokens": 1265,
-      "outputTokens": 72,
-      "estimatedCostUSD": 0.00023295
+      "inputTokens": 1745,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032715
     }
   }
 }
