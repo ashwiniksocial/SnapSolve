@@ -37,7 +37,6 @@
 │       ├── economics/          # (present)
 │       └── computerScience/    # (present)
 │
-├── gold-standard/              # Gold-standard reference content
 │   ├── index.ts                # Barrel export
 │   ├── types.ts                # Type definitions
 │   ├── mathematics.ts          # Gold-standard reference for Mathematics
@@ -368,25 +367,6 @@ academic-knowledge/subjects/
 ├── biology/        class9.ts
 ├── economics/      (present)
 └── computerScience/ (present)
-```
-
----
-
-## `gold-standard/` — Reference content
-
-Gold-standard reference content per subject. Used by the AI pipeline and quality evaluation.
-
-```
-gold-standard/
-├── index.ts            # Barrel export
-├── types.ts            # GoldStandard type definitions
-├── mathematics.ts
-├── physics.ts
-├── chemistry.ts
-├── biology.ts
-├── economics.ts
-├── computerScience.ts
-└── README.md           # Developer usage notes
 ```
 
 ---

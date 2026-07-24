@@ -82,7 +82,7 @@ Repo Chemistry total: **4 chapters, 75 questions** — all 75 in the one chapter
 
 | Official 2026-27 Chapter | Exists in repo? | Question count | Notes |
 |---|---|---|---|
-| Ch2 Cell — The Fundamental Unit of Life | N (metadata only, no questions) | 0 | Pedagogical/academic notes exist in `academic-knowledge/subjects/biology/class9.ts` and `gold-standard/biology.ts`, but zero question-bank content |
+| Ch2 Cell — The Fundamental Unit of Life | N (metadata only, no questions) | 0 | Pedagogical/academic notes exist in `academic-knowledge/subjects/biology/class9.ts`, but zero question-bank content |
 | Ch3 Tissues | N | 0 | No question file exists at all |
 | Ch11 Reproduction | N | 0 | No question file exists at all |
 | Ch12 Diversity | N | 0 | No question file exists at all |
@@ -157,7 +157,6 @@ Repo Biology total: **0 chapters wired with content, 0 questions.**
 - Zero questions exist for any of the four officially assessed Biology chapters (Cell, Tissues, Reproduction, Diversity).
 - Some pedagogical/planning material exists but is not question content and is not wired to any runtime path:
   - `academic-knowledge/subjects/biology/class9.ts` — learning objectives, NEP competency mappings, CBSE/ICSE outcomes for "The Fundamental Unit of Life" (Cell) and other chapters (metadata/authoring reference only, ~789 lines, not consumed by the question bank).
-  - `gold-standard/biology.ts` — one example "gold standard" lesson (`biology-cell-structure-class9`) used as a pedagogy template, not a question bank.
   - `question-bank/blueprints/biology.ts` — a target-count blueprint (e.g. "major: targetTotal 80, by type...") describing how Biology questions *should* eventually be distributed, explicitly marked "Developer-only. Never imported by any runtime service."
 - No topic-level breakdowns, no difficulty distributions, no actual question text exist for any Biology chapter.
 
@@ -242,4 +241,4 @@ This section identifies sequencing only — it is not authorization to begin con
 ## Appendix — Source citations
 
 - CBSE Class 9 Science Curriculum 2026-27, Subject Code 086: `https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart1/ScienceSt_SecP1_2026-27.pdf` (fetched directly; used for Course Structure table, unit/chapter/mark mapping, per-chapter Key Concepts and Learning Outcomes, and Practicals list which cross-references chapter numbers, e.g. "Ch. 5", "Ch. 9", "Ch. 2", "Ch. 11", "Ch. 7", "Ch.10" — confirming the chapter-numbering scheme used throughout this report).
-- Repository files cited: `scripts/src/curriculumGateway.ts`, `artifacts/homework-hero/src/data/questions/index.ts`, `artifacts/homework-hero/src/data/questions/class9-physics-ch{1-5}.ts`, `artifacts/homework-hero/src/data/questions/class9-chemistry.ts`, `question-bank/questions/chemistry/class9/ch0{1-4}-*.ts`, `artifacts/homework-hero/src/data/subjects.ts`, `artifacts/homework-hero/src/pages/Practice.tsx`, `academic-knowledge/subjects/biology/class9.ts`, `gold-standard/biology.ts`, `question-bank/blueprints/biology.ts`.
+- Repository files cited: `scripts/src/curriculumGateway.ts`, `artifacts/homework-hero/src/data/questions/index.ts`, `artifacts/homework-hero/src/data/questions/class9-physics-ch{1-5}.ts`, `artifacts/homework-hero/src/data/questions/class9-chemistry.ts`, `question-bank/questions/chemistry/class9/ch0{1-4}-*.ts`, `artifacts/homework-hero/src/data/subjects.ts`, `artifacts/homework-hero/src/pages/Practice.tsx`, `academic-knowledge/subjects/biology/class9.ts`, `question-bank/blueprints/biology.ts`.

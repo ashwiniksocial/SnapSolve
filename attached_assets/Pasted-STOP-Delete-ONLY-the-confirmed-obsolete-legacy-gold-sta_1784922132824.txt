@@ -1,0 +1,97 @@
+STOP.
+
+Delete ONLY the confirmed obsolete legacy gold-standard/ lesson library and
+clean its stale documentation references.
+
+IMPORTANT DISTINCTION
+
+The deleted gold-standard/ folder is an obsolete lesson benchmark library.
+
+The existing file:
+
+artifacts/api-server/src/services/teachingQuality/qualityChecklist.ts
+
+is a runtime Teaching Quality lesson checklist. It is NOT the newly approved
+SnapSolve Gold Standard Question & Answer Acceptance Checklist.
+
+Do NOT rename it.
+Do NOT delete it.
+Do NOT merge it with the new Q&A checklist.
+Do NOT claim that the new Q&A Gold Standard is already implemented there.
+
+TASK
+
+1. Delete the entire top-level:
+
+gold-standard/
+
+folder, including all 9 files.
+
+2. Update CLASS9_SCIENCE_LAUNCH_READINESS.md:
+
+   - Remove the reference to gold-standard/biology.ts from the table entry.
+   - Remove the complete gold-standard/biology.ts benchmark bullet.
+   - Remove gold-standard/biology.ts from the cited-files inventory.
+
+3. Update docs/GOVERNANCE/PROJECT_STRUCTURE.md:
+
+   - Remove gold-standard/ from the top-level directory tree.
+   - Remove the complete gold-standard/ reference-content section and subtree.
+
+4. Search the entire repository after deletion and confirm zero remaining
+   references to:
+
+   - gold-standard/
+   - ALL_GOLD_STANDARDS
+   - GoldStandardLesson
+   - CMFCompliance
+   - getLibrarySummary
+
+5. Preserve without modification:
+
+   artifacts/api-server/src/services/teachingQuality/qualityChecklist.ts
+
+6. Add a brief clarification to the appropriate academic-review documentation:
+
+   - The runtime Teaching Quality checklist evaluates generated lessons.
+   - It is separate from the approved Gold Standard Question & Answer
+     Acceptance Checklist.
+   - The approved Q&A checklist must be implemented only in the existing
+     academic-review workflow, not as a parallel system.
+
+DO NOT
+
+- modify question banks
+- modify curriculum architecture
+- modify academicReview.ts in this task
+- modify runtime behaviour
+- create a replacement gold-standard folder
+- create another checklist
+- perform any academic review
+
+VALIDATE
+
+- legacy folder fully deleted
+- zero stale references remain
+- runtime lesson-quality checklist remains unchanged
+- both TypeScript typechecks pass
+- validate-curriculum passes
+- curriculum-check passes
+- no runtime, build or test behaviour changes
+
+REPORT OUTPUT REQUIREMENT
+
+Write the complete report to:
+
+curriculum/generated/LATEST_REPLIT_REPORT.md
+
+Overwrite the previous contents and show the same report in the Agent response.
+
+Return only:
+
+1. Files deleted
+2. Documentation updated
+3. Zero-reference confirmation
+4. Confirmation that qualityChecklist.ts remained unchanged
+5. Confirmation that it is not the approved Q&A Gold Standard
+6. Validation results
