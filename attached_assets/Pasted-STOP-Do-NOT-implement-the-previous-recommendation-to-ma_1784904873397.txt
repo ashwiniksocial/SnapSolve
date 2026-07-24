@@ -1,0 +1,66 @@
+STOP.
+
+Do NOT implement the previous recommendation to mark both chapters OFFICIALLY_DELETED.
+
+The root-cause report contains a confirmed error:
+
+The official CBSE Class IX Mathematics syllabus 2026–27 explicitly includes:
+“Linear Equations in Two Variables.”
+
+Therefore Mathematics ch4 is active curriculum content and must NOT be classified as OFFICIALLY_DELETED.
+
+Perform a narrow official-source reconciliation for only:
+
+1. Mathematics ch4 — Linear Equations in Two Variables
+2. Chemistry chem-ch01 — Matter in Our Surroundings
+
+Authority order:
+
+1. Official CBSE Class IX 2026–27 subject syllabus
+2. Official NCERT Grade IX syllabus
+3. Official NCERT 2026–27 textbook PDFs
+4. Existing repository mappings
+
+Tasks:
+
+MATHEMATICS ch4
+
+1. Read the official CBSE Mathematics Class IX 2026–27 syllabus already available from CBSE Academic.
+2. Confirm that Linear Equations in Two Variables is active.
+3. Identify which official Ganita Manjari chapter or chapters teach the syllabus content.
+4. Search all available Ganita Manjari PDFs by actual content, headings and learning outcomes—not chapter-number position or filename assumptions.
+5. Determine whether:
+   - the content is embedded within another chapter;
+   - spread across multiple chapters;
+   - provided through another official resource;
+   - or the textbook set in the repository is incomplete.
+6. Do NOT classify it as deleted.
+
+CHEMISTRY chem-ch01
+
+1. Read the official CBSE Science Class IX 2026–27 syllabus.
+2. Determine whether states of matter, change of state, latent heat and evaporation are:
+   - active Class IX assessed content;
+   - prerequisite/background content only;
+   - embedded within another chapter;
+   - moved outside Class IX;
+   - or absent.
+3. Search all official Curiosity PDFs by content, not only iesc101.
+4. Check the official NCERT Grade IX Science syllabus as an additional authority.
+5. Determine the correct permanent status from official evidence.
+
+For each chapter return:
+
+- Official CBSE syllabus status
+- Exact official syllabus wording
+- Matching official NCERT source(s), if any
+- Correct canonical mapping
+- Correct curriculumStatus
+- Whether the existing 50/75 questions align with current syllabus
+- Any questions containing out-of-syllabus subtopics
+- Lowest-risk permanent action
+- Evidence paths/pages used
+
+Do NOT modify code, question banks, canonical curriculum or generated artifacts.
+
+Return only the corrected Official-Source Reconciliation Report.
