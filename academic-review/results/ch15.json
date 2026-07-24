@@ -1,0 +1,1416 @@
+{
+  "c9-m-ch15-t1-q01": {
+    "questionId": "c9-m-ch15-t1-q01",
+    "contentHash": "e8841eaf6808e1181ac827298e0f70acecd7773b03de56cac8c22b866d847e4b",
+    "reviewedAt": "2026-07-24T17:48:42.452Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1022,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019649999999999998
+    }
+  },
+  "c9-m-ch15-t1-q02": {
+    "questionId": "c9-m-ch15-t1-q02",
+    "contentHash": "1498723a5b7f68c4a069f4e9444850e7ce7fa7514f9e89844842c414e7bf4516",
+    "reviewedAt": "2026-07-24T17:48:44.355Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1016,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019559999999999998
+    }
+  },
+  "c9-m-ch15-t1-q03": {
+    "questionId": "c9-m-ch15-t1-q03",
+    "contentHash": "074bc6ef7f69ab359ad72dd6bc2ac3c3a06484a698fd7d8abff7f7915556408b",
+    "reviewedAt": "2026-07-24T17:48:46.431Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1054,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002013
+    }
+  },
+  "c9-m-ch15-t1-q04": {
+    "questionId": "c9-m-ch15-t1-q04",
+    "contentHash": "139a844939edc866b43e049b6bb083270a2409c100a4520912d323fc07334c1b",
+    "reviewedAt": "2026-07-24T17:48:49.676Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The answer incorrectly implies that probability can be any real number, while it should only be between 0 and 1, inclusive.",
+      "Step 3 reasoning is vague and does not clearly separate between 0, 1, and other probabilities."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect understanding of probability range.",
+        "required_fix": "Probability can only take values between 0 and 1, inclusively, and must not be any real number."
+      },
+      {
+        "field": "steps",
+        "issue": "Unclear explanation of probability values.",
+        "required_fix": "Clearly state that probabilities can only be between 0 and 1, inclusive, and provide clearer examples."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1109,
+      "outputTokens": 229,
+      "estimatedCostUSD": 0.00030375
+    }
+  },
+  "c9-m-ch15-t2-q01": {
+    "questionId": "c9-m-ch15-t2-q01",
+    "contentHash": "49e25c4061b76e1b30a783f45018cf33c52dabac276758faf1097ea1575bd894",
+    "reviewedAt": "2026-07-24T17:48:51.544Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 986,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019109999999999998
+    }
+  },
+  "c9-m-ch15-t2-q02": {
+    "questionId": "c9-m-ch15-t2-q02",
+    "contentHash": "cec7e5c5209bd202db1f92efdbdae60d644fa57254c5cb34769cdfdcc76abe82",
+    "reviewedAt": "2026-07-24T17:48:54.010Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [
+      "The question is based on wrong chapter content for the current syllabus as it is implied to be from a deleted chapter."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Answer derived from an incorrect interpretation of the topic or content.",
+        "required_fix": "Ensure the question aligns with the current chapters and topics in the syllabus."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1055,
+      "outputTokens": 149,
+      "estimatedCostUSD": 0.00024765
+    }
+  },
+  "c9-m-ch15-t2-q03": {
+    "questionId": "c9-m-ch15-t2-q03",
+    "contentHash": "62460e01dc346aabcf4a93903627170118781d1911d10a5d28ccf7b32c51ff00",
+    "reviewedAt": "2026-07-24T17:48:57.881Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect calculation for (a) getting 4.",
+      "Incorrect calculation for (c) getting prime number.",
+      "Step 3 contains a wrong intermediate value leading to an incorrect final answer."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect final answer for part (a).",
+        "required_fix": "(a) 50/400 = 1/8 (correct). For part (b) it is actually 192/400 = 12/25 (correct). For part (c), it should be (72 + 68 + 80)/400 = 220/400 = 11/20 (correct)."
+      },
+      {
+        "field": "steps",
+        "issue": "Incorrect calculation for (c) getting prime number.",
+        "required_fix": "Step 3 should correctly show: (72 + 68 + 80)/400 = 220/400 = 11/20."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1156,
+      "outputTokens": 274,
+      "estimatedCostUSD": 0.00033779999999999997
+    }
+  },
+  "c9-m-ch15-t2-q04": {
+    "questionId": "c9-m-ch15-t2-q04",
+    "contentHash": "bd8f6c9d3f3ab0b024999648e3372e47462303a772377f97e7eb6344fa2850da",
+    "reviewedAt": "2026-07-24T17:48:59.618Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 989,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019155
+    }
+  },
+  "c9-m-ch15-t2-q05": {
+    "questionId": "c9-m-ch15-t2-q05",
+    "contentHash": "68a2f1156591d2b00bbfdc857f4fe2cad59d778e95bf62b191a322f9686f5e38",
+    "reviewedAt": "2026-07-24T17:49:01.456Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1129,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021255
+    }
+  },
+  "c9-m-ch15-t2-q06": {
+    "questionId": "c9-m-ch15-t2-q06",
+    "contentHash": "a274ffc3b8d0fdc9cf7ad48e726a29eab1565d8df83321fab3259aa532f014fa",
+    "reviewedAt": "2026-07-24T17:49:05.867Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The question does not align with the chapter context of 'Experimental Probability' since it requires calculation of probabilities and comparison without properly stating that explicit method.",
+      "The theoretical probabilities for blue and green balls are incorrectly calculated as they should be Blue=3/10=0.3 and Green=2/10=0.2, but they were reported incorrectly in the answer section.",
+      "The question requires a detailed comparison that is not fully adhered to in the steps."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect theoretical probability values presented.",
+        "required_fix": "Theoretical: Red=1/2, Blue=3/10, Green=1/5 should be corrected to Theoretical: Red=1/2, Blue=3/10, Green=2/10."
+      },
+      {
+        "field": "steps",
+        "issue": "Missing clarity on how to compare theoretical and experimental probabilities.",
+        "required_fix": "Add detailed steps on computing and comparing probabilities."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1141,
+      "outputTokens": 287,
+      "estimatedCostUSD": 0.00034334999999999997
+    }
+  },
+  "c9-m-ch15-t3-q01": {
+    "questionId": "c9-m-ch15-t3-q01",
+    "contentHash": "215eb67f94164abdcabef79708c2981fcf6963c513606eafdbe91b072532e62e",
+    "reviewedAt": "2026-07-24T17:49:08.335Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1015,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019545
+    }
+  },
+  "c9-m-ch15-t3-q02": {
+    "questionId": "c9-m-ch15-t3-q02",
+    "contentHash": "48567da0a535c7a76a2f7cbce3d7fa4699888646c19eb56c0935a166bb60d239",
+    "reviewedAt": "2026-07-24T17:49:10.134Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 994,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0001923
+    }
+  },
+  "c9-m-ch15-t3-q03": {
+    "questionId": "c9-m-ch15-t3-q03",
+    "contentHash": "94442a2784072b9fd2334791ea3a7842517db9b18e6d8ca5fc971279d87b99bf",
+    "reviewedAt": "2026-07-24T17:49:12.872Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [
+      "The answer incorrectly combines definitions and interpretations of probability."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "The explanation is misleading and misinterprets the concept of mutually exclusive events.",
+        "required_fix": "P(E) + P(not E) = 1 always, as per the definition of complementary events."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1083,
+      "outputTokens": 146,
+      "estimatedCostUSD": 0.00025005
+    }
+  },
+  "c9-m-ch15-t4-q01": {
+    "questionId": "c9-m-ch15-t4-q01",
+    "contentHash": "e565a656b50fa68080ab1f4b399641698d34c1134659f2d1b6f78fa321a8d419",
+    "reviewedAt": "2026-07-24T17:49:14.743Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1020,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0001962
+    }
+  },
+  "c9-m-ch15-t4-q02": {
+    "questionId": "c9-m-ch15-t4-q02",
+    "contentHash": "0e751768f9ab9ae3748901f9b7ea2338788d1ce321da8afa14ace53ed7cb201b",
+    "reviewedAt": "2026-07-24T17:49:19.467Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The chapter is not aligned with the current syllabus; it is incorrectly referenced as chapter 15 instead of the correct chapter index.",
+      "The answer for part (c) is incorrect as the simplified probability for drawing a spade should be 1/4 instead of 1/4 as it is already in simplest form, and an issue with the final result format which does not specify which probability corresponds to which part (a, b, c)."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "curriculum",
+        "issue": "Incorrect chapter referenced.",
+        "required_fix": "Change chapter from 'The Mathematics of Maybe: Introduction to Probability' to the correct reference."
+      },
+      {
+        "field": "answer",
+        "issue": "Result format is ambiguous for parts (a), (b), and (c).",
+        "required_fix": "Provide answers in a clearer format that specifies which probability corresponds to which part."
+      },
+      {
+        "field": "steps",
+        "issue": "Result line is unclear; does not connect correctly with the parts of the question.",
+        "required_fix": "Clarify the result line to show P(a), P(b), and P(c) explicitly."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1113,
+      "outputTokens": 325,
+      "estimatedCostUSD": 0.00036195
+    }
+  },
+  "c9-m-ch15-t4-q03": {
+    "questionId": "c9-m-ch15-t4-q03",
+    "contentHash": "1bf8de41c0266f4cf97741c4ba7f49fce183d93b86838daca2cbfe0d6bff9fc8",
+    "reviewedAt": "2026-07-24T17:49:21.536Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1176,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021959999999999997
+    }
+  },
+  "c9-m-ch15-t4-q04": {
+    "questionId": "c9-m-ch15-t4-q04",
+    "contentHash": "5727eaebccbeab4cdf821a0c1a1caa2bb86fbc9351b87f8c907b2544b0b59f22",
+    "reviewedAt": "2026-07-24T17:49:25.130Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect final answer for part (c) resulting from the calculation of red or white balls."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect calculation for part (c)",
+        "required_fix": "(c) 10/15 = 2/3 should be 10/15 = 2/3."
+      },
+      {
+        "field": "steps",
+        "issue": "Incorrect reasoning in step 4.",
+        "required_fix": "Step 4 should clarify that the calculation is for the total of red and white balls: (6+4)/15 = 10/15 = 2/3."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1105,
+      "outputTokens": 212,
+      "estimatedCostUSD": 0.00029295000000000005
+    }
+  },
+  "c9-m-ch15-t4-q05": {
+    "questionId": "c9-m-ch15-t4-q05",
+    "contentHash": "5c560b514e7ab1e21f8fd94b5098540221ff2a58b3c8308dd6e8f69c3d26f262",
+    "reviewedAt": "2026-07-24T17:49:28.971Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Wrong answer for part (c) - should state the count of numbers divisible by 2 and 3, not 6.",
+      "Incorrect interpretation of divisibility in Step 3."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "The answer for part (c) is incorrect.",
+        "required_fix": "Update part (c) answer to 8/25, as there are 8 numbers (6, 12, 18, 24) divisible by both 2 and 3."
+      },
+      {
+        "field": "steps",
+        "issue": "Step 3 incorrectly mentions divisible by 6 instead of 2 and 3.",
+        "required_fix": "Correct Step 3 to focus on multiples of both 2 and 3."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1134,
+      "outputTokens": 242,
+      "estimatedCostUSD": 0.0003153
+    }
+  },
+  "c9-m-ch15-t4-q06": {
+    "questionId": "c9-m-ch15-t4-q06",
+    "contentHash": "1a6296201a8f002050d79da4efa04f6318aaaaa2fb5a7bc2d38fa3f3cf41e805",
+    "reviewedAt": "2026-07-24T17:49:31.933Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect calculation leading to wrong value of P(B).",
+      "Incorrect final answer for P(B but not A).",
+      "Incorrect formula application in the steps."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Wrong final answer value for P(B)",
+        "required_fix": "Correct value of P(B) should be 5/9."
+      },
+      {
+        "field": "steps",
+        "issue": "Incorrect calculation",
+        "required_fix": "Fix the steps to show correct calculation of P(B) as 5/9."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1186,
+      "outputTokens": 188,
+      "estimatedCostUSD": 0.00029069999999999996
+    }
+  },
+  "c9-m-ch15-t1-q05": {
+    "questionId": "c9-m-ch15-t1-q05",
+    "contentHash": "eac6f8cbb301a4bd08f2be00cf17096738b88cafe27705fc14b6a607a125a165",
+    "reviewedAt": "2026-07-24T17:49:33.894Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 991,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019184999999999997
+    }
+  },
+  "c9-m-ch15-t1-q06": {
+    "questionId": "c9-m-ch15-t1-q06",
+    "contentHash": "39c93bbe1b76d803a1b7464bd5422aafe4d4b1b28ac9bec1ad91be735d5312cc",
+    "reviewedAt": "2026-07-24T17:49:35.732Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1013,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019515
+    }
+  },
+  "c9-m-ch15-t1-q07": {
+    "questionId": "c9-m-ch15-t1-q07",
+    "contentHash": "0c15ef72e0bad3f6d5601397aff6d46ff86d5a789efba4e595c6e4bb4f5dee2c",
+    "reviewedAt": "2026-07-24T17:49:37.720Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1054,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002013
+    }
+  },
+  "c9-m-ch15-t1-q08": {
+    "questionId": "c9-m-ch15-t1-q08",
+    "contentHash": "51cbd3f73cc16ecdbeeec546862057159d9d4196d4057581d166059340285ac3",
+    "reviewedAt": "2026-07-24T17:49:41.712Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect answer values for probabilities: P(Blue) should be 3/6 = 1/2, which is still correct, but the solution shows a misunderstanding in the phrasing and verification.",
+      "Incorrect calculation for the probability sum during verification: It mistakenly states 1/2 as 1/3.",
+      "The steps contain logical inconsistencies in expressing the relationship between probabilities."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect representation of probability values.",
+        "required_fix": "P(Red) = 1/3, P(Blue) = 1/2, P(Green) = 1/6. Sum = 1"
+      },
+      {
+        "field": "steps",
+        "issue": "Logical inconsistency in step verification.",
+        "required_fix": "Ensure that the addition in Step 4 sums correctly and emphasizes each term."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1173,
+      "outputTokens": 264,
+      "estimatedCostUSD": 0.00033434999999999997
+    }
+  },
+  "c9-m-ch15-t1-q09": {
+    "questionId": "c9-m-ch15-t1-q09",
+    "contentHash": "0cc00ac33782579e6b36c6c486bae3b4fc1f8f8bb991c98d0635d0d8177cb6ae",
+    "reviewedAt": "2026-07-24T17:49:46.126Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The answer for part (a) is incorrectly simplified; the probability should be 1/3 not shown as 1/3 after calculation (needs clearer explanation).",
+      "The overall answer structure does not align with CBSE marking scheme for probabilities."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incomplete explanation of probability reduction.",
+        "required_fix": "(a) P = 2/6 = 1/3. (b) P = 0 (impossible event)."
+      },
+      {
+        "field": "steps",
+        "issue": "Final result in steps combines probabilities incorrectly.",
+        "required_fix": "Separate answers for (a) and (b) in final results."
+      },
+      {
+        "field": "examTip",
+        "issue": "No exam tip provided.",
+        "required_fix": "Provide an exam tip on how to represent probabilities in answers."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1082,
+      "outputTokens": 268,
+      "estimatedCostUSD": 0.0003231
+    }
+  },
+  "c9-m-ch15-t1-q10": {
+    "questionId": "c9-m-ch15-t1-q10",
+    "contentHash": "2e2dd6f414469695baa2cd19fa9853e96e73936b2706285d4c00671a584b73f7",
+    "reviewedAt": "2026-07-24T17:49:49.817Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The answer does not correctly state that experimental probability equals theoretical probability only when the number of trials is infinite, not just as it increases."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Inaccurate explanation of when experimental probability equals theoretical probability.",
+        "required_fix": "Experimental probability equals theoretical probability only in the limit as the number of trials approaches infinity."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1092,
+      "outputTokens": 156,
+      "estimatedCostUSD": 0.00025739999999999997
+    }
+  },
+  "c9-m-ch15-t1-q11": {
+    "questionId": "c9-m-ch15-t1-q11",
+    "contentHash": "778661c9677dc819ddef70c86e12626fd6e8ae79e857c33e316c794863c32891",
+    "reviewedAt": "2026-07-24T17:49:53.499Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [
+      "The answer contains incorrect information regarding the axiom of probability; a probability of 110% being stated does not violate the definition of probability itself but indicates a misunderstanding.",
+      "Incorrect interpretation of probability maximum; the explanation needs to address a misunderstanding rather than simply stating the axiom."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Misinterpretation of what the statement indicates.",
+        "required_fix": "The statement reflects a misunderstanding of probability, as it suggests that the student believes they are certain to pass and more, which exceeds acceptable bounds, indicating a lack of comprehension of how probability works."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1105,
+      "outputTokens": 203,
+      "estimatedCostUSD": 0.00028755
+    }
+  },
+  "c9-m-ch15-t1-q12": {
+    "questionId": "c9-m-ch15-t1-q12",
+    "contentHash": "783f8eb8f9caadbea67c978fe0bd0ae7bf5a9c5a9ef3d33eadb351aeb51aa23f",
+    "reviewedAt": "2026-07-24T17:49:55.981Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect calculation of P(B) and P(not I) which leads to a wrong result."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect probability values for B and not I.",
+        "required_fix": "P(B) = 2/11; P(not I) = 9/11 is incorrectly derived from P(I) calculation."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1190,
+      "outputTokens": 147,
+      "estimatedCostUSD": 0.0002667
+    }
+  },
+  "c9-m-ch15-t2-q07": {
+    "questionId": "c9-m-ch15-t2-q07",
+    "contentHash": "9e4017dcd3d17ebb45ca82a3b0e592812e32f4b031f47c044b0de21851d21a7e",
+    "reviewedAt": "2026-07-24T17:49:59.523Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Final answer value is incorrect.",
+      "Calculation for P(A) should not state it equals 0.28, as it does not match the reduced fraction."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect final answer value presented.",
+        "required_fix": "Remove the statement ' = 0.28'."
+      },
+      {
+        "field": "steps",
+        "issue": "Incorrect calculation explanation for P(A).",
+        "required_fix": "Remove ' = 0.28' and correctly present the final simplified fraction only as 7/25."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1017,
+      "outputTokens": 193,
+      "estimatedCostUSD": 0.00026835
+    }
+  },
+  "c9-m-ch15-t2-q08": {
+    "questionId": "c9-m-ch15-t2-q08",
+    "contentHash": "6551720368c11392c6e2b09557d83be373fded6c8ba8839e9bc0f689609d4d44",
+    "reviewedAt": "2026-07-24T17:50:01.371Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1006,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019409999999999997
+    }
+  },
+  "c9-m-ch15-t2-q09": {
+    "questionId": "c9-m-ch15-t2-q09",
+    "contentHash": "6258f263ff9586cdacde0365828450370ccde608b908dc723eb369cc609ea4b7",
+    "reviewedAt": "2026-07-24T17:50:03.363Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1107,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020924999999999996
+    }
+  },
+  "c9-m-ch15-t2-q10": {
+    "questionId": "c9-m-ch15-t2-q10",
+    "contentHash": "d03fc00a1713deea91b1b29a1cab186df20154e624befa73b8e050cc1f1479f3",
+    "reviewedAt": "2026-07-24T17:50:07.372Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect calculation for P(neither O nor AB).",
+      "Incorrect phrasing in steps stating 'A or B only' instead of 'neither O nor AB'."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect calculation for P(neither O nor AB).",
+        "required_fix": "P(neither O nor AB) = (68+40)/200 = 108/200 = 27/50 is correct, but incorrectly labeled in steps."
+      },
+      {
+        "field": "steps",
+        "issue": "Incorrect phrasing in steps stating 'A or B only'.",
+        "required_fix": "Change 'P(A or B only)' to 'P(neither O nor AB)'."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1164,
+      "outputTokens": 233,
+      "estimatedCostUSD": 0.0003144
+    }
+  },
+  "c9-m-ch15-t2-q11": {
+    "questionId": "c9-m-ch15-t2-q11",
+    "contentHash": "0d81c91f83e8403ab3e7d87b29567e907ec2c9e04abbf653266d0e225ce860e9",
+    "reviewedAt": "2026-07-24T17:50:11.173Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [
+      "Incorrect probability calculation for P(getting 5). Should be 27/180.",
+      "Steps do not match the final answers correctly.",
+      "Final answer for (a) is inaccurately stated as 3/20 when it should be 27/180."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect final answer provided for P(getting 5)",
+        "required_fix": "(a) 27/180"
+      },
+      {
+        "field": "steps",
+        "issue": "Steps leading to P(getting 5) are incorrect",
+        "required_fix": "Step 1: (a) P(5) 27/180"
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1207,
+      "outputTokens": 222,
+      "estimatedCostUSD": 0.00031424999999999997
+    }
+  },
+  "c9-m-ch15-t2-q12": {
+    "questionId": "c9-m-ch15-t2-q12",
+    "contentHash": "822e6f8c3a254c1553fc33c47b213ff8470153d1a0026f48a8bef8b75275ff24",
+    "reviewedAt": "2026-07-24T17:50:12.983Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1277,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00023475
+    }
+  },
+  "c9-m-ch15-t2-q13": {
+    "questionId": "c9-m-ch15-t2-q13",
+    "contentHash": "27cf7bfa600b6e8e43d0aceaa886e2910d2a8e56e3610d5d32609c31db738986",
+    "reviewedAt": "2026-07-24T17:50:17.090Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect calculations for probability values.",
+      "The definition of probabilities must include correct interpretations in context."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Calculated probabilities are incorrect for playing only cricket and playing at least one sport.",
+        "required_fix": "(a) P(plays only cricket) = (80 - 40)/200 = 40/200 = 1/5. (b) P(plays at least one sport) = (200 - 20)/200 = 180/200 = 9/10. (c) P(plays neither sport) = 20/200 = 1/10."
+      },
+      {
+        "field": "steps",
+        "issue": "Step explanations do not clearly show correct calculations and reasoning.",
+        "required_fix": "Revise steps to clearly state and explain the foundational probability calculations for clarity."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1175,
+      "outputTokens": 259,
+      "estimatedCostUSD": 0.00033165
+    }
+  },
+  "c9-m-ch15-t2-q14": {
+    "questionId": "c9-m-ch15-t2-q14",
+    "contentHash": "3205cfeae8a87084904cf6f5db16f47fabf1ea246afc72f54a72bbbe1a9dfe7f",
+    "reviewedAt": "2026-07-24T17:50:21.416Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Calculations for probabilities are incorrect.",
+      "The step for calculating 'neither' contains an error in the reasoning.",
+      "Final answer values do not conform to the correct calculations."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect final answer values for probabilities.",
+        "required_fix": "Correct probabilities: (a) P(watches only news) = 1/8, (b) P(watches only sports) = 1/4, (c) P(watches neither) = 3/8."
+      },
+      {
+        "field": "steps",
+        "issue": "Incorrect reasoning in 'neither' probability calculation.",
+        "required_fix": "Correct Step 3: At least one = 150+100 = 250. Neither = 400–(50+100+100) = 150. P = 150/400 = 3/8."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1205,
+      "outputTokens": 268,
+      "estimatedCostUSD": 0.00034155
+    }
+  },
+  "c9-m-ch15-t3-q04": {
+    "questionId": "c9-m-ch15-t3-q04",
+    "contentHash": "ba35348f087716506ecec174b5df44fbdf458557b595fca2a3917081368b2e84",
+    "reviewedAt": "2026-07-24T17:50:23.413Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1013,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00019515
+    }
+  },
+  "c9-m-ch15-t3-q05": {
+    "questionId": "c9-m-ch15-t3-q05",
+    "contentHash": "edf6b828b4cc9f9e3ccd05814c287b9d75efeafc1f3ca1475f8538869b8aa7b3",
+    "reviewedAt": "2026-07-24T17:50:27.094Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Incorrect final answer value based on wrong formula application.",
+      "Calculation error producing an incorrect result."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect justification for the values of P(E) and P(not E).",
+        "required_fix": "P(E) + P(not E) must equal 1; here, 0.6 + 0.5 = 1.1, so one of the values is incorrect."
+      },
+      {
+        "field": "steps",
+        "issue": "Step logic is flawed due to incorrect calculation result.",
+        "required_fix": "Clarify that the sum exceeds 1, making at least one probability incorrect."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1069,
+      "outputTokens": 220,
+      "estimatedCostUSD": 0.00029235000000000003
+    }
+  },
+  "c9-m-ch15-t3-q06": {
+    "questionId": "c9-m-ch15-t3-q06",
+    "contentHash": "aa44ffd9c432cfc6817194e971c77d66a0ad31190e2d5533a5f42b9db717d4c2",
+    "reviewedAt": "2026-07-24T17:50:31.256Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The chapter mentioned does not align with the content; it falls under a different topic.",
+      "The calculation for 'P(not vowel)' is incorrect; it should explicitly state 'P(consonant)' instead.",
+      "Incomplete steps for the probabilities."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "curriculum",
+        "issue": "Content misalignment with current chapter.",
+        "required_fix": "Align with the correct chapter topic from the syllabus."
+      },
+      {
+        "field": "answer",
+        "issue": "Incorrectly states 'P(not vowel)'.",
+        "required_fix": "Correct answer to 'P(consonant)' = 7/11."
+      },
+      {
+        "field": "steps",
+        "issue": "Steps do not clearly outline the complete reasoning for calculating probabilities.",
+        "required_fix": "Add clear reasoning steps for calculating P(it is not a vowel)."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1124,
+      "outputTokens": 250,
+      "estimatedCostUSD": 0.0003186
+    }
+  },
+  "c9-m-ch15-t3-q07": {
+    "questionId": "c9-m-ch15-t3-q07",
+    "contentHash": "b203ca313490b03334a59e5184c9f8e493016a034598027d788189aefc31e070",
+    "reviewedAt": "2026-07-24T17:50:33.118Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1081,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00020534999999999998
+    }
+  },
+  "c9-m-ch15-t3-q08": {
+    "questionId": "c9-m-ch15-t3-q08",
+    "contentHash": "c0dc7056a2e6b3f34d3aa04b12a357a6769db926e9d673a51fb83f92af0e2e16",
+    "reviewedAt": "2026-07-24T17:50:35.809Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [
+      "Final answer value is incorrect."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Final answer value is incorrect.",
+        "required_fix": "x = 2.33 or 7/3 as a simplified fraction."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1094,
+      "outputTokens": 124,
+      "estimatedCostUSD": 0.0002385
+    }
+  },
+  "c9-m-ch15-t3-q09": {
+    "questionId": "c9-m-ch15-t3-q09",
+    "contentHash": "0ed137929db4d356e9a41bfa8bde66136f8cf50cf37c09bffef13ea218e1a3b2",
+    "reviewedAt": "2026-07-24T17:50:40.014Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "Question not aligned with correct chapter sections in syllabus.",
+      "Answer contains incorrect examples for complementary events.",
+      "Steps do not logically produce correct examples for all event types."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "answer",
+        "issue": "Incorrect example for complementary events.",
+        "required_fix": "Define complementary events as two outcomes that together cover all possibilities in a sample space, e.g., getting Heads (H) and getting not Heads (T) in a coin toss."
+      },
+      {
+        "field": "steps",
+        "issue": "Steps include incorrect or insufficient detail for complementary events.",
+        "required_fix": "Clarify that complementary events refer to two outcomes that together encompass the entire sample space, providing a clearer example."
+      },
+      {
+        "field": "steps",
+        "issue": "Final wording issues.",
+        "required_fix": "Revise the result statement to specify distinct types of events rather than a vague summary."
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1170,
+      "outputTokens": 273,
+      "estimatedCostUSD": 0.0003393
+    }
+  },
+  "c9-m-ch15-t3-q10": {
+    "questionId": "c9-m-ch15-t3-q10",
+    "contentHash": "2e5d0f7a792a64956d71c701105a72e573de72ac02b68ffc25a8a5136835b2d0",
+    "reviewedAt": "2026-07-24T17:50:41.897Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1108,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.0002094
+    }
+  },
+  "c9-m-ch15-t3-q11": {
+    "questionId": "c9-m-ch15-t3-q11",
+    "contentHash": "37926e03f4e5a114d491304a14136bb9f5771b2bd691a948add193b5c368a2c7",
+    "reviewedAt": "2026-07-24T17:50:43.930Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1121,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021135
+    }
+  },
+  "c9-m-ch15-t3-q12": {
+    "questionId": "c9-m-ch15-t3-q12",
+    "contentHash": "e82df2faaff7fb176208704aae831fe9b5eb138bbf48b3f4ab92ed8f6a18e66e",
+    "reviewedAt": "2026-07-24T17:50:45.801Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "PASS",
+    "dimensions": {
+      "curriculum": "PASS",
+      "question_quality": "PASS",
+      "correctness": "PASS",
+      "steps_quality": "PASS",
+      "hint_quality": "PASS",
+      "exam_readiness": "PASS"
+    },
+    "reasons": [],
+    "fieldCorrections": [],
+    "tokenUsage": {
+      "inputTokens": 1150,
+      "outputTokens": 72,
+      "estimatedCostUSD": 0.00021569999999999998
+    }
+  },
+  "c9-m-ch15-t4-q07": {
+    "questionId": "c9-m-ch15-t4-q07",
+    "contentHash": "3da36fa794b47a8213177f082387da5e53c4d9a676b794743d335b20c539d0ad",
+    "reviewedAt": "2026-07-24T17:50:50.159Z",
+    "model": "gpt-4o-mini",
+    "promptVersion": "1.1",
+    "sourceContextStatus": "PRESENT",
+    "overall": "FAIL",
+    "dimensions": {
+      "curriculum": "FAIL",
+      "question_quality": "PASS",
+      "correctness": "FAIL",
+      "steps_quality": "FAIL",
+      "hint_quality": "PASS",
+      "exam_readiness": "FAIL"
+    },
+    "reasons": [
+      "The chapter mentioned in the context does not match the question's chapter.",
+      "The answer is incorrect; it does not match the correct calculation of the probability of drawing a white ball.",
+      "Steps contain a wrong calculation of the probability value."
+    ],
+    "fieldCorrections": [
+      {
+        "field": "curriculum",
+        "issue": "Question is based on a different chapter than the specified",
+        "required_fix": "Align question with chapter 'The Mathematics of Maybe: Introduction to Probability'"
+      },
+      {
+        "field": "answer",
+        "issue": "Incorrect final answer value",
+        "required_fix": "The correct answer is 1/3 which is correct, the options need revision"
+      },
+      {
+        "field": "steps",
+        "issue": "Incorrect reasoning leading to the answer",
+        "required_fix": "Correct the final step to clearly explain the probability calculation as 4/12 = 1/3"
+      }
+    ],
+    "tokenUsage": {
+      "inputTokens": 1022,
+      "outputTokens": 257,
+      "estimatedCostUSD": 0.0003075
+    }
+  }
+}

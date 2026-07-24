@@ -210,17 +210,10 @@ function runChecks(chapters: ChapterRecord[]): Finding[] {
       seenNames.add(n);
     }
 
-    // F3: Zero-question chapters.
-    // Downgraded to WARNING for ACTIVE chapters registered as intentional placeholders
-    // (content being prepared): canonical status is ACTIVE but question bank is empty.
+    // F3: Zero-question chapters — always a FAIL for every ACTIVE chapter.
     for (const ch of group) {
       if (ch.questions === 0) {
-        const canonical = getCanonicalChapter(ch.id);
-        if (canonical?.status === "ACTIVE") {
-          warn("F3", `Zero questions in "${ch.name}" (${key}) — content being prepared. File: ${ch.filePath.split("/").pop()}`);
-        } else {
-          fail("F3", `Zero questions in "${ch.name}" (${key}) — file: ${ch.filePath.split("/").pop()}`);
-        }
+        fail("F3", `Zero questions in "${ch.name}" (${key}) — file: ${ch.filePath.split("/").pop()}`);
       }
     }
 

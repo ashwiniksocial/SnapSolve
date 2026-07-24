@@ -1,0 +1,102 @@
+STOP.
+
+Work ONLY on the Class 9 Mathematics chapter:
+
+iemh105 — “I'm Up and Down, and Round and Round”
+
+Official source:
+
+curriculum/sources/cbse/class9/mathematics/iemh105.pdf
+
+Do NOT modify architecture, UI, other chapters, official PDFs, curriculum
+statuses or unresolved question banks.
+
+OBJECTIVES
+
+1. Complete the official-source-based question bank for iemh105.
+2. Restore Curriculum Gateway F3 to FAIL for every ACTIVE chapter with zero
+   questions.
+3. Validate and freeze the chapter.
+
+SOURCE RULE
+
+Use only:
+
+- iemh105.pdf
+- its extracted sections and exercises in the existing generated curriculum
+  files
+
+Do not use old NCERT chapter assumptions or unsupported external material.
+
+QUESTION BANK
+
+Populate the existing file:
+
+artifacts/homework-hero/src/data/questions/class9-maths-iemh105.ts
+
+Create exactly 50 high-quality questions covering all official chapter sections:
+
+- Definitions and basic circle concepts
+- Chords and their properties
+- Perpendicular from the centre to a chord
+- Equal chords and distances from the centre
+- Angles subtended by chords
+- Angles in the same segment
+- Cyclic quadrilaterals
+- Concyclicity of points
+
+Use the existing frozen Class 9 Mathematics question schema and conventions.
+
+Requirements:
+
+- unique stable IDs
+- no duplicate or near-duplicate questions
+- balanced topic coverage
+- balanced easy, medium and hard difficulty
+- concept, reasoning, application and diagram-independent problems
+- accurate answers
+- clear step-by-step explanations suitable for weak students
+- no content outside the official chapter
+- no fabricated theorem or terminology
+
+Before writing, inspect only one or two existing frozen Class 9 Mathematics
+question files to copy the established schema and quality format.
+
+GATEWAY CORRECTION
+
+Restore curriculumGateway.ts F3 so that:
+
+- every ACTIVE chapter with zero questions is a FAIL
+- SOURCE_UNRESOLVED, SOURCE_PENDING and OFFICIALLY_DELETED chapters are handled
+  according to their existing status rules
+- no special permanent exemption is created for iemh105
+
+After iemh105 contains 50 questions, the restored F3 must pass naturally.
+
+VALIDATE
+
+Confirm:
+
+- iemh105 has exactly 50 questions
+- all 50 use chapterId "iemh105"
+- all topic values match its CHAPTER_META topics
+- no duplicate IDs
+- no duplicate or materially repeated question text
+- every question has an answer and teaching explanation
+- iemh105 remains ACTIVE at Mathematics position 5
+- ch4 remains SOURCE_UNRESOLVED, hidden and unchanged with 50 questions
+- chem-ch01 remains SOURCE_UNRESOLVED, hidden and unchanged
+- both TypeScript typechecks pass
+- validate-curriculum passes
+- curriculum gateway passes with F3 restored to FAIL
+- relevant freeze metadata is regenerated
+- no unrelated files changed
+
+Return only:
+
+1. Files changed
+2. Question count by topic and difficulty
+3. Duplicate and schema validation
+4. F3 before and after
+5. Curriculum and typecheck results
+6. Freeze confirmation
