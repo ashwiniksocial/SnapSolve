@@ -173,7 +173,7 @@ export default function Solution() {
               </Link>
             )}
             <div className="min-w-0">
-              <h1 className="text-xl font-bold text-slate-900">SnapSolve Solution</h1>
+              <h1 className="text-xl font-bold text-slate-900">Solution</h1>
               <p className="text-sm mt-0.5 truncate" style={{ color: cfg.color }}>
                 {cfg.icon} {session.subject}
                 {solution && <> · {solution.topic}</>}
@@ -515,7 +515,7 @@ export default function Solution() {
             <div className="flex items-center justify-between gap-2">
               <button
                 onClick={() => setShowTools((value) => !value)}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-700 px-1 py-2"
+                className="text-xs font-semibold text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full px-3 py-1.5 transition-colors"
               >
                 {showTools ? "Hide study tools" : "More study tools"} {showTools ? "▲" : "▼"}
               </button>

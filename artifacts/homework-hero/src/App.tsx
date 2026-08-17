@@ -120,11 +120,8 @@ const clerkAppearance = {
 const NAV = [
   { to: "/",         icon: "⊞",  label: "Home"     },
   { to: "/scan",     icon: "⊕",  label: "Scan"     },
-  { to: "/revision", icon: "↺",  label: "Revision" },
-  { to: "/practice", icon: "✎",  label: "Practice" },
-  { to: "/progress", icon: "◈",  label: "Progress" },
-  { to: "/exam",     icon: "🎯", label: "Exam"     },
-  { to: "/journal",  icon: "✗",  label: "Journal"  },
+  { to: "/practice", icon: "✏️", label: "Practice" },
+  { to: "/progress", icon: "📊", label: "Progress" },
 ];
 
 function BottomNav() {

@@ -18,7 +18,7 @@ type Phase =
 
 type InputTab = "photo" | "type";
 
-const SUBJECTS_LIST: Subject[] = ["Mathematics", "Science"];
+const SUBJECTS_LIST: Subject[] = ["Mathematics", "Science", "Information Technology"];
 
 // ─── Loading bar ──────────────────────────────────────────────────────────────
 function ProgressBar({ pct, label }: { pct: number; label: string }) {
@@ -383,7 +383,7 @@ export default function Scan() {
                     className="w-full py-4 rounded-2xl font-bold text-white text-sm shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
                     style={{ backgroundColor: scanColor }}
                   >
-                    <span>🔍</span> Scan & Extract Text
+                    <span>🔍</span> Extract & Review Text
                   </button>
                 </div>
               </div>

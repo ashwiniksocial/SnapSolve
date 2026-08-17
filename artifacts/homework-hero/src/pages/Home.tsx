@@ -36,7 +36,7 @@ function HeaderAuth() {
   );
 }
 
-const subjects: Subject[] = ["Mathematics", "Science"];
+const subjects: Subject[] = ["Mathematics", "Science", "Information Technology"];
 
 export default function Home() {
   const { session, update } = useSession();
@@ -50,7 +50,7 @@ export default function Home() {
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">SnapSolve</h1>
-            <p className="text-sm text-slate-500 mt-0.5">Mathematics · Science</p>
+            <p className="text-sm text-slate-500 mt-0.5">Mathematics · Science · IT</p>
           </div>
           <div className="flex items-center gap-2">
             {streak > 0 && (
@@ -135,31 +135,43 @@ export default function Home() {
         </div>
 
         {/* Primary CTA */}
-        <Link href="/scan">
-          <button
-            className="w-full py-4 rounded-2xl font-semibold text-white text-base shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
-            style={{ background: `linear-gradient(135deg, ${SUBJECTS[session.subject].color}, ${SUBJECTS[session.subject].color}cc)` }}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Scan a Question · {session.subject}
-          </button>
-        </Link>
+        <Show when="signed-in">
+          <Link href="/scan">
+            <button
+              className="w-full py-4 rounded-2xl font-semibold text-white text-base shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
+              style={{ background: `linear-gradient(135deg, ${SUBJECTS[session.subject].color}, ${SUBJECTS[session.subject].color}cc)` }}
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Scan a Question · {session.subject}
+            </button>
+          </Link>
+        </Show>
+        <Show when="signed-out">
+          <Link href="/sign-up">
+            <button
+              className="w-full py-4 rounded-2xl font-semibold text-white text-base shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
+              style={{ background: "linear-gradient(135deg, #4f46e5, #4f46e5cc)" }}
+            >
+              Sign Up Free →
+            </button>
+          </Link>
+        </Show>
 
         {/* Quick links */}
         <div className="grid grid-cols-2 gap-3">
           <Link href="/practice">
             <div className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-indigo-200 transition-colors cursor-pointer shadow-sm">
-              <div className="text-2xl mb-2">✎</div>
+              <div className="text-2xl mb-2">✏️</div>
               <p className="font-semibold text-slate-800 text-sm">Practice</p>
               <p className="text-xs text-slate-500 mt-0.5">Topic-wise questions</p>
             </div>
           </Link>
           <Link href="/progress">
             <div className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-indigo-200 transition-colors cursor-pointer shadow-sm">
-              <div className="text-2xl mb-2">◈</div>
+              <div className="text-2xl mb-2">📊</div>
               <p className="font-semibold text-slate-800 text-sm">Progress</p>
               <p className="text-xs text-slate-500 mt-0.5">Weakness analysis</p>
             </div>
