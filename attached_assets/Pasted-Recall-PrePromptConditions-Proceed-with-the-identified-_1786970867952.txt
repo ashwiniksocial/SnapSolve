@@ -1,0 +1,91 @@
+Recall PrePromptConditions.
+
+Proceed with the identified next content task only:
+
+**Class 9 Mathematics**
+`iemh101 — Orienting Yourself: The Use of Coordinates`
+50 existing questions with full Q&A.
+
+Objective:
+
+**Validate → fix confirmed defects only → revalidate → freeze**
+
+Use the EXISTING Gold Standard Q&A acceptance path in `academicReview.ts`.
+
+Do not create or modify any validator, checklist, review system, registry, governance file, roadmap or architecture.
+
+### Acceptance
+
+Run the existing Gold Standard acceptance gate for `iemh101` only.
+
+The complete Gold Standard Checklist executes only as the formal acceptance gate. Do not perform a second parallel/manual checklist review.
+
+Every accepted Q&A must satisfy the existing:
+
+* Teacher Approval Gate
+* Examiner Approval Gate
+* curriculum relevance
+* correctness
+* reasoning/steps
+* marking completeness
+* appropriate depth
+* weak-student accessibility
+* hint quality
+
+### Defects
+
+If the existing review identifies CONFIRMED defects:
+
+* fix only those specific Q&A;
+* preserve question IDs and chapter structure;
+* do not rewrite passing Q&A unnecessarily;
+* do not expand the question bank;
+* do not change curriculum architecture.
+
+Then rerun acceptance only where required by the existing review/cache behaviour.
+
+Do not treat reviewer uncertainty as a confirmed content defect.
+
+### Freeze
+
+If all 50 Q&A satisfy the existing acceptance requirements:
+
+* use the EXISTING freeze/status mechanism;
+* do not create a new freeze file or baseline;
+* verify question count remains exactly 50;
+* verify chapter remains active and correctly registered.
+
+### Protected scope
+
+Do not modify:
+
+* other chapters;
+* curriculum architecture;
+* Gold Standard implementation;
+* `qualityChecklist.ts`;
+* UI;
+* AI runtime/model work;
+* four-action patch;
+* telemetry.
+
+Do not work on Computers yet.
+
+Note only for future scope consistency:
+
+**Computers remains part of the approved Class 9 product scope even though no canonical Computers chapters are currently registered. Do not classify it as product-out-of-scope. No action on Computers in this task.**
+
+Report only:
+
+1. Q&A reviewed;
+2. Gold Standard passes;
+3. confirmed defects;
+4. exact Q&A corrected;
+5. final validation;
+6. final question count;
+7. freeze status.
+
+If successful end with:
+
+**iemh101 COMPLETE AND FROZEN**
+
+Then stop.

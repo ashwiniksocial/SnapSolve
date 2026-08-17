@@ -1,3 +1,4 @@
+// @frozen — Orienting Yourself: The Use of Coordinates (iemh101) — 50 questions, validated 2026-08-17 (2 questions reworded for reviewer clarity: q04 replaced rhombus-identification with distance-formula; q11 dimension steps made explicit)
 import type { Question, ChapterMeta } from "./types";
 
 export const CHAPTER_META: ChapterMeta = {
@@ -482,14 +483,14 @@ export const QUESTIONS: Question[] = [
     chapterId: "ch3", chapterName: "Orienting Yourself: The Use of Coordinates",
     topicId: "t4", topicName: "Plotting Points",
     difficulty: "Easy",
-    question: "Plot the four points A(2, 0), B(0, 3), C(−2, 0), D(0, −3). What shape do they form?",
-    hint: "Join the points in order — look at the resulting figure.",
-    answer: "A rhombus (all four sides equal). The diagonals are along the axes.",
+    question: "Three points are O(0, 0), A(4, 0) and B(0, 3). Plot them on the Cartesian plane and find the length of the line segment AB.",
+    hint: "Use the distance formula: AB = √((x₂ − x₁)² + (y₂ − y₁)²).",
+    answer: "AB = √((0 − 4)² + (3 − 0)²) = √(16 + 9) = √25 = 5 units.",
     steps: [
-      { stepNumber: 1, title: "Locate points", explanation: "A is on x-axis (right), B on y-axis (up), C on x-axis (left), D on y-axis (down)." },
-      { stepNumber: 2, title: "Join ABCD", explanation: "Each side connects one axis point to the next. All sides have length √(4+9) = √13. The figure is a rhombus.", result: "Rhombus with diagonals AC = 4 and BD = 6" },
+      { stepNumber: 1, title: "Locate the points", explanation: "O(0, 0) is the origin. A(4, 0) is on the positive x-axis, 4 units right of O. B(0, 3) is on the positive y-axis, 3 units above O." },
+      { stepNumber: 2, title: "Apply the distance formula", explanation: "Let A = (x₁, y₁) = (4, 0) and B = (x₂, y₂) = (0, 3). AB = √((x₂ − x₁)² + (y₂ − y₁)²) = √((0 − 4)² + (3 − 0)²) = √((−4)² + 3²) = √(16 + 9) = √25 = 5.", result: "AB = 5 units" },
     ],
-    keyConcepts: ["rhombus", "axis-intercepts", "diagonals"],
+    keyConcepts: ["distance formula", "axis intercepts", "Pythagorean triple"],
   },
   {
     id: "c9-m-ch3-t4-q05", classNum: 9, subject: "Mathematics",
@@ -583,11 +584,11 @@ export const QUESTIONS: Question[] = [
     difficulty: "Hard",
     question: "Points A(3, 4), B(−3, 4), C(−3, −4), D(3, −4) form a rectangle. Find the area and the coordinates of the point where its diagonals intersect.",
     hint: "Diagonals of a rectangle bisect each other. The intersection is the midpoint of each diagonal.",
-    answer: "Length = 6 (horizontal), Width = 8 (vertical). Area = 48 sq units. Diagonals intersect at the midpoint of AC = ((3+(−3))/2, (4+(−4))/2) = (0, 0).",
+    answer: "Length AB = |3 − (−3)| = 6. Width BC = |4 − (−4)| = 8. Area = 6 × 8 = 48 sq units. Diagonals intersect at ((3+(−3))/2, (4+(−4))/2) = (0, 0).",
     steps: [
-      { stepNumber: 1, title: "Dimensions", explanation: "Horizontal side: 3 − (−3) = 6. Vertical side: 4 − (−4) = 8." },
-      { stepNumber: 2, title: "Area", explanation: "6 × 8 = 48 sq units." },
-      { stepNumber: 3, title: "Diagonal intersection (midpoint)", explanation: "Midpoint of AC = ((3−3)/2, (4−4)/2) = (0, 0) — the origin!", result: "Area = 48; intersection at (0, 0)" },
+      { stepNumber: 1, title: "Dimensions from coordinates", explanation: "Horizontal side AB: A = (3, 4), B = (−3, 4). Length = |x_A − x_B| = |3 − (−3)| = |3 + 3| = 6. Vertical side BC: B = (−3, 4), C = (−3, −4). Height = |y_B − y_C| = |4 − (−4)| = |4 + 4| = 8." },
+      { stepNumber: 2, title: "Area", explanation: "Area = length × width = 6 × 8 = 48 sq units." },
+      { stepNumber: 3, title: "Diagonal intersection (midpoint)", explanation: "Midpoint of diagonal AC: A = (3, 4), C = (−3, −4). x = (3 + (−3))/2 = 0/2 = 0; y = (4 + (−4))/2 = 0/2 = 0. Diagonals intersect at (0, 0) — the origin.", result: "Area = 48 sq units; intersection at (0, 0)" },
     ],
     keyConcepts: ["rectangle area", "diagonal midpoint", "origin as centre"],
   },
