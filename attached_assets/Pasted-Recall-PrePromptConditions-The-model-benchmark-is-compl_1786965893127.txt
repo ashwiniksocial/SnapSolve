@@ -1,0 +1,122 @@
+Recall PrePromptConditions.
+
+The model benchmark is complete.
+
+Freeze the current production model as:
+
+`gpt-4o-mini`
+
+Do not change models.
+
+A confirmed teaching-quality defect was identified across all benchmarked models:
+
+**Hard questions introduce formal notation/procedure before establishing intuitive understanding, causing CMF-1 / CMF-2 failures and weak-student comprehension scores around 50.**
+
+Fix ONLY this root cause in the existing student lesson-generation prompt/path.
+
+### Required teaching sequence
+
+For difficult/conceptual questions, ensure the lesson teaches in this order wherever applicable:
+
+1. **Intuition first**
+
+   * explain what is happening in simple student language;
+   * establish the core idea before terminology or formulas.
+
+2. **Concrete meaning**
+
+   * use a simple example, analogy, mental picture or familiar situation where useful;
+   * explain WHY the concept works.
+
+3. **Formal concept**
+
+   * only after intuition is established, introduce formal terminology, notation, equation, theorem, definition or rule.
+
+4. **Step-by-step application**
+
+   * solve logically without skipping reasoning;
+   * explain why each important step is taken.
+
+5. **Exam-ready answer**
+
+   * finish with the form/working a Class 9 student could confidently write in a school examination.
+
+### Weak-student rule
+
+A weak Class 9 student should not have to understand unexplained formal notation in order to understand the explanation preceding it.
+
+Avoid:
+
+* symbol-first teaching;
+* definition-first dumping;
+* unexplained formula insertion;
+* procedural steps without conceptual reason;
+* excessive verbosity added merely to appear detailed.
+
+Preserve curriculum correctness and examiner-quality final answers.
+
+### Scope
+
+Modify only the minimum existing Master Teacher / generation prompt instruction responsible for this behaviour.
+
+Do NOT:
+
+* create a new prompt framework;
+* create a new teaching engine;
+* create another quality checklist;
+* change `qualityChecklist.ts`;
+* change Gold Standard;
+* change question banks;
+* change curriculum;
+* change UI;
+* change model;
+* change token limits;
+* change review thresholds;
+* change quality-pipeline architecture;
+* modify the four-action patch or telemetry.
+
+### Validation
+
+After the minimum prompt change:
+
+Run the SAME existing benchmark questions necessary to verify the confirmed defect, using **gpt-4o-mini only**.
+
+Prioritise the previously failing Hard questions plus a small mixed regression sample.
+
+Compare BEFORE vs AFTER for:
+
+* conceptTeaching;
+* reasoning;
+* weakStudentUnderstanding;
+* stepExplanation;
+* overall score;
+* structured-output reliability;
+* latency;
+* tokens;
+* cost;
+* quality-review cycles.
+
+Acceptance requires:
+
+* material improvement on the previously failing Hard questions;
+* no regression in correctness/exam completeness;
+* no meaningful deterioration on easy/medium questions;
+* no material token/cost inflation simply from making responses longer.
+
+Do not tune against individual benchmark answers. Fix the general teaching instruction.
+
+Report:
+
+1. exact prompt/file changed;
+2. exact minimum instruction added/changed;
+3. before-vs-after scores;
+4. hard-question improvement;
+5. token/cost impact;
+6. regressions, if any;
+7. whether the defect is resolved.
+
+If resolved, state:
+
+**HARD-QUESTION TEACHING DEFECT READY TO FREEZE**
+
+Then stop.

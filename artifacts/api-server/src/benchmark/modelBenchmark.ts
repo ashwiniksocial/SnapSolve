@@ -40,9 +40,8 @@ const MODELS: ModelConfig[] = [
   //   • Phase 2 (Detailed mode, 6 questions): larger budget so reasoning fits; quality scored.
   // Standard mini=1200 tokens; Standard luna/terra=4000 tokens (headroom for reasoning + output)
   // Detailed mini=2800 tokens; Detailed luna/terra=6000 tokens (reasoning + full schema output)
+  // Validation run: gpt-4o-mini only (post-prompt-fix, comparing against BEFORE scores)
   { name: "gpt-4o-mini",   label: "baseline", tokenParam: "max_tokens",            maxDraftTokens: -1, supportsTemperature: true,  supportsJsonFormat: true  },
-  { name: "gpt-5.6-luna",  label: "luna",     tokenParam: "max_completion_tokens",  maxDraftTokens: -1, supportsTemperature: false, supportsJsonFormat: false },
-  { name: "gpt-5.6-terra", label: "terra",    tokenParam: "max_completion_tokens",  maxDraftTokens: -1, supportsTemperature: false, supportsJsonFormat: false },
 ];
 
 function getMaxDraftTokens(m: ModelConfig): number {
@@ -732,26 +731,23 @@ async function main() {
     await new Promise(r => setTimeout(r, 2000));
   }
 
-  // Compute summaries
-  const baselineSummary  = summarise(allResults.baseline,  "baseline");
-  const lunaSummary      = summarise(allResults.luna,      "luna",  baselineSummary.avgTotalCostUsd);
-  const terraSummary     = summarise(allResults.terra,     "terra", baselineSummary.avgTotalCostUsd);
+  // Compute summaries (validation run: baseline only)
+  const summaries: Record<string, ModelSummary> = {};
+  const baselineSummary = allResults.baseline ? summarise(allResults.baseline, "baseline") : null;
+  if (baselineSummary) summaries.baseline = baselineSummary;
+  if (allResults.luna)  summaries.luna  = summarise(allResults.luna,  "luna",  baselineSummary?.avgTotalCostUsd);
+  if (allResults.terra) summaries.terra = summarise(allResults.terra, "terra", baselineSummary?.avgTotalCostUsd);
 
   const output = {
     timestamp:   new Date().toISOString(),
     totalQuestions: ACTIVE_QUESTIONS.length,
     reviewModel: REVIEW_MODEL,
     generationMode: RUN_MODE,
-    compatibility: {
-      "gpt-4o-mini":   "max_tokens (standard)",
-      "gpt-5.6-luna":  "max_completion_tokens (required — 400 error otherwise)",
-      "gpt-5.6-terra": "max_completion_tokens (required — 400 error otherwise)",
-    },
-    summaries: { baseline: baselineSummary, luna: lunaSummary, terra: terraSummary },
+    summaries,
     raw: allResults,
   };
 
-  const outPath = `./benchmark_results_${RUN_MODE}.json`;
+  const outPath = `./benchmark_results_${RUN_MODE}_after.json`;
   import("fs").then(fs => {
     fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
     console.log(`\n✓ Results written to ${outPath}`);
@@ -759,7 +755,7 @@ async function main() {
 
   // Print quick summary table
   console.log("\n\n══════ QUICK RESULTS ══════");
-  for (const s of [baselineSummary, lunaSummary, terraSummary]) {
+  for (const s of Object.values(summaries)) {
     console.log(`\n${s.model.toUpperCase()}`);
     console.log(`  Pass rate:      ${s.qualityPassRate}`);
     console.log(`  Avg overall:    ${s.avgOverallScore}/100`);
