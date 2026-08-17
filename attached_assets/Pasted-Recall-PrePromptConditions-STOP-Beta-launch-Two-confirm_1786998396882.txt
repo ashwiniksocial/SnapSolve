@@ -1,0 +1,199 @@
+Recall PrePromptConditions.
+
+STOP Beta launch.
+
+Two confirmed P0 teaching/correctness defects must be fixed BEFORE streaming work.
+
+==================================================
+P0-A — RESTORE STANDARD TEACHING QUALITY
+========================================
+
+The 3-step / 600-token Standard speed patch materially degraded teaching quality.
+
+Restore Standard toward the last proven higher-quality configuration.
+
+Required Standard end state:
+
+* 4 guided reasoning steps;
+* `pause` retained where already part of the proven Standard structure;
+* `questionTranslation` restored, using the previously validated conditional/filler-removal logic;
+* `finalAnswer.whyCorrect` restored;
+* `finalAnswer.verification` retained;
+* restore sufficient completion budget for complete answers.
+
+`practiceQuestion` may remain removed from Standard for now because it is not required for the immediate answer and saves substantial output tokens.
+
+Do NOT restore filler.
+
+For factual/recall/MCQ questions:
+
+* "Understand the Question" remains hidden when it adds no value.
+
+For calculations/proofs/complex reasoning:
+
+* retain it when useful.
+
+Do NOT force a fixed visible section count.
+
+==================================================
+P0-B — FIX DETERMINISTIC PLANNER WRONG-TOPIC ROUTING
+====================================================
+
+Confirmed examples:
+
+1. "What is the Pythagoras theorem?"
+   was blueprinted/routed to Remainder/Factor Theorem.
+
+2. "What is Newton's first law of motion?"
+   was blueprinted/routed to gravity/acceleration content.
+
+3. Linear acceleration question was associated with Free Fall / acceleration due to gravity.
+
+This is unacceptable.
+
+Investigate ONLY the existing `deterministicPlanner` / topic-blueprint matching path responsible.
+
+Find the ROOT CAUSE.
+
+Possible causes to inspect:
+
+* overly broad keyword matching;
+* fallback chapter selection;
+* subject/chapter ordering;
+* stale/legacy topic map;
+* first-match-wins behaviour;
+* missing confidence threshold;
+* wrong canonical topic associations.
+
+Do NOT patch only the three example strings.
+
+Make the smallest GENERAL correction so a blueprint is injected only when the existing deterministic evidence is sufficiently specific to the question.
+
+If planner confidence/evidence is weak, it is safer to provide NO misleading chapter blueprint than to inject the wrong topic.
+
+Do NOT create a new planner, router, embedding system, registry or AI classification call.
+
+==================================================
+VALIDATE PLANNER CORRECTNESS
+============================
+
+Test a small representative set including:
+
+MATHEMATICS:
+
+* Pythagoras theorem;
+* right-triangle calculation;
+* Factor/Remainder theorem question;
+* one coordinate question;
+* one probability question.
+
+SCIENCE:
+
+* Newton's first law;
+* acceleration from velocity/time;
+* gravitational/free-fall question;
+* cell question;
+* mixtures/chemistry question.
+
+INFORMATION TECHNOLOGY:
+
+* IT vs ITeS;
+* keyboard/data-entry question;
+* Digital Documentation question.
+
+For every case report:
+
+question
+→ planner blueprint/topic selected
+→ expected topic
+→ PASS/FAIL
+
+Acceptance:
+
+**0 wrong-topic blueprint injections.**
+
+If uncertain, planner must safely abstain/fallback rather than inject unrelated teaching context.
+
+==================================================
+STANDARD QUALITY VALIDATION
+===========================
+
+After restoration, test:
+
+* simple factual Maths;
+* Maths calculation;
+* Maths proof;
+* Science factual;
+* Science calculation/reasoning;
+* Biology explanatory;
+* IT factual/procedural.
+
+Verify:
+
+* correct topic;
+* 4-step reasoning where appropriate;
+* proof is non-circular;
+* weak-student clarity restored;
+* final answer examiner-usable;
+* no filler question restatement;
+* no practiceQuestion required in Standard;
+* Detailed unchanged;
+* Compact unchanged.
+
+==================================================
+SPEED
+=====
+
+Measure full Standard latency after quality restoration.
+
+Do NOT attempt to force full completion under 5 seconds in this task.
+
+The next task will address perceived response speed through streaming.
+
+Bank fast path MUST remain:
+
+* 0 AI calls;
+* near-instant.
+
+==================================================
+DO NOT
+======
+
+Do NOT:
+
+* implement streaming;
+* change model;
+* add AI calls;
+* modify question banks;
+* modify curriculum;
+* change Gold Standard;
+* change UI;
+* undo scroll fix;
+* undo bank fast path;
+* create new architecture.
+
+==================================================
+REPORT
+======
+
+Return:
+
+1. exact Standard fields restored;
+2. final Standard token budget;
+3. exact deterministicPlanner root cause;
+4. files changed;
+5. planner before/after behaviour;
+6. representative planner validation table;
+7. Standard teaching-quality validation;
+8. proof/reasoning validation;
+9. full-response latency after restoration;
+10. bank fast-path confirmation;
+11. regressions/blockers.
+
+Do not declare Beta ready yet.
+
+If successful end exactly:
+
+**STANDARD QUALITY RESTORED AND BLUEPRINT MISROUTING RESOLVED**
+
+Then STOP.

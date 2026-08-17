@@ -597,6 +597,46 @@ function tokenise(text: string): Set<string> {
   );
 }
 
+/**
+ * Words that must NOT drive chapter selection.
+ *
+ * Two categories:
+ *   (a) Generic academic category nouns — they appear in many subtopic names
+ *       across chapters (e.g. "theorem" in "Remainder Theorem", "Factor Theorem",
+ *       "Exterior Angle Theorem") and therefore have no chapter-discriminating
+ *       power.  A question like "What is the Pythagoras theorem?" should NOT
+ *       match the Polynomials chapter merely because it says "theorem".
+ *
+ *   (b) Common English function words that survive the 3-char length filter but
+ *       appear uniformly across all chapter texts, adding noise to every score.
+ *
+ * These are filtered from the QUESTION'S token set only — chapter texts are
+ * scored as-is so that specific content words in subtopic names still match.
+ */
+const PLANNER_STOP_WORDS = new Set([
+  // (a) Generic academic category nouns
+  "theorem", "law",  "principle", "property", "formula", "concept",
+  "rule",    "equation", "definition",
+  // (a) Generic question-instruction verbs — indicate format, not chapter
+  "find", "explain", "state", "define", "prove", "show", "calculate",
+  "compute", "determine", "evaluate", "describe", "write", "derive",
+  // (b) Short English function words that survive the 3-char length filter
+  "the", "and", "are", "not", "its", "for", "has", "was", "can",
+  "with", "that", "this", "will", "from", "when", "does", "did",
+  "via", "use", "per", "any",
+]);
+
+/**
+ * Tokenise a question and remove non-discriminating stop words.
+ * Use this for the question side of scoring; use plain tokenise() for
+ * chapter text so that specific content words in subtopic names still match.
+ */
+function questionTokens(question: string): Set<string> {
+  const raw = tokenise(question);
+  for (const w of PLANNER_STOP_WORDS) raw.delete(w);
+  return raw;
+}
+
 /** Score a chapter against the question. Higher score = better topical match. */
 function scoreChapter(ch: Chapter, qTokens: Set<string>): number {
   let score = 0;
@@ -611,9 +651,16 @@ function scoreChapter(ch: Chapter, qTokens: Set<string>): number {
 }
 
 function matchChapter(subject: string, question: string): Chapter | null {
-  const qTokens = tokenise(question);
+  // Use stop-word-filtered question tokens so that generic academic terms
+  // (e.g. "theorem", "law") cannot drive chapter selection toward an unrelated
+  // chapter that happens to mention them in a subtopic name.
+  const qTokens = questionTokens(question);
+
   let best: Chapter | null = null;
-  let bestScore = 2; // minimum threshold — score 1 from coincidental words is noise
+  // Threshold raised from 2 → 4: a score of 1–3 from coincidental word
+  // overlap (e.g. "the" or a single generic cc mention) is rejected.
+  // A genuine match has multiple specific content words and reliably scores ≥ 5.
+  let bestScore = 4;
 
   for (const ch of REGISTRY) {
     if (ch.subject !== subject) continue;

@@ -17,4 +17,5 @@
 - [Canonical Academic System](canonical-curriculum-system.md) — single-source curriculum contract; canonicalCurriculum.ts → canonical IDs; browser mirror in canonicalIdLookup.ts; V2 chapterId needs bio-/chem- prefix before lookup.
 - [Model Benchmark Findings](model-benchmark-findings.md) — Luna fails 42% of questions at production token budget (reasoning exhaustion); Terra +3pts quality vs mini but +51% cost; stay on gpt-4o-mini.
 - [Hard-Question Proof Defect](hard-question-proof-defect.md) — CMF-1/CMF-2 defect on M4/P4 is real but unfixable via prompt engineering; skip all prompt approaches; fix requires post-generation content injection.
-- [Standard Mode Speed Gate](standard-mode-speed-gate.md) — 3-step slim schema, maxTokens=600; never go below 550 or json_object truncation produces 502; Detailed/Compact unchanged at 800 tokens.
+- [Standard Mode Schema](standard-mode-schema.md) — 4-step schema + questionTranslation + finalAnswer (no practiceQuestion); maxTokens=1100; practiceQuestion stripped post-generation if model hallucinates it.
+- [Planner Stop Words](planner-stop-words.md) — PLANNER_STOP_WORDS filters generic terms ("theorem","law","principle"…) from question tokens before chapter scoring; threshold raised 2→4; prevents wrong-chapter blueprint injection.
