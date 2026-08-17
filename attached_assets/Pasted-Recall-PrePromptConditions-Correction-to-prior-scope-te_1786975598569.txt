@@ -1,0 +1,81 @@
+Recall PrePromptConditions.
+
+Correction to prior scope terminology:
+
+Do NOT use **“Computers”** as an assumed canonical subject name.
+
+Use the ACTUAL official CBSE subject/course names evidenced by the supplied official CBSE materials.
+
+The supplied official-source estate includes:
+
+### Classes 6–8
+
+**Computational Thinking and AI (CTAI)**
+
+with class-specific official materials for Classes 6, 7 and 8.
+
+### Class 9
+
+Treat these as DISTINCT CBSE subjects/courses unless the official documents themselves establish otherwise:
+
+* **Artificial Intelligence — 417**
+* **Computer Applications — 165**
+* **Information Technology — 402**
+
+Do NOT merge these into a generic Computers curriculum.
+
+### Task
+
+Read the supplied official CBSE PDFs and correlate each document with its exact:
+
+`Class | Official subject/course name | Subject code if applicable | Document type | Official units/chapters | Source authority`
+
+Distinguish carefully between:
+
+* official syllabus/curriculum;
+* student textbook;
+* facilitator handbook;
+* Python handbook;
+* supporting/reference material.
+
+A supporting handbook must not automatically become the canonical student chapter structure.
+
+Then inspect the EXISTING SnapSolve curriculum only to determine whether any of these official subjects/chapters are already represented.
+
+Report:
+
+1. exact official subject structure for Classes 6, 7, 8 and 9 evidenced by the supplied documents;
+2. exact official Class 9 courses and their codes;
+3. chapters/units available from each supplied official source;
+4. which have sufficient official source material to begin question-bank construction;
+5. any source/document gaps;
+6. any existing SnapSolve legacy “Computer Science” or “Computers” content that maps to these subjects — report only, do not modify;
+7. recommended student-facing subject names using the official CBSE terminology;
+8. the single highest-priority next content build.
+
+### Rules
+
+Official supplied CBSE/Government documents take precedence.
+
+Do NOT:
+
+* invent a generic Computers curriculum;
+* combine AI 417, Computer Applications 165 and IT 402;
+* mechanically translate content between courses;
+* invent missing chapters;
+* create question banks yet;
+* modify curriculum;
+* rename existing files yet;
+* create registries/governance/roadmaps;
+* change UI;
+* modify Mathematics or Science.
+
+This is a narrow source-to-curriculum correlation task only.
+
+End with:
+
+**OFFICIAL SUBJECT STRUCTURE: [concise structure]**
+
+**NEXT CONTENT BUILD: [exact class + official subject + unit/chapter]**
+
+Then stop.
