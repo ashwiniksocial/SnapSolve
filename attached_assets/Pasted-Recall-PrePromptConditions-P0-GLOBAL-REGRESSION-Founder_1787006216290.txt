@@ -1,0 +1,179 @@
+Recall PrePromptConditions.
+
+P0 GLOBAL REGRESSION.
+
+Founder has confirmed:
+
+* One tested Maths question can now show the intended 8/5/3 mode structure.
+* Other bank questions still do NOT.
+
+Therefore the previous fix is NOT generic and NOT complete.
+
+DO NOT patch individual questions.
+
+### Permanent requirement
+
+For EVERY frozen bank question in:
+
+* Mathematics
+* Science
+* Information Technology
+
+the runtime path must support:
+
+**Detailed = 8 sections**
+**Standard = 5 sections**
+**Compact = 3 sections**
+
+using the SAME complete cached/generated TeachingLesson per question.
+
+Mode switching:
+
+* 0 AI calls
+* instant
+
+First uncached open:
+
+* exactly 1 streamed AI call
+* first meaningful content ≤5 sec
+
+Repeat open:
+
+* 0 AI calls
+* <1 sec target
+
+### Task
+
+Inspect ONLY the generic bank-question lesson path.
+
+Find why some bank questions get a complete TeachingLesson while others still render incomplete/fallback content.
+
+Specifically trace:
+
+* `getBankCachedLesson(questionId)`
+* cache validation
+* `solveBankWithStream`
+* final stream completion
+* `isBankLessonComplete`
+* cache write
+* fallback path
+* Solution.tsx selection between lesson renderer and legacy/bank fallback
+
+Do NOT inspect or alter individual bank content.
+
+### Required fix
+
+Every bank question must follow ONE consistent rule:
+
+1. valid complete cached TeachingLesson exists
+   → use it
+
+2. no valid complete cached TeachingLesson
+   → generate one full TeachingLesson through the single streamed call
+   → wait for successful final normalized lesson
+   → cache ONLY that complete lesson
+
+3. partial/fallback/minimal bank response
+   → may be shown temporarily if needed
+   → must NEVER be treated as the final mode-capable lesson
+   → must NEVER be cached as complete
+
+4. once full lesson completes
+   → replace temporary view with full TeachingLesson
+   → Detailed/Standard/Compact all derive from it
+
+No question-specific branches.
+
+### Critical
+
+Do NOT:
+
+* special-case Maths Ch1 Q1
+* hardcode question IDs
+* hardcode chapter IDs
+* fabricate missing lesson fields
+* remap frozen bank fields into fake mode structures
+* alter frozen question banks
+* alter 8/5/3 renderer
+* change model
+* change prompt schema
+* change streaming architecture
+* change planner
+* add AI calls
+
+### Validate GENERICALLY
+
+Use at least:
+
+MATHEMATICS
+
+* 3 different chapters
+* 2 questions per chapter
+
+SCIENCE
+
+* Biology
+* Physics
+* Chemistry
+* 2 questions each
+
+INFORMATION TECHNOLOGY
+
+* Ch1
+* Ch2
+* Ch3
+* 2 questions each
+
+Minimum 18 bank questions total.
+
+For EVERY tested question verify:
+
+Detailed = 8 meaningful sections
+Standard = 5 meaningful sections
+Compact = 3 meaningful sections
+
+Do not count empty sections.
+
+Also verify:
+
+* first uncached open = 1 AI call
+* repeat open = 0 AI calls
+* mode switch = 0 AI calls
+* no fallback skeleton is cached
+* no question-specific code exists
+* TypeScript passes
+
+### Failure rule
+
+If any tested question cannot produce full 8/5/3 because its generated TeachingLesson is structurally incomplete:
+
+STOP.
+
+Report the shared structural cause.
+
+Do NOT patch the individual question.
+
+### Report only
+
+1. global root cause
+2. exact generic path bug
+3. files changed
+4. generic fix
+5. 18-question validation table
+6. section counts for every test
+7. AI calls first/repeat/mode switch
+8. cache behavior
+9. TypeScript result
+10. whether any question-specific code exists
+
+Success requires ALL tested bank questions to show:
+
+Detailed 8
+Standard 5
+Compact 3
+
+End exactly:
+
+**GLOBAL BANK 8/5/3 TEACHING PATH VERIFIED ACROSS SUBJECTS**
+
+Then STOP.
