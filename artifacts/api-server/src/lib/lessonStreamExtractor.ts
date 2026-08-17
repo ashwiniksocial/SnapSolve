@@ -60,16 +60,9 @@ export class LessonStreamExtractor {
       }
     }
 
-    // ── questionTranslation object ────────────────────────────────────────────
-    if (!this.emitted.has("questionTranslation")) {
-      const v = this.tryObject("questionTranslation");
-      if (v) {
-        this.emitted.add("questionTranslation");
-        out.push({ field: "questionTranslation", value: v });
-      }
-    }
-
     // ── guidedReasoning steps — sequentially 0 → 7 ───────────────────────────
+    // Schema order: guidedReasoning now appears immediately after keyConcepts so
+    // step_0 can be emitted as early as possible (target ≤3–5 s from click).
     // Supports up to 8 steps (Detailed/bank mode uses 6–8; Standard uses 4).
     // Stop as soon as a step is incomplete so we never skip ahead.
     while (this.nextStep < 8) {
@@ -83,11 +76,22 @@ export class LessonStreamExtractor {
     }
 
     // ── finalAnswer object ────────────────────────────────────────────────────
+    // Schema order: finalAnswer now appears immediately after guidedReasoning.
     if (!this.emitted.has("finalAnswer")) {
       const v = this.tryObject("finalAnswer");
       if (v) {
         this.emitted.add("finalAnswer");
         out.push({ field: "finalAnswer", value: v });
+      }
+    }
+
+    // ── questionTranslation object ────────────────────────────────────────────
+    // Schema order: questionTranslation now appears after finalAnswer (support fields).
+    if (!this.emitted.has("questionTranslation")) {
+      const v = this.tryObject("questionTranslation");
+      if (v) {
+        this.emitted.add("questionTranslation");
+        out.push({ field: "questionTranslation", value: v });
       }
     }
 

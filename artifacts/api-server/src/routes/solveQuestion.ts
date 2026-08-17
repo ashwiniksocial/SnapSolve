@@ -152,6 +152,22 @@ No markdown fences. No extra text. No explanation outside JSON.
   "keyConcepts": string[],
   "aiConfidence": number,
 
+  "guidedReasoning": [
+    {
+      "what": string,
+      "why": string,
+      "math": string,
+      "result": string,
+      "pause": string
+    }
+  ],
+
+  "finalAnswer": {
+    "answer": string,
+    "whyCorrect": string,
+    "verification": string
+  },
+
   "beforeWeStart": {
     "motivator": string,
     "anxietyReducer": string,
@@ -180,16 +196,6 @@ No markdown fences. No extra text. No explanation outside JSON.
     "clues": string
   },
 
-  "guidedReasoning": [
-    {
-      "what": string,
-      "why": string,
-      "math": string,
-      "result": string,
-      "pause": string
-    }
-  ],
-
   "confusionPoints": string[],
 
   "commonMistakes": [
@@ -206,12 +212,6 @@ No markdown fences. No extra text. No explanation outside JSON.
     "topperInsight": string,
     "examTip": string,
     "examTrap": string
-  },
-
-  "finalAnswer": {
-    "answer": string,
-    "whyCorrect": string,
-    "verification": string
   },
 
   "simplerExample": {
@@ -301,6 +301,43 @@ Depth is the primary axis of differentiation. Enforce it strictly.
 ═══════════════════════════════════════════════════════════════
 FIELD INSTRUCTIONS — Read every instruction. Fill every field.
 ═══════════════════════════════════════════════════════════════
+
+GUIDED REASONING
+━━━━━━━━━━━━━━━
+guidedReasoning
+  This is the most important section. It replaces the old "steps[]" format entirely.
+  Write 4–8 steps. For EVERY step:
+
+  what: Describe clearly WHAT we are doing. 1–2 sentences. Active voice.
+  why: Explain WHY we are doing this. Which mathematical rule allows this?
+       What would happen if we skipped this step? 2–3 sentences.
+  math: Write the actual formula, equation, or calculation. Empty string if none.
+  result: What we obtain after this step. Empty string if no single result yet.
+  pause: A question to make the student stop and think. Something like:
+         "Before moving on — can you guess what we'll do with this result?"
+         "Why do you think we wrote it this way instead of that way?"
+         Empty string if no natural pause question for this step.
+
+  Rules:
+  - Never combine two operations into one step.
+  - Show every arithmetic step. Even 18 + 22 = 40.
+  - The WHY is as important as the WHAT.
+  - Every formula must be justified before use.
+
+FINAL ANSWER
+━━━━━━━━━━━
+finalAnswer.answer
+  Full sentence. Value + unit + sign. Re-state what the question asked.
+  "Therefore, [quantity] = [value] [unit]."
+
+finalAnswer.whyCorrect
+  Explain why this answer is correct and why it makes sense.
+  Sanity-check the magnitude and units. 1–2 sentences.
+
+finalAnswer.verification
+  Substitute the answer back into the original equation or condition.
+  Show every substitution step. Confirm LHS = RHS.
+  End with: "LHS = RHS ✓  The answer is verified."
 
 BEFORE WE START
 ━━━━━━━━━━━━━━
@@ -392,28 +429,6 @@ teacherThinking.clues
   Which words or numbers are hints about what method to use?
   2–3 sentences.
 
-GUIDED REASONING
-━━━━━━━━━━━━━━━
-guidedReasoning
-  This is the most important section. It replaces the old "steps[]" format entirely.
-  Write 4–8 steps. For EVERY step:
-
-  what: Describe clearly WHAT we are doing. 1–2 sentences. Active voice.
-  why: Explain WHY we are doing this. Which mathematical rule allows this?
-       What would happen if we skipped this step? 2–3 sentences.
-  math: Write the actual formula, equation, or calculation. Empty string if none.
-  result: What we obtain after this step. Empty string if no single result yet.
-  pause: A question to make the student stop and think. Something like:
-         "Before moving on — can you guess what we'll do with this result?"
-         "Why do you think we wrote it this way instead of that way?"
-         Empty string if no natural pause question for this step.
-
-  Rules:
-  - Never combine two operations into one step.
-  - Show every arithmetic step. Even 18 + 22 = 40.
-  - The WHY is as important as the WHAT.
-  - Every formula must be justified before use.
-
 CONFUSION POINTS
 ━━━━━━━━━━━━━━━
 confusionPoints
@@ -450,21 +465,6 @@ examinerThinking.examTip
 examinerThinking.examTrap
   The specific CBSE/ICSE trap in this question type that costs marks.
   Name the exact mistake. 1–2 sentences.
-
-FINAL ANSWER
-━━━━━━━━━━━
-finalAnswer.answer
-  Full sentence. Value + unit + sign. Re-state what the question asked.
-  "Therefore, [quantity] = [value] [unit]."
-
-finalAnswer.whyCorrect
-  Explain why this answer is correct and why it makes sense.
-  Sanity-check the magnitude and units. 1–2 sentences.
-
-finalAnswer.verification
-  Substitute the answer back into the original equation or condition.
-  Show every substitution step. Confirm LHS = RHS.
-  End with: "LHS = RHS ✓  The answer is verified."
 
 SIMPLER EXAMPLE
 ━━━━━━━━━━━━━━

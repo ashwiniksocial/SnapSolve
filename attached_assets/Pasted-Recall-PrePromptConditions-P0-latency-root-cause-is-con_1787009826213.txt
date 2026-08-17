@@ -1,0 +1,142 @@
+Recall PrePromptConditions.
+
+P0 latency root cause is confirmed.
+
+Do NOT redesign.
+Do NOT reduce Detailed teaching depth.
+Do NOT change model.
+Do NOT add AI calls.
+Do NOT change bank content.
+Do NOT create a second answer strategy.
+
+Keep the Questions-button fix exactly as implemented.
+
+### Confirmed root cause
+
+Detailed streaming works, but `guidedReasoning` appears too late in the JSON/schema order.
+
+Current sequence forces the model to generate several hundred tokens of:
+
+* beforeWeStart
+* prerequisites
+* vocabulary
+* intuition
+* questionTranslation
+* teacherThinking
+
+before it reaches `guidedReasoning`.
+
+Result:
+
+* keyConcepts visible ~1s
+* first worked step visible ~8–11s
+* full lesson ~19–26s
+
+This fails the founder's ≤5s meaningful-teaching requirement.
+
+### Required end state
+
+Preserve the SAME full Detailed lesson content and section set.
+
+Only change generation order so the first worked reasoning step is generated much earlier.
+
+Preferred order:
+
+1. topic / difficulty / confidence
+2. keyConcepts
+3. guidedReasoning
+4. finalAnswer
+5. remaining Detailed support fields:
+
+   * beforeWeStart
+   * prerequisites
+   * vocabulary
+   * intuition
+   * questionTranslation
+   * teacherThinking
+   * commonMistakes
+   * simplerExample
+   * other existing Detailed-only fields
+
+Do NOT remove fields.
+
+Do NOT shorten the Detailed lesson.
+
+Do NOT change section visibility in the final rendered UI.
+
+This is generation-order optimisation only.
+
+### Streaming extractor
+
+Update the existing stream extractor only as required so:
+
+* `step_0` can be emitted as soon as the first guidedReasoning object completes
+* finalAnswer can also be emitted as soon as available
+* later Detailed fields continue filling in progressively
+
+Do NOT create a new stream parser.
+
+### Validation
+
+Use 3 uncached bank questions:
+
+* Maths
+* Science
+* Information Technology
+
+Measure from click:
+
+* keyConcept visible
+* first worked step visible
+* final answer visible
+* full Detailed lesson complete
+
+Acceptance:
+
+* first worked step ≤5 seconds for ALL 3
+* target ≤3 seconds
+* exactly 1 AI call
+* full Detailed lesson still complete
+* no sections removed
+* no teaching-quality reduction
+* repeat cached open remains instant
+* TypeScript passes
+
+Also verify the final Detailed lesson still contains every field/section it contained before this order change.
+
+### Strict protection
+
+Do NOT modify:
+
+* question banks
+* curriculum
+* Gold Standard
+* planner
+* model
+* token budget
+* Practice
+* mode UI
+* cache architecture
+* Questions-button navigation fix
+* scroll fix
+* telemetry architecture
+
+No other optimisation.
+
+### Report only
+
+1. exact schema order before
+2. exact schema order after
+3. files changed
+4. first-step latency for Maths/Science/IT
+5. final-answer latency
+6. full-completion latency
+7. AI-call count
+8. confirmation all Detailed fields still present
+9. TypeScript result
+
+If all three first worked steps are ≤5 seconds, end exactly:
+
+**DETAILED WORKED REASONING NOW VISIBLE WITHIN 5 SECONDS**
+
+Then STOP.
