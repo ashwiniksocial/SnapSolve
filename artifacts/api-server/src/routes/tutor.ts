@@ -12,6 +12,8 @@
  */
 
 import { Router } from "express";
+import { logger }  from "../lib/logger";
+import { extractUsage } from "../lib/aiCost";
 
 const router = Router();
 
@@ -97,19 +99,26 @@ function fallbackQuestion(topic: string, mastery: number): string {
 
 // ── OpenAI call helper ────────────────────────────────────────────────────────
 
-async function callOpenAI(systemPrompt: string, userContent: string, maxTokens = 300): Promise<string | null> {
+async function callOpenAI(
+  systemPrompt: string,
+  userContent:  string,
+  maxTokens     = 300,
+  callType      = "tutor",
+): Promise<string | null> {
   const key = process.env["OPENAI_API_KEY"];
   if (!key) return null;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 12_000);
+  const TUTOR_MODEL = "gpt-4o-mini";
+  const controller  = new AbortController();
+  const timer       = setTimeout(() => controller.abort(), 12_000);
+  const callStart   = Date.now();
 
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: TUTOR_MODEL,
         max_tokens: maxTokens,
         temperature: 0.7,
         messages: [
@@ -121,7 +130,20 @@ async function callOpenAI(systemPrompt: string, userContent: string, maxTokens =
     });
     clearTimeout(timer);
     if (!res.ok) return null;
-    const json = await res.json() as { choices?: Array<{ message?: { content?: string } }> };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const json = await res.json() as any;
+    const usage = extractUsage(json, TUTOR_MODEL);
+    logger.info({
+      callType,
+      model:            usage.model,
+      promptTokens:     usage.promptTokens,
+      completionTokens: usage.completionTokens,
+      cachedTokens:     usage.cachedTokens,
+      totalTokens:      usage.totalTokens,
+      aiCallCount:      1,
+      latencyMs:        Date.now() - callStart,
+      estimatedCostUsd: usage.estimatedCostUsd,
+    }, "tutor: ai_call telemetry");
     return json.choices?.[0]?.message?.content?.trim() ?? null;
   } catch {
     clearTimeout(timer);
@@ -150,7 +172,7 @@ ${studentContext ? `Student context:\n${studentContext}` : ""}`;
 
   const userContent = `Generate one Socratic question about "${topic}" in ${subject} at mastery level ${masteryScore}/100.`;
 
-  const ai = await callOpenAI(systemPrompt, userContent, 120);
+  const ai = await callOpenAI(systemPrompt, userContent, 120, "generateQuestion");
   return {
     action: "generateQuestion",
     content: ai ?? fallbackQuestion(topic, masteryScore),
@@ -185,7 +207,7 @@ Return ONLY valid JSON. No markdown fences.`;
 Question asked: "${question}"
 Student's answer: "${studentAnswer}"`;
 
-  const raw = await callOpenAI(systemPrompt, userContent, 280);
+  const raw = await callOpenAI(systemPrompt, userContent, 280, "assessAnswer");
 
   if (raw) {
     try {
@@ -241,7 +263,7 @@ Return ONLY the hint text. No preamble.`;
 
   const userContent = `Give hint level ${hintLevel} for: "${question}" (topic: ${topic}, ${subject})`;
 
-  const ai = await callOpenAI(systemPrompt, userContent, 150);
+  const ai = await callOpenAI(systemPrompt, userContent, 150, "generateHint");
 
   const fallbacks: Record<number, string> = {
     1: `Think carefully about the core definition of ${topic}. What does it really mean?`,
@@ -277,7 +299,7 @@ Be warm but honest. Do not be generic. Keep each line to 1 sentence.`;
 - Misconceptions corrected: ${s?.misconceptionsFixed ?? 0}
 - Current mastery: ${masteryScore}/100`;
 
-  const ai = await callOpenAI(systemPrompt, userContent, 220);
+  const ai = await callOpenAI(systemPrompt, userContent, 220, "generateReflection");
 
   const fallback = [
     `✦ Today you understood: The core concepts of ${topic}`,

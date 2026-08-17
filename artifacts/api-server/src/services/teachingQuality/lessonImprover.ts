@@ -15,6 +15,7 @@
 import { parseLessonResponse, type LessonResponse } from "../../lib/lessonTypes";
 import type { ReviewReport }                         from "./lessonReviewer";
 import { retryFetch }                                from "../../lib/retryFetch";
+import { extractUsage, type UsageSnapshot }         from "../../lib/aiCost";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -121,7 +122,7 @@ export async function improveLesson(
   lesson:  LessonResponse,
   report:  ReviewReport,
   apiKey:  string,
-): Promise<LessonResponse> {
+): Promise<{ lesson: LessonResponse; usage: UsageSnapshot }> {
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), IMPROVE_TIMEOUT);
 
@@ -159,9 +160,10 @@ export async function improveLesson(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const body    = (await res.json()) as any;
+  const usage   = extractUsage(body, MODEL);
   const content = body?.choices?.[0]?.message?.content ?? "{}";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = JSON.parse(content) as any;
-  return parseLessonResponse(p);
+  return { lesson: parseLessonResponse(p), usage };
 }

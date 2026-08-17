@@ -25,6 +25,7 @@ import { parseLessonResponse, type LessonResponse, type LessonStep } from "../li
 import { runQualityPipeline }    from "../services/teachingQuality";
 import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
+import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
 
 const router = Router();
 
@@ -1166,7 +1167,7 @@ async function generateDraft(
   blueprint?:      BlueprintInjection,
   timeoutMs?:      number,
   intent?:         SolveIntent,
-): Promise<LessonResponse> {
+): Promise<{ lesson: LessonResponse; usage: UsageSnapshot }> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
@@ -1238,11 +1239,12 @@ exam jargon. Do not change the question or invent a different answer.`
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const body    = (await res.json()) as any;
+  const usage   = extractUsage(body, MODEL);
   const content = body?.choices?.[0]?.message?.content ?? "{}";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = JSON.parse(content) as any;
-  return parseLessonResponse(p);
+  return { lesson: parseLessonResponse(p), usage };
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -1286,6 +1288,7 @@ router.post("/solveQuestion", async (req, res) => {
     requestId: rawRequestId,
     mode: rawMode,
     intent: rawIntent,
+    ocrUsed: rawOcrUsed,
   } = req.body as {
     question?:       unknown;
     subject?:        unknown;
@@ -1293,7 +1296,11 @@ router.post("/solveQuestion", async (req, res) => {
     requestId?:      unknown;
     mode?:           unknown;
     intent?:         unknown;
+    ocrUsed?:        unknown;
   };
+  // ocrUsed is a client-supplied boolean hint — OCR runs client-side so this is
+  // metadata only. Never trusted for access control; just recorded in telemetry.
+  const ocrUsed = rawOcrUsed === true;
   const mode: LessonMode = LESSON_MODES.includes(rawMode as LessonMode) ? rawMode as LessonMode : "standard";
   const intent: SolveIntent | undefined = rawIntent === "simplify" ? "simplify" : undefined;
   // Intent is resolved server-side. It does not mutate the student's saved
@@ -1334,6 +1341,28 @@ router.post("/solveQuestion", async (req, res) => {
       req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
       setProgress(reqId, "cache_hit", "Lesson ready!", 100);
       res.json(cached);
+      // Emit zero-cost telemetry for cache hits so every request has a log entry.
+      req.log.info({
+        requestId:        reqId,
+        requestType:      "solve",
+        intent:           intent ?? null,
+        generationMode:   mode,
+        cacheStatus:      "hit",
+        ocrUsed:          ocrUsed,
+        plannerCalls:     0,
+        draftCalls:       0,
+        reviewerCalls:    0,
+        improverCalls:    0,
+        totalAiCalls:     0,
+        promptTokens:     0,
+        completionTokens: 0,
+        cachedTokens:     0,
+        totalTokens:      0,
+        qualityCyclesRun: 0,
+        latencyMs:        Date.now() - requestStart,
+        estimatedCostUsd: 0,
+        model:            MODEL,
+      }, "solveQuestion: telemetry");
       if (reqId) progressStore.delete(reqId);
       return;
     }
@@ -1382,6 +1411,7 @@ router.post("/solveQuestion", async (req, res) => {
   }, "[PIPELINE:5] START — calling OpenAI for draft lesson generation");
   setProgress(reqId, "draft_start", "Writing your lesson…", 38);
   let draft: LessonResponse;
+  let draftUsage: UsageSnapshot = zeroUsage(MODEL);
   // Standard mode: compute the remaining wall-clock budget (subtract blueprint + cache time).
   // This becomes the hard abort deadline for the OpenAI call.
   const standardTimeoutMs = generationMode === "standard"
@@ -1389,7 +1419,9 @@ router.post("/solveQuestion", async (req, res) => {
     : undefined;
 
   try {
-    draft = await generateDraft(subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent);
+    const draftResult = await generateDraft(subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent);
+    draft      = draftResult.lesson;
+    draftUsage = draftResult.usage;
     req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
       "[PIPELINE:5] DONE — draft lesson generated");
     setProgress(reqId, "draft_done", "Lesson written — quality checking…", 62);
@@ -1416,6 +1448,10 @@ router.post("/solveQuestion", async (req, res) => {
   // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
   //    Standard and Compact modes skip this for faster responses.
   let finalLesson = draft;
+  let qualityUsage: UsageSnapshot = zeroUsage(MODEL);
+  let reviewerCalls = 0;
+  let improverCalls = 0;
+  let qualityCyclesRun = 0;
 
   if (generationMode !== "basic") {
     // Standard: plan + draft only (~25–30 s). Compact: draft only (~10–15 s).
@@ -1443,7 +1479,11 @@ router.post("/solveQuestion", async (req, res) => {
         if (pipelineResult === null) {
           req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] TIMEOUT — budget exceeded; returning draft");
         } else {
-          finalLesson = pipelineResult.lesson;
+          finalLesson      = pipelineResult.lesson;
+          qualityUsage     = pipelineResult.usageTotal;
+          reviewerCalls    = pipelineResult.reviewerCalls;
+          improverCalls    = pipelineResult.improverCalls;
+          qualityCyclesRun = pipelineResult.cyclesRun;
 
           req.log.info({
             subject:    subj,
@@ -1478,6 +1518,39 @@ router.post("/solveQuestion", async (req, res) => {
     setCached(subj, q, mode, finalLesson);
     req.log.info({ subject: subj, mode }, "[PIPELINE:7] lesson cached on server");
   }
+
+  // 8. Emit single structured telemetry summary for this solve request.
+  //    Raw token counts are always stored — estimatedCostUsd uses pricing from aiCost.ts.
+  //    No question text, answer text, or student content is included.
+  const totalUsage     = addUsage(draftUsage, qualityUsage);
+  const totalAiCalls   = (draft !== finalLesson || generationMode === "basic" ? 1 : 1)
+                         + reviewerCalls + improverCalls;
+  req.log.info({
+    requestId:        reqId,
+    requestType:      "solve",
+    intent:           intent ?? null,
+    generationMode,
+    cacheStatus:      (!ctx && !intent) ? "miss" : (intent ? "skip_intent" : "skip_personalised"),
+    ocrUsed,
+    // per-call-type counts (planner is always 0 — deterministic, no AI call)
+    plannerCalls:     0,
+    draftCalls:       1,
+    reviewerCalls,
+    improverCalls,
+    totalAiCalls,
+    // token totals (sum of all instrumented calls)
+    promptTokens:     totalUsage.promptTokens,
+    completionTokens: totalUsage.completionTokens,
+    cachedTokens:     totalUsage.cachedTokens,
+    totalTokens:      totalUsage.totalTokens,
+    // per-call-type token breakdown for detailed analysis
+    draftTokens:      { prompt: draftUsage.promptTokens, completion: draftUsage.completionTokens },
+    qualityTokens:    { prompt: qualityUsage.promptTokens, completion: qualityUsage.completionTokens },
+    qualityCyclesRun,
+    latencyMs:        Date.now() - requestStart,
+    estimatedCostUsd: totalUsage.estimatedCostUsd,
+    model:            totalUsage.model || MODEL,
+  }, "solveQuestion: telemetry");
 
   setProgress(reqId, "done", "Lesson ready!", 100);
   req.log.info({ subject: subj, topic: finalLesson.topic },

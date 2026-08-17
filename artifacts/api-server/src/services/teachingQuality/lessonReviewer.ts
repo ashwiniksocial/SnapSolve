@@ -18,6 +18,7 @@ import { parseDimensionScores } from "./qualityScoreEngine";
 import { PASS_THRESHOLD }       from "./teachingRubric";
 import { WEAK_STUDENT_PERSONA } from "./weakStudentSimulator";
 import { retryFetch }            from "../../lib/retryFetch";
+import { extractUsage, type UsageSnapshot } from "../../lib/aiCost";
 
 export interface ReviewReport {
   scores:         DimensionScores;
@@ -268,7 +269,7 @@ RESPONSE FORMAT — Return ONLY valid JSON. No other text.
 export async function reviewLesson(
   lesson:  LessonResponse,
   apiKey:  string,
-): Promise<ReviewReport> {
+): Promise<{ report: ReviewReport; usage: UsageSnapshot }> {
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), REVIEW_TIMEOUT);
 
@@ -305,6 +306,7 @@ export async function reviewLesson(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const body    = (await res.json()) as any;
+  const usage   = extractUsage(body, MODEL);
   const content = body?.choices?.[0]?.message?.content ?? "{}";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -344,10 +346,13 @@ export async function reviewLesson(
   const { getRubricLabel } = await import("./teachingRubric");
 
   return {
-    scores,
-    confusions,
-    criticalIssues,
-    passed,
-    rubricLabel: getRubricLabel(scores.overall),
+    report: {
+      scores,
+      confusions,
+      criticalIssues,
+      passed,
+      rubricLabel: getRubricLabel(scores.overall),
+    },
+    usage,
   };
 }

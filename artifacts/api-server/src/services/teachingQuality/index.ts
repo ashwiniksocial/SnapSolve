@@ -18,6 +18,7 @@ import { validateLesson }        from "./lessonValidator";
 import type { ReviewReport }     from "./lessonReviewer";
 import type { DimensionScores }  from "./qualityScoreEngine";
 import { MAX_REVIEW_CYCLES }     from "./teachingRubric";
+import { addUsage, zeroUsage, type UsageSnapshot } from "../../lib/aiCost";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -31,11 +32,17 @@ export interface CycleLog {
 }
 
 export interface QualityPipelineResult {
-  lesson:      LessonResponse;
-  finalScore:  DimensionScores;
-  passed:      boolean;
-  cyclesRun:   number;
-  qualityLog:  CycleLog[];
+  lesson:         LessonResponse;
+  finalScore:     DimensionScores;
+  passed:         boolean;
+  cyclesRun:      number;
+  qualityLog:     CycleLog[];
+  /** Accumulated token usage across all reviewer + improver calls in this pipeline run. */
+  usageTotal:     UsageSnapshot;
+  /** Number of reviewLesson AI calls made. */
+  reviewerCalls:  number;
+  /** Number of improveLesson AI calls made. */
+  improverCalls:  number;
 }
 
 // ─── Orchestrator ─────────────────────────────────────────────────────────────
@@ -45,9 +52,12 @@ export async function runQualityPipeline(
   apiKey:      string,
   onProgress?: (message: string, percent: number) => void,
 ): Promise<QualityPipelineResult> {
-  let current     = draft;
+  let current       = draft;
   const qualityLog: CycleLog[] = [];
   let lastReport:   ReviewReport | null = null;
+  let usageTotal    = zeroUsage();
+  let reviewerCalls = 0;
+  let improverCalls = 0;
 
   for (let cycle = 1; cycle <= MAX_REVIEW_CYCLES; cycle++) {
     // Emit progress: review starts at 65, 75, 85 for cycles 1, 2, 3
@@ -58,7 +68,10 @@ export async function runQualityPipeline(
     // ── Review ────────────────────────────────────────────────────────────────
     let report: ReviewReport;
     try {
-      report = await reviewLesson(current, apiKey);
+      const result  = await reviewLesson(current, apiKey);
+      report        = result.report;
+      usageTotal    = addUsage(usageTotal, result.usage);
+      reviewerCalls += 1;
     } catch {
       // Review call failed — stop pipeline, return best lesson so far
       break;
@@ -80,11 +93,14 @@ export async function runQualityPipeline(
       // Lesson passed all thresholds — we're done
       qualityLog.push(cycleEntry);
       return {
-        lesson:     current,
-        finalScore: report.scores,
-        passed:     true,
-        cyclesRun:  cycle,
+        lesson:        current,
+        finalScore:    report.scores,
+        passed:        true,
+        cyclesRun:     cycle,
         qualityLog,
+        usageTotal,
+        reviewerCalls,
+        improverCalls,
       };
     }
 
@@ -92,7 +108,10 @@ export async function runQualityPipeline(
     if (cycle < MAX_REVIEW_CYCLES) {
       onProgress?.(`Improving lesson — cycle ${cycle}…`, improvePct);
       try {
-        current          = await improveLesson(current, report, apiKey);
+        const improved   = await improveLesson(current, report, apiKey);
+        current          = improved.lesson;
+        usageTotal       = addUsage(usageTotal, improved.usage);
+        improverCalls   += 1;
         cycleEntry.improved = true;
       } catch {
         // Improve call failed — stop pipeline, return best lesson so far
@@ -106,10 +125,13 @@ export async function runQualityPipeline(
 
   // Exhausted cycles or hit an error — return the best lesson we have
   return {
-    lesson:     current,
-    finalScore: lastReport?.scores ?? ({} as DimensionScores),
-    passed:     false,
-    cyclesRun:  qualityLog.length,
+    lesson:        current,
+    finalScore:    lastReport?.scores ?? ({} as DimensionScores),
+    passed:        false,
+    cyclesRun:     qualityLog.length,
     qualityLog,
+    usageTotal,
+    reviewerCalls,
+    improverCalls,
   };
 }

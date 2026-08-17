@@ -1,0 +1,118 @@
+Recall PrePromptConditions.
+
+Implement the minimum beta AI-cost telemetry patch using the EXISTING structured pino logging path.
+
+Do not change models, prompts, teaching behaviour, retry behaviour, caching behaviour, quality thresholds, UI or architecture.
+
+Do not create a model registry or new analytics system.
+
+### Objective
+
+For every student AI interaction, capture enough telemetry to calculate actual AI usage and cost per active student during beta.
+
+### A. Main `/api/solveQuestion` pipeline
+
+Instrument the existing calls in:
+
+* `solveQuestion.ts`
+* `lessonPlanner.ts`
+* `lessonReviewer.ts`
+* `lessonImprover.ts`
+* `teachingQuality/index.ts`
+
+Read actual OpenAI response usage where available and propagate only the minimum usage metadata needed.
+
+For each completed solve, emit ONE structured summary log containing:
+
+* `requestId`
+* authenticated `userId` if already available
+* request type / `intent`
+* generation mode
+* cache hit/miss
+* actual model used by each call type
+* planner call count
+* draft call count
+* reviewer call count
+* improver call count
+* total AI call count
+* input/prompt tokens
+* output/completion tokens
+* cached prompt tokens where available
+* total tokens if useful
+* retry count if safely obtainable from existing flow
+* quality cycles run
+* total request latency
+* estimated AI API cost
+
+Do not log question text, answer text or unnecessary student content.
+
+For a cache hit, log zero AI calls/tokens and the cache status.
+
+### B. Socratic Tutor
+
+Instrument the existing `/api/tutor` endpoint using the SAME telemetry field conventions.
+
+Each tutor AI call must record:
+
+* user/request identifier available in the existing request;
+* interaction type;
+* model;
+* input tokens;
+* output tokens;
+* cached tokens if available;
+* AI call count;
+* latency;
+* estimated cost.
+
+Do not create a new tutor telemetry subsystem.
+
+### C. Cost calculation
+
+Keep pricing/configuration minimal and server-side.
+
+Do not scatter pricing values across files.
+
+If an existing suitable configuration location exists, reuse it. Otherwise add only the smallest local configuration necessary for converting actual token usage into an estimated cost.
+
+Cost estimation must use the **actual model returned/used**, not assume every call uses the same model.
+
+Keep raw token counts in telemetry so historical beta data remains usable even if model pricing later changes.
+
+### D. OCR / non-AI usage
+
+Do NOT redesign OCR.
+
+Because OCR currently runs client-side, do not add server architecture merely to measure it.
+
+If the existing solve request can safely carry a simple boolean such as `ocrUsed` without broader changes, include it as request metadata only. Otherwise leave OCR instrumentation for a separate client telemetry step and state this clearly.
+
+### E. Validation
+
+Verify:
+
+1. no change to generated lesson content;
+2. no additional OpenAI calls introduced by telemetry;
+3. cache-hit requests still make zero AI calls;
+4. Simplify behaviour remains unchanged;
+5. normal, simplify and tutor interactions emit telemetry;
+6. token totals equal the sum of underlying instrumented calls;
+7. missing OpenAI `usage` fields fail safely;
+8. no question/answer/student-content text enters cost logs;
+9. frontend/API typechecks and relevant tests pass;
+10. protected academic/governance/question-bank files remain untouched.
+
+Do not implement dashboards, databases, pricing changes or model routing.
+
+Report:
+
+* files changed;
+* telemetry schema emitted;
+* sample telemetry with fake/redacted values;
+* validation results;
+* any AI-cost path still unmeasured.
+
+If successful, state:
+
+**AI COST TELEMETRY READY FOR BETA MEASUREMENT**
+
+Then stop.
