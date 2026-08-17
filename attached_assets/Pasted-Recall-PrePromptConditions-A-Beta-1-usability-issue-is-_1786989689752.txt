@@ -1,0 +1,90 @@
+Recall PrePromptConditions.
+
+A Beta 1 usability issue is confirmed in Practice:
+
+Question cards have no visible serial numbers.
+
+### Required end state
+
+Every student-facing question card in Practice must display a clear sequential number:
+
+**Q1.**
+**Q2.**
+**Q3.**
+...
+
+This must work consistently across all currently supported subjects:
+
+* Mathematics
+* Science
+* Information Technology
+
+### Important rule
+
+This is DISPLAY-ONLY numbering.
+
+Do NOT modify:
+
+* question IDs;
+* canonical IDs;
+* topic IDs;
+* question-bank data;
+* question order;
+* curriculum;
+* frozen content;
+* Gold Standard metadata.
+
+Use the final rendered question array/order and derive the visible serial number from:
+
+**rendered index + 1**
+
+### Behaviour
+
+For each chapter/unit, numbering should start from **Q1** and continue sequentially through the visible questions in that chapter/unit.
+
+If questions are filtered, searched or subsetted in an existing mode, numbering should match the order currently shown to the student.
+
+Do not expose internal IDs such as:
+
+`c9-it-unit2-t3-q06`
+
+### UI
+
+Keep the question card design unchanged apart from adding a clearly readable serial label.
+
+Prefer something compact such as:
+
+**Q1.**
+
+before the question text.
+
+Do not add badges, extra panels or new components unless required.
+
+### Validate
+
+At approximately 390px width verify:
+
+1. Mathematics Practice questions show Q1, Q2, Q3...
+2. Science Practice questions show Q1, Q2, Q3...
+3. Information Technology Practice questions show Q1, Q2, Q3...
+4. Numbering is sequential with no gaps.
+5. Each chapter/unit starts at Q1.
+6. Existing difficulty/type labels remain intact.
+7. Question routing/opening remains unchanged.
+8. Question IDs/data are unchanged.
+9. TypeScript passes.
+10. No frozen question-bank/content file changes.
+
+Report:
+
+* root cause/current rendering;
+* exact file(s) changed;
+* numbering logic used;
+* validation by subject;
+* any genuine blocker.
+
+If successful end exactly:
+
+**PRACTICE QUESTION SERIAL NUMBERS ADDED ACROSS SUBJECTS**
+
+Then stop.

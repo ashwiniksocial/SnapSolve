@@ -201,7 +201,7 @@ function MasteryProgressBar({ score, label, color }: { score: number; label: str
 }
 
 // ─── Question card ────────────────────────────────────────────────────────────
-function QuestionCard({ q, cfg, onOpen }: { q: Question; cfg: SubjectConfig; onOpen: () => void }) {
+function QuestionCard({ q, cfg, onOpen, index }: { q: Question; cfg: SubjectConfig; onOpen: () => void; index: number }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all hover:border-slate-300 hover:shadow-md">
       <button className="w-full text-left p-4 active:bg-slate-50 transition-colors" onClick={onOpen}>
@@ -212,6 +212,7 @@ function QuestionCard({ q, cfg, onOpen }: { q: Question; cfg: SubjectConfig; onO
           >✦</div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span className="text-[11px] font-bold text-slate-400 mr-0.5">Q{index}.</span>
               <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[q.difficulty]}`}>
                 {q.difficulty}
               </span>
@@ -1046,11 +1047,12 @@ export default function Practice() {
 
             {questions.length > 0 ? (
               <div className="space-y-3 pb-4">
-                {questions.map((q) => (
+                {questions.map((q, qi) => (
                   <QuestionCard
                     key={q.id}
                     q={q}
                     cfg={cfg}
+                    index={qi + 1}
                     onOpen={() => handleOpenQuestion(q)}
                   />
                 ))}
