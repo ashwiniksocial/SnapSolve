@@ -1,0 +1,124 @@
+Recall PrePromptConditions.
+
+AI Cost Telemetry is complete and frozen.
+
+Do NOT change the production model or production runtime behaviour.
+
+Run a controlled benchmark to determine the safest economical OpenAI model for SnapSolve's student-facing runtime.
+
+Current production baseline:
+`gpt-4o-mini`
+
+Candidate models:
+
+* `gpt-5.6-luna`
+* `gpt-5.6-terra`
+
+Do NOT benchmark Sol unless Luna/Terra reveal a genuine quality gap requiring it.
+
+### Objective
+
+Determine whether GPT-5.6 Luna can replace the current model without reducing curriculum correctness, teaching quality, weak-student accessibility or examiner-quality answers.
+
+Terra should be evaluated as the possible escalation/stronger model.
+
+### Reuse existing systems
+
+Do not create a new review architecture, Gold Standard system, governance system or permanent model router.
+
+Reuse existing:
+
+* student lesson generation prompts;
+* Teaching Quality review/checklist;
+* telemetry/cost helpers;
+* existing representative curriculum/question-bank content where safely callable.
+
+Do not modify question banks.
+
+### Benchmark set
+
+Use a small but representative set of approximately **24 questions** from the CURRENT Class 9 scope only:
+
+* Mathematics: 8
+* Science: 12 total, balanced across Physics, Chemistry and Biology
+* Computers: 4
+
+Within each subject include a mixture of:
+
+* easy;
+* medium;
+* difficult/reasoning;
+* numerical/step-based where applicable;
+* conceptual/explanatory.
+
+Use existing curriculum-aligned questions. Do not generate a new permanent question bank.
+
+Run the SAME questions/prompts under:
+
+1. current `gpt-4o-mini` baseline;
+2. `gpt-5.6-luna`;
+3. `gpt-5.6-terra`.
+
+Keep all other generation settings as equivalent as the APIs permit.
+
+### Evaluate
+
+For each output compare:
+
+* curriculum correctness;
+* final-answer correctness;
+* reasoning/step validity;
+* completeness for school examination;
+* clarity;
+* weak-student accessibility;
+* appropriate depth;
+* unnecessary verbosity;
+* structured-output/schema reliability;
+* Teaching Quality pass/fail;
+* number of improvement/review cycles required;
+* latency;
+* input tokens;
+* output tokens;
+* total AI calls;
+* estimated cost.
+
+Do not accept a cheaper model merely because it costs less.
+
+### Important fairness rule
+
+Where different models require different API parameters or reasoning configuration, make the minimum compatibility adjustment needed and document it.
+
+Do not rewrite SnapSolve's teaching prompts to favour a candidate model during this benchmark.
+
+### Report
+
+Provide a concise comparison containing:
+
+1. pass rate by model;
+2. major quality defects by model;
+3. average AI calls per solved question;
+4. average input/output tokens;
+5. average latency;
+6. average estimated cost per uncached solved question;
+7. relative cost versus current `gpt-4o-mini`;
+8. whether Luna is acceptable as:
+
+   * main draft model;
+   * quality reviewer;
+   * lesson improver;
+   * Socratic Tutor;
+   * Simplify model;
+9. whether Terra provides a meaningful quality advantage and for which cases;
+10. recommendation for the minimum production model configuration.
+
+Do NOT implement the recommendation.
+
+If Luna achieves materially equivalent teaching quality, prefer the lower-cost model.
+
+If Luna has identifiable weaknesses, determine whether those cases can be handled by selective Terra escalation rather than making Terra the universal default.
+
+End with:
+
+**RECOMMENDED MODEL CONFIGURATION — NOT YET IMPLEMENTED**
+
+Then stop.
