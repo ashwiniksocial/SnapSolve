@@ -1,0 +1,250 @@
+Recall PrePromptConditions.
+
+STOP Beta launch.
+
+Two P0 blockers have been confirmed by direct founder testing.
+
+==================================================
+P0-1 — WRONG SCROLL POSITION
+============================
+
+Observed behaviour:
+
+A. From Practice, clicking a chapter/question opens the Solution page in the MIDDLE of the answer instead of at the TOP.
+
+B. From Solution, clicking Questions/New Question returns to the Practice/question list in the MIDDLE of the list instead of at the TOP of the relevant question section/page.
+
+Required permanent behaviour:
+
+* Opening any new page → start at top.
+* Opening any question/answer → answer starts at top.
+* Returning to Questions → question list starts at its correct top.
+* Changing chapter → chapter/question area begins at its correct top.
+* Changing subject → subject/chapter page begins at its correct top.
+
+Do NOT preserve stale scroll positions between these navigation actions.
+
+Implement the smallest safe existing React/router scroll-reset solution.
+
+Do not redesign navigation or create new routing architecture.
+
+==================================================
+P0-2 — ANSWER LOAD TIME 50–60 SECONDS
+=====================================
+
+This is unacceptable.
+
+Permanent product requirement:
+
+**No ordinary student navigation/action should take more than 5 seconds.**
+
+Target:
+
+* ordinary page/chapter/question navigation: preferably <1 second;
+* question-bank answer opening: preferably near-instant / <2 seconds;
+* hard maximum for normal Beta student flow: 5 seconds.
+
+Founder testing currently sees ~50–60 seconds to open answers.
+
+DO NOT attempt to solve this by:
+
+* changing to a more expensive model;
+* increasing token budgets;
+* showing fake loading screens;
+* adding another cache architecture;
+* weakening teaching quality.
+
+==================================================
+FIRST — TRACE THE ACTUAL ROOT CAUSE
+===================================
+
+Inspect the exact Practice → Question → Solution path.
+
+Pay particular attention to:
+
+`practiceMode=1`
+
+Previous runtime inspection established that this mode may:
+
+* skip the existing question bank;
+* require a fresh AI lesson;
+* trigger the full solve/quality pipeline.
+
+Confirm whether that is why opening an EXISTING frozen Practice question takes 50–60 seconds.
+
+Also trace:
+
+* bank lookup;
+* `aiSolver.solve()`;
+* `solveWithOpenAI()`;
+* Solution.tsx;
+* Practice.tsx;
+* stored Gold Standard answer fields;
+* any unnecessary API generation/review calls.
+
+Do not perform a broad architecture audit.
+
+==================================================
+REQUIRED SPEED ARCHITECTURE
+===========================
+
+For an EXISTING question-bank question:
+
+**DO NOT generate its answer again with AI merely because the student clicked it in Practice.**
+
+The existing frozen Gold Standard Q&A is the authoritative content.
+
+Required flow:
+
+Practice question
+→ existing question-bank lookup
+→ existing stored approved answer/explanation
+→ render immediately
+
+AI calls for an existing bank answer should be:
+
+**0**
+
+unless the student explicitly invokes a separate feature that genuinely requires AI.
+
+Do NOT use `practiceMode=1` to force AI generation for ordinary bank-question viewing if that is the current cause.
+
+Reuse the existing deterministic/bank answer path.
+
+Do NOT create another answer system.
+
+==================================================
+TEACHING QUALITY PROTECTION
+===========================
+
+Speed must NOT reduce teaching quality.
+
+The Practice answer shown must use the existing approved Q&A/steps/hints available in the frozen question bank.
+
+Do not replace it with a short raw answer merely to gain speed.
+
+If the existing bank answer shape does not map directly to the current Solution renderer:
+
+reuse the smallest existing deterministic renderer/normalization path.
+
+Do NOT regenerate the content with OpenAI.
+
+==================================================
+AI FALLBACK
+===========
+
+For a genuinely new typed/scanned question that has NO bank match:
+
+AI fallback may still be required.
+
+Measure its current latency separately.
+
+Do not mix bank-answer performance with new-question AI-generation performance.
+
+If AI fallback cannot currently meet the 5-second requirement, REPORT the exact breakdown and bottleneck.
+
+Do not undertake model/pipeline redesign in this task unless a very small confirmed change can safely remove wasted latency.
+
+The priority is:
+
+**existing bank questions must become instant first.**
+
+==================================================
+MEASURE — DO NOT GUESS
+======================
+
+Instrument/use existing telemetry only.
+
+Test at least:
+
+1. Maths bank question
+2. Science bank question
+3. IT bank question
+4. repeat/open same bank question
+5. chapter switch
+6. question switch
+7. Questions → answer → Questions
+8. one genuinely unmatched AI fallback question
+
+For each record:
+
+* navigation latency
+* answer-ready latency
+* AI call count
+* cache status
+* whether question bank was used
+* total API calls
+
+Acceptance for BANK questions:
+
+* 0 AI calls
+* answer ready ≤2 seconds target
+* absolute maximum 5 seconds
+
+Acceptance for ordinary navigation:
+
+* ≤1–2 seconds target
+* never >5 seconds
+
+==================================================
+SCROLL VALIDATION
+=================
+
+At approximately 390px mobile width verify visually:
+
+1. Click a question → Solution opens at top.
+2. Click another question → opens at top.
+3. Click Questions → Practice question section opens at top.
+4. Change chapter → correct top position.
+5. Change subject → correct top position.
+6. Browser Back/Forward does not produce obviously broken positioning.
+
+==================================================
+PROTECTED SCOPE
+===============
+
+Do NOT modify:
+
+* frozen Q&A content;
+* Gold Standard;
+* curriculum;
+* canonical IDs;
+* chapter/question IDs;
+* Detailed/Standard/Compact teaching content;
+* AI model;
+* token budgets;
+* UI design except necessary scroll behaviour;
+* governance;
+* telemetry architecture.
+
+Do not create:
+
+* new cache system;
+* new answer engine;
+* new router;
+* new registry.
+
+==================================================
+REPORT
+======
+
+Return:
+
+1. exact cause of 50–60 second delay;
+2. whether `practiceMode=1` was forcing AI generation;
+3. exact files changed;
+4. before/after Practice question flow;
+5. bank-question AI calls before/after;
+6. measured latency for Maths, Science and IT bank questions;
+7. unmatched AI-fallback latency;
+8. scroll behaviour before/after;
+9. TypeScript/test results;
+10. any remaining path above 5 seconds and exact reason.
+
+Do not declare Beta ready if an ordinary bank-question answer still takes more than 5 seconds.
+
+If all bank/navigation acceptance criteria pass, end exactly:
+
+**P0 PRACTICE SPEED AND SCROLL BLOCKERS RESOLVED**
+
+Then STOP.

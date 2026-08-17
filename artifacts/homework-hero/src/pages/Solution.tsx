@@ -9,7 +9,8 @@ import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
 import { callDevLesson, toAIResponse } from "@/services/ai/openaiSolver";
 import { useCelebration } from "@/hooks/useCelebration";
-import type { Difficulty } from "@/services/questionService";
+import { getQuestionById, type Difficulty } from "@/services/questionService";
+import type { Subject } from "@/data/subjects";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
@@ -65,21 +66,57 @@ export default function Solution() {
     }
 
     try {
+      // ── Fast path: frozen bank question — 0 AI calls, near-instant ──────────
+      // When a student opens a Practice question we already have the question ID.
+      // Look it up directly in the curriculum bank (preloaded by the Practice page)
+      // and build an AIResponse from the frozen Gold Standard data.
+      // This replaces the 50–60 s AI pipeline that practiceMode=1 previously forced.
+      if (practiceMode && session.practiceQuestionId) {
+        const bankQ = getQuestionById(session.practiceQuestionId);
+        if (bankQ) {
+          const bankResult: AIResponse = {
+            id:               bankQ.id,
+            subject:          bankQ.subject as Subject,
+            topic:            bankQ.topicName,
+            difficulty:       bankQ.difficulty,
+            detectedQuestion: bankQ.question,
+            keyConcepts:      bankQ.keyConcepts,
+            steps:            bankQ.steps,
+            finalAnswer:      bankQ.answer,
+            similarQuestions: [],
+            source:           "bank",
+          };
+          setSolution(bankResult);
+          recordSolve(session.subject, session.practiceTopic ?? bankQ.topicName, true, bankQ.id);
+          update({ practiceTopic: bankQ.topicName });
+          if (session.practiceChapterId) {
+            logAttempt(
+              bankQ.id,
+              bankQ.question,
+              true,
+              bankQ.difficulty,
+              session.practiceChapterId,
+              session.practiceChapterName ?? "",
+              bankQ.subject as Subject,
+              session.practiceClassNum ?? 9,
+            );
+          }
+          setPageState("done");
+          return;
+        }
+      }
+
+      // ── AI path: new or unmatched question — full pipeline ───────────────────
       const result = await solve(
         session.subject,
         session.question,
         session.ocrConfidence ?? 1,
         (msg, idx) => { setPhaseMsg(msg); setPhaseIdx(idx); },
-        practiceMode ? { skipBank: true, requireLesson: true } : undefined,
+        practiceMode ? { requireLesson: true } : undefined,
         (msg, pct) => { setProgressMsg(msg); setProgressPct(pct); }
       );
 
       setSolution(result);
-      // Use the predefined topic name from the question bank (session.practiceTopic) so
-      // useChapterStats can match it by key.  Fall back to the AI-inferred name for
-      // Scan / typed-question flows where no bank topic name is available.
-      // Also pass the question ID so the `attempted[]` array is populated and chapter
-      // completion percentages compute correctly.
       const topicKey = (practiceMode && session.practiceTopic)
         ? session.practiceTopic
         : result.topic;
@@ -91,7 +128,6 @@ export default function Solution() {
       );
       update({ practiceTopic: result.topic });
 
-      // Log to attempt detail log when we have question context from practice mode
       if (
         practiceMode &&
         session.practiceQuestionId &&
@@ -100,7 +136,7 @@ export default function Solution() {
         logAttempt(
           session.practiceQuestionId,
           session.question,
-          true, // default correct on view; student can override below
+          true,
           session.practiceQuestionDiff ?? "Medium",
           session.practiceChapterId,
           session.practiceChapterName ?? "",
@@ -116,7 +152,7 @@ export default function Solution() {
       setSolveError(msg);
       setPageState("error");
     }
-  }, [session.subject, session.question, session.ocrConfidence, practiceMode]);
+  }, [session.subject, session.question, session.ocrConfidence, practiceMode, session.practiceQuestionId]);
 
   useEffect(() => { runSolver(); }, []);
 

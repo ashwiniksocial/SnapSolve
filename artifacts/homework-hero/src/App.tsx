@@ -288,6 +288,17 @@ function RequireAdminAuth({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+// ─── Scroll-to-top on every route change ─────────────────────────────────────
+// Wouter does not reset scroll between navigations.  This component scrolls
+// the page to (0, 0) whenever the pathname changes, covering all cases:
+//   Practice → Solution, Solution → Practice, subject/chapter switch, Back/Fwd.
+
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [location]);
+  return null;
+}
+
 function ProtectedSwitch() {
   return (
     <RequireAuth>
@@ -322,6 +333,7 @@ function Router() {
 
   return (
     <>
+      <ScrollToTop />
       <div className={hideNav ? "min-h-screen" : "pb-20 min-h-screen"}>
         <RouteErrorBoundary key={location}>
           <Suspense fallback={<PageLoader />}>
