@@ -1,0 +1,127 @@
+Recall PrePromptConditions.
+
+**BETA 1 UI is READY.**
+
+Do NOT add features, redesign UI, polish further, change content, change architecture, or reopen frozen work.
+
+Perform the FINAL pre-beta smoke test only.
+
+### Objective
+
+Determine whether a real first-time Class 9 student can successfully complete the core SnapSolve journey without assistance:
+
+**Open SnapSolve → sign up/sign in → select subject → scan/type a real question → receive solution → understand answer → use Still confused? → practise/new question**
+
+### Preconditions
+
+Do not modify Clerk credentials automatically.
+
+If production Clerk keys are not yet active, report that authenticated production verification remains pending, but complete every other test that is possible.
+
+### Test only these core journeys
+
+Test representative questions from existing frozen content:
+
+* Mathematics
+* Science — Physics
+* Science — Chemistry
+* Science — Biology
+* Information Technology
+
+Use a small representative set only.
+
+Include:
+
+1. typed question;
+2. scanned/image question if available;
+3. question-bank match;
+4. AI fallback when appropriate;
+5. Easy question;
+6. Medium question;
+7. one reasoning/difficult question where appropriate.
+
+### Verify student flow
+
+Confirm:
+
+* Home loads correctly.
+* Signed-out CTA behaves correctly.
+* Sign-up/sign-in route works when credentials permit.
+* Mathematics, Science and Information Technology are selectable.
+* Scan and Type flows work.
+* OCR review step is understandable.
+* Solution renders correctly.
+* No blank/empty solution state.
+* Reading-level selector works.
+* **Still confused?** exposes exactly:
+
+  * Explain it more simply
+  * Show me visually
+  * Quick revision
+  * Practise
+* Visual/Revision/Practise do not trigger unnecessary AI calls.
+* Simplify still behaves correctly.
+* Practice hints reveal progressively.
+* Mark Solved works.
+* New Question works.
+* Bottom navigation shows exactly:
+  **Home | Scan | Practice | Progress**
+* Revision, Exam and Journal routes remain accessible through existing internal paths.
+* Mobile layout works at approximately 390px width.
+* No broken/dead buttons.
+* No console/application errors.
+* No obvious first-use blocker.
+
+### Performance sanity check
+
+Using existing telemetry only, record for the tested AI solves:
+
+* total AI calls;
+* latency;
+* token usage;
+* cache hit/miss;
+* estimated cost.
+
+Do NOT optimise these values in this task.
+
+### Strict rule
+
+If you find:
+
+**P0 — prevents beta use**
+→ make the smallest safe fix and validate it.
+
+**P1/P2 cosmetic or optional improvement**
+→ REPORT ONLY. Do NOT fix before beta.
+
+Do not touch:
+
+* frozen question banks;
+* curriculum;
+* Gold Standard;
+* teaching architecture;
+* AI models/prompts;
+* telemetry architecture;
+* governance;
+* unrelated UI.
+
+### Final report
+
+Report only:
+
+1. journeys tested;
+2. pass/fail;
+3. P0 blockers and fixes, if any;
+4. unresolved beta blockers;
+5. Clerk production-key status;
+6. mobile verification;
+7. telemetry sanity results;
+8. Git/worktree cleanliness.
+
+If there is no beta-blocking defect, end exactly with:
+
+**SNAPSOLVE BETA 1 READY FOR REAL STUDENTS**
+
+Then stop.
+
+Do not propose more development work.
