@@ -1,0 +1,168 @@
+Recall PrePromptConditions.
+
+Streaming speed has PASSED.
+
+FREEZE the successful streaming behaviour:
+
+* bank questions remain near-instant and 0 AI calls;
+* fresh unmatched Standard questions show meaningful content in ~1–1.5 seconds;
+* Standard teaching structure remains intact;
+* planner fix remains intact.
+
+Do NOT redesign or optimise streaming further.
+
+Two specific Beta 1 loose ends must now be closed.
+
+==================================================
+
+1. OUT-OF-SCOPE ENGLISH APPEARED IN VALIDATION
+   ==================================================
+
+The streaming validation report included:
+
+`Q6 | English (poem theme)`
+
+Current Class 9 Beta scope is ONLY:
+
+* Mathematics
+* Science
+* Information Technology
+
+English is NOT part of the current Beta scope.
+
+Determine why an English request was accepted/tested.
+
+Check only the existing subject allowlist/runtime path.
+
+Required end state:
+
+A Class 9 Beta student must not be offered or routed into unsupported English content through the current Home / Scan / Practice / solve pipeline.
+
+Do NOT delete reusable future English capability if it exists elsewhere.
+
+Do NOT perform broad subject cleanup.
+
+If English was only a bad test fixture and cannot actually be selected/accepted through the current student product, report that and make no code change.
+
+If the production solve route currently accepts unsupported English requests from this beta flow, apply the smallest safe scope restriction consistent with existing subject architecture.
+
+==================================================
+2. STREAM FAILURE MUST NOT HIDE A SECOND AI CALL
+================================================
+
+Current report states:
+
+"Stream failure silently falls back to the regular non-streaming route."
+
+Inspect exactly what happens after OpenAI streaming has already begun.
+
+Required principle:
+
+**One student solve must not silently incur a second full OpenAI generation merely because the first stream failed.**
+
+Determine whether current fallback can cause:
+
+streaming OpenAI call
+→ failure
+→ second non-streaming OpenAI call
+
+If YES:
+
+Remove the silent automatic second-generation behaviour.
+
+Preferred end state:
+
+* if failure occurs BEFORE an OpenAI generation has genuinely started, existing safe transport fallback may be used;
+* if the OpenAI generation has already started/consumed tokens, do NOT automatically start another full generation;
+* transition to the existing clear Retry/error state and let the student explicitly retry.
+
+Do not create new retry architecture.
+
+Do not remove existing safe HTTP/network retry behaviour for failures that occur before generation if it does not duplicate billable AI work.
+
+==================================================
+3. TELEMETRY SAFETY
+===================
+
+Using the EXISTING telemetry, verify:
+
+Successful streamed fresh solve:
+
+* exactly 1 AI generation call.
+
+Stream failure after generation begins:
+
+* no automatic second full AI generation.
+
+Bank question:
+
+* 0 AI calls.
+
+Do not create new telemetry.
+
+==================================================
+4. REVALIDATE STREAMING — SMALL SAMPLE ONLY
+===========================================
+
+Retest only CURRENT supported scope:
+
+* Mathematics
+* Science
+* Information Technology
+
+Use one fresh unmatched Standard question from each.
+
+Report:
+
+* first meaningful content latency;
+* full completion latency;
+* AI call count;
+* final lesson valid.
+
+Do NOT test English or any other out-of-scope subject.
+
+==================================================
+5. PROTECT
+==========
+
+Do NOT modify:
+
+* Standard teaching schema;
+* planner logic;
+* bank fast path;
+* scroll fix;
+* frozen question banks;
+* curriculum content;
+* Gold Standard;
+* model;
+* token budget;
+* UI styling;
+* Detailed;
+* Compact;
+* Practice;
+* governance.
+
+No broad audit.
+
+==================================================
+REPORT
+======
+
+Return only:
+
+1. Why English appeared.
+2. Whether production Beta could actually accept/show English.
+3. Any scope fix made.
+4. Exact stream-failure behaviour before.
+5. Exact stream-failure behaviour after.
+6. AI-call count on success/failure/bank path.
+7. 3-subject streaming revalidation.
+8. Files changed.
+9. TypeScript/tests.
+10. Any genuine blocker.
+
+If both issues are safely resolved, end exactly:
+
+**STREAMING SAFETY AND BETA SUBJECT SCOPE VERIFIED**
+
+Then STOP.

@@ -629,14 +629,21 @@ export async function solveWithOpenAI(
   if (mode === "standard" && !intent && onPartial) {
     // Stable ID shared across all partial updates AND the final result so the
     // SolutionCard never remounts during streaming.
-    const streamId     = `ai-${Date.now()}`;
-    const sectionMap   = new Map<string, unknown>();
+    const streamId        = `ai-${Date.now()}`;
+    const sectionMap      = new Map<string, unknown>();
     let   firstMeaningful = false;
+    // Tracks whether the server has started emitting OpenAI content.
+    // Set to true on the first section event — meaning tokens are being consumed.
+    let   generationStarted = false;
 
     try {
       const data = await callBackendStream(
         subject, question, mode, studentContext || undefined,
         (sec) => {
+          // Mark generation as in-progress on the first section received.
+          // Used in the catch block to prevent a second AI call on stream failure.
+          generationStarted = true;
+
           const key = sec.field === "step" ? `step_${sec.index ?? 0}` : sec.field;
           sectionMap.set(key, sec.value);
 
@@ -669,8 +676,17 @@ export async function solveWithOpenAI(
       return { ...result, id: streamId };
 
     } catch (err) {
-      // Streaming failed — fall back to non-streaming call transparently.
-      console.warn("[STREAM] SSE failed, falling back to regular call:", String(err));
+      if (generationStarted) {
+        // OpenAI was already generating (tokens consumed).  Do NOT fall through to
+        // callBackend() — that would trigger a second full OpenAI generation for
+        // the same question.  Re-throw so aiSolver goes to its bank fallback path
+        // (Path C, zero additional AI calls).
+        console.warn("[STREAM] stream failed after generation started — re-throwing to prevent second AI call:", String(err));
+        throw err;
+      }
+      // Pre-generation failure (HTTP 4xx/5xx, network error, auth error).
+      // No OpenAI tokens were consumed, so falling back to the regular route is safe.
+      console.warn("[STREAM] pre-generation SSE failure, falling back to regular call:", String(err));
       // Fall through to regular callBackend below.
     }
   }
