@@ -1,0 +1,193 @@
+Recall PrePromptConditions.
+
+BETA TEACHING-QUALITY DEFECT — INVESTIGATE STANDARD MODE BEFORE MODIFYING ANYTHING.
+
+Founder has manually tested:
+
+Class 9 → Mathematics → Ch 1 → Q1
+Question:
+"What is another name for the Cartesian plane?"
+
+In STANDARD mode the current 5-section explanation includes:
+
+1. KEY CONCEPT → "Cartesian Plane"
+2. UNDERSTAND THE QUESTION → essentially repeats:
+   "What is another name for the Cartesian plane?"
+
+This is pedagogically weak and wastes one of only five Standard-mode sections.
+
+Compact and Detailed currently make more sense for this question.
+
+DO NOT PATCH THIS INDIVIDUAL QUESTION.
+
+We need to determine whether Standard mode has a SYSTEMIC teaching-design defect.
+
+==================================================
+SNAPSOLVE PRODUCT REQUIREMENT
+==================================================
+
+Standard mode should be the best everyday/default learning answer.
+
+It must be:
+
+- curriculum aligned;
+- exam useful;
+- understandable to a weak student;
+- concise but sufficiently explanatory;
+- free from filler/repetition;
+- appropriate to question complexity.
+
+Detailed = deeper teaching.
+Standard = complete everyday teaching.
+Compact = shortest useful solution.
+
+Standard must NOT mechanically fill five sections when a section adds no educational value.
+
+==================================================
+TASK 1 — TRACE CURRENT STANDARD MODE
+==================================================
+
+Do not modify code yet.
+
+Trace exactly:
+
+- Standard-mode schema;
+- generation prompt;
+- rendering;
+- required fields/sections;
+- fallback behaviour;
+- question-bank vs AI-generated behaviour;
+- whether "Understand the Question" is mandatory;
+- whether the model is instructed to paraphrase/restate every question;
+- whether five sections are mandatory regardless of question type.
+
+Identify the root cause of the repetition seen in Maths Ch1 Q1.
+
+==================================================
+TASK 2 — REPRESENTATIVE AUDIT
+==================================================
+
+Audit a SMALL representative sample only.
+
+Use existing content/questions from:
+
+MATHEMATICS
+- 1 Easy factual/concept question
+- 1 Medium calculation/reasoning question
+- 1 Hard/proof question if available
+
+SCIENCE
+- 1 Easy
+- 1 Medium
+- 1 harder reasoning question
+
+INFORMATION TECHNOLOGY
+- 1 Easy factual question
+- 1 Medium procedural/application question
+
+For each, inspect the current STANDARD answer.
+
+Evaluate:
+
+1. Does "Understand the Question" add meaning or merely repeat the stem?
+2. Does Key Concept actually teach something?
+3. Are any sections filler?
+4. Is the final answer explicit?
+5. Are steps logically sequenced?
+6. Would a weak Class 9 student understand it?
+7. Would the answer help the student write an examiner-acceptable response?
+8. Is Standard materially better than Compact without becoming Detailed?
+
+Do NOT run a large expensive AI benchmark.
+
+Maximum 8 representative questions.
+
+Reuse existing/cached outputs wherever possible.
+
+==================================================
+TASK 3 — DETERMINE CORRECT DESIGN
+==================================================
+
+Based on the audit, recommend the SMALLEST SYSTEMIC correction.
+
+Important:
+
+Do NOT assume Standard must always contain exactly five sections.
+
+For a very simple factual question such as:
+
+"What is another name for the Cartesian plane?"
+
+a good Standard response may only need, for example:
+
+1. Direct Answer
+2. Simple Explanation
+3. Remember / Exam Tip
+
+For a calculation question it may need:
+
+1. What is Given / Asked
+2. Concept or Formula
+3. Step-by-Step Working
+4. Final Answer
+5. Check / Exam Tip
+
+For a conceptual Science question it may need a different useful structure.
+
+The principle is:
+
+EVERY DISPLAYED SECTION MUST ADD NEW LEARNING VALUE.
+
+Never create a section merely to satisfy a fixed section count.
+
+Specifically investigate whether "Understand the Question" should:
+
+A. be removed from Standard;
+B. become conditional;
+C. only appear when genuine interpretation/simplification is required.
+
+A verbatim or near-verbatim restatement of the question is NOT acceptable.
+
+==================================================
+PROTECTION
+==================================================
+
+Do NOT:
+
+- modify frozen question banks;
+- change curriculum;
+- change canonical IDs;
+- change Practice;
+- change Compact mode;
+- change Detailed mode;
+- change UI styling;
+- add new AI calls;
+- change model;
+- increase token budgets;
+- create another teaching engine;
+- implement the fix during this investigation.
+
+We need diagnosis + minimal proposed patch FIRST.
+
+==================================================
+REPORT
+==================================================
+
+Return:
+
+1. exact root cause;
+2. current Standard five-section contract;
+3. audit table for the representative questions;
+4. which sections are genuinely useful vs repetitive;
+5. whether defect is isolated or systemic;
+6. recommended future Standard structure;
+7. exact files that would require modification;
+8. expected AI-call/token/cost impact;
+9. regression risks;
+10. smallest implementation patch.
+
+End exactly:
+
+STANDARD MODE TEACHING AUDIT COMPLETE — AWAITING IMPLEMENTATION APPROVAL
+
+Then STOP. Do not implement.
