@@ -104,6 +104,29 @@ function writeBankCache(store: Record<string, BankCacheEntry>): void {
   try { localStorage.setItem(BANK_CACHE_STORE_KEY, JSON.stringify(store)); } catch {}
 }
 
+/**
+ * Smallest validity guard: a bank lesson is complete iff it has:
+ * - a lesson object
+ * - ≥1 real guided reasoning step
+ * - a finalAnswer that is not the generic placeholder
+ * - ≥1 key concept
+ *
+ * This guards against caching partial stream state or fallback skeletons.
+ */
+function isBankLessonComplete(response: AIResponse): boolean {
+  const lesson = response.lesson;
+  if (!lesson) return false;
+  if (!lesson.guidedReasoning || lesson.guidedReasoning.length === 0) return false;
+  const ans = lesson.finalAnswer?.answer ?? "";
+  if (
+    !ans ||
+    ans === "See guided reasoning above." ||
+    ans === "Work through the four steps above to find your specific answer."
+  ) return false;
+  if (!lesson.keyConcepts || lesson.keyConcepts.length === 0) return false;
+  return true;
+}
+
 export function getBankCachedLesson(questionId: string): AIResponse | null {
   const store = readBankCache();
   const entry = store[questionId];
@@ -113,10 +136,21 @@ export function getBankCachedLesson(questionId: string): AIResponse | null {
     writeBankCache(store);
     return null;
   }
+  // Treat incomplete cached entries as a cache miss — regenerate once
+  if (!isBankLessonComplete(entry.lesson)) {
+    delete store[questionId];
+    writeBankCache(store);
+    return null;
+  }
   return entry.lesson;
 }
 
 function cacheBankLesson(questionId: string, lesson: AIResponse): void {
+  // Only cache a complete, validated lesson — never partial stream state or skeletons
+  if (!isBankLessonComplete(lesson)) {
+    console.warn("[BANK:CACHE] Lesson failed validity check — not caching (partial/fallback)");
+    return;
+  }
   const store = readBankCache();
   const now   = Date.now();
   // Evict expired entries to keep the store tidy

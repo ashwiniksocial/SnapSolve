@@ -1881,7 +1881,10 @@ router.post("/solveQuestion/stream", async (req, res) => {
   }
 
   // ── 7. Call OpenAI with stream: true ──────────────────────────────────────────
-  const budgetTimer = setTimeout(() => abortCtrl.abort(), STANDARD_BUDGET_MS);
+  // Bank questions use "basic" mode (2800 tokens, ~35–56 s) — they need a larger
+  // budget than Standard (1100 tokens, 15 s).  Standard keeps its 15 s guarantee.
+  const budgetMs    = bankCtx ? 50_000 : STANDARD_BUDGET_MS;
+  const budgetTimer = setTimeout(() => abortCtrl.abort(), budgetMs);
 
   let openaiRes: Response;
   try {

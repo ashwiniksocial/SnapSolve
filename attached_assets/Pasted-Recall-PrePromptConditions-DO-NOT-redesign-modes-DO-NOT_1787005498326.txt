@@ -1,0 +1,128 @@
+Recall PrePromptConditions.
+
+DO NOT redesign modes.
+DO NOT change 8/5/3.
+DO NOT change teaching schema.
+DO NOT change model, prompts, question banks, curriculum, UI, streaming architecture or latency work.
+
+Observed running UI:
+
+* Detailed button says 8 sections but only ~2 sections render.
+* Standard says 5 but renders essentially the same.
+* Compact says 3 but renders only ~1 section.
+
+Replit's previous implementation added:
+
+* `getBankCachedLesson`
+* `cacheBankLesson`
+* streamed bank TeachingLesson generation
+* minimal fallback skeleton if streaming fails.
+
+Most likely defect:
+
+**an incomplete/partial/fallback lesson is being cached and subsequently reused as though it were a complete TeachingLesson.**
+
+### Task
+
+Inspect ONLY the bank lesson cache/write path.
+
+Determine:
+
+1. What exact object is currently stored in localStorage for the founder's test question.
+2. Whether that cached object contains the complete Detailed TeachingLesson fields required for the existing 8-section renderer.
+3. Whether partial streamed state or the fallback skeleton can reach `cacheBankLesson()`.
+4. What condition currently decides that a bank lesson is cacheable.
+
+### Required fix
+
+A bank TeachingLesson may be cached ONLY after the stream has completed successfully AND the final normalized lesson contains the required full lesson structure.
+
+Do not cache:
+
+* partial stream state;
+* fallback skeleton;
+* failed stream output;
+* malformed/incomplete lesson.
+
+If an existing cached entry is incomplete, treat it as a cache miss and regenerate once.
+
+Do NOT globally destroy unrelated caches.
+
+Use the smallest validity guard possible.
+
+### Exact validation
+
+Use the founder's frozen Maths question:
+
+"What is another name for the Cartesian plane?"
+
+Start with its bank lesson cache cleared/invalidated ONLY for this test entry.
+
+First uncached open must:
+
+* stream one full TeachingLesson;
+* first meaningful content ≤5 sec;
+* exactly 1 AI call;
+* complete successfully.
+
+After completion verify the actual lesson object has all fields needed by the existing renderer.
+
+Then visually verify:
+
+**Detailed**
+
+* exactly 8 meaningful sections visible.
+
+**Standard**
+
+* exactly 5 meaningful sections visible.
+
+**Compact**
+
+* exactly 3 meaningful sections visible.
+
+Then close/reopen the same question.
+
+Verify:
+
+* cache hit;
+* 0 AI calls;
+* same correct 8/5/3 behaviour;
+* <1 sec opening.
+
+Also test one Science bank question.
+
+### Critical rule
+
+Do NOT attempt another mode mapping or renderer redesign.
+
+The 8/5/3 renderer already worked before.
+
+This task is only about ensuring that the cache contains the COMPLETE generated TeachingLesson rather than a partial/fallback object.
+
+Allowed files:
+only the existing bank-stream/cache files strictly required.
+
+Report only:
+
+1. root cause;
+2. exact cached object completeness before fix;
+3. exact cache-write bug;
+4. files changed;
+5. cache validity rule added;
+6. first-open section counts;
+7. repeat-open section counts;
+8. first-open AI calls/latency;
+9. repeat-open AI calls/latency.
+
+If and only if running UI visibly shows:
+
+Detailed = 8
+Standard = 5
+Compact = 3
+
+end exactly:
+
+**FULL 8/5/3 LESSON CACHE VERIFIED — NO PARTIAL LESSONS CACHED**
+
+Then STOP.
