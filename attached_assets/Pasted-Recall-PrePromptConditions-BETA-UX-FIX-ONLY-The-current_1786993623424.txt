@@ -1,0 +1,85 @@
+Recall PrePromptConditions.
+
+BETA UX FIX ONLY.
+
+The current Solution screen still reveals the four old study-tool actions after the student clicks "Needs Review":
+
+* Explain it more simply
+* Show me visually
+* Quick revision
+* Practise
+
+This is redundant and reintroduces UI clutter we already removed.
+
+REMOVE this entire "Still Confused?" four-button panel from the Solution screen, including after clicking Needs Review.
+
+### Required behaviour
+
+When student clicks:
+
+**✓ Got it**
+
+* preserve existing progress/mastery behaviour;
+* do not reveal additional study-tool buttons.
+
+**✕ Needs Review**
+
+* preserve the existing Needs Review / weakness / review-state recording behaviour;
+* show only a small confirmation such as:
+  **"Marked for review — we'll help you practise this again."**
+* do NOT reveal another action panel.
+
+Keep:
+
+* Got it
+* Needs Review
+* Mark Solved
+* Questions
+* existing Practice bottom-navigation destination
+* all existing progress/mastery/review-state logic.
+
+Remove from this Solution-screen flow only:
+
+* Still Confused? container
+* Explain it more simply
+* Show me visually
+* Quick revision
+* Practise button inside that container
+* any now-unused UI state/imports solely supporting this panel.
+
+DO NOT remove underlying routes, engines, functions or capabilities if they are used elsewhere.
+
+DO NOT modify:
+
+* Teaching content
+* Detailed / Standard / Compact modes
+* Question banks
+* Curriculum
+* AI solver
+* Practice page
+* Progress
+* Bottom navigation
+* Got It / Needs Review tracking behaviour
+* Mark Solved behaviour
+
+This is a minimal UI cleanup only.
+
+After implementation verify:
+
+1. Open a solution.
+2. Got It works.
+3. Needs Review works.
+4. Needs Review records the review state.
+5. No four-button panel appears.
+6. No "Still Confused?" section appears anywhere on the Solution screen.
+7. Mark Solved still works.
+8. Questions still works.
+9. Practice remains accessible through bottom navigation.
+10. TypeScript passes.
+11. No console errors.
+
+Report exact files changed and confirm whether any underlying learning/progress functionality was affected.
+
+End with:
+
+**NEEDS REVIEW UX CLEANUP COMPLETE**

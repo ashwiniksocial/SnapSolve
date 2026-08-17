@@ -6,7 +6,7 @@ import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
 import { useAttemptLog } from "@/hooks/useAttemptLog";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
-import { solve, type AIResponse, type SolveIntent } from "@/services/aiSolver";
+import { solve, type AIResponse } from "@/services/aiSolver";
 import { callDevLesson, toAIResponse } from "@/services/ai/openaiSolver";
 import { useCelebration } from "@/hooks/useCelebration";
 import type { Difficulty } from "@/services/questionService";
@@ -15,15 +15,9 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
 import StarBurst from "@/components/StarBurst";
 import SocraticTutor from "@/components/socratic/SocraticTutor";
-import { PracticeWithHints } from "@/components/teaching/TeachingLayout";
 import { getMasteryEntry } from "@/services/studentModel";
 
 type PageState = "loading" | "done" | "error";
-type LearningAction = "visual" | "revision" | "practice";
-
-function nonEmpty(values: string[] | undefined): string[] {
-  return (values ?? []).map((value) => value.trim()).filter(Boolean);
-}
 
 export default function Solution() {
   const { session, update } = useSession();
@@ -45,26 +39,20 @@ export default function Solution() {
   const [burst,       setBurst]       = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
   const [showTutor,   setShowTutor]   = useState(false);
-  const [learningAction, setLearningAction] = useState<LearningAction | null>(null);
-  // null = not yet rated, false = got it, true = needs review (reveals 4 help actions)
+  // null = not yet rated, false = got it, true = needs review
   const [needsReview, setNeedsReview] = useState<boolean | null>(null);
-  const [revisionChoice, setRevisionChoice] = useState<number | null>(null);
-  const [simplifiedView, setSimplifiedView] = useState(false);
   // practiceMode result: null = not yet rated, true = got it, false = needs review
   const [practiceResult, setPracticeResult] = useState<boolean | null>(null);
 
   // Practice mode: ?practiceMode=1 forces full AI pipeline (skipBank + requireLesson).
   const practiceMode = new URLSearchParams(window.location.search).get("practiceMode") === "1";
 
-  const runSolver = useCallback(async (intent?: SolveIntent) => {
+  const runSolver = useCallback(async () => {
     setPageState("loading");
     setSolution(null);
     setSolveError(null);
     setShowSimilar(false);
-    setLearningAction(null);
-    setRevisionChoice(null);
     setNeedsReview(null);
-    setSimplifiedView(intent === "simplify");
 
     // ── Dev audit mode: ?audit=1 bypasses session/OpenAI, loads fixture direct ──
     const auditMode = new URLSearchParams(window.location.search).get("audit") === "1";
@@ -82,11 +70,7 @@ export default function Solution() {
         session.question,
         session.ocrConfidence ?? 1,
         (msg, idx) => { setPhaseMsg(msg); setPhaseIdx(idx); },
-        intent === "simplify"
-          ? { skipBank: true, requireLesson: true, intent }
-          : practiceMode
-            ? { skipBank: true, requireLesson: true }
-            : undefined,
+        practiceMode ? { skipBank: true, requireLesson: true } : undefined,
         (msg, pct) => { setProgressMsg(msg); setProgressPct(pct); }
       );
 
@@ -143,11 +127,6 @@ export default function Solution() {
     setBurst(true);
     setTimeout(() => setBurst(false), 2500);
   };
-
-  function selectLearningAction(action: LearningAction) {
-    setRevisionChoice(null);
-    setLearningAction((current) => current === action ? null : action);
-  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -229,7 +208,6 @@ export default function Solution() {
             <SolutionCard
               key={solution.id}
               solution={solution}
-              initialLevel={simplifiedView ? "basic" : undefined}
             />
 
             {/* ── Socratic Tutor Panel ───────────────────────────────────── */}
@@ -350,183 +328,12 @@ export default function Solution() {
               </div>
             )}
 
-            {/* ── Four help actions — revealed only after Needs Review ─────── */}
+            {/* ── Needs Review confirmation — no action panel ───────────── */}
             {needsReview === true && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm fade-up">
-                <p className="text-xs font-bold text-slate-500 mb-3">Still confused?</p>
-                <div className="grid grid-cols-2 gap-2.5">
-                  <button
-                    onClick={() => void runSolver("simplify")}
-                    className="w-full min-h-14 rounded-2xl border-2 border-indigo-200 bg-indigo-50 px-3 py-2 text-left text-xs font-bold text-indigo-800 hover:bg-indigo-100 active:scale-95 transition-all"
-                  >
-                    <span className="block text-base mb-0.5">🧩</span>
-                    Explain it more simply
-                  </button>
-                  <button
-                    onClick={() => selectLearningAction("visual")}
-                    className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
-                      learningAction === "visual"
-                        ? "border-sky-500 bg-sky-500 text-white"
-                        : "border-sky-200 bg-sky-50 text-sky-800 hover:bg-sky-100"
-                    }`}
-                  >
-                    <span className="block text-base mb-0.5">👀</span>
-                    Show me visually
-                  </button>
-                  <button
-                    onClick={() => selectLearningAction("revision")}
-                    className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
-                      learningAction === "revision"
-                        ? "border-amber-500 bg-amber-500 text-white"
-                        : "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100"
-                    }`}
-                  >
-                    <span className="block text-base mb-0.5">⚡</span>
-                    Quick revision
-                  </button>
-                  <button
-                    onClick={() => selectLearningAction("practice")}
-                    className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
-                      learningAction === "practice"
-                        ? "border-emerald-500 bg-emerald-500 text-white"
-                        : "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
-                    }`}
-                  >
-                    <span className="block text-base mb-0.5">✏️</span>
-                    Practise
-                  </button>
-                </div>
-              </div>
+              <p className="text-center text-xs text-slate-500 fade-up py-1">
+                Marked for review — we'll help you practise this again.
+              </p>
             )}
-
-            {/* ── Action-specific presentation panels — no AI calls ───────── */}
-            {learningAction === "visual" && (
-              <div className="fade-up bg-sky-50 border border-sky-200 rounded-2xl p-4 space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-sky-600">Picture this</p>
-                {(
-                  solution.lesson?.intuition.visual ||
-                  solution.visualThinking ||
-                  ""
-                ).trim() ? (
-                  <p className="text-sm text-sky-950 leading-relaxed whitespace-pre-wrap">
-                    {solution.lesson?.intuition.visual || solution.visualThinking}
-                  </p>
-                ) : (
-                  <p className="text-sm text-sky-800 leading-relaxed">
-                    This lesson does not include a visual explanation yet. Try “Explain it more simply” for another explanation.
-                  </p>
-                )}
-              </div>
-            )}
-
-            {learningAction === "revision" && (() => {
-              const lesson = solution.lesson;
-              const memory = nonEmpty(lesson?.rememberThese ?? solution.memoryShortcut);
-              const retrieval = nonEmpty(lesson?.retrievalPractice);
-              const confidenceCheck = lesson?.confidenceCheck ?? solution.confidenceCheck;
-              const options = nonEmpty(confidenceCheck?.options);
-              const hasCheck = Boolean(confidenceCheck?.question?.trim() && options.length > 0);
-              const hasRevision = memory.length > 0 || retrieval.length > 0 || hasCheck ||
-                Boolean(lesson?.confidenceBuilder?.trim());
-
-              return (
-                <div className="fade-up bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-4">
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">Quick revision</p>
-                    {lesson?.confidenceBuilder?.trim() && (
-                      <p className="text-sm text-amber-950 leading-relaxed mt-1">
-                        {lesson.confidenceBuilder.trim()}
-                      </p>
-                    )}
-                  </div>
-
-                  {memory.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-amber-600 mb-1.5">Remember these</p>
-                      <ul className="space-y-1.5">
-                        {memory.map((item, index) => (
-                          <li key={index} className="text-sm text-amber-950 leading-relaxed flex gap-2">
-                            <span className="text-amber-500 shrink-0">✓</span>{item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {retrieval.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-amber-600 mb-1.5">Try to recall</p>
-                      <ol className="space-y-1.5 list-decimal list-inside">
-                        {retrieval.map((item, index) => (
-                          <li key={index} className="text-sm text-amber-950 leading-relaxed">{item}</li>
-                        ))}
-                      </ol>
-                    </div>
-                  )}
-
-                  {hasCheck && confidenceCheck && (
-                    <div className="bg-white/70 border border-amber-200 rounded-xl p-3 space-y-2">
-                      <p className="text-xs font-bold text-amber-900">{confidenceCheck.question}</p>
-                      <div className="grid gap-1.5">
-                        {options.map((option, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setRevisionChoice(index)}
-                            className={`text-left text-xs rounded-lg border px-3 py-2 transition-colors ${
-                              revisionChoice === index
-                                ? index === confidenceCheck.correctIndex
-                                  ? "border-emerald-300 bg-emerald-50 text-emerald-800"
-                                  : "border-red-300 bg-red-50 text-red-800"
-                                : "border-amber-200 bg-white text-slate-700 hover:bg-amber-50"
-                            }`}
-                          >
-                            {option}
-                          </button>
-                        ))}
-                      </div>
-                      {revisionChoice !== null && (
-                        <p className="text-xs text-amber-900 leading-relaxed">
-                          {revisionChoice === confidenceCheck.correctIndex
-                            ? "Correct — nice recall!"
-                            : confidenceCheck.explanation || "Review the lesson once more, then try again."}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {!hasRevision && (
-                    <p className="text-sm text-amber-800 leading-relaxed">
-                      Revision points are not available for this lesson yet.
-                    </p>
-                  )}
-                </div>
-              );
-            })()}
-
-            {learningAction === "practice" && (() => {
-              const pq = solution.lesson?.practiceQuestion;
-              const hasPractice = Boolean(pq?.question?.trim());
-              return (
-                <div className="fade-up bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-3">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Your turn</p>
-                  {hasPractice ? (
-                    <PracticeWithHints
-                      question={pq!.question}
-                      hints={pq!.hints ?? []}
-                      solution={pq!.solution}
-                      borderColor={cfg.color}
-                    />
-                  ) : (
-                    <p className="text-sm text-emerald-800 leading-relaxed">
-                      No practice question is available for this lesson yet.
-                      {solution.similarQuestions.length > 0 && (
-                        <> Similar questions are listed below.</>
-                      )}
-                    </p>
-                  )}
-                </div>
-              );
-            })()}
 
             {/* ── Utility controls ─────────────────────────────────────────── */}
             <div className="flex items-center justify-end gap-2">
