@@ -69,9 +69,10 @@ export class LessonStreamExtractor {
       }
     }
 
-    // ── guidedReasoning steps — sequentially 0 → 3 ───────────────────────────
+    // ── guidedReasoning steps — sequentially 0 → 7 ───────────────────────────
+    // Supports up to 8 steps (Detailed/bank mode uses 6–8; Standard uses 4).
     // Stop as soon as a step is incomplete so we never skip ahead.
-    while (this.nextStep < 4) {
+    while (this.nextStep < 8) {
       const key = `step_${this.nextStep}`;
       if (this.emitted.has(key)) { this.nextStep++; continue; }
       const v = this.tryStep(this.nextStep);

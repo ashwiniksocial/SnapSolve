@@ -84,6 +84,49 @@ export function clearAICache(): void {
   localStorage.removeItem(CACHE_STORE_KEY);
 }
 
+// ─── Bank question lesson cache ───────────────────────────────────────────────
+// Keyed by questionId (not question text) — 7-day TTL localStorage cache.
+// One entry per bank question; the same lesson serves all 3 teaching modes.
+
+const BANK_CACHE_STORE_KEY = "studyai-bank-lesson-cache-v1";
+
+interface BankCacheEntry {
+  lesson:    AIResponse;
+  timestamp: number;
+}
+
+function readBankCache(): Record<string, BankCacheEntry> {
+  try { return JSON.parse(localStorage.getItem(BANK_CACHE_STORE_KEY) ?? "{}"); }
+  catch { return {}; }
+}
+
+function writeBankCache(store: Record<string, BankCacheEntry>): void {
+  try { localStorage.setItem(BANK_CACHE_STORE_KEY, JSON.stringify(store)); } catch {}
+}
+
+export function getBankCachedLesson(questionId: string): AIResponse | null {
+  const store = readBankCache();
+  const entry = store[questionId];
+  if (!entry) return null;
+  if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+    delete store[questionId];
+    writeBankCache(store);
+    return null;
+  }
+  return entry.lesson;
+}
+
+function cacheBankLesson(questionId: string, lesson: AIResponse): void {
+  const store = readBankCache();
+  const now   = Date.now();
+  // Evict expired entries to keep the store tidy
+  for (const k of Object.keys(store)) {
+    if (now - store[k].timestamp > CACHE_TTL_MS) delete store[k];
+  }
+  store[questionId] = { lesson, timestamp: now };
+  writeBankCache(store);
+}
+
 // ─── Backend lesson response shape (mirrors solveQuestion.ts LessonResponse) ──
 
 interface BackendLessonStep {
@@ -502,7 +545,8 @@ function buildPartialData(sections: Map<string, unknown>): Partial<BackendLesson
   if (sections.has("finalAnswer"))        d.finalAnswer  = sections.get("finalAnswer") as BackendLessonResponse["finalAnswer"];
 
   const steps: BackendLessonStep[] = [];
-  for (let i = 0; i < 4; i++) {
+  // Support up to 8 steps — Detailed/bank mode uses 6–8; Standard uses 4.
+  for (let i = 0; i < 8; i++) {
     const step = sections.get(`step_${i}`);
     if (step) steps.push(step as BackendLessonStep);
   }
@@ -589,6 +633,161 @@ async function callBackendStream(
 
   if (!finalLesson) throw new Error("stream_incomplete");
   return finalLesson;
+}
+
+// ─── Bank question streaming ──────────────────────────────────────────────────
+//
+// Bank questions use a separate streaming path:
+//   1. Check client-side localStorage cache by questionId (7-day TTL)
+//   2. Cache miss → POST /api/solveQuestion/stream with mode:"basic" + bankContext
+//      Backend generates a full TeachingLesson grounded in the frozen bank answer,
+//      skipping the blueprint planner and quality reviewer pipeline.
+//   3. Progressive partial renders via onPartial as SSE sections arrive
+//   4. Cache the completed lesson by questionId for future instant loads
+//   5. One lesson serves all 3 teaching modes — mode switching is zero AI calls
+//
+// Speed contract: first content ≤2 s (trigger on keyConcepts or first step),
+//                 full lesson ≤10 s, cache hit ≤50 ms.
+
+export interface BankQuestionContext {
+  questionId:  string;
+  answer:      string;
+  hint:        string;
+  steps:       { title: string; explanation: string; formula?: string; result?: string }[];
+  keyConcepts: string[];
+}
+
+/**
+ * Stream a bank question lesson from the backend.
+ * Posts bankContext as authoritative grounding; backend generates a full
+ * Detailed-mode TeachingLesson without running the quality pipeline.
+ */
+async function callBankStream(
+  subject:     Subject,
+  question:    string,
+  bankContext: BankQuestionContext,
+  onSection?:  (ev: { field: string; index?: number; value: unknown }) => void,
+): Promise<BackendLessonResponse> {
+  const controller = new AbortController();
+  const timer      = setTimeout(() => controller.abort(), FRONTEND_TIMEOUT_MS);
+
+  let res: Response;
+  try {
+    res = await fetch("/api/solveQuestion/stream", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      signal:  controller.signal,
+      body:    JSON.stringify({
+        subject,
+        question:    question.trim(),
+        mode:        "basic",    // Full Detailed schema → all sections → all 3 modes work
+        bankContext,             // Authoritative grounding: frozen answer, steps, hint
+      }),
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!res.ok) {
+    let errBody: BackendErrorResponse = { error: `http_${res.status}` };
+    try { errBody = (await res.json()) as BackendErrorResponse; } catch {}
+    const code = errBody.error ?? "";
+    if (res.status === 429 || code.includes("rate_limit")) throw new Error("rate_limit");
+    if (code === "no_key")      throw new Error("no_key");
+    if (code === "invalid_key") throw new Error("invalid_key");
+    throw new Error(`backend_${res.status}`);
+  }
+
+  const reader     = res.body!.getReader();
+  const decoder    = new TextDecoder();
+  let   lineBuf    = "";
+  let   finalLesson: BackendLessonResponse | null = null;
+
+  try {
+    outer: while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      lineBuf += decoder.decode(value, { stream: true });
+      const lines = lineBuf.split("\n");
+      lineBuf = lines.pop() ?? "";
+
+      for (const line of lines) {
+        if (!line.startsWith("data: ")) continue;
+        const raw = line.slice(6).trim();
+        if (!raw) continue;
+
+        let event: StreamEvent;
+        try { event = JSON.parse(raw) as StreamEvent; } catch { continue; }
+
+        if (event.type === "section" && event.field && onSection) {
+          onSection({ field: event.field, index: event.index, value: event.value });
+        } else if (event.type === "done") {
+          finalLesson = event.lesson as BackendLessonResponse;
+          break outer;
+        } else if (event.type === "cached") {
+          finalLesson = event.lesson as BackendLessonResponse;
+          break outer;
+        } else if (event.type === "error") {
+          throw new Error(event.code ?? "stream_error");
+        }
+      }
+    }
+  } finally {
+    try { reader.releaseLock(); } catch { /* already released */ }
+  }
+
+  if (!finalLesson) throw new Error("stream_incomplete");
+  return finalLesson;
+}
+
+/**
+ * Solve a bank question: localStorage cache check → streaming generation → cache.
+ * Calls onPartial progressively as SSE sections arrive so the student sees
+ * content within ~1 s. Returns the complete AIResponse (from cache or stream).
+ */
+export async function solveBankWithStream(
+  subject:     Subject,
+  question:    string,
+  bankContext: BankQuestionContext,
+  onPartial:   (partial: AIResponse) => void,
+): Promise<AIResponse> {
+  // Stable ID shared across partial and final renders — prevents SolutionCard remount
+  const streamId = `bank-${bankContext.questionId}`;
+
+  const sectionMap      = new Map<string, unknown>();
+  let   firstMeaningful = false;
+
+  const data = await callBankStream(
+    subject, question, bankContext,
+    (sec) => {
+      const key = sec.field === "step" ? `step_${sec.index ?? 0}` : sec.field;
+      sectionMap.set(key, sec.value);
+
+      // Trigger first partial render on keyConcepts (arrives early, ~300–500 ms)
+      // or the first step, whichever comes first.
+      if (!firstMeaningful) {
+        const isEarly = sec.field === "keyConcepts" || sec.field === "step";
+        if (isEarly) firstMeaningful = true;
+      }
+
+      if (firstMeaningful) {
+        const partialData = buildPartialData(sectionMap);
+        const partial     = toAIResponse(partialData as BackendLessonResponse, subject, question);
+        // Suppress placeholder practice question during partial renders
+        if (partial.lesson) {
+          partial.lesson.practiceQuestion.question = "";
+          partial.lesson.practiceQuestion.hints    = [];
+          partial.lesson.practiceQuestion.solution = "";
+        }
+        onPartial({ ...partial, id: streamId, source: "bank" });
+      }
+    },
+  );
+
+  const result: AIResponse = { ...toAIResponse(data, subject, question), id: streamId, source: "bank" };
+  cacheBankLesson(bankContext.questionId, result);
+  return result;
 }
 
 // ─── Public API ─────────────────────────────────────────────────────────────

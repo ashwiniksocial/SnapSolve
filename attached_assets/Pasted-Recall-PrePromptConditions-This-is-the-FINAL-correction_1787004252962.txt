@@ -1,0 +1,281 @@
+Recall PrePromptConditions.
+
+This is the FINAL correction to the latency regression.
+
+DO NOT experiment.
+
+### NON-NEGOTIABLE PRODUCT CONTRACT
+
+SnapSolve's three teaching modes are a core differentiator:
+
+**Detailed = 8 sections**
+**Standard = 5 sections**
+**Compact = 3 sections**
+
+They must remain meaningfully different.
+
+Teaching quality must remain:
+
+* descriptive;
+* curriculum-correct;
+* weak-student friendly;
+* teacher-acceptable;
+* examiner-acceptable.
+
+DO NOT reduce teaching depth to achieve speed.
+
+==================================================
+ROOT CAUSE ALREADY KNOWN
+========================
+
+Before latency optimisation, Practice generated a full `TeachingLesson`.
+
+That full lesson correctly supported:
+
+* Detailed 8 sections
+* Standard 5 sections
+* Compact 3 sections
+
+Latency became unacceptable because Practice forced the expensive full multi-call AI quality pipeline.
+
+The bank fast-path then bypassed `TeachingLesson` completely, which destroyed the 8/5/3 mode behaviour.
+
+DO NOT repeat either mistake.
+
+==================================================
+REQUIRED RUNTIME ARCHITECTURE
+=============================
+
+For a frozen bank question:
+
+1. Retrieve the frozen Gold Standard question + approved answer instantly.
+
+2. Use that approved Q&A as authoritative grounding for ONE full `TeachingLesson` generation.
+
+3. Generate ONE complete TeachingLesson capable of supporting the existing:
+
+   * Detailed 8-section view
+   * Standard 5-section view
+   * Compact 3-section view
+
+4. Use the CURRENT streaming transport.
+
+5. Show meaningful real teaching content as soon as it arrives.
+
+6. DO NOT run reviewer/improver cycles during this runtime generation.
+
+7. Once the full TeachingLesson is available, all three modes use that SAME lesson.
+
+8. Detailed ↔ Standard ↔ Compact switching:
+
+   * 0 AI calls
+   * instant
+   * no page reload
+
+Do NOT generate three lessons.
+
+==================================================
+ACADEMIC SAFETY
+===============
+
+The frozen Gold Standard bank content is authoritative.
+
+The runtime model must NOT change:
+
+* the correct answer;
+* mathematical result;
+* scientific fact;
+* curriculum meaning;
+* exam requirement.
+
+Use existing approved:
+
+* answer;
+* steps;
+* explanation;
+* marking requirements;
+* hints where relevant
+
+as grounding/context for TeachingLesson generation.
+
+AI may expand the pedagogy, but must not replace the approved academic answer.
+
+==================================================
+SPEED CONTRACT
+==============
+
+Do NOT optimise by shortening the TeachingLesson.
+
+Required:
+
+### First uncached bank lesson
+
+* page opens immediately;
+* first meaningful teaching content target ≤2 seconds;
+* absolute maximum ≤5 seconds;
+* exactly 1 AI generation call.
+
+The rest of the full Detailed lesson may continue streaming progressively.
+
+### Repeat/cached lesson
+
+* target <1 second;
+* 0 new AI calls.
+
+### Mode switch
+
+* instant;
+* 0 AI calls.
+
+Do NOT restore the old 50–60 second quality pipeline.
+
+==================================================
+8 / 5 / 3 MUST BE REAL
+======================
+
+Use the EXISTING known-good pre-latency `TeachingLesson` mode contract.
+
+Do NOT manually invent new mode definitions.
+
+Restore the known-good rendering behaviour where:
+
+Detailed visibly renders 8 meaningful sections.
+
+Standard visibly renders 5 meaningful sections.
+
+Compact visibly renders 3 meaningful sections.
+
+Do NOT count empty sections.
+
+Do NOT fabricate filler merely to reach 8/5/3.
+
+Use the existing TeachingLesson fields that supported this before the latency changes.
+
+==================================================
+CACHE
+=====
+
+First inspect and reuse the EXISTING lesson/cache path.
+
+Do NOT create another cache system.
+
+If the current cache can preserve the full generated TeachingLesson for repeat use, use it.
+
+Report whether the cache survives server restart.
+
+Do NOT redesign persistence in this task.
+
+==================================================
+VALIDATE WITH EXACT FOUNDER TEST
+================================
+
+Use:
+
+Class 9 Mathematics
+same frozen question:
+"What is another name for the Cartesian plane?"
+
+In the RUNNING UI verify:
+
+### Detailed
+
+* exactly 8 meaningful sections
+* descriptive/full teaching
+
+### Standard
+
+* exactly 5 meaningful sections
+* complete everyday/exam-ready teaching
+* visibly shorter than Detailed
+
+### Compact
+
+* exactly 3 meaningful sections
+* concise revision
+* NOT blank
+* visibly shorter than Standard
+
+Then validate one:
+
+* Science question
+* Information Technology question
+
+==================================================
+TEACHER / EXAMINER SANITY
+=========================
+
+For the three tested questions verify:
+
+* answer matches frozen approved answer;
+* no contradiction with bank content;
+* reasoning is complete;
+* weak student can understand;
+* final answer is school-exam usable;
+* no filler/repetition introduced.
+
+Do NOT launch another AI reviewer call.
+
+This is a sanity comparison against the approved frozen answer.
+
+==================================================
+STRICT PROTECTION
+=================
+
+Do NOT modify:
+
+* frozen question-bank content;
+* Gold Standard;
+* curriculum;
+* model;
+* planner;
+* streaming infrastructure except minimum wiring;
+* scroll fix;
+* Practice numbering;
+* subject fixes;
+* UI design;
+* telemetry architecture.
+
+Do NOT:
+
+* restore `skipBank: true` with the old multi-call quality pipeline;
+* generate separate mode answers;
+* manually remap bank fields into fake mode structures;
+* shorten the 8/5/3 lesson to hit latency.
+
+==================================================
+REPORT
+======
+
+Return only:
+
+1. exact runtime flow implemented;
+2. files changed;
+3. AI calls on first open;
+4. AI calls on repeat open;
+5. AI calls on mode switch;
+6. time to first meaningful content;
+7. full lesson completion time;
+8. Detailed section count;
+9. Standard section count;
+10. Compact section count;
+11. teacher/examiner sanity result against frozen answer;
+12. cache behaviour;
+13. TypeScript result.
+
+If exact 8/5/3 cannot be restored with ONE streamed generation call, STOP and report why.
+
+Do NOT try another architecture.
+
+Success requires BOTH:
+
+**Detailed 8 / Standard 5 / Compact 3**
+
+AND
+
+**first meaningful content ≤5 seconds**
+
+End exactly:
+
+**8/5/3 TEACHING QUALITY AND SPEED BOTH RESTORED**
+
+Then STOP.

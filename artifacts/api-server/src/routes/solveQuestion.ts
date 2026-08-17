@@ -96,6 +96,14 @@ function makeCacheKey(subject: string, question: string, mode: LessonMode): stri
   return Math.abs(h).toString(36);
 }
 
+/** Stable cache key for bank questions — keyed by questionId, not question text. */
+function makeBankCacheKey(questionId: string): string {
+  const raw = `bank::${questionId}`;
+  let h = 0;
+  for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
+  return `b${Math.abs(h).toString(36)}`;
+}
+
 function getCached(subject: string, question: string, mode: LessonMode): LessonResponse | null {
   const key   = makeCacheKey(subject, question, mode);
   const entry = responseCache.get(key);
@@ -1734,11 +1742,28 @@ router.post("/solveQuestion/stream", async (req, res) => {
   }
 
   // ── 2. Validate input ────────────────────────────────────────────────────────
-  const { question, subject, studentContext: rawCtx } = req.body as {
+  const {
+    question, subject, studentContext: rawCtx,
+    mode: rawMode, bankContext: rawBankCtx,
+  } = req.body as {
     question?:       unknown;
     subject?:        unknown;
     studentContext?: unknown;
+    mode?:           unknown;
+    bankContext?:    unknown;
   };
+
+  // mode: "basic" generates the full Detailed schema (bank questions); "standard" default
+  const streamMode: LessonMode = LESSON_MODES.includes(rawMode as LessonMode)
+    ? rawMode as LessonMode : "standard";
+
+  // bankContext: present when request is for a frozen bank question
+  type BankStep = { title: string; explanation: string; formula?: string; result?: string };
+  interface BankCtx { questionId: string; answer: string; hint: string; steps: BankStep[]; keyConcepts: string[]; }
+  const bankCtx: BankCtx | undefined = (
+    rawBankCtx && typeof rawBankCtx === "object" &&
+    typeof (rawBankCtx as Record<string, unknown>).questionId === "string"
+  ) ? rawBankCtx as BankCtx : undefined;
 
   if (typeof question !== "string" || question.trim().length < 5) {
     res.status(400).json({ error: "invalid_question" }); return;
@@ -1759,8 +1784,22 @@ router.post("/solveQuestion/stream", async (req, res) => {
     try { res.write(`data: ${JSON.stringify(data)}\n\n`); } catch { /* client gone */ }
   };
 
-  // ── 3. Server-side cache check (skip for personalised requests) ──────────────
-  if (!ctx) {
+  // ── 3. Server-side cache check ───────────────────────────────────────────────
+  // Bank questions: cache by questionId (survives until server restart).
+  // Standard questions: cache by question text + mode (existing behaviour).
+  if (bankCtx) {
+    const entry = responseCache.get(makeBankCacheKey(bankCtx.questionId));
+    if (entry && Date.now() <= entry.expiresAt) {
+      req.log.info({ questionId: bankCtx.questionId }, "[STREAM] bank server-cache hit");
+      res.setHeader("Content-Type",     "text/event-stream");
+      res.setHeader("Cache-Control",    "no-cache");
+      res.setHeader("X-Accel-Buffering", "no");
+      res.flushHeaders();
+      emit({ type: "cached", lesson: { ...entry.data, cached: true } });
+      res.end();
+      return;
+    }
+  } else if (!ctx) {
     const cached = getCached(subj, q, "standard");
     if (cached) {
       req.log.info({ subject: subj, cached: true }, "[STREAM] cache hit — returning via SSE");
@@ -1792,13 +1831,54 @@ router.post("/solveQuestion/stream", async (req, res) => {
     res.end(); return;
   }
 
+  // Blueprint planning — skip for bank questions (frozen question, no topic routing needed)
   let blueprint: BlueprintInjection | undefined;
-  try {
-    blueprint = await buildTeachingBlueprint(subj, q, apiKey, "standard");
-  } catch { /* degraded — continue without blueprint */ }
+  if (!bankCtx) {
+    try {
+      blueprint = await buildTeachingBlueprint(subj, q, apiKey, "standard");
+    } catch { /* degraded — continue without blueprint */ }
+  }
 
   // ── 6. Build prompts ──────────────────────────────────────────────────────────
-  const { systemContent, userContent } = buildDraftPrompts(subj, q, "standard", ctx, blueprint);
+  // systemContent and maxTokens from buildDraftPrompts (handles mode-specific schema).
+  // userContent is overridden for bank questions to inject authoritative grounding.
+  const { systemContent, maxTokens: streamMaxTokens } = buildDraftPrompts(subj, q, streamMode, ctx, blueprint);
+  let userContent: string;
+  if (bankCtx) {
+    // Inject the frozen Gold Standard answer as authoritative grounding.
+    // AI expands pedagogy (intuition, mistakes, examples) but MUST NOT change the answer.
+    const stepsText = bankCtx.steps.map((s, i) =>
+      [
+        `Step ${i + 1} — ${s.title}:`,
+        s.explanation,
+        ...(s.formula ? [`Formula: ${s.formula}`] : []),
+        ...(s.result  ? [`Result: ${s.result}`]   : []),
+      ].join("\n")
+    ).join("\n\n");
+
+    userContent = [
+      `GOLD STANDARD ANSWER — AUTHORITATIVE. Do NOT change this answer or its mathematical/scientific content:`,
+      `"${bankCtx.answer}"`,
+      ``,
+      `APPROVED STEP-BY-STEP REASONING (anchor guidedReasoning to these; expand the WHY and PAUSE fields):`,
+      stepsText,
+      ``,
+      `AUTHORITATIVE KEY CONCEPTS: ${bankCtx.keyConcepts.join(", ")}`,
+      ``,
+      `PEDAGOGICAL HINT (use for questionTranslation.plainEnglish context): ${bankCtx.hint}`,
+      ``,
+      `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above.`,
+      `guidedReasoning MUST follow the approved reasoning (you may add depth to why/pause).`,
+      `All other sections (intuition, vocabulary, commonMistakes, simplerExample, practiceQuestion, rememberThese) should be authored with full pedagogical depth.`,
+      ``,
+      `Subject: ${subj}`,
+      ``,
+      `Question:`,
+      q,
+    ].join("\n");
+  } else {
+    ({ userContent } = buildDraftPrompts(subj, q, "standard", ctx, blueprint));
+  }
 
   // ── 7. Call OpenAI with stream: true ──────────────────────────────────────────
   const budgetTimer = setTimeout(() => abortCtrl.abort(), STANDARD_BUDGET_MS);
@@ -1814,7 +1894,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       body: JSON.stringify({
         model:          MODEL,
         temperature:    0.3,
-        max_tokens:     1100,
+        max_tokens:     streamMaxTokens,
         stream:         true,
         stream_options: { include_usage: true },
         messages: [
@@ -1904,21 +1984,31 @@ router.post("/solveQuestion/stream", async (req, res) => {
     res.end(); return;
   }
 
-  // Apply the same post-processing guards as the regular route.
-  if (!questionNeedsTranslation(q) && finalLesson.questionTranslation) {
-    finalLesson.questionTranslation.plainEnglish = "";
-    finalLesson.questionTranslation.whatWeKnow   = "";
-    finalLesson.questionTranslation.whatWeFind   = "";
-    finalLesson.questionTranslation.wordToMath   = "";
-  }
-  if (finalLesson.practiceQuestion) {
-    finalLesson.practiceQuestion.question = "";
-    finalLesson.practiceQuestion.hints    = ["", "", ""];
-    finalLesson.practiceQuestion.solution = "";
+  // Post-processing guards — Standard mode, non-bank questions only.
+  // Bank questions are generated at "basic" (Detailed) mode — all fields intentionally populated.
+  if (!bankCtx) {
+    if (!questionNeedsTranslation(q) && finalLesson.questionTranslation) {
+      finalLesson.questionTranslation.plainEnglish = "";
+      finalLesson.questionTranslation.whatWeKnow   = "";
+      finalLesson.questionTranslation.whatWeFind   = "";
+      finalLesson.questionTranslation.wordToMath   = "";
+    }
+    if (finalLesson.practiceQuestion) {
+      finalLesson.practiceQuestion.question = "";
+      finalLesson.practiceQuestion.hints    = ["", "", ""];
+      finalLesson.practiceQuestion.solution = "";
+    }
   }
 
   // ── 10. Cache + telemetry ─────────────────────────────────────────────────────
-  if (!ctx) {
+  if (bankCtx) {
+    // Cache bank lesson by questionId (server-side in-memory, survives until restart)
+    responseCache.set(makeBankCacheKey(bankCtx.questionId), {
+      data:      finalLesson,
+      expiresAt: Date.now() + CACHE_TTL_MS,
+    });
+    req.log.info({ questionId: bankCtx.questionId }, "[STREAM] bank lesson cached on server");
+  } else if (!ctx) {
     setCached(subj, q, "standard", finalLesson);
   }
 

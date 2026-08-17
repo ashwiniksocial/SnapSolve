@@ -7,7 +7,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { useAttemptLog } from "@/hooks/useAttemptLog";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
-import { callDevLesson, toAIResponse } from "@/services/ai/openaiSolver";
+import { callDevLesson, toAIResponse, solveBankWithStream, getBankCachedLesson, type BankQuestionContext } from "@/services/ai/openaiSolver";
 import { useCelebration } from "@/hooks/useCelebration";
 import { getQuestionById, type Difficulty } from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
@@ -66,27 +66,25 @@ export default function Solution() {
     }
 
     try {
-      // ── Fast path: frozen bank question — 0 AI calls, near-instant ──────────
-      // When a student opens a Practice question we already have the question ID.
-      // Look it up directly in the curriculum bank (preloaded by the Practice page)
-      // and build an AIResponse from the frozen Gold Standard data.
-      // This replaces the 50–60 s AI pipeline that practiceMode=1 previously forced.
+      // ── Bank question path: streaming TeachingLesson grounded in frozen answer ─
+      // Step 1: check localStorage cache by questionId (7-day TTL) — 0 AI calls.
+      // Step 2: cache miss → stream full Detailed lesson grounded in frozen bank
+      //         answer via POST /api/solveQuestion/stream with bankContext.
+      //         First content ≤2 s target; onPartial renders progressively.
+      // Step 3: on completion, cache lesson by questionId for future instant loads.
+      // One lesson serves all 3 teaching modes — switching is instant, 0 AI calls.
       if (practiceMode && session.practiceQuestionId) {
         const bankQ = getQuestionById(session.practiceQuestionId);
         if (bankQ) {
-          const bankResult: AIResponse = {
-            id:               bankQ.id,
-            subject:          bankQ.subject as Subject,
-            topic:            bankQ.topicName,
-            difficulty:       bankQ.difficulty,
-            detectedQuestion: bankQ.question,
-            keyConcepts:      bankQ.keyConcepts,
-            steps:            bankQ.steps,
-            finalAnswer:      bankQ.answer,
-            similarQuestions: [],
-            source:           "bank",
+          const bankContext: BankQuestionContext = {
+            questionId:  bankQ.id,
+            answer:      bankQ.answer,
+            hint:        bankQ.hint,
+            steps:       bankQ.steps,
+            keyConcepts: bankQ.keyConcepts,
           };
-          setSolution(bankResult);
+
+          // Analytics — same whether cache hit or miss
           recordSolve(session.subject, session.practiceTopic ?? bankQ.topicName, true, bankQ.id);
           update({ practiceTopic: bankQ.topicName });
           if (session.practiceChapterId) {
@@ -101,7 +99,47 @@ export default function Solution() {
               session.practiceClassNum ?? 9,
             );
           }
-          setPageState("done");
+
+          // ── Cache hit: instant display, 0 AI calls ───────────────────────────
+          const cached = getBankCachedLesson(bankQ.id);
+          if (cached) {
+            setSolution(cached);
+            setPageState("done");
+            return;
+          }
+
+          // ── Cache miss: stream a full TeachingLesson anchored to frozen answer ─
+          // onPartial fires on first keyConcepts or step (≤2 s) → switches from
+          // loading spinner to solution card while remaining sections arrive.
+          try {
+            const result = await solveBankWithStream(
+              bankQ.subject as Subject,
+              bankQ.question,
+              bankContext,
+              (partial) => {
+                setSolution(partial);
+                setPageState("done"); // switch from spinner to card on first content
+              },
+            );
+            setSolution(result);
+            setPageState("done");
+          } catch (err) {
+            // Streaming failed — show the minimal bank entry so student isn't stuck
+            console.warn("[BANK:STREAM] TeachingLesson generation failed:", String(err));
+            setSolution({
+              id:               `bank-${bankQ.id}`,
+              subject:          bankQ.subject as Subject,
+              topic:            bankQ.topicName,
+              difficulty:       bankQ.difficulty,
+              detectedQuestion: bankQ.question,
+              keyConcepts:      bankQ.keyConcepts,
+              steps:            bankQ.steps,
+              finalAnswer:      bankQ.answer,
+              similarQuestions: [],
+              source:           "bank",
+            });
+            setPageState("done");
+          }
           return;
         }
       }
