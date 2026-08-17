@@ -1,0 +1,75 @@
+Recall PrePromptConditions.
+
+BETA UI READINESS — READ ONLY. DO NOT MODIFY ANY FILE.
+
+We are preparing SnapSolve for a small student/parent Beta 1.
+
+Do NOT redesign the product, create new features, change architecture, change academic content, or propose a large UI project.
+
+Inspect the CURRENT student-facing product only, preferably by actually running it.
+
+Evaluate the core journey:
+
+Open SnapSolve → understand what to do → select/scan/type an actual Class 9 question → receive solution → understand the teaching answer → use “Still confused?” actions → practise/new question.
+
+Apply these frozen principles:
+
+One screen, one primary goal, maximum four visible actions.
+A first-time Class 6 student should understand what to press within 10 seconds.
+Teaching quality > feature visibility.
+Calm, uncluttered, mobile-first interface.
+Progressive disclosure.
+Existing functionality must be reused.
+Beta is for learning from students, not achieving visual perfection.
+
+Inspect specifically:
+
+first-screen clarity;
+navigation clutter;
+subject/chapter selection;
+scan/type-question experience;
+loading/waiting experience;
+solution readability on mobile;
+font sizes, spacing and hierarchy;
+whether long teaching answers feel overwhelming;
+visibility and clarity of Still confused?
+Explain it more simply
+Show me visually
+Quick revision
+Practise
+whether existing Ask AI / Practice Similar / Mark Solved / New Question / Re-solve create unnecessary visible-action overload;
+obvious dead buttons, broken states or confusing terminology;
+responsiveness/mobile usability;
+sign-up/sign-in friction for a first beta student;
+anything that would prevent a student from completing one real question independently.
+
+Categorise findings ONLY as:
+
+P0 — blocks beta
+P1 — likely confuses students
+P2 — worthwhile polish before beta
+POST-BETA — leave alone
+
+For every P0/P1/P2 item state:
+
+exact screen/component;
+exact problem;
+smallest safe correction;
+files that would need modification;
+whether functionality changes or visual-only;
+regression risk.
+
+Also identify anything already good enough and explicitly recommend LEAVE AS IS.
+
+Do not write code.
+Do not modify files.
+Do not create new UI architecture/components unless absolutely unavoidable.
+Do not audit backend/content/governance.
+
+End with:
+
+MINIMUM BETA UI PATCH
+
+containing only the changes genuinely worth making before putting SnapSolve in front of real students and parents.
+
+Then stop.
