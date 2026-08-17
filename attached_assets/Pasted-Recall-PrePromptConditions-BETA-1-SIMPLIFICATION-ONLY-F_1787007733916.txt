@@ -1,0 +1,125 @@
+Recall PrePromptConditions.
+
+BETA 1 SIMPLIFICATION ONLY.
+
+Founder decision:
+
+For Beta 1, keep ONLY the existing **Detailed** answer mode.
+
+Temporarily remove/hide the student-facing:
+
+* Standard
+* Compact
+
+Do NOT redesign Detailed.
+Do NOT change Detailed teaching content.
+Do NOT change the Detailed schema.
+Do NOT reduce teaching depth.
+
+### Required end state
+
+For both:
+
+* frozen bank questions
+* genuinely new AI-generated questions
+
+the student sees only the existing **Detailed** teaching experience.
+
+The Detailed lesson must remain the same full descriptive, weak-student-friendly, teacher/examiner-acceptable answer structure already used by SnapSolve.
+
+### Important
+
+This is primarily a complexity/risk reduction.
+
+Do NOT claim that hiding Standard/Compact alone will solve the 18–20 second generation latency.
+
+Preserve all existing speed work:
+
+* streaming;
+* bank lesson cache;
+* scroll-to-top;
+* planner fix;
+* stream-failure safety.
+
+### UI
+
+Remove/hide only the mode-selector UI:
+
+`Detailed | Standard | Compact`
+
+The Solution screen should directly render Detailed.
+
+Do not leave an inactive Detailed button or empty selector container.
+
+### Runtime
+
+Do not generate Standard or Compact variants.
+
+If the current implementation generates ONE full Detailed TeachingLesson and derives Standard/Compact only at render time, leave the generation path unchanged and simply render Detailed only.
+
+Do NOT add new AI calls.
+
+Mode-switch code that is now unused may be removed only if it is safely isolated and doing so reduces complexity.
+
+Do not perform broad refactoring.
+
+### Preserve
+
+Do NOT modify:
+
+* frozen question banks;
+* Gold Standard;
+* curriculum;
+* model;
+* prompts;
+* planner;
+* Detailed schema;
+* Detailed section structure;
+* streaming architecture;
+* cache architecture;
+* Practice;
+* progress;
+* navigation;
+* telemetry.
+
+### Validation
+
+Test only:
+
+1. one Maths bank question;
+2. one Science bank question;
+3. one IT bank question;
+4. one fresh unmatched AI question.
+
+Verify:
+
+* no Standard button;
+* no Compact button;
+* no mode selector container;
+* Detailed answer renders normally;
+* no blank sections;
+* bank cached lesson still works;
+* streaming fresh answer still works;
+* no new AI calls introduced;
+* TypeScript passes.
+
+Measure and report the actual Detailed answer latency before/after this UI simplification.
+
+Do NOT optimise latency further in this task.
+
+### Report only
+
+1. exact file(s) changed;
+2. mode selector removed;
+3. Detailed behaviour preserved;
+4. bank AI-call count;
+5. fresh AI-call count;
+6. Detailed first-content latency;
+7. Detailed full-completion latency;
+8. TypeScript result.
+
+If successful end exactly:
+
+**BETA 1 DETAILED-ONLY MODE ACTIVE**
+
+Then STOP.

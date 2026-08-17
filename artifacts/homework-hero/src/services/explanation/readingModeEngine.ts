@@ -3,11 +3,9 @@ export type ReadingLevel = "basic" | "standard" | "advanced";
 const LEVEL_KEY = "studyai-reading-level";
 
 export function getStoredLevel(): ReadingLevel {
-  try {
-    const v = localStorage.getItem(LEVEL_KEY);
-    if (v === "basic" || v === "standard" || v === "advanced") return v;
-  } catch {}
-  return "standard";
+  // Beta 1: always Detailed — mode selector is hidden.
+  // Stored value is ignored; generation is always "basic" (full Detailed schema).
+  return "basic";
 }
 
 export function setStoredLevel(level: ReadingLevel): void {
