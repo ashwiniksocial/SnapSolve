@@ -1,0 +1,97 @@
+Recall PrePromptConditions.
+
+The Four-Action Patch is complete and frozen. Do not modify it.
+
+Do not change code.
+
+Inspect only the existing production student AI generation path needed for model selection and cost measurement.
+
+Trace from:
+
+`POST /api/solveQuestion`
+→ blueprint/prompt construction
+→ `generateDraft()`
+→ any quality/retry/escalation calls
+→ OpenAI client/model
+→ final response.
+
+Report concisely:
+
+### 1. Current models
+
+For every AI call that can occur during one normal student solve, identify:
+
+* exact file/function;
+* current OpenAI model;
+* purpose of the call;
+* whether it always runs or is conditional;
+* maximum calls possible for one solve.
+
+Include the new `simplify` path separately.
+
+### 2. Model-selection authority
+
+Identify the single existing server-side location where model choice should be controlled with the minimum modification.
+
+Do not propose a new model-router service if the existing architecture can perform this function.
+
+### 3. Current token/cost telemetry
+
+Identify whether the runtime currently captures:
+
+* input/prompt tokens;
+* output/completion tokens;
+* cached tokens if exposed;
+* model name;
+* number of OpenAI calls;
+* latency;
+* retry/escalation count;
+* OCR usage;
+* cache hit/miss;
+* request/user/session identifier.
+
+For each, state:
+**already captured / available but discarded / not available**.
+
+### 4. Cost-critical behaviour
+
+Identify anything currently capable of multiplying AI cost per student request, including:
+
+* multiple generation passes;
+* quality retries;
+* automatic regeneration;
+* duplicate frontend/backend requests;
+* uncached personalized requests;
+* simplify requests;
+* practice AI mode;
+* Socratic Tutor calls.
+
+Do not redesign them. Just identify them.
+
+### 5. Minimum next patch
+
+Recommend the smallest patch that would let beta record per request:
+
+`model + AI call count + input tokens + output tokens + cache status + latency + request type/intent + estimated API cost`
+
+Prefer the existing logging/analytics path if one exists.
+
+Do NOT:
+
+* change models;
+* change prompts;
+* change teaching quality;
+* modify Gold Standard;
+* create new governance;
+* create a new analytics architecture;
+* build dashboards;
+* change UI;
+* modify question banks or curriculum.
+
+End with:
+
+**RECOMMENDED MINIMUM TELEMETRY PATCH**
+
+and list only the exact files/functions that would need modification.
+
+Then stop.
