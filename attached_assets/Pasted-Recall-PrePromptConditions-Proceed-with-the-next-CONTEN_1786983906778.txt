@@ -1,0 +1,123 @@
+Recall PrePromptConditions.
+
+Proceed with the next CONTENT BUILD only:
+
+**Class 9 — Information Technology (Code 402)**
+**Unit 3 — Digital Documentation**
+
+Units 1 and 2 are COMPLETE AND FROZEN.
+
+Reuse the existing Information Technology 402 integration already established.
+
+Do not reopen or redesign shared architecture.
+
+### Authoritative sources
+
+Use ONLY the supplied official:
+
+1. CBSE Information Technology (402) Class IX syllabus, 2026–27.
+2. NCERT Class IX Information Technology textbook.
+
+No third-party or inferred content.
+
+### Step 1 — Source-grounded structure
+
+Derive the exact Unit 3 topics/subtopics directly from the official textbook and syllabus before generating questions.
+
+Do not introduce Unit 4/5 content.
+
+Register Unit 3 through the EXISTING IT 402 canonical path with the next correct display order.
+
+### Step 2 — Question bank
+
+Build approximately **50 strong school-exam/practical-preparation questions**, adjusted only if official content clearly warrants another count.
+
+Because this unit is practical, prioritise:
+
+* MCQ/objective;
+* short answer;
+* procedural steps;
+* application/scenario questions;
+* feature/function identification;
+* document-creation/editing workflows;
+* formatting and editing concepts;
+* practical task reasoning.
+
+Do not force artificial Hard questions.
+
+Use realistic practical scenarios where direct practical execution cannot be represented in text.
+
+### Step 3 — Answers
+
+Every answer must be:
+
+* official-source aligned;
+* teacher/examiner acceptable;
+* complete for the question;
+* clear enough for weak students;
+* procedural where required;
+* concise but sufficient.
+
+Hints must guide without revealing the full answer.
+
+### Step 4 — Gold Standard
+
+Run the EXISTING Gold Standard acceptance gate.
+
+Fix only CONFIRMED defects.
+
+Do not rewrite passing Q&A unnecessarily.
+
+Use the existing reviewer uncertainty process.
+
+Do not create another checklist/review path.
+
+### Step 5 — Validate and freeze
+
+Verify:
+
+* official Unit 3 alignment;
+* complete topic coverage;
+* no Unit 4/5 leakage;
+* unique IDs;
+* no duplicates;
+* appropriate type/difficulty mix;
+* IT 402 registration/gateway visibility;
+* TypeScript;
+* curriculum validations;
+* all Q&A GOLD_STANDARD_PASS.
+
+Then freeze using the EXISTING mechanism.
+
+### Protected scope
+
+Do not modify:
+
+* IT 402 Units 1 or 2;
+* Mathematics;
+* Science;
+* Artificial Intelligence 417;
+* Computer Applications 165;
+* CTAI Classes 6–8;
+* UI;
+* AI/model work;
+* telemetry;
+* governance;
+* Gold Standard implementation.
+
+Report only:
+
+1. official topic structure;
+2. files changed;
+3. question count/type/difficulty distribution;
+4. Gold Standard result;
+5. confirmed defects/fixes;
+6. validation results;
+7. final count;
+8. freeze status.
+
+If successful end:
+
+**CLASS 9 INFORMATION TECHNOLOGY 402 — UNIT 3 COMPLETE AND FROZEN**
+
+Then stop.

@@ -8299,6 +8299,107 @@
         ],
         "figures": []
       }
+    },
+    {
+      "filename": "402-IT-IX-unit3.pdf",
+      "filepath": "curriculum/sources/cbse/class9/computer/Information Technology Class 9 textbook 402_IT_IX.pdf",
+      "board": "CBSE",
+      "class": 9,
+      "subject": "Information Technology",
+      "series": "NCERT IT 402 Textbook",
+      "book": "Information Technology Class IX",
+      "chapter_number": "Unit 3",
+      "chapter_title": "Digital Documentation",
+      "is_chapter": true,
+      "page_count": 30,
+      "structure": {
+        "sections": [
+          {
+            "number": "3.1",
+            "title": "Introduction to LibreOffice Writer"
+          },
+          {
+            "number": "3.2",
+            "title": "Creating and Editing a Document"
+          },
+          {
+            "number": "3.3",
+            "title": "Formatting Text and Paragraphs"
+          },
+          {
+            "number": "3.4",
+            "title": "Tables in Writer"
+          },
+          {
+            "number": "3.5",
+            "title": "Mail Merge"
+          }
+        ],
+        "subsections": [],
+        "activities": [],
+        "exercises": [],
+        "key_terms": [
+          "word processor",
+          "LibreOffice Writer",
+          "ODF",
+          ".odt",
+          "title bar",
+          "menu bar",
+          "standard toolbar",
+          "formatting toolbar",
+          "ruler",
+          "status bar",
+          "word wrap",
+          "save",
+          "save as",
+          "cut",
+          "copy",
+          "paste",
+          "clipboard",
+          "undo",
+          "redo",
+          "find and replace",
+          "spell check",
+          "autocorrect",
+          "select all",
+          "bold",
+          "italic",
+          "underline",
+          "font",
+          "font size",
+          "points",
+          "alignment",
+          "left align",
+          "right align",
+          "centre align",
+          "justify",
+          "indentation",
+          "first-line indent",
+          "hanging indent",
+          "line spacing",
+          "bullets",
+          "numbering",
+          "header",
+          "footer",
+          "page margins",
+          "portrait",
+          "landscape",
+          "table",
+          "merge cells",
+          "split cells",
+          "tab key",
+          "insert row",
+          "delete row",
+          "table properties",
+          "autoformat",
+          "mail merge",
+          "main document",
+          "data source",
+          "merge fields",
+          "merge to new document"
+        ],
+        "figures": []
+      }
     }
   ]
 }
