@@ -1,0 +1,157 @@
+Recall PrePromptConditions.
+
+DO NOT declare the ≤5-second P0 solved yet.
+
+Two issues remain:
+
+1. One normal unmatched Biology question took **8.1 seconds**, exceeding the founder's hard ≤5-second requirement.
+2. The speed patch materially reduced Standard teaching output:
+
+   * 4 guided steps → 3
+   * removed questionTranslation entirely
+   * removed practiceQuestion
+   * removed pause
+   * removed finalAnswer.whyCorrect
+   * maxTokens 1200 → 600
+
+Teaching quality has priority over arbitrary latency optimisation.
+
+Do NOT make further production changes initially.
+
+==================================================
+TASK 1 — QUALITY REGRESSION CHECK
+=================================
+
+Compare BEFORE-speed-patch Standard output against CURRENT Standard output for a small representative set:
+
+* Maths factual
+* Maths calculation
+* Maths reasoning/proof
+* Science factual
+* Science numerical/reasoning
+* Biology explanatory
+* Information Technology factual/procedural
+
+Evaluate:
+
+* correctness
+* concept teaching
+* reasoning completeness
+* weak-student understanding
+* exam-answer completeness
+* skipped reasoning
+* whether 3 steps are sufficient
+* whether removal of `whyCorrect` causes loss of confidence/verification
+* whether removal of practiceQuestion affects immediate teaching flow
+
+Do NOT run a large benchmark.
+
+Maximum 7 representative questions.
+
+If quality is materially worse than the pre-speed Standard, state that clearly.
+
+==================================================
+TASK 2 — LATENCY DISTRIBUTION
+=============================
+
+The current claim "3.1–4.7 seconds normal" is insufficient because one normal case took 8.1 seconds.
+
+Run a small repeated latency test on CURRENT Standard:
+
+Use 5 representative unmatched questions.
+
+Run each 3 times with cache bypassed appropriately.
+
+Report:
+
+* median
+* p80
+* maximum
+* time to first response byte/token if available
+* full completion time
+
+Do not count cached responses.
+
+Founder requirement is about reliable student experience, not best-case averages.
+
+==================================================
+TASK 3 — STREAMING FEASIBILITY
+==============================
+
+Inspect whether the EXISTING single OpenAI Standard call can be streamed to the current frontend using the minimum safe modification.
+
+Objective:
+
+**First meaningful answer content visible ≤5 seconds even when full completion takes longer.**
+
+Meaningful content means actual teaching/answer text — not spinner text.
+
+Do NOT add a second AI call.
+
+Do NOT create a new teaching engine.
+
+Determine the minimum files/change required for:
+
+OpenAI streaming
+→ server forwards streamed content
+→ frontend renders usable partial solution progressively
+→ final structured solution completes normally
+
+If the current JSON-only response architecture makes direct progressive rendering unsafe, explain the minimum viable alternative.
+
+Do NOT implement streaming in this task.
+
+==================================================
+TASK 4 — RECOMMEND CORRECT END STATE
+====================================
+
+Choose among:
+
+A. Keep current reduced 600-token/3-step Standard because quality is genuinely equivalent and latency is reliably acceptable.
+
+B. Restore some/all removed Standard teaching content and use streaming to meet perceived ≤5-second response.
+
+C. Another smaller evidence-based configuration.
+
+Do NOT recommend a stronger/more expensive model unless there is no smaller solution.
+
+==================================================
+PROTECT
+=======
+
+Do NOT modify:
+
+* bank fast path
+* scroll fix
+* frozen question banks
+* curriculum
+* Gold Standard
+* Detailed
+* Compact
+* model
+* model routing
+* caching architecture
+* UI styling
+
+No implementation yet.
+
+==================================================
+REPORT
+======
+
+Return:
+
+1. quality before vs current Standard;
+2. any teaching regressions caused by 600-token/3-step schema;
+3. repeated latency distribution;
+4. exact 8.1-second cause if determinable;
+5. streaming feasibility;
+6. minimum files required for streaming if recommended;
+7. cost impact;
+8. final recommended Standard configuration.
+
+End exactly:
+
+**SPEED VS TEACHING QUALITY REVIEW COMPLETE — AWAITING FINAL IMPLEMENTATION DECISION**
+
+Then STOP.
