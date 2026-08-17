@@ -94,7 +94,7 @@ export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boo
         // CLASS9_DISPLAY_ORDER carries absolute NCERT ordinals including SOURCE_UNRESOLVED slots;
         // filtering those out leaves a gap (e.g. first visible chapter gets ordinal 2, not 1).
         // Using idx+1 closes that gap. Mathematics keeps CLASS9_DISPLAY_ORDER (no gap there).
-        displayChapterNumber: subject === "Science"
+        displayChapterNumber: subject === "Science" || subject === "Information Technology"
           ? idx + 1
           : (subject === "Mathematics" && ch.classNum === 9)
             ? CLASS9_DISPLAY_ORDER[ch.id]
