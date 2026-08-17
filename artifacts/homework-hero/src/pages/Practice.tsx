@@ -422,8 +422,33 @@ export default function Practice() {
   // selectedSubject is intentionally excluded from deps — subject switches are
   // handled synchronously by handleSubjectChange. The closure captures the
   // latest selectedSubject at the time bankReady / practiceClass changes.
+  //
+  // If a ?chapter=X param is present (set by the Solution page "← Questions"
+  // button), open that chapter's question list directly and scroll to it.
   useEffect(() => {
     if (!bankReady) return;
+
+    const paramChapter = new URLSearchParams(window.location.search).get("chapter") ?? "";
+    if (paramChapter) {
+      // Find which Practice-level subject owns this chapter ID.
+      const owningSubject = ALL_SUBJECTS.find((s) =>
+        getChapters(practiceClass, s).some((ch) => ch.id === paramChapter),
+      );
+      if (owningSubject) {
+        setSelectedSubject(owningSubject);
+        setSelectedChapterId(paramChapter);
+        setSelectedTopicId("all");
+        setSelectedDiff("All");
+        setSelectedType("All");
+        setDrilldownOpen(true);
+        setTimeout(() => {
+          document.getElementById("question-list")?.scrollIntoView({ behavior: "smooth" });
+        }, 80);
+        return;
+      }
+    }
+
+    // Default: first chapter, no drilldown
     const next = getChapters(practiceClass, selectedSubject);
     setSelectedChapterId(next[0]?.id ?? "");
     setDrilldownOpen(false);

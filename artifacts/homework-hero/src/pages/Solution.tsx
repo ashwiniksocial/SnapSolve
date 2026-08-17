@@ -432,7 +432,11 @@ export default function Solution() {
               >
                 {isTodayCompleted || marked ? "✓ Marked Done" : "✓ Mark Solved"}
               </button>
-              <Link href={practiceMode && session.practiceChapterId ? "/practice" : "/scan"}>
+              <Link href={
+                practiceMode && session.practiceChapterId
+                  ? `/practice?chapter=${encodeURIComponent(session.practiceChapterId)}`
+                  : "/scan"
+              }>
                 <button className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
                   {practiceMode && session.practiceChapterId ? "← Questions" : "← New Question"}
                 </button>

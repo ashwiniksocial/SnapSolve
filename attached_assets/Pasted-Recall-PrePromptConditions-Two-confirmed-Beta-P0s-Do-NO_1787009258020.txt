@@ -1,0 +1,118 @@
+Recall PrePromptConditions.
+
+Two confirmed Beta P0s.
+
+Do NOT redesign anything.
+Do NOT change teaching content.
+Do NOT change model/schema/cache architecture unless the exact latency root cause is proven first.
+
+## P0-1 — Questions button
+
+Observed:
+
+On Solution page, clicking **Questions** returns to the Practice chapter list.
+
+Required:
+
+Return directly to the **question list of the currently selected chapter**.
+
+Preserve:
+
+* current subject
+* current chapter
+* current filters if already available
+
+After navigation, scroll to the TOP of that chapter's question list.
+
+Do NOT return to the chapter list.
+Do NOT create new routing architecture.
+
+Make the smallest existing-state/navigation fix only.
+
+## P0-2 — Real answer loading is still 18–22 seconds
+
+Founder manually observes:
+
+Question click → usable answer visible = ~18–22 seconds.
+
+This fails the product requirement.
+
+DO NOT rely on server `firstContentMs`.
+
+Measure the ACTUAL browser journey:
+
+1. question card clicked
+2. route change begins
+3. Solution page mounts
+4. loading state appears
+5. first REAL teaching section is visibly rendered
+6. final answer becomes visible
+7. full Detailed lesson completes
+
+Use one Maths bank question and one Science bank question.
+
+Report exact milliseconds for each stage.
+
+Then trace only:
+
+* Practice.tsx question click
+* Solution.tsx bank path
+* `solveBankWithStream`
+* `onPartial`
+* `setSolution`
+* SolutionCard / TeachingLayout render
+
+Determine whether streamed partial sections are actually being rendered progressively, or whether the frontend waits for the completed full lesson before showing the answer.
+
+### If the confirmed root cause is simple
+
+If partial lesson data is already arriving within ≤2 seconds but `Solution.tsx` waits for full completion before rendering:
+
+fix ONLY that render/update bug so the first valid section appears immediately.
+
+Do NOT alter:
+
+* Detailed content
+* 2800-token budget
+* question banks
+* Gold Standard
+* planner
+* model
+* streaming protocol
+* cache architecture
+
+If the cause is anything broader, STOP and report before changing it.
+
+## Acceptance
+
+Questions button:
+
+* returns to current chapter's question list
+* question list starts at top
+
+Answer:
+
+* first meaningful visible teaching content ≤5 seconds
+* target ≤2 seconds
+* full Detailed lesson may continue streaming afterward
+* no reduction in teaching depth
+* no extra AI calls
+
+Run TypeScript.
+
+Report only:
+
+1. Questions-button root cause and fix
+2. files changed
+3. browser latency timeline before
+4. confirmed answer-latency root cause
+5. any latency fix made
+6. browser latency after
+7. AI-call count
+8. TypeScript result
+
+End exactly:
+
+**QUESTION RETURN AND REAL-WORLD ANSWER LATENCY VERIFIED**
+
+Then STOP.
