@@ -88,17 +88,17 @@
   },
   "c9-m-ch1-t1-q04": {
     "questionId": "c9-m-ch1-t1-q04",
-    "contentHash": "0ca6e0e505b813bfc461a26f21493188fa9320c638a3c887da0c52ca704ff4a2",
+    "contentHash": "021168a6ec11a70e30884a9c563bff1f01c0fe5d26aa945be984b402792481a2",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:06:32.162Z",
+    "reviewedAt": "2026-08-17T13:17:58.617Z",
     "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "CONFIRMED_DEFECT",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
       "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
-      "correctness": "FAIL",
-      "steps_validity": "FAIL",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
       "marking_completeness": "PASS",
       "examination_worthiness": "PASS",
       "curriculum_importance": "PASS",
@@ -106,33 +106,13 @@
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "correctness",
-        "exact_defective_text": "Formula: (1/3 + 1/2) / 2 = (2/6 + 3/6) / 2 = (5/6) / 2",
-        "reason": "The calculation of the average is incorrect; it incorrectly states (1/3 + 1/2) / 2 = (5/6) / 2 instead of the correct value.",
-        "expected_correction": "Formula should show: (1/3 + 1/2) / 2 = (2/6 + 3/6) / 2 = (5/6) / 2 = 5/12.",
-        "supporting_evidence": "(1/3 + 1/2) = (2/6 + 3/6) = 5/6; hence, (5/6)/2 = 5/12 is correct, but the intermediate step was not shown clearly.",
-        "reviewer_confidence": 0
-      },
-      {
-        "criterion_id": "steps_validity",
-        "exact_defective_text": "Rational number between a and b = (a + b)/2",
-        "reason": "The average method described is correct in stating the formula, but the subsequent calculation is not valid because of an incorrect intermediate step.",
-        "expected_correction": "Ensure each step logically leads to final average correctly calculated.",
-        "supporting_evidence": "Correct calculation should show that (1/3 + 1/2) reduces to 5/6 before dividing by 2, leading to 5/12.",
-        "reviewer_confidence": 0
-      }
-    ],
+    "failEvidence": [],
     "failConfidences": {},
-    "reasons": [
-      "[correctness] The calculation of the average is incorrect; it incorrectly states (1/3 + 1/2) / 2 = (5/6) / 2 instead of the correct value.",
-      "[steps_validity] The average method described is correct in stating the formula, but the subsequent calculation is not valid because of an incorrect intermediate step."
-    ],
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2541,
-      "outputTokens": 856,
-      "estimatedCostUSD": 0.0008947499999999999
+      "inputTokens": 1817,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00033795
     }
   },
   "c9-m-ch1-t1-q05": {
@@ -429,14 +409,14 @@
     "questionId": "c9-m-ch1-t2-q05",
     "contentHash": "a4870f7ee1dee40c36a7271549df5e950ffd1bbbac3e431f4bdd174cb872d1ad",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:03.135Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:04:42.629Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
       "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
-      "correctness": "FAIL",
+      "correctness": "PASS",
       "steps_validity": "PASS",
       "marking_completeness": "PASS",
       "examination_worthiness": "PASS",
@@ -445,26 +425,13 @@
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "correctness",
-        "exact_defective_text": "ANSWER: 7√3",
-        "reason": "The answer stated is incorrect; √12 + √75 simplifies to 7√3, which is accurate, but it should also be fully presented in the form of the combined radicals due to potential misinterpretation.",
-        "expected_correction": "The answer should explicitly present the radical addition and simplification process to confirm the final answer.",
-        "supporting_evidence": "√12 + √75 = 2√3 + 5√3 = 7√3 is correct but should be explained fully in the answer, including the initial radicals before adding.",
-        "reviewer_confidence": 0.9
-      }
-    ],
-    "failConfidences": {
-      "correctness": 0.9
-    },
-    "reasons": [
-      "[correctness] The answer stated is incorrect; √12 + √75 simplifies to 7√3, which is accurate, but it should also be fully presented in the form of the combined radicals due to potential misinterpretation."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2348,
-      "outputTokens": 421,
-      "estimatedCostUSD": 0.0006048
+      "inputTokens": 1576,
+      "outputTokens": 269,
+      "estimatedCostUSD": 0.00039779999999999997
     }
   },
   "c9-m-ch1-t2-q06": {
@@ -558,42 +525,29 @@
     "questionId": "c9-m-ch1-t2-q09",
     "contentHash": "933c246a3b50e33ce75d751dd5327ba80d08a2c54aa08154539b7dff3d48848b",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:17.990Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:04:47.337Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
       "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
       "correctness": "PASS",
       "steps_validity": "PASS",
-      "marking_completeness": "FAIL",
+      "marking_completeness": "PASS",
       "examination_worthiness": "PASS",
       "curriculum_importance": "PASS",
       "appropriate_depth": "PASS",
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "marking_completeness",
-        "exact_defective_text": "Numerator = 16 + 6√7",
-        "reason": "The marking points lack detail on how 8 + 3√7 is obtained and should explicitly mention the simplification steps.",
-        "expected_correction": "Include steps showing how to conclude from (16 + 6√7) / 2 to get 8 + 3√7 clearly.",
-        "supporting_evidence": "In the steps provided, simplification is shown, but a direct mention linking it to the final answer is not made clear.",
-        "reviewer_confidence": 0.8
-      }
-    ],
-    "failConfidences": {
-      "marking_completeness": 0.8
-    },
-    "reasons": [
-      "[marking_completeness] The marking points lack detail on how 8 + 3√7 is obtained and should explicitly mention the simplification steps."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2468,
-      "outputTokens": 604,
-      "estimatedCostUSD": 0.0007326
+      "inputTokens": 1643,
+      "outputTokens": 271,
+      "estimatedCostUSD": 0.00040905
     }
   },
   "c9-m-ch1-t2-q10": {
@@ -627,86 +581,43 @@
   },
   "c9-m-ch1-t3-q01": {
     "questionId": "c9-m-ch1-t3-q01",
-    "contentHash": "d74fc21e438339025ce5ad236a8fa8aa59f7fa556e0386eae344f2b3a376e0b5",
+    "contentHash": "9f5a04911c41686b777242757964b6f48a9709ecf786e8c764a658c61dfc35ff",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:33.217Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:16:29.709Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum_alignment": "FAIL",
+      "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
-      "correctness": "FAIL",
+      "correctness": "PASS",
       "steps_validity": "PASS",
-      "marking_completeness": "FAIL",
+      "marking_completeness": "PASS",
       "examination_worthiness": "PASS",
-      "curriculum_importance": "FAIL",
+      "curriculum_importance": "PASS",
       "appropriate_depth": "PASS",
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "curriculum_alignment",
-        "exact_defective_text": "2³ × 2⁴",
-        "reason": "The question tests the laws of exponents, but the relevant chapter sections do not cover this specific topic within the curriculum context provided.",
-        "expected_correction": "The question should relate directly to the provided sections or chapters regarding laws of exponents or mention them explicitly.",
-        "supporting_evidence": "The sections listed (3.2 to 3.7) do not include laws of exponents; hence, the content doesn't align with the given curriculum.",
-        "reviewer_confidence": 0.9
-      },
-      {
-        "criterion_id": "correctness",
-        "exact_defective_text": "128",
-        "reason": "The answer provided does not align with the calculation steps shown.",
-        "expected_correction": "The answer should be expressed through the simplification process, i.e., the correct value of 2⁷.",
-        "supporting_evidence": "2⁷ equals 128, which is correct, but it was not represented as part of the final answer contextually in relation to the steps.",
-        "reviewer_confidence": 0.8
-      },
-      {
-        "criterion_id": "marking_completeness",
-        "exact_defective_text": "128",
-        "reason": "The final answer does not explicitly mention the relationship with the steps leading to the result.",
-        "expected_correction": "The answer should clarify 'Result: 2⁷ = 128' for complete marking points.",
-        "supporting_evidence": "The answer field needs to reflect each valued step for clarity and completeness, aligning with CBSE marking practices.",
-        "reviewer_confidence": 0.7
-      },
-      {
-        "criterion_id": "curriculum_importance",
-        "exact_defective_text": "Laws of Exponents",
-        "reason": "Laws of Exponents are not highlighted as part of the provided chapter content, thus indicating their significance may not align with students' curricular focus.",
-        "expected_correction": "Reframe the context to include direct references or applications that emphasize the importance of laws of exponents in the chapter context.",
-        "supporting_evidence": "The sections detailed (3.2 to 3.7) focus on number systems without explicit mention of exponent laws.",
-        "reviewer_confidence": 0.9
-      }
-    ],
-    "failConfidences": {
-      "curriculum_alignment": 0.9,
-      "correctness": 0.8,
-      "marking_completeness": 0.7,
-      "curriculum_importance": 0.9
-    },
-    "reasons": [
-      "[curriculum_alignment] The question tests the laws of exponents, but the relevant chapter sections do not cover this specific topic within the curriculum context provided.",
-      "[correctness] The answer provided does not align with the calculation steps shown.",
-      "[marking_completeness] The final answer does not explicitly mention the relationship with the steps leading to the result.",
-      "[curriculum_importance] Laws of Exponents are not highlighted as part of the provided chapter content, thus indicating their significance may not align with students' curricular focus."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2536,
-      "outputTokens": 1008,
-      "estimatedCostUSD": 0.0009851999999999999
+      "inputTokens": 1638,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031109999999999997
     }
   },
   "c9-m-ch1-t3-q02": {
     "questionId": "c9-m-ch1-t3-q02",
-    "contentHash": "363e468e6c0da9d7b06ef432e4985ab5eb6340e1942fbc11426f4b5c403aafbd",
+    "contentHash": "769126b6893b3cb41e279258562ec026664147aeae0b3889b63cfb38449d8be3",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:38.774Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:16:32.967Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum_alignment": "FAIL",
+      "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
       "correctness": "PASS",
       "steps_validity": "PASS",
@@ -717,33 +628,20 @@
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "curriculum_alignment",
-        "exact_defective_text": "Simplify: (3²)³",
-        "reason": "The topic of Laws of Exponents is not listed in the provided sections of the chapter 'The World of Numbers'.",
-        "expected_correction": "Change the chapter to one that includes Laws of Exponents.",
-        "supporting_evidence": "The chapter sections focus on various number concepts without mention of exponents.",
-        "reviewer_confidence": 0.9
-      }
-    ],
-    "failConfidences": {
-      "curriculum_alignment": 0.9
-    },
-    "reasons": [
-      "[curriculum_alignment] The topic of Laws of Exponents is not listed in the provided sections of the chapter 'The World of Numbers'."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2190,
-      "outputTokens": 383,
-      "estimatedCostUSD": 0.0005583
+      "inputTokens": 1645,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031215
     }
   },
   "c9-m-ch1-t3-q03": {
     "questionId": "c9-m-ch1-t3-q03",
-    "contentHash": "b9b8b2872080cf6c482ec0dec78637fae1360911f63a497cb5519f90dc471f11",
+    "contentHash": "036d430fc85561cd35c1bec8a059bee7fd25dde7f644b32211d222004d392a8b",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:40.808Z",
+    "reviewedAt": "2026-08-17T13:16:36.038Z",
     "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
     "overall": "GOLD_STANDARD_PASS",
@@ -763,21 +661,21 @@
     "failConfidences": {},
     "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1533,
+      "inputTokens": 1648,
       "outputTokens": 109,
-      "estimatedCostUSD": 0.00029535
+      "estimatedCostUSD": 0.0003126
     }
   },
   "c9-m-ch1-t3-q04": {
     "questionId": "c9-m-ch1-t3-q04",
-    "contentHash": "49915caff0428d1a12370014a1ea9d73db2ac66f76b9fddd968dfed556525e60",
+    "contentHash": "438ea2624d8a03cf9fbd553c7d7195d0efbb0e78d60dde1c5886dade471cc543",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:46.474Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:16:38.836Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum_alignment": "FAIL",
+      "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
       "correctness": "PASS",
       "steps_validity": "PASS",
@@ -788,38 +686,25 @@
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "curriculum_alignment",
-        "exact_defective_text": "Simplify: x⁵ / x³",
-        "reason": "The concept of Laws of Exponents does not reside in the chapter titled 'The World of Numbers'. This chapter does not address exponential expressions or their simplifications.",
-        "expected_correction": "The question should relate to a concept found within 'The World of Numbers' such as integers or rational numbers.",
-        "supporting_evidence": "According to the chapter sections, the relevant topics include integers and rational numbers, but not exponents.",
-        "reviewer_confidence": 1
-      }
-    ],
-    "failConfidences": {
-      "curriculum_alignment": 1
-    },
-    "reasons": [
-      "[curriculum_alignment] The concept of Laws of Exponents does not reside in the chapter titled 'The World of Numbers'. This chapter does not address exponential expressions or their simplifications."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2174,
-      "outputTokens": 414,
-      "estimatedCostUSD": 0.0005744999999999999
+      "inputTokens": 1688,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003186
     }
   },
   "c9-m-ch1-t3-q05": {
     "questionId": "c9-m-ch1-t3-q05",
-    "contentHash": "8d09517504d5f084b4639014b1c6724c7d097b4b826e59894704092b44de1bd9",
+    "contentHash": "c10ca446f88849c1ca1a144851b4f925bf8fb14b88dfb31c1f54f3349fa4d399",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:53.233Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:16:41.333Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum_alignment": "FAIL",
+      "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
       "correctness": "PASS",
       "steps_validity": "PASS",
@@ -830,33 +715,20 @@
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "curriculum_alignment",
-        "exact_defective_text": "Laws of Exponents (t3)",
-        "reason": "The question and answer relate to exponents, but the source context does not explicitly cover laws of exponents within 'The World of Numbers' curriculum for Class 9. The relevant concepts of exponents may not be adequately addressed in the chapter provided.",
-        "expected_correction": "Ensure that any concepts directly related to laws of exponents are covered in the provided source context or clearly reference the appropriate chapter and section that discusses them.",
-        "supporting_evidence": "The section titles provided (3.2, 3.3, 3.4, etc.) in 'The World of Numbers' do not suggest coverage of 'Laws of Exponents' as a topic.",
-        "reviewer_confidence": 0.8
-      }
-    ],
-    "failConfidences": {
-      "curriculum_alignment": 0.8
-    },
-    "reasons": [
-      "[curriculum_alignment] The question and answer relate to exponents, but the source context does not explicitly cover laws of exponents within 'The World of Numbers' curriculum for Class 9. The relevant concepts of exponents may not be adequately addressed in the chapter provided."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2306,
-      "outputTokens": 513,
-      "estimatedCostUSD": 0.0006536999999999999
+      "inputTokens": 1651,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031305
     }
   },
   "c9-m-ch1-t3-q06": {
     "questionId": "c9-m-ch1-t3-q06",
-    "contentHash": "8ea66ae8caa89664d3e99c92be6dc43bf193ec4c607174429f11ef2898c33399",
+    "contentHash": "a4b39463a6d6ba5874fc8089c7612424abbfc8b84c68a0f5cf1a751c8cf6258c",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:07:55.352Z",
+    "reviewedAt": "2026-08-17T13:16:49.774Z",
     "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
     "overall": "GOLD_STANDARD_PASS",
@@ -876,16 +748,16 @@
     "failConfidences": {},
     "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1558,
+      "inputTokens": 1673,
       "outputTokens": 109,
-      "estimatedCostUSD": 0.0002991
+      "estimatedCostUSD": 0.00031635
     }
   },
   "c9-m-ch1-t3-q07": {
     "questionId": "c9-m-ch1-t3-q07",
-    "contentHash": "7a8650b3fac9cecd5b7cb60823d06d313e56a34a53fbd8e38becda248b3fa5dc",
+    "contentHash": "7f2097c235a47d5af893839a6c5cb359f63540967c206ec02baefe5dd8e5aef9",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:08:00.017Z",
+    "reviewedAt": "2026-08-17T13:16:53.109Z",
     "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
     "overall": "GOLD_STANDARD_PASS",
@@ -905,56 +777,16 @@
     "failConfidences": {},
     "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1540,
-      "outputTokens": 275,
-      "estimatedCostUSD": 0.000396
+      "inputTokens": 1624,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.000309
     }
   },
   "c9-m-ch1-t3-q08": {
     "questionId": "c9-m-ch1-t3-q08",
-    "contentHash": "83b06d079d84b1384534491c167fdfcf79ff4b0de03c40e9f3fce96476b2ed49",
+    "contentHash": "e0b83d52af834c236d9e4775fb353e579596e3da378ce88bb88129e5337f10a7",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:08:09.676Z",
-    "model": "gpt-4o-mini",
-    "sourceContextStatus": "PRESENT",
-    "overall": "CONFIRMED_DEFECT",
-    "dimensions": {
-      "curriculum_alignment": "FAIL",
-      "question_clarity": "PASS",
-      "correctness": "PASS",
-      "steps_validity": "PASS",
-      "marking_completeness": "PASS",
-      "examination_worthiness": "PASS",
-      "curriculum_importance": "PASS",
-      "appropriate_depth": "PASS",
-      "weak_student_accessibility": "PASS",
-      "hint_quality": "PASS"
-    },
-    "failEvidence": [
-      {
-        "criterion_id": "curriculum_alignment",
-        "exact_defective_text": "Evaluate: (8^(1/3) × 16^(1/4)) / 2^(1/2)",
-        "reason": "The topic tested, Laws of Exponents, does not align with the content of the chapter 'The World of Numbers', which focuses on different types of numbers rather than exponentiation.",
-        "expected_correction": "The question should focus on a concept relevant to 'The World of Numbers', such as integers, fractions, rational numbers, irrational numbers, or real numbers.",
-        "supporting_evidence": "The chapter sections explicitly mention 'The Revolution of Śhūnya', 'Integers', 'Filling the Spaces', 'Irrational Numbers', and 'Real Numbers', none of which cover the topic of exponentiation or laws of exponents.",
-        "reviewer_confidence": 0
-      }
-    ],
-    "failConfidences": {},
-    "reasons": [
-      "[curriculum_alignment] The topic tested, Laws of Exponents, does not align with the content of the chapter 'The World of Numbers', which focuses on different types of numbers rather than exponentiation."
-    ],
-    "tokenUsage": {
-      "inputTokens": 2632,
-      "outputTokens": 675,
-      "estimatedCostUSD": 0.0007998
-    }
-  },
-  "c9-m-ch1-t3-q09": {
-    "questionId": "c9-m-ch1-t3-q09",
-    "contentHash": "9cb7b7f73eb944e395c8b1e153193cea8a8c98d6c56b19a3388225604049c82c",
-    "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:08:11.905Z",
+    "reviewedAt": "2026-08-17T13:16:55.796Z",
     "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
     "overall": "GOLD_STANDARD_PASS",
@@ -974,21 +806,21 @@
     "failConfidences": {},
     "reasons": [],
     "tokenUsage": {
-      "inputTokens": 1577,
+      "inputTokens": 1655,
       "outputTokens": 109,
-      "estimatedCostUSD": 0.00030195
+      "estimatedCostUSD": 0.00031365
     }
   },
-  "c9-m-ch1-t3-q10": {
-    "questionId": "c9-m-ch1-t3-q10",
-    "contentHash": "53f3c1eb054a92cc8a37f405bafaece9dbbc398409ff0692b91083cd3424369a",
+  "c9-m-ch1-t3-q09": {
+    "questionId": "c9-m-ch1-t3-q09",
+    "contentHash": "c59bfb5ffe3336d74eeaf652b41ae53df4dc9a9cc47f18d1dc4b6e7640c3cdd9",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:08:18.528Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:16:58.589Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
-      "curriculum_alignment": "FAIL",
+      "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
       "correctness": "PASS",
       "steps_validity": "PASS",
@@ -999,26 +831,42 @@
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "curriculum_alignment",
-        "exact_defective_text": "QUESTION: If 4^x = 8^y, prove that 3y = 2x and hence find x:y.",
-        "reason": "The question pertains to the laws of exponents, but the sections provided in the source context discuss a different overarching theme, 'The World of Numbers.' The specific topic of 'Laws of Exponents' does not appear in the cited chapter structure.",
-        "expected_correction": "Align the question with an appropriate chapter or section that specifically deals with 'Laws of Exponents' as part of the curriculum.",
-        "supporting_evidence": "The chapter sections do not explicitly mention laws of exponents or aspects related to exponential equations.",
-        "reviewer_confidence": 1
-      }
-    ],
-    "failConfidences": {
-      "curriculum_alignment": 1
-    },
-    "reasons": [
-      "[curriculum_alignment] The question pertains to the laws of exponents, but the sections provided in the source context discuss a different overarching theme, 'The World of Numbers.' The specific topic of 'Laws of Exponents' does not appear in the cited chapter structure."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2444,
-      "outputTokens": 491,
-      "estimatedCostUSD": 0.0006612
+      "inputTokens": 1695,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031965
+    }
+  },
+  "c9-m-ch1-t3-q10": {
+    "questionId": "c9-m-ch1-t3-q10",
+    "contentHash": "dd188d903ad47abe92a6f590128c1097a14e09b1c458f3d31fc59c6a619b1876",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T13:17:00.910Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1854,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003435
     }
   },
   "c9-m-ch1-t4-q01": {
@@ -1402,14 +1250,14 @@
     "questionId": "c9-m-ch1-t5-q04",
     "contentHash": "4b041bdf46682a51c8630370b692a544cc74b6403df30c8175db77ebb79664ab",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:08:56.493Z",
+    "reviewedAt": "2026-08-17T13:05:45.897Z",
     "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "CONFIRMED_DEFECT",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
       "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
-      "correctness": "FAIL",
+      "correctness": "PASS",
       "steps_validity": "PASS",
       "marking_completeness": "PASS",
       "examination_worthiness": "PASS",
@@ -1418,76 +1266,42 @@
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "correctness",
-        "exact_defective_text": "√5",
-        "reason": "The final answer does not accurately reflect the simplification process outlined in the steps.",
-        "expected_correction": "2√5",
-        "supporting_evidence": "Step 1: The simplifications yield √45 = 3√5 and 3√20 = 6√5. Therefore, we combine: 3√5 - 6√5 + 4√5 = (3 - 6 + 4)√5 = 1√5 = √5 which is incorrect. The accurate combination should yield 3 - 6 + 4 = 1, indicating the final answer simplifies correctly to 1√5 = √5 but should be reexamined for potential simplification errors.",
-        "reviewer_confidence": 0
-      }
-    ],
+    "failEvidence": [],
     "failConfidences": {},
-    "reasons": [
-      "[correctness] The final answer does not accurately reflect the simplification process outlined in the steps."
-    ],
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2298,
-      "outputTokens": 454,
-      "estimatedCostUSD": 0.0006171
+      "inputTokens": 1560,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0002994
     }
   },
   "c9-m-ch1-t5-q05": {
     "questionId": "c9-m-ch1-t5-q05",
     "contentHash": "fa6363bae6d2a4d47f8c7bf41198f21a2097ef2bfd4dd41596e87ba6fbb14223",
     "checklistVersion": "2.0",
-    "reviewedAt": "2026-07-24T21:09:07.359Z",
-    "model": "gpt-4o-mini→verify",
+    "reviewedAt": "2026-08-17T13:11:08.871Z",
+    "model": "gpt-4o-mini",
     "sourceContextStatus": "PRESENT",
-    "overall": "REVIEWER_UNCERTAINTY",
+    "overall": "GOLD_STANDARD_PASS",
     "dimensions": {
       "curriculum_alignment": "PASS",
       "question_clarity": "PASS",
-      "correctness": "FAIL",
+      "correctness": "PASS",
       "steps_validity": "PASS",
-      "marking_completeness": "FAIL",
+      "marking_completeness": "PASS",
       "examination_worthiness": "PASS",
       "curriculum_importance": "PASS",
       "appropriate_depth": "PASS",
       "weak_student_accessibility": "PASS",
       "hint_quality": "PASS"
     },
-    "failEvidence": [
-      {
-        "criterion_id": "correctness",
-        "exact_defective_text": "2√3 − 2",
-        "reason": "The final answer is not correctly simplified; there is a mistake in the calculation.",
-        "expected_correction": "2√3 − 2 + 2 = 2√3 − 2.",
-        "supporting_evidence": "Upon simplifying the expression 4(√3−1)/2, it yields 2√3 - 2, which misses the +2 term. The complete answer should include the component from the rationalisaton process where 4/2 results in 2 but mistakenly only considers the other side.",
-        "reviewer_confidence": 0.9
-      },
-      {
-        "criterion_id": "marking_completeness",
-        "exact_defective_text": "2√3 − 2",
-        "reason": "The marking scheme lacks an explicit explanation of all required steps.",
-        "expected_correction": "Include each step of the rationalisation process clearly instead of just final answer.",
-        "supporting_evidence": "The steps in the solution do not clearly correspond to marking points. For instance, mentioning that the multiplication and rationalisation steps should earn specific credit points.",
-        "reviewer_confidence": 0.8
-      }
-    ],
-    "failConfidences": {
-      "correctness": 0.9,
-      "marking_completeness": 0.8
-    },
-    "reasons": [
-      "[correctness] The final answer is not correctly simplified; there is a mistake in the calculation.",
-      "[marking_completeness] The marking scheme lacks an explicit explanation of all required steps."
-    ],
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
     "tokenUsage": {
-      "inputTokens": 2461,
-      "outputTokens": 641,
-      "estimatedCostUSD": 0.00075375
+      "inputTokens": 1586,
+      "outputTokens": 261,
+      "estimatedCostUSD": 0.0003945
     }
   },
   "c9-m-ch1-t5-q06": {

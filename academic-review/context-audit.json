@@ -1,106 +1,23 @@
 {
-  "auditedAt": "2026-07-24T12:31:28.313Z",
+  "auditedAt": "2026-08-17T13:08:34.715Z",
   "curriculumIndex": "curriculum/generated/master-curriculum-index.json",
-  "totalQuestions": 1225,
-  "present": 1100,
-  "missing": 125,
-  "coveragePercent": "89.8%",
+  "totalQuestions": 50,
+  "present": 50,
+  "missing": 0,
+  "coveragePercent": "100.0%",
   "byClass": {
     "9": {
-      "present": 1100,
-      "missing": 125
+      "present": 50,
+      "missing": 0
     }
   },
   "bySubject": {
     "Mathematics": {
-      "present": 450,
-      "missing": 50
-    },
-    "Physics": {
-      "present": 200,
+      "present": 50,
       "missing": 0
-    },
-    "Biology": {
-      "present": 225,
-      "missing": 0
-    },
-    "Chemistry": {
-      "present": 225,
-      "missing": 75
     }
   },
   "byChapter": [
-    {
-      "classNum": 9,
-      "subject": "Biology",
-      "chapterId": "bio-ch01",
-      "chapterName": "Cell: The Building Block of Life",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iesc102"
-    },
-    {
-      "classNum": 9,
-      "subject": "Biology",
-      "chapterId": "bio-ch02",
-      "chapterName": "Tissues in Action",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iesc103"
-    },
-    {
-      "classNum": 9,
-      "subject": "Biology",
-      "chapterId": "bio-ch03",
-      "chapterName": "Patterns in Life: Diversity and Classification",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iesc112"
-    },
-    {
-      "classNum": 9,
-      "subject": "Chemistry",
-      "chapterId": "chem-ch01",
-      "chapterName": "Matter in Our Surroundings",
-      "total": 75,
-      "present": 0,
-      "missing": 75,
-      "canonicalId": "SOURCE_UNRESOLVED",
-      "missReason": "SOURCE_UNRESOLVED: chapter \"chem-ch01\" has no confirmed 2026-27 canonical source"
-    },
-    {
-      "classNum": 9,
-      "subject": "Chemistry",
-      "chapterId": "chem-ch02",
-      "chapterName": "Exploring Mixtures and their Separation",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iesc105"
-    },
-    {
-      "classNum": 9,
-      "subject": "Chemistry",
-      "chapterId": "chem-ch03",
-      "chapterName": "Atomic Foundations of Matter",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iesc109"
-    },
-    {
-      "classNum": 9,
-      "subject": "Chemistry",
-      "chapterId": "chem-ch04",
-      "chapterName": "Journey Inside the Atom",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iesc108"
-    },
     {
       "classNum": 9,
       "subject": "Mathematics",
@@ -109,136 +26,8 @@
       "total": 50,
       "present": 50,
       "missing": 0,
-      "canonicalId": "iemh103"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "ch15",
-      "chapterName": "The Mathematics of Maybe: Introduction to Probability",
-      "total": 50,
-      "present": 50,
-      "missing": 0,
-      "canonicalId": "iemh107"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "ch16",
-      "chapterName": "Exploring Algebraic Identities",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iemh104"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "ch17",
-      "chapterName": "Predicting What Comes Next: Exploring Sequences and Progressions",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iemh108"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "ch18",
-      "chapterName": "Measuring Space: Perimeter and Area",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iemh106"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "ch3",
-      "chapterName": "Orienting Yourself: The Use of Coordinates",
-      "total": 50,
-      "present": 50,
-      "missing": 0,
-      "canonicalId": "iemh101"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "ch4",
-      "chapterName": "Linear Equations in Two Variables",
-      "total": 50,
-      "present": 0,
-      "missing": 50,
-      "canonicalId": "SOURCE_UNRESOLVED",
-      "missReason": "SOURCE_UNRESOLVED: chapter \"ch4\" has no confirmed 2026-27 canonical source"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "iemh102",
-      "chapterName": "Introduction to Linear Polynomials",
-      "total": 75,
-      "present": 75,
-      "missing": 0,
-      "canonicalId": "iemh102"
-    },
-    {
-      "classNum": 9,
-      "subject": "Physics",
-      "chapterId": "phy-ch1",
-      "chapterName": "Describing Motion Around Us",
-      "total": 50,
-      "present": 50,
-      "missing": 0,
-      "canonicalId": "iesc104"
-    },
-    {
-      "classNum": 9,
-      "subject": "Physics",
-      "chapterId": "phy-ch2",
-      "chapterName": "How Forces Affect Motion",
-      "total": 50,
-      "present": 50,
-      "missing": 0,
-      "canonicalId": "iesc106"
-    },
-    {
-      "classNum": 9,
-      "subject": "Physics",
-      "chapterId": "phy-ch4",
-      "chapterName": "Work, Energy, and Simple Machines",
-      "total": 50,
-      "present": 50,
-      "missing": 0,
-      "canonicalId": "iesc107"
-    },
-    {
-      "classNum": 9,
-      "subject": "Physics",
-      "chapterId": "phy-ch5",
-      "chapterName": "Sound Waves: Characteristics and Applications",
-      "total": 50,
-      "present": 50,
-      "missing": 0,
-      "canonicalId": "iesc110"
+      "canonicalChapterId": "iemh103"
     }
   ],
-  "unmatchedChapters": [
-    {
-      "classNum": 9,
-      "subject": "Chemistry",
-      "chapterId": "chem-ch01",
-      "chapterName": "Matter in Our Surroundings",
-      "questions": 75,
-      "reason": "SOURCE_UNRESOLVED: chapter \"chem-ch01\" has no confirmed 2026-27 canonical source"
-    },
-    {
-      "classNum": 9,
-      "subject": "Mathematics",
-      "chapterId": "ch4",
-      "chapterName": "Linear Equations in Two Variables",
-      "questions": 50,
-      "reason": "SOURCE_UNRESOLVED: chapter \"ch4\" has no confirmed 2026-27 canonical source"
-    }
-  ]
+  "unmatchedChapters": []
 }

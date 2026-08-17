@@ -1,0 +1,93 @@
+Recall PrePromptConditions.
+
+Proceed with the next queued content task only:
+
+**Class 9 Mathematics**
+`iemh103 — The World of Numbers`
+50 existing questions with full Q&A.
+
+Objective:
+
+**Validate → fix confirmed defects only → revalidate → freeze**
+
+Use the EXISTING Gold Standard Q&A acceptance path in `academicReview.ts`.
+
+Do not create or modify any validator, checklist, review system, registry, governance file, roadmap, architecture, prompt framework or source of truth.
+
+### Acceptance
+
+Run the existing Gold Standard acceptance gate for `iemh103` only.
+
+Do not conduct any parallel/manual second checklist review.
+
+Every accepted Q&A must satisfy the existing Teacher Approval Gate + Examiner Approval Gate, including:
+
+* curriculum relevance;
+* exam worthiness;
+* correctness;
+* marking completeness;
+* valid reasoning/steps;
+* appropriate depth;
+* weak-student accessibility;
+* quality hints.
+
+### Confirmed defects
+
+If CONFIRMED defects are found:
+
+* fix only those Q&A;
+* preserve IDs and chapter structure;
+* do not rewrite passing Q&A unnecessarily;
+* do not change other chapters;
+* do not expand question count.
+
+If a question itself is genuinely defective and cannot be repaired without changing its mathematical meaning, replacement is allowed only if the replacement:
+
+* tests the same chapter;
+* preserves or improves the intended difficulty;
+* remains exam-worthy;
+* avoids reducing the bank's conceptual/reasoning diversity;
+* then passes the existing Gold Standard.
+
+Do not replace questions merely because the reviewer/model struggles with them.
+
+Reviewer uncertainty is not a confirmed defect.
+
+### Freeze
+
+Once all 50 Q&A pass:
+
+* use the EXISTING freeze/status mechanism;
+* verify exactly 50 questions remain;
+* verify chapter remains active and correctly registered;
+* do not create another freeze artifact.
+
+### Protected scope
+
+Do not modify:
+
+* iemh101;
+* iemh107;
+* other question banks;
+* curriculum architecture;
+* Gold Standard implementation;
+* `qualityChecklist.ts`;
+* AI/model work;
+* UI;
+* telemetry.
+
+Report only:
+
+1. Q&A reviewed;
+2. Gold Standard passes;
+3. confirmed defects;
+4. exact Q&A corrected/replaced;
+5. final validation;
+6. final count;
+7. freeze status.
+
+If successful end with:
+
+**iemh103 COMPLETE AND FROZEN**
+
+Then stop.
