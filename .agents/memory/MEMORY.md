@@ -20,3 +20,4 @@
 - [Standard Mode Schema](standard-mode-schema.md) — 4-step schema + questionTranslation + finalAnswer (no practiceQuestion); maxTokens=1100; practiceQuestion stripped post-generation if model hallucinates it.
 - [Planner Stop Words](planner-stop-words.md) — PLANNER_STOP_WORDS filters generic terms ("theorem","law","principle"…) from question tokens before chapter scoring; threshold raised 2→4; prevents wrong-chapter blueprint injection.
 - [Streaming SSE Architecture](streaming-sse-architecture.md) — Standard-mode fresh questions use POST /api/solveQuestion/stream; first content 850–1550 ms; stable streamId prevents SolutionCard remounts; stream failure falls back to regular route.
+- [Bank Question Teaching Modes](bank-question-teaching-modes.md) — Bank questions now build a TeachingLesson from frozen fields; GuidedStepCard is mode-aware (Detailed: why always visible, Standard: why toggle, Compact: why hidden).

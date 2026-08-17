@@ -1,0 +1,292 @@
+Recall PrePromptConditions.
+
+The previous task completed STREAMING SAFETY.
+
+Do NOT repeat streaming, subject-scope, planner, latency or bank-fast-path work.
+
+A CURRENT P0 teaching regression remains unresolved.
+
+Founder has visually verified on existing frozen Practice questions:
+
+* Detailed and Standard are essentially identical.
+* Compact differs only slightly.
+* The displayed reasoning depth is much shallower than expected.
+* Changing modes appears mostly to hide/show parts of the SAME reduced bank response rather than provide genuinely different teaching depth.
+
+This occurred after the bank fast-path work.
+
+==================================================
+PERMANENT REQUIREMENT
+=====================
+
+Bank questions MUST remain:
+
+* near-instant;
+* 0 AI calls;
+* based only on existing frozen Gold Standard Q&A.
+
+DO NOT restore AI generation for bank questions.
+
+At the same time:
+
+**Detailed, Standard and Compact must provide meaningfully different teaching experiences.**
+
+==================================================
+
+1. TRACE CURRENT BANK LESSON CONSTRUCTION
+   ==================================================
+
+Do not modify initially.
+
+Trace exactly:
+
+Practice question
+→ `getQuestionById()`
+→ bank fast-path response construction
+→ SolutionCard
+→ TeachingLayout
+→ mode selector.
+
+Report internally before patching:
+
+* all relevant fields available on a frozen question;
+* answer;
+* explanation;
+* steps;
+* hints;
+* marking criteria;
+* any concept/topic fields;
+* any other pedagogically useful stored fields;
+* what the bank fast path currently copies into the lesson;
+* how many reasoning steps it creates;
+* whether one identical lesson object feeds all three modes;
+* which differences are currently renderer-only.
+
+Identify why the founder sees Detailed ≈ Standard.
+
+==================================================
+2. REQUIRED MODE CONTRACT
+=========================
+
+All three modes must use the SAME approved frozen source content.
+
+Do NOT store three duplicate answers.
+
+Do NOT call AI when switching modes.
+
+### DETAILED
+
+Purpose:
+**Teach the weakest student comprehensively.**
+
+Use every useful existing approved field available.
+
+Where available show:
+
+* Key concept / what is being tested
+* Simple explanation of the concept
+* Full reasoning
+* ALL meaningful stored steps
+* Explanation of why important steps are taken
+* Worked calculations/details
+* Hints/supporting understanding where useful
+* Marking/exam requirements where available
+* Explicit final answer
+* Verification/check where available
+
+Detailed should clearly feel like:
+**“Teach me properly.”**
+
+Do not manufacture filler or fake steps.
+
+### STANDARD
+
+Purpose:
+**Best everyday/default school answer.**
+
+Use:
+
+* Key concept
+* Enough reasoning to understand
+* Important steps
+* Explicit exam-ready final answer
+
+Remove excessive scaffolding, repetition and optional details.
+
+Standard should clearly be shorter than Detailed while remaining fully understandable and examiner-usable.
+
+### COMPACT
+
+Purpose:
+**Quick revision / shortest useful answer.**
+
+Use only:
+
+* essential concept/formula if needed;
+* essential working/reasoning;
+* direct final answer.
+
+Compact must be visibly shorter than Standard.
+
+==================================================
+3. IMPORTANT — DO NOT FORCE FIXED STEP COUNTS
+=============================================
+
+A simple factual question may genuinely need:
+
+Detailed: richer explanation
+Standard: concise explanation
+Compact: direct answer
+
+A calculation/proof may contain more steps.
+
+Do NOT invent 4 steps merely because AI Standard normally has 4.
+
+For bank questions, preserve meaningful stored reasoning exactly.
+
+==================================================
+4. MODE SWITCHING
+=================
+
+Detailed ↔ Standard ↔ Compact must:
+
+* switch instantly;
+* make 0 network calls;
+* make 0 AI calls;
+* preserve current question;
+* not reload the page;
+* visibly change teaching depth.
+
+==================================================
+5. VALIDATE WITH ACTUAL RUNNING UI
+==================================
+
+Use frozen bank questions:
+
+MATHEMATICS
+
+1. Easy factual
+2. Calculation
+3. Reasoning/proof
+
+SCIENCE
+4. Factual
+5. Numerical/reasoning
+6. Biology explanatory
+
+INFORMATION TECHNOLOGY
+7. Factual
+8. Procedural/application
+
+For every question inspect all three modes in the RUNNING UI.
+
+Provide a comparison such as:
+
+Question X
+
+Detailed:
+
+* sections...
+* steps...
+* supporting explanation...
+
+Standard:
+
+* sections...
+* steps...
+
+Compact:
+
+* sections...
+* steps...
+
+Acceptance requires:
+
+**Detailed ≠ Standard**
+**Standard ≠ Compact**
+
+and the differences must be educationally meaningful, not just headings/colors.
+
+==================================================
+6. SPEED PROTECTION
+===================
+
+For bank questions after this fix:
+
+* opening answer remains <2 seconds;
+* target near-instant;
+* AI calls = 0;
+* switching modes = instant.
+
+Do not disturb streaming for genuinely unmatched questions.
+
+==================================================
+7. PROTECTED SCOPE
+==================
+
+Do NOT modify:
+
+* frozen question-bank CONTENT;
+* question IDs;
+* curriculum;
+* Gold Standard;
+* streaming implementation;
+* planner;
+* model;
+* token limits;
+* bank lookup;
+* scroll fix;
+* Practice navigation;
+* telemetry architecture;
+* subject scope.
+
+Do NOT reintroduce `skipBank: true`.
+
+Do NOT create another teaching engine.
+
+Use the existing bank-response normalization/rendering path.
+
+==================================================
+8. IMPORTANT FAILURE CONDITION
+==============================
+
+If the existing frozen question-bank fields are NOT rich enough to support a genuinely useful Detailed mode:
+
+DO NOT fabricate content and DO NOT call AI.
+
+Stop and report:
+
+* what fields are missing;
+* how widespread the limitation is;
+* whether existing stored Gold Standard answers can be deterministically expanded from existing fields;
+* minimum content-layer remedy.
+
+Do not hide this limitation behind UI changes.
+
+==================================================
+REPORT
+======
+
+Return only:
+
+1. root cause;
+2. bank fields available;
+3. old bank-response mapping;
+4. files changed;
+5. new Detailed behaviour;
+6. new Standard behaviour;
+7. new Compact behaviour;
+8. representative Maths / Science / IT validation;
+9. AI calls when opening/switching modes;
+10. latency;
+11. any source-content limitation.
+
+Do not declare completion just because buttons select different CSS states.
+
+The actual explanation content must visibly differ.
+
+If successful end exactly:
+
+**BANK QUESTION TEACHING MODES RESTORED — DETAILED / STANDARD / COMPACT DISTINCT**
+
+Then STOP.
