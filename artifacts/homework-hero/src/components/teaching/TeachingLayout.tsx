@@ -262,7 +262,7 @@ function LessonRenderer({ lesson, level, cfg }: {
     mistakes:  isDetailed,
     answer:    true,
     similar:   isDetailed,
-    practice:  !isCompact,
+    practice:  !isCompact && !!(lesson.practiceQuestion?.question),
     remember:  isCompact,
   };
 

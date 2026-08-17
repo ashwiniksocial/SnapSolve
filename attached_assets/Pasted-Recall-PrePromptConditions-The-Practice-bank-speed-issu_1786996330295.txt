@@ -1,0 +1,212 @@
+Recall PrePromptConditions.
+
+The Practice/bank speed issue is resolved correctly:
+
+* bank questions: <100 ms
+* 0 AI calls
+* deterministic approved answers
+
+FREEZE that behaviour.
+
+One final P0 remains before Beta 1.
+
+==================================================
+HARD PRODUCT REQUIREMENT
+========================
+
+Founder requirement:
+
+**No normal student action may take more than 5 seconds.**
+
+This includes a genuinely NEW typed/scanned question with no bank match.
+
+Current unmatched Standard AI solve:
+
+**~8–10 seconds**
+
+This FAILS the Beta requirement.
+
+Do NOT classify 8–10 seconds as acceptable or expected merely because AI is required.
+
+==================================================
+TASK 1 — MEASURE THE EXACT 8–10 SECOND PATH
+===========================================
+
+Do not modify code initially.
+
+Trace one representative unmatched typed question from click → usable answer.
+
+Measure separately:
+
+* frontend navigation/setup
+* request construction
+* request/network overhead
+* prompt construction
+* OpenAI time-to-first-response/token if measurable
+* OpenAI total generation time
+* JSON parsing
+* normalization
+* rendering
+* any retries
+* any unnecessary synchronous work
+
+Use existing telemetry where possible.
+
+Also report:
+
+* prompt token count
+* completion token count
+* generated Standard fields
+* max completion tokens
+* whether all generated fields are necessary before first useful answer can be shown
+
+Do NOT perform another broad architecture audit.
+
+==================================================
+TASK 2 — FIND THE SMALLEST SAFE SPEED FIX
+=========================================
+
+Target for a genuinely unmatched question:
+
+* page/navigation response: near-instant
+* first meaningful usable teaching response: **≤5 seconds**
+* no increase in AI call count
+* teaching quality preserved
+
+Prefer eliminating unnecessary work before considering model changes.
+
+Investigate, in this order:
+
+1. unnecessary prompt/context size;
+2. unnecessary generated Standard fields;
+3. waiting for content not required before displaying the useful answer;
+4. response parsing/normalization overhead;
+5. whether streaming the EXISTING single response can safely make the useful answer visible within ≤5 seconds;
+6. OpenAI request configuration that can be safely reduced without weakening the answer.
+
+Do NOT:
+
+* add a second AI call;
+* create a new answer engine;
+* create another cache architecture;
+* change Gold Standard;
+* weaken answers;
+* switch model merely for speed without evidence;
+* fake completion with a loading message and call that ≤5 seconds.
+
+The student must receive **meaningful answer content**, not merely see a spinner/page shell.
+
+==================================================
+IMPORTANT — STANDARD MODE
+=========================
+
+Standard is the normal/default teaching answer.
+
+Preserve:
+
+* explicit answer;
+* useful reasoning/steps;
+* weak-student clarity;
+* examiner-quality response;
+* adaptive removal of filler;
+* existing bank fast path.
+
+If some fields such as Practice Question are responsible for substantial generation latency and are NOT required to answer the student's immediate question, determine whether they can be produced/retrieved differently using EXISTING capabilities.
+
+Do not implement extra generation calls.
+
+==================================================
+SCAN PATH
+=========
+
+Measure OCR separately.
+
+Required distinction:
+
+A. image → OCR text ready
+B. OCR text → AI answer ready
+
+Report both.
+
+Do not redesign OCR unless it independently exceeds the 5-second requirement.
+
+==================================================
+ACCEPTANCE TESTS
+================
+
+Test at least:
+
+* 2 unmatched Maths questions;
+* 2 unmatched Science questions;
+* 1 unmatched Information Technology question;
+* one short factual question;
+* one calculation/reasoning question.
+
+For each record:
+
+* time to page/navigation
+* time to first meaningful answer
+* time to complete answer
+* input tokens
+* output tokens
+* AI calls
+* cost
+* correctness/teaching sanity
+
+Acceptance:
+
+**First meaningful usable answer ≤5 seconds for every normal case tested.**
+
+Aim for 2–4 seconds.
+
+Bank question performance must remain <2 seconds and 0 AI calls.
+
+==================================================
+IMPLEMENTATION
+==============
+
+After identifying the bottleneck, implement ONLY the smallest safe fix necessary to reach the target.
+
+If the bottleneck is fundamentally the current model/API response time and cannot safely reach ≤5 seconds without a model/config change, STOP before changing models and report:
+
+* measured evidence;
+* minimum alternative;
+* expected quality/cost/speed trade-off.
+
+Do not independently reopen the previous Luna/Terra work.
+
+==================================================
+VALIDATION
+==========
+
+Verify:
+
+* bank path unchanged;
+* scroll fix unchanged;
+* Standard teaching quality preserved;
+* Detailed/Compact unaffected unless genuinely necessary;
+* AI calls do not increase;
+* no curriculum/question-bank changes;
+* frontend/API TypeScript pass;
+* no new console errors.
+
+Report:
+
+1. latency breakdown before;
+2. confirmed bottleneck;
+3. files changed;
+4. exact optimisation;
+5. latency after for each test;
+6. first meaningful answer latency;
+7. complete-answer latency;
+8. token/cost change;
+9. teaching-quality sanity result;
+10. anything still exceeding 5 seconds.
+
+Do NOT declare Beta ready if normal unmatched questions still exceed the founder's 5-second requirement.
+
+If successful end exactly:
+
+**NEW QUESTION RESPONSE ≤5 SECONDS — P0 SPEED GATE PASSED**
+
+Then STOP.

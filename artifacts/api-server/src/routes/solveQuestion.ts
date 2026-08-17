@@ -527,6 +527,20 @@ Teaching effectiveness is the only measure of quality.`.trim();
 // Detailed mode uses the full JSON_SCHEMA above (embedded in SYSTEM_PROMPTS).
 // Standard and Compact use reduced schemas — fewer sections, lower output tokens.
 
+// ─── Standard mode schema — speed-optimised for ≤5 s first answer ────────────
+//
+// Sections removed vs Detailed:
+//   • questionTranslation   — the server-side classifier already cleared this
+//                             for factual questions; step 1 of guidedReasoning
+//                             captures Given/Find context for calculation questions.
+//   • practiceQuestion      — not required to answer the student's current question;
+//                             adds ~220 tokens (~1.7 s) with no teaching gain on first view.
+//   • finalAnswer.whyCorrect — minor sanity sentence, already covered by verification.
+//   • pause per step        — cosmetic reflection prompt; saves ~40 tokens total.
+//
+// Expected completion tokens: ~400–600 (vs ~1,000–1,200 before).
+// Expected total latency:     ~3.5–5.0 s (vs ~8–10 s before).
+
 const JSON_SCHEMA_STANDARD = `
 ═══════════════════════════════════════════════════════════════
 RESPONSE FORMAT — STANDARD MODE
@@ -539,72 +553,43 @@ Respond ONLY with a valid JSON object. No markdown fences. No extra text.
   "keyConcepts":  string[],
   "aiConfidence": number,
 
-  "questionTranslation": {
-    "plainEnglish": string,
-    "whatWeKnow":   string,
-    "whatWeFind":   string,
-    "wordToMath":   string
-  },
-
   "guidedReasoning": [
     {
       "what":   string,
       "why":    string,
       "math":   string,
-      "result": string,
-      "pause":  string
+      "result": string
     }
   ],
 
   "finalAnswer": {
     "answer":       string,
-    "whyCorrect":   string,
     "verification": string
-  },
-
-  "practiceQuestion": {
-    "question": string,
-    "hints":    [string, string, string],
-    "solution": string
   }
 }
 
 ═══════════════════════════════════════════════════════════════
-FIELD RULES — be concise; every field is one sentence unless noted
+FIELD RULES — every field is one sentence unless noted
 ═══════════════════════════════════════════════════════════════
 
 topic           Short topic name. E.g. "Pythagoras' Theorem".
 keyConcepts     2–3 labels. Each under 5 words.
 aiConfidence    0.0–1.0
 
-questionTranslation.plainEnglish
-  "The examiner is asking us to…" — 1–2 sentences max.
-questionTranslation.whatWeKnow
-  "We are told that…" — one fact per line.
-questionTranslation.whatWeFind
-  "We need to find…" — name the quantity and its unit.
-questionTranslation.wordToMath
-  Key phrase → symbol/expression, one per line. 2–3 lines max.
-
-guidedReasoning — WRITE EXACTLY 4 STEPS. NOT 3. NOT 5. NOT 6. EXACTLY 4.
-  Each step covers ONE operation or ONE new idea. Never two.
+guidedReasoning — WRITE EXACTLY 3 STEPS. NOT 2. NOT 4. EXACTLY 3.
+  Each step covers ONE key operation or ONE main idea. Never two.
 
   what:   What we do. 1 sentence, active voice.
-  why:    The reason — rule, theorem, or logic. 1–2 sentences.
-  math:   The key formula or calculation (short). "" if none.
-  result: What we get. 1 phrase or 1 short sentence. "" if none.
-  pause:  A short reflection question for the student. "" if none.
+  why:    The rule applied — state only the theorem/law name + one clause. 1 SHORT sentence, ≤12 words.
+  math:   The key formula or calculation. "" if none.
+  result: What we get after this step. 1 short phrase. "" if none.
 
-  Rules: Justify every formula before using it. Show key sub-steps in math.
+  Rules: State every formula before using it. Show key sub-steps in math.
          NEVER combine two operations in one step.
+         WHY must name the rule; do not restate or explain it at length.
 
-finalAnswer.answer       "Therefore, [quantity] = [value] [unit]." — 1 sentence.
-finalAnswer.whyCorrect   Sanity-check magnitude and units. 1 sentence.
-finalAnswer.verification Substitute back; confirm LHS = RHS. 2–3 sentences.
-
-practiceQuestion.question  New question, same concept, different structure. 1 sentence.
-practiceQuestion.hints     Exactly 3 strings. Reveal thinking, not answers.
-practiceQuestion.solution  Key steps as a tutor. 3–4 sentences.
+finalAnswer.answer        "Therefore, [quantity] = [value] [unit]." — 1 sentence.
+finalAnswer.verification  Substitute back and confirm LHS = RHS. 1–2 sentences.
 
 ABSOLUTE RULES: Never write "clearly", "obviously", "it follows", "simply", "just".
 Always explain WHY. Short sentences. Active voice.`.trim();
@@ -1309,7 +1294,13 @@ exam jargon. Do not change the question or invent a different answer.`
     : baseUserContent;
 
   // Token budget scales with mode: fewer sections = fewer output tokens needed.
-  const maxTokens = mode === "basic" ? 2800 : mode === "standard" ? 1200 : 800;
+  // Standard: slim schema (3 steps, no practiceQuestion, no questionTranslation)
+  // expects ~320–500 completion tokens.  600 is the safe cap — low enough to
+  // drive ~4–5 s generation at 100 t/s while high enough to avoid truncating
+  // the JSON for verbose conceptual questions (e.g. theorems, definitions).
+  // DO NOT lower below 550 — json_object format still truncates at max_tokens,
+  // producing unparseable JSON that triggers a 502 fallback.
+  const maxTokens = mode === "basic" ? 2800 : mode === "standard" ? 600 : 800;
 
   let res: Response;
   try {
@@ -1525,13 +1516,8 @@ router.post("/solveQuestion", async (req, res) => {
     draft      = draftResult.lesson;
     draftUsage = draftResult.usage;
 
-    // Standard mode: suppress "Understand the Question" for factual/recall/MCQ
-    // questions where the model generates filler paraphrases regardless of
-    // prompt instructions.  Deterministic — zero AI cost.
-    if (generationMode === "standard" && !questionNeedsTranslation(q)) {
-      draft.questionTranslation = { plainEnglish: "", whatWeKnow: "", whatWeFind: "", wordToMath: "" };
-      req.log.info({ subject: subj }, "[PIPELINE:5] questionTranslation cleared — factual/recall question");
-    }
+    // Standard mode no longer generates questionTranslation — it is absent from
+    // the slim schema.  No post-processing needed for that section.
 
     req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
       "[PIPELINE:5] DONE — draft lesson generated");
