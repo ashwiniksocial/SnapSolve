@@ -8,7 +8,6 @@ import { useAttemptLog } from "@/hooks/useAttemptLog";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
 import { callDevLesson, toAIResponse } from "@/services/ai/openaiSolver";
-import type { TeachingLesson } from "@/data/solutionBank";
 import { useCelebration } from "@/hooks/useCelebration";
 import { getQuestionById, type Difficulty } from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
@@ -75,60 +74,6 @@ export default function Solution() {
       if (practiceMode && session.practiceQuestionId) {
         const bankQ = getQuestionById(session.practiceQuestionId);
         if (bankQ) {
-          // ── Build a TeachingLesson from frozen bank fields ─────────────────
-          // This routes bank questions through LessonRenderer (mode-aware)
-          // instead of the legacy StepReasoningCard path.
-          // No content is fabricated — only fields present in the bank Question
-          // are used. Empty fields are left empty (renderer hides them).
-          const bankLesson: TeachingLesson = {
-            topic:        bankQ.topicName,
-            difficulty:   bankQ.difficulty,
-            keyConcepts:  bankQ.keyConcepts,
-            aiConfidence: 1.0,
-
-            beforeWeStart:     { motivator: "", anxietyReducer: "", preview: "" },
-            prerequisites:     [],
-            vocabulary:        [],
-
-            // Intuition fields empty — LessonRenderer only renders if content exists
-            intuition: { story: "", visual: "", everyday: "" },
-
-            // hint is the stored pedagogical explanation — shown as
-            // "Understand the Question" in Detailed + Standard; hidden in Compact.
-            questionTranslation: {
-              plainEnglish: bankQ.hint,
-              whatWeKnow:   "",
-              whatWeFind:   "",
-              wordToMath:   "",
-            },
-
-            teacherThinking: { firstNotice: "", whyThisMethod: "", clues: "" },
-
-            // Map bank SolutionSteps → LessonSteps.
-            // title → what (header shown in all modes)
-            // explanation → why (shown fully in Detailed, collapsed in Standard, hidden in Compact)
-            // formula → math (formula box, shown in all modes)
-            // result → result (green chip, shown in all modes)
-            guidedReasoning: bankQ.steps.map((s) => ({
-              what:   s.title,
-              why:    s.explanation,
-              math:   s.formula ?? "",
-              result: s.result   ?? "",
-              pause:  "",   // no bank equivalent — hidden by renderer
-            })),
-
-            confusionPoints:   [],
-            commonMistakes:    [],   // no bank equivalent — section hidden when empty
-            examinerThinking:  { whyAsked: "", conceptTested: "", topperInsight: "", examTip: "", examTrap: "" },
-            finalAnswer:       { answer: bankQ.answer, whyCorrect: "", verification: "" },
-            simplerExample:    { problem: "", solution: "" },  // hidden when empty
-            practiceQuestion:  { question: "", hints: [], solution: "" },
-            confidenceCheck:   { question: "", options: [], correctIndex: 0, explanation: "" },
-            retrievalPractice: [],
-            rememberThese:     [],  // hidden when empty
-            confidenceBuilder: "",
-          };
-
           const bankResult: AIResponse = {
             id:               bankQ.id,
             subject:          bankQ.subject as Subject,
@@ -140,7 +85,6 @@ export default function Solution() {
             finalAnswer:      bankQ.answer,
             similarQuestions: [],
             source:           "bank",
-            lesson:           bankLesson,  // routes through mode-aware LessonRenderer
           };
           setSolution(bankResult);
           recordSolve(session.subject, session.practiceTopic ?? bankQ.topicName, true, bankQ.id);

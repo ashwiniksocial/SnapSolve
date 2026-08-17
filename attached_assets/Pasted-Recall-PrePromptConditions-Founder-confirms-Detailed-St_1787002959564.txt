@@ -1,0 +1,114 @@
+Recall PrePromptConditions.
+
+Founder confirms:
+
+**Detailed / Standard / Compact answers were working correctly BEFORE the latency-removal exercise.**
+
+Therefore do NOT redesign the modes and do NOT collapse bank questions to a single view.
+
+This is a regression-recovery task only.
+
+### Objective
+
+Restore the PRE-LATENCY-EXERCISE Detailed / Standard / Compact behavior exactly as it worked before, while preserving the validated latency improvements that do not depend on the broken mode-remapping changes.
+
+### Step 1 — Identify regression boundary
+
+Use git/history/current diff to identify only the changes introduced during the latency/speed work that altered:
+
+* bank fast-path lesson construction;
+* Solution mode rendering;
+* TeachingLayout mode behavior;
+* any mapping from bank fields into TeachingLesson;
+* step counts/fields shown per mode.
+
+Do not inspect unrelated architecture.
+
+### Step 2 — Restore known-good mode behavior
+
+Restore the previously working Detailed / Standard / Compact behavior from the last known-good pre-latency state.
+
+Do NOT invent a new mode system.
+
+Do NOT manually reinterpret bank fields.
+
+Do NOT fabricate new teaching structures.
+
+### Step 3 — Preserve independent speed fixes
+
+Do NOT revert:
+
+* bank lookup speed improvement itself unless absolutely required;
+* scroll-to-top fix;
+* streaming for genuinely unmatched Standard questions;
+* planner wrong-topic fix;
+* subject/practice fixes;
+* question/chapter numbering fixes;
+* Git/auth work;
+* any unrelated validated beta fixes.
+
+If the bank fast path is intrinsically incompatible with the previously working three modes, STOP and report that conflict before making further changes.
+
+Do not guess.
+
+### Validation
+
+Use the SAME existing frozen bank question that founder has been visually testing.
+
+Verify in RUNNING UI:
+
+Detailed:
+
+* visibly richer than Standard;
+* previously expected sections/content restored.
+
+Standard:
+
+* clearly different from Detailed;
+* complete and sensible.
+
+Compact:
+
+* clearly shorter;
+* not blank;
+* final answer visible.
+
+Then test one Science and one IT question.
+
+Also verify:
+
+* bank answer latency remains under 2 seconds if possible;
+* mode switching is instant;
+* no new AI call when simply switching modes;
+* unmatched AI streaming still works;
+* TypeScript passes.
+
+### Strict scope
+
+Do NOT:
+
+* change content;
+* change question banks;
+* change curriculum;
+* change Gold Standard;
+* change models;
+* change token budgets;
+* create new components or architecture;
+* optimize anything else.
+
+Report only:
+
+1. exact commits/changes that caused the regression;
+2. exact lines/files restored;
+3. what latency fixes were preserved;
+4. Detailed/Standard/Compact before vs restored;
+5. bank latency after restoration;
+6. AI calls on open and mode switch;
+7. TypeScript result;
+8. any unavoidable conflict.
+
+If successful end exactly:
+
+**PRE-LATENCY ANSWER MODES RESTORED WITHOUT LOSING SPEED**
+
+Then STOP.

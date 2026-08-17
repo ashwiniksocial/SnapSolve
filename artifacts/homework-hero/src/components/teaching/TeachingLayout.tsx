@@ -26,13 +26,6 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 // ─── Guided Step Card ─────────────────────────────────────────────────────────
-//
-// Mode-differentiated step rendering:
-//   Detailed (basic)   — why is always visible as inline prose; pause shown if present
-//   Standard           — why is a collapsible toggle (closed by default); pause hidden
-//   Compact (advanced) — why is hidden entirely; pause hidden
-//
-// This creates genuine teaching-depth differentiation from the same frozen data.
 
 function GuidedStepCard({
   step,
@@ -40,18 +33,13 @@ function GuidedStepCard({
   color,
   light,
   border,
-  level,
 }: {
   step:   LessonStep;
   index:  number;
   color:  string;
   light:  string;
   border: string;
-  level:  import("@/services/explanation/readingModeEngine").ReadingLevel;
 }) {
-  const isDetailed = level === "basic";
-  const isCompact  = level === "advanced";
-
   const [whyOpen,   setWhyOpen]   = useState(false);
   const [pauseOpen, setPauseOpen] = useState(false);
 
@@ -70,7 +58,7 @@ function GuidedStepCard({
 
       <div className="px-4 py-3 bg-white space-y-2">
 
-        {/* Math formula — shown in all modes */}
+        {/* Math formula */}
         {step.math && (
           <div className="bg-slate-900 rounded-xl px-4 py-2.5">
             <p className="text-xs text-slate-300 mb-0.5 font-mono uppercase tracking-wider">Formula / Calculation</p>
@@ -78,7 +66,7 @@ function GuidedStepCard({
           </div>
         )}
 
-        {/* Result — shown in all modes */}
+        {/* Result */}
         {step.result && (
           <div className="flex items-start gap-2.5 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5">
             <span className="text-emerald-500 mt-0.5 shrink-0 text-sm">✓</span>
@@ -86,41 +74,26 @@ function GuidedStepCard({
           </div>
         )}
 
-        {/* Why this step ───────────────────────────────────────────────────
-            Detailed:  always visible as inline prose — teaches comprehensively
-            Standard:  collapsible toggle (closed by default) — student drives depth
-            Compact:   hidden entirely — just the method, no overhead            */}
-        {!isCompact && step.why && (
-          isDetailed ? (
-            /* Detailed: always-visible explanation block */
-            <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
-              <p className="text-[10px] font-black uppercase tracking-widest text-violet-500 mb-1.5">Why this step</p>
-              <p className="text-sm text-violet-800 leading-relaxed whitespace-pre-wrap">{step.why}</p>
-            </div>
-          ) : (
-            /* Standard: collapsible toggle */
-            <>
-              <button
-                onClick={() => setWhyOpen((o) => !o)}
-                className="w-full flex items-center justify-between text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 rounded-xl px-3 py-2 hover:bg-violet-100 transition-colors"
-              >
-                <span className="flex items-center gap-1.5">
-                  <span>💭</span>
-                  <span>Why this step?</span>
-                </span>
-                <span className="text-violet-400">{whyOpen ? "▲ Hide" : "▼ Show"}</span>
-              </button>
-              {whyOpen && (
-                <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
-                  <p className="text-sm text-violet-800 leading-relaxed whitespace-pre-wrap">{step.why}</p>
-                </div>
-              )}
-            </>
-          )
+        {/* Why this step — collapsible reveal */}
+        <button
+          onClick={() => setWhyOpen((o) => !o)}
+          className="w-full flex items-center justify-between text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 rounded-xl px-3 py-2 hover:bg-violet-100 transition-colors"
+        >
+          <span className="flex items-center gap-1.5">
+            <span>💭</span>
+            <span>Why this step?</span>
+          </span>
+          <span className="text-violet-400">{whyOpen ? "▲ Hide" : "▼ Show"}</span>
+        </button>
+
+        {whyOpen && (
+          <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
+            <p className="text-sm text-violet-800 leading-relaxed whitespace-pre-wrap">{step.why}</p>
+          </div>
         )}
 
-        {/* Pause and think — Detailed only */}
-        {isDetailed && step.pause && (
+        {/* Pause and think */}
+        {step.pause && (
           <>
             <button
               onClick={() => setPauseOpen((o) => !o)}
@@ -283,15 +256,14 @@ function LessonRenderer({ lesson, level, cfg }: {
   );
   const show = {
     concept:   !isCompact,
-    intuition: isDetailed && (!!lesson.intuition.story || !!lesson.intuition.visual || !!lesson.intuition.everyday),
+    intuition: isDetailed,
     translate: translateHasContent,
     steps:     true,
-    // Guard against empty arrays so sections never render as hollow shells
-    mistakes:  isDetailed && lesson.commonMistakes.length > 0,
+    mistakes:  isDetailed,
     answer:    true,
-    similar:   isDetailed && !!lesson.simplerExample?.problem,
+    similar:   isDetailed,
     practice:  !isCompact && !!(lesson.practiceQuestion?.question),
-    remember:  isCompact  && lesson.rememberThese.length > 0,
+    remember:  isCompact,
   };
 
   let _n = 0;
@@ -447,7 +419,6 @@ function LessonRenderer({ lesson, level, cfg }: {
                 color={cfg.color}
                 light={cfg.light}
                 border={cfg.border}
-                level={level}
               />
             ))}
           </div>
