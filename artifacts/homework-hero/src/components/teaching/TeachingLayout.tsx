@@ -119,7 +119,7 @@ function GuidedStepCard({
 
 // ─── Practice Question with progressive hints ─────────────────────────────────
 
-function PracticeWithHints({
+export function PracticeWithHints({
   question,
   hints,
   solution,

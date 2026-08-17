@@ -1,0 +1,63 @@
+Recall PrePromptConditions and continue from the CURRENT working tree.
+
+Do not restart the task, redesign it, or repeat the earlier architecture inspection.
+
+The previous run was interrupted by quota after the four-action patch was largely implemented.
+
+First inspect the current diff only enough to determine what remains unfinished.
+
+Known remaining items from the interrupted run:
+
+1. **Practise**
+
+   * Ensure the existing `practiceQuestion`, hints and solution can be shown from the post-solution **Practise** action even when the current lesson/rendering preference is Compact.
+   * Reuse the existing practice renderer/component.
+   * Do not generate a fresh AI question.
+
+2. **Quick revision**
+
+   * Do not render generic placeholder text for missing optional revision fields.
+   * Show only meaningful available content from:
+     `rememberThese`,
+     `retrievalPractice`,
+     `confidenceCheck`,
+     `confidenceBuilder`.
+   * Fail gracefully if some/all are unavailable.
+
+Then complete validation of the already-implemented patch.
+
+Verify specifically:
+
+* normal solve path remains unchanged;
+* bank-first behaviour remains unchanged;
+* `Show me visually` makes 0 new AI calls;
+* `Quick revision` makes 0 new AI calls;
+* `Practise` makes 0 new AI calls;
+* `Explain it more simply` makes exactly 1 intentional AI request;
+* `simplify` cannot receive a normal cached lesson;
+* simplify remains transient and does not change the saved/global explanation preference;
+* existing Ask AI/Socratic Tutor still works;
+* essential navigation/workflow controls remain accessible;
+* no protected academic/governance/question-bank files changed;
+* frontend typecheck passes;
+* API typecheck passes;
+* relevant builds/tests pass.
+
+If the workspace-wide build is blocked only by the unrelated `mockup-sandbox` managed `PORT` requirement, do not modify its configuration. Validate only the changed frontend/API packages using the correct existing environment.
+
+Do not add any further features.
+
+At the end report only:
+
+1. files changed;
+2. final behaviour of each of the four actions;
+3. AI-call count for each action;
+4. simplify cache behaviour;
+5. validation results;
+6. any genuine blocker.
+
+If all checks pass, state:
+
+**FOUR-ACTION PATCH READY TO FREEZE**
+
+Then stop.

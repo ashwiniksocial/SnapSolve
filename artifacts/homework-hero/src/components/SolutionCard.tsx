@@ -17,7 +17,10 @@ import {
   recordSession,
 } from "@/services/studentModel";
 
-interface Props { solution: AIResponse }
+interface Props {
+  solution: AIResponse;
+  initialLevel?: ReadingLevel;
+}
 
 const DIFF_BADGE: Record<string, string> = {
   Easy:   "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -25,8 +28,8 @@ const DIFF_BADGE: Record<string, string> = {
   Hard:   "bg-red-50     text-red-700     border-red-200",
 };
 
-export default function SolutionCard({ solution }: Props) {
-  const [level, setLevel] = useState<ReadingLevel>(getStoredLevel);
+export default function SolutionCard({ solution, initialLevel }: Props) {
+  const [level, setLevel] = useState<ReadingLevel>(initialLevel ?? getStoredLevel);
 
   const cfg  = SUBJECTS[solution.subject as Subject];
   const isAI = solution.source === "openai";

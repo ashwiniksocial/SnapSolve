@@ -19,6 +19,8 @@ import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
 import { buildStudentContext }             from "@/services/studentModel";
 import { getStoredLevel, type ReadingLevel } from "@/services/explanation/readingModeEngine";
 
+export type SolveIntent = "simplify";
+
 // ─── Availability check ───────────────────────────────────────────────────────
 
 export function isOpenAIAvailable(): boolean {
@@ -219,6 +221,7 @@ async function callBackend(
   mode:            ReadingLevel,
   studentContext?: string,
   onProgress?:     (message: string, percent: number) => void,
+  intent?:         SolveIntent,
 ): Promise<BackendLessonResponse> {
   // Generate a requestId so the backend can key progress entries to this request
   const requestId = (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function")
@@ -241,7 +244,14 @@ async function callBackend(
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       signal:  controller.signal,
-      body:    JSON.stringify({ subject, question: question.trim(), mode, studentContext, requestId }),
+      body:    JSON.stringify({
+        subject,
+        question: question.trim(),
+        mode,
+        studentContext,
+        requestId,
+        ...(intent ? { intent } : {}),
+      }),
     });
   } finally {
     clearTimeout(timer);
@@ -468,6 +478,7 @@ export async function solveWithOpenAI(
   subject:     Subject,
   question:    string,
   onProgress?: (message: string, percent: number) => void,
+  intent?:     SolveIntent,
 ): Promise<AIResponse> {
   // ── Dev audit path: bypass API key, return hardcoded fixture ──────────────
   // Must be checked BEFORE the min-length guard.
@@ -480,22 +491,33 @@ export async function solveWithOpenAI(
   // Read the stored mode so the backend generates only the sections this mode needs.
   const mode = getStoredLevel();
 
-  // Client-side cache hit → instant, no network
-  const cached = getCachedSolution(subject, question, mode);
-  if (cached) {
-    return { ...cached, detectedQuestion: question };
+  // Simplify is deliberately fresh: a normal cached lesson must never be
+  // returned for an intent-specific regeneration.
+  if (!intent) {
+    const cached = getCachedSolution(subject, question, mode);
+    if (cached) {
+      return { ...cached, detectedQuestion: question };
+    }
   }
 
   // Build student context for personalised AI response
   const studentContext = buildStudentContext(subject);
 
   // Backend call — passes mode so the server generates only the required sections
-  const data = await callBackend(subject, question, mode, studentContext || undefined, onProgress);
+  const data = await callBackend(
+    subject,
+    question,
+    mode,
+    studentContext || undefined,
+    onProgress,
+    intent,
+  );
 
   const result = toAIResponse(data, subject, question);
 
-  // Store in client-side cache
-  cacheSolution(subject, question, mode, result);
+  // Intent-specific lessons are transient and must not replace or share the
+  // normal lesson cache entry.
+  if (!intent) cacheSolution(subject, question, mode, result);
 
   return result;
 }

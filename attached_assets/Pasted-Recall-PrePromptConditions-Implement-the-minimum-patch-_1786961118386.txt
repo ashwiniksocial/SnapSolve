@@ -1,0 +1,103 @@
+Recall PrePromptConditions.
+
+Implement the minimum patch for the approved post-solution learning actions.
+
+Permanent UX:
+
+**Still confused?**
+
+1. Explain it more simply
+2. Show me visually
+3. Quick revision
+4. Practise
+
+Apply:
+
+* one screen / one primary goal / max four visible learning actions;
+* 10-second rule;
+* natural student language;
+* progressive disclosure;
+* reuse existing capabilities;
+* no new parallel architecture.
+
+### Required behaviour
+
+**Explain it more simply**
+
+* Use the existing solve pipeline.
+* Add one transient request intent such as `simplify`.
+* Carry it through the existing client transport to `POST /api/solveQuestion`.
+* Resolve intent server-side before generation.
+* Generate a genuinely simpler explanation for the existing question/solution.
+* Do NOT change the student's saved/global explanation-level preference.
+* Do NOT create a new AI engine, router, service or prompt framework.
+* Prevent normal cached content from being incorrectly returned for this intent using the smallest safe cache change.
+
+**Show me visually**
+
+* No fresh AI call.
+* Reuse `lesson.intuition.visual`.
+* Reveal/focus it in a simple dedicated presentation.
+* Do not add image generation or diagram infrastructure.
+
+**Quick revision**
+
+* No fresh AI call.
+* Reuse existing lesson fields, prioritising:
+  `rememberThese`,
+  `retrievalPractice`,
+  `confidenceCheck`,
+  `confidenceBuilder`.
+* Present only the useful available content; avoid placeholder/empty sections.
+
+**Practise**
+
+* No fresh AI call initially.
+* Reuse the existing `practiceQuestion`, hints and solution.
+* Reuse existing practice components/navigation where possible.
+
+### Scope protection
+
+Do not modify:
+
+* Gold Standard `academicReview.ts`;
+* `qualityChecklist.ts`;
+* question banks;
+* curriculum architecture;
+* governance/registries;
+* unrelated Practice architecture;
+* existing teaching engines unless strictly required for the simplify intent.
+
+Do not implement `/teachme`, `/mindmap`, `/doubtkiller`, etc. as separate visible actions.
+
+Do not introduce model-tier routing yet.
+
+Preserve existing solution generation, bank-first behaviour and Socratic Tutor functionality unless directly conflicting with the approved four-action UX.
+
+Before changing existing visible solution-page buttons, preserve essential workflow access such as New Question / Mark Solved where needed, but do not allow the screen to become cluttered. Learning actions and utility/navigation controls may be visually separated.
+
+### Validation
+
+Verify:
+
+1. normal solve behaviour is unchanged;
+2. Visual, Revision and Practise trigger zero new AI requests;
+3. Simplify makes exactly one intentional regeneration request;
+4. simplify cannot incorrectly receive the normal cached lesson;
+5. global explanation preference is unchanged;
+6. missing optional lesson fields fail gracefully;
+7. TypeScript/typecheck passes;
+8. existing relevant tests pass.
+
+Make the smallest safe patch.
+
+Report:
+
+* files changed;
+* exact behaviour implemented;
+* AI calls by each action;
+* cache handling for `simplify`;
+* validation results;
+* any genuine blocker.
+
+Then stop.

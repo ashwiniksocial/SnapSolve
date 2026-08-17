@@ -14,13 +14,14 @@
  */
 
 import { matchSolutionWithScore, type AIResponse } from "@/data/solutionBank";
-import { solveWithOpenAI, isOpenAIAvailable }      from "@/services/ai/openaiSolver";
+import { solveWithOpenAI, isOpenAIAvailable, type SolveIntent } from "@/services/ai/openaiSolver";
 import { detectBestTopic }                          from "@/services/ai/topicMatcher";
 import { computeConfidenceBreakdown }               from "@/services/confidenceEngine";
 import { verifySolution }                           from "@/services/verificationEngine";
 import type { Subject } from "@/data/subjects";
 
 export type { AIResponse, SolutionStep, SimilarQuestion } from "@/data/solutionBank";
+export type { SolveIntent } from "@/services/ai/openaiSolver";
 
 // ─── Loading phases (used by LoadingSpinner dot count) ────────────────────────
 
@@ -55,6 +56,7 @@ const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
  *                       Passed through to the confidence engine.
  * @param opts.skipBank      When true, skip Path A (bank match) and go straight to OpenAI.
  *                           Used by Practice mode to force the full AI teaching pipeline.
+ * @param opts.intent         Transient post-solution generation intent.
  * @param opts.requireLesson When true, throw if the AI pipeline fails or returns no lesson.
  *                           Disables all silent fallbacks. Failures become visible errors.
  */
@@ -63,7 +65,7 @@ export async function solve(
   question:      string,
   ocrConfidence  = 1.0,
   onPhase?:      (msg: string, index: number) => void,
-  opts?:         { skipBank?: boolean; requireLesson?: boolean },
+  opts?:         { skipBank?: boolean; requireLesson?: boolean; intent?: SolveIntent },
   onDetail?:     (message: string, percent: number) => void,
 ): Promise<AIResponse> {
 
@@ -85,7 +87,7 @@ export async function solve(
   const detectedTopicName = topicMatch?.topic;
 
   // ── Path A: strong bank match (skipped when skipBank=true) ───────────────
-  if (!opts?.skipBank && bankScore > 0) {
+  if (!opts?.skipBank && !opts?.intent && bankScore > 0) {
     onPhase?.(PHASES_BANK[2], 2);
     await delay(500);
     onPhase?.(PHASES_BANK[3], 3);
@@ -122,7 +124,7 @@ export async function solve(
     onPhase?.(PHASES_AI[2], 2);
 
     try {
-      const aiResp = await solveWithOpenAI(subject, question, onDetail);
+      const aiResp = await solveWithOpenAI(subject, question, onDetail, opts?.intent);
 
       onPhase?.(PHASES_AI[3], 3);
       await delay(280);

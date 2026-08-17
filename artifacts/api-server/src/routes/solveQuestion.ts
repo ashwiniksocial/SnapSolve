@@ -47,6 +47,7 @@ type Subject = (typeof SUBJECTS)[number];
 // ─── Lesson mode (mirrors ReadingLevel on the frontend) ───────────────────────
 type LessonMode = "basic" | "standard" | "advanced";
 const LESSON_MODES: readonly LessonMode[] = ["basic", "standard", "advanced"];
+type SolveIntent = "simplify";
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
 
@@ -1164,6 +1165,7 @@ async function generateDraft(
   studentContext?: string,
   blueprint?:      BlueprintInjection,
   timeoutMs?:      number,
+  intent?:         SolveIntent,
 ): Promise<LessonResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
@@ -1186,7 +1188,14 @@ async function generateDraft(
   const baseSystem = blueprint?.systemSuffix
     ? subjectBase + blueprint.systemSuffix
     : subjectBase;
-  const systemContent = baseSystem + depthOverride;
+  const intentInstruction = intent === "simplify"
+    ? `\n\nSIMPLIFY INTENT — The student is still confused by the existing solution.
+Rewrite this same lesson in genuinely simpler language for a younger or struggling student.
+Keep the mathematics, facts, method, and final answer correct. Use shorter sentences,
+define technical words immediately, explain one idea at a time, and avoid unnecessary
+exam jargon. Do not change the question or invent a different answer.`
+    : "";
+  const systemContent = baseSystem + depthOverride + intentInstruction;
 
   const baseUserContent = studentContext
     ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
@@ -1270,14 +1279,27 @@ router.post("/solveQuestion", async (req, res) => {
   req.log.info({ ip }, "[PIPELINE:1] PASS — rate limit ok");
 
   // 2. Validate input
-  const { question, subject, studentContext, requestId: rawRequestId, mode: rawMode } = req.body as {
+  const {
+    question,
+    subject,
+    studentContext,
+    requestId: rawRequestId,
+    mode: rawMode,
+    intent: rawIntent,
+  } = req.body as {
     question?:       unknown;
     subject?:        unknown;
     studentContext?: unknown;
     requestId?:      unknown;
     mode?:           unknown;
+    intent?:         unknown;
   };
   const mode: LessonMode = LESSON_MODES.includes(rawMode as LessonMode) ? rawMode as LessonMode : "standard";
+  const intent: SolveIntent | undefined = rawIntent === "simplify" ? "simplify" : undefined;
+  // Intent is resolved server-side. It does not mutate the student's saved
+  // reading preference, but it does request a sufficiently detailed lesson for
+  // a genuinely simpler rewrite.
+  const generationMode: LessonMode = intent === "simplify" ? "basic" : mode;
   const reqId = typeof rawRequestId === "string" && rawRequestId.length > 0 ? rawRequestId : undefined;
   setProgress(reqId, "init", "Analysing your question…", 5);
 
@@ -1306,7 +1328,7 @@ router.post("/solveQuestion", async (req, res) => {
     "[PIPELINE:2] input validated");
 
   // 3. Server-side cache — skip for personalised responses
-  if (!ctx) {
+  if (!ctx && !intent) {
     const cached = getCached(subj, q, mode);
     if (cached) {
       req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
@@ -1317,6 +1339,9 @@ router.post("/solveQuestion", async (req, res) => {
     }
     req.log.info({ subject: subj }, "[PIPELINE:3] MISS — server cache empty for this question");
     setProgress(reqId, "cache_miss", "No cached lesson — building fresh…", 10);
+  } else if (intent) {
+    req.log.info({ subject: subj, intent }, "[PIPELINE:3] SKIP — intent-specific request requires fresh generation");
+    setProgress(reqId, "intent", "Preparing a fresh explanation…", 10);
   } else {
     req.log.info({ subject: subj }, "[PIPELINE:3] SKIP — personalised request bypasses server cache");
     setProgress(reqId, "personalised", "Building personalised lesson…", 10);
@@ -1327,15 +1352,15 @@ router.post("/solveQuestion", async (req, res) => {
   let blueprint: BlueprintInjection | undefined;
   if (!apiKey) {
     req.log.warn("[PIPELINE:4] SKIP — no OPENAI_API_KEY; blueprint and generation both unavailable");
-  } else if (mode === "advanced") {
+  } else if (generationMode === "advanced") {
     // Compact mode: skip planning to reduce latency — a steps-only response doesn't benefit from a blueprint.
-    req.log.info({ subject: subj, mode }, "[PIPELINE:4] SKIP — Compact mode does not use blueprint");
+    req.log.info({ subject: subj, mode: generationMode }, "[PIPELINE:4] SKIP — Compact mode does not use blueprint");
     setProgress(reqId, "blueprint_done", "Building compact solution…", 35);
   } else {
     req.log.info({ subject: subj }, "[PIPELINE:4] START — calling Master Teacher Engine (lesson planner)");
     setProgress(reqId, "blueprint_start", "Planning lesson structure…", 15);
     try {
-      blueprint = await buildTeachingBlueprint(subj, q, apiKey, mode);
+      blueprint = await buildTeachingBlueprint(subj, q, apiKey, generationMode);
       req.log.info({
         subject:      subj,
         concepts:     blueprint.conceptCount,
@@ -1359,12 +1384,12 @@ router.post("/solveQuestion", async (req, res) => {
   let draft: LessonResponse;
   // Standard mode: compute the remaining wall-clock budget (subtract blueprint + cache time).
   // This becomes the hard abort deadline for the OpenAI call.
-  const standardTimeoutMs = mode === "standard"
+  const standardTimeoutMs = generationMode === "standard"
     ? Math.max(5_000, STANDARD_BUDGET_MS - (Date.now() - requestStart))
     : undefined;
 
   try {
-    draft = await generateDraft(subj, q, mode, ctx, blueprint, standardTimeoutMs);
+    draft = await generateDraft(subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent);
     req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
       "[PIPELINE:5] DONE — draft lesson generated");
     setProgress(reqId, "draft_done", "Lesson written — quality checking…", 62);
@@ -1376,7 +1401,7 @@ router.post("/solveQuestion", async (req, res) => {
     if (msg.includes("invalid_key")) { res.status(503).json({ error: "invalid_key",     message: "OPENAI_API_KEY is invalid" }); return; }
     if (msg.includes("rate_limit"))  { res.status(429).json({ error: "openai_rate_limit", message: "High demand right now — please wait a moment and try again." }); return; }
 
-    if (msg.includes("aborted") && mode === "standard") {
+    if (msg.includes("aborted") && generationMode === "standard") {
       // Standard budget (15 s) expired — serve a structured method guide instead of a 504.
       req.log.warn({ budget: STANDARD_BUDGET_MS, elapsed: Date.now() - requestStart },
         "[PIPELINE:5] BUDGET — Standard 15 s expired; serving fallback lesson");
@@ -1392,7 +1417,7 @@ router.post("/solveQuestion", async (req, res) => {
   //    Standard and Compact modes skip this for faster responses.
   let finalLesson = draft;
 
-  if (mode !== "basic") {
+  if (generationMode !== "basic") {
     // Standard: plan + draft only (~25–30 s). Compact: draft only (~10–15 s).
     req.log.info({ subject: subj, mode }, "[PIPELINE:6] SKIP — Quality pipeline runs only for Detailed mode");
   } else {
@@ -1449,7 +1474,7 @@ router.post("/solveQuestion", async (req, res) => {
   }
 
   // 7. Cache the reviewed lesson (not the draft)
-  if (!ctx) {
+  if (!ctx && !intent) {
     setCached(subj, q, mode, finalLesson);
     req.log.info({ subject: subj, mode }, "[PIPELINE:7] lesson cached on server");
   }
