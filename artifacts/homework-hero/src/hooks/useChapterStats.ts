@@ -49,7 +49,7 @@ export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boo
     const chapters = getChapters(classNum, subject);
     const subjectProgress = (progress as Record<string, Record<string, { solved: number; correct: number; attempted: string[] }>>)[subject] ?? {};
 
-    return chapters.map((ch) => {
+    return chapters.map((ch, idx) => {
       const chapterQuestions = getQuestions({ classNum, subject, chapterId: ch.id });
 
       const topicCompletions: TopicCompletion[] = ch.topics.map((t) => {
@@ -90,9 +90,15 @@ export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boo
         chapterId: ch.id,
         chapterName: ch.name,
         chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
-        displayChapterNumber: (subject === "Science" || (subject === "Mathematics" && ch.classNum === 9))
-          ? CLASS9_DISPLAY_ORDER[ch.id]
-          : undefined,
+        // Science: sequential 1-based position in the already-filtered ACTIVE-only sorted array.
+        // CLASS9_DISPLAY_ORDER carries absolute NCERT ordinals including SOURCE_UNRESOLVED slots;
+        // filtering those out leaves a gap (e.g. first visible chapter gets ordinal 2, not 1).
+        // Using idx+1 closes that gap. Mathematics keeps CLASS9_DISPLAY_ORDER (no gap there).
+        displayChapterNumber: subject === "Science"
+          ? idx + 1
+          : (subject === "Mathematics" && ch.classNum === 9)
+            ? CLASS9_DISPLAY_ORDER[ch.id]
+            : undefined,
         totalQuestions: chapterQuestions.length,
         attempted: chAttempted,
         correct: chCorrect,

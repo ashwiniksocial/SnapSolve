@@ -1,0 +1,113 @@
+Recall PrePromptConditions.
+
+P0 BETA UI DEFECT — SCIENCE PRACTICE NUMBERING IS STILL WRONG.
+
+I have visually verified the current Practice screen AFTER the previous work.
+
+Current visible Science list begins:
+
+Ch 2. Cell: The Building Block of Life
+Ch 3. Tissues in Action
+Ch 4. Describing Motion Around Us
+Ch 5. Exploring Mixtures and Their Separation
+
+There is NO visible Ch 1.
+
+Therefore the previous task did NOT correct the student-facing serial number.
+
+DO NOT assume this is fixed because validators pass.
+
+TASK:
+
+Trace the EXACT expression/value rendered before each chapter title in the Class 9 Science Practice UI.
+
+Start from Practice.tsx and follow only the data actually used to render:
+
+"Ch. X"
+
+Determine exactly why the first VISIBLE ACTIVE Science chapter receives 2 instead of 1.
+
+IMPORTANT DISTINCTION:
+
+Internal canonical displayOrder / book IDs / official source IDs may remain unchanged.
+
+The STUDENT-FACING serial number must represent the position among VISIBLE ACTIVE chapters.
+
+Therefore, if the visible Science array is:
+
+[
+ Cell,
+ Tissues,
+ Motion,
+ Mixtures,
+ ...
+]
+
+the UI must display:
+
+Ch 1. Cell: The Building Block of Life
+Ch 2. Tissues in Action
+Ch 3. Describing Motion Around Us
+Ch 4. Exploring Mixtures and Their Separation
+...
+
+Hidden, SOURCE_UNRESOLVED, deleted, inactive, or otherwise non-rendered chapters MUST NOT consume a visible chapter serial number.
+
+IMPLEMENTATION RULE:
+
+Prefer deriving the displayed chapter number from the final filtered/rendered chapter array:
+
+visible index + 1
+
+Do NOT modify canonical IDs merely to achieve sequential numbering.
+
+Do NOT:
+- alter frozen question banks
+- renumber question IDs
+- change canonical book IDs
+- unhide chapters
+- change official curriculum content
+- modify Mathematics numbering
+- modify Information Technology numbering
+- create another registry
+- perform unrelated refactoring
+
+This should be the SMALLEST SAFE UI FIX.
+
+VALIDATE IN THE ACTUAL RUNNING UI, not merely TypeScript or source inspection.
+
+After patch:
+
+1. Open Practice.
+2. Select Class 9.
+3. Select Science.
+4. Visually inspect the first several cards.
+5. Confirm first visible card literally renders "Ch 1."
+6. Confirm second renders "Ch 2."
+7. Confirm numbering remains sequential through the LAST visible Science chapter.
+8. Confirm clicking Ch 1 opens Cell and its correct questions.
+9. Confirm Mathematics unchanged.
+10. Confirm Information Technology unchanged.
+11. Run TypeScript.
+12. Run existing curriculum/gateway validation.
+
+Report:
+
+- root cause
+- old rendering expression
+- new rendering expression
+- exact file changed
+- complete final visible Science chapter list with displayed serial numbers
+- screenshot/browser verification result
+- TypeScript result
+- curriculum/gateway result
+
+Do not report completion unless the RUNNING PREVIEW visibly shows:
+
+"Ch 1. Cell: The Building Block of Life"
+
+If it still says Ch 2, continue tracing until the real rendering source is found.
+
+End exactly:
+
+SCIENCE VISIBLE CHAPTER NUMBERING VERIFIED — CH 1 STARTS WITH CELL
