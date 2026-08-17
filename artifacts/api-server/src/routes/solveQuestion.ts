@@ -26,6 +26,7 @@ import { runQualityPipeline }    from "../services/teachingQuality";
 import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
 import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
+import { LessonStreamExtractor } from "../lib/lessonStreamExtractor";
 
 const router = Router();
 
@@ -1129,10 +1130,56 @@ function questionNeedsTranslation(question: string): boolean {
 
 // ─── OpenAI draft generation call ────────────────────────────────────────────
 
-const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
-const MODEL          = "gpt-4o-mini";
-const OPENAI_TIMEOUT    = 90_000;
+const OPENAI_URL      = "https://api.openai.com/v1/chat/completions";
+const MODEL           = "gpt-4o-mini";
+const OPENAI_TIMEOUT  = 90_000;
 const STANDARD_BUDGET_MS = 15_000; // wall-clock guarantee for Standard mode
+
+// ─── Shared prompt builder ────────────────────────────────────────────────────
+// Factored out of generateDraft so the streaming route can reuse the same
+// system/user content without duplicating the prompt-construction logic.
+
+function buildDraftPrompts(
+  subject:         Subject,
+  question:        string,
+  mode:            LessonMode,
+  studentContext?: string,
+  blueprint?:      BlueprintInjection,
+  intent?:         SolveIntent,
+): { systemContent: string; userContent: string; maxTokens: number } {
+  const depth         = extractDepth(studentContext);
+  const depthOverride = mode === "basic" ? DEPTH_SYSTEM_OVERRIDES[depth] : "";
+
+  const subjectBase = mode === "basic"
+    ? SYSTEM_PROMPTS[subject]
+    : getSubjectPreamble(subject) + (mode === "standard" ? JSON_SCHEMA_STANDARD : JSON_SCHEMA_COMPACT);
+
+  const baseSystem = blueprint?.systemSuffix
+    ? subjectBase + blueprint.systemSuffix
+    : subjectBase;
+
+  const intentInstruction = intent === "simplify"
+    ? `\n\nSIMPLIFY INTENT — The student is still confused by the existing solution.
+Rewrite this same lesson in genuinely simpler language for a younger or struggling student.
+Keep the mathematics, facts, method, and final answer correct. Use shorter sentences,
+define technical words immediately, explain one idea at a time, and avoid unnecessary
+exam jargon. Do not change the question or invent a different answer.`
+    : "";
+
+  const systemContent = baseSystem + depthOverride + intentInstruction;
+
+  const baseUserContent = studentContext
+    ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
+    : `Subject: ${subject}\n\nQuestion:\n${question.trim()}`;
+
+  const userContent = blueprint?.userPrefix
+    ? blueprint.userPrefix + baseUserContent
+    : baseUserContent;
+
+  const maxTokens = mode === "basic" ? 2800 : mode === "standard" ? 1100 : 800;
+
+  return { systemContent, userContent, maxTokens };
+}
 
 // ─── Standard-mode fallback lesson ───────────────────────────────────────────
 // Built deterministically when the Standard 15 s budget expires.
@@ -1282,44 +1329,10 @@ async function generateDraft(
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), timeoutMs ?? OPENAI_TIMEOUT);
 
-  // Depth override only applies to Detailed mode — Standard/Compact schemas
-  // embed their own concise depth guidance directly.
-  const depth         = extractDepth(studentContext);
-  const depthOverride = mode === "basic" ? DEPTH_SYSTEM_OVERRIDES[depth] : "";
-
-  // Build mode-specific system prompt.
-  // Detailed (basic): use SYSTEM_PROMPTS[subject] which already includes the full JSON_SCHEMA.
-  // Standard/Compact: use the subject preamble + the reduced mode-specific schema.
-  const subjectBase = mode === "basic"
-    ? SYSTEM_PROMPTS[subject]
-    : getSubjectPreamble(subject) + (mode === "standard" ? JSON_SCHEMA_STANDARD : JSON_SCHEMA_COMPACT);
-
-  const baseSystem = blueprint?.systemSuffix
-    ? subjectBase + blueprint.systemSuffix
-    : subjectBase;
-  const intentInstruction = intent === "simplify"
-    ? `\n\nSIMPLIFY INTENT — The student is still confused by the existing solution.
-Rewrite this same lesson in genuinely simpler language for a younger or struggling student.
-Keep the mathematics, facts, method, and final answer correct. Use shorter sentences,
-define technical words immediately, explain one idea at a time, and avoid unnecessary
-exam jargon. Do not change the question or invent a different answer.`
-    : "";
-  const systemContent = baseSystem + depthOverride + intentInstruction;
-
-  const baseUserContent = studentContext
-    ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
-    : `Subject: ${subject}\n\nQuestion:\n${question.trim()}`;
-
-  const userContent = blueprint?.userPrefix
-    ? blueprint.userPrefix + baseUserContent
-    : baseUserContent;
-
-  // Token budget scales with mode.
-  // Standard: 4-step schema + questionTranslation + finalAnswer (no practiceQuestion)
-  // expects ~700–950 completion tokens.  1100 is the safe cap — enough headroom
-  // for verbose conceptual questions without the practiceQuestion cost.
-  // Compact: lean 4-step schema, 800 tokens unchanged.
-  const maxTokens = mode === "basic" ? 2800 : mode === "standard" ? 1100 : 800;
+  // Build prompts using the shared helper (avoids duplication with the streaming route).
+  const { systemContent, userContent, maxTokens } = buildDraftPrompts(
+    subject, question, mode, studentContext, blueprint, intent,
+  );
 
   let res: Response;
   try {
@@ -1693,6 +1706,242 @@ router.post("/solveQuestion", async (req, res) => {
     "[PIPELINE:7] RESPONSE — sending final lesson to client");
   res.json(finalLesson);
   if (reqId) progressStore.delete(reqId);
+});
+
+// ─── SSE streaming route ──────────────────────────────────────────────────────
+//
+// POST /api/solveQuestion/stream
+//
+// Streams a Standard-mode lesson via Server-Sent Events so meaningful teaching
+// content appears within ≤5 s (target ≤3 s) instead of waiting for the full
+// response.  Bank questions and non-Standard modes use the regular route.
+//
+// SSE event shapes:
+//   { type:"section", field, index?, value }  — one section is complete
+//   { type:"cached",  lesson }                — server-cache hit, nothing to stream
+//   { type:"done",    lesson, firstContentMs, totalLatencyMs, ... }
+//   { type:"error",   code, message? }
+
+router.post("/solveQuestion/stream", async (req, res) => {
+  const requestStart = Date.now();
+  const ip = req.ip ?? (req.socket.remoteAddress ?? "unknown");
+
+  // ── 1. Rate limit ────────────────────────────────────────────────────────────
+  const rl = checkRateLimit(ip);
+  if (!rl.allowed) {
+    res.status(429).json({ error: "rate_limit", retryAfter: rl.retryAfter });
+    return;
+  }
+
+  // ── 2. Validate input ────────────────────────────────────────────────────────
+  const { question, subject, studentContext: rawCtx } = req.body as {
+    question?:       unknown;
+    subject?:        unknown;
+    studentContext?: unknown;
+  };
+
+  if (typeof question !== "string" || question.trim().length < 5) {
+    res.status(400).json({ error: "invalid_question" }); return;
+  }
+  if (question.length > 2000) {
+    res.status(400).json({ error: "question_too_long" }); return;
+  }
+  if (!SUBJECTS.includes(subject as Subject)) {
+    res.status(400).json({ error: "invalid_subject" }); return;
+  }
+
+  const subj = subject as Subject;
+  const q    = question.trim();
+  const ctx  = typeof rawCtx === "string" && rawCtx.length > 0 ? rawCtx.slice(0, 2000) : undefined;
+
+  // Helper: write one SSE event to the response stream.
+  const emit = (data: unknown): void => {
+    try { res.write(`data: ${JSON.stringify(data)}\n\n`); } catch { /* client gone */ }
+  };
+
+  // ── 3. Server-side cache check (skip for personalised requests) ──────────────
+  if (!ctx) {
+    const cached = getCached(subj, q, "standard");
+    if (cached) {
+      req.log.info({ subject: subj, cached: true }, "[STREAM] cache hit — returning via SSE");
+      res.setHeader("Content-Type",    "text/event-stream");
+      res.setHeader("Cache-Control",   "no-cache");
+      res.setHeader("X-Accel-Buffering", "no");
+      res.flushHeaders();
+      emit({ type: "cached", lesson: cached });
+      res.end();
+      return;
+    }
+  }
+
+  // ── 4. Open SSE channel ───────────────────────────────────────────────────────
+  res.setHeader("Content-Type",     "text/event-stream");
+  res.setHeader("Cache-Control",    "no-cache");
+  res.setHeader("Connection",       "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
+  res.flushHeaders();
+
+  // Abort OpenAI stream when client disconnects.
+  const abortCtrl = new AbortController();
+  res.on("close", () => abortCtrl.abort());
+
+  // ── 5. Blueprint planning ─────────────────────────────────────────────────────
+  const apiKey = process.env.OPENAI_API_KEY ?? "";
+  if (!apiKey) {
+    emit({ type: "error", code: "no_key", message: "OPENAI_API_KEY not configured" });
+    res.end(); return;
+  }
+
+  let blueprint: BlueprintInjection | undefined;
+  try {
+    blueprint = await buildTeachingBlueprint(subj, q, apiKey, "standard");
+  } catch { /* degraded — continue without blueprint */ }
+
+  // ── 6. Build prompts ──────────────────────────────────────────────────────────
+  const { systemContent, userContent } = buildDraftPrompts(subj, q, "standard", ctx, blueprint);
+
+  // ── 7. Call OpenAI with stream: true ──────────────────────────────────────────
+  const budgetTimer = setTimeout(() => abortCtrl.abort(), STANDARD_BUDGET_MS);
+
+  let openaiRes: Response;
+  try {
+    openaiRes = await fetch(OPENAI_URL, {
+      method:  "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model:          MODEL,
+        temperature:    0.3,
+        max_tokens:     1100,
+        stream:         true,
+        stream_options: { include_usage: true },
+        messages: [
+          { role: "system", content: systemContent },
+          { role: "user",   content: userContent  },
+        ],
+      }),
+      signal: abortCtrl.signal,
+    });
+  } catch (err) {
+    clearTimeout(budgetTimer);
+    const msg  = err instanceof Error ? err.message : String(err);
+    const code = msg.includes("abort") ? "timeout" : "openai_error";
+    req.log.warn({ code, msg }, "[STREAM] OpenAI fetch failed");
+    if (!res.writableEnded) { emit({ type: "error", code, message: msg }); res.end(); }
+    return;
+  }
+
+  if (openaiRes.status === 429) { clearTimeout(budgetTimer); emit({ type: "error", code: "rate_limit"   }); res.end(); return; }
+  if (openaiRes.status === 401) { clearTimeout(budgetTimer); emit({ type: "error", code: "invalid_key"  }); res.end(); return; }
+  if (!openaiRes.ok)            { clearTimeout(budgetTimer); emit({ type: "error", code: `openai_${openaiRes.status}` }); res.end(); return; }
+
+  // ── 8. Stream chunks → LessonStreamExtractor → SSE ───────────────────────────
+  const extractor   = new LessonStreamExtractor();
+  const reader      = openaiRes.body!.getReader();
+  const decoder     = new TextDecoder();
+  let   sseLineBuf  = "";
+  let   accumJson   = "";
+  let   promptTok   = 0;
+  let   completionTok = 0;
+  let   firstContentMs = -1;
+
+  try {
+    outer: while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      sseLineBuf += decoder.decode(value, { stream: true });
+      const lines = sseLineBuf.split("\n");
+      sseLineBuf  = lines.pop() ?? "";
+
+      for (const line of lines) {
+        if (!line.startsWith("data: ")) continue;
+        const raw = line.slice(6).trim();
+        if (raw === "[DONE]") { break outer; }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let chunk: any;
+        try { chunk = JSON.parse(raw); } catch { continue; }
+
+        if (chunk.usage) {
+          promptTok     = chunk.usage.prompt_tokens     ?? promptTok;
+          completionTok = chunk.usage.completion_tokens ?? completionTok;
+        }
+
+        const content: string | undefined = chunk.choices?.[0]?.delta?.content;
+        if (!content) continue;
+
+        accumJson += content;
+
+        const sections = extractor.feed(content);
+        for (const sec of sections) {
+          if (firstContentMs < 0) firstContentMs = Date.now() - requestStart;
+          emit({ type: "section", field: sec.field, index: sec.index, value: sec.value });
+        }
+      }
+    }
+  } catch (err) {
+    clearTimeout(budgetTimer);
+    const msg = err instanceof Error ? err.message : String(err);
+    req.log.warn({ err: msg }, "[STREAM] interrupted during chunk read");
+    if (!res.writableEnded) { emit({ type: "error", code: "stream_interrupted", message: msg }); res.end(); }
+    return;
+  } finally {
+    clearTimeout(budgetTimer);
+    try { reader.releaseLock(); } catch { /* already released */ }
+  }
+
+  // ── 9. Parse + post-process ───────────────────────────────────────────────────
+  let finalLesson: LessonResponse;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    finalLesson = parseLessonResponse(JSON.parse(accumJson) as any);
+  } catch {
+    req.log.warn({ accumJsonLen: accumJson.length }, "[STREAM] response JSON incomplete/malformed");
+    emit({ type: "error", code: "stream_incomplete", message: "Response JSON was incomplete or malformed" });
+    res.end(); return;
+  }
+
+  // Apply the same post-processing guards as the regular route.
+  if (!questionNeedsTranslation(q) && finalLesson.questionTranslation) {
+    finalLesson.questionTranslation.plainEnglish = "";
+    finalLesson.questionTranslation.whatWeKnow   = "";
+    finalLesson.questionTranslation.whatWeFind   = "";
+    finalLesson.questionTranslation.wordToMath   = "";
+  }
+  if (finalLesson.practiceQuestion) {
+    finalLesson.practiceQuestion.question = "";
+    finalLesson.practiceQuestion.hints    = ["", "", ""];
+    finalLesson.practiceQuestion.solution = "";
+  }
+
+  // ── 10. Cache + telemetry ─────────────────────────────────────────────────────
+  if (!ctx) {
+    setCached(subj, q, "standard", finalLesson);
+  }
+
+  const totalMs = Date.now() - requestStart;
+  req.log.info({
+    requestType:      "solve_stream",
+    firstContentMs,
+    totalLatencyMs:   totalMs,
+    promptTokens:     promptTok,
+    completionTokens: completionTok,
+    estimatedCostUsd: (promptTok * 0.00000015) + (completionTok * 0.0000006),
+  }, "[STREAM] telemetry");
+
+  // ── 11. Emit done ─────────────────────────────────────────────────────────────
+  emit({
+    type:            "done",
+    lesson:          finalLesson,
+    firstContentMs,
+    totalLatencyMs:  totalMs,
+    promptTokens:    promptTok,
+    completionTokens: completionTok,
+  });
+  res.end();
 });
 
 export default router;

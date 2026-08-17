@@ -67,6 +67,7 @@ export async function solve(
   onPhase?:      (msg: string, index: number) => void,
   opts?:         { skipBank?: boolean; requireLesson?: boolean; intent?: SolveIntent },
   onDetail?:     (message: string, percent: number) => void,
+  onPartial?:    (partial: AIResponse) => void,
 ): Promise<AIResponse> {
 
   // Phase 0 — reading
@@ -124,7 +125,7 @@ export async function solve(
     onPhase?.(PHASES_AI[2], 2);
 
     try {
-      const aiResp = await solveWithOpenAI(subject, question, onDetail, opts?.intent);
+      const aiResp = await solveWithOpenAI(subject, question, onDetail, opts?.intent, onPartial);
 
       onPhase?.(PHASES_AI[3], 3);
       await delay(280);

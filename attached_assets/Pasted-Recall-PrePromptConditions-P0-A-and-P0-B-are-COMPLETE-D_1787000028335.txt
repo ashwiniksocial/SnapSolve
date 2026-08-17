@@ -1,0 +1,235 @@
+Recall PrePromptConditions.
+
+P0-A and P0-B are COMPLETE.
+
+Do NOT repeat, reopen, retest broadly, or modify:
+
+* Standard teaching-quality restoration;
+* deterministicPlanner fix;
+* bank fast path;
+* scroll fix.
+
+### Current state
+
+Frozen bank question:
+**<100 ms, 0 AI calls** — KEEP EXACTLY AS IS.
+
+Fresh unmatched Standard AI question:
+full answer approximately **4.9–6.9 seconds**.
+
+Founder requirement:
+
+**Meaningful student answer content must begin appearing within 5 seconds, target 2–3 seconds.**
+
+### TASK
+
+Implement the minimum safe progressive/streaming response path for:
+
+**fresh unmatched Standard-mode AI questions only.**
+
+Do NOT apply streaming to existing bank questions.
+
+Do NOT add another AI call.
+
+---
+
+## Required student experience
+
+Student submits a genuinely new typed/scanned question.
+
+1. Solution page opens immediately at the top.
+2. Existing loading state appears.
+3. As soon as genuine answer content becomes available, show it progressively.
+4. Student must see meaningful teaching within ≤5 seconds, target ≤3 seconds.
+5. Remaining lesson content may continue appearing until completion.
+
+Meaningful content means actual:
+
+* Key Concept;
+* useful question interpretation;
+* reasoning step;
+* or final-answer content.
+
+A spinner, skeleton or “Thinking…” message does NOT satisfy the latency target.
+
+---
+
+## Preserve final Standard quality
+
+Completed Standard lesson must retain the CURRENT validated structure:
+
+* 4 guided reasoning steps;
+* pause fields;
+* classifier-gated `questionTranslation`;
+* `finalAnswer.whyCorrect`;
+* `finalAnswer.verification`;
+* no Standard `practiceQuestion`;
+* current 1100-token budget unless streaming technically requires a justified minimal adjustment.
+
+Do NOT weaken teaching quality to improve speed.
+
+---
+
+## Architecture rule
+
+Use the EXISTING OpenAI request/solution pipeline.
+
+Prefer the smallest officially supported streaming approach compatible with the current OpenAI request path.
+
+Do NOT create:
+
+* another solver;
+* another teaching engine;
+* a second generation request;
+* new model routing;
+* new caching architecture;
+* new analytics architecture.
+
+If existing transport helpers can be extended safely, reuse them.
+
+---
+
+## Partial-response safety
+
+Do not render malformed JSON or broken cards.
+
+Use the smallest safe mechanism so only complete meaningful fields/steps become visible.
+
+At final completion:
+
+* validate/normalize the full lesson through the existing lesson-response path;
+* replace/complete partial state with the final valid Standard lesson.
+
+If streaming fails:
+
+* never leave the student with a permanently broken partial answer;
+* transition to the existing clear Retry/error state.
+
+Do NOT silently fire additional AI requests outside existing retry behaviour.
+
+---
+
+## Telemetry
+
+Extend the EXISTING telemetry minimally to capture:
+
+* request start;
+* time to first meaningful content;
+* full completion latency;
+* total AI calls;
+* input tokens;
+* output tokens;
+* cost;
+* stream completed/failed.
+
+Do not build another telemetry system.
+
+---
+
+## Scan path
+
+Do not redesign OCR.
+
+For scanned questions measure separately:
+
+**image → OCR text ready**
+
+and
+
+**OCR text → first meaningful AI answer**
+
+The ≤5-second AI-response requirement begins once valid OCR text is available.
+
+---
+
+## Validation
+
+Use at least 6 genuinely unmatched, uncached questions:
+
+1. Maths factual
+2. Maths calculation
+3. Maths proof/reasoning
+4. Science factual
+5. Science numerical/reasoning
+6. Biology or Information Technology explanatory
+
+For each report:
+
+`First meaningful content | Full lesson | AI calls | Tokens | Cost | Final lesson valid`
+
+Acceptance:
+
+* **ALL first meaningful responses ≤5 seconds**
+* target median ≤3 seconds
+* exactly 1 AI call per fresh solve
+* final answer remains complete and correct
+* Standard teaching structure preserved
+* no malformed partial UI
+* no bank-path regression
+
+Also recheck:
+
+### Bank questions
+
+* Maths <2s
+* Science <2s
+* IT <2s
+* 0 AI calls
+
+### Navigation
+
+* Solution opens at top
+* Questions returns correctly
+* scroll fix preserved
+
+### Technical
+
+* frontend TypeScript
+* API TypeScript
+* relevant existing tests
+* no new console errors
+
+---
+
+## Strict protection
+
+Do NOT modify:
+
+* frozen question banks;
+* curriculum;
+* Gold Standard;
+* planner scoring/stop words;
+* Standard teaching contract except transport needs;
+* Detailed;
+* Compact;
+* model;
+* Practice bank fast path;
+* UI styling/features;
+* governance.
+
+Do not perform another broad audit.
+
+---
+
+## Report only
+
+1. files changed;
+2. exact streaming mechanism;
+3. before/after request flow;
+4. first-content latency for each test;
+5. full-completion latency;
+6. AI call/token/cost results;
+7. final teaching-quality sanity;
+8. bank fast-path verification;
+9. streaming failure/retry handling;
+10. remaining blocker, if any.
+
+Do NOT declare success based on average latency.
+
+Every normal test must satisfy the first-content ≤5-second gate.
+
+If successful end exactly:
+
+**STREAMING RESPONSE SPEED GATE PASSED — BETA SPEED READY**
+
+Then STOP.

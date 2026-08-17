@@ -19,3 +19,4 @@
 - [Hard-Question Proof Defect](hard-question-proof-defect.md) — CMF-1/CMF-2 defect on M4/P4 is real but unfixable via prompt engineering; skip all prompt approaches; fix requires post-generation content injection.
 - [Standard Mode Schema](standard-mode-schema.md) — 4-step schema + questionTranslation + finalAnswer (no practiceQuestion); maxTokens=1100; practiceQuestion stripped post-generation if model hallucinates it.
 - [Planner Stop Words](planner-stop-words.md) — PLANNER_STOP_WORDS filters generic terms ("theorem","law","principle"…) from question tokens before chapter scoring; threshold raised 2→4; prevents wrong-chapter blueprint injection.
+- [Streaming SSE Architecture](streaming-sse-architecture.md) — Standard-mode fresh questions use POST /api/solveQuestion/stream; first content 850–1550 ms; stable streamId prevents SolutionCard remounts; stream failure falls back to regular route.

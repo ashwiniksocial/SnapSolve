@@ -107,13 +107,22 @@ export default function Solution() {
       }
 
       // ── AI path: new or unmatched question — full pipeline ───────────────────
+      // onPartial fires progressively during Standard-mode SSE streaming:
+      // show the card immediately with whatever content has arrived so far,
+      // then replace it with the complete lesson when solve() resolves.
+      const onPartial = (partial: AIResponse) => {
+        setSolution(partial);
+        setPageState("done");
+      };
+
       const result = await solve(
         session.subject,
         session.question,
         session.ocrConfidence ?? 1,
         (msg, idx) => { setPhaseMsg(msg); setPhaseIdx(idx); },
         practiceMode ? { requireLesson: true } : undefined,
-        (msg, pct) => { setProgressMsg(msg); setProgressPct(pct); }
+        (msg, pct) => { setProgressMsg(msg); setProgressPct(pct); },
+        onPartial,
       );
 
       setSolution(result);

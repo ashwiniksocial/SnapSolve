@@ -472,6 +472,125 @@ export async function callDevLesson(): Promise<BackendLessonResponse> {
   return res.json() as Promise<BackendLessonResponse>;
 }
 
+// ─── SSE streaming support ────────────────────────────────────────────────────
+
+interface StreamEvent {
+  type:            "section" | "done" | "cached" | "error";
+  field?:          string;
+  index?:          number;
+  value?:          unknown;
+  lesson?:         BackendLessonResponse;
+  firstContentMs?: number;
+  totalLatencyMs?: number;
+  promptTokens?:   number;
+  completionTokens?: number;
+  code?:           string;
+  message?:        string;
+}
+
+/**
+ * Build a partial BackendLessonResponse from accumulated streaming sections.
+ * Only includes fields that have actually been received.
+ */
+function buildPartialData(sections: Map<string, unknown>): Partial<BackendLessonResponse> {
+  const d: Partial<BackendLessonResponse> = {};
+  if (sections.has("topic"))              d.topic        = sections.get("topic") as string;
+  if (sections.has("difficulty"))         d.difficulty   = sections.get("difficulty") as BackendLessonResponse["difficulty"];
+  if (sections.has("keyConcepts"))        d.keyConcepts  = sections.get("keyConcepts") as string[];
+  if (sections.has("aiConfidence"))       d.aiConfidence = sections.get("aiConfidence") as number;
+  if (sections.has("questionTranslation")) d.questionTranslation = sections.get("questionTranslation") as BackendLessonResponse["questionTranslation"];
+  if (sections.has("finalAnswer"))        d.finalAnswer  = sections.get("finalAnswer") as BackendLessonResponse["finalAnswer"];
+
+  const steps: BackendLessonStep[] = [];
+  for (let i = 0; i < 4; i++) {
+    const step = sections.get(`step_${i}`);
+    if (step) steps.push(step as BackendLessonStep);
+  }
+  if (steps.length > 0) d.guidedReasoning = steps;
+
+  return d;
+}
+
+/**
+ * Stream a Standard-mode lesson from the backend SSE endpoint.
+ * Calls onSection for each complete field as it arrives.
+ * Returns the final complete BackendLessonResponse from the "done" event.
+ */
+async function callBackendStream(
+  subject:         Subject,
+  question:        string,
+  mode:            ReadingLevel,
+  studentContext?: string,
+  onSection?:      (ev: { field: string; index?: number; value: unknown }) => void,
+): Promise<BackendLessonResponse> {
+  const controller = new AbortController();
+  const timer      = setTimeout(() => controller.abort(), FRONTEND_TIMEOUT_MS);
+
+  let res: Response;
+  try {
+    res = await fetch("/api/solveQuestion/stream", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      signal:  controller.signal,
+      body:    JSON.stringify({ subject, question: question.trim(), mode, studentContext }),
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!res.ok) {
+    let errBody: BackendErrorResponse = { error: `http_${res.status}` };
+    try { errBody = (await res.json()) as BackendErrorResponse; } catch {}
+    const code = errBody.error ?? "";
+    if (res.status === 429 || code.includes("rate_limit")) throw new Error("rate_limit");
+    if (code === "no_key")      throw new Error("no_key");
+    if (code === "invalid_key") throw new Error("invalid_key");
+    throw new Error(`backend_${res.status}`);
+  }
+
+  const reader     = res.body!.getReader();
+  const decoder    = new TextDecoder();
+  let   lineBuf    = "";
+  let   finalLesson: BackendLessonResponse | null = null;
+
+  try {
+    outer: while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      lineBuf += decoder.decode(value, { stream: true });
+      const lines = lineBuf.split("\n");
+      lineBuf = lines.pop() ?? "";
+
+      for (const line of lines) {
+        if (!line.startsWith("data: ")) continue;
+        const raw = line.slice(6).trim();
+        if (!raw) continue;
+
+        let event: StreamEvent;
+        try { event = JSON.parse(raw) as StreamEvent; } catch { continue; }
+
+        if (event.type === "section" && event.field && onSection) {
+          onSection({ field: event.field, index: event.index, value: event.value });
+        } else if (event.type === "done") {
+          finalLesson = event.lesson as BackendLessonResponse;
+          break outer;
+        } else if (event.type === "cached") {
+          finalLesson = event.lesson as BackendLessonResponse;
+          break outer;
+        } else if (event.type === "error") {
+          throw new Error(event.code ?? "stream_error");
+        }
+      }
+    }
+  } finally {
+    try { reader.releaseLock(); } catch { /* already released */ }
+  }
+
+  if (!finalLesson) throw new Error("stream_incomplete");
+  return finalLesson;
+}
+
 // ─── Public API ─────────────────────────────────────────────────────────────
 
 export async function solveWithOpenAI(
@@ -479,6 +598,7 @@ export async function solveWithOpenAI(
   question:    string,
   onProgress?: (message: string, percent: number) => void,
   intent?:     SolveIntent,
+  onPartial?:  (partial: AIResponse) => void,
 ): Promise<AIResponse> {
   // ── Dev audit path: bypass API key, return hardcoded fixture ──────────────
   // Must be checked BEFORE the min-length guard.
@@ -503,6 +623,59 @@ export async function solveWithOpenAI(
   // Build student context for personalised AI response
   const studentContext = buildStudentContext(subject);
 
+  // ── Streaming path: Standard mode, no intent, onPartial provided ──────────
+  // For fresh uncached Standard questions: stream sections progressively so
+  // the student sees meaningful content within ≤3 s.
+  if (mode === "standard" && !intent && onPartial) {
+    // Stable ID shared across all partial updates AND the final result so the
+    // SolutionCard never remounts during streaming.
+    const streamId     = `ai-${Date.now()}`;
+    const sectionMap   = new Map<string, unknown>();
+    let   firstMeaningful = false;
+
+    try {
+      const data = await callBackendStream(
+        subject, question, mode, studentContext || undefined,
+        (sec) => {
+          const key = sec.field === "step" ? `step_${sec.index ?? 0}` : sec.field;
+          sectionMap.set(key, sec.value);
+
+          // Trigger first partial render on: the first step, or a non-empty
+          // questionTranslation (lesson intro visible before step 1 arrives).
+          if (!firstMeaningful) {
+            const isStep = sec.field === "step";
+            const isQT   = sec.field === "questionTranslation" &&
+                           !!(sec.value as { plainEnglish?: string })?.plainEnglish;
+            if (isStep || isQT) firstMeaningful = true;
+          }
+
+          if (firstMeaningful) {
+            const partialData = buildPartialData(sectionMap);
+            const partial     = toAIResponse(partialData as BackendLessonResponse, subject, question);
+            // Suppress the default practice-question placeholder for partial renders
+            if (partial.lesson) {
+              partial.lesson.practiceQuestion.question = "";
+              partial.lesson.practiceQuestion.hints    = [];
+              partial.lesson.practiceQuestion.solution = "";
+            }
+            onPartial({ ...partial, id: streamId });
+          }
+        },
+      );
+
+      const result = toAIResponse(data, subject, question);
+      if (!intent) cacheSolution(subject, question, mode, result);
+      // Return final result with the same stable ID so React does not remount the card.
+      return { ...result, id: streamId };
+
+    } catch (err) {
+      // Streaming failed — fall back to non-streaming call transparently.
+      console.warn("[STREAM] SSE failed, falling back to regular call:", String(err));
+      // Fall through to regular callBackend below.
+    }
+  }
+
+  // ── Regular (non-streaming) path ──────────────────────────────────────────
   // Backend call — passes mode so the server generates only the required sections
   const data = await callBackend(
     subject,
