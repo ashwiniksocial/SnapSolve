@@ -1,0 +1,101 @@
+Recall PrePromptConditions.
+
+Implement the **FINAL MINIMUM BETA 1 UI PATCH** based strictly on the completed read-only audit.
+
+**Permanent end state:** SnapSolve is usable by first-time beta students with minimal confusion. This is NOT a redesign and NOT a new feature sprint.
+
+### 1. Bottom navigation
+
+Reduce primary bottom navigation to exactly:
+
+**Home | Scan | Practice | Progress**
+
+Do NOT delete Revision, Exam or Journal routes/features. Keep them accessible through existing internal/progressive links.
+
+Because Journal is leaving the bottom nav, do NOT separately change its old ✗ nav icon unless that icon remains visibly exposed elsewhere.
+
+### 2. Information Technology
+
+Add existing **Information Technology** to the Class 9 subject choices on Home and Scan using the already-established subject configuration.
+
+Update the Home subject subtitle appropriately.
+
+Do NOT create new subject architecture.
+
+### 3. Signed-out primary CTA
+
+For signed-out users:
+
+**Sign Up Free →** → existing `/sign-up`
+
+For signed-in users:
+
+Retain existing **Scan a Question** behaviour.
+
+Reuse the existing Clerk `<Show>` mechanism.
+
+### 4. Tiny beta polish
+
+Make only these additional changes:
+
+* `SnapSolve Solution` → `Solution`
+* Make existing `More study tools` disclosure a clearly tappable subtle pill; keep its underlying tools progressively disclosed.
+* Replace unreliable abstract Practice/Progress Unicode icons with the audit-recommended broadly supported equivalents wherever still student-facing.
+* `Scan & Extract Text` → `Extract & Review Text`
+
+### 5. Clerk
+
+Do NOT modify credentials or secrets automatically.
+
+Report whether production Clerk keys are currently configured.
+
+If not, identify this as the manual pre-beta configuration requirement.
+
+### Strict protection
+
+Do NOT modify:
+
+* teaching layout or lesson content;
+* Still confused? four-action behaviour;
+* AI solver/model/prompts;
+* question banks;
+* curriculum;
+* Gold Standard;
+* academic review;
+* telemetry;
+* backend;
+* onboarding;
+* existing routes;
+* architecture/governance.
+
+Do not create new components unless absolutely required.
+
+### Validation
+
+After implementation:
+
+* Typecheck frontend.
+* Run existing relevant checks.
+* Run the app.
+* Inspect Home, Scan and Solution at approximately 390px mobile width.
+* Verify signed-in and signed-out CTA behaviour if the environment permits.
+* Verify Information Technology can actually be selected.
+* Verify exactly four primary bottom-nav items.
+* Verify no route/function was removed.
+* Fix only regressions caused by this patch.
+
+Report:
+
+1. Files changed.
+2. Exact before/after behaviour.
+3. Validation results.
+4. Production Clerk status.
+5. Any genuine blocker.
+
+If successful end:
+
+**BETA 1 UI READY**
+
+Then STOP.
+
+Do NOT propose or implement further polish.
