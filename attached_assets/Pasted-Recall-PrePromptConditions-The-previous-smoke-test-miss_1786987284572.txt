@@ -1,0 +1,97 @@
+Recall PrePromptConditions.
+
+The previous smoke test missed one genuine Beta 1 blocker.
+
+**Observed directly in the running UI:**
+
+Home correctly shows:
+
+* Mathematics
+* Science
+* Information Technology
+
+But `/practice` currently shows only:
+
+* Mathematics
+* Science
+
+Therefore a Class 9 Information Technology student cannot practise the existing frozen IT 402 question banks.
+
+Fix ONLY this root cause.
+
+### Required end state
+
+On Class 9 Practice, the student must be able to select:
+
+**Mathematics | Science | Information Technology**
+
+Information Technology Practice must use the EXISTING IT 402 canonical chapters/question banks:
+
+* Unit 1 — Introduction to IT-ITeS Industry
+* Unit 2 — Data Entry and Keyboarding Skills
+* Unit 3 — Digital Documentation
+
+Do not duplicate or recreate IT content.
+
+Reuse the existing subject/question-bank architecture already established for IT 402.
+
+### Inspect first, then make the minimum patch
+
+Identify why `Practice.tsx` or its existing subject/chapter source excludes Information Technology.
+
+Modify only the smallest existing subject/config/list path required.
+
+Do NOT:
+
+* create new Practice architecture;
+* create another subject registry;
+* modify IT question banks;
+* modify curriculum content;
+* modify Mathematics or Science;
+* modify Gold Standard;
+* change AI models/prompts;
+* optimise Simplify;
+* redesign Practice;
+* add Units 4 or 5;
+* perform another broad audit.
+
+### Validate specifically
+
+At approximately 390px mobile width verify:
+
+1. Class 9 Practice shows Mathematics, Science and Information Technology.
+2. Selecting Information Technology shows all 3 existing IT 402 units.
+3. Each unit opens its existing questions.
+4. Question counts come from existing data, not hardcoded copies.
+5. Mathematics Practice remains unchanged.
+6. Science Practice remains unchanged.
+7. Bottom nav remains exactly Home | Scan | Practice | Progress.
+8. TypeScript passes.
+9. No frozen question-bank file is changed.
+10. No unrelated file is modified.
+
+Also correct the previous smoke-test conclusion: navigation to Practice alone was insufficient validation because IT was not actually selectable.
+
+### Git
+
+The GitHub connection has already been re-established by the founder.
+
+Do not diagnose OAuth again.
+
+After the code fix is validated, report the current Git/worktree state accurately. Do not pull/reset/rebase/force-push.
+
+Report only:
+
+* root cause;
+* files changed;
+* before/after;
+* IT units visible in Practice;
+* validation;
+* Git/worktree status;
+* any genuine blocker.
+
+If successful end exactly:
+
+**IT PRACTICE BETA BLOCKER RESOLVED**
+
+Then stop.

@@ -49,7 +49,7 @@ const typeStyle: Record<string, string> = {
   Unclassified: "bg-slate-50  text-slate-500  border-slate-300",
 };
 const CLASS_OPTIONS = [6, 7, 8, 9];
-const ALL_SUBJECTS: Subject[] = ["Mathematics", "Science"];
+const ALL_SUBJECTS: Subject[] = ["Mathematics", "Science", "Information Technology"];
 
 // ─── Chapter status (5 tiers) ──────────────────────────────────────────────────
 type ChapterStatus = "new" | "learning" | "improving" | "strong" | "mastered";
