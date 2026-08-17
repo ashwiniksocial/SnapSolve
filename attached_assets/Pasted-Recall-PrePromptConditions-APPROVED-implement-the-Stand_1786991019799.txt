@@ -1,0 +1,226 @@
+Recall PrePromptConditions.
+
+APPROVED: implement the Standard-mode teaching-quality correction identified in the audit.
+
+GOAL
+
+Standard must remain SnapSolve's best everyday/default teaching mode.
+
+Every displayed section must add NEW learning value.
+
+The confirmed defect is:
+
+"Understand the Question" is mandatory even for factual, recall, definition and MCQ questions, causing repetition/filler.
+
+Implement the SMALLEST SAFE SYSTEMIC FIX.
+
+==================================================
+1. STANDARD GENERATION RULE
+==================================================
+
+In JSON_SCHEMA_STANDARD only:
+
+For simple factual / recall / definition / straightforward MCQ questions where there is genuinely nothing useful to decompose:
+
+- questionTranslation.plainEnglish = ""
+- questionTranslation.whatWeKnow = ""
+- questionTranslation.whatWeFind = ""
+- questionTranslation.wordToMath = ""
+
+Do NOT generate paraphrased filler merely to populate the section.
+
+Examples that normally should NOT need "Understand the Question":
+
+"What is another name for the Cartesian plane?"
+"Define displacement."
+"Which of the following is..."
+"Name..."
+"State..."
+
+BUT do not classify solely from these opening words.
+
+If interpreting the question genuinely helps the student — calculation, word problem, proof, multi-condition problem, difficult reasoning, meaningful multi-part question — retain and populate the section.
+
+Examples where it SHOULD remain:
+
+- given numerical values must be extracted;
+- quantities/units must be identified;
+- words must be translated into mathematics;
+- proof assumptions need clarification;
+- multiple conditions must be organised;
+- the wording is genuinely difficult for a weak student.
+
+==================================================
+2. RENDERING GUARD
+==================================================
+
+In TeachingLayout.tsx:
+
+Do not show "Understand the Question" when questionTranslation contains no meaningful content.
+
+Do NOT rely blindly on only one field if the existing structure makes a safe all-fields usefulness check easy.
+
+Preferred logic:
+
+show the section only when at least one questionTranslation field contains meaningful non-empty content.
+
+However:
+
+Do NOT add complicated semantic heuristics, classifiers, new components or another engine.
+
+Keep this extremely small.
+
+==================================================
+3. IMPORTANT PRODUCT RULE
+==================================================
+
+DO NOT replace the removed filler with another filler section.
+
+Standard does NOT need exactly five visible sections.
+
+For a simple question, 4 useful sections are better than 5 sections containing repetition.
+
+For complex questions, all 5 may remain.
+
+Do not alter:
+
+- Detailed mode
+- Compact mode
+- frozen question banks
+- curriculum
+- Practice
+- model
+- token limits
+- AI call count
+- quality pipeline
+- styling
+- canonical architecture
+
+==================================================
+4. VALIDATE WITH THE SAME REPRESENTATIVE CASES
+==================================================
+
+After implementation, test at minimum:
+
+MATHS
+
+A. "What is another name for the Cartesian plane?"
+Expected:
+"Understand the Question" HIDDEN.
+
+B. Medium calculation/reasoning question.
+Expected:
+section remains IF it adds genuine interpretation value.
+
+C. Hard/proof question.
+Expected:
+section remains where useful.
+
+SCIENCE
+
+D. Easy factual/MCQ.
+Expected:
+section hidden if repetitive.
+
+E. Numerical/problem question.
+Expected:
+section retained where givens/find/translation help.
+
+INFORMATION TECHNOLOGY
+
+F. Easy factual/MCQ.
+Expected:
+section hidden if repetitive.
+
+G. Procedural/application question.
+Retain only if it genuinely helps interpretation.
+
+==================================================
+5. QUALITY CHECK — VERY IMPORTANT
+==================================================
+
+For every tested Standard answer verify:
+
+- no question-stem repetition presented as teaching;
+- Key Concept adds actual information;
+- steps teach rather than merely repeat;
+- final answer is explicit;
+- answer is understandable to a weak Class 9 student;
+- answer is useful for CBSE/exam preparation;
+- no empty section/card is rendered;
+- no awkward numbering gap appears when section 2 is absent.
+
+If rendered section headings currently have fixed numbering such as:
+
+1. Key Concept
+2. Understand the Question
+3. Step-by-Step
+4. Final Answer
+5. Practice
+
+then inspect what happens when section 2 is hidden.
+
+Student-facing numbering MUST remain natural.
+
+Do not show:
+
+1. Key Concept
+3. Step-by-Step
+4. Final Answer
+5. Practice
+
+If necessary, make displayed numbering sequential based on visible sections, using the smallest UI-only change.
+
+==================================================
+6. CACHE WARNING
+==================================================
+
+The audit states existing cached factual lessons may continue showing the old questionTranslation.
+
+Do NOT globally destroy useful caches.
+
+Determine the smallest safe way to verify the new behaviour with freshly generated test cases.
+
+Report whether existing Beta users could continue receiving old repetitive cached Standard answers and whether a targeted Standard cache version/invalidation is actually required.
+
+Do not implement broad cache invalidation unless necessary.
+
+==================================================
+7. VALIDATION
+==================================================
+
+Run:
+
+- frontend TypeScript
+- API TypeScript
+- existing relevant tests
+- representative Standard-mode tests above
+
+Confirm:
+
+- 0 new AI calls
+- no token-budget increase
+- Detailed unchanged
+- Compact unchanged
+- frozen content untouched
+- curriculum untouched
+
+Return:
+
+1. files changed
+2. exact logic changed
+3. before/after for Maths Cartesian-plane question
+4. results of representative Maths/Science/IT tests
+5. visible-section numbering verification
+6. cache finding
+7. token/cost impact
+8. TypeScript/test results
+9. regressions/blockers
+
+Do not broaden scope.
+
+If successful end exactly:
+
+STANDARD MODE FILLER REMOVED — BETA TEACHING QUALITY VERIFIED
+
+Then STOP.

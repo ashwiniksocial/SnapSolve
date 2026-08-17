@@ -240,13 +240,24 @@ function LessonRenderer({ lesson, level, cfg }: {
   const isDetailed = level === "basic";
   const isCompact  = level === "advanced";
 
-  // Section visibility is mode-only (not data-dependent).
-  // Fallback content is guaranteed by toAIResponse normalisation so no section
-  // ever renders empty.  Counts: Detailed=8, Standard=5, Compact=3.
+  // Section visibility: mode-driven, except `translate` which is also
+  // data-driven — hidden when all four questionTranslation fields are empty
+  // (the model omits them for factual/recall/MCQ questions where decomposing
+  // the question adds no learning value).
+  // Counts: Detailed=8, Standard=4–5 (translate conditional), Compact=3.
+  // Section numbering uses the sequential _n counter below, so hiding
+  // translate never creates a gap (e.g. 1, 3, 4, 5 — it stays 1, 2, 3, 4).
+  const qt = lesson.questionTranslation;
+  const translateHasContent = !isCompact && (
+    !!qt.plainEnglish?.trim() ||
+    !!qt.whatWeKnow?.trim()   ||
+    !!qt.whatWeFind?.trim()   ||
+    !!qt.wordToMath?.trim()
+  );
   const show = {
     concept:   !isCompact,
     intuition: isDetailed,
-    translate: !isCompact,
+    translate: translateHasContent,
     steps:     true,
     mistakes:  isDetailed,
     answer:    true,

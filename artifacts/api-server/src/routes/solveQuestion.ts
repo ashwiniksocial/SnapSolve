@@ -1080,6 +1080,47 @@ These rules OVERRIDE all field-level defaults below.
 • beforeWeStart: Keep very brief — strong students don't need extensive motivation.`,
 };
 
+// ─── Standard-mode: question translation relevance classifier ────────────────
+//
+// gpt-4o-mini does not reliably omit the "Understand the Question" section for
+// factual/recall/MCQ questions even when the prompt instructs it to.  This
+// function runs deterministically AFTER generation and clears the four
+// questionTranslation fields when decomposing the question adds no learning
+// value.  The frontend rendering guard then hides the section automatically.
+//
+// Returns true  → section should be shown (calculation / word problem / proof).
+// Returns false → section should be suppressed (factual / recall / MCQ).
+//
+// Classification is structural (pattern-matching on the question text), NOT
+// semantic.  No AI call.  No external dependency.  Under 20 lines of logic.
+
+function questionNeedsTranslation(question: string): boolean {
+  const q = question.trim();
+
+  // 1. Explicit numerical values with SI / common units → almost always a
+  //    calculation question that benefits from "Given / Find / Word→Math".
+  if (/\b\d+(\.\d+)?\s*(m\b|km\b|kg\b|g\b|cm\b|mm\b|s\b|ms\b|min\b|h\b|N\b|J\b|W\b|kJ\b|Pa\b|°C\b|K\b|mol\b|L\b|mL\b|A\b|V\b|Ω\b|Hz\b|rad\b)/i.test(q)) return true;
+
+  // 2. Proof / derivation language — the proof setup is genuine decomposition.
+  if (/\b(prove|show that|derive|establish|verify that|deduce)\b/i.test(q)) return true;
+
+  // 3. "Given that …" / "If … find" / "If … calculate" constructs.
+  if (/\bgiven\s+that\b|\bif\b.{1,60}\b(find|calculate|determine|compute)\b/i.test(q)) return true;
+
+  // 4. Algebraic equations with an explicit equals sign between variables/values
+  //    (word-to-math translation is genuinely useful: "a + b√2 = 3 + 2√2").
+  //    Require = to avoid matching hyphenated compound words like "velocity-time".
+  if (/\b[a-z]\s*[+\-]?\s*[a-z0-9√]\s*=\s*[a-z0-9]|\b[a-z0-9]\s*=\s*[a-z]\b/i.test(q)) return true;
+
+  // 5. Multi-part NUMERICAL questions marked (i), (ii), (a), (b) that also
+  //    contain actual numerical values — MCQ option lists without numbers are
+  //    excluded (the \d guard prevents matching "Displacement is (a)..." MCQs).
+  if (/\(\s*[ivi]+\s*\)|\(\s*[abc]\s*\)/i.test(q) && /\b\d+/.test(q)) return true;
+
+  // Otherwise: factual, recall, definition, MCQ — suppress the section.
+  return false;
+}
+
 // ─── OpenAI draft generation call ────────────────────────────────────────────
 
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
@@ -1483,6 +1524,15 @@ router.post("/solveQuestion", async (req, res) => {
     const draftResult = await generateDraft(subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent);
     draft      = draftResult.lesson;
     draftUsage = draftResult.usage;
+
+    // Standard mode: suppress "Understand the Question" for factual/recall/MCQ
+    // questions where the model generates filler paraphrases regardless of
+    // prompt instructions.  Deterministic — zero AI cost.
+    if (generationMode === "standard" && !questionNeedsTranslation(q)) {
+      draft.questionTranslation = { plainEnglish: "", whatWeKnow: "", whatWeFind: "", wordToMath: "" };
+      req.log.info({ subject: subj }, "[PIPELINE:5] questionTranslation cleared — factual/recall question");
+    }
+
     req.log.info({ subject: subj, topic: draft.topic, stepsCount: draft.guidedReasoning?.length ?? 0 },
       "[PIPELINE:5] DONE — draft lesson generated");
     setProgress(reqId, "draft_done", "Lesson written — quality checking…", 62);
