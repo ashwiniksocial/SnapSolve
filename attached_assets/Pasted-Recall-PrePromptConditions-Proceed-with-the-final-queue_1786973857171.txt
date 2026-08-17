@@ -1,0 +1,92 @@
+Recall PrePromptConditions.
+
+Proceed with the final queued incomplete Class 9 Mathematics content task only:
+
+**`iemh107 — The Mathematics of Maybe: Introduction to Probability`**
+50 existing questions with full Q&A.
+
+Objective:
+
+**Validate → fix confirmed defects only → revalidate → freeze**
+
+Use ONLY the EXISTING Gold Standard Q&A acceptance path in `academicReview.ts`.
+
+Do not create or modify validators, checklists, review systems, registries, governance, roadmaps, architecture, prompt frameworks or sources of truth.
+
+### Important curriculum-alignment check
+
+The previous chapter review found an entire topic that was not part of the canonical chapter.
+
+Therefore, while executing the existing Gold Standard gate, ensure every question/topic in `iemh107` is genuinely supported by the existing canonical/official chapter structure.
+
+Do NOT perform a separate broad curriculum audit.
+
+If an existing topic/question is confirmed outside the official chapter scope, replace it with curriculum-aligned, exam-worthy content at equivalent or better difficulty while preserving the question ID and overall question-bank diversity.
+
+### Gold Standard
+
+Run the existing acceptance gate for `iemh107` only.
+
+Fix only CONFIRMED defects.
+
+Preserve:
+
+* IDs;
+* chapter structure;
+* question count;
+* difficulty balance;
+* conceptual/reasoning diversity.
+
+Do not rewrite passing Q&A unnecessarily.
+
+Do not replace difficult questions merely because the reviewer struggles with them.
+
+Reviewer uncertainty is not a confirmed content defect.
+
+### Freeze
+
+Once all questions pass:
+
+* verify exactly **50 questions** remain;
+* verify the chapter remains active and correctly registered;
+* use the EXISTING freeze/status mechanism;
+* do not create another freeze artifact.
+
+### Protected scope
+
+Do not modify:
+
+* iemh101;
+* iemh103;
+* other Mathematics chapters;
+* Science;
+* Computers;
+* curriculum architecture;
+* Gold Standard implementation;
+* `qualityChecklist.ts`;
+* UI;
+* AI/model work;
+* telemetry.
+
+Report only:
+
+1. Q&A reviewed;
+2. Gold Standard passes;
+3. confirmed defects;
+4. curriculum-alignment defects, if any;
+5. exact Q&A corrected/replaced;
+6. final validation;
+7. final count;
+8. freeze status.
+
+If successful, also verify from the EXISTING canonical/freeze state whether **all active Class 9 Mathematics chapters are now complete and frozen**.
+
+End with:
+
+**iemh107 COMPLETE AND FROZEN**
+
+and, if verified:
+
+**CLASS 9 MATHEMATICS CONTENT COMPLETE**
+
+Then stop.
