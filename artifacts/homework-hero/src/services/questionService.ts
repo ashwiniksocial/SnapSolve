@@ -177,7 +177,7 @@ export interface ChapterStats {
 /** Get stats for all chapters of a given class + subject. */
 export function getAllChapterStats(classNum: number, subject: string): ChapterStats[] {
   const chapters = getChapters(classNum, subject);
-  return chapters.map((ch) => {
+  return chapters.map((ch, idx) => {
     // Use ch.subject (the chapter's native domain) so "Science" sessions correctly
     // fetch Physics / Chemistry / Biology questions for each chapter.
     const chSubject = ch.subject;
@@ -188,13 +188,22 @@ export function getAllChapterStats(classNum: number, subject: string): ChapterSt
     for (const q of qs) {
       if (q.questionType) byType[q.questionType]++;
     }
+    // Science: use sequential 1-based position in the already-sorted ACTIVE-only list.
+    // CLASS9_DISPLAY_ORDER encodes absolute NCERT ordinals including SOURCE_UNRESOLVED
+    // slots; after filtering those out the display sequence has gaps (e.g. starts at 2).
+    // Sequential renumbering closes that gap so the first visible chapter is always Ch 1.
+    // Mathematics: keep CLASS9_DISPLAY_ORDER (no SOURCE_UNRESOLVED gap exists there).
+    const displayChapterNumber: number | undefined =
+      subject === "Science"
+        ? idx + 1
+        : (subject === "Mathematics" && ch.classNum === 9)
+          ? CLASS9_DISPLAY_ORDER[ch.id]
+          : undefined;
     return {
       chapterId: ch.id,
       chapterName: ch.name,
       chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
-      displayChapterNumber: (subject === "Science" || (subject === "Mathematics" && ch.classNum === 9))
-        ? CLASS9_DISPLAY_ORDER[ch.id]
-        : undefined,
+      displayChapterNumber,
       totalQuestions: qs.length,
       byDifficulty: getDifficultyBreakdown({ classNum, subject: chSubject, chapterId: ch.id }),
       byType,

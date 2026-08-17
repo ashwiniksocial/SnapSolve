@@ -45,8 +45,9 @@ export default function Solution() {
   const [burst,       setBurst]       = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
   const [showTutor,   setShowTutor]   = useState(false);
-  const [showTools,   setShowTools]   = useState(false);
   const [learningAction, setLearningAction] = useState<LearningAction | null>(null);
+  // null = not yet rated, false = got it, true = needs review (reveals 4 help actions)
+  const [needsReview, setNeedsReview] = useState<boolean | null>(null);
   const [revisionChoice, setRevisionChoice] = useState<number | null>(null);
   const [simplifiedView, setSimplifiedView] = useState(false);
   // practiceMode result: null = not yet rated, true = got it, false = needs review
@@ -62,6 +63,7 @@ export default function Solution() {
     setShowSimilar(false);
     setLearningAction(null);
     setRevisionChoice(null);
+    setNeedsReview(null);
     setSimplifiedView(intent === "simplify");
 
     // ── Dev audit mode: ?audit=1 bypasses session/OpenAI, loads fixture direct ──
@@ -145,16 +147,6 @@ export default function Solution() {
   function selectLearningAction(action: LearningAction) {
     setRevisionChoice(null);
     setLearningAction((current) => current === action ? null : action);
-
-    if (action === "practice") {
-      setShowSimilar(true);
-      window.setTimeout(() => {
-        document.getElementById("lesson-practice")?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 0);
-    }
   }
 
   return (
@@ -259,6 +251,7 @@ export default function Solution() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => {
+                      setNeedsReview(false);
                       if (practiceResult !== true) {
                         setPracticeResult(true);
                         logAttempt(
@@ -292,6 +285,7 @@ export default function Solution() {
                   </button>
                   <button
                     onClick={() => {
+                      setNeedsReview(true);
                       if (practiceResult !== false) {
                         setPracticeResult(false);
                         logAttempt(
@@ -335,52 +329,75 @@ export default function Solution() {
               </div>
             )}
 
-            {/* ── Still confused? — four primary learning actions ────────── */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-              <p className="text-xs font-bold text-slate-500 mb-3">Still confused?</p>
-              <div className="grid grid-cols-2 gap-2.5">
-                <button
-                  onClick={() => void runSolver("simplify")}
-                  className="w-full min-h-14 rounded-2xl border-2 border-indigo-200 bg-indigo-50 px-3 py-2 text-left text-xs font-bold text-indigo-800 hover:bg-indigo-100 active:scale-95 transition-all"
-                >
-                  <span className="block text-base mb-0.5">🧩</span>
-                  Explain it more simply
-                </button>
-                <button
-                  onClick={() => selectLearningAction("visual")}
-                  className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
-                    learningAction === "visual"
-                      ? "border-sky-500 bg-sky-500 text-white"
-                      : "border-sky-200 bg-sky-50 text-sky-800 hover:bg-sky-100"
-                  }`}
-                >
-                  <span className="block text-base mb-0.5">👀</span>
-                  Show me visually
-                </button>
-                <button
-                  onClick={() => selectLearningAction("revision")}
-                  className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
-                    learningAction === "revision"
-                      ? "border-amber-500 bg-amber-500 text-white"
-                      : "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100"
-                  }`}
-                >
-                  <span className="block text-base mb-0.5">⚡</span>
-                  Quick revision
-                </button>
-                <button
-                  onClick={() => selectLearningAction("practice")}
-                  className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
-                    learningAction === "practice"
-                      ? "border-emerald-500 bg-emerald-500 text-white"
-                      : "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
-                  }`}
-                >
-                  <span className="block text-base mb-0.5">✏️</span>
-                  Practise
-                </button>
+            {/* ── Got it / Needs Review — shown for non-practiceMode flows ── */}
+            {!practiceMode && needsReview === null && (
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+                <p className="text-xs font-bold text-slate-500 mb-3 text-center">How did you find this?</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setNeedsReview(false)}
+                    className="py-2.5 rounded-xl text-sm font-semibold border-2 border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 active:scale-95 transition-all"
+                  >
+                    ✓ Got it
+                  </button>
+                  <button
+                    onClick={() => setNeedsReview(true)}
+                    className="py-2.5 rounded-xl text-sm font-semibold border-2 border-red-300 text-red-700 bg-red-50 hover:bg-red-100 active:scale-95 transition-all"
+                  >
+                    ✗ Needs Review
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* ── Four help actions — revealed only after Needs Review ─────── */}
+            {needsReview === true && (
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm fade-up">
+                <p className="text-xs font-bold text-slate-500 mb-3">Still confused?</p>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    onClick={() => void runSolver("simplify")}
+                    className="w-full min-h-14 rounded-2xl border-2 border-indigo-200 bg-indigo-50 px-3 py-2 text-left text-xs font-bold text-indigo-800 hover:bg-indigo-100 active:scale-95 transition-all"
+                  >
+                    <span className="block text-base mb-0.5">🧩</span>
+                    Explain it more simply
+                  </button>
+                  <button
+                    onClick={() => selectLearningAction("visual")}
+                    className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
+                      learningAction === "visual"
+                        ? "border-sky-500 bg-sky-500 text-white"
+                        : "border-sky-200 bg-sky-50 text-sky-800 hover:bg-sky-100"
+                    }`}
+                  >
+                    <span className="block text-base mb-0.5">👀</span>
+                    Show me visually
+                  </button>
+                  <button
+                    onClick={() => selectLearningAction("revision")}
+                    className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
+                      learningAction === "revision"
+                        ? "border-amber-500 bg-amber-500 text-white"
+                        : "border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100"
+                    }`}
+                  >
+                    <span className="block text-base mb-0.5">⚡</span>
+                    Quick revision
+                  </button>
+                  <button
+                    onClick={() => selectLearningAction("practice")}
+                    className={`w-full min-h-14 rounded-2xl border-2 px-3 py-2 text-left text-xs font-bold active:scale-95 transition-all ${
+                      learningAction === "practice"
+                        ? "border-emerald-500 bg-emerald-500 text-white"
+                        : "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                    }`}
+                  >
+                    <span className="block text-base mb-0.5">✏️</span>
+                    Practise
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* ── Action-specific presentation panels — no AI calls ───────── */}
             {learningAction === "visual" && (
@@ -511,72 +528,26 @@ export default function Solution() {
               );
             })()}
 
-            {/* ── Utility controls and progressive-disclosure tools ───────── */}
-            <div className="flex items-center justify-between gap-2">
+            {/* ── Utility controls ─────────────────────────────────────────── */}
+            <div className="flex items-center justify-end gap-2">
               <button
-                onClick={() => setShowTools((value) => !value)}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full px-3 py-1.5 transition-colors"
+                onClick={handleMark}
+                disabled={isTodayCompleted || marked}
+                className={`py-2.5 px-3 rounded-xl text-xs font-semibold transition-all active:scale-95 ${
+                  isTodayCompleted || marked
+                    ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
+                    : "text-white shadow-sm"
+                }`}
+                style={!(isTodayCompleted || marked) ? { backgroundColor: cfg.color } : {}}
               >
-                {showTools ? "Hide study tools" : "More study tools"} {showTools ? "▲" : "▼"}
+                {isTodayCompleted || marked ? "✓ Marked Done" : "✓ Mark Solved"}
               </button>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleMark}
-                  disabled={isTodayCompleted || marked}
-                  className={`py-2.5 px-3 rounded-xl text-xs font-semibold transition-all active:scale-95 ${
-                    isTodayCompleted || marked
-                      ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
-                      : "text-white shadow-sm"
-                  }`}
-                  style={!(isTodayCompleted || marked) ? { backgroundColor: cfg.color } : {}}
-                >
-                  {isTodayCompleted || marked ? "✓ Marked Done" : "✓ Mark Solved"}
+              <Link href={practiceMode && session.practiceChapterId ? "/practice" : "/scan"}>
+                <button className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
+                  {practiceMode && session.practiceChapterId ? "← Questions" : "← New Question"}
                 </button>
-                <Link href={practiceMode && session.practiceChapterId ? "/practice" : "/scan"}>
-                  <button className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
-                    {practiceMode && session.practiceChapterId ? "← Questions" : "← New Question"}
-                  </button>
-                </Link>
-              </div>
+              </Link>
             </div>
-
-            {showTools && (
-              <div className="grid grid-cols-2 gap-2 fade-up">
-              <button
-                onClick={() => setShowTutor((v) => !v)}
-                className={`w-full py-3 rounded-xl font-semibold text-xs transition-all flex items-center justify-center gap-2 border ${
-                  showTutor
-                    ? "text-white border-transparent bg-gradient-to-r from-indigo-600 to-violet-600"
-                    : "border-slate-200 text-slate-700 bg-white hover:border-indigo-200 hover:bg-indigo-50"
-                }`}
-              >
-                🎓 {showTutor ? "Close Tutor" : "Ask AI"}
-              </button>
-
-              <button
-                onClick={() => setShowSimilar((v) => !v)}
-                className={`w-full py-3 rounded-xl font-semibold text-xs transition-all flex items-center justify-center gap-2 border ${
-                  showSimilar
-                    ? "text-white border-transparent"
-                    : "border-slate-200 text-slate-700 bg-white hover:border-indigo-200 hover:bg-indigo-50"
-                }`}
-                style={showSimilar ? { backgroundColor: cfg.color } : {}}
-              >
-                ✎ {showSimilar ? "Hide Similar" : "Practice Similar"}
-              </button>
-              </div>
-            )}
-
-            {/* Similar questions panel */}
-            {showSimilar && solution.similarQuestions.length > 0 && (
-              <div className="slide-in">
-                <SimilarQuestions
-                  questions={solution.similarQuestions}
-                  topic={solution.topic}
-                  subject={session.subject}
-                />
-              </div>
-            )}
 
           </div>
         )}

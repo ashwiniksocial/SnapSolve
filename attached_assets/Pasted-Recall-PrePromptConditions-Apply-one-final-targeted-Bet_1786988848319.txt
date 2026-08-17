@@ -1,0 +1,139 @@
+Recall PrePromptConditions.
+
+Apply one final targeted Beta 1 UX cleanup to the Solution screen based on direct founder testing.
+
+This is NOT a redesign.
+
+### Observed problem
+
+The current Solution screen exposes too many overlapping controls:
+
+* Got it
+* Needs Review
+* Explain it more simply
+* Show me visually
+* Quick revision
+* Practise
+* Ask AI
+* Show/Hide Similar
+* Mark Solved
+* Questions
+
+Founder testing also confirms **Ask AI currently does nothing**.
+
+This violates the frozen UX principle:
+
+**One screen. One primary goal. Maximum four visible actions. Progressive disclosure.**
+
+### Required end state
+
+After the main solution, initially show only the existing:
+
+**✓ Got it | ✕ Needs Review**
+
+Do NOT simultaneously expose the four "Still confused?" actions.
+
+### Needs Review behaviour
+
+When the student selects **Needs Review**, reveal the existing four actions:
+
+* Explain it more simply
+* Show me visually
+* Quick revision
+* Practise
+
+Reuse their EXISTING implementations.
+
+Do not create new functionality.
+
+Do not trigger any AI call merely by selecting Needs Review.
+
+### Got it behaviour
+
+Preserve the existing solved/progress behaviour associated with Got it.
+
+Do not add another confirmation layer.
+
+### Remove redundant legacy controls from Solution UI
+
+Remove from the student-facing Solution screen:
+
+* **Ask AI**
+* **Show Similar / Hide Similar**
+
+These should no longer render on this screen.
+
+Before removal, confirm that removing these UI controls does NOT delete or break any underlying route/service/capability that may be used elsewhere.
+
+Remove only their Solution-screen exposure.
+
+### Practice disclosure
+
+When the student selects:
+
+**Needs Review → Practise**
+
+show the existing practice question/hints/full-solution experience.
+
+Do not simultaneously expose redundant legacy Ask AI/Similar controls underneath it.
+
+### Preserve
+
+Keep:
+
+* Mark Solved where still logically required by existing progress behaviour.
+* Questions/New Question navigation where required.
+* Reveal Hint.
+* Show Full Solution.
+* four Needs Review actions and their existing functionality.
+* bottom navigation.
+
+Do NOT modify:
+
+* AI solver;
+* prompts/models;
+* simplify pipeline;
+* question banks;
+* curriculum;
+* Gold Standard;
+* teaching content;
+* telemetry;
+* practice-question generation;
+* backend;
+* routes;
+* academic architecture.
+
+Do NOT optimise the 65-second Simplify latency in this task.
+
+### Validate at ~390px mobile width
+
+Test:
+
+1. Normal solution initially shows Got it / Needs Review without the four help actions.
+2. Got it behaves correctly.
+3. Needs Review reveals exactly the four help actions.
+4. Explain Simply still works.
+5. Show Visually still works.
+6. Quick Revision still works.
+7. Practise still works.
+8. Ask AI is absent.
+9. Show Similar / Hide Similar is absent.
+10. No dead controls remain in this area.
+11. Mark Solved/progress behaviour remains functional.
+12. Bottom nav remains unchanged.
+13. TypeScript passes.
+14. No protected system/content files changed.
+
+Report:
+
+* files changed;
+* controls removed;
+* progressive-disclosure behaviour;
+* validation;
+* any genuine blocker.
+
+If successful end exactly:
+
+**SOLUTION SCREEN BETA UX CLEANUP COMPLETE**
+
+Then STOP.

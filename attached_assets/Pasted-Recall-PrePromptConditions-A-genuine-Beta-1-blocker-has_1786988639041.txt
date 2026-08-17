@@ -1,0 +1,69 @@
+Recall PrePromptConditions.
+
+A genuine Beta 1 blocker has been observed:
+
+**Class 9 Science Chapter 1 is missing from the student-facing chapter list.**
+
+Do NOT assume what Chapter 1 should be and do NOT create a new chapter.
+
+### Objective
+
+Identify the exact root cause using the EXISTING canonical curriculum, gateway, question-bank index and Science grouping logic.
+
+Determine:
+
+1. What the current official/canonical **first active Class 9 Science chapter** is.
+2. Its canonical ID.
+3. Its question-bank file.
+4. Whether it is ACTIVE, hidden, SOURCE_UNRESOLVED, missing from the index, or merely not rendered.
+5. Why it does not appear in the student-facing Science chapter list.
+
+### Important protections
+
+Do NOT:
+
+* invent or restore legacy Science content;
+* unhide SOURCE_UNRESOLVED content;
+* modify frozen question banks unless the root cause genuinely requires it;
+* create a new registry/manifest/gateway;
+* change official chapter ordering;
+* merge Physics/Chemistry/Biology into separate student-facing subjects;
+* modify Mathematics or Information Technology;
+* perform a broad curriculum audit.
+
+Science must remain the single student-facing subject containing Physics, Chemistry and Biology.
+
+### Fix
+
+After identifying the exact root cause, make ONLY the minimum safe correction required so that every ACTIVE canonical Science chapter appears in the correct student-facing order.
+
+If the supposedly missing “Chapter 1” is actually intentionally hidden/SOURCE_UNRESOLVED, do NOT expose it. Instead report that clearly and identify what the first legitimate active Science chapter should display as.
+
+### Validation
+
+Verify:
+
+1. Science chapter list matches ACTIVE canonical Science chapters exactly.
+2. No SOURCE_UNRESOLVED chapter becomes visible.
+3. Correct chapter titles and numbering/order are shown.
+4. Existing Science questions open correctly.
+5. Physics/Chemistry/Biology content remains under Science.
+6. Mathematics and IT Practice remain unchanged.
+7. TypeScript passes.
+8. Curriculum/gateway checks pass.
+9. No frozen content is unnecessarily modified.
+
+Report:
+
+* expected Science Chapter 1;
+* root cause;
+* exact files changed;
+* before/after;
+* complete visible Science chapter order after fix;
+* validation results.
+
+If resolved end exactly:
+
+**SCIENCE CHAPTER LIST BETA BLOCKER RESOLVED**
+
+Then stop.

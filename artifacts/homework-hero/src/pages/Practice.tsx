@@ -687,14 +687,18 @@ export default function Practice() {
             </div>
             <div className="divide-y divide-slate-100">
               {weakChapters.map((cs) => {
-                const chNum = cs.displayChapterNumber !== undefined
-                  ? String(cs.displayChapterNumber)
-                  : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const isIT    = selectedSubject === "Information Technology";
+                const chNum   = isIT
+                  ? (cs.chapterId.match(/(\d+)$/) ?? [])[1] ?? ""
+                  : cs.displayChapterNumber !== undefined
+                    ? String(cs.displayChapterNumber)
+                    : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const chLabel = isIT ? "Unit" : "Ch";
                 return (
                   <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`} className="px-4 py-3 flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-slate-800 truncate">
-                        <span className="text-slate-400 font-normal text-xs mr-1">Ch {chNum}.</span>
+                        <span className="text-slate-400 font-normal text-xs mr-1">{chLabel} {chNum}.</span>
                         {cs.chapterName}
                       </p>
                       <div className="flex items-center gap-3 mt-1.5">
@@ -787,9 +791,13 @@ export default function Practice() {
                 const status     = getChapterStatus(cs.accuracy, cs.attempted, cs.completionPct);
                 const isSelected = selectedChapterId === cs.chapterId;
                 const isOpen     = isSelected && drilldownOpen;
-                const chNum      = cs.displayChapterNumber !== undefined
-                  ? String(cs.displayChapterNumber)
-                  : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const isIT       = selectedSubject === "Information Technology";
+                const chNum      = isIT
+                  ? (cs.chapterId.match(/(\d+)$/) ?? [])[1] ?? ""
+                  : cs.displayChapterNumber !== undefined
+                    ? String(cs.displayChapterNumber)
+                    : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const chLabel    = isIT ? "Unit" : "Ch";
 
                 return (
                   <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`}>
@@ -808,7 +816,7 @@ export default function Practice() {
                         <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${STATUS_DOT[status]}`} />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-slate-800 truncate">
-                            <span className="text-slate-400 font-normal text-xs mr-1">Ch {chNum}.</span>
+                            <span className="text-slate-400 font-normal text-xs mr-1">{chLabel} {chNum}.</span>
                             {cs.chapterName}
                           </p>
                         </div>

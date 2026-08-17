@@ -1,0 +1,90 @@
+Recall PrePromptConditions.
+
+A Beta 1 presentation defect is visible in Class 9 Science Practice.
+
+Current UI shows:
+
+* `Ch 2. Cell: The Building Block of Life`
+* `Ch 3. Tissues in Action`
+
+This creates the appearance that Science Chapter 1 is missing.
+
+### Objective
+
+Determine whether:
+
+1. an ACTIVE canonical Science chapter is genuinely missing from Practice, OR
+2. all active chapters are present but the student-facing serial numbering is using the wrong/global display order.
+
+Do not assume.
+
+### Inspect only the existing Science data path
+
+Use the EXISTING:
+
+* canonical curriculum;
+* Science grouping/order;
+* question-bank index;
+* Practice chapter list formatting.
+
+Identify the complete ACTIVE Class 9 Science chapter order as currently canonical.
+
+Respect all SOURCE_UNRESOLVED/hidden entries.
+
+### Required end state
+
+The Practice page must display all ACTIVE Science chapters in the correct official/canonical order with clear student-facing numbering.
+
+If hidden/SOURCE_UNRESOLVED entries exist before an active chapter, they must NOT create visible numbering gaps.
+
+For example, if the first visible active Science chapter is the first valid student chapter, it should display as:
+
+`Ch 1. [title]`
+
+not `Ch 2` merely because a hidden/non-student entry occupies an internal order position.
+
+Do NOT change canonical IDs or official source order merely to make numbers sequential.
+
+Fix only the student-facing numbering/presentation logic if that is the root cause.
+
+### Protection
+
+Do NOT:
+
+* unhide SOURCE_UNRESOLVED chapters;
+* create missing chapters;
+* modify frozen question banks;
+* alter official curriculum order;
+* change Science grouping architecture;
+* change Mathematics or Information Technology;
+* create new registries/validators;
+* perform a broad curriculum audit.
+
+### Validate
+
+Report the complete visible Science order before and after.
+
+Verify:
+
+1. every ACTIVE Science chapter appears;
+2. no hidden/SOURCE_UNRESOLVED chapter appears;
+3. visible numbering begins at 1 and has no unexplained gaps;
+4. titles remain unchanged;
+5. chapter routing/questions still work;
+6. Mathematics and IT numbering remain unchanged;
+7. TypeScript passes;
+8. curriculum/gateway validation passes.
+
+Report:
+
+* whether Chapter 1 was truly missing or only misnumbered;
+* root cause;
+* exact file changed;
+* final visible Science chapter order;
+* validation results.
+
+If successful end exactly:
+
+**SCIENCE PRACTICE NUMBERING CORRECTED**
+
+Then stop.
