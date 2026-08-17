@@ -1,0 +1,140 @@
+Recall PrePromptConditions.
+
+Proceed with the next CONTENT BUILD only:
+
+**Class 9 — Information Technology (Code 402)**
+**Unit 2 — Data Entry and Keyboarding Skills**
+
+Unit 1 is COMPLETE AND FROZEN.
+
+Reuse the existing Information Technology 402 subject integration established during Unit 1.
+
+Do NOT reopen or redesign:
+
+* subject registration architecture;
+* Math/Science grouping logic;
+* gateway architecture;
+* frontend subject typing;
+* Gold Standard;
+* validators;
+* governance.
+
+Modify shared files only if Unit 2 genuinely cannot function through the existing IT 402 path.
+
+### Authoritative sources
+
+Use ONLY the supplied official:
+
+1. CBSE Information Technology (402) Class IX syllabus, 2026–27.
+2. NCERT Class IX Information Technology textbook.
+
+Do not use third-party material or inferred topics.
+
+### Step 1 — Source-grounded structure
+
+Before generating questions, derive the exact Unit 2 topic/subtopic structure from the supplied official textbook and syllabus.
+
+Do not invent or import later-unit concepts.
+
+Use the existing canonical curriculum structure to register Unit 2 with the next correct display order.
+
+### Step 2 — Question bank
+
+Build an initial bank of approximately **50 high-quality questions**, adjusting only if the actual official content clearly warrants a different number.
+
+This is a practical/procedural unit.
+
+Use an appropriate mixture of:
+
+* MCQ/objective;
+* very short and short answer;
+* procedural questions;
+* application/scenario questions;
+* keyboarding/data-entry concepts;
+* correct-practice identification;
+* practical-step questions;
+* descriptive questions only where genuinely exam-relevant.
+
+Do not manufacture artificial Hard questions merely to satisfy a percentage.
+
+Difficulty and type distribution must follow the actual nature of Unit 2.
+
+Where practical skills cannot be meaningfully tested as ordinary prose questions, frame realistic school-exam/practical scenarios rather than pretending they are theoretical facts.
+
+### Step 3 — Answers
+
+Every answer must be:
+
+* official-source aligned;
+* factually correct;
+* teacher-acceptable;
+* examiner-ready;
+* sufficiently complete for the question/marks;
+* easy for a weak Class 9 student to understand.
+
+For procedural tasks, give the required sequence clearly.
+
+Hints should guide rather than reveal the answer.
+
+### Step 4 — Gold Standard
+
+Run the EXISTING Gold Standard acceptance path once as the formal gate.
+
+Fix only CONFIRMED defects.
+
+Do not rewrite passing Q&A unnecessarily.
+
+Reviewer uncertainty is not automatically a content defect; follow the existing uncertainty/verification process.
+
+Do not replace valid questions simply because the reviewer struggles with them.
+
+### Step 5 — Validate and freeze
+
+Verify:
+
+* official Unit 2 alignment;
+* no Unit 1 or Unit 3+ leakage;
+* complete topic coverage;
+* unique IDs;
+* no duplicates;
+* appropriate question-type/difficulty balance;
+* correct IT 402 canonical registration;
+* gateway visibility;
+* TypeScript;
+* existing curriculum validation;
+* all accepted Q&A GOLD_STANDARD_PASS.
+
+Then use the EXISTING freeze mechanism.
+
+### Protected scope
+
+Do not modify:
+
+* IT 402 Unit 1;
+* Mathematics;
+* Science;
+* Artificial Intelligence 417;
+* Computer Applications 165;
+* CTAI Classes 6–8;
+* UI design;
+* AI/model work;
+* telemetry;
+* governance;
+* Gold Standard implementation.
+
+Report only:
+
+1. official topic structure;
+2. files changed;
+3. question count/type/difficulty distribution;
+4. Gold Standard result;
+5. confirmed defects and fixes;
+6. validation results;
+7. final count;
+8. freeze status.
+
+If successful end:
+
+**CLASS 9 INFORMATION TECHNOLOGY 402 — UNIT 2 COMPLETE AND FROZEN**
+
+Then stop.

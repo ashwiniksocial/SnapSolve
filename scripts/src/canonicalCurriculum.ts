@@ -174,6 +174,7 @@ const INTERNAL_TO_CANONICAL: Record<string, RegistryEntry> = {
   // Source: CBSE IT 402 Syllabus 2026-27 + NCERT IT 402 Textbook (PSSCIVE/NCERT, 2018)
   // Job Role: Domestic Data Entry Operator (SSC/Q2212, IT-ITeS sector)
   "it402-unit1": { bookId: "402-IT-IX-unit1", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Information Technology", indexSubjectId: "Information Technology", bookSeries: "NCERT IT 402 Textbook", status: "ACTIVE", displayOrder: 1 },
+  "it402-unit2": { bookId: "402-IT-IX-unit2", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Information Technology", indexSubjectId: "Information Technology", bookSeries: "NCERT IT 402 Textbook", status: "ACTIVE", displayOrder: 2 },
 };
 
 // ─── Index loader (cached, lazy) ──────────────────────────────────────────────

@@ -1,7 +1,7 @@
 {
   "note": "Extracted exclusively from uploaded official PDFs. No external knowledge used.",
   "total_pdfs": 119,
-  "total_chapters": 110,
+  "total_chapters": 111,
   "entries": [
     {
       "filename": "Class 3 to 8 Computational Thinking and AI CTAI_Pri_2026-27.pdf",
@@ -8206,6 +8206,96 @@
           "health and safety",
           "IT-ITeS",
           "NASSCOM"
+        ],
+        "figures": []
+      }
+    },
+    {
+      "filename": "402-IT-IX-unit2.pdf",
+      "filepath": "curriculum/sources/cbse/class9/computer/Information Technology Class 9 textbook 402_IT_IX.pdf",
+      "board": "CBSE",
+      "class": 9,
+      "subject": "Information Technology",
+      "series": "NCERT IT 402 Textbook",
+      "book": "Information Technology Class IX",
+      "chapter_number": "Unit 2",
+      "chapter_title": "Data Entry and Keyboarding Skills",
+      "is_chapter": true,
+      "page_count": 20,
+      "structure": {
+        "sections": [
+          {
+            "number": "2.1",
+            "title": "Keyboarding Skills"
+          },
+          {
+            "number": "2.2",
+            "title": "Types of Keys"
+          },
+          {
+            "number": "2.3",
+            "title": "Numeric Keypad"
+          },
+          {
+            "number": "2.4",
+            "title": "Home Keys"
+          },
+          {
+            "number": "2.5",
+            "title": "Guide Keys"
+          },
+          {
+            "number": "2.6",
+            "title": "Typing and Deleting Text"
+          },
+          {
+            "number": "2.7",
+            "title": "Typing Ergonomics"
+          },
+          {
+            "number": "2.8",
+            "title": "Positioning of Fingers on the Keyboard"
+          },
+          {
+            "number": "2.9",
+            "title": "Mouse and Mouse Operations"
+          },
+          {
+            "number": "2.10",
+            "title": "Rapid Typing Tutor"
+          },
+          {
+            "number": "2.11",
+            "title": "Touch Typing Technique"
+          }
+        ],
+        "subsections": [],
+        "activities": [],
+        "exercises": [],
+        "key_terms": [
+          "keyboard",
+          "alphanumeric keys",
+          "function keys",
+          "numeric keypad",
+          "NumLock",
+          "home keys",
+          "guide keys",
+          "touch typing",
+          "muscle memory",
+          "WPM",
+          "ergonomics",
+          "eye level",
+          "copy holder",
+          "mouse",
+          "pointing device",
+          "scroll wheel",
+          "Rapid Typing Tutor",
+          "FOSS",
+          "typing rhythm",
+          "lesson editor",
+          "virtual keyboard",
+          "taskbar",
+          "progress bar"
         ],
         "figures": []
       }

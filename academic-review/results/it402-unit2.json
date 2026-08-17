@@ -1,0 +1,1452 @@
+{
+  "c9-it-unit2-t1-q01": {
+    "questionId": "c9-it-unit2-t1-q01",
+    "contentHash": "9e13821c28b283974e546980ad6c3551c5ef55e609bf7d62d3808b7ad69e1ebc",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:13:59.263Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1744,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032700000000000003
+    }
+  },
+  "c9-it-unit2-t1-q02": {
+    "questionId": "c9-it-unit2-t1-q02",
+    "contentHash": "8969f31de7b25293fe0c966b9eefc9f2b859d1c2c9d58426c88e6808c33f5870",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:01.518Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1714,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032250000000000003
+    }
+  },
+  "c9-it-unit2-t1-q03": {
+    "questionId": "c9-it-unit2-t1-q03",
+    "contentHash": "4bfda16bba236c93b469047a45ce433b96799a0e826563de1358e9283d9a35d2",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:03.653Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1758,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032910000000000003
+    }
+  },
+  "c9-it-unit2-t1-q04": {
+    "questionId": "c9-it-unit2-t1-q04",
+    "contentHash": "257a46ae9ceed3c8711057d272a5381fab8fa3e1e6f4570ef03e09af563b46e8",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:05.583Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1739,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032625000000000004
+    }
+  },
+  "c9-it-unit2-t1-q05": {
+    "questionId": "c9-it-unit2-t1-q05",
+    "contentHash": "370171192fbb025fbdd4fdd642ec24c23ddcfe8af670c17cd39845e37f4dcd44",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:10.559Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1730,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003249
+    }
+  },
+  "c9-it-unit2-t1-q06": {
+    "questionId": "c9-it-unit2-t1-q06",
+    "contentHash": "055ee0733b28af0dd5b113493a9e23cbf608e4202500a0aa7be2002f78d54f7c",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:13.400Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1685,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031815
+    }
+  },
+  "c9-it-unit2-t1-q07": {
+    "questionId": "c9-it-unit2-t1-q07",
+    "contentHash": "518f477eff4e44efaa6749162f16bdf37dc2a69e9cd3be8db0bc03dd959d2e6d",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:15.755Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1755,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032865
+    }
+  },
+  "c9-it-unit2-t1-q08": {
+    "questionId": "c9-it-unit2-t1-q08",
+    "contentHash": "32e214524784899221ab03f93e588f416f9c8a2d32e422d38af57690adad3e4d",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:17.775Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1728,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003246
+    }
+  },
+  "c9-it-unit2-t1-q09": {
+    "questionId": "c9-it-unit2-t1-q09",
+    "contentHash": "ba33a26a4ea158e6f179e78cac5433a6d010cf8f12cbdf506e8193ad776e01e4",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:19.972Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1876,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003468
+    }
+  },
+  "c9-it-unit2-t1-q10": {
+    "questionId": "c9-it-unit2-t1-q10",
+    "contentHash": "a3da5f177e66836a783376b6dd18413219a3a67b2edd11fec1f6c29e2e133ca0",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:22.155Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1738,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003261
+    }
+  },
+  "c9-it-unit2-t1-q11": {
+    "questionId": "c9-it-unit2-t1-q11",
+    "contentHash": "96f1f64cce4787497c3870f54c59705bfbb3c350cc6cf21683c8107e1304dcf5",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:24.342Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1723,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032385
+    }
+  },
+  "c9-it-unit2-t1-q12": {
+    "questionId": "c9-it-unit2-t1-q12",
+    "contentHash": "e792a64fa3ae405acff3e2613e40f3f93ac3a52e51b7c0bb443cfedcfdd6d221",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:26.861Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1723,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032385
+    }
+  },
+  "c9-it-unit2-t2-q01": {
+    "questionId": "c9-it-unit2-t2-q01",
+    "contentHash": "15f87071366f570665b99c3b55ea10a96e5594a2bb1c664009c3671cb0c83122",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:29.003Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1699,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032025
+    }
+  },
+  "c9-it-unit2-t2-q02": {
+    "questionId": "c9-it-unit2-t2-q02",
+    "contentHash": "c194272d57064b6a7091d676184c41d020b9d2a0976538d2a8241249f62616b8",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:31.000Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1737,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032595000000000004
+    }
+  },
+  "c9-it-unit2-t2-q03": {
+    "questionId": "c9-it-unit2-t2-q03",
+    "contentHash": "c7a33a994ebb63ce70cfebcba95fdc2fc9f3045842081c84577c20a1c3e45fcf",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:33.036Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1780,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003324
+    }
+  },
+  "c9-it-unit2-t2-q04": {
+    "questionId": "c9-it-unit2-t2-q04",
+    "contentHash": "985e7e2e5d500e4e6eded3b75d7fd4b668fed29e782fda7ed1fcb3ffadadc2b0",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:35.106Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1724,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.000324
+    }
+  },
+  "c9-it-unit2-t2-q05": {
+    "questionId": "c9-it-unit2-t2-q05",
+    "contentHash": "5836b6ec59f19a20b2706bc1c740e01c080444454ee8bb36cf4cb6570b06ff37",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:37.020Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1746,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003273
+    }
+  },
+  "c9-it-unit2-t2-q06": {
+    "questionId": "c9-it-unit2-t2-q06",
+    "contentHash": "8ad19e80247d00feb5f79c6d9f391d2d0d31b32705c135c9be37d37aecdd2766",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:38.879Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1733,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032535
+    }
+  },
+  "c9-it-unit2-t2-q07": {
+    "questionId": "c9-it-unit2-t2-q07",
+    "contentHash": "ce9129b1f87e3763c3dc22ff6c096c36a24d1fe20f33fde8e95a7520b8919d45",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:41.522Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1719,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032325
+    }
+  },
+  "c9-it-unit2-t2-q08": {
+    "questionId": "c9-it-unit2-t2-q08",
+    "contentHash": "1d5fe2275c4d5e6b8b1d20e2d0bba2b5b6e149c265a1f5e15d6ec1b14c4cde9d",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:43.583Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1760,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032940000000000004
+    }
+  },
+  "c9-it-unit2-t2-q09": {
+    "questionId": "c9-it-unit2-t2-q09",
+    "contentHash": "579aabdaa36230a6555f771b83ab9752bbdd6202b19f124b157e9a9f8fc358f7",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:45.717Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1742,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003267
+    }
+  },
+  "c9-it-unit2-t2-q10": {
+    "questionId": "c9-it-unit2-t2-q10",
+    "contentHash": "096615807aa302b8f893bb5ad888d6ab8c1a301bdb5bcbd6deaef50273f78768",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:48.081Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1717,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032295
+    }
+  },
+  "c9-it-unit2-t3-q01": {
+    "questionId": "c9-it-unit2-t3-q01",
+    "contentHash": "68b8cdd1eb6b033974ca5ca560c052d8ee727322eac80cb5ff69ae2b08468b67",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:50.234Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1681,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031755
+    }
+  },
+  "c9-it-unit2-t3-q02": {
+    "questionId": "c9-it-unit2-t3-q02",
+    "contentHash": "a862a34b28b8a8d2706ec89d354f4485fd7e3c561df441ff8e660c8a59b4fdcd",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:52.440Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1699,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032025
+    }
+  },
+  "c9-it-unit2-t3-q03": {
+    "questionId": "c9-it-unit2-t3-q03",
+    "contentHash": "7c5bf35882a099413f79fbd18d962c3f36c7faa999181de8b073d727093b6b72",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:54.744Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1689,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00031875
+    }
+  },
+  "c9-it-unit2-t3-q04": {
+    "questionId": "c9-it-unit2-t3-q04",
+    "contentHash": "b6a7a7e31eaf52bc8e85bf070b28d215fcd6e96a848673bc9a1171146747781c",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:56.883Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1715,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032265
+    }
+  },
+  "c9-it-unit2-t3-q05": {
+    "questionId": "c9-it-unit2-t3-q05",
+    "contentHash": "e04a14e1ccfebccaf24c5cf7ae87be8bd1c4845225f3fed2a0f8f04af742e02a",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:14:58.796Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1714,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032250000000000003
+    }
+  },
+  "c9-it-unit2-t3-q06": {
+    "questionId": "c9-it-unit2-t3-q06",
+    "contentHash": "4f0926705dbf2eb243d8081a53c82824463ce3110e82f7f475bf9e4d62e60a79",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:16:40.252Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1825,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00033915000000000003
+    }
+  },
+  "c9-it-unit2-t3-q07": {
+    "questionId": "c9-it-unit2-t3-q07",
+    "contentHash": "9da3d2455475c4999ee83b96db666203d90d1c3cf6a31886ff02577adcc7a5a5",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:08.412Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1733,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032535
+    }
+  },
+  "c9-it-unit2-t3-q08": {
+    "questionId": "c9-it-unit2-t3-q08",
+    "contentHash": "735595031998f6b9b95bbd8b05c8bf50bdb89af00d14da077501f9f359d11ffb",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:10.532Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1754,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003285
+    }
+  },
+  "c9-it-unit2-t4-q01": {
+    "questionId": "c9-it-unit2-t4-q01",
+    "contentHash": "18c1da3d24a1e8a9e72f8546e70537fd410c4764f8f6d5baacf6d515b231b0d7",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:12.711Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1730,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003249
+    }
+  },
+  "c9-it-unit2-t4-q02": {
+    "questionId": "c9-it-unit2-t4-q02",
+    "contentHash": "eba04fb0a2651cf4418b80eb562a9a9414cd1e7d99a8b9705b8c2ff1d56e09fb",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:14.800Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1725,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032415
+    }
+  },
+  "c9-it-unit2-t4-q03": {
+    "questionId": "c9-it-unit2-t4-q03",
+    "contentHash": "06a5ce7be925088c9d93a989eda09290226e31cb6a65457e8c8cf84186b0053d",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:16.706Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1726,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003243
+    }
+  },
+  "c9-it-unit2-t4-q04": {
+    "questionId": "c9-it-unit2-t4-q04",
+    "contentHash": "f3289a26a8538900f66b1777053cf4c13ff46824071311380380e4081c1958ca",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:19.201Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1728,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003246
+    }
+  },
+  "c9-it-unit2-t4-q05": {
+    "questionId": "c9-it-unit2-t4-q05",
+    "contentHash": "1af353edc88a8bd0f41205c6356bfc55859e1af98248782cb3f1a3cde77412c4",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:21.159Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1741,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032655
+    }
+  },
+  "c9-it-unit2-t4-q06": {
+    "questionId": "c9-it-unit2-t4-q06",
+    "contentHash": "5282119e4d533b250346f5bba1dcbe9fef6df3ed87926a7722278052654a1071",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:23.193Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1729,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032475
+    }
+  },
+  "c9-it-unit2-t4-q07": {
+    "questionId": "c9-it-unit2-t4-q07",
+    "contentHash": "509d22a2fcd3cccb6072afca819313f51c506370116934cd411071d40f79ae29",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:25.183Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1731,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032505
+    }
+  },
+  "c9-it-unit2-t4-q08": {
+    "questionId": "c9-it-unit2-t4-q08",
+    "contentHash": "7c37dd4bfca5b974b0dddb1d3d43698d7076ec45cc43d62e3278f237305177bf",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:27.427Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1768,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003306
+    }
+  },
+  "c9-it-unit2-t4-q09": {
+    "questionId": "c9-it-unit2-t4-q09",
+    "contentHash": "c8ac10f09cbd4cf424f8cb7ae4ba61ae13f0a2a2eb63bb80e68a83792e465832",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:30.027Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1715,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032265
+    }
+  },
+  "c9-it-unit2-t4-q10": {
+    "questionId": "c9-it-unit2-t4-q10",
+    "contentHash": "8c10b9b791fa59f0e941a6673d5823fff017abeaf0f103352c5c1ef76207ca0e",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:32.039Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1812,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003372
+    }
+  },
+  "c9-it-unit2-t5-q01": {
+    "questionId": "c9-it-unit2-t5-q01",
+    "contentHash": "1452bbcaa34d4a2c24e2640226b0e57ae64346fc413a10a0b4eea904b1b2b52f",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:34.010Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1758,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032910000000000003
+    }
+  },
+  "c9-it-unit2-t5-q02": {
+    "questionId": "c9-it-unit2-t5-q02",
+    "contentHash": "2299ea02d86abcdeada29255fb6b0e095c5320f5fb93547eaf652e709db866c6",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:36.103Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1788,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00033360000000000003
+    }
+  },
+  "c9-it-unit2-t5-q03": {
+    "questionId": "c9-it-unit2-t5-q03",
+    "contentHash": "dce79ac65339d5ea5a4c9cf671451944937ad4f8becd24e18e0f6b9872603b9c",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:38.273Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1749,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032774999999999997
+    }
+  },
+  "c9-it-unit2-t5-q04": {
+    "questionId": "c9-it-unit2-t5-q04",
+    "contentHash": "f8aad7d25d7a8cd99febbc440e01674fd92ea18ccf8d7209491da6c9038dd408",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:40.380Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1727,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032445
+    }
+  },
+  "c9-it-unit2-t5-q05": {
+    "questionId": "c9-it-unit2-t5-q05",
+    "contentHash": "ccd22e58bc6e390c8d18f24b9d89cfb16f36ec9da18c541d1eaa740350454c04",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:42.735Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1765,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00033015000000000003
+    }
+  },
+  "c9-it-unit2-t5-q06": {
+    "questionId": "c9-it-unit2-t5-q06",
+    "contentHash": "67fcadd65f77355b97e2bbdca5c02e86fece572f7bc2b82e23d21d8cd8f00e09",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:44.722Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1772,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003312
+    }
+  },
+  "c9-it-unit2-t5-q07": {
+    "questionId": "c9-it-unit2-t5-q07",
+    "contentHash": "8180acf4bb1371d7d8ffe29014e70c9905fbe2f19c8304fe30af69984955145f",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:47.151Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1729,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00032475
+    }
+  },
+  "c9-it-unit2-t5-q08": {
+    "questionId": "c9-it-unit2-t5-q08",
+    "contentHash": "ffebba4bab348ea02f6e2ea37d7cb5df31ec1cf1dd605c3e7429a20a01670458",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:49.204Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1774,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003315
+    }
+  },
+  "c9-it-unit2-t5-q09": {
+    "questionId": "c9-it-unit2-t5-q09",
+    "contentHash": "cfeca5b4f3dd816e9b66aed6ebcd7ca53222da3eae997268bb63dcc947d02d10",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:51.690Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1756,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003288
+    }
+  },
+  "c9-it-unit2-t5-q10": {
+    "questionId": "c9-it-unit2-t5-q10",
+    "contentHash": "5aaae6716cc3b9ec3077b67e57f392270926957898aeafa2b4c0114ae1a4f1f2",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-08-17T15:15:53.742Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1770,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003309
+    }
+  }
+}
