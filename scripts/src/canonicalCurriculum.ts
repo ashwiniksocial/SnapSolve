@@ -168,7 +168,12 @@ const INTERNAL_TO_CANONICAL: Record<string, RegistryEntry> = {
   "bio-ch05":  { bookId: "iesc111",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Biology",       indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 11 },
 
   // ── Class 9 Science: Curiosity Book 1 — Earth Science (iesc113) ──────────
-  "esc-ch01":  { bookId: "iesc113",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Earth Science", indexSubjectId: "Science",     bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 13 },
+  "esc-ch01":  { bookId: "iesc113",         classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Earth Science",       indexSubjectId: "Science",              bookSeries: "Curiosity Book 1",      status: "ACTIVE",            displayOrder: 13 },
+
+  // ── Class 9 Information Technology: NCERT IT 402 Textbook (Skill Subject, Code 402) ────────────
+  // Source: CBSE IT 402 Syllabus 2026-27 + NCERT IT 402 Textbook (PSSCIVE/NCERT, 2018)
+  // Job Role: Domestic Data Entry Operator (SSC/Q2212, IT-ITeS sector)
+  "it402-unit1": { bookId: "402-IT-IX-unit1", classId: 9, boardId: "CBSE", academicSession: "2026-27", subjectId: "Information Technology", indexSubjectId: "Information Technology", bookSeries: "NCERT IT 402 Textbook", status: "ACTIVE", displayOrder: 1 },
 };
 
 // ─── Index loader (cached, lazy) ──────────────────────────────────────────────
@@ -369,9 +374,14 @@ export function getClass9DisplayOrder(): {
     if (reg.status !== "ACTIVE") continue;
     if (reg.indexSubjectId === "Mathematics") {
       math[internalId] = reg.displayOrder;
-    } else {
+    } else if (reg.indexSubjectId === "Science") {
+      // Only Curiosity Book 1 Science subjects (Physics, Chemistry, Biology, Earth Science)
+      // go into the science display group. Other non-Math subjects (e.g. Information Technology)
+      // have their own distinct display sequences and are NOT included here.
       science[internalId] = reg.displayOrder;
     }
+    // Information Technology and other non-Science/non-Math subjects are excluded from
+    // both groups; they use their own subject-level ordering.
   }
   return { math, science };
 }

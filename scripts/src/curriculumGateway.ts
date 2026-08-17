@@ -378,13 +378,24 @@ function checkMissingExpected(): Finding[] {
       const ph = join(HH_DATA, "class9-science-placeholders.ts");
       if (existsSync(ph)) found = read(ph).includes(`id: "${internalId}"`);
     } else {
-      // Mathematics, Physics, Economics: V1 format
-      const prefixMap: Record<string, string> = { Mathematics: "maths", Physics: "physics", Economics: "economics" };
+      // Mathematics, Physics, Economics, Information Technology: V1 format
+      // prefixMap: subject → file prefix used in class9-<prefix>-<id>.ts filenames
+      const prefixMap: Record<string, string> = {
+        Mathematics:          "maths",
+        Physics:              "physics",
+        Economics:            "economics",
+        "Information Technology": "it402",
+      };
       const prefix = prefixMap[subjectId] ?? subjectId.toLowerCase();
       if (existsSync(HH_DATA)) {
+        // maths: class9-maths-(ch\d+|iemh\d+).ts
+        // it402: class9-it402-<anything>.ts  (units are named e.g. it402-unit1, not ch\d+)
+        // others: class9-<prefix>-ch\d+.ts
         const pattern = prefix === "maths"
           ? new RegExp(`^class9-${prefix}-(ch\\d+|iemh\\d+)\\.ts$`)
-          : new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
+          : prefix === "it402"
+            ? new RegExp(`^class9-${prefix}-[a-z0-9-]+\\.ts$`)
+            : new RegExp(`^class9-${prefix}-ch\\d+\\.ts$`);
         found = readdirSync(HH_DATA).filter(f => pattern.test(f)).some(f => {
           const src = read(join(HH_DATA, f));
           const meta = parseV1Meta(src);

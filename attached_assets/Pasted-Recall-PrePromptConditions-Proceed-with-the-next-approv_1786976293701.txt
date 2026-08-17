@@ -1,0 +1,142 @@
+Recall PrePromptConditions.
+
+Proceed with the next approved CONTENT BUILD:
+
+**Class 9 — Information Technology (Code 402)**
+**Unit 1 — Introduction to IT-ITeS Industry**
+
+Authoritative sources are ONLY the supplied official:
+
+1. CBSE Information Technology (402) Class IX syllabus for 2026–27.
+2. NCERT Class IX Information Technology student textbook.
+
+Do not use third-party or inferred content.
+
+### Step 1 — Canonical chapter integration
+
+Using the EXISTING SnapSolve curriculum architecture, add this subject/course and Unit 1 with the minimum required changes.
+
+Official student-facing subject name:
+
+**Information Technology**
+
+Preserve **Code 402** in appropriate curriculum metadata.
+
+Do NOT call it:
+
+* Computers;
+* Computer Science;
+* CTAI.
+
+Do not create a new registry, manifest, gateway, validator, architecture or source-of-truth system.
+
+Reuse the existing canonical curriculum/gateway mechanisms.
+
+### Step 2 — Source-grounded topic structure
+
+Derive Unit 1 topics/subtopics directly from the supplied NCERT textbook and current CBSE syllabus.
+
+Do not invent topics.
+
+Before generating questions, report the exact source-grounded topic structure and ensure the bank covers the full examinable theory of Unit 1.
+
+### Step 3 — Build question bank
+
+Create a strong, balanced school-exam-oriented question bank for Unit 1.
+
+Target **50 questions initially**, unless the official Unit 1 content genuinely requires more for complete coverage.
+
+Prioritise quality and coverage over arbitrary quantity.
+
+Include an appropriate mixture of:
+
+* objective/MCQ;
+* very short answer;
+* short answer;
+* descriptive questions;
+* application/scenario questions where supported by the source;
+* terminology/concept questions;
+* exam-relevant distinctions/comparisons.
+
+Difficulty should include Easy, Medium and Hard where genuinely appropriate to the official material.
+
+Do not manufacture artificial difficulty for a largely factual topic.
+
+### Step 4 — Answers
+
+Every question must include a complete answer suitable for:
+
+* curriculum-based learning;
+* school examination preparation;
+* teacher approval;
+* examiner approval;
+* weak-student understanding.
+
+Answers should be sufficiently descriptive for the marks/type of question, not unnecessarily verbose.
+
+Hints should help the student think without simply revealing the answer.
+
+### Step 5 — Gold Standard
+
+After generation, run the EXISTING Gold Standard Q&A acceptance gate.
+
+The formal checklist executes once through the existing acceptance path.
+
+Fix only CONFIRMED defects.
+
+Do not create another review/checklist.
+
+Do not rewrite passing Q&A unnecessarily.
+
+If reviewer uncertainty occurs, follow the existing Gold Standard uncertainty handling.
+
+### Step 6 — Validate and freeze
+
+Verify:
+
+* official-source alignment;
+* no unsupported topics;
+* topic coverage;
+* question count;
+* unique IDs;
+* difficulty/type balance;
+* registration/gateway visibility;
+* no duplicate questions;
+* all accepted Q&A GOLD_STANDARD_PASS;
+* existing curriculum validation/typechecks pass.
+
+Then use the EXISTING freeze mechanism.
+
+### Protected scope
+
+Do not modify:
+
+* Mathematics;
+* Science;
+* CTAI Classes 6–8;
+* Artificial Intelligence 417;
+* Computer Applications 165;
+* unrelated curriculum;
+* Gold Standard implementation;
+* Teaching Quality architecture;
+* AI/model work;
+* UI;
+* telemetry;
+* governance.
+
+Report:
+
+1. official topic structure used;
+2. files changed;
+3. number/type/difficulty distribution of questions;
+4. Gold Standard results;
+5. confirmed defects and fixes;
+6. validation results;
+7. final question count;
+8. freeze status.
+
+If successful end with:
+
+**CLASS 9 INFORMATION TECHNOLOGY 402 — UNIT 1 COMPLETE AND FROZEN**
+
+Then stop.

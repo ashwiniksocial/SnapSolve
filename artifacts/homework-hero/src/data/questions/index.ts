@@ -1,5 +1,6 @@
 /**
- * Central question bank registry — Class 9: Mathematics, Physics, Chemistry, Biology, Earth Science.
+ * Central question bank registry — Class 9: Mathematics, Physics, Chemistry, Biology, Earth Science,
+ * Information Technology.
  *
  * Adding a new chapter:
  *  1. Create a class9-<subject>-<ch>.ts file in this directory.
@@ -31,6 +32,8 @@ import { CLASS9_CHEMISTRY_CHAPTERS, CLASS9_CHEMISTRY_QUESTIONS } from "./class9-
 import { CLASS9_BIOLOGY_CHAPTERS,  CLASS9_BIOLOGY_QUESTIONS  } from "./class9-biology";
 import { CLASS9_SCIENCE_PLACEHOLDER_CHAPTERS, CLASS9_SCIENCE_PLACEHOLDER_QUESTIONS } from "./class9-science-placeholders";
 
+import { CHAPTER_META as IT402_U1_META, QUESTIONS as IT402_U1_QUESTIONS } from "./class9-it402-unit1";
+
 const CLASS9_MATHS_CHAPTERS: ChapterMeta[] = [
   CH1_META, CH3_META, CH4_META, CH15_META,
   CH16_META, CH17_META, CH18_META, IEMH102_META,
@@ -52,12 +55,16 @@ const CLASS9_PHYSICS_QUESTIONS: Question[] = [
   ...PHY_CH4_QUESTIONS, ...PHY_CH5_QUESTIONS,
 ];
 
+const CLASS9_IT_CHAPTERS: ChapterMeta[]  = [IT402_U1_META];
+const CLASS9_IT_QUESTIONS: Question[]    = [...IT402_U1_QUESTIONS];
+
 export const ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS9_MATHS_CHAPTERS,
   ...CLASS9_PHYSICS_CHAPTERS,
   ...CLASS9_CHEMISTRY_CHAPTERS,
   ...CLASS9_BIOLOGY_CHAPTERS,
   ...CLASS9_SCIENCE_PLACEHOLDER_CHAPTERS,
+  ...CLASS9_IT_CHAPTERS,
 ];
 
 export const ALL_QUESTIONS: Question[] = [
@@ -66,6 +73,7 @@ export const ALL_QUESTIONS: Question[] = [
   ...CLASS9_CHEMISTRY_QUESTIONS,
   ...CLASS9_BIOLOGY_QUESTIONS,
   ...CLASS9_SCIENCE_PLACEHOLDER_QUESTIONS,
+  ...CLASS9_IT_QUESTIONS,
 ];
 
 export type { ChapterMeta, Question };

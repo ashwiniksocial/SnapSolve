@@ -90,6 +90,10 @@ const CHAPTER_MAP: Record<Subject, Record<ClassNum, string[]>> = {
     9: [],
   },
   Science: { 6: [], 7: [], 8: [], 9: [] },
+  "Information Technology": {
+    6: [], 7: [], 8: [],
+    9: ["Introduction to IT-ITeS Industry"],
+  },
   Biology: { 6: [], 7: [], 8: [], 9: [] },
   Economics: { 6: [], 7: [], 8: [], 9: [] },
   "Computer Science": { 6: [], 7: [], 8: [], 9: [] },

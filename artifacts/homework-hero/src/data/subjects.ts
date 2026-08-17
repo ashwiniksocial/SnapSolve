@@ -5,7 +5,8 @@ export type Subject =
   | "Chemistry"
   | "Biology"
   | "Economics"
-  | "Computer Science";
+  | "Computer Science"
+  | "Information Technology";
 
 export interface SubjectConfig {
   icon: string;
@@ -164,6 +165,27 @@ export const SUBJECTS: Record<Subject, SubjectConfig> = {
       "Web Technologies",
       "Python",
       "Digital Logic",
+    ],
+  },
+  "Information Technology": {
+    icon: "🖥️",
+    color: "#0369a1",
+    light: "#f0f9ff",
+    border: "#bae6fd",
+    textClass: "text-sky-800",
+    bgClass: "bg-sky-50",
+    borderClass: "border-sky-200",
+    topics: [
+      "IT and ITeS Industry",
+      "BPO Services",
+      "BPM Industry",
+      "Applications of IT",
+      "Data Entry Skills",
+      "Digital Documentation",
+      "Electronic Spreadsheet",
+      "Digital Presentation",
+      "Work Area Safety",
+      "Keyboarding Skills",
     ],
   },
 };
