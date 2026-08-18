@@ -1,0 +1,82 @@
+Recall PrePromptConditions.
+
+READ-ONLY PERFORMANCE DIAGNOSIS FIRST.
+
+DO NOT MODIFY CODE.
+
+Founder performance requirement is now frozen:
+
+* page open <1 sec
+* first meaningful content ≤3 sec
+* first worked step ≤5 sec
+* **full Detailed answer target ≤10 sec**
+* cached repeat <1 sec
+
+Teaching quality must remain detailed, descriptive, weak-student-friendly, teacher/examiner acceptable.
+
+Current full Detailed generation is ~18–25 sec.
+
+### Task
+
+Using the CURRENT Detailed schema and existing telemetry, measure ONE Maths, ONE Science and ONE IT uncached bank lesson.
+
+For every Detailed field/section record:
+
+* order generated
+* approximate output tokens
+* time section completes
+* whether it is visibly rendered to the Beta student
+* whether it materially improves teaching/exam quality
+
+Include all existing Detailed fields.
+
+Identify:
+
+1. Which sections consume the largest output-token/time share.
+2. Which fields duplicate information already contained elsewhere.
+3. Which fields are generated but currently not displayed.
+4. Which fields are low educational value for Beta.
+5. Which fields are essential to preserve teacher/examiner-quality Detailed teaching.
+
+Do NOT remove anything yet.
+
+### Critical
+
+Do not recommend reducing:
+
+* core reasoning
+* worked steps
+* explicit final answer
+* concept explanation
+* weak-student explanation
+* examiner/marking completeness
+
+Look first for:
+
+* duplicate prose
+* unused generated fields
+* redundant metadata
+* overly verbose optional sections
+* fields generated but hidden in current Detailed UI
+
+### Report
+
+Return only:
+
+`Field | Avg tokens | Completion time contribution | Visible? | Teaching value: Essential / Useful / Optional / Redundant`
+
+Then provide:
+
+1. total average output tokens now
+2. estimated minimum output-token target required to retain strong Detailed teaching
+3. estimated full-generation latency at that target using observed throughput
+4. smallest set of fields that could be removed/shortened without reducing core teaching quality
+5. whether ≤10 sec appears achievable on current model with ONE call
+
+No code changes.
+No new benchmark architecture.
+Maximum 3 questions.
+
+End exactly:
+
+**DETAILED ≤10 SECOND DIAGNOSTIC COMPLETE — NO CHANGES MADE**
