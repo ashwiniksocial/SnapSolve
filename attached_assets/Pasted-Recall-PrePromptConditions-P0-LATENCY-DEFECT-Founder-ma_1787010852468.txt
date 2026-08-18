@@ -1,0 +1,129 @@
+Recall PrePromptConditions.
+
+P0 LATENCY DEFECT.
+
+Founder manually observes:
+
+**Practice question click → Solution page itself does not open for ~20–22 seconds.**
+
+This is different from the previously measured streaming latency.
+
+Required permanent behaviour:
+
+**Click question → Solution page opens immediately, target <500 ms, absolute max 1 second.**
+
+Teaching content may then stream progressively on the Solution page.
+
+DO NOT change:
+
+* Detailed teaching schema
+* model
+* token budget
+* streaming schema/order
+* question banks
+* curriculum
+* Gold Standard
+* planner
+* cache architecture
+* UI design
+* Questions-button fix
+
+### Task 1 — trace exact click path
+
+Inspect ONLY:
+
+* Practice.tsx question-card click handler
+* session.update / practiceQuestionId storage
+* navigate("/solution...")
+* Solution.tsx mount
+* runSolver trigger
+
+Measure in the browser:
+
+T0 = user clicks question card
+T1 = click handler starts
+T2 = session/state write completes
+T3 = navigate() called
+T4 = `/solution` route mounted
+T5 = loading/skeleton visible
+T6 = first streamed teaching content visible
+
+Find exactly where the 20–22 second wait occurs.
+
+### Critical question
+
+Determine whether Practice is currently doing ANY of the following before `navigate()`:
+
+* awaiting solve/generation
+* awaiting bank lesson stream
+* awaiting cache validation
+* awaiting async session work
+* awaiting API response
+* awaiting anything unrelated to navigation
+
+If YES, that is the defect.
+
+### Required fix if confirmed
+
+Navigation must happen FIRST.
+
+Correct flow:
+
+question click
+→ synchronously store only the minimum question/session identifiers
+→ immediately navigate to `/solution?practiceMode=1`
+→ Solution page mounts immediately
+→ show loading/skeleton immediately
+→ Solution.tsx performs cache lookup / generation / streaming after mount
+
+Do NOT generate or await the answer inside Practice before navigation.
+
+### Acceptance
+
+Test 3 bank questions:
+
+* Maths
+* Science
+* Information Technology
+
+For each:
+
+* click → Solution route mounted <500 ms target
+* hard maximum 1 second
+* loading/skeleton immediately visible
+* first meaningful teaching content still ≤5 seconds
+* exactly 1 AI call on uncached lesson
+* repeat cached lesson remains instant
+* no teaching-quality change
+
+Also verify Questions button still returns to the correct chapter question list.
+
+### Strict scope
+
+Modify only the minimum Practice/Solution navigation files if required.
+
+No broad audit.
+No new architecture.
+No additional optimisation.
+
+### Report only
+
+1. exact blocking operation
+2. timing T0–T6 before
+3. files changed
+4. exact navigation fix
+5. timing T0–T6 after
+6. AI-call count
+7. TypeScript result
+
+Do not declare success based on server timing.
+
+Founder-visible requirement is:
+
+**QUESTION CLICK → SOLUTION PAGE OPENS IN ≤1 SECOND**
+
+If achieved end exactly:
+
+**SOLUTION PAGE NAVIGATION P0 RESOLVED — PAGE OPENS IMMEDIATELY**
+
+Then STOP.

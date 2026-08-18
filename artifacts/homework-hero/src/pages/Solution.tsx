@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { flushSync } from "react-dom";
 import { Link } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
@@ -111,14 +112,21 @@ export default function Solution() {
           // ── Cache miss: stream a full TeachingLesson anchored to frozen answer ─
           // onPartial fires on first keyConcepts or step (≤2 s) → switches from
           // loading spinner to solution card while remaining sections arrive.
+          // flushSync forces an immediate React re-render on each partial so the
+          // student sees content within 2–3 s instead of waiting for the full
+          // 20-22 s stream. Without flushSync, React 18 automatic batching defers
+          // all setSolution/setPageState updates inside the async SSE reading loop
+          // until the stream completes — causing the spinner to spin for 20+ s.
           try {
             const result = await solveBankWithStream(
               bankQ.subject as Subject,
               bankQ.question,
               bankContext,
               (partial) => {
-                setSolution(partial);
-                setPageState("done"); // switch from spinner to card on first content
+                flushSync(() => {
+                  setSolution(partial);
+                  setPageState("done"); // switch from spinner to card on first content
+                });
               },
             );
             setSolution(result);
@@ -148,9 +156,13 @@ export default function Solution() {
       // onPartial fires progressively during Standard-mode SSE streaming:
       // show the card immediately with whatever content has arrived so far,
       // then replace it with the complete lesson when solve() resolves.
+      // flushSync: same reason as bank path — force immediate re-render so
+      // content appears within seconds, not at stream completion.
       const onPartial = (partial: AIResponse) => {
-        setSolution(partial);
-        setPageState("done");
+        flushSync(() => {
+          setSolution(partial);
+          setPageState("done");
+        });
       };
 
       const result = await solve(
@@ -217,31 +229,29 @@ export default function Solution() {
 
       {/* Header */}
       <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-5">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 min-w-0">
-            {practiceMode && session.practiceChapterId && (
+        <div className="max-w-lg mx-auto">
+          {/* Top navigation — Chapter + Questions (practice mode only) */}
+          {practiceMode && session.practiceChapterId && (
+            <div className="flex items-center gap-2 mb-3">
               <Link href="/practice">
-                <button className="flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-slate-500 border border-slate-200 bg-white rounded-xl px-3 py-2 hover:bg-slate-50 active:scale-95 transition-all">
+                <button className="flex items-center gap-1 text-xs font-semibold text-slate-500 border border-slate-200 bg-white rounded-xl px-3 py-2 hover:bg-slate-50 active:scale-95 transition-all">
                   ← Chapter
                 </button>
               </Link>
-            )}
-            <div className="min-w-0">
-              <h1 className="text-xl font-bold text-slate-900">Solution</h1>
-              <p className="text-sm mt-0.5 truncate" style={{ color: cfg.color }}>
-                {cfg.icon} {session.subject}
-                {solution && <> · {solution.topic}</>}
-              </p>
+              <Link href={`/practice?chapter=${encodeURIComponent(session.practiceChapterId)}`}>
+                <button className="flex items-center gap-1 text-xs font-semibold text-slate-500 border border-slate-200 bg-white rounded-xl px-3 py-2 hover:bg-slate-50 active:scale-95 transition-all">
+                  ← Questions
+                </button>
+              </Link>
             </div>
-          </div>
-          {pageState === "done" && (
-            <button
-               onClick={() => void runSolver()}
-              className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-slate-500 border border-slate-200 bg-white rounded-xl px-3 py-2 hover:bg-slate-50 active:scale-95 transition-all"
-            >
-              ↻ Re-solve
-            </button>
           )}
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold text-slate-900">Solution</h1>
+            <p className="text-sm mt-0.5 truncate" style={{ color: cfg.color }}>
+              {cfg.icon} {session.subject}
+              {solution && <> · {solution.topic}</>}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -432,16 +442,30 @@ export default function Solution() {
               >
                 {isTodayCompleted || marked ? "✓ Marked Done" : "✓ Mark Solved"}
               </button>
-              <Link href={
-                practiceMode && session.practiceChapterId
-                  ? `/practice?chapter=${encodeURIComponent(session.practiceChapterId)}`
-                  : "/scan"
-              }>
-                <button className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
-                  {practiceMode && session.practiceChapterId ? "← Questions" : "← New Question"}
-                </button>
-              </Link>
+              {!practiceMode && (
+                <Link href="/scan">
+                  <button className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
+                    ← New Question
+                  </button>
+                </Link>
+              )}
             </div>
+
+            {/* ── Bottom navigation — Chapter + Questions (practice mode only) ── */}
+            {practiceMode && session.practiceChapterId && (
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <Link href="/practice">
+                  <button className="w-full py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
+                    ← Chapter
+                  </button>
+                </Link>
+                <Link href={`/practice?chapter=${encodeURIComponent(session.practiceChapterId)}`}>
+                  <button className="w-full py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
+                    ← Questions
+                  </button>
+                </Link>
+              </div>
+            )}
 
           </div>
         )}

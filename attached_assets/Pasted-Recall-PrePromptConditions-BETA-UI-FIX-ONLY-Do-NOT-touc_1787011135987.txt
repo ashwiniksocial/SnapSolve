@@ -1,0 +1,106 @@
+Recall PrePromptConditions.
+
+BETA UI FIX ONLY.
+
+Do NOT touch teaching content, streaming, latency, model, cache, question banks, curriculum, Gold Standard, planner or answer generation.
+
+Two directly observed defects:
+
+1. Solution page does not provide consistent Chapter + Questions navigation at both top and bottom.
+2. `Re-solve` currently does nothing.
+
+## Required end state
+
+### A. TOP navigation
+
+At the top of every Practice-originated Solution page show:
+
+**← Chapter**
+**← Questions**
+
+Keep these compact and student-friendly.
+
+Behaviour:
+
+**Chapter**
+→ return to the current subject/chapter list context.
+
+**Questions**
+→ return directly to the question list for the current chapter, using the already implemented `?chapter=` navigation.
+
+Do NOT send Questions back to the general chapter list.
+
+### B. BOTTOM navigation
+
+At the bottom of the Solution page, after the answer/progress controls, show the same:
+
+**← Chapter**
+**← Questions**
+
+Both must perform exactly the same actions as the top buttons.
+
+Do not create duplicate navigation logic. Reuse the existing destinations/helpers.
+
+### C. REMOVE RE-SOLVE
+
+Remove the student-facing **Re-solve** button from the Solution page.
+
+Reason:
+
+* it currently does nothing;
+* dead controls are unacceptable for Beta;
+* do NOT create another AI generation path merely to make the button functional.
+
+Remove UI exposure only.
+
+Do NOT delete underlying solver capability that may be used elsewhere.
+
+## Preserve
+
+Do NOT alter:
+
+* Detailed answer behaviour
+* streaming
+* bank lesson generation/cache
+* scroll-to-top
+* Questions chapter-query fix
+* Marked Done / Got It / Needs Review
+* Practice page
+* Progress tracking
+* bottom app navigation
+
+## Validation
+
+Test one Maths Practice question.
+
+Verify:
+
+1. Top shows Chapter + Questions.
+2. Bottom shows Chapter + Questions.
+3. Top Questions returns directly to current chapter's question list.
+4. Bottom Questions does the same.
+5. Chapter returns to correct chapter context.
+6. Returning to Questions starts at top of question list.
+7. Re-solve is absent.
+8. No dead button remains.
+9. Answer generation behaviour unchanged.
+10. TypeScript passes.
+
+Allowed scope:
+Solution page/navigation code only unless one existing navigation helper must be reused.
+
+No refactoring.
+No new component unless absolutely necessary.
+No unrelated cleanup.
+
+Report only:
+
+* exact file(s) changed;
+* top navigation behaviour;
+* bottom navigation behaviour;
+* Re-solve removal;
+* TypeScript result.
+
+End exactly:
+
+**SOLUTION NAVIGATION CLEANUP COMPLETE**
