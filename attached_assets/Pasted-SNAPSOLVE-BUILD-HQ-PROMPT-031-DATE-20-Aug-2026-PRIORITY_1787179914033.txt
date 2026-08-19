@@ -1,0 +1,335 @@
+SNAPSOLVE BUILD HQ — PROMPT #031
+DATE: 20-Aug-2026
+PRIORITY: P0 BETA BLOCKER
+MODE: ROOT-CAUSE → MINIMUM SAFE FIX → VALIDATE
+PURPOSE: MAKE PHOTO SCAN SAFE AND RELIABLE ENOUGH FOR CONTROLLED BETA
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate, cost-control rules, regression-prevention rules, and Build → Validate → Freeze → Next discipline BEFORE execution.
+
+DO NOT PUBLISH.
+DO NOT MODIFY DEPLOYMENT CONFIGURATION.
+DO NOT TOUCH PRACTICE.
+DO NOT TOUCH THE 20 FROZEN PRE-GENERATED LESSONS.
+DO NOT TOUCH QUESTION BANK / CURRICULUM / CANONICAL METADATA.
+DO NOT REDESIGN THE CAMERA — REAL CAMERA CAPTURE IS WORKING.
+DO NOT CREATE A SECOND SCAN/OCR PIPELINE UNLESS THE CURRENT PIPELINE IS PROVEN FUNDAMENTALLY UNSUITABLE.
+DO NOT MAKE PAID AI CALLS DURING DIAGNOSTIC UNLESS SPECIFICALLY REQUIRED FOR FINAL VALIDATION.
+
+==================================================
+CONFIRMED REAL-WORLD FAILURE
+==================================================
+
+Founder used the new real camera and photographed a handwritten Mathematics question approximately:
+
+“In which quadrant is x < 0 and y > 0?”
+
+Correct interpretation:
+- Mathematics
+- Coordinate Geometry / Quadrants
+- Correct answer: Quadrant II
+
+The captured image itself was usable enough for a human to read.
+
+SnapSolve OCR instead extracted corrupted text approximately:
+
+“RISER Ad ~~ — | - 26 = e ~ospig y ) Ti os RIES ce ger”
+
+Despite this, the application displayed:
+
+“Text extracted successfully · Topic: Number Systems”
+
+Founder then pressed Get AI Solution.
+
+The solver interpreted the corrupted OCR as an equation and generated an unrelated lesson ending with:
+
+“Therefore, e = 26.”
+
+THIS IS NOT AN ORDINARY OCR TYPO.
+
+It is a SYSTEM TRUST FAILURE:
+
+PHOTO
+→ BAD OCR
+→ BAD OCR ACCEPTED AS SUCCESS
+→ WRONG TOPIC
+→ SOLVER ALLOWED
+→ CONFIDENTLY WRONG LESSON
+
+A weak student must NEVER be shown a confident unrelated lesson from unreadable OCR.
+
+==================================================
+STEP 1 — TRACE CURRENT SCAN PIPELINE
+==================================================
+
+Trace the exact existing path:
+
+camera capture
+→ image preprocessing
+→ OCR engine
+→ OCR raw result
+→ OCR confidence/result metadata
+→ detected-question editor
+→ topic detection
+→ Get AI Solution eligibility
+→ solver
+
+Report exact files/functions at every boundary.
+
+Determine:
+
+1. Exact OCR engine/library currently used.
+
+2. Whether it is realistically designed for:
+   - handwriting
+   - handwritten Mathematics
+   - inequalities < >
+   - fractions / roots / algebra symbols
+   - notebook photographs
+   - Science notation
+
+3. Existing image preprocessing:
+   - crop
+   - resize
+   - grayscale
+   - contrast
+   - threshold
+   - sharpen
+   - denoise
+   - perspective correction
+   - rotation correction
+   - none
+
+4. Why the corrupted extraction was labelled:
+   “Text extracted successfully”.
+
+5. Whether a real OCR confidence value exists.
+
+6. If confidence exists:
+   why this result passed.
+
+7. If reliable confidence does NOT exist:
+   say so explicitly.
+
+8. Why topic detection chose Number Systems.
+
+9. Why Get AI Solution remained enabled.
+
+10. Whether the solver currently validates that OCR text is coherent before solving.
+
+==================================================
+STEP 2 — DETERMINE WHETHER CURRENT OCR CAN BE SAVED
+==================================================
+
+Do NOT immediately replace OCR.
+
+Determine whether the smallest safe improvement to the CURRENT engine can handle Beta-quality handwritten questions through:
+
+- better crop
+- higher-resolution processing
+- contrast/grayscale
+- thresholding
+- denoising
+- perspective correction
+- recognition configuration
+- OCR result validation
+
+If current OCR technology is fundamentally unsuitable for handwritten Maths/Science, state that clearly.
+
+Compare ONLY these strategies:
+
+A. Improve current OCR
+B. Current OCR + stronger validation / confirmation gate
+C. Existing OCR + existing multimodal vision capability, if already available in current architecture
+D. Replace OCR technology
+
+For each report:
+
+- expected handwriting accuracy
+- math-symbol reliability
+- latency
+- likely per-scan cost
+- implementation effort
+- duplicate-system risk
+- Beta suitability
+
+DO NOT buy or add a new service in this task without founder approval.
+
+==================================================
+STEP 3 — IMPLEMENT MANDATORY OCR SAFETY GATE
+==================================================
+
+Regardless of whether OCR accuracy can be improved immediately, implement the SMALLEST systemic safety fix so corrupted OCR can NEVER silently become a confident lesson.
+
+Required states:
+
+OCR_HIGH_CONFIDENCE
+OCR_NEEDS_REVIEW
+OCR_FAILED
+
+HIGH CONFIDENCE:
+→ show extracted question
+→ student may solve
+
+NEEDS REVIEW:
+→ prominently display:
+   “Please check the detected question before solving.”
+→ allow student to edit text
+→ require explicit confirmation before Get AI Solution
+
+FAILED / GARBAGE:
+→ display:
+   “We couldn't read this question clearly.”
+→ actions:
+   Retake Photo
+   Choose Photo
+   Type/Edit Question
+→ DO NOT call solver
+
+Do NOT rely only on raw OCR confidence.
+
+Add deterministic sanity checks such as appropriate combinations of:
+
+- minimum meaningful text
+- alphabetic/numeric ratio
+- excessive symbol/noise ratio
+- word coherence
+- malformed fragments
+- mathematical-symbol preservation
+- obviously nonsensical OCR output
+
+Use the smallest robust approach supported by the existing architecture.
+
+==================================================
+STEP 4 — TOPIC DETECTION SAFETY
+==================================================
+
+Topic classification must NOT confidently label garbage OCR.
+
+If OCR state != HIGH_CONFIDENCE:
+
+- do not show a confident academic topic
+OR
+- label it as unconfirmed pending student review.
+
+Do not modify the canonical topic system used by Practice.
+
+This applies only to Scan OCR input.
+
+==================================================
+STEP 5 — STUDENT CONFIRMATION
+==================================================
+
+For OCR-derived questions:
+
+The student must always have a clear opportunity to verify/edit the extracted text before solving.
+
+If extraction is uncertain, confirmation is mandatory.
+
+Manual Type Question remains unchanged.
+
+==================================================
+STEP 6 — VALIDATION DATASET
+==================================================
+
+Use the founder's captured image if accessible in the current workspace/browser test artifacts.
+
+Also create/use a SMALL controlled test set only — no broad project.
+
+Test approximately 10 representative images:
+
+Mathematics:
+- simple printed question
+- handwritten words
+- inequality such as x < 0, y > 0
+- fraction/root/equation
+
+Science:
+- handwritten conceptual question
+- question containing units/symbols
+
+Information Technology:
+- handwritten sentence question
+
+Include:
+- clear image
+- slightly tilted image
+- lower-contrast image
+
+No need for 100-image benchmarking before Beta.
+
+For every test report:
+
+Actual question
+OCR text
+OCR state
+Whether solver allowed
+Whether human correction required
+Topic result
+Final verdict
+
+==================================================
+STEP 7 — BETA ACCEPTANCE
+==================================================
+
+PASS requires:
+
+1. Clear handwritten/printed questions can proceed normally where recognition is adequate.
+
+2. Garbage OCR NEVER gets labelled simply as successful.
+
+3. Garbage OCR NEVER automatically reaches AI solving.
+
+4. Wrong topic is not confidently assigned to uncertain OCR.
+
+5. Student can edit detected text.
+
+6. Retake Photo works.
+
+7. Choose Photo works.
+
+8. Type Question remains unchanged.
+
+9. Camera remains unchanged and working.
+
+10. No regressions to Practice/Solution.
+
+==================================================
+COST CONTROL
+==================================================
+
+Do not solve all OCR test questions through AI.
+
+Most validation must stop at the OCR/trust gate.
+
+At most ONE controlled solver call may be made if strictly necessary to prove the final successful high-confidence Scan → Solution path.
+
+Report exact AI/API calls and estimated cost.
+
+==================================================
+RETURN EXACTLY
+==================================================
+
+1. Existing OCR engine
+2. Root cause of founder extraction failure
+3. Why corrupted text was marked successful
+4. Why Number Systems was selected
+5. Why solver accepted it
+6. Whether current OCR is adequate for handwriting/math
+7. Chosen smallest Beta-safe architecture
+8. Files changed
+9. Exact safety gate implemented
+10. OCR test matrix/results
+11. Founder image result after fix
+12. AI/API calls made
+13. TypeScript result
+14. Production build result
+15. Confirmation frozen Practice/question-bank/lesson systems untouched
+16. Remaining limitations, if any
+
+DO NOT propose unrelated features.
+DO NOT publish.
+DO NOT create another task automatically.
+
+End exactly:
+
+SCAN OCR TRUST GATE CLOSED — AWAITING FOUNDER REAL-WORLD RETEST
