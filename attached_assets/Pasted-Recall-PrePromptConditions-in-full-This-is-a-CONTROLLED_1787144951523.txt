@@ -1,0 +1,303 @@
+Recall PrePromptConditions in full.
+
+This is a CONTROLLED IMPLEMENTATION PILOT only.
+
+Do NOT generate all current questions.
+
+### Permanent objective
+
+For any EXISTING approved bank question:
+
+**Question bank → persistent pre-generated Detailed TeachingLesson → instant answer → 0 runtime AI calls**
+
+For genuinely NEW typed/scanned questions with no bank lesson:
+
+**keep the existing streamed AI Detailed path**
+
+The frozen question bank remains the academic source of truth.
+
+The pre-generated lesson is a DERIVED artifact only.
+
+---
+
+## Scalability requirement
+
+Do NOT design this around the current 1,375 questions.
+
+The mechanism must automatically support future:
+
+* additional IT 402 units;
+* additional CBSE subjects/classes;
+* Bengal Board;
+* Bengali-medium content;
+* future boards and curricula.
+
+Do NOT hardcode:
+
+* current subject names;
+* current chapter counts;
+* 1,375;
+* CBSE-only paths.
+
+Everything must operate by existing unique `questionId` and current active/gateway question discovery.
+
+---
+
+## Minimal persistence architecture
+
+Use the smallest project-side persistent static generated-data mechanism possible.
+
+Do NOT introduce:
+
+* database;
+* Redis;
+* external service;
+* object-storage service;
+* new registry;
+* new curriculum source of truth;
+* new cache framework.
+
+Prefer a simple generated lesson asset/store keyed by:
+
+`questionId`
+
+Each entry should minimally contain:
+
+* `questionId`
+* source/content hash sufficient to detect question changes
+* complete normalized Detailed `TeachingLesson`
+
+Question-bank content remains authoritative.
+
+The generated lesson store is ONLY a derived performance artifact.
+
+---
+
+## Critical stale-content protection
+
+A pre-generated lesson may be reused only when its stored source/content hash still matches the current approved question/Q&A source.
+
+If the question, answer, steps or other authoritative grounding changes:
+
+→ lesson becomes stale
+→ regenerate that question only.
+
+Do NOT regenerate unaffected lessons.
+
+This is mandatory for future Gold Standard fixes and curriculum updates.
+
+---
+
+## Generation tooling
+
+Implement the minimum generator required to support:
+
+* one question ID;
+* selected question IDs;
+* all missing lessons;
+* all stale lessons;
+* skip existing valid lessons automatically;
+* safe resume after interruption.
+
+Do NOT build scheduling, queues, dashboards or admin UI.
+
+No over-engineering.
+
+---
+
+## Pilot — EXACTLY 20 questions
+
+Generate exactly 20 ACTIVE, student-visible, frozen questions:
+
+### Mathematics — 6
+
+Include:
+
+* easy factual
+* medium/calculation
+* harder reasoning where available
+
+### Science — 10
+
+* Physics: 3
+* Chemistry: 3
+* Biology: 4
+
+Include at least one longer/HOTS Biology question because these are currently the slowest.
+
+### Information Technology — 4
+
+Include:
+
+* factual
+* procedural/application
+
+Exactly 20.
+
+Do NOT generate question 21.
+
+---
+
+## Academic grounding
+
+For each generation, ground the Detailed lesson in the existing approved:
+
+* question;
+* final answer;
+* steps;
+* hint;
+* key concepts;
+* relevant marking/exam information already present.
+
+AI may EXPAND the pedagogy.
+
+AI must NOT change:
+
+* approved answer;
+* numerical result;
+* scientific fact;
+* curriculum meaning;
+* essential approved reasoning.
+
+Keep the current Detailed teaching quality.
+
+Do NOT run reviewer/improver runtime cycles.
+
+Exactly ONE generation call per lesson.
+
+---
+
+## Runtime lookup order
+
+For a bank question:
+
+1. Look for valid persistent pre-generated lesson by `questionId`.
+2. Verify source/content hash.
+3. If valid:
+   → render immediately;
+   → 0 AI calls.
+4. If missing/stale:
+   → preserve CURRENT streamed Detailed generation path.
+
+For genuinely unmatched typed/scanned questions:
+→ current streaming path unchanged.
+
+Do NOT make localStorage or in-memory server cache authoritative.
+
+They may remain secondary caches.
+
+---
+
+## Validity
+
+Persist ONLY:
+
+* successfully completed;
+* normalized;
+* complete Detailed TeachingLesson.
+
+Never persist:
+
+* partial stream;
+* temporary bank fallback;
+* malformed lesson;
+* incomplete lesson.
+
+---
+
+## Pilot validation
+
+For ALL 20 generated lessons verify:
+
+* answer opens from persistent project data;
+* 0 runtime AI calls;
+* target <1 second from click to complete Detailed lesson visible;
+* all currently visible Detailed sections render correctly;
+* no blank sections;
+* final answer matches frozen approved answer;
+* works after localStorage clear;
+* works after server restart;
+* works for a different browser/session;
+* no streaming AI generation begins for those 20.
+
+Then verify:
+
+### One non-pregenerated bank question
+
+Current streamed generation still works.
+
+### One unmatched typed/scanned question
+
+Current streamed generation still works.
+
+---
+
+## Future curriculum test
+
+Without generating anything extra, confirm from the implementation design that when a future question with a new unique ID is added—for example:
+
+* IT 402 Unit 4;
+* Bengal Board Mathematics;
+* Bengali-medium Science;
+
+the generator will simply detect it as missing and generate only that new lesson.
+
+No architecture change should be required.
+
+---
+
+## Protected scope
+
+Do NOT modify:
+
+* frozen question-bank content;
+* Gold Standard;
+* curriculum;
+* canonical curriculum architecture;
+* gateway rules;
+* Detailed teaching schema;
+* model;
+* planner;
+* Practice UI;
+* navigation;
+* streaming behaviour for non-pregenerated questions;
+* progress;
+* telemetry architecture.
+
+Do NOT reopen latency/schema optimization.
+
+---
+
+## Report only
+
+1. files added/changed;
+2. exact derived storage format;
+3. confirmation question bank remains source of truth;
+4. hash/staleness rule;
+5. 20 exact question IDs;
+6. AI calls used;
+7. actual generation cost;
+8. generated static-data size;
+9. runtime latency for all 20;
+10. runtime AI calls for all 20;
+11. persistence after localStorage clear/server restart;
+12. frozen-answer comparison;
+13. non-pregenerated bank fallback result;
+14. unmatched-question result;
+15. missing/stale/resume behaviour;
+16. projected storage size for:
+
+* 1,375
+* 5,000
+* 10,000
+* 50,000 questions
+
+17. TypeScript/tests.
+
+Do NOT generate more than 20.
+
+If successful end exactly:
+
+**SCALABLE 20-QUESTION PRE-GENERATED DETAILED PILOT PASSED — READY FOR CONTROLLED BATCHING**
+
+Then STOP.
