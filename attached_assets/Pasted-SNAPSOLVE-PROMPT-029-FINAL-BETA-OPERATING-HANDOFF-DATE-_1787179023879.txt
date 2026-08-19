@@ -1,0 +1,75 @@
+SNAPSOLVE — PROMPT #029 — FINAL BETA OPERATING HANDOFF
+DATE/TIME: 20-Aug-2026 | 03:49 IST
+MODE: READ-ONLY
+PURPOSE: GIVE FOUNDER EXACT STEPS TO START CONTROLLED BETA
+
+Recall and obey ALL SnapSolve PrePromptConditions.
+
+CONTROLLED BETA TECHNICAL BLOCKERS ARE NOW CLOSED.
+
+DO NOT CHANGE CODE.
+DO NOT CREATE A TASK.
+DO NOT AUDIT THE PRODUCT.
+DO NOT RUN AI.
+DO NOT GENERATE LESSONS.
+DO NOT MODIFY PRACTICE, SCAN, SOLUTION, AUTH, FEEDBACK, QUESTION BANK, CURRICULUM OR CACHING.
+DO NOT FIX PRE-EXISTING NON-BLOCKING TECHNICAL DEBT.
+
+I ONLY NEED THE EXACT FOUNDER OPERATING INSTRUCTIONS FOR THE SYSTEM THAT ALREADY EXISTS.
+
+Return, concisely:
+
+1. EXACT production/Beta URL I should send to testers.
+
+2. EXACT information I need from each tester before approving them.
+   Example: email used for Clerk sign-in — confirm the actual requirement.
+
+3. EXACT place where APPROVED_BETA_EMAILS is configured.
+   - Replit setting/environment location
+   - exact variable name
+   - exact required format
+   - example with two dummy emails only
+
+4. EXACT steps for ADDING a tester.
+
+5. Whether a workflow restart/redeploy is required after adding a tester.
+   If yes, state exactly what must be restarted/redeployed.
+
+6. EXACT steps for REVOKING a tester.
+
+7. What an UNAPPROVED authenticated tester sees.
+
+8. What an APPROVED tester sees.
+
+9. EXACT location of the Beta Feedback entry point for the tester.
+
+10. EXACT founder route/location for viewing submitted feedback in Admin.
+
+11. Confirm who can view Beta feedback and how founder/admin authorization is determined.
+
+12. Confirm current protection against unexpected AI spend:
+    - 20 pre-generated pilot questions → zero solver calls
+    - remaining bank questions → existing streamed fallback/cache
+    - Type Question → AI generation
+    - current rate limit
+    - existing cache duration
+    Do not modify any of these.
+
+13. Give me a recommended FIRST BETA GROUP size using the EXISTING system only.
+    No new infrastructure.
+
+14. Give me a 5-minute Founder Pre-Beta Checklist containing ONLY actions I personally need to perform.
+
+IMPORTANT:
+
+Do not recommend improvements.
+Do not propose follow-up engineering.
+Do not create another Beta system.
+Do not publish or deploy anything unless deployment is already required by the existing operational flow.
+
+FILES CHANGED: MUST BE 0
+AI/API CALLS: MUST BE 0
+
+End exactly:
+
+BETA OPERATING HANDOFF COMPLETE — NO CHANGES MADE
