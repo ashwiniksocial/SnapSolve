@@ -1,0 +1,174 @@
+REVISE TASK #7 BEFORE IMPLEMENTATION.
+
+Founder has completed another Practice review.
+
+Apply these changes to Task #7:
+
+1. REMOVE "NEEDS MORE WORK" FROM STUDENT UI
+
+Delete the separate student-facing "Needs More Work" section from Practice.
+
+Do NOT create another equivalent/replacement section.
+
+"Need More Practice" is sufficient for Beta.
+
+Underlying topic-level evidence may remain internally if already useful,
+but do not display a separate Needs More Work panel.
+
+2. MAKE READINESS METRICS DRILL-DOWN CONTROLS
+
+The following existing Practice readiness metrics must be clickable:
+
+I AM CONFIDENT
+NEED MORE PRACTICE
+EASY
+MEDIUM
+HARD
+
+Clicking each must show the actual questions represented by that number.
+
+Examples:
+
+I AM CONFIDENT
+→ show only unique questions currently marked CONFIDENT.
+
+NEED MORE PRACTICE
+→ show only unique questions currently marked NEEDS_PRACTICE.
+
+EASY
+→ show only unique PRACTISED Easy questions.
+
+MEDIUM
+→ show only unique PRACTISED Medium questions.
+
+HARD
+→ show only unique PRACTISED Hard questions.
+
+Do NOT create five duplicate pages.
+
+Reuse the existing Practice question-list UI with an appropriate filter/state.
+
+Each filtered result must preserve:
+- Q-number
+- question
+- difficulty
+- type
+- topic where currently applicable
+- normal opening of the exact Solution
+
+Provide an obvious way to return to normal Practice view.
+
+The displayed count MUST exactly equal the number of unique questions returned
+by the drill-down.
+
+3. QUESTIONS PRACTISED SHOULD ALSO BE AUDITABLE
+
+Make "Questions Practised" clickable as well.
+
+It should show all unique questions currently counted as practised.
+
+This gives the student/founder a transparent explanation of the numerator.
+
+Do not make Topics Practised clickable unless it can be done cleanly without
+adding scope.
+
+4. IMPORTANT LEGACY-STATE AUDIT
+
+Current founder screen shows:
+
+Questions Practised = 19
+I Am Confident = 4
+Need More Practice = 2
+
+Therefore 13 practised questions currently have neither explicit new
+self-assessment state.
+
+Determine WHY.
+
+If these are legitimate legacy records from the previous Practice behaviour,
+do NOT fabricate CONFIDENT or NEEDS_PRACTICE states.
+
+Report them explicitly as legacy/unassessed records.
+
+For Beta going forward, verify:
+
+A question must enter Questions Practised only through the CURRENT intended
+explicit self-assessment workflow.
+
+Opening/viewing a lesson alone must not increment it.
+
+Do not silently delete founder test history merely to make the arithmetic
+match.
+
+5. TASK #7 REMAINS REQUIRED
+
+Keep the previously scoped full integrity work:
+
+- canonical metadata audit
+- difficulty mismatch detection/fix
+- Practice ↔ Solution metadata consistency
+- Q-number consistency
+- lesson linkage/completeness validation
+- deterministic full-bank auditor
+- progress-state transition tests
+- floating Top / Middle / Bottom navigation
+- TypeScript/build/validator checks
+- zero unnecessary AI calls
+
+The previously confirmed Hard-vs-Medium mismatch and thin Detailed lesson
+example remain audit inputs.
+
+6. ADD DRILL-DOWN INVARIANT TESTS
+
+Automatically prove:
+
+Questions Practised count
+= unique questions returned by Questions Practised drill-down.
+
+Confident count
+= unique CONFIDENT questions returned.
+
+Need More Practice count
+= unique NEEDS_PRACTICE questions returned.
+
+Easy count
+= unique practised Easy questions returned.
+
+Medium count
+= unique practised Medium questions returned.
+
+Hard count
+= unique practised Hard questions returned.
+
+No question may appear twice in the same filtered result.
+
+Changing CONFIDENT ↔ NEEDS_PRACTICE must immediately move the question between
+those filtered views without increasing Questions Practised.
+
+Difficulty must always come from canonical question-bank metadata.
+
+7. DO NOT EXPAND BETA
+
+Do not touch Scan yet.
+Do not redesign Practice.
+Do not add new analytics.
+Do not add scoring/gamification.
+Do not add new readiness concepts.
+Do not regenerate the question bank.
+
+Update Task #7 with these requirements and IMPLEMENT IT.
+
+Do not stop after planning or tell me to assign another task.
+Proceed with the implementation now if the environment permits.
+
+At completion return the previously requested audit table plus:
+
+- legacy/unassessed practised count and cause
+- drill-down counts verified against displayed counts
+- Needs More Work UI removal confirmed
+- floating navigation confirmed
+- remaining anomalies requiring founder review
+
+End:
+
+FULL BETA PRACTICE INTEGRITY AUDIT COMPLETE — AWAITING FOUNDER REVIEW

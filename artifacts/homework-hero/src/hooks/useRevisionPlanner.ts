@@ -53,7 +53,7 @@ export interface RevisionItem {
   mastered:     boolean;
 }
 
-type RevisionItems = Record<string, RevisionItem>;  // keyed by questionId
+export type RevisionItems = Record<string, RevisionItem>;  // keyed by questionId
 
 export interface SelfAssessmentRecord {
   questionId: string;
@@ -66,10 +66,12 @@ export interface SelfAssessmentRecord {
   updatedAt: string;
 }
 
-interface RevisionStore {
+export interface RevisionStore {
   items: RevisionItems;
   selfAssessments: Record<string, SelfAssessmentRecord>;
 }
+
+export type SelfAssessmentInput = Omit<SelfAssessmentRecord, "status" | "updatedAt">;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -106,6 +108,56 @@ function load(): RevisionStore {
 
 function persist(store: RevisionStore): void {
   localStorage.setItem(KEY, JSON.stringify(store));
+}
+
+/** Pure self-assessment transition for deterministic readiness-state tests. */
+export function applySelfAssessment(
+  previous: RevisionStore,
+  question: SelfAssessmentInput,
+  status: Exclude<SelfAssessmentStatus, "UNSET">,
+  today = todayStr(),
+  updatedAt = new Date().toISOString(),
+): RevisionStore {
+  const existingItem = previous.items[question.questionId];
+  const items = status === "NEEDS_PRACTICE"
+    ? {
+        ...previous.items,
+        [question.questionId]: existingItem
+          ? {
+              ...existingItem,
+              interval: 1 as SRInterval,
+              nextReview: addDays(today, 1),
+              mastered: false,
+            }
+          : {
+              questionId: question.questionId,
+              question: question.question,
+              subject: question.subject,
+              topic: question.topic,
+              chapter: question.chapter,
+              difficulty: question.difficulty,
+              interval: 1 as SRInterval,
+              nextReview: addDays(today, 1),
+              addedDate: today,
+              lastReview: null,
+              timesCorrect: 0,
+              timesWrong: 0,
+              mastered: false,
+            },
+      }
+    : previous.items;
+
+  return {
+    items,
+    selfAssessments: {
+      ...previous.selfAssessments,
+      [question.questionId]: {
+        ...question,
+        status,
+        updatedAt,
+      },
+    },
+  };
 }
 
 /** Higher score = show first */
@@ -217,52 +269,10 @@ export function useRevisionPlanner() {
    */
   const setSelfAssessment = useCallback(
     (
-      question: Omit<SelfAssessmentRecord, "status" | "updatedAt">,
+      question: SelfAssessmentInput,
       status: Exclude<SelfAssessmentStatus, "UNSET">,
     ) => {
-      mutate((prev) => {
-        const today = todayStr();
-        const existingItem = prev.items[question.questionId];
-        const items = status === "NEEDS_PRACTICE"
-          ? {
-              ...prev.items,
-              [question.questionId]: existingItem
-                ? {
-                    ...existingItem,
-                    interval: 1 as SRInterval,
-                    nextReview: addDays(today, 1),
-                    mastered: false,
-                  }
-                : {
-                    questionId: question.questionId,
-                    question: question.question,
-                    subject: question.subject,
-                    topic: question.topic,
-                    chapter: question.chapter,
-                    difficulty: question.difficulty,
-                    interval: 1 as SRInterval,
-                    nextReview: addDays(today, 1),
-                    addedDate: today,
-                    lastReview: null,
-                    timesCorrect: 0,
-                    timesWrong: 0,
-                    mastered: false,
-                  },
-            }
-          : prev.items;
-
-        return {
-          items,
-          selfAssessments: {
-            ...prev.selfAssessments,
-            [question.questionId]: {
-              ...question,
-              status,
-              updatedAt: new Date().toISOString(),
-            },
-          },
-        };
-      });
+      mutate((prev) => applySelfAssessment(prev, question, status));
     },
     [mutate],
   );

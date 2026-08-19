@@ -176,6 +176,44 @@ export function isCompleteDetailedLesson(lesson: TeachingLesson): boolean {
   );
 }
 
+export type DetailedLessonQualityFlag =
+  | "THIN_GUIDED_REASONING"
+  | "MISSING_WORKED_MATH"
+  | "MISSING_QUESTION_TRANSLATION"
+  | "THIN_COMMON_MISTAKES";
+
+/**
+ * Quality flags are intentionally advisory. They identify detailed assets that
+ * deserve human review without forcing a made-up fixed number of steps on every
+ * factual or short-answer question.
+ */
+export function getDetailedLessonQualityFlags(
+  lesson: TeachingLesson,
+  question: Question,
+): DetailedLessonQualityFlag[] {
+  const flags: DetailedLessonQualityFlag[] = [];
+  const expectedMinimumSteps =
+    question.difficulty === "Hard" || question.questionType === "LongAnswer" || question.questionType === "HOTS"
+      ? 3
+      : 2;
+  const translation = lesson.questionTranslation;
+  const translationHasContent = [
+    translation.plainEnglish,
+    translation.whatWeKnow,
+    translation.whatWeFind,
+    translation.wordToMath,
+  ].some(text);
+
+  if (lesson.guidedReasoning.length < expectedMinimumSteps) flags.push("THIN_GUIDED_REASONING");
+  if (lesson.guidedReasoning.length > 0 && lesson.guidedReasoning.every((step) => !text(step.math) && !text(step.result))) {
+    flags.push("MISSING_WORKED_MATH");
+  }
+  if (!translationHasContent && question.questionType !== "MCQ") flags.push("MISSING_QUESTION_TRANSLATION");
+  if (lesson.commonMistakes.length < 2) flags.push("THIN_COMMON_MISTAKES");
+
+  return flags;
+}
+
 export function isStoredLessonValid(
   entry: PreGeneratedLessonEntry | undefined,
   question: Question,
@@ -200,8 +238,11 @@ export async function getPreGeneratedBankLesson(question: Question): Promise<AIR
   return {
     id: `pregenerated-${question.id}`,
     subject: question.subject as Subject,
-    topic: entry.lesson.topic || question.topicName,
-    difficulty: entry.lesson.difficulty,
+    // Frozen bank metadata is authoritative even for a source-fresh derived
+    // asset. Older pilot chunks may carry historic display labels; never let
+    // those labels alter the Practice/Solution heading or difficulty badge.
+    topic: question.topicName,
+    difficulty: question.difficulty,
     detectedQuestion: question.question,
     keyConcepts: entry.lesson.keyConcepts,
     similarQuestions: [],

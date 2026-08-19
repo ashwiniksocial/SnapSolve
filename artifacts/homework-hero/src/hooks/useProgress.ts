@@ -29,6 +29,30 @@ function persist(data: ProgressData) {
   localStorage.setItem(KEY, JSON.stringify(data));
 }
 
+/** Pure unique-coverage transition used by the Practice outcome workflow. */
+export function recordUniquePractice(
+  previous: ProgressData,
+  subject: Subject,
+  topic: string,
+  questionId: string,
+): ProgressData {
+  const subjectProgress = { ...(previous[subject] ?? {}) };
+  const current = subjectProgress[topic] ?? { solved: 0, correct: 0, attempted: [] };
+
+  if (current.attempted.includes(questionId)) return previous;
+
+  return {
+    ...previous,
+    [subject]: {
+      ...subjectProgress,
+      [topic]: {
+        ...current,
+        attempted: [...current.attempted, questionId],
+      },
+    },
+  };
+}
+
 // ─── Derived statistics types ─────────────────────────────────────────────────
 
 export interface TopicStat {
@@ -96,21 +120,8 @@ export function useProgress() {
   const recordPractice = useCallback(
     (subject: Subject, topic: string, questionId: string) => {
       setProgress((prev) => {
-        const subj = { ...(prev[subject] ?? {}) };
-        const current = subj[topic] ?? { solved: 0, correct: 0, attempted: [] };
-
-        if (current.attempted.includes(questionId)) return prev;
-
-        const next = {
-          ...prev,
-          [subject]: {
-            ...subj,
-            [topic]: {
-              ...current,
-              attempted: [...current.attempted, questionId],
-            },
-          },
-        };
+        const next = recordUniquePractice(prev, subject, topic, questionId);
+        if (next === prev) return prev;
         persist(next);
         return next;
       });

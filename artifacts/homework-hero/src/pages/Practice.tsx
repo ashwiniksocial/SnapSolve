@@ -7,7 +7,6 @@ import { useChapterStats } from "@/hooks/useChapterStats";
 import { useAttemptLog } from "@/hooks/useAttemptLog";
 import { useProgress }      from "@/hooks/useProgress";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
-import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import {
   getChapters,
   getChapterDisplayNumber,
@@ -18,6 +17,13 @@ import {
   preloadQBank,
 } from "@/services/questionService";
 import type { Question, Difficulty, QuestionType, EffectiveQuestionType } from "@/services/questionService";
+import {
+  derivePracticeReadiness,
+  getReadinessDrilldownQuestions,
+  readinessDrilldownLabel,
+  type ReadinessDrilldown,
+} from "@/services/practiceReadiness";
+import FloatingPageNavigation from "@/components/FloatingPageNavigation";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const DIFFICULTIES: (Difficulty | "All")[] = ["All", "Easy", "Medium", "Hard"];
@@ -197,7 +203,17 @@ function MasteryProgressBar({ score, label, color }: { score: number; label: str
 }
 
 // ─── Question card ────────────────────────────────────────────────────────────
-function QuestionCard({ q, cfg, onOpen, index }: { q: Question; cfg: SubjectConfig; onOpen: () => void; index: number }) {
+function QuestionCard({
+  q,
+  cfg,
+  onOpen,
+  questionNumber,
+}: {
+  q: Question;
+  cfg: SubjectConfig;
+  onOpen: () => void;
+  questionNumber: number | undefined;
+}) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all hover:border-slate-300 hover:shadow-md">
       <button className="w-full text-left p-4 active:bg-slate-50 transition-colors" onClick={onOpen}>
@@ -208,7 +224,7 @@ function QuestionCard({ q, cfg, onOpen, index }: { q: Question; cfg: SubjectConf
           >✦</div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="text-[11px] font-bold text-slate-400 mr-0.5">Q{index}.</span>
+              <span className="text-[11px] font-bold text-slate-400 mr-0.5">Q{questionNumber ?? "—"}.</span>
               <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[q.difficulty]}`}>
                 {q.difficulty}
               </span>
@@ -216,6 +232,7 @@ function QuestionCard({ q, cfg, onOpen, index }: { q: Question; cfg: SubjectConf
                 {TYPE_LABELS[q.questionType ?? "Unclassified"]}
               </span>
             </div>
+            <p className="text-[11px] font-medium text-slate-400 mb-1.5">{q.topicName}</p>
             <p className="text-sm font-medium text-slate-800 leading-relaxed">{q.question}</p>
           </div>
           <div className="flex flex-col items-end gap-0.5 flex-shrink-0 mt-1 ml-2">
@@ -238,8 +255,7 @@ export default function Practice() {
   const { profile }                            = useProfile();
   const { getChapterAttempts }                 = useAttemptLog();
   const { progress }                           = useProgress();
-  const { revisionItems, selfAssessments }     = useRevisionPlanner();
-  const { getTopicsNeedingRevision }           = useMistakeJournal();
+  const { selfAssessments }                    = useRevisionPlanner();
 
   const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
   const [bankReady,       setBankReady]      = useState(false);
@@ -258,139 +274,14 @@ export default function Practice() {
     [bankReady, practiceClass, selectedSubject],
   );
 
-  const readiness = useMemo(() => {
-    const activeQuestions = bankReady
-      ? getQuestions({ classNum: practiceClass, subject: selectedSubject })
-      : [];
-    const activeById = new Map(activeQuestions.map((question) => [question.id, question]));
-    const activeTopicMeta = new Map<string, { label: string; chapterId: string }>();
-
-    for (const question of activeQuestions) {
-      const key = `${question.subject}::${question.topicName}`;
-      if (!activeTopicMeta.has(key)) {
-        activeTopicMeta.set(key, {
-          label: selectedSubject === "Science"
-            ? `${question.subject} — ${question.topicName}`
-            : question.topicName,
-          chapterId: question.chapterId,
-        });
-      }
-    }
-
-    const practicedIds = new Set<string>();
-    for (const [subject, topics] of Object.entries(progress)) {
-      if (getStudentFacingSubject(subject) !== selectedSubject) continue;
-      for (const record of Object.values(topics)) {
-        for (const questionId of record.attempted ?? []) {
-          if (activeById.has(questionId)) practicedIds.add(questionId);
-        }
-      }
-    }
-
-    const practicedTopicKeys = new Set(
-      [...practicedIds]
-        .map((questionId) => activeById.get(questionId))
-        .filter((question): question is Question => Boolean(question))
-        .map((question) => `${question.subject}::${question.topicName}`),
-    );
-
-    const practiceByDifficulty = (["Easy", "Medium", "Hard"] as const).map((difficulty) => {
-      const questionsAtLevel = activeQuestions.filter((question) => question.difficulty === difficulty);
-      return {
-        difficulty,
-        total: questionsAtLevel.length,
-        practised: questionsAtLevel.filter((question) => practicedIds.has(question.id)).length,
-      };
-    });
-
-    const activeAssessments = Object.values(selfAssessments).filter((assessment) =>
-      activeById.has(assessment.questionId),
-    );
-    const confidentCount = activeAssessments.filter(
-      (assessment) => assessment.status === "CONFIDENT",
-    ).length;
-    const needsPracticeCount = activeAssessments.filter(
-      (assessment) => assessment.status === "NEEDS_PRACTICE",
-    ).length;
-
-    const evidence = new Map<string, {
-      label: string;
-      chapterId: string;
-      needsPractice: number;
-      due: number;
-      repeatedWrong: number;
-    }>();
-    const addEvidence = (question: Question, field: "needsPractice" | "due" | "repeatedWrong", value: number) => {
-      const key = `${question.subject}::${question.topicName}`;
-      const meta = activeTopicMeta.get(key);
-      if (!meta) return;
-      const current = evidence.get(key) ?? {
-        label: meta.label,
-        chapterId: meta.chapterId,
-        needsPractice: 0,
-        due: 0,
-        repeatedWrong: 0,
-      };
-      current[field] += value;
-      evidence.set(key, current);
-    };
-
-    for (const assessment of activeAssessments) {
-      if (assessment.status !== "NEEDS_PRACTICE") continue;
-      const question = activeById.get(assessment.questionId);
-      if (question) addEvidence(question, "needsPractice", 1);
-    }
-
-    const today = new Date().toISOString().slice(0, 10);
-    for (const item of revisionItems) {
-      if (item.mastered || item.nextReview > today) continue;
-      const question = activeById.get(item.questionId);
-      if (question) addEvidence(question, "due", 1);
-    }
-
-    for (const topic of getTopicsNeedingRevision()) {
-      if (topic.wrongCount < 2) continue;
-      const key = `${topic.subject}::${topic.topic}`;
-      const meta = activeTopicMeta.get(key);
-      if (!meta) continue;
-      const current = evidence.get(key) ?? {
-        label: meta.label,
-        chapterId: meta.chapterId,
-        needsPractice: 0,
-        due: 0,
-        repeatedWrong: 0,
-      };
-      current.repeatedWrong += topic.wrongCount;
-      evidence.set(key, current);
-    }
-
-    const needsMoreWork = [...evidence.values()]
-      .filter((item) => item.needsPractice > 0 || item.due > 0 || item.repeatedWrong >= 2)
-      .sort((a, b) =>
-        (b.needsPractice * 3 + b.due * 2 + b.repeatedWrong)
-        - (a.needsPractice * 3 + a.due * 2 + a.repeatedWrong),
-      )
-      .slice(0, 3);
-
-    return {
-      questionsPractised: practicedIds.size,
-      totalQuestions: activeQuestions.length,
-      topicsPractised: practicedTopicKeys.size,
-      totalTopics: activeTopicMeta.size,
-      confidentCount,
-      needsPracticeCount,
-      practiceByDifficulty,
-      needsMoreWork,
-    };
-  }, [
-    bankReady,
-    practiceClass,
-    selectedSubject,
-    progress,
-    selfAssessments,
-    revisionItems,
-    getTopicsNeedingRevision,
-  ]);
+  const activeReadinessQuestions = useMemo(
+    () => bankReady ? getQuestions({ classNum: practiceClass, subject: selectedSubject }) : [],
+    [bankReady, practiceClass, selectedSubject],
+  );
+  const readiness = useMemo(
+    () => derivePracticeReadiness(activeReadinessQuestions, progress, selfAssessments, selectedSubject),
+    [activeReadinessQuestions, progress, selfAssessments, selectedSubject],
+  );
 
   // ── Chapter progress sorted ─────────────────────────────────────────────────
   // selectedSubject is explicit here so sortedChapters invalidates in the same
@@ -407,6 +298,7 @@ export default function Practice() {
   const [selectedDiff,      setSelectedDiff]      = useState<Difficulty | "All">("All");
   const [selectedType,      setSelectedType]      = useState<EffectiveQuestionType | "All">("All");
   const [searchQuery,       setSearchQuery]       = useState("");
+  const [readinessDrilldown, setReadinessDrilldown] = useState<ReadinessDrilldown | null>(null);
 
   const topics = useMemo(() => getTopics(selectedChapterId), [selectedChapterId]);
 
@@ -422,6 +314,14 @@ export default function Practice() {
       }),
     [practiceClass, selectedSubject, selectedChapterId, selectedTopicId, selectedDiff, selectedType],
   );
+
+  const readinessQuestions = useMemo(
+    () => readinessDrilldown
+      ? getReadinessDrilldownQuestions(readiness, readinessDrilldown)
+      : [],
+    [readiness, readinessDrilldown],
+  );
+  const visibleQuestions = readinessDrilldown ? readinessQuestions : questions;
 
   // True when the currently visible chapter (and topic, if filtered) contains
   // at least one legacy question with no questionType metadata.
@@ -493,6 +393,7 @@ export default function Practice() {
     setSelectedDiff("All");
     setSelectedType("All");
     setDrilldownOpen(false);
+    setReadinessDrilldown(null);
   }, [practiceClass, update]);
 
   useEffect(() => {
@@ -523,6 +424,7 @@ export default function Practice() {
         setSelectedTopicId("all");
         setSelectedDiff("All");
         setSelectedType("All");
+        setReadinessDrilldown(null);
         setDrilldownOpen(true);
         setTimeout(() => {
           document.getElementById("question-list")?.scrollIntoView({ behavior: "smooth" });
@@ -580,11 +482,23 @@ export default function Practice() {
     setSelectedTopicId("all");
     setSelectedDiff("All");
     setSelectedType("All");
+    setReadinessDrilldown(null);
     setDrilldownOpen(true);
     setTimeout(() => {
       document.getElementById("question-list")?.scrollIntoView({ behavior: "smooth" });
     }, 80);
   }, []);
+
+  const openReadinessDrilldown = (drilldown: ReadinessDrilldown) => {
+    setSelectedTopicId("all");
+    setSelectedDiff("All");
+    setSelectedType("All");
+    setDrilldownOpen(false);
+    setReadinessDrilldown(drilldown);
+    window.setTimeout(() => {
+      document.getElementById("question-list")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
 
   const handleChapterRowClick = (chapterId: string) => {
     if (selectedChapterId === chapterId) {
@@ -592,6 +506,7 @@ export default function Practice() {
     } else {
       setSelectedChapterId(chapterId);
       setSelectedTopicId("all");
+      setReadinessDrilldown(null);
       setDrilldownOpen(true);
     }
   };
@@ -737,148 +652,57 @@ export default function Practice() {
 
       <div className="max-w-lg mx-auto px-5 py-5 space-y-5">
 
-        {/* ── Subject readiness — evidence, not a composite mastery score ─── */}
+        {/* ── Subject readiness — every count opens the canonical question list ── */}
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wide" style={{ color: cfg.color }}>
-              {selectedSubject} readiness
-            </p>
-            <p className="text-xs text-slate-500 mt-1">
-              Your practice coverage and your own check-ins.
-            </p>
+            <p className="text-xs font-bold uppercase tracking-wide" style={{ color: cfg.color }}>{selectedSubject} readiness</p>
+            <p className="text-xs text-slate-500 mt-1">Your practice coverage and your own check-ins.</p>
           </div>
-
-          <div>
+          <button type="button" onClick={() => openReadinessDrilldown("PRACTISED")} className="block w-full rounded-xl text-left transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Questions Practised</p>
-                <p className="text-2xl font-black text-slate-800 mt-0.5">
-                  {readiness.questionsPractised} <span className="text-base text-slate-400">/ {readiness.totalQuestions}</span>
-                </p>
+                <p className="text-2xl font-black text-slate-800 mt-0.5">{readiness.questionsPractised.length} <span className="text-base text-slate-400">/ {activeReadinessQuestions.length}</span></p>
               </div>
-              <p className="text-xs font-semibold text-slate-500">
-                {readiness.totalQuestions > 0
-                  ? `${Math.round((readiness.questionsPractised / readiness.totalQuestions) * 100)}% covered`
-                  : "No active questions"}
-              </p>
+              <p className="text-xs font-semibold text-slate-500">View questions →</p>
             </div>
             <div className="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: `${readiness.totalQuestions > 0
-                    ? (readiness.questionsPractised / readiness.totalQuestions) * 100
-                    : 0}%`,
-                  backgroundColor: cfg.color,
-                }}
-              />
+              <div className="h-full rounded-full transition-all" style={{ width: `${activeReadinessQuestions.length ? (readiness.questionsPractised.length / activeReadinessQuestions.length) * 100 : 0}%`, backgroundColor: cfg.color }} />
             </div>
-            <p className="text-[11px] text-slate-400 mt-2">
-              Topics Practised: {readiness.topicsPractised} / {readiness.totalTopics}
-            </p>
-          </div>
-
+            <p className="text-[11px] text-slate-400 mt-2">Topics Practised: {readiness.topicsPractised} / {readiness.totalTopics}</p>
+          </button>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
+            <button type="button" onClick={() => openReadinessDrilldown("CONFIDENT")} className="rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-left transition hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
               <p className="text-[10px] font-semibold text-emerald-700 uppercase tracking-wide">I Am Confident</p>
-              <p className="text-2xl font-black text-emerald-700 mt-1">{readiness.confidentCount}</p>
-              <p className="text-[10px] text-emerald-700/70 mt-1">Your self-report</p>
-            </div>
-            <div className="rounded-xl border border-amber-100 bg-amber-50 p-3">
+              <p className="text-2xl font-black text-emerald-700 mt-1">{readiness.confidentQuestions.length}</p>
+              <p className="text-[10px] text-emerald-700/70 mt-1">View questions →</p>
+            </button>
+            <button type="button" onClick={() => openReadinessDrilldown("NEEDS_PRACTICE")} className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-left transition hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500">
               <p className="text-[10px] font-semibold text-amber-700 uppercase tracking-wide">Need More Practice</p>
-              <p className="text-2xl font-black text-amber-700 mt-1">{readiness.needsPracticeCount}</p>
-              <p className="text-[10px] text-amber-700/70 mt-1">Saved for revision</p>
-            </div>
+              <p className="text-2xl font-black text-amber-700 mt-1">{readiness.needsPracticeQuestions.length}</p>
+              <p className="text-[10px] text-amber-700/70 mt-1">View questions →</p>
+            </button>
           </div>
-
           <div className="border-t border-slate-100 pt-3">
             <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2">Practice by Difficulty</p>
             <div className="space-y-2">
-              {readiness.practiceByDifficulty.map((item) => (
-                <div key={item.difficulty} className="flex items-center gap-2">
-                  <span className={`w-16 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[item.difficulty]}`}>
-                    {item.difficulty}
-                  </span>
-                  <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${item.total > 0 ? (item.practised / item.total) * 100 : 0}%`,
-                        backgroundColor: cfg.color,
-                      }}
-                    />
-                  </div>
-                  <span className="w-11 text-right text-[11px] font-semibold text-slate-600">
-                    {item.practised} / {item.total}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-          <div className="px-4 pt-4 pb-2 border-b border-slate-100">
-            <p className="text-xs font-bold text-slate-700 uppercase tracking-wide">Needs More Work</p>
-          </div>
-          {readiness.needsMoreWork.length > 0 ? (
-            <div className="divide-y divide-slate-100">
-              {readiness.needsMoreWork.map((area) => (
-                <div key={area.label} className="px-4 py-3 flex items-center gap-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-800 truncate">{area.label}</p>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      {area.needsPractice > 0
-                        ? `${area.needsPractice} question${area.needsPractice === 1 ? "" : "s"} marked for more practice`
-                        : area.due > 0
-                          ? `${area.due} revision question${area.due === 1 ? "" : "s"} due`
-                          : `${area.repeatedWrong} repeated incorrect answers`}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => openChapter(area.chapterId)}
-                    className="flex-shrink-0 text-[11px] font-bold px-3 py-1.5 rounded-xl text-white shadow-sm transition-all"
-                    style={{ backgroundColor: cfg.color }}
-                  >
-                    Practise →
+              {(["Easy", "Medium", "Hard"] as const).map((difficulty) => {
+                const practised = readiness.practisedByDifficulty[difficulty].length;
+                const total = activeReadinessQuestions.filter((question) => question.difficulty === difficulty).length;
+                return (
+                  <button key={difficulty} type="button" onClick={() => openReadinessDrilldown(difficulty)} className="flex w-full items-center gap-2 rounded-lg text-left transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+                    <span className={`w-16 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[difficulty]}`}>{difficulty}</span>
+                    <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className="h-full rounded-full" style={{ width: `${total ? (practised / total) * 100 : 0}%`, backgroundColor: cfg.color }} /></div>
+                    <span className="w-11 text-right text-[11px] font-semibold text-slate-600">{practised} / {total}</span>
                   </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
-          ) : (
-            <p className="px-4 py-4 text-sm text-slate-500">
-              Keep practising — we’ll identify areas that need more work as you answer more questions.
-            </p>
+          </div>
+          {readiness.legacyUnassessedQuestions.length > 0 && (
+            <p className="text-[11px] text-slate-500">{readiness.legacyUnassessedQuestions.length} practised question{readiness.legacyUnassessedQuestions.length === 1 ? "" : "s"} {readiness.legacyUnassessedQuestions.length === 1 ? "is" : "are"} legacy/unassessed and excluded from both self-assessment counts.</p>
           )}
         </div>
-
-        {readiness.needsMoreWork[0] && (
-          <div
-            className="rounded-2xl border p-4"
-            style={{ backgroundColor: `${cfg.color}08`, borderColor: `${cfg.color}25` }}
-          >
-            <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: cfg.color }}>
-              What to Practise Next
-            </p>
-            <p className="text-sm font-semibold text-slate-800 mt-0.5">
-              {readiness.needsMoreWork[0].label}
-            </p>
-            <p className="text-[12px] text-slate-500 mt-0.5">
-              {readiness.needsMoreWork[0].needsPractice > 0
-                ? `${readiness.needsMoreWork[0].needsPractice} question${readiness.needsMoreWork[0].needsPractice === 1 ? "" : "s"} need more practice`
-                : readiness.needsMoreWork[0].due > 0
-                  ? `${readiness.needsMoreWork[0].due} revision question${readiness.needsMoreWork[0].due === 1 ? "" : "s"} are due`
-                  : "Repeated mistakes show this area needs another look"}
-            </p>
-            <button
-              onClick={() => openChapter(readiness.needsMoreWork[0].chapterId)}
-              className="mt-3 text-sm font-bold px-4 py-2 rounded-xl text-white shadow-sm transition-all"
-              style={{ backgroundColor: cfg.color }}
-            >
-              Practise this area →
-            </button>
-          </div>
-        )}
 
         {/* ── 5. Chapter Progress ── */}
         {chapters.length > 0 && (
@@ -1017,11 +841,26 @@ export default function Practice() {
 
         {/* ── Question list ── */}
         {chapters.length > 0 && (
-          <div id="question-list" className="space-y-3">
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              Questions · {sortedChapters.find((cs) => cs.chapterId === selectedChapterId)?.chapterName ?? "Select a chapter"}
-            </p>
+          <div id="question-list" className="space-y-3 scroll-mt-4">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                {readinessDrilldown
+                  ? readinessDrilldownLabel(readinessDrilldown)
+                  : <>Questions · {sortedChapters.find((cs) => cs.chapterId === selectedChapterId)?.chapterName ?? "Select a chapter"}</>}
+              </p>
+              {readinessDrilldown && (
+                <button
+                  type="button"
+                  onClick={() => setReadinessDrilldown(null)}
+                  className="flex-shrink-0 text-[11px] font-bold text-indigo-600 hover:text-indigo-700"
+                >
+                  Show chapter list
+                </button>
+              )}
+            </div>
 
+            {!readinessDrilldown && (
+              <>
             {/* Topic filter */}
             <div className="flex flex-wrap gap-2">
               <button
@@ -1091,19 +930,21 @@ export default function Practice() {
                 );
               })}
             </div>
+              </>
+            )}
 
             <p className="text-sm font-semibold text-slate-700">
-              {questions.length} question{questions.length !== 1 ? "s" : ""}
+              {visibleQuestions.length} question{visibleQuestions.length !== 1 ? "s" : ""}
             </p>
 
-            {questions.length > 0 ? (
+            {visibleQuestions.length > 0 ? (
               <div className="space-y-3 pb-4">
-                {questions.map((q, qi) => (
+                {visibleQuestions.map((q) => (
                   <QuestionCard
                     key={q.id}
                     q={q}
                     cfg={cfg}
-                    index={qi + 1}
+                    questionNumber={getQuestionDisplayNumber(q)}
                     onOpen={() => handleOpenQuestion(q)}
                   />
                 ))}
@@ -1128,6 +969,7 @@ export default function Practice() {
           </div>
         )}
       </div>
+      <FloatingPageNavigation />
     </div>
   );
 }

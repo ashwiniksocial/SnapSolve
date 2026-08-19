@@ -14,6 +14,8 @@
     "generate-canonical-registry": "tsx ./src/generateCanonicalRegistry.ts",
     "generate-pre-generated-lessons": "tsx ./src/generatePreGeneratedLessons.ts",
     "validate-pre-generated-lessons": "tsx ./src/validatePreGeneratedLessons.ts",
+    "test:practice-readiness": "tsx ./src/testPracticeReadiness.ts",
+    "audit-beta-practice-integrity": "tsx ./src/auditBetaPracticeIntegrity.ts",
     "test:academic-review": "node --import tsx/esm --test src/academicReview.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

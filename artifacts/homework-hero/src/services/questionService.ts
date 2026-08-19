@@ -9,8 +9,13 @@
 
 import type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType } from "@/data/questions";
 import { CLASS9_DISPLAY_ORDER } from "@/data/questions/canonicalChapterRegistry.gen";
+import {
+  BETA_SCIENCE_DOMAINS,
+  getStudentFacingSubject,
+} from "@/data/questions/studentFacingSubject";
 
 export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType };
+export { BETA_SCIENCE_DOMAINS, getStudentFacingSubject };
 
 // ── Module-level question bank cache ────────────────────────────────────────
 // Start empty; populated by preloadQBank().  Synchronous query functions below
@@ -40,15 +45,6 @@ export async function preloadQBank(_classNum?: number): Promise<void> {
  * Earth Science remains in the question bank, but is deliberately outside the
  * current Beta readiness scope and therefore is not aggregated here.
  */
-export const BETA_SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology"] as const;
-
-/** Maps a native science domain to the student-facing Practice subject. */
-export function getStudentFacingSubject(subject: string): string {
-  return BETA_SCIENCE_DOMAINS.includes(subject as typeof BETA_SCIENCE_DOMAINS[number])
-    ? "Science"
-    : subject;
-}
-
 /**
  * All chapters for a given class + subject, in official textbook order.
  * "Science" resolves to the union of all Science domain chapters sorted by
