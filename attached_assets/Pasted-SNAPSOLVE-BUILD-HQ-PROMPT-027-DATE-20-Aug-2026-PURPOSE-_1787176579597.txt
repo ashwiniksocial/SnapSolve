@@ -1,0 +1,391 @@
+SNAPSOLVE BUILD HQ — PROMPT #027
+DATE: 20-Aug-2026
+PURPOSE: FINAL BETA BLOCKERS — GUARANTEED PRE-GENERATED LESSON PRIORITY + REAL CAMERA CAPTURE
+PRIORITY: P0
+END STATE: CONTROLLED BETA CAN START
+
+Apply ALL existing SnapSolve PrePromptConditions BEFORE changing code.
+
+This is NOT a new feature-development cycle.
+
+Founder has now tested the real Beta journeys and found TWO concrete remaining blockers.
+
+Resolve BOTH systemically in this task, validate the real rendered paths, and STOP.
+
+==================================================
+FROZEN / DO NOT TOUCH
+==================================================
+
+The following are accepted/frozen unless strictly required by the two defects below:
+
+- 1,375 active Beta questions / 22 chapters
+- question-bank content
+- curriculum/gateway
+- canonical metadata resolver
+- Practice readiness
+- Practice drill-downs
+- I Am Confident / Need More Practice
+- difficulty logic
+- Q-numbering
+- IT chapter numbering
+- Find a Question
+- floating Top/Middle/Bottom navigation
+- 20 pre-generated lesson CONTENT bodies
+- 20-lesson academic corrections
+- teaching schema
+- Detailed lesson UI
+- Beta feedback system
+- Clerk authentication
+- APPROVED_BETA_EMAILS architecture
+
+DO NOT:
+- regenerate lessons
+- change lesson content
+- mass-generate anything
+- add another cache
+- add another lesson registry
+- replace the lazy-chunk architecture
+- redesign Scan
+- redesign Solution
+- run broad unrelated audits
+- make intentional AI lesson calls during implementation
+
+==================================================
+P0-A — PRE-GENERATED QUESTIONS MUST NEVER START STREAMING
+==================================================
+
+CONFIRMED REAL-BROWSER DEFECT:
+
+A valid pre-generated pilot question such as:
+
+c9-m-ch1-t1-q01
+
+passes:
+- static validator
+- source hash
+- frozen answer validation
+- pre-generated store membership
+
+BUT the real browser can still attempt:
+
+POST /api/solveQuestion/stream
+
+before/while the static lesson becomes available.
+
+This creates unnecessary AI-cost exposure.
+
+==================================================
+REQUIRED ARCHITECTURAL INVARIANT
+==================================================
+
+For any valid pre-generated bank question:
+
+CLICK QUESTION
+→ resolve canonical question
+→ locate/load its lazy pre-generated chapter chunk
+→ validate stored lesson
+→ render stored lesson
+→ STOP
+
+There must be:
+
+0 calls to /api/solveQuestion
+0 calls to /api/solveQuestion/stream
+0 OpenAI calls
+
+The streaming fallback may run ONLY after the pre-generated lookup has definitively completed and returned one of:
+
+- no lesson
+- stale lesson
+- invalid lesson
+- hash mismatch
+- malformed lesson
+
+A lazy import being "not loaded yet" is NOT a cache miss.
+
+A pending lookup is NOT permission to stream.
+
+==================================================
+TRACE BEFORE FIX
+==================================================
+
+Trace the exact browser execution order for:
+
+c9-m-ch1-t1-q01
+
+Report:
+
+1. Solution mount
+2. canonical question resolution
+3. pre-generated chunk import start
+4. pre-generated chunk import completion
+5. lesson lookup result
+6. validation result
+7. condition that currently starts streaming
+8. exact point where the fallback is allowed too early
+
+Determine the ROOT CAUSE.
+
+Specifically inspect for:
+- unresolved Promise treated as miss
+- race between useEffect paths
+- duplicate solver effects
+- stale state
+- async lazy import not awaited
+- cache/pre-generated lookup running in parallel with solver
+- React effect rerun
+- StrictMode double execution
+- generationStarted logic
+- another hidden route to solveWithOpenAI
+
+Do NOT assume which one it is.
+
+==================================================
+FIX
+==================================================
+
+Implement the smallest safe systemic fix.
+
+There must be an explicit resolution state equivalent to:
+
+PREGNERATED_LOOKUP_PENDING
+PREGNERATED_VALID
+PREGNERATED_MISS_OR_INVALID
+
+Streaming is forbidden while lookup is PENDING.
+
+If VALID:
+render it and never enter streaming.
+
+If MISS/INVALID:
+continue through the EXISTING fallback architecture.
+
+Do NOT add an arbitrary timeout.
+Do NOT use sleep/delay.
+Do NOT merely abort the network request after it starts.
+Prevent the request from being initiated.
+
+Preserve:
+- chapter-level lazy chunks
+- source-hash validation
+- canonical metadata overrides
+- local/server cache behaviour
+- streaming fallback for the other 1,355 questions
+
+==================================================
+MANDATORY COST VALIDATION
+==================================================
+
+Test ALL 20 pre-generated pilot question IDs deterministically.
+
+For every one prove:
+
+pregenerated lookup = valid
+/api/solveQuestion calls = 0
+/api/solveQuestion/stream calls = 0
+
+Then perform REAL browser tests on at least 5 pre-generated questions across:
+
+- Mathematics
+- Physics
+- Chemistry
+- Biology
+- Information Technology
+
+Network evidence must show ZERO solver POSTs.
+
+Then test:
+- 1 known non-pre-generated bank question
+
+It MUST still reach the existing streamed fallback.
+
+Do not let that test complete an unnecessary paid generation if it can be safely intercepted after proving the correct endpoint decision.
+
+==================================================
+P0-B — "TAKE PHOTO" MUST ACTUALLY OPEN CAMERA
+==================================================
+
+FOUNDER REAL-UI OBSERVATION:
+
+Scan → Photo Scan / Take Photo currently opens the gallery/file-selection flow rather than an actual camera capture experience.
+
+For mobile Beta, this is not the intended behaviour.
+
+Required UX:
+
+TAKE PHOTO
+→ request/use device camera where supported
+→ preferably rear/environment camera
+→ student captures image
+→ captured image enters the EXISTING Scan/OCR/solve pipeline
+
+The student should not be forced into the gallery when they selected Take Photo.
+
+==================================================
+IMPLEMENTATION RULE
+==================================================
+
+First inspect existing Scan implementation.
+
+Reuse the existing image-processing/OCR pipeline after image acquisition.
+
+Do NOT build a second OCR/Scan pipeline.
+
+For supported mobile browsers/devices, use the smallest reliable browser-camera method.
+
+Prefer direct camera capture.
+
+If getUserMedia is already compatible with current architecture, use it.
+
+If the existing input flow can reliably invoke direct device capture using the appropriate camera capture semantics, use that.
+
+However:
+
+DO NOT falsely claim desktop browsers can always open a phone-style camera UI.
+
+Graceful fallback is required when:
+- camera API unsupported
+- permission denied
+- no camera available
+
+Fallback may offer:
+"Choose Photo"
+
+The Scan UI should therefore have clearly distinct acquisition intent:
+
+TAKE PHOTO
+and, if required,
+CHOOSE/UPLOAD PHOTO
+
+Do not confuse those two actions.
+
+==================================================
+CAMERA VALIDATION
+==================================================
+
+Verify:
+
+1. Mobile-capable browser path:
+   Take Photo requests/directly invokes camera acquisition.
+
+2. Rear/environment camera preferred where supported.
+
+3. Captured image reaches the SAME existing Scan processing pipeline.
+
+4. Permission denied:
+   clean fallback/error message, no broken page.
+
+5. Unsupported/desktop environment:
+   upload/photo chooser remains available.
+
+6. Existing Type Question flow remains unchanged.
+
+==================================================
+FOUNDER'S PARAPHRASE TEST — PRESERVE
+==================================================
+
+Founder tested:
+
+Stored-style question:
+"In which quadrant do both coordinates have positive values?"
+
+Typed variation:
+"name the quadrant in which both coordinates have positive values?"
+
+Both correctly produced:
+Quadrant I / First Quadrant.
+
+This is GOOD and must not regress.
+
+The typed free-form question may continue using the existing AI solver.
+
+Do NOT force typed questions to match the bank merely to save an AI call in this task.
+
+Do NOT introduce semantic-search/embedding architecture now.
+
+==================================================
+BETA ACCESS / FEEDBACK
+==================================================
+
+Task #9 already successfully implemented/verified:
+
+- Clerk authentication
+- APPROVED_BETA_EMAILS
+- Beta Access Pending
+- durable Beta feedback
+- founder-only Feedback admin viewing
+
+Preserve all of it.
+
+Do not rebuild Beta access.
+
+==================================================
+VALIDATION
+==================================================
+
+Run only necessary existing validation:
+
+- frontend TypeScript
+- API TypeScript
+- relevant deterministic tests
+- production build
+- 20/20 pre-generated validator
+- targeted browser/network validation
+- Scan camera acquisition validation
+- Type Question smoke test
+
+NO broad academic audit.
+NO lesson regeneration.
+NO unnecessary AI calls.
+
+==================================================
+RETURN EXACTLY
+==================================================
+
+A. PRE-GENERATED FALLBACK
+
+1. Exact root cause
+2. Exact execution order before fix
+3. Files changed
+4. Exact systemic fix
+5. 20/20 pilot zero-network-solver result
+6. Five real-browser pilot results
+7. Non-pilot fallback result
+8. AI calls made during implementation/testing
+9. Operational AI cost risk after fix:
+   LOW / MEDIUM / HIGH
+
+B. CAMERA
+
+10. Previous Take Photo implementation
+11. Why gallery opened
+12. New acquisition behaviour
+13. Mobile camera result
+14. Permission-denied result
+15. Desktop/unsupported fallback
+16. Confirmation same existing OCR/Scan pipeline is reused
+
+C. REGRESSION
+
+17. Typed-question flow result
+18. Beta authentication result
+19. Feedback result
+20. TypeScript/build result
+21. Confirmation frozen systems were not changed
+22. Git/worktree status
+
+SUCCESS CONDITION:
+
+- Valid pre-generated lessons NEVER initiate solver streaming.
+- Non-pre-generated lessons retain normal fallback.
+- Take Photo genuinely invokes camera capture on supported devices.
+- Gallery/upload remains a graceful fallback.
+- Typed-question flow remains correct.
+- No unrelated system changes.
+- No unnecessary AI generation calls.
+
+If ALL pass, declare controlled Beta ready.
+
+End exactly:
+
+FINAL BETA BLOCKERS CLOSED — CONTROLLED BETA READY FOR REAL STUDENTS/PARENTS

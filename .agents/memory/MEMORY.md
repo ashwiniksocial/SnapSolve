@@ -28,7 +28,7 @@
 - [Detailed schema field order](detailed-schema-field-order.md) — guidedReasoning+finalAnswer moved before support fields in JSON_SCHEMA; first step now 2.3–3.6 s; do NOT revert order.
 - [Detailed invisible fields](detailed-invisible-fields.md) — hidden fields are excluded from all Detailed output prompts; parser defaults mean telemetry, not returned keys, proves savings.
 - [Persistent bank lesson assets](persistent-bank-lessons.md) — static derived lessons are hash-verified against frozen bank content; invalid entries must fall through to existing streaming.
-- [Lazy lesson chunks](lazy-lesson-chunks.md) — direct Vite glob syntax is required for metadata-derived, chapter-level lesson code splitting.
+- [Lazy lesson chunks](lazy-lesson-chunks.md) — import.meta.glob must be called unconditionally (compile-time transform; runtime typeof guard kills it) and chunk filenames must avoid percent-encoding.
 - [Revision storage compatibility](revision-storage-compatibility.md) — revision readers must accept both legacy flat records and the self-assessment envelope.
 - [Offline question-bank audit](offline-question-bank-audit.md) — use source discovery for Node audits; direct browser-bank imports can fail on mixed legacy module exports.
 - [Runtime static lesson verification](runtime-static-lesson-verification.md) — asset validation alone cannot prove a static lesson avoids browser streaming; intercept the route in a real browser.

@@ -84,10 +84,21 @@ function chunkKey(question: Pick<Question, "classNum" | "subject" | "chapterId">
   return JSON.stringify([question.classNum, question.subject, question.chapterId]);
 }
 
+/**
+ * URL-safe filename token — MUST stay in lockstep with chunkFileToken() in
+ * artifacts/homework-hero/src/data/preGeneratedLessons.ts. Percent-encoding
+ * ("%20") breaks browser dynamic imports: the dev server decodes the request
+ * URL to a path with a literal space, 404s, and the runtime lookup silently
+ * falls through to the paid streaming fallback.
+ */
+function chunkFileToken(value: string): string {
+  return value.replace(/[^A-Za-z0-9_-]+/g, "_");
+}
+
 function chunkPath(question: Pick<Question, "classNum" | "subject" | "chapterId">): string {
   return resolve(
     chunksDirectory,
-    `${question.classNum}--${encodeURIComponent(question.subject)}--${encodeURIComponent(question.chapterId)}.ts`,
+    `${question.classNum}--${chunkFileToken(question.subject)}--${chunkFileToken(question.chapterId)}.ts`,
   );
 }
 

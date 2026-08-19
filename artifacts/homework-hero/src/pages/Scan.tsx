@@ -6,11 +6,13 @@ import { useScanHistory, compressImageToThumbnail, resizeForOCR, relativeTime } 
 import { safeRecognizeWithConfidence } from "@/services/ai/ocrService";
 import { cleanOcrText, detectBestTopic } from "@/services/ai/topicMatcher";
 import type { OcrProgress } from "@/services/ai/ocrService";
+import CameraCapture from "@/components/CameraCapture";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Phase =
   | "idle"        // upload area shown
+  | "camera"      // live device-camera capture (Take Photo)
   | "preview"     // image selected, ready to scan
   | "processing"  // OCR in progress
   | "review"      // OCR done, user can edit detected text
@@ -112,6 +114,23 @@ export default function Scan() {
   // Cleanup object URL on unmount
   useEffect(() => {
     return () => { if (previewRef.current) URL.revokeObjectURL(previewRef.current); };
+  }, []);
+
+  // ── Take Photo: open the live camera on supported devices ──
+  // Distinct from "Choose from Gallery". If getUserMedia is unavailable (e.g.
+  // some older/desktop browsers), fall back to the capture-hinted file input so
+  // the student is never stuck. The CameraCapture component itself handles
+  // permission-denied / no-camera errors and offers a gallery fallback there.
+  const openCamera = useCallback(() => {
+    const canUseLiveCamera =
+      typeof navigator !== "undefined" &&
+      !!navigator.mediaDevices &&
+      typeof navigator.mediaDevices.getUserMedia === "function";
+    if (canUseLiveCamera) {
+      setPhase("camera");
+    } else {
+      cameraRef.current?.click();
+    }
   }, []);
 
   // ── Image selection ──
@@ -321,7 +340,9 @@ export default function Scan() {
                 </div>
 
                 <div className="flex flex-col gap-2 w-full max-w-xs">
-                  {/* Camera capture (mobile-first) */}
+                  {/* Fallback camera input — used only when getUserMedia is
+                      unsupported (see openCamera). capture="environment" hints
+                      the OS to prefer the rear camera on the file-picker path. */}
                   <input
                     ref={cameraRef}
                     type="file"
@@ -330,15 +351,17 @@ export default function Scan() {
                     className="hidden"
                     onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
                   />
+                  {/* Take Photo — opens the live in-app camera on supported
+                      devices; gracefully falls back to the capture input. */}
                   <button
-                    onClick={() => cameraRef.current?.click()}
+                    onClick={openCamera}
                     className="w-full py-3.5 rounded-2xl text-sm font-bold text-white shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
                     style={{ backgroundColor: scanColor }}
                   >
                     <span className="text-base">📷</span> Take Photo
                   </button>
 
-                  {/* Gallery upload */}
+                  {/* Gallery upload — a distinct, explicit acquisition intent. */}
                   <input
                     ref={fileRef}
                     type="file"
@@ -356,6 +379,16 @@ export default function Scan() {
 
                 <p className="text-xs text-slate-400">JPG · PNG · WEBP · up to any size</p>
               </div>
+            )}
+
+            {/* ── camera: live device-camera capture ── */}
+            {phase === "camera" && (
+              <CameraCapture
+                accentColor={scanColor}
+                onCapture={(file) => handleFile(file)}
+                onCancel={() => setPhase("idle")}
+                onChoosePhoto={() => { setPhase("idle"); fileRef.current?.click(); }}
+              />
             )}
 
             {/* ── preview: image selected ── */}

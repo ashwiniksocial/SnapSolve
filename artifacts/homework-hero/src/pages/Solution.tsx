@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { flushSync } from "react-dom";
 import { Link } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
@@ -16,7 +16,7 @@ import {
   type Difficulty,
 } from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
-import { getPreGeneratedBankLesson } from "@/data/preGeneratedLessons";
+import { resolvePreGeneratedBankLesson } from "@/data/preGeneratedLessons";
 import {
   applyCanonicalBankMetadata,
   getCanonicalPracticeMetadata,
@@ -56,7 +56,30 @@ export default function Solution() {
   const practiceMode = solutionParams.get("practiceMode") === "1";
   const practiceQuestionId = solutionParams.get("questionId") ?? session.practiceQuestionId;
 
+  // ── In-flight guard ──────────────────────────────────────────────────────────
+  // Serializes solver runs for THIS component instance. Under wouter's
+  // `key={location}` remount and React's lazy/Suspense resolution, useEffect can
+  // fire runSolver() more than once before the first run's async pre-generated
+  // lookup resolves. Without a guard, a second concurrent run can slip past the
+  // pre-generated return and initiate a paid streaming POST for a question whose
+  // valid static lesson is still being awaited. This ref lets a run bail out
+  // immediately if another run is already resolving.
+  const solveInFlight = useRef(false);
+
   const runSolver = useCallback(async () => {
+    // A run is already resolving for this instance — do not start a second one.
+    // Prevents concurrent runs from independently reaching the streaming
+    // fallback while the pre-generated lookup is still PENDING.
+    if (solveInFlight.current) return;
+    solveInFlight.current = true;
+    try {
+      await runSolverInner();
+    } finally {
+      solveInFlight.current = false;
+    }
+  }, [session.subject, session.question, session.ocrConfidence, practiceMode, practiceQuestionId]);
+
+  const runSolverInner = useCallback(async () => {
     setPageState("loading");
     setSolution(null);
     setSolveError(null);
@@ -103,12 +126,16 @@ export default function Solution() {
           update({ practiceTopic: bankQ.topicName });
 
           // ── Persistent derived lesson: instant display, 0 AI calls ──────────
-          // This is validated against the current frozen question source on every
-          // lookup. Missing/stale entries intentionally continue to the existing
-          // secondary localStorage cache and then the unchanged SSE path.
-          const preGenerated = await getPreGeneratedBankLesson(bankQ);
-          if (preGenerated) {
-            setSolution(applyCanonicalBankMetadata(preGenerated, bankQ));
+          // GUARANTEED INVARIANT (Prompt #027 P0-A): the pre-generated lookup is
+          // awaited to a DEFINITIVE resolution before any fallback is reachable.
+          // resolvePreGeneratedBankLesson() only resolves after the lazy chapter
+          // chunk has finished importing (a "not loaded yet" chunk is resolved
+          // first, never treated as a miss) and the stored lesson has been
+          // validated against current frozen source content. Streaming is
+          // structurally unreachable until this returns "MISS_OR_INVALID".
+          const resolution = await resolvePreGeneratedBankLesson(bankQ);
+          if (resolution.status === "VALID") {
+            setSolution(applyCanonicalBankMetadata(resolution.response, bankQ));
             setPageState("done");
             return;
           }
@@ -121,7 +148,7 @@ export default function Solution() {
             return;
           }
 
-          // ── Cache miss: stream a full TeachingLesson anchored to frozen answer ─
+          // ── Miss/invalid ONLY: stream a full TeachingLesson from frozen answer ─
           // onPartial fires on first keyConcepts or step (≤2 s) → switches from
           // loading spinner to solution card while remaining sections arrive.
           // flushSync forces an immediate React re-render on each partial so the
