@@ -1,0 +1,267 @@
+SNAPSOLVE BUILD HQ — REPLIT PROMPT #020
+DATE: 20-Aug-2026
+PURPOSE: FULL BETA PRACTICE INTEGRITY AUDIT + FIX CONFIRMED DEFECTS
+
+Recall and obey ALL PrePromptConditions.
+
+DO NOT FREEZE PRACTICE.
+
+Founder testing has exposed defects that prove manual question-by-question
+acceptance is insufficient.
+
+CONFIRMED DEFECTS
+
+1. DIFFICULTY SOURCE-OF-TRUTH DEFECT
+Example:
+Mathematics Ch 2 question shown as Q10 in the question list is labelled HARD,
+but its Solution page displays MEDIUM.
+
+Audit the COMPLETE ACTIVE CLASS 9 BETA QUESTION BANK.
+
+For every active question compare:
+- question ID
+- student-facing Q-number
+- subject
+- chapter
+- topic
+- difficulty
+- question type
+
+across:
+- source question bank
+- Practice question list
+- Solution
+- progress/readiness calculations
+- revision records
+- search results
+- lesson metadata
+
+The QUESTION BANK RECORD must be the canonical source.
+
+Do not manually duplicate difficulty/topic/chapter metadata elsewhere.
+
+Fix every mismatch found.
+
+2. DETAILED LESSON QUALITY / COMPLETENESS
+
+Founder found Mathematics Ch 2 Q32 whose displayed detailed solution contains
+only 2 solution steps.
+
+DO NOT blindly force exactly 8 steps on every question.
+
+Instead inspect the existing approved Detailed Teaching Lesson contract and
+audit ALL existing pre-generated lessons and their metadata for completeness.
+
+A lesson must not pass merely because a JSON object exists.
+
+Validator should detect, where applicable:
+- missing final answer
+- incomplete reasoning
+- unexplained calculation jumps
+- answer that does not fully answer every part of the question
+- suspiciously thin detailed explanation
+- malformed/empty sections
+- question/lesson mismatch
+- stale question hash
+- wrong question ID
+- wrong chapter/topic/difficulty metadata
+- internally contradictory answer
+- missing exam-ready conclusion where required
+
+Do NOT regenerate the whole bank.
+Do NOT make AI calls across the bank.
+
+Report lessons requiring human/AI teaching-quality review separately.
+
+Preserve approved frozen answers unless a confirmed defect exists.
+
+3. READINESS SEMANTICS
+
+Keep these concepts distinct:
+
+NEED MORE PRACTICE
+= individual questions explicitly marked by the student as needing practice.
+
+NEEDS MORE WORK
+= system-derived TOPICS/AREAS where accumulated question evidence indicates
+weakness.
+
+Needs More Work must NOT simply duplicate Need More Practice.
+
+Audit the implementation and correct only if these currently collapse to the
+same signal/display.
+
+4. FLOATING PAGE NAVIGATION
+
+Founder requested this earlier but it is not visible in the tested Practice
+and Solution screens.
+
+Implement ONE reusable global floating navigation component for long
+student-facing pages:
+
+↑ Top
+↕ Middle
+↓ Bottom
+
+Requirements:
+- fixed/floating
+- unobtrusive
+- always accessible while scrolling long pages
+- mobile and desktop safe
+- must not cover bottom navigation or learning content
+- smooth scroll
+- Top = document/page top
+- Middle = approximately 50% of scrollable content
+- Bottom = page bottom
+
+Use the shared component rather than duplicating implementation page-by-page.
+
+Apply to relevant long student-facing pages, including at minimum:
+- Practice
+- Solution
+
+Do not redesign pages.
+
+5. BUILD A DETERMINISTIC FULL-BANK BETA PRACTICE AUDITOR
+
+This is the critical requirement.
+
+Founder must NOT be required to manually discover structural/data anomalies
+question by question.
+
+Create/reuse the smallest appropriate validation script that audits EVERY
+ACTIVE CLASS 9 BETA QUESTION.
+
+For every question automatically validate:
+
+IDENTITY
+- unique question ID
+- valid Q-number
+- no duplicate IDs
+- question resolves from Practice to exact Solution question
+
+CURRICULUM METADATA
+- correct active subject
+- correct chapter
+- correct student-facing chapter number
+- valid topic
+- valid question type
+- valid Easy/Medium/Hard difficulty
+
+CROSS-SURFACE CONSISTENCY
+- Practice metadata == canonical question metadata
+- Solution metadata == canonical question metadata
+- Search metadata == canonical question metadata
+- readiness/progress classification uses canonical metadata
+
+LESSON LINKAGE
+- correct lesson/question association
+- pre-generated lesson hash valid where present
+- no lesson attached to wrong question
+- missing/stale lessons correctly use fallback
+
+COUNTS
+Recalculate independently and compare:
+- total active questions per subject
+- questions per chapter
+- questions per difficulty
+- questions per type
+- topics
+- readiness denominators
+
+Flag every discrepancy.
+
+Do NOT silently repair questionable curriculum content.
+Report it.
+
+6. PROGRESS STATE TESTS
+
+Add deterministic tests proving:
+
+A. opening a lesson alone does NOT count as practised
+
+B. UNSET → CONFIDENT:
+unique practised +1
+confident +1
+
+C. UNSET → NEEDS_PRACTICE:
+unique practised +1
+needs-practice +1
+
+D. CONFIDENT → NEEDS_PRACTICE:
+unique practised unchanged
+confident -1
+needs-practice +1
+
+E. NEEDS_PRACTICE → CONFIDENT:
+unique practised unchanged
+needs-practice -1
+confident +1
+
+F. repeated same selection does not double count
+
+G. refresh/persistence does not change counts
+
+H. difficulty coverage counts UNIQUE practised questions only
+
+I. topic coverage counts UNIQUE practised topics correctly
+
+J. Science aggregation includes only intended active Physics/Chemistry/Biology
+data according to current frozen Beta rules.
+
+7. DO NOT EXPAND SCOPE
+
+Do NOT:
+- modify Scan
+- add new features
+- redesign Practice
+- regenerate the question bank
+- mass-generate lessons
+- make unnecessary AI calls
+- refactor unrelated architecture
+- change frozen question IDs
+- change approved curriculum content merely to satisfy validator
+- touch unrelated files
+
+RUN:
+- full new integrity audit
+- existing question-bank validators
+- pre-generated lesson validator
+- TypeScript checks
+- production build
+- relevant deterministic tests
+
+RETURN A COMPACT AUDIT TABLE:
+
+Check | Total Checked | Passed | Failed | Fixed | Remaining
+
+Then separately report:
+
+A. all metadata mismatches found
+B. difficulty mismatches found
+C. lesson-quality/completeness flags
+D. progress/counting test results
+E. floating-navigation implementation
+F. files changed
+G. regressions
+H. AI calls made
+I. git/worktree status
+
+IMPORTANT:
+Do not claim Practice is Beta-ready merely because build/typecheck pass.
+
+Practice is ready for founder acceptance only when the deterministic audit
+passes all structural/data-integrity checks and all unresolved teaching-quality
+flags are explicitly listed.
+
+End exactly:
+
+FULL BETA PRACTICE INTEGRITY AUDIT COMPLETE — AWAITING FOUNDER REVIEW
+
+Then STOP.
+
+TRACE:
+CHAT #020
+REPLIT PROMPT #020
+FULL PRACTICE INTEGRITY AUDIT
+20-Aug-2026
