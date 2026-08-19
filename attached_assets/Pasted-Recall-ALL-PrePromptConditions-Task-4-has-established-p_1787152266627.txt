@@ -1,0 +1,266 @@
+Recall ALL PrePromptConditions.
+
+Task #4 has established:
+
+* persistent pre-generated Detailed lessons work;
+* valid pilot lesson complete browser paint ≈597 ms;
+* runtime AI calls = 0;
+* academic source-of-truth remains the frozen question bank.
+
+DO NOT regenerate the 20 lessons.
+
+DO NOT generate any additional lessons.
+
+We now need to remove ONE confirmed scalability blocker BEFORE batch generation:
+
+The current 20 lessons are statically imported into the Solution chunk as one complete collection.
+
+This architecture must NOT be scaled to 1,375+ lessons.
+
+==================================================
+IRREVERSIBLE END STATE
+======================
+
+Pre-generated Detailed lessons must remain persistent static derived assets, but the browser must load ONLY the smallest relevant lesson chunk required for the selected question.
+
+Future additions such as:
+
+* more IT units;
+* Bengal Board;
+* other boards;
+* additional classes;
+* additional subjects;
+* Bengali-medium content;
+
+must NOT increase the initial Solution payload proportionally to the total global lesson count.
+
+==================================================
+ARCHITECTURE — MINIMUM SAFE CHANGE
+==================================
+
+Implement LAZY CHAPTER-LEVEL LESSON CHUNKS.
+
+Do NOT use:
+
+* one giant lesson file;
+* one file per question;
+* database;
+* Redis;
+* external object storage;
+* new backend service;
+* new curriculum registry;
+* new source of truth.
+
+Use the EXISTING question/curriculum metadata to determine the appropriate lesson chunk.
+
+Conceptually:
+
+board/class/subject/chapter
+→ lazy import appropriate pre-generated lesson chunk
+→ lookup questionId
+→ validate hash
+→ render Detailed lesson.
+
+Do not hardcode today's Mathematics/Science/IT chapter list.
+
+The generator must derive the destination chunk from existing authoritative question/chapter metadata.
+
+==================================================
+IMPORTANT — NO DUPLICATE REGISTRY
+=================================
+
+Do NOT create a second manually maintained map of:
+
+questionId → chapter → file.
+
+Generated import metadata is acceptable ONLY if automatically produced by the generator/build process.
+
+There must be ONE academic source of truth.
+
+Generated lesson/chunk metadata is derived data only.
+
+==================================================
+PILOT MIGRATION
+===============
+
+Migrate ONLY the existing 20 pilot lessons into the new lazy chapter-level structure.
+
+Do NOT regenerate their AI content.
+
+Do NOT call OpenAI.
+
+Preserve:
+
+* lesson content;
+* source hash;
+* questionId;
+* final-answer validation.
+
+Delete/retire the old eager 20-lesson import path only after the lazy path is verified.
+
+Do not leave two active lesson-serving architectures.
+
+==================================================
+RUNTIME FLOW
+============
+
+For a bank question:
+
+1. Resolve existing authoritative question.
+2. Determine its existing board/class/subject/chapter identity.
+3. Lazy-load ONLY its generated lesson chunk.
+4. Lookup questionId.
+5. Validate source hash + completeness + final-answer equality.
+6. If valid:
+   → render immediately;
+   → 0 AI calls.
+7. If missing/stale/invalid:
+   → current streamed Detailed fallback unchanged.
+
+New typed/scanned questions:
+→ unchanged.
+
+==================================================
+PERFORMANCE GATE
+================
+
+Using ACTUAL browser instrumentation, test all 20 existing pilot questions.
+
+Record:
+
+* click → URL
+* click → first teaching DOM
+* click → complete Detailed DOM
+* click → paint
+* lazy chunk transfer size
+* total new network bytes after click
+* AI calls.
+
+Target:
+
+* complete Detailed paint ≤1 second under normal local/test conditions;
+* 0 runtime AI calls;
+* unrelated lesson chunks must NOT load.
+
+Also verify:
+
+Opening a Maths lesson must NOT download Science/IT lesson chunks.
+
+Opening IT must NOT download Maths/Science lesson chunks.
+
+==================================================
+SCALABILITY GATE
+================
+
+Do NOT generate dummy lesson content.
+
+From actual chunk architecture and current average lesson size, report expected behaviour at:
+
+* 1,375 lessons
+* 5,000
+* 10,000
+* 50,000
+* 100,000
+
+Most importantly report:
+
+A. estimated TOTAL stored assets;
+B. estimated lesson bytes downloaded for ONE ordinary question;
+C. whether browser payload for one question grows with GLOBAL question count;
+D. expected number of generated chapter chunks.
+
+The desired answer for C is:
+
+**No material proportional growth with global lesson count.**
+
+==================================================
+GENERATOR COMPATIBILITY
+=======================
+
+Without generating lessons, confirm generator supports future:
+
+* missing-only;
+* stale-only;
+* selected IDs;
+* one ID;
+* resume;
+* automatically writing lessons into correct chapter chunk.
+
+If current generator requires a minimal change for chunk output, make ONLY that change.
+
+==================================================
+PROTECTED
+=========
+
+Do NOT modify:
+
+* frozen questions/answers;
+* Gold Standard;
+* curriculum content;
+* canonical curriculum rules;
+* teaching schema/content;
+* AI model;
+* planner;
+* Practice UI;
+* Solution UI appearance;
+* progress;
+* auth;
+* streaming fallback behaviour;
+* navigation behaviour.
+
+No teaching-content changes.
+
+No latency experiments unrelated to static lesson loading.
+
+No AI calls.
+
+==================================================
+VALIDATION
+==========
+
+Verify:
+
+* all 20 pilot lessons preserved byte/content-equivalently where practical;
+* frozen final answers unchanged;
+* source hashes unchanged;
+* 20/20 static validity;
+* 0 runtime AI calls;
+* localStorage clear works;
+* server restart works;
+* unrelated chunks not loaded;
+* non-pregenerated lookup still falls through to existing stream path without actually triggering an AI test unnecessarily;
+* TypeScript/build passes.
+
+==================================================
+RETURN ONLY
+===========
+
+1. files added/changed/deleted;
+2. exact lazy-chunk structure;
+3. how question → chunk resolution works;
+4. confirmation no duplicate manual registry;
+5. confirmation 20 lessons were migrated, NOT regenerated;
+6. AI calls during implementation;
+7. browser latency table for all 20;
+8. per-question/chapter network payload;
+9. proof unrelated chunks are not loaded;
+10. current total lesson storage size;
+11. projected storage at 1,375 / 5k / 10k / 50k / 100k;
+12. projected ONE-question browser lesson payload at those same scales;
+13. number of expected chunks;
+14. missing/stale/resume generator behaviour;
+15. persistence checks;
+16. TypeScript/build/tests;
+17. regressions/blockers.
+
+Do NOT generate question 21.
+
+Do NOT start batch generation.
+
+Do NOT create another task automatically.
+
+If all gates pass, end exactly:
+
+TASK #4B LAZY LESSON ARCHITECTURE PASSED — READY FOR CONTROLLED BATCH GENERATION
+
+Then STOP.
