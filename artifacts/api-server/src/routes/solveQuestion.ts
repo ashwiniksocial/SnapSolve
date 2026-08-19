@@ -164,18 +164,8 @@ No markdown fences. No extra text. No explanation outside JSON.
 
   "finalAnswer": {
     "answer": string,
-    "whyCorrect": string,
-    "verification": string
+    "whyCorrect": string
   },
-
-  "beforeWeStart": {
-    "motivator": string,
-    "anxietyReducer": string,
-    "preview": string
-  },
-
-  "prerequisites": string[],
-  "vocabulary": [{ "term": string, "meaning": string }],
 
   "intuition": {
     "story": string,
@@ -190,14 +180,6 @@ No markdown fences. No extra text. No explanation outside JSON.
     "wordToMath": string
   },
 
-  "teacherThinking": {
-    "firstNotice": string,
-    "whyThisMethod": string,
-    "clues": string
-  },
-
-  "confusionPoints": string[],
-
   "commonMistakes": [
     {
       "mistake": string,
@@ -205,14 +187,6 @@ No markdown fences. No extra text. No explanation outside JSON.
       "howToAvoid": string
     }
   ],
-
-  "examinerThinking": {
-    "whyAsked": string,
-    "conceptTested": string,
-    "topperInsight": string,
-    "examTip": string,
-    "examTrap": string
-  },
 
   "simplerExample": {
     "problem": string,
@@ -223,18 +197,7 @@ No markdown fences. No extra text. No explanation outside JSON.
     "question": string,
     "hints": [string, string, string],
     "solution": string
-  },
-
-  "confidenceCheck": {
-    "question": string,
-    "options": [string, string, string, string],
-    "correctIndex": number,
-    "explanation": string
-  },
-
-  "retrievalPractice": string[],
-  "rememberThese": string[],
-  "confidenceBuilder": string
+  }
 }
 
 ═══════════════════════════════════════════════════════════════
@@ -252,48 +215,24 @@ BASIC  (struggling student, score ~30–50, slow learner):
                       Never combine two operations on one line.
                       The WHY for each step: 3–5 full sentences.
                       Use analogies in the WHY whenever possible.
-  • vocabulary      : 6–10 terms. MANDATORY — include ALL of these categories:
-                        (a) Every subject-specific term in the question/solution.
-                        (b) Operation words the student may not know: "simplify",
-                            "substitute", "isolate", "evaluate", "express", "formula",
-                            "expression", "coefficient", "variable" — add whichever appear.
-                        (c) Any geometry or algebra word used, even if it seems basic.
-                      Do NOT stop at 4–5 terms. Keep adding until you have 6–10.
-  • prerequisites   : 4–6 items. Start from absolute basics — arithmetic operations,
-                      number sense, what letters mean in maths, basic formulas used.
-                      Never write fewer than 4 prerequisite items for a BASIC student.
   • intuition.story : 5–7 sentences. Rich everyday context, no assumed knowledge.
   • simplerExample  : 6–8 sentences for the solution. Show every sub-step.
-  • confusionPoints : Predict beginner mistakes. Resolve each fully (3–4 sentences).
   • practiceQuestion.hints : Three very specific hints, each nudging one sub-step.
-  • beforeWeStart   : Warm, explicit anxiety acknowledgement. 3–4 sentences.
 
 STANDARD  (average student, score ~50–75, moderate pace):
   • guidedReasoning : 4–6 steps. Combine only obvious sub-operations.
                       The WHY for each step: 2–3 sentences.
-  • vocabulary      : 4–6 terms. Subject-specific and non-obvious terms only.
-  • prerequisites   : 3–4 items. Core prerequisites directly needed.
   • intuition.story : 3–5 sentences.
   • simplerExample  : 4–6 sentences for the solution.
-  • confusionPoints : 2–3 sentences each.
   • practiceQuestion.hints : Three progressive hints.
-  • beforeWeStart   : Encouraging, balanced. 2–3 sentences.
 
 ADVANCED  (strong student, score ~75–95, fast learner):
   • guidedReasoning : 3–4 steps. Combine routine operations into one step.
                       The WHY for each step: 1–2 sentences. State the rule concisely.
-  • vocabulary      : 2–4 terms. MANDATORY — skip any term a strong Class 8–10 student
-                      already knows (area, perimeter, rectangle, add, subtract, ratio, etc.).
-                      Only define genuinely non-obvious or advanced terms specific to
-                      THIS problem's method. If all terms are standard, write only 2.
-  • prerequisites   : 1–3 items. Only the single most direct prerequisite(s) needed.
-                      Do NOT list foundational arithmetic — assume it is known.
   • intuition.story : 2–3 sentences. Brief conceptual framing, no hand-holding.
   • simplerExample  : 3–4 sentences for the solution. Concise.
-  • confusionPoints : 1–2 sentences each — name the confusion and resolve it tersely.
   • practiceQuestion.hints : Three hints that progressively unlock the method,
                              without spelling out each arithmetic step.
-  • beforeWeStart   : Brief. Skip extensive motivation — strong students don't need it.
 
 These targets override any conflicting default length guidance below.
 Depth is the primary axis of differentiation. Enforce it strictly.
@@ -333,43 +272,6 @@ finalAnswer.answer
 finalAnswer.whyCorrect
   Explain why this answer is correct and why it makes sense.
   Sanity-check the magnitude and units. 1–2 sentences.
-
-finalAnswer.verification
-  Substitute the answer back into the original equation or condition.
-  Show every substitution step. Confirm LHS = RHS.
-  End with: "LHS = RHS ✓  The answer is verified."
-
-BEFORE WE START
-━━━━━━━━━━━━━━
-beforeWeStart.motivator
-  Why does this topic exist? Where is it used in the real world?
-  Why did the board include it? Give 2–3 concrete, exciting examples.
-  Connect it to something the student sees or uses every day.
-  2–4 sentences. No jargon. No formula yet.
-
-beforeWeStart.anxietyReducer
-  This question WILL look scary to a weak student.
-  Acknowledge that directly. Then tell them exactly why it is manageable.
-  Use encouraging language: "Don't worry", "We'll go through this together", "By the time we finish..."
-  2–3 sentences.
-
-beforeWeStart.preview
-  Tell the student exactly what they will know by the end.
-  Use a list-style sentence: "By the end you will know: (1) what X means, (2) why Y works, (3) how to solve Z."
-  1–2 sentences.
-
-PREREQUISITES + VOCABULARY
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-prerequisites
-  3–6 concept names the student MUST know first.
-  Start from absolute basics. If the question involves fractions, "how fractions work" is a prerequisite.
-
-vocabulary
-  Every unfamiliar word, symbol, or phrase used in the question or solution MUST appear here.
-  Include mathematical terms (e.g. "rational number"), symbols (e.g. "√"), and any word a weak student may not know.
-  Each meaning: 1–2 plain sentences. No jargon in the meaning. Use analogies.
-  Minimum 4 terms (BASIC/STANDARD) or minimum 2 terms (ADVANCED). Maximum 10.
-  The EXPLANATION DEPTH section above overrides this floor — ADVANCED may use 2–4 terms.
 
 INTUITION
 ━━━━━━━━━
@@ -412,31 +314,6 @@ questionTranslation.wordToMath
   "its complement → 90 − x  (complementary angles always sum to 90°)"
   Never jump to the final equation. Build it phrase by phrase.
 
-TEACHER THINKING
-━━━━━━━━━━━━━━━
-teacherThinking.firstNotice
-  What should a good student notice immediately when reading this question?
-  What kind of problem is this? What category does it fall in?
-  2–3 sentences. First-person student voice: "I notice that...", "I see that..."
-
-teacherThinking.whyThisMethod
-  Why do we choose this specific method/approach for this problem?
-  Why NOT a different approach? What would go wrong if we tried another way?
-  3–4 sentences.
-
-teacherThinking.clues
-  What hidden clues does the question contain?
-  Which words or numbers are hints about what method to use?
-  2–3 sentences.
-
-CONFUSION POINTS
-━━━━━━━━━━━━━━━
-confusionPoints
-  Exactly 3 strings.
-  Predict the 3 most likely points of confusion for a weak student.
-  Each string: name the confusion, then immediately resolve it.
-  Format: "A student might wonder why we [X]. The reason is [Y]."
-
 COMMON MISTAKES
 ━━━━━━━━━━━━━━
 commonMistakes
@@ -444,27 +321,6 @@ commonMistakes
   mistake: Name the specific wrong thing students do. Start with "❌".
   whyItHappens: The root cause — which misconception or habit causes it.
   howToAvoid: A specific, actionable rule to prevent it permanently.
-
-EXAMINER THINKING
-━━━━━━━━━━━━━━━━
-examinerThinking.whyAsked
-  Why did the board choose to test this? What skill are they measuring?
-  1–2 sentences.
-
-examinerThinking.conceptTested
-  Name the exact concept or theorem being tested. 1 sentence.
-
-examinerThinking.topperInsight
-  What do top-scoring students recognise immediately that average students miss?
-  1–2 sentences.
-
-examinerThinking.examTip
-  The single most useful exam-day shortcut. Ultra-short. Memorisable.
-  1–2 sentences.
-
-examinerThinking.examTrap
-  The specific CBSE/ICSE trap in this question type that costs marks.
-  Name the exact mistake. 1–2 sentences.
 
 SIMPLER EXAMPLE
 ━━━━━━━━━━━━━━
@@ -492,21 +348,6 @@ practiceQuestion.solution
   The complete solution with every step shown. Written as a tutor walking through it.
   5–8 sentences.
 
-CONFIDENCE CHECK (MCQ)
-━━━━━━━━━━━━━━━━━━━━
-confidenceCheck.question
-  One MCQ testing WHY a key step was taken, not just the final answer.
-  1 clear sentence.
-
-confidenceCheck.options
-  Exactly 4 options. One correct. Three plausible but wrong.
-
-confidenceCheck.correctIndex
-  0-based index of the correct option.
-
-confidenceCheck.explanation
-  Why the correct option is right. 1–2 sentences.
-
 ═══════════════════════════════════════════════════════════════
 ABSOLUTE LANGUAGE RULES — Zero exceptions
 ═══════════════════════════════════════════════════════════════
@@ -519,12 +360,8 @@ MATH: Never skip any step. Never combine two operations into one line.
 ═══════════════════════════════════════════════════════════════
 QUALITY CHECK — Run silently before outputting JSON
 ═══════════════════════════════════════════════════════════════
-□ Did a student scoring 20/100 get welcomed, not intimidated, in beforeWeStart?
-□ Did I define EVERY unfamiliar word in vocabulary?
 □ Did I explain the WHY for every step in guidedReasoning?
 □ Did I show every arithmetic calculation without skipping?
-□ Did I predict and resolve the 3 most likely confusions?
-□ Did I explain the CBSE/ICSE exam trap specifically?
 □ Did I provide a fully worked simplerExample?
 □ Did I give 3 progressive hints for practiceQuestion without solving it?
 □ Could a student currently scoring 20/100 read this lesson and solve a similar problem independently?
@@ -1093,15 +930,8 @@ These rules OVERRIDE all field-level defaults below.
 • guidedReasoning: Write 6–8 steps. Split EVERY sub-operation onto its own step.
   Even trivial arithmetic like "15 ÷ 3 = 5" gets its own step with its own WHY.
   WHY per step: 3–5 sentences. Use everyday analogies. Justify every rule.
-• vocabulary: Write 6–10 terms. Include all subject terms PLUS any operation
-  words that appear (simplify, substitute, isolate, evaluate, formula,
-  expression, coefficient, variable, factor, multiple, etc.).
-  DO NOT stop at 4–5. Count the terms and keep adding until you reach 6.
-• prerequisites: Write 4–6 items. Start from arithmetic basics and number sense.
-  Never write fewer than 4 prerequisite items.
 • intuition.story: 5–7 sentences. Rich, relatable everyday context.
-• simplerExample.solution: 6–8 sentences. Show every arithmetic sub-step.
-• beforeWeStart.anxietyReducer: 3–4 warm, encouraging sentences.`,
+• simplerExample.solution: 6–8 sentences. Show every arithmetic sub-step.`,
 
   STANDARD: ``,
 
@@ -1113,17 +943,8 @@ These rules OVERRIDE all field-level defaults below.
 ═══════════════════════════════════════════════════════════════
 • guidedReasoning: Write 3–4 steps. Combine routine sub-operations freely.
   WHY per step: 1–2 sentences. State the rule name, then move on. No analogies.
-• vocabulary: Write 2–4 terms ONLY. The "Minimum 4" floor does NOT apply here.
-  SKIP any term a strong Class 8–10 student already knows:
-  (area, perimeter, rectangle, triangle, multiply, divide, add, subtract,
-  ratio, fraction, equal, formula, variable, equation — skip these).
-  Only define genuinely non-obvious or problem-specific terms.
-  If all terms are standard, write exactly 2 terms.
-• prerequisites: Write 1–3 items. Assume arithmetic and basic algebra are known.
-  Only list the direct concept this problem builds on.
 • intuition.story: 2–3 sentences. Brief conceptual framing only.
-• simplerExample.solution: 3–4 sentences. Concise. Skip trivial sub-steps.
-• beforeWeStart: Keep very brief — strong students don't need extensive motivation.`,
+• simplerExample.solution: 3–4 sentences. Concise. Skip trivial sub-steps.`,
 };
 
 // ─── Standard-mode: question translation relevance classifier ────────────────
@@ -1900,7 +1721,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       ``,
       `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above.`,
       `guidedReasoning MUST follow the approved reasoning (you may add depth to why/pause).`,
-      `All other sections (intuition, vocabulary, commonMistakes, simplerExample, practiceQuestion, rememberThese) should be authored with full pedagogical depth.`,
+      `All other visible sections (intuition, commonMistakes, simplerExample, practiceQuestion) should be authored with full pedagogical depth.`,
       ``,
       `Subject: ${subj}`,
       ``,

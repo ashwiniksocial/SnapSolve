@@ -1,0 +1,114 @@
+Recall PrePromptConditions.
+
+Implement ONE confirmed performance optimisation only.
+
+The read-only diagnostic established that approximately 937 completion tokens per Detailed lesson are spent generating fields that are NEVER rendered to the Beta student.
+
+Removing them does not reduce visible teaching quality.
+
+### Remove from Detailed generation ONLY
+
+Stop generating these currently invisible fields:
+
+* `beforeWeStart`
+* `prerequisites`
+* `vocabulary`
+* `teacherThinking`
+* `confusionPoints`
+* `examinerThinking`
+* `confidenceCheck`
+* `retrievalPractice`
+* `rememberThese`
+* `confidenceBuilder`
+* `finalAnswer.verification`
+
+Do NOT merely hide them — they are already hidden.
+
+Remove them from the Detailed generation schema/prompt so OpenAI does not spend tokens producing them.
+
+### KEEP UNCHANGED
+
+These are the visible/essential Detailed teaching fields and MUST remain:
+
+* topic / difficulty
+* keyConcepts
+* guidedReasoning
+* finalAnswer.answer
+* finalAnswer.whyCorrect
+* intuition
+* questionTranslation
+* commonMistakes
+* simplerExample
+* practiceQuestion
+
+Do NOT shorten their content.
+
+Do NOT reduce reasoning-step quality.
+
+Do NOT change:
+
+* model
+* token budget unless the removed schema safely allows lowering only the hard ceiling without truncation
+* streaming
+* planner
+* question banks
+* Gold Standard
+* curriculum
+* UI
+* navigation
+* cache architecture
+* scroll behaviour
+
+### Renderer compatibility
+
+Before removing fields, confirm no CURRENT Beta Detailed renderer actually references any of them.
+
+If any removed field is still referenced by runtime code, remove only the obsolete reference needed to prevent an empty/error state.
+
+Do not redesign the renderer.
+
+### Validate
+
+Use one fresh uncached question each:
+
+* Mathematics
+* Science
+* Information Technology
+
+Compare before/after:
+
+* first meaningful content latency
+* first worked step latency
+* final answer latency
+* full lesson completion latency
+* completion tokens
+* estimated cost
+* visible Detailed sections
+* teaching quality sanity
+
+Acceptance:
+
+* all current visible Detailed sections remain present;
+* no visible teaching content lost;
+* no blank sections;
+* no new AI calls;
+* completion tokens materially reduced;
+* full completion materially faster;
+* TypeScript passes.
+
+Report only:
+
+1. files changed
+2. fields removed
+3. confirmation none were visible
+4. before/after token count
+5. before/after latency
+6. before/after cost
+7. visible Detailed-section verification
+8. TypeScript result
+
+Then STOP.
+
+End exactly:
+
+**INVISIBLE DETAILED GENERATION REMOVED — VISIBLE TEACHING UNCHANGED**

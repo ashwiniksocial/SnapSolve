@@ -32,23 +32,13 @@ const LESSON_JSON_STRUCTURE = `{
   "difficulty": "Easy" | "Medium" | "Hard",
   "keyConcepts": string[],
   "aiConfidence": number,
-  "beforeWeStart": { "motivator": string, "anxietyReducer": string, "preview": string },
-  "prerequisites": string[],
-  "vocabulary": [{ "term": string, "meaning": string }],
   "intuition": { "story": string, "visual": string, "everyday": string },
   "questionTranslation": { "plainEnglish": string, "whatWeKnow": string, "whatWeFind": string, "wordToMath": string },
-  "teacherThinking": { "firstNotice": string, "whyThisMethod": string, "clues": string },
   "guidedReasoning": [{ "what": string, "why": string, "math": string, "result": string, "pause": string }],
-  "confusionPoints": string[],
   "commonMistakes": [{ "mistake": string, "whyItHappens": string, "howToAvoid": string }],
-  "examinerThinking": { "whyAsked": string, "conceptTested": string, "topperInsight": string, "examTip": string, "examTrap": string },
-  "finalAnswer": { "answer": string, "whyCorrect": string, "verification": string },
+  "finalAnswer": { "answer": string, "whyCorrect": string },
   "simplerExample": { "problem": string, "solution": string },
-  "practiceQuestion": { "question": string, "hints": [string, string, string], "solution": string },
-  "confidenceCheck": { "question": string, "options": [string, string, string, string], "correctIndex": number, "explanation": string },
-  "retrievalPractice": string[],
-  "rememberThese": string[],
-  "confidenceBuilder": string
+  "practiceQuestion": { "question": string, "hints": [string, string, string], "solution": string }
 }`;
 
 // ─── Build the improve system prompt ─────────────────────────────────────────
@@ -101,9 +91,9 @@ IMPROVEMENT RULES — Follow every rule without exception
 □ NEVER shorten any section. Only expand.
 □ FIX every issue listed above. Do not leave any unresolved.
 □ ANSWER every student confusion proactively in the appropriate section.
-□ vocabulary — define EVERY term, symbol, and phrase before it appears. No exceptions.
+□ Define every term, symbol, and phrase in the visible questionTranslation or guidedReasoning where it first appears.
 □ guidedReasoning — add explicit WHY for every step. Show every algebra and arithmetic line.
-□ confusionPoints — rewrite to directly address the confusions listed above.
+□ Address student confusions directly in guidedReasoning and commonMistakes.
 □ simplerExample — use even simpler numbers. Show every single step.
 □ practiceQuestion — hints must guide WITHOUT solving. Three separate ideas, each one step closer.
 □ Read the result as a student scoring 20/100. If they would be confused anywhere — fix it.
