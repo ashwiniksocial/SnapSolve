@@ -1,0 +1,222 @@
+SNAPSOLVE — PROMPT #026 — OPEN CONTROLLED STUDENT/PARENT BETA
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate, cost-control rules, architecture rules, regression-prevention rules, and Build → Validate → Freeze → Next discipline BEFORE execution.
+
+THIS IS A BETA-ENABLEMENT TASK, NOT A DEVELOPMENT/AUDIT TASK.
+
+CURRENT FROZEN STATE:
+
+- Active Beta bank: 1,375 questions / 22 chapters
+- Mathematics: verified
+- Science: verified
+- Information Technology: verified
+- Practice core flow: founder-verified
+- Practice → Solution canonical metadata parity: verified
+- Easy / Medium / Hard drill-downs: verified
+- I Am Confident / Need More Practice: verified
+- Floating navigation: verified
+- 20/20 pre-generated pilot lessons: valid and FROZEN
+- Remaining questions use existing streamed fallback
+- Production build: PASS
+- Regression suite: PASS
+
+DO NOT RE-AUDIT OR REBUILD THESE SYSTEMS.
+
+PRIMARY GOAL:
+
+Make the EXISTING SnapSolve application ready for a small controlled real-world Beta test with students and parents using the EXISTING authentication and Beta-access architecture.
+
+DO NOT add feature scope.
+
+STEP 1 — INSPECT EXISTING BETA ACCESS SYSTEM FIRST
+
+Determine exactly how the current:
+- Clerk authentication
+- Beta Access Pending screen
+- /api/beta/check
+- beta approval/allowlist
+- user identity
+- admin approval mechanism, if one exists
+
+currently work.
+
+REUSE the existing system.
+
+Do NOT create a second Beta-access system.
+Do NOT replace Clerk.
+Do NOT create duplicate user databases.
+Do NOT redesign authentication.
+
+STEP 2 — MAKE THE SMALLEST CHANGE REQUIRED FOR REAL TESTERS
+
+Founder must be able to admit a small number of real students/parents into Beta.
+
+If the existing architecture already supports approval:
+use it and make only the minimum missing connection/UI change required.
+
+If founder approval can already be performed safely through an existing admin mechanism:
+DO NOT build another approval interface.
+
+If no usable approval mechanism exists:
+implement the smallest safe founder-only approval mechanism using the existing Beta-access data model.
+
+Required Beta journey:
+
+Student/Parent
+→ Sign in
+→ Beta eligibility checked
+→ Approved user enters SnapSolve
+→ Unapproved user sees Beta Access Pending
+→ Approved user can use the existing Beta product normally.
+
+Do not build invitations, referral systems, waitlist marketing, onboarding campaigns, subscription systems, payment systems or elaborate administration.
+
+STEP 3 — PRESERVE CURRENT PRODUCT
+
+DO NOT MODIFY unless absolutely required for Beta access:
+
+- question bank
+- curriculum
+- canonical metadata
+- Practice
+- Solution teaching architecture
+- generated lesson corpus
+- readiness
+- progress calculations
+- confidence logic
+- difficulty logic
+- Scan
+- navigation
+- floating navigation
+- teaching engines
+- AI prompts
+- streaming architecture
+
+No lesson generation.
+No question generation.
+No AI/API calls for implementation/testing.
+
+STEP 4 — BETA FEEDBACK
+
+FIRST inspect whether SnapSolve already has a usable feedback mechanism.
+
+If a simple existing mechanism exists, REUSE IT.
+
+If none exists, add ONLY a very small non-intrusive Beta feedback entry point.
+
+Maximum required feedback:
+
+1. Tester type:
+   Student / Parent
+
+2. Overall experience:
+   1–5
+
+3. What went wrong or was confusing?
+   Free text
+
+4. What did you like?
+   Free text
+
+5. Optional:
+   Which screen/question were you using?
+
+Do NOT build analytics dashboards, ticketing systems, surveys, NPS infrastructure or another large subsystem.
+
+Prefer the smallest existing persistence mechanism already available in the architecture.
+
+STEP 5 — BETA COST PROTECTION
+
+Before enabling Beta, verify existing AI solution calls have appropriate safeguards against obvious duplicate/repeated accidental requests.
+
+DO NOT redesign caching or AI architecture.
+
+Only report whether existing protection is adequate for a small controlled Beta.
+
+If a confirmed P0 cost leak exists, STOP and report it rather than expanding scope.
+
+STEP 6 — VALIDATE THE REAL USER JOURNEY
+
+Validate:
+
+A. Unauthenticated user
+→ sign-in
+
+B. Authenticated but unapproved user
+→ Beta Access Pending
+
+C. Approved Beta user
+→ application opens
+
+D. Approved user
+→ Practice
+→ select real question
+→ AI Lesson/Solution
+→ return to questions
+
+E. Approved user
+→ self-assessment
+→ readiness/progress updates correctly
+
+F. Feedback submission works, if feedback implementation was required.
+
+Use existing deterministic/static/pre-generated paths where possible to avoid unnecessary AI cost during testing.
+
+Do NOT use bulk AI/API calls.
+
+STEP 7 — PROVIDE FOUNDER OPERATING INSTRUCTIONS
+
+At completion tell me, in plain English:
+
+1. EXACTLY how I add/approve a Beta tester.
+2. What information I need from the tester.
+3. What URL I send the tester.
+4. What the tester sees before approval.
+5. What the tester sees after approval.
+6. How I revoke Beta access if required.
+7. Where tester feedback is stored/viewed.
+8. Any expected AI/API cost exposure during Beta.
+
+Keep founder instructions short.
+
+VALIDATION:
+
+Run only existing necessary checks:
+
+- TypeScript
+- production build
+- relevant existing regression tests
+
+Do NOT rerun broad academic/content audits unless directly required by a changed file.
+
+COST/CHANGE REPORT:
+
+Report:
+- files changed
+- systems reused
+- new systems created
+- AI/API calls during implementation
+- whether any frozen area was modified
+- production build result
+- Beta access test result
+- feedback test result
+- estimated operational AI-cost risk: LOW / MEDIUM / HIGH with reason
+
+STRICT SUCCESS CONDITION:
+
+A real student/parent can:
+SIGN IN → BE APPROVED → ENTER SNAPSOLVE → PRACTICE → OPEN SOLUTION → RECORD SELF-ASSESSMENT → SUBMIT SIMPLE FEEDBACK.
+
+Founder can approve and revoke testers without developer intervention.
+
+NO unrelated feature work.
+NO broad audit.
+NO redesign.
+NO polishing.
+NO scope expansion.
+
+If the existing system already satisfies any requirement, VERIFY IT AND LEAVE IT ALONE.
+
+At completion end exactly:
+
+CONTROLLED BETA READY — AWAITING REAL STUDENT/PARENT TESTERS
