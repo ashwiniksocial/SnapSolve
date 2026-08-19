@@ -23,7 +23,6 @@ import {
   readinessDrilldownLabel,
   type ReadinessDrilldown,
 } from "@/services/practiceReadiness";
-import FloatingPageNavigation from "@/components/FloatingPageNavigation";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const DIFFICULTIES: (Difficulty | "All")[] = ["All", "Easy", "Medium", "Hard"];
@@ -969,7 +968,6 @@ export default function Practice() {
           </div>
         )}
       </div>
-      <FloatingPageNavigation />
     </div>
   );
 }

@@ -599,10 +599,33 @@ export async function loadStudentVisibleQuestions(): Promise<ReviewableQuestion[
   }
 
   const all = await loadAllQuestions();
-  return all.filter((question) => {
+  const standardVisible = all.filter((question) => {
     if (question.schema === "v1") return activeV1QuestionIds.has(question.id);
     return getCanonicalChapter(question.chapterId)?.status === "ACTIVE";
   });
+
+  // This frozen mixed module contains two otherwise valid V1 chapters. It stays
+  // out of loadAllQuestions() to prevent Earth Science from entering generic
+  // beta audits, but its active Biology chapter is part of the browser's
+  // student-facing Science gateway and must be represented here as well.
+  const placeholderPath = join(HH_DATA, "class9-science-placeholders.ts");
+  let biologyPlaceholderQuestions: ReviewableQuestion[] = [];
+  if (existsSync(placeholderPath)) {
+    try {
+      const mod = await import(placeholderPath) as Record<string, unknown>;
+      const rawQuestions = mod["CLASS9_SCIENCE_PLACEHOLDER_QUESTIONS"];
+      if (Array.isArray(rawQuestions)) {
+        biologyPlaceholderQuestions = (rawQuestions as AnyObj[])
+          .filter((question) => question?.["subject"] === "Biology")
+          .map(normalizeV1);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      process.stderr.write(`  [LOAD-ERROR] ${placeholderPath.split("/").slice(-3).join("/")}: ${msg}\n`);
+    }
+  }
+
+  return [...standardVisible, ...biologyPlaceholderQuestions];
 }
 
 // ─── Filter + should-review logic ────────────────────────────────────────────

@@ -21,7 +21,6 @@ import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
 import SocraticTutor from "@/components/socratic/SocraticTutor";
-import FloatingPageNavigation from "@/components/FloatingPageNavigation";
 import { getMasteryEntry } from "@/services/studentModel";
 
 type PageState = "loading" | "done" | "error";
@@ -416,7 +415,6 @@ export default function Solution() {
           </div>
         )}
       </div>
-      <FloatingPageNavigation />
     </div>
   );
 }

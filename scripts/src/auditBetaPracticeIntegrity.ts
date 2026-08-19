@@ -16,7 +16,7 @@ import type { Question } from "../../artifacts/homework-hero/src/data/questions/
 
 const repoRoot = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const chunksDirectory = resolve(repoRoot, "artifacts/homework-hero/src/data/generatedLessonChunks");
-const BETA_SUBJECTS = new Set(["Mathematics", "Physics", "Chemistry", "Biology", "Information Technology", "Earth Science"]);
+const BETA_SUBJECTS = new Set(["Mathematics", "Physics", "Chemistry", "Biology", "Information Technology"]);
 
 function chunkKey(question: Pick<Question, "classNum" | "subject" | "chapterId">): string {
   return JSON.stringify([question.classNum, question.subject, question.chapterId]);

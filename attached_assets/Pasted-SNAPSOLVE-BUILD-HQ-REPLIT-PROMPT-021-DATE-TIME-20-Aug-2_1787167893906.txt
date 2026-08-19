@@ -1,0 +1,212 @@
+SNAPSOLVE BUILD HQ — REPLIT PROMPT #021
+DATE/TIME: 20-Aug-2026 | 00:34 IST
+PURPOSE: Fix missing floating Top/Middle/Bottom controls + reconcile active-bank count discrepancy
+STATUS: TARGETED P0/P1 FIX ONLY
+
+Recall and obey ALL PrePromptConditions.
+
+FOUNDER REVIEW AFTER TASK #7:
+
+The full Practice integrity audit broadly passed.
+
+However TWO issues remain before Practice can be frozen:
+
+1. FLOATING TOP / MIDDLE / BOTTOM CONTROL IS STILL NOT VISIBLE
+2. AUDIT NOW REPORTS 1,300 ACTIVE QUESTIONS / 21 CHAPTERS, whereas the previously verified Beta scope was 1,375 questions.
+
+DO NOT modify unrelated Practice functionality.
+
+DO NOT touch Scan.
+
+DO NOT generate lessons.
+
+DO NOT regenerate the question bank.
+
+DO NOT modify Find a Question, readiness logic, drill-downs, IT numbering, Q-numbering, or lazy lesson architecture unless strictly required for the confirmed defects below.
+
+==================================================
+P0 — FLOATING NAVIGATION IS NOT VISIBLE
+==================================================
+
+Founder explicitly requested:
+
+↑ Top
+↕ Middle
+↓ Bottom
+
+Replit reports that a shared floating navigation component was added to Practice and Solution, but the Founder cannot see it on the tested pages.
+
+Therefore do NOT assume implementation success merely because the component exists in source.
+
+Trace the ACTUAL rendered path.
+
+Check:
+
+- Is the component mounted?
+- Is it inside the correct route/layout?
+- Is its visibility condition false?
+- Is scroll-height detection wrong?
+- Is the component hidden by CSS?
+- Is z-index too low?
+- Is it positioned outside the visible viewport?
+- Is it covered by the Replit preview frame / bottom nav?
+- Is it rendered only after some scroll threshold?
+- Is it hidden on desktop width?
+- Is it hidden because the wrong scroll container is being measured?
+- Is Practice/Solution scrolling inside an internal container rather than window?
+- Does the component listen to window when the real scroll happens on a nested element?
+
+Identify the exact root cause.
+
+==================================================
+REQUIRED END STATE
+==================================================
+
+On any meaningfully scrollable Practice or Solution page, Founder must visibly see ONE compact floating control with:
+
+↑ Top
+↕ Middle
+↓ Bottom
+
+Requirements:
+
+- clearly visible but unobtrusive
+- fixed to right side preferred
+- must remain visible while scrolling
+- must sit above bottom navigation
+- must not cover lesson/question content
+- usable on desktop and mobile
+- high enough z-index
+- smooth scrolling
+- works with the ACTUAL scroll container used by SnapSolve
+- hidden only on genuinely short pages
+
+Do NOT make it depend on an unreliable page-height threshold.
+
+If scroll-container architecture differs between Practice/Solution, the reusable component must support both safely.
+
+==================================================
+VALIDATE VISUALLY, NOT JUST BY CODE INSPECTION
+==================================================
+
+Use the authenticated/beta-capable browser path available to you if possible.
+
+If automated identity is blocked by Beta Access Pending, validate with the actual rendered DOM/CSS and provide exact browser evidence from accessible routes.
+
+At minimum prove:
+
+Practice long question list:
+- control exists in DOM
+- visible computed style
+- bounding rectangle inside viewport
+- z-index above page cards/bottom nav
+- Top works
+- Middle works
+- Bottom works
+
+Solution long Detailed answer:
+same checks.
+
+Also test one short page:
+- control may be hidden if scrolling is unnecessary.
+
+Return exact screenshots/DOM evidence if tooling permits.
+
+Do NOT claim success without verifying rendered visibility.
+
+==================================================
+P1 — RECONCILE 1,300 VS 1,375 QUESTIONS
+==================================================
+
+Previous verified Beta scope:
+
+Mathematics = 500
+Science = 725
+Information Technology = 150
+TOTAL = 1,375
+
+Task #7 now reports:
+
+1,300 active questions / 21 chapters
+
+Read-only trace the exact reason for the 75-question difference.
+
+Return:
+
+- current active Mathematics count
+- current active Physics count
+- current active Chemistry count
+- current active Biology count
+- current active IT count
+- chapter list and counts contributing to 1,300
+- exact chapter/question set excluded compared with the prior 1,375
+- whether exclusion is caused by:
+  - curriculumStatus
+  - cbseDeleted
+  - subject-scope mapping
+  - registry/gateway change
+  - accidental filter
+  - duplicate removal
+  - stale earlier report
+  - another reason
+
+IMPORTANT:
+
+Do NOT change curriculum status merely to force 1,375.
+
+First establish which count is currently correct according to the canonical active Beta gateway.
+
+If 1,300 is correct, explain exactly why.
+
+If 1,375 should still be correct, identify the regression and apply the smallest safe fix.
+
+==================================================
+DO NOT TOUCH THE 11 FLAGGED LESSONS YET
+==================================================
+
+Task #7 found 11 pre-generated lessons with advisory teaching-quality flags.
+
+Do NOT rewrite them in this task.
+
+Just preserve the list for the next Founder review step.
+
+==================================================
+VALIDATION
+==================================================
+
+Run:
+
+- frontend TypeScript
+- relevant tests
+- production build if affected
+
+Return:
+
+1. Floating-navigation root cause
+2. Files changed
+3. Exact fix
+4. Practice visibility verification
+5. Solution visibility verification
+6. Top/Middle/Bottom functional verification
+7. Mobile/desktop result
+8. Exact 1,300 count breakdown
+9. Exact reason for 1,300 vs 1,375
+10. Whether any curriculum/gateway fix was required
+11. Confirmation no unrelated Practice behaviour changed
+12. TypeScript/build result
+13. Git/worktree status
+14. Confirmation 11 flagged lessons remain untouched
+
+DO NOT continue into lesson-quality repair.
+
+End exactly:
+
+FLOATING NAVIGATION VERIFIED + ACTIVE BANK COUNT RECONCILED — AWAITING FOUNDER REVIEW
+
+Then STOP.
+
+TRACE:
+CHAT #021
+REPLIT PROMPT #021
+FLOATING NAVIGATION + ACTIVE BANK COUNT RECONCILIATION
+20-Aug-2026 00:34 IST

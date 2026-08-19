@@ -4,6 +4,7 @@ import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, Router as WouterRouter, Link, useLocation } from "wouter";
 import Home from "@/pages/Home";
+import FloatingPageNavigation from "@/components/FloatingPageNavigation";
 import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
 
 // Lazy-loaded routes — each becomes its own JS chunk loaded on first visit.
@@ -330,11 +331,15 @@ const AUTH_PATHS = ["/sign-in", "/sign-up", "/onboarding", "/dev"];
 function Router() {
   const [location] = useLocation();
   const hideNav = AUTH_PATHS.some(p => location.startsWith(p));
+  const showFloatingNavigation = location.startsWith("/practice") || location.startsWith("/solution");
 
   return (
     <>
       <ScrollToTop />
-      <div className={hideNav ? "min-h-screen" : "pb-20 min-h-screen"}>
+      <div
+        data-page-scroll-content
+        className={hideNav ? "min-h-screen" : "pb-20 min-h-screen"}
+      >
         <RouteErrorBoundary key={location}>
           <Suspense fallback={<PageLoader />}>
             <Switch>
@@ -352,6 +357,7 @@ function Router() {
           </Suspense>
         </RouteErrorBoundary>
       </div>
+      {showFloatingNavigation && <FloatingPageNavigation />}
       {!hideNav && <BottomNav />}
     </>
   );
