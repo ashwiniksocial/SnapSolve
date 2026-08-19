@@ -1,0 +1,202 @@
+Recall PrePromptConditions.
+
+STOP ALL OPTIMISATION.
+
+READ-ONLY DIAGNOSTIC ONLY.
+
+Founder manually timed actual student-facing answer generation in the browser AFTER the latest invisible-field removal.
+
+ACTUAL OBSERVED TIMES:
+
+MATHEMATICS — Class 9 Chapter 1
+Q1 = 4s
+Q2 = 11s
+Q3 = 13s
+Q48 = 17s
+Q49 = 14s
+Q50 = 15s
+
+SCIENCE — Class 9 Chapter 1
+Q1 = 19s
+Q2 = 24s
+Q3 = 27s
+Q73 = 35s
+Q74 = 34s
+Q75 = 36s
+
+INFORMATION TECHNOLOGY — Class 9 Chapter 1
+Q1 = 20s
+Q2 = 18s
+Q3 = 16s
+Q48 = 21s
+Q49 = 18s
+Q50 = 1s
+
+These browser measurements override synthetic assumptions.
+
+Founder requirement:
+Normal answer experience should be approximately 5–10 seconds maximum.
+
+Current performance is unacceptable, particularly Science.
+
+DO NOT CHANGE CODE.
+
+DO NOT:
+
+* modify prompts
+* modify schema
+* reduce teaching quality
+* remove visible sections
+* change model
+* change token limits
+* change streaming
+* change renderer
+* change cache
+* change question bank
+* change curriculum
+* add infrastructure
+* build pre-generation yet
+
+We need ROOT CAUSE before another change.
+
+### TASK 1 — Identify exact questions
+
+Resolve the exact question IDs corresponding to:
+
+Maths Ch1: Q1,Q2,Q3,Q48,Q49,Q50
+Science Ch1: Q1,Q2,Q3,Q73,Q74,Q75
+IT Ch1: Q1,Q2,Q3,Q48,Q49,Q50
+
+Report their:
+
+* question ID
+* question type
+* question text
+* stored answer/steps count
+* difficulty
+
+Do not edit them.
+
+### TASK 2 — Trace actual runtime path
+
+For EACH of these 18 questions determine:
+
+* local lesson cache hit/miss
+* server lesson cache hit/miss
+* bank lookup hit/miss
+* bank question ID successfully passed?
+* streamed bank-generation path used?
+* normal AI generation path used?
+* number of AI calls
+* model
+* prompt tokens
+* completion tokens
+* number of generated guidedReasoning steps
+* first content ms
+* first step ms
+* final answer ms
+* DONE/full completion ms
+* whether full completion is what currently controls what founder perceives as "answer generated"
+
+Do not regenerate all 18 merely for benchmarking if this would waste tokens.
+
+Use existing logs/cache/code trace wherever possible.
+
+Only make fresh calls where absolutely required to establish root cause.
+
+MAXIMUM 3 fresh AI calls:
+1 Maths
+1 Science
+1 IT.
+
+### TASK 3 — Explain Science discrepancy
+
+This is critical.
+
+Maths average observed ≈12.3 sec.
+Science average observed ≈29.2 sec.
+
+Science is more than twice as slow.
+
+Determine EXACTLY why.
+
+Check specifically:
+
+* Are Science questions using a different question object/schema?
+* Are Science IDs failing the intended bank fast path?
+* Is Science accidentally entering another generation path?
+* Are Science prompts materially larger?
+* Are Science lessons generating more steps?
+* Are Science answers much longer?
+* Is `bankContext` different/missing?
+* Is planner running for Science when it should be skipped?
+* Is another API/reviewer/improver call occurring?
+* Is cache-key generation mismatching Science IDs?
+* Is the Science chapter UI passing the correct `practiceQuestionId`?
+* Are Biology/Science adapter IDs handled differently from Maths/IT?
+* Is the frontend waiting for DONE rather than progressive content for these questions?
+
+Do not assume model throughput variance explains a consistent 19–36 second subject-level difference unless logs prove it.
+
+### TASK 4 — Explain IT Q50 = 1 second
+
+Determine whether IT Q50 was:
+
+* browser localStorage lesson-cache hit
+* server cache hit
+* some other fast path
+
+If it was a cache hit, state exactly which cache served it.
+
+This is important because it demonstrates the achievable student experience once a Detailed lesson already exists.
+
+### TASK 5 — Determine what the founder's stopwatch is actually measuring
+
+Founder starts stopwatch when clicking a question and stops when the usable answer appears.
+
+Trace:
+
+CLICK
+→ route
+→ Solution mount
+→ bank answer availability
+→ AI request
+→ first content
+→ first worked step
+→ final answer
+→ complete Detailed lesson
+→ React visible render
+
+Determine which event currently corresponds to the founder's observed 12–36 second completion.
+
+Do not infer. Correlate with actual runtime behaviour.
+
+### RETURN ONLY
+
+A. 18-question diagnostic table
+
+Question | ID | Cache | Runtime path | AI calls | Completion tokens | Steps | First content | First step | Final answer | DONE
+
+B. Maths vs Science vs IT comparison.
+
+C. Exact root cause(s) of the Science 19–36 sec behaviour.
+
+D. Exact explanation of IT Q50's 1-second result.
+
+E. Whether the frontend is actually displaying progressive content before DONE.
+
+F. Identify the SINGLE highest-impact next fix.
+
+G. Estimate what that single fix would do to the founder-observed latency WITHOUT reducing visible Detailed teaching quality.
+
+NO CODE CHANGES.
+
+NO IMPLEMENTATION.
+
+NO NEW ARCHITECTURE.
+
+Maximum 3 fresh AI calls.
+
+End exactly:
+
+REAL BROWSER LATENCY ROOT CAUSE IDENTIFIED — NO CHANGES MADE
