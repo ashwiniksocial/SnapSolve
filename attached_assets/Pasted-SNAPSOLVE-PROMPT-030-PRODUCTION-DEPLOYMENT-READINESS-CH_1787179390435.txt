@@ -1,0 +1,108 @@
+SNAPSOLVE — PROMPT #030 — PRODUCTION DEPLOYMENT READINESS CHECK
+MODE: READ-ONLY
+GOAL: PREPARE SNAPSOLVE FOR FIRST CONTROLLED BETA PUBLICATION
+
+Apply all existing SnapSolve PrePromptConditions, Build Impact Gate and cost-control rules.
+
+IMPORTANT:
+DO NOT CHANGE ANY FILE.
+DO NOT DEPLOY OR PUBLISH.
+DO NOT CHANGE DATABASES.
+DO NOT CHANGE SECRETS.
+DO NOT MODIFY AUTH.
+DO NOT MODIFY QUESTION BANKS, LESSONS, PRACTICE, SCAN, SOLUTION OR AI.
+DO NOT CREATE NEW INFRASTRUCTURE.
+DO NOT RUN AI LESSON GENERATION.
+DO NOT CREATE A NEW TASK.
+
+We are preparing to publish SnapSolve for a CONTROLLED BETA OF ONLY 5 TESTERS.
+
+Inspect the CURRENT application and CURRENT Replit deployment options/configuration.
+
+Report ONLY:
+
+1. Which Replit deployment type should be used for SnapSolve's current architecture.
+
+2. Exact recommended deployment configuration:
+   - deployment type
+   - build command
+   - run command
+   - required ports
+   - frontend/API routing requirements
+   - database requirement
+   - required production environment variables/secrets
+
+3. Identify every REQUIRED production secret/environment variable by exact variable name.
+
+For each classify:
+   REQUIRED FOR BETA
+   OPTIONAL
+   NOT REQUIRED
+
+Do NOT reveal secret values.
+
+Specifically verify:
+- Clerk production configuration
+- APPROVED_BETA_EMAILS
+- ADMIN_EMAILS
+- OpenAI/API credentials currently required by solver
+- database connection
+- any frontend VITE variables genuinely required in production
+
+4. Verify whether the existing Postgres beta-feedback table/database will persist correctly after deployment.
+
+5. Verify whether the existing 7-day SERVER cache is in-memory and therefore lost on deployment/restart.
+
+If yes, state this clearly but DO NOT redesign it.
+Determine whether this is acceptable for a 5-person controlled beta.
+
+6. Verify the existing:
+- authentication gate
+- beta allowlist
+- admin authorization
+- solver rate limit
+- 20 pre-generated lessons
+- streaming fallback
+will operate correctly in the proposed production deployment.
+
+7. COST CHECK
+
+Give the CURRENT expected Replit infrastructure cost implication of the recommended deployment configuration.
+
+Do not guess pricing if it cannot be determined from the workspace/account.
+If exact cost is unavailable, say:
+"VERIFY PRICE IN REPLIT PUBLISH SCREEN BEFORE CONFIRMING."
+
+Flag anything that could create uncontrolled usage/cost.
+
+8. Determine whether publishing requires ANY code modification.
+
+Expected answer should be NO unless you find a genuine blocker.
+
+If you find a blocker:
+STOP.
+Report the blocker.
+DO NOT FIX IT.
+
+9. Give the founder exact CLICK-BY-CLICK instructions for publishing using the Replit UI.
+
+Keep this extremely simple.
+
+10. After publication, give exactly FIVE production smoke tests I should personally perform BEFORE inviting testers.
+
+They must include:
+- sign-in/beta gate
+- one pre-generated Practice question with ZERO solver call
+- one Type Question
+- Take Photo on real phone
+- beta feedback submission/admin visibility
+
+Do not intentionally generate AI answers while performing this audit.
+This is READ-ONLY.
+
+FILES CHANGED: MUST BE 0
+INTENTIONAL AI/API GENERATION CALLS: MUST BE 0
+
+End exactly:
+
+PRODUCTION DEPLOYMENT READINESS REPORT COMPLETE — NO CHANGES MADE — AWAITING FOUNDER PUBLISH DECISION
