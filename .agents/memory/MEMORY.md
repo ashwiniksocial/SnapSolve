@@ -31,3 +31,4 @@
 - [Lazy lesson chunks](lazy-lesson-chunks.md) — direct Vite glob syntax is required for metadata-derived, chapter-level lesson code splitting.
 - [Revision storage compatibility](revision-storage-compatibility.md) — revision readers must accept both legacy flat records and the self-assessment envelope.
 - [Offline question-bank audit](offline-question-bank-audit.md) — use source discovery for Node audits; direct browser-bank imports can fail on mixed legacy module exports.
+- [Runtime static lesson verification](runtime-static-lesson-verification.md) — asset validation alone cannot prove a static lesson avoids browser streaming; intercept the route in a real browser.

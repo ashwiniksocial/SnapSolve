@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useAuth } from "@clerk/react";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -30,6 +31,16 @@ interface Question {
   answer:       string | null;
   source:       string | null;
   createdAt:    string;
+}
+
+interface BetaFeedback {
+  id: string;
+  testerType: "student" | "parent";
+  experienceRating: number;
+  issueText: string | null;
+  likedText: string | null;
+  contextReference: string | null;
+  createdAt: string;
 }
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
@@ -65,11 +76,12 @@ const DIFF_BAR: Record<string, string> = {
   Easy: "bg-emerald-400", Medium: "bg-amber-400", Hard: "bg-red-400",
 };
 
-type Tab = "import" | "stats" | "questions";
+type Tab = "import" | "stats" | "questions" | "feedback";
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export default function Admin() {
+  const { getToken } = useAuth();
   // Import state
   const [csvText, setCsvText]       = useState("");
   const [fileName, setFileName]     = useState("");
@@ -90,6 +102,9 @@ export default function Admin() {
   const [qTotal, setQTotal]       = useState(0);
   const [qPage, setQPage]         = useState(1);
   const [loadingQ, setLoadingQ]   = useState(false);
+  const [feedback, setFeedback]   = useState<BetaFeedback[]>([]);
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
+  const [feedbackError, setFeedbackError] = useState("");
 
   const [tab, setTab] = useState<Tab>("import");
 
@@ -186,11 +201,31 @@ export default function Admin() {
     finally { setLoadingQ(false); }
   }
 
+  async function fetchFeedback() {
+    setLoadingFeedback(true);
+    setFeedbackError("");
+    try {
+      const token = await getToken();
+      if (!token) throw new Error("Your admin session has expired.");
+      const res = await fetch("/api/beta/feedback", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json() as { feedback?: BetaFeedback[]; message?: string };
+      if (!res.ok) throw new Error(data.message ?? "Unable to load beta feedback.");
+      setFeedback(data.feedback ?? []);
+    } catch (err) {
+      setFeedbackError(err instanceof Error ? err.message : "Unable to load beta feedback.");
+    } finally {
+      setLoadingFeedback(false);
+    }
+  }
+
   // ── Effects ─────────────────────────────────────────────────────────────────
 
   useEffect(() => {
     if (tab === "stats"     && !stats)               fetchStats();
     if (tab === "questions" && questions.length === 0) fetchQuestions(1);
+    if (tab === "feedback"  && feedback.length === 0)  fetchFeedback();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
@@ -213,8 +248,8 @@ export default function Admin() {
         </div>
 
         {/* Tab selector */}
-        <div className="grid grid-cols-3 bg-white rounded-2xl border border-slate-200 p-1 mb-5 shadow-sm gap-1">
-          {(["import", "stats", "questions"] as Tab[]).map(t => (
+        <div className="grid grid-cols-4 bg-white rounded-2xl border border-slate-200 p-1 mb-5 shadow-sm gap-1">
+          {(["import", "stats", "questions", "feedback"] as Tab[]).map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -224,7 +259,7 @@ export default function Admin() {
                   : "text-slate-500 hover:bg-slate-50"
               }`}
             >
-              {t === "import" ? "📤 Upload" : t === "stats" ? "📊 Statistics" : "📝 Questions"}
+              {t === "import" ? "📤 Upload" : t === "stats" ? "📊 Statistics" : t === "questions" ? "📝 Questions" : "💬 Feedback"}
             </button>
           ))}
         </div>
@@ -647,6 +682,79 @@ export default function Admin() {
                 {loadingQ ? "Loading…" : `Load More · ${(qTotal - questions.length).toLocaleString()} remaining`}
               </button>
             )}
+          </div>
+        )}
+
+        {/* ══ BETA FEEDBACK TAB ════════════════════════════════════════════════ */}
+        {tab === "feedback" && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-slate-700">Controlled beta feedback</p>
+                <p className="text-xs text-slate-400 mt-0.5">Submitted by signed-in student and parent testers</p>
+              </div>
+              <button
+                onClick={fetchFeedback}
+                disabled={loadingFeedback}
+                className="text-xs text-indigo-600 font-semibold hover:text-indigo-700 disabled:opacity-50"
+              >
+                ↺ Refresh
+              </button>
+            </div>
+
+            {feedbackError && (
+              <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+                <p className="text-sm font-semibold text-red-700">Feedback could not be loaded</p>
+                <p className="text-xs text-red-600 mt-1">{feedbackError}</p>
+              </div>
+            )}
+
+            {loadingFeedback && feedback.length === 0 && (
+              <div className="text-center py-16 text-sm text-slate-400">Loading feedback…</div>
+            )}
+
+            {!loadingFeedback && !feedbackError && feedback.length === 0 && (
+              <div className="text-center py-16">
+                <div className="text-3xl mb-3">💬</div>
+                <p className="text-sm font-semibold text-slate-600">No feedback yet</p>
+                <p className="text-xs text-slate-400 mt-1">Feedback from beta testers will appear here.</p>
+              </div>
+            )}
+
+            {feedback.map((entry) => (
+              <article key={entry.id} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-100 px-2 py-1 rounded-full">
+                      {entry.testerType}
+                    </span>
+                    <span className="text-sm font-bold text-amber-600" aria-label={`${entry.experienceRating} out of 5`}>
+                      {"★".repeat(entry.experienceRating)}<span className="text-slate-200">{"★".repeat(5 - entry.experienceRating)}</span>
+                    </span>
+                  </div>
+                  <time className="text-[10px] text-slate-400">
+                    {new Date(entry.createdAt).toLocaleString()}
+                  </time>
+                </div>
+                {entry.issueText && (
+                  <div className="mb-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Confusing or wrong</p>
+                    <p className="text-sm text-slate-700 whitespace-pre-wrap">{entry.issueText}</p>
+                  </div>
+                )}
+                {entry.likedText && (
+                  <div className="mb-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">What they liked</p>
+                    <p className="text-sm text-slate-700 whitespace-pre-wrap">{entry.likedText}</p>
+                  </div>
+                )}
+                {entry.contextReference && (
+                  <p className="pt-3 border-t border-slate-100 text-xs text-slate-500">
+                    <span className="font-semibold text-slate-600">Context:</span> {entry.contextReference}
+                  </p>
+                )}
+              </article>
+            ))}
           </div>
         )}
 
