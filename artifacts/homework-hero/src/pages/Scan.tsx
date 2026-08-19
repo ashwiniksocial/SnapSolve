@@ -5,7 +5,9 @@ import { useSession }                                from "@/hooks/useSession";
 import { useScanHistory, compressImageToThumbnail, resizeForOCR, relativeTime } from "@/hooks/useScanHistory";
 import { safeRecognizeWithConfidence } from "@/services/ai/ocrService";
 import { cleanOcrText, detectBestTopic } from "@/services/ai/topicMatcher";
+import { classifyOcrOutput } from "@/services/ai/ocrTrustGate";
 import type { OcrProgress } from "@/services/ai/ocrService";
+import type { OcrTrustState } from "@/services/ai/ocrTrustGate";
 import CameraCapture from "@/components/CameraCapture";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -106,6 +108,11 @@ export default function Scan() {
   const [isDragging,    setIsDragging]    = useState(false);
   const [ocrError,      setOcrError]      = useState("");
 
+  // ── OCR trust gate state (Prompt #032) ──
+  const [ocrTrustState,    setOcrTrustState]    = useState<OcrTrustState>("OCR_NEEDS_REVIEW");
+  // NEEDS_REVIEW requires the student to tick a confirmation box before solving
+  const [reviewConfirmed,  setReviewConfirmed]  = useState(false);
+
   // ── Refs ──
   const fileRef    = useRef<HTMLInputElement>(null);
   const cameraRef  = useRef<HTMLInputElement>(null);
@@ -117,10 +124,6 @@ export default function Scan() {
   }, []);
 
   // ── Take Photo: open the live camera on supported devices ──
-  // Distinct from "Choose from Gallery". If getUserMedia is unavailable (e.g.
-  // some older/desktop browsers), fall back to the capture-hinted file input so
-  // the student is never stuck. The CameraCapture component itself handles
-  // permission-denied / no-camera errors and offers a gallery fallback there.
   const openCamera = useCallback(() => {
     const canUseLiveCamera =
       typeof navigator !== "undefined" &&
@@ -145,6 +148,7 @@ export default function Scan() {
     setOcrError("");
     setDetectedText("");
     setEditedQ("");
+    setReviewConfirmed(false);
   }, []);
 
   // ── Drag-and-drop ──
@@ -157,11 +161,23 @@ export default function Scan() {
     if (file) handleFile(file);
   };
 
+  // ── Retake / reset helper ──
+  const resetToIdle = useCallback(() => {
+    setPhase("idle");
+    setImageFile(null);
+    setImageUrl("");
+    setOcrError("");
+    setDetectedText("");
+    setEditedQ("");
+    setReviewConfirmed(false);
+  }, []);
+
   // ── OCR pipeline ──
   const runOcr = useCallback(async () => {
     if (!imageFile) return;
     setPhase("processing");
     setOcrError("");
+    setReviewConfirmed(false);
     setOcrProgress({ phase: "Preparing image…", percent: 5 });
 
     try {
@@ -169,18 +185,25 @@ export default function Scan() {
       const resized = await resizeForOCR(imageFile);
       setOcrProgress({ phase: "Scanning image…", percent: 15 });
 
-      // Step 2 — Tesseract OCR (captures confidence for the answer engine)
+      // Step 2 — Tesseract OCR (captures confidence for answer engine)
       const ocrResult = await safeRecognizeWithConfidence(resized, (p) => setOcrProgress(p));
-      const rawText = ocrResult.text;
+      const rawText   = ocrResult.text;
       update({ ocrConfidence: ocrResult.confidence });
       setOcrProgress({ phase: "Cleaning text…", percent: 92 });
 
       const cleaned = cleanOcrText(rawText);
 
-      // Step 3 — topic detection
-      setOcrProgress({ phase: "Detecting topic…", percent: 96 });
-      const match = detectBestTopic(cleaned, session.subject);
-      const topic = match?.topic ?? "General";
+      // Step 3 — classify the OCR output through the trust gate (Prompt #032)
+      setOcrProgress({ phase: "Checking quality…", percent: 94 });
+      const trust = classifyOcrOutput(cleaned, ocrResult.confidence);
+      setOcrTrustState(trust.state);
+
+      // Step 4 — topic detection (only label it if trust is HIGH)
+      setOcrProgress({ phase: "Detecting topic…", percent: 97 });
+      const topic =
+        trust.state === "OCR_HIGH_CONFIDENCE"
+          ? (detectBestTopic(cleaned, session.subject)?.topic ?? "General")
+          : "";
 
       setOcrProgress({ phase: "Done!", percent: 100 });
       await new Promise((r) => setTimeout(r, 400));
@@ -189,62 +212,68 @@ export default function Scan() {
       setEditedQ(cleaned);
       setDetectedTopic(topic);
       setPhase("review");
-    } catch (err) {
+    } catch {
       setOcrError("OCR failed. Please type the question manually below.");
+      setOcrTrustState("OCR_FAILED");
       setPhase("review");
       setDetectedText("");
       setEditedQ("");
     }
-  }, [imageFile, session.subject]);
+  }, [imageFile, session.subject, update]);
 
   // ── Solution generation ──
+  // Structurally enforces the trust gate: FAILED never reaches this function
+  // because the button is absent in that branch; NEEDS_REVIEW requires
+  // reviewConfirmed to be true.
   const handleSolve = useCallback(async (questionOverride?: string) => {
     const question = (questionOverride ?? editedQ).trim();
     if (!question) return;
 
     setPhase("solving");
 
-    // Detect topic for metadata (question solving happens in Solution.tsx via AI pipeline)
-    const match = detectBestTopic(question, session.subject) ?? { subject: session.subject, topic: detectedTopic || "General", confidence: 0.1 };
+    const match = detectBestTopic(question, session.subject) ?? {
+      subject:    session.subject,
+      topic:      detectedTopic || "General",
+      confidence: 0.1,
+    };
 
     update({
       question:      question,
       practiceTopic: match.topic,
     });
 
-    // Save to scan history
     const thumbnail = imageFile ? await compressImageToThumbnail(imageFile) : "";
     addRecord({
-      subject:       session.subject,
-      topic:         match.topic,
-      detectedText:  detectedText.slice(0, 500),
-      questionText:  question,
-      thumbnailUrl:  thumbnail,
+      subject:      session.subject,
+      topic:        match.topic,
+      detectedText: detectedText.slice(0, 500),
+      questionText: question,
+      thumbnailUrl: thumbnail,
     });
 
     navigate("/solution");
-  }, [editedQ, session.subject, detectedTopic, detectedText, imageFile]);
+  }, [editedQ, session.subject, detectedTopic, detectedText, imageFile, update, addRecord, navigate]);
 
-  // ── Typed question solve ──
+  // ── Typed question solve — unchanged ──
   const handleTypedSolve = useCallback(() => {
     if (typedQ.trim().length < 5) return;
     setPhase("solving");
     update({ question: typedQ, practiceTopic: "", ocrConfidence: 1 });
     addRecord({
-      subject:       session.subject,
-      topic:         detectBestTopic(typedQ, session.subject)?.topic ?? "General",
-      detectedText:  typedQ,
-      questionText:  typedQ,
-      thumbnailUrl:  "",
+      subject:      session.subject,
+      topic:        detectBestTopic(typedQ, session.subject)?.topic ?? "General",
+      detectedText: typedQ,
+      questionText: typedQ,
+      thumbnailUrl: "",
     });
     navigate("/solution");
-  }, [typedQ, session.subject]);
+  }, [typedQ, session.subject, update, addRecord, navigate]);
 
   // ── Revisit history ──
   const revisitRecord = useCallback((record: ReturnType<typeof useScanHistory>["history"][number]) => {
     update({ subject: record.subject, question: record.questionText, practiceTopic: record.topic, ocrConfidence: 1 });
     navigate("/solution");
-  }, []);
+  }, [update, navigate]);
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Render helpers
@@ -252,12 +281,216 @@ export default function Scan() {
 
   const scanColor = cfg.color;
 
+  // ── Trust-gate review section (three branches) ─────────────────────────────
+
+  function renderReviewSection() {
+    // ── FAILED: garbage / blank OCR ─────────────────────────────────────────
+    if (ocrTrustState === "OCR_FAILED" || ocrError) {
+      return (
+        <div className="space-y-3">
+          {/* Image thumbnail (if available) */}
+          {imageUrl && (
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <img
+                src={imageUrl}
+                alt="Scanned"
+                className="w-full max-h-40 object-contain bg-slate-50"
+              />
+            </div>
+          )}
+
+          {/* Failure card */}
+          <div className="bg-white rounded-2xl border border-red-200 shadow-sm p-5 space-y-3">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl mt-0.5">📵</span>
+              <div>
+                <p className="font-bold text-slate-800 text-sm leading-snug">
+                  We couldn't read this question clearly.
+                </p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  The photo may be blurry, too dark, or contain handwriting that
+                  the scanner can't recognise. Please try again or type your question.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2 pt-1">
+              <button
+                onClick={resetToIdle}
+                className="w-full py-3 rounded-xl text-sm font-bold text-white active:scale-95 transition-all"
+                style={{ backgroundColor: scanColor }}
+              >
+                📷 Retake Photo
+              </button>
+              <button
+                onClick={() => { resetToIdle(); setTimeout(() => fileRef.current?.click(), 50); }}
+                className="w-full py-3 rounded-xl text-sm font-semibold text-slate-700 border-2 border-slate-200 bg-white active:scale-95 transition-all"
+              >
+                🖼 Choose Photo
+              </button>
+              <button
+                onClick={() => { resetToIdle(); setTab("type"); }}
+                className="w-full py-3 rounded-xl text-sm font-semibold text-slate-700 border-2 border-slate-200 bg-white active:scale-95 transition-all"
+              >
+                ✏️ Type the Question Instead
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── NEEDS_REVIEW: uncertain OCR; student must confirm ───────────────────
+    if (ocrTrustState === "OCR_NEEDS_REVIEW") {
+      return (
+        <div className="space-y-4">
+          <div className="bg-white rounded-2xl border border-amber-200 shadow-sm overflow-hidden">
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt="Scanned"
+                className="w-full max-h-40 object-contain bg-slate-50 border-b border-slate-100"
+              />
+            )}
+            <div className="p-4 space-y-3">
+
+              {/* Amber warning banner */}
+              <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 flex items-start gap-2.5">
+                <span className="text-amber-500 text-base mt-0.5">⚠</span>
+                <div>
+                  <p className="text-xs font-bold text-amber-800">
+                    Please check the detected question before solving.
+                  </p>
+                  <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">
+                    The scan quality is uncertain. Review the text below and correct
+                    any mistakes before getting a solution.
+                  </p>
+                </div>
+              </div>
+
+              {/* Editable question */}
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Detected Question — edit if needed
+                </p>
+                <textarea
+                  value={editedQ}
+                  onChange={(e) => { setEditedQ(e.target.value); setReviewConfirmed(false); }}
+                  placeholder="Edit to correct any mistakes before solving…"
+                  rows={5}
+                  className="w-full text-sm text-slate-800 border border-amber-200 rounded-xl p-3 resize-none outline-none focus:border-amber-400 leading-relaxed"
+                />
+              </div>
+
+              {/* Explicit confirmation tick */}
+              <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={reviewConfirmed}
+                  onChange={(e) => setReviewConfirmed(e.target.checked)}
+                  className="w-4 h-4 rounded accent-amber-500"
+                />
+                <span className="text-xs font-semibold text-slate-700">
+                  I've checked the question — it's correct
+                </span>
+              </label>
+            </div>
+          </div>
+
+          {/* Solve button — only active after explicit confirmation */}
+          <button
+            onClick={() => handleSolve()}
+            disabled={!editedQ.trim() || !reviewConfirmed}
+            className={`w-full py-4 rounded-2xl font-bold text-white text-sm shadow-sm transition-all flex items-center justify-center gap-2 ${
+              editedQ.trim() && reviewConfirmed ? "active:scale-95" : "opacity-40 cursor-not-allowed"
+            }`}
+            style={{ backgroundColor: scanColor }}
+          >
+            <span>✦</span> Get AI Solution
+          </button>
+
+          <button
+            onClick={resetToIdle}
+            className="w-full py-3 rounded-2xl font-semibold text-sm text-slate-600 border-2 border-slate-200 bg-white active:scale-95 transition-all"
+          >
+            ← Scan Another Image
+          </button>
+        </div>
+      );
+    }
+
+    // ── HIGH_CONFIDENCE: current green success experience ───────────────────
+    return (
+      <div className="space-y-4">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="Scanned"
+              className="w-full max-h-40 object-contain bg-slate-50 border-b border-slate-100"
+            />
+          )}
+          <div className="p-4 space-y-3">
+
+            {/* Green success banner */}
+            <div
+              className="rounded-xl border p-2.5 flex items-center gap-2"
+              style={{ backgroundColor: cfg.light, borderColor: cfg.border }}
+            >
+              <span className="text-sm">✓</span>
+              <p className="text-xs font-semibold" style={{ color: scanColor }}>
+                Text extracted successfully
+                {detectedTopic ? ` · Topic: ${detectedTopic}` : ""}
+              </p>
+            </div>
+
+            {/* Editable question */}
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                Detected Question — edit if needed
+              </p>
+              <textarea
+                value={editedQ}
+                onChange={(e) => setEditedQ(e.target.value)}
+                placeholder="OCR extracted text appears here. Edit to correct any mistakes…"
+                rows={5}
+                className="w-full text-sm text-slate-800 border border-slate-200 rounded-xl p-3 resize-none outline-none focus:border-indigo-300 leading-relaxed"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => handleSolve()}
+          disabled={!editedQ.trim()}
+          className={`w-full py-4 rounded-2xl font-bold text-white text-sm shadow-sm transition-all flex items-center justify-center gap-2 ${
+            editedQ.trim() ? "active:scale-95" : "opacity-40 cursor-not-allowed"
+          }`}
+          style={{ backgroundColor: scanColor }}
+        >
+          <span>✦</span> Get AI Solution
+        </button>
+
+        <button
+          onClick={resetToIdle}
+          className="w-full py-3 rounded-2xl font-semibold text-sm text-slate-600 border-2 border-slate-200 bg-white active:scale-95 transition-all"
+        >
+          ← Scan Another Image
+        </button>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Main render
+  // ─────────────────────────────────────────────────────────────────────────────
+
   return (
     <div className="min-h-screen bg-slate-50" style={{ "--scan-color": scanColor } as React.CSSProperties}>
 
       {/* ── Header ── */}
       <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-4">
-        <div className="max-w-lg mx-auto">
+        <div className="max-lg mx-auto">
           <div className="flex items-center justify-between mb-3">
             <div>
               <h1 className="text-xl font-bold text-slate-900">Scan & Solve</h1>
@@ -275,7 +508,7 @@ export default function Scan() {
           {/* Subject tabs */}
           <div className="flex gap-2 overflow-x-auto pb-1">
             {SUBJECTS_LIST.map((s) => {
-              const c = SUBJECTS[s];
+              const c      = SUBJECTS[s];
               const active = session.subject === s;
               return (
                 <button
@@ -294,7 +527,7 @@ export default function Scan() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-5 py-5 space-y-4">
+      <div className="max-lg mx-auto px-5 py-5 space-y-4">
 
         {/* ── Input method tabs (only in idle / preview) ── */}
         {(phase === "idle" || phase === "preview") && (
@@ -341,8 +574,8 @@ export default function Scan() {
 
                 <div className="flex flex-col gap-2 w-full max-w-xs">
                   {/* Fallback camera input — used only when getUserMedia is
-                      unsupported (see openCamera). capture="environment" hints
-                      the OS to prefer the rear camera on the file-picker path. */}
+                      unsupported. capture="environment" hints the OS to prefer
+                      the rear camera on the file-picker path. */}
                   <input
                     ref={cameraRef}
                     type="file"
@@ -351,8 +584,6 @@ export default function Scan() {
                     className="hidden"
                     onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
                   />
-                  {/* Take Photo — opens the live in-app camera on supported
-                      devices; gracefully falls back to the capture input. */}
                   <button
                     onClick={openCamera}
                     className="w-full py-3.5 rounded-2xl text-sm font-bold text-white shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
@@ -361,7 +592,6 @@ export default function Scan() {
                     <span className="text-base">📷</span> Take Photo
                   </button>
 
-                  {/* Gallery upload — a distinct, explicit acquisition intent. */}
                   <input
                     ref={fileRef}
                     type="file"
@@ -457,76 +687,8 @@ export default function Scan() {
               </div>
             )}
 
-            {/* ── review: OCR complete ── */}
-            {phase === "review" && (
-              <div className="space-y-4">
-
-                {/* OCR result card */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                  {imageUrl && (
-                    <img
-                      src={imageUrl}
-                      alt="Scanned"
-                      className="w-full max-h-40 object-contain bg-slate-50 border-b border-slate-100"
-                    />
-                  )}
-                  <div className="p-4 space-y-3">
-
-                    {/* Status */}
-                    {ocrError ? (
-                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2">
-                        <span className="text-amber-500">⚠</span>
-                        <p className="text-xs text-amber-700 leading-relaxed">{ocrError}</p>
-                      </div>
-                    ) : (
-                      <div
-                        className="rounded-xl border p-2.5 flex items-center gap-2"
-                        style={{ backgroundColor: cfg.light, borderColor: cfg.border }}
-                      >
-                        <span className="text-sm">✓</span>
-                        <p className="text-xs font-semibold" style={{ color: scanColor }}>
-                          Text extracted successfully
-                          {detectedTopic ? ` · Topic: ${detectedTopic}` : ""}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Editable question */}
-                    <div>
-                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                        Detected Question — edit if needed
-                      </p>
-                      <textarea
-                        value={editedQ}
-                        onChange={(e) => setEditedQ(e.target.value)}
-                        placeholder="OCR extracted text appears here. Edit to correct any mistakes…"
-                        rows={5}
-                        className="w-full text-sm text-slate-800 border border-slate-200 rounded-xl p-3 resize-none outline-none focus:border-indigo-300 leading-relaxed"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action buttons */}
-                <button
-                  onClick={() => handleSolve()}
-                  disabled={!editedQ.trim()}
-                  className={`w-full py-4 rounded-2xl font-bold text-white text-sm shadow-sm transition-all flex items-center justify-center gap-2 ${
-                    editedQ.trim() ? "active:scale-95" : "opacity-40 cursor-not-allowed"
-                  }`}
-                  style={{ backgroundColor: scanColor }}
-                >
-                  <span>✦</span> Get AI Solution
-                </button>
-
-                <button
-                  onClick={() => { setPhase("idle"); setImageFile(null); setImageUrl(""); setOcrError(""); }}
-                  className="w-full py-3 rounded-2xl font-semibold text-sm text-slate-600 border-2 border-slate-200 bg-white active:scale-95 transition-all"
-                >
-                  ← Scan Another Image
-                </button>
-              </div>
-            )}
+            {/* ── review: trust-gate branches (FAILED / NEEDS_REVIEW / HIGH_CONFIDENCE) ── */}
+            {phase === "review" && renderReviewSection()}
 
             {/* ── solving: brief loading ── */}
             {phase === "solving" && (
@@ -544,7 +706,7 @@ export default function Scan() {
           </>
         )}
 
-        {/* ══ TYPE TAB ═══════════════════════════════════════════════════════════ */}
+        {/* ══ TYPE TAB — unchanged ═══════════════════════════════════════════════ */}
         {tab === "type" && phase !== "solving" && (
           <div className="space-y-4">
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -560,7 +722,6 @@ export default function Scan() {
               </div>
             </div>
 
-            {/* Tips */}
             <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Tips for best results</p>
               <ul className="space-y-1.5">

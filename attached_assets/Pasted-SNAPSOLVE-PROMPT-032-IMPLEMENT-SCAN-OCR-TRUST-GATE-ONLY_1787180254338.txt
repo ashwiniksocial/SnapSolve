@@ -1,0 +1,139 @@
+SNAPSOLVE — PROMPT #032 — IMPLEMENT SCAN OCR TRUST GATE ONLY
+PRIORITY: P0 BETA SAFETY
+SCOPE: STRATEGY B ONLY
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate, cost-control rules, regression-prevention rules, and Build → Validate → Freeze → Next discipline before execution.
+
+APPROVED DECISION:
+Implement Strategy B — Current Tesseract OCR + strong trust gate.
+
+DO NOT implement OpenAI Vision.
+DO NOT replace Tesseract.
+DO NOT add a new OCR vendor/library.
+DO NOT redesign CameraCapture.
+DO NOT touch Practice, Solution teaching architecture, question bank, curriculum, canonical metadata, pre-generated lessons, readiness, feedback, auth, deployment or caching.
+
+CURRENT CONFIRMED ROOT CAUSE:
+- Tesseract.js is printed-English oriented and weak on handwriting/math.
+- OCR confidence exists but is not used to gate Scan.
+- Review UI currently shows success whenever OCR does not throw.
+- Topic detection returns a topic even for a 0-vs-0 garbage match.
+- Get AI Solution only checks editedQ.trim().length > 0.
+- Solver accepts incoherent OCR text without validation.
+
+GOAL:
+Bad or uncertain OCR must NEVER silently become a confident AI lesson.
+
+IMPLEMENT THE SMALLEST SYSTEMIC TRUST GATE.
+
+Required states:
+
+OCR_HIGH_CONFIDENCE
+OCR_NEEDS_REVIEW
+OCR_FAILED
+
+Use a pure deterministic classifier based on the existing OCR result plus simple coherence signals.
+
+At minimum consider:
+- Tesseract confidence
+- minimum meaningful character count
+- meaningful word count
+- alphabetic/numeric ratio
+- excessive punctuation/symbol/noise ratio
+- fragmented/gibberish token pattern
+- whether the result contains enough coherent text to plausibly represent a question
+
+Do NOT pretend these checks prove academic correctness.
+They are only a safety gate.
+
+HIGH CONFIDENCE:
+- retain current green success state
+- show detected text
+- topic may be shown
+- solver allowed
+
+NEEDS REVIEW:
+- show amber warning:
+  “Please check the detected question before solving.”
+- show editable detected text prominently
+- topic must be “Unconfirmed” or hidden
+- require explicit user confirmation before Get AI Solution becomes active
+
+FAILED:
+- show:
+  “We couldn't read this question clearly.”
+- do not show a confident topic
+- do not allow solver call
+- provide:
+  Retake Photo
+  Choose Photo
+  Type/Edit Question
+
+IMPORTANT:
+The founder’s failed image:
+actual question ≈ “In which quadrant is x < 0 and y > 0?”
+garbage OCR ≈ “RISER Ad ~~ — | - 26 = e ~ospig y ) Ti os RIES ce ger”
+
+This case MUST NOT appear as green success and MUST NOT automatically reach the solver after the fix.
+
+TOPIC DETECTION:
+Modify only the Scan OCR path so topic classification is not treated as confirmed unless OCR state is HIGH_CONFIDENCE.
+Do not change Practice canonical topic handling.
+
+SOLVER GATE:
+Make it structurally impossible for OCR_FAILED to call the solver.
+OCR_NEEDS_REVIEW must require explicit confirmation.
+Manual Type Question remains unchanged.
+
+VALIDATION:
+Use the existing founder image if accessible plus a small 10-case matrix covering:
+- clear printed question
+- clear handwritten words
+- handwritten x < 0 / y > 0 style inequality
+- handwritten fraction/root/equation
+- Science handwritten question
+- IT handwritten sentence
+- slightly tilted image
+- low-contrast image
+- obvious garbage/noise
+- short but valid question
+
+For each report:
+- OCR text
+- raw OCR confidence
+- trust state
+- topic behavior
+- solver allowed? yes/no
+- whether manual correction is required
+
+Most tests must stop before AI solving.
+
+At most ONE solver call may be used if strictly necessary to verify a HIGH_CONFIDENCE Scan → Solution journey.
+
+REQUIRED REGRESSION CHECKS:
+- Camera still works
+- Choose Photo still works
+- Retake works
+- Type Question unchanged
+- Practice unchanged
+- frozen 20 lessons unchanged
+- no new AI/OCR service introduced
+- frontend/API TypeScript pass
+- production build pass
+
+RETURN:
+1. Files changed
+2. Exact trust-classification rules
+3. Founder failed-image result after fix
+4. 10-case validation matrix
+5. AI/API calls made
+6. TypeScript/build result
+7. Confirmation no frozen systems changed
+8. Any remaining known limitation
+
+DO NOT propose Strategy C again in this task.
+DO NOT create another task automatically.
+
+End exactly:
+
+SCAN OCR TRUST GATE CLOSED — READY FOR FOUNDER REAL-WORLD RETEST

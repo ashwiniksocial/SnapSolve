@@ -32,3 +32,4 @@
 - [Revision storage compatibility](revision-storage-compatibility.md) — revision readers must accept both legacy flat records and the self-assessment envelope.
 - [Offline question-bank audit](offline-question-bank-audit.md) — use source discovery for Node audits; direct browser-bank imports can fail on mixed legacy module exports.
 - [Runtime static lesson verification](runtime-static-lesson-verification.md) — asset validation alone cannot prove a static lesson avoids browser streaming; intercept the route in a real browser.
+- [OCR Trust Gate](ocr-trust-gate.md) — 3-state classifier in ocrTrustGate.ts; combined low-conf+alpha gate is critical for founder failure case; scope: Scan only.
