@@ -1,0 +1,165 @@
+## A. 18-question diagnostic table
+
+**Important runtime finding:** the browser’s Maths runs did **not** use the `c9-m-ch1-…` questions described in the brief. The actual requests used `c9-m-ch3-…` — *Orienting Yourself: The Use of Coordinates*. The table uses the browser/server runtime IDs as the source of truth.
+
+### A1. Resolved question identities
+
+| Question | ID | Type / difficulty | Question text | Stored answer size / approved steps |
+|---|---|---|---|---|
+| Maths Q1 | `c9-m-ch3-t1-q01` | ShortAnswer / Easy | What is another name for the Cartesian plane? | 72 chars / 1 |
+| Maths Q2 | `c9-m-ch3-t1-q02` | ShortAnswer / Easy | What are the two axes of the Cartesian plane called? | 70 chars / 1 |
+| Maths Q3 | `c9-m-ch3-t1-q03` | ShortAnswer / Easy | What is the point where the x-axis and y-axis intersect called? | 39 chars / 1 |
+| Maths Q48 | `c9-m-ch3-t5-q06` | ShortAnswer / Medium | A bridge connects town A(1, 4) to town B(7, 4). A service point is placed at the centre of the bridge. Find its coordinates. | 39 chars / 1 |
+| Maths Q49 | `c9-m-ch3-t5-q07` | ShortAnswer / Medium | A rectangle-shaped garden has corners at (−3, 1), (5, 1), (5, −2), (−3, −2). Find the length, width, and area of the garden. | 88 chars / 3 |
+| Maths Q50 | `c9-m-ch3-t5-q08` | ShortAnswer / Medium | A ship moves from port P(2, −3) to port Q(2, 5). How far did it travel? In which direction? | 99 chars / 1 |
+| Science Q1 | `bo-bio-9-ch01-con-001` | ShortAnswer / Easy | Who coined the term “cell”? What did this scientist observe, and in what year? | 438 chars / 4 |
+| Science Q2 | `bo-bio-9-ch01-con-002` | ShortAnswer / Easy | State the three postulates of the modern cell theory. | 416 chars / 3 |
+| Science Q3 | `bo-bio-9-ch01-con-003` | ShortAnswer / Easy | State two differences between prokaryotic and eukaryotic cells. | 611 chars / 2 |
+| Science Q73 | `bo-bio-9-ch01-hot-011` | HOTS / Hard | Cells undergoing programmed cell death (apoptosis) show two key events: cytochrome c release and lysosomal enzyme release. Explain how each contributes to orderly self-destruction. | 2,386 chars / 4 |
+| Science Q74 | `bo-bio-9-ch01-hot-012` | HOTS / Hard | Evaluate the ER as the cell’s “internal transport highway,” explaining how it connects nuclear gene expression to protein secretion. | 2,052 chars / 5 |
+| Science Q75 | `bo-bio-9-ch01-hot-013` | HOTS / Hard | Propose and justify at least four cellular modifications for a “super cell” surviving a 70°C dry desert environment. | 3,302 chars / 5 |
+| IT Q1 | `c9-it-unit1-t1-q01` | MCQ / Easy | Information Technology (IT) means: creating, managing, storing and exchanging information. | 58 chars / 2 |
+| IT Q2 | `c9-it-unit1-t1-q02` | MCQ / Easy | Which option correctly describes data? | 63 chars / 2 |
+| IT Q3 | `c9-it-unit1-t1-q03` | ShortAnswer / Easy | What does “ITeS” stand for? How is it different from IT? | 431 chars / 2 |
+| IT Q48 | `c9-it-unit1-t5-q04` | ShortAnswer / Medium | What health risks can an 8-hour-a-day data-entry operator face, and how can they reduce them? | 1,098 chars / 3 |
+| IT Q49 | `c9-it-unit1-t5-q05` | ShortAnswer / Easy | List three National Occupational Standards covered by IT 402 for Class IX. | 254 chars / 2 |
+| IT Q50 | `c9-it-unit1-t5-q06` | LongAnswer / Hard | Describe ergonomic and safety considerations for setting up a healthy data-entry workstation. | 1,343 chars / 4 |
+
+### A2. Browser-runtime trace and telemetry
+
+`—` means the current stream telemetry does not record that field. It logs first-content and total completion only; it does not persist individual `step` or `finalAnswer` section timestamps, nor the final generated `guidedReasoning` count.
+
+| Question | Cache | Runtime path | AI calls | Completion tokens | Approved steps | First content | First step | Final answer | DONE / full completion |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Maths Q1 | Browser local miss; **server cache hit** | Bank SSE cached response | 0 | — | 1 | — | — | — | Server 6ms |
+| Maths Q2 | Browser local miss; server miss | Bank SSE started, then browser disconnected | 1 attempted | — | 1 | — | — | — | Aborted at 10.93s |
+| Maths Q3 | Browser local miss; server miss | Bank SSE generation | 1 | 1,138 | 1 | 1.03s | — | — | 12.31s |
+| Maths Q48 | Browser local miss; server miss | Bank SSE generation | 1 | 1,761 | 1 | 1.51s | — | — | 17.58s |
+| Maths Q49 | Browser local miss; server miss | Bank SSE generation | 1 | 1,469 | 3 | 1.05s | — | — | 14.40s |
+| Maths Q50 | Browser local miss; server miss | Bank SSE generation | 1 | 1,517 | 1 | 1.08s | — | — | 16.45s |
+| Science Q1 | Browser local miss; server miss | Bank SSE generation | 1 | 1,458 | 4 | 1.13s | — | — | 19.78s |
+| Science Q2 | Browser local miss; server miss | Bank SSE generation | 1 | 1,485 | 3 | 1.07s | — | — | 22.80s |
+| Science Q3 | Browser local miss; server miss | Bank SSE generation | 1 | 1,593 | 2 | 1.20s | — | — | 25.02s |
+| Science Q73 | Browser local miss; server miss | Bank SSE generation | 1 | 2,250 | 4 | 1.15s | — | — | 33.49s |
+| Science Q74 | Browser local miss; server miss | Bank SSE generation | 1 | 2,253 | 5 | 1.02s | — | — | 32.40s |
+| Science Q75 | Browser local miss; server miss | Bank SSE generation | 1 | 2,402 | 5 | 1.02s | — | — | 35.81s |
+| IT Q1 | Browser local miss; server miss | Bank SSE generation | 1 | 1,388 | 2 | 1.11s | — | — | 17.46s |
+| IT Q2 | Browser local miss; server miss | Bank SSE generation | 1 | 1,322 | 2 | 1.97s | — | — | 16.52s |
+| IT Q3 | Browser local miss; server miss | Bank SSE generation | 1 | 1,222 | 2 | 1.02s | — | — | 15.07s |
+| IT Q48 | Browser local miss; server miss | Bank SSE generation | 1 | 1,582 | 3 | 0.75s | — | — | 20.20s |
+| IT Q49 | Browser local miss; server miss | Bank SSE generation | 1 | 1,236 | 2 | 1.41s | — | — | 15.89s |
+| IT Q50 | Browser local miss; **rate-limit rejection before server-cache check** | Frozen bank fallback in frontend | 0 | — | 4 | — | — | — | HTTP 429 in 3ms; fallback shown immediately |
+
+All successful generated questions used:
+
+- The **streamed bank-generation path**
+- A valid `bankContext` with the exact question ID
+- **One** OpenAI call
+- Model: **`gpt-4o-mini`**
+- No planner AI call
+- No reviewer call
+- No quality-improver call
+- No normal non-bank generation route
+
+## B. Maths vs Science vs IT comparison
+
+| Group | Successful uncached runs | Average prompt tokens | Average completion tokens | Average full completion |
+|---|---:|---:|---:|---:|
+| Maths | 4 | 2,564 | 1,471 | 15.18s |
+| Science | 6 | 2,971 | 1,907 | 28.21s |
+| IT | 5 | 2,840 | 1,350 | 17.03s |
+
+Science generated:
+
+- **29.6% more completion tokens than Maths**
+- **41.3% more completion tokens than IT**
+- **85.8% more full-latency than Maths**
+- **65.7% more full-latency than IT**
+
+The largest Science items were Q73–Q75:
+
+| Science question | Prompt tokens | Completion tokens | DONE |
+|---|---:|---:|---:|
+| Q73 | 3,189 | 2,250 | 33.49s |
+| Q74 | 3,133 | 2,253 | 32.40s |
+| Q75 | 3,428 | 2,402 | 35.81s |
+
+## C. Exact root cause(s) of Science’s 19–36 second behaviour
+
+1. **Science is not taking a different or broken runtime route.**  
+   All six Science questions used the intended bank fast path:
+   `Practice click → Solution → bankContext → POST /api/solveQuestion/stream → streamed bank lesson`.
+
+2. **Science IDs are not failing bank lookup.**  
+   The Biology V2 adapter preserves the question ID. Its only relevant normalization is `ch01 → bio-ch01` for the chapter ID. The server logs show each Biology question ID being successfully cached after generation, proving `bankContext.questionId` reached the backend.
+
+3. **No planner, reviewer, or improver is running for Science bank questions.**  
+   The bank stream route explicitly skips blueprint planning and does not invoke the non-stream quality pipeline. There is one `gpt-4o-mini` streamed draft call per uncached Science question.
+
+4. **The direct cause is larger grounded input plus substantially longer generated Detailed lessons.**  
+   Every bank request includes the complete frozen answer, approved steps, concepts, hint, and the full eight-section Detailed lesson schema. Biology’s stored material is much larger:
+   - Easy Biology answers: **416–611 characters**, versus Maths answers of **39–99 characters** in the actual browser run.
+   - Biology Q73–Q75 answers: **2,052–3,302 characters**.
+   - Biology Q73–Q75 bank grounding payloads: **3,136–4,577 characters**.
+   - Biology Q73–Q75 then generate **2,250–2,402 completion tokens**.
+
+5. **The logged timings match token generation, not a hidden extra API call.**  
+   Science first content arrives consistently at **1.02–1.20 seconds**, but full lesson completion rises from **19.78–25.02 seconds** for easy questions to **32.40–35.81 seconds** for hard HOTS questions. This is direct evidence that the later time is spent completing the larger Detailed response.
+
+## D. Exact explanation of IT Q50’s 1-second result
+
+IT Q50 was **not** served by browser localStorage and **not** served by the server lesson cache.
+
+The exact sequence was:
+
+1. Browser sent `POST /api/solveQuestion/stream`.
+2. The API rate limiter rejected it with **HTTP 429 in 3ms**.
+3. The browser logged: `TeachingLesson generation failed: Error: rate_limit`.
+4. `Solution.tsx` caught that streaming failure and immediately rendered the frozen bank fallback using the stored answer and approved steps.
+
+So the 1-second result demonstrates the speed of the **frontend’s error fallback**, not a cached Detailed lesson. It is fast, but it is not the target complete Detailed teaching experience.
+
+## E. Whether progressive content displays before DONE
+
+**Yes. The frontend does display progressive content before `done`.**
+
+- The server emits `section` events as fields are extracted.
+- The client switches from the spinner to `SolutionCard` on the first `keyConcepts` or `step` event.
+- `flushSync` forces that render immediately.
+- The browser-visible first content is supported by telemetry at approximately **0.75–1.97 seconds** across the successful current runs.
+
+However, the founder’s stopwatch aligns strongly with **full SSE completion / `done`**, not first content:
+
+- Science Q1: observed 19s; server DONE 19.78s
+- Science Q2: observed 24s; server DONE 22.80s
+- Science Q3: observed 27s; server DONE 25.02s
+- Science Q73: observed 35s; server DONE 33.49s
+- Science Q74: observed 34s; server DONE 32.40s
+- Science Q75: observed 36s; server DONE 35.81s
+
+Therefore, the card appears progressively, but the perceived “answer generated” event is the point at which the full Detailed lesson is complete.
+
+## F. SINGLE highest-impact next fix
+
+**Pre-generate and persist the complete Detailed bank lesson for each frozen question before the student clicks it.**
+
+This preserves:
+
+- The existing model
+- All eight visible Detailed teaching sections
+- Existing question-bank content
+- The same teaching quality
+- The existing frontend renderer
+
+It removes the first student’s need to wait for a full on-demand 1.2k–2.4k-token Detailed generation.
+
+## G. Estimated effect of that single fix
+
+For a pre-generated lesson:
+
+- **Server-cache response:** demonstrated at **6ms** for the existing cached Maths request.
+- **Browser local cache:** code path is synchronous localStorage retrieval and immediate render; the target is effectively instant.
+- **Founder-observed first-use latency:** expected to drop from the current **15–36 seconds** of on-demand generation to approximately **1–4 seconds end-to-end**, with the residual time being route/session/render work rather than model generation.
+- **Repeat local-cache latency:** under the existing design, approximately **sub-second**.
+
+REAL BROWSER LATENCY ROOT CAUSE IDENTIFIED — NO CHANGES MADE
