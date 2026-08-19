@@ -38,6 +38,11 @@ export async function preloadQBank(_classNum?: number): Promise<void> {
 /** Internal domain labels that make up the student-facing "Science" subject. */
 const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology", "Earth Science"];
 
+/** Maps a native science domain to the student-facing Practice subject. */
+export function getStudentFacingSubject(subject: string): string {
+  return SCIENCE_DOMAINS.includes(subject) ? "Science" : subject;
+}
+
 /**
  * All chapters for a given class + subject, in official textbook order.
  * "Science" resolves to the union of all Science domain chapters sorted by
@@ -130,6 +135,36 @@ export function getQuestionById(id: string): Question | undefined {
   return ALL_QUESTIONS.find((q) => q.id === id);
 }
 
+/**
+ * Student-facing chapter serial from the same active, ordered collection used
+ * by Practice. Never derive a visible serial by parsing an internal chapter ID.
+ */
+export function getChapterDisplayNumber(
+  classNum: number,
+  subject: string,
+  chapterId: string,
+): number | undefined {
+  const practiceSubject = getStudentFacingSubject(subject);
+  const chapterIndex = getChapters(classNum, practiceSubject)
+    .findIndex((chapter) => chapter.id === chapterId);
+  return chapterIndex >= 0 ? chapterIndex + 1 : undefined;
+}
+
+/**
+ * Student-facing question serial from the authoritative chapter question list.
+ * The list preserves the same source order rendered by Practice without
+ * inspecting question IDs.
+ */
+export function getQuestionDisplayNumber(question: Question): number | undefined {
+  const chapterQuestions = getQuestions({
+    classNum: question.classNum,
+    subject: question.subject,
+    chapterId: question.chapterId,
+  });
+  const questionIndex = chapterQuestions.findIndex((candidate) => candidate.id === question.id);
+  return questionIndex >= 0 ? questionIndex + 1 : undefined;
+}
+
 /** Get n random questions matching a filter (for quiz / challenge modes). */
 export function getRandomQuestions(filter: QuestionFilter, n: number): Question[] {
   const pool = getQuestions(filter);
@@ -188,17 +223,7 @@ export function getAllChapterStats(classNum: number, subject: string): ChapterSt
     for (const q of qs) {
       if (q.questionType) byType[q.questionType]++;
     }
-    // Science: use sequential 1-based position in the already-sorted ACTIVE-only list.
-    // CLASS9_DISPLAY_ORDER encodes absolute NCERT ordinals including SOURCE_UNRESOLVED
-    // slots; after filtering those out the display sequence has gaps (e.g. starts at 2).
-    // Sequential renumbering closes that gap so the first visible chapter is always Ch 1.
-    // Mathematics: keep CLASS9_DISPLAY_ORDER (no SOURCE_UNRESOLVED gap exists there).
-    const displayChapterNumber: number | undefined =
-      subject === "Science"
-        ? idx + 1
-        : (subject === "Mathematics" && ch.classNum === 9)
-          ? CLASS9_DISPLAY_ORDER[ch.id]
-          : undefined;
+    const displayChapterNumber = getChapterDisplayNumber(ch.classNum, ch.subject, ch.id);
     return {
       chapterId: ch.id,
       chapterName: ch.name,

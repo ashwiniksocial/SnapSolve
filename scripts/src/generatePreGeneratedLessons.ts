@@ -1,12 +1,13 @@
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { gunzipSync, gzipSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { loadStudentVisibleQuestions, type ReviewableQuestion } from "./academicReview.ts";
 import {
   hashQuestionContent,
   isStoredLessonValid,
+  type PreGeneratedLessonChunk,
   type PreGeneratedLessonEntry,
-  type PreGeneratedLessonStore,
 } from "../../artifacts/homework-hero/src/data/preGeneratedLessons.ts";
 import type { Question } from "../../artifacts/homework-hero/src/data/questions/types.ts";
 import type { TeachingLesson } from "../../artifacts/homework-hero/src/data/solutionBank.ts";
@@ -14,7 +15,8 @@ import { parseLessonResponse } from "../../artifacts/api-server/src/lib/lessonTy
 import { PILOT_QUESTION_IDS } from "./preGeneratedLessonPilot.ts";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const storePath = resolve(repoRoot, "artifacts/homework-hero/src/data/generatedDetailedLessons.json");
+const chunksDirectory = resolve(repoRoot, "artifacts/homework-hero/src/data/generatedLessonChunks");
+const args = new Set(process.argv.slice(2));
 
 type GenerationEvent = {
   type?: string;
@@ -73,23 +75,78 @@ async function activeQuestions(): Promise<Map<string, Question>> {
   }));
 }
 
-async function readStore(): Promise<PreGeneratedLessonStore> {
-  try {
-    const parsed = JSON.parse(await readFile(storePath, "utf8")) as Partial<PreGeneratedLessonStore>;
-    if (parsed.version === 1 && parsed.lessons && typeof parsed.lessons === "object") {
-      return parsed as PreGeneratedLessonStore;
-    }
-  } catch {
-    // A missing store is the normal first-run state.
-  }
-  return { version: 1, lessons: {} };
+type ChunkRecord = {
+  path: string;
+  chunk: PreGeneratedLessonChunk;
+};
+
+function chunkKey(question: Pick<Question, "classNum" | "subject" | "chapterId">): string {
+  return JSON.stringify([question.classNum, question.subject, question.chapterId]);
 }
 
-async function persistStore(store: PreGeneratedLessonStore): Promise<void> {
-  const tempPath = `${storePath}.tmp`;
-  await mkdir(dirname(storePath), { recursive: true });
-  await writeFile(tempPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");
-  await rename(tempPath, storePath);
+function chunkPath(question: Pick<Question, "classNum" | "subject" | "chapterId">): string {
+  return resolve(
+    chunksDirectory,
+    `${question.classNum}--${encodeURIComponent(question.subject)}--${encodeURIComponent(question.chapterId)}.ts`,
+  );
+}
+
+function isChunk(value: unknown): value is PreGeneratedLessonChunk {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<PreGeneratedLessonChunk>;
+  return (
+    candidate.version === 1 &&
+    typeof candidate.classNum === "number" &&
+    typeof candidate.subject === "string" &&
+    typeof candidate.chapterId === "string" &&
+    !!candidate.lessons &&
+    typeof candidate.lessons === "object"
+  );
+}
+
+function decodeChunkSource(source: string, file: string): PreGeneratedLessonChunk {
+  const match = source.match(/^export default "([A-Za-z0-9+/=]+";?)\s*$/);
+  if (!match) throw new Error(`Invalid pre-generated lesson chunk source: ${file}`);
+  const decoded = gunzipSync(Buffer.from(match[1].replace(/;$/, ""), "base64")).toString("utf8");
+  const parsed = JSON.parse(decoded) as unknown;
+  if (!isChunk(parsed)) throw new Error(`Invalid pre-generated lesson chunk data: ${file}`);
+  return parsed;
+}
+
+async function readChunkIndex(): Promise<Map<string, ChunkRecord>> {
+  const index = new Map<string, ChunkRecord>();
+  let files: string[] = [];
+  try {
+    files = (await readdir(chunksDirectory))
+      .filter((file) => file.endsWith(".ts"))
+      .sort();
+  } catch {
+    return index;
+  }
+
+  for (const file of files) {
+    const path = resolve(chunksDirectory, file);
+    const parsed = decodeChunkSource(await readFile(path, "utf8"), file);
+    const key = chunkKey(parsed);
+    if (index.has(key)) throw new Error(`Duplicate pre-generated lesson chunk metadata: ${file}`);
+    index.set(key, { path, chunk: parsed });
+  }
+  return index;
+}
+
+function entryFor(
+  chunks: Map<string, ChunkRecord>,
+  question: Question,
+): PreGeneratedLessonEntry | undefined {
+  return chunks.get(chunkKey(question))?.chunk.lessons[question.id];
+}
+
+async function persistChunk(record: ChunkRecord): Promise<void> {
+  const tempPath = `${record.path}.tmp`;
+  await mkdir(dirname(record.path), { recursive: true });
+  const compressed = gzipSync(JSON.stringify(record.chunk));
+  await writeFile(tempPath, `export default "${compressed.toString("base64")}";\n`, "utf8");
+  await rename(tempPath, record.path);
 }
 
 function apiBaseUrl(): string {
@@ -228,9 +285,8 @@ function argumentValues(name: string): string[] {
 
 function requestedIds(
   allQuestions: Map<string, Question>,
-  store: PreGeneratedLessonStore,
+  chunks: Map<string, ChunkRecord>,
 ): string[] {
-  const args = new Set(process.argv.slice(2));
   const explicit = argumentValues("ids");
   const targets = new Set<string>();
 
@@ -238,12 +294,12 @@ function requestedIds(
   explicit.forEach((id) => targets.add(id));
   if (args.has("--missing")) {
     for (const question of allQuestions.values()) {
-      if (!isStoredLessonValid(store.lessons[question.id], question)) targets.add(question.id);
+      if (!isStoredLessonValid(entryFor(chunks, question), question)) targets.add(question.id);
     }
   }
   if (args.has("--stale")) {
     for (const question of allQuestions.values()) {
-      const entry = store.lessons[question.id];
+      const entry = entryFor(chunks, question);
       if (entry && !isStoredLessonValid(entry, question)) targets.add(question.id);
     }
   }
@@ -260,8 +316,8 @@ function requestedIds(
 
 async function main(): Promise<void> {
   const questions = await activeQuestions();
-  const store = await readStore();
-  const ids = requestedIds(questions, store);
+  const chunks = await readChunkIndex();
+  const ids = requestedIds(questions, chunks);
   const baseUrl = apiBaseUrl();
   const totals = {
     modelCalls: 0,
@@ -275,7 +331,7 @@ async function main(): Promise<void> {
 
   for (const [index, id] of ids.entries()) {
     const question = questions.get(id)!;
-    if (isStoredLessonValid(store.lessons[id], question)) {
+    if (isStoredLessonValid(entryFor(chunks, question), question)) {
       console.log(`[${index + 1}/${ids.length}] SKIP valid ${id}`);
       continue;
     }
@@ -318,8 +374,20 @@ async function main(): Promise<void> {
       throw new Error(`Refusing incomplete or answer-mismatched lesson for ${id}.`);
     }
 
-    store.lessons[id] = entry;
-    await persistStore(store);
+    const key = chunkKey(question);
+    const record = chunks.get(key) ?? {
+      path: chunkPath(question),
+      chunk: {
+        version: 1 as const,
+        classNum: question.classNum,
+        subject: question.subject,
+        chapterId: question.chapterId,
+        lessons: {},
+      },
+    };
+    record.chunk.lessons[id] = entry;
+    await persistChunk(record);
+    chunks.set(key, record);
     if (result.servedFromCache) totals.cacheRecoveries += 1;
     else totals.modelCalls += 1;
     totals.promptTokens += result.promptTokens;

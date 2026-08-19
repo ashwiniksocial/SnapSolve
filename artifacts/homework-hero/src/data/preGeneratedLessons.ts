@@ -1,4 +1,5 @@
-import generatedStore from "./generatedDetailedLessons.json";
+/// <reference types="vite/client" />
+
 import type { AIResponse, TeachingLesson } from "./solutionBank";
 import type { Subject } from "./subjects";
 import type { Question } from "./questions/types";
@@ -19,7 +20,62 @@ export interface PreGeneratedLessonStore {
   lessons: Record<string, PreGeneratedLessonEntry>;
 }
 
-const store = generatedStore as unknown as PreGeneratedLessonStore;
+export interface PreGeneratedLessonChunk extends PreGeneratedLessonStore {
+  classNum: number;
+  subject: string;
+  chapterId: string;
+}
+
+type LessonChunkModule = { default: string };
+
+/**
+ * Vite turns each compressed chapter module into an independently requested
+ * chunk. The key is
+ * calculated from the authoritative question metadata, so no question-ID
+ * registry is maintained here.
+ */
+const chunkLoaders = typeof import.meta.glob === "function"
+  ? import.meta.glob("./generatedLessonChunks/**/*.ts")
+  : {};
+const loadedChunks = new Map<string, Promise<PreGeneratedLessonChunk | null>>();
+
+function chunkPath(question: Question): string {
+  return `./generatedLessonChunks/${question.classNum}--${encodeURIComponent(question.subject)}--${encodeURIComponent(question.chapterId)}.ts`;
+}
+
+async function decodeChunk(encoded: string): Promise<PreGeneratedLessonChunk> {
+  const binary = atob(encoded);
+  const compressed = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+  const decompressed = new Blob([compressed])
+    .stream()
+    .pipeThrough(new DecompressionStream("gzip"));
+  return new Response(decompressed).json() as Promise<PreGeneratedLessonChunk>;
+}
+
+async function loadChunk(question: Question): Promise<PreGeneratedLessonChunk | null> {
+  const path = chunkPath(question);
+  const existing = loadedChunks.get(path);
+  if (existing) return existing;
+
+  const pending = (async () => {
+    const loader = chunkLoaders?.[path] as (() => Promise<LessonChunkModule>) | undefined;
+    if (!loader) return null;
+    const chunk = await decodeChunk((await loader()).default);
+    if (
+      chunk.version !== 1 ||
+      chunk.classNum !== question.classNum ||
+      chunk.subject !== question.subject ||
+      chunk.chapterId !== question.chapterId ||
+      !chunk.lessons ||
+      typeof chunk.lessons !== "object"
+    ) {
+      return null;
+    }
+    return chunk;
+  })();
+  loadedChunks.set(path, pending);
+  return pending;
+}
 
 function text(value: unknown): boolean {
   return typeof value === "string" && value.trim().length > 0;
@@ -132,12 +188,13 @@ export function isStoredLessonValid(
 }
 
 /**
- * Returns a fully formed existing AIResponse without touching localStorage,
- * the API, or a model. The derived asset is checked against current frozen
- * source content every time it is used.
+ * Lazily imports just the owning chapter's derived asset. It never touches
+ * localStorage, the API, or a model. The derived asset is checked against
+ * current frozen source content every time it is used.
  */
-export function getPreGeneratedBankLesson(question: Question): AIResponse | null {
-  const entry = store.lessons[question.id];
+export async function getPreGeneratedBankLesson(question: Question): Promise<AIResponse | null> {
+  const chunk = await loadChunk(question);
+  const entry = chunk?.lessons[question.id];
   if (!isStoredLessonValid(entry, question)) return null;
 
   return {

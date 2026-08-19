@@ -1,0 +1,520 @@
+SNAPSOLVE BUILD HQ — REPLIT PROMPT #009
+DATE/TIME: 19-Aug-2026 | 22:02 IST
+PURPOSE: Fix IT chapter numbering globally + add Solution Q-number + Find Question + complete Task #6 lazy lesson architecture
+STATUS: APPROVED IMPLEMENTATION PROMPT
+
+Recall and apply ALL PrePromptConditions.
+
+IMPORTANT:
+Do NOT mass-generate any additional lessons.
+Do NOT generate lesson #21 onward.
+Do NOT regenerate the existing 20 pilot lessons.
+
+Founder acceptance has established:
+
+- pre-generated pilot lessons open in ~1 second
+- full Detailed 8-section teaching is preserved
+- non-pre-generated questions still take ~20–30 seconds
+- pre-generation is therefore the approved direction for frozen bank questions
+- the current eager 20-lesson store must NOT be scaled directly
+
+There are THREE confirmed product requirements to implement now:
+
+==================================================
+P0-A — FIX IT CHAPTER NUMBERING GLOBALLY
+==================================================
+
+Current defect:
+
+Information Technology chapters are still shown with incorrect student-facing serials such as:
+
+Ch 4021
+Ch 4022
+Ch 4023
+
+This was previously identified and was supposed to be rectified, but the defect still exists in the live Practice UI.
+
+Required permanent visible numbering:
+
+Ch 1 — Introduction to IT-ITeS Industry
+Ch 2 — Data Entry and Keyboarding Skills
+Ch 3 — Digital Documentation
+
+Internal IDs MUST remain unchanged:
+
+it402-unit1
+it402-unit2
+it402-unit3
+
+Do NOT rename canonical IDs.
+
+Do NOT alter curriculum data merely to change display labels.
+
+Find the SHARED display-number derivation that currently produces 4021/4022/4023 and fix it generically.
+
+The visible chapter number must be based on the chapter's student-facing order/display order, not by parsing digits from internal IDs.
+
+This must work automatically for future IT units:
+
+it402-unit4 → Ch 4
+it402-unit5 → Ch 5
+
+without another code patch.
+
+Do NOT hardcode:
+
+it402-unit1 → 1
+it402-unit2 → 2
+it402-unit3 → 3
+
+unless the existing authoritative chapter metadata itself already contains that order and the renderer simply needs to use it.
+
+Audit all student-facing IT chapter-number displays, including at minimum:
+
+- Practice chapter list
+- Recommended Next Action
+- expanded chapter/question list
+- search result labels added below
+- Solution navigation/context where chapter serial is shown
+- any shared chapter-label helper used by these surfaces
+
+There must be ONE shared display rule.
+
+Do not create another numbering system.
+
+Validate that Mathematics and Science numbering remain unchanged.
+
+==================================================
+P0-B — SHOW QUESTION NUMBER ON SOLUTION PAGE
+==================================================
+
+Current defect:
+
+The Solution page shows the question text but not its visible Q-number.
+
+Required display:
+
+QUESTION DETECTED · Q9
+
+or equivalent compact presentation.
+
+The visible Q-number must come from the question's ACTUAL position in the student-visible chapter question list.
+
+Do NOT infer visible Q-number by parsing internal IDs such as:
+
+t1-q09
+hot-004
+con-001
+
+because internal IDs do not necessarily equal displayed chapter serial numbers.
+
+Generic requirement:
+
+Works for:
+- Mathematics
+- Science
+- Information Technology
+- future IT units
+- future boards such as Bengal Board
+- future subjects/classes
+
+Use the existing canonical/student-visible chapter question collection to determine the visible serial.
+
+Do not mutate question-bank IDs.
+
+No AI call.
+
+Also verify top and bottom:
+
+← Chapter
+← Questions
+
+navigation remain correct.
+
+==================================================
+P1 — ADD "FIND A QUESTION" TO PRACTICE
+==================================================
+
+Add a compact student-facing search field near the TOP of Practice.
+
+Exact placement:
+
+Below Class/Subject selectors
+ABOVE Mastery Overview
+
+Label:
+
+Find a Question
+
+Placeholder:
+
+Search by words, topic or part of a question...
+
+Purpose:
+
+Student can type something such as:
+
+irrational number
+plasma membrane
+BPO
+coordinates
+velocity
+
+and immediately find relevant existing bank questions.
+
+Search source:
+
+ONLY current canonical ACTIVE, non-deleted, student-visible questions.
+
+Do NOT use:
+- OpenAI
+- embeddings
+- external API
+- new database
+- duplicate question source
+- separate manually-maintained search index
+
+Use existing loaded/canonical question data.
+
+Search at minimum:
+
+- question text
+- topic
+- existing key concepts/keywords where already available
+
+Behaviour:
+
+- local deterministic search
+- case-insensitive
+- partial-text matching
+- responsive while typing
+- compact results
+- no clutter
+
+Each result should show:
+
+Subject · Ch X · Chapter Name · Q-number
+
+then the question text.
+
+For Information Technology, after P0-A:
+
+use Ch 1 / Ch 2 / Ch 3 — NEVER Ch 4021/4022/4023.
+
+Clicking result must:
+
+- open exact canonical questionId
+- preserve owning subject/chapter
+- preserve visible Q-number context
+- allow Questions button to return to the correct owning chapter question list
+
+Future approved IT chapters and Bengal Board questions must automatically become searchable through the same canonical gateway.
+
+Do NOT hardcode today's 1,375 questions.
+
+==================================================
+P1 — EXECUTE TASK #6 LAZY PRE-GENERATED LESSON ARCHITECTURE
+==================================================
+
+The 20-question pre-generated pilot is technically validated.
+
+Current problem:
+
+All 20 lessons are currently loaded as one static collection inside the Solution chunk.
+
+That architecture must NOT scale to:
+
+1,375
+5,000
+10,000
+50,000+
+lessons.
+
+Implement the already-approved Task #6 architecture:
+
+CHAPTER-LEVEL LAZY LESSON CHUNKS.
+
+Permanent runtime:
+
+questionId
+→ authoritative question/chapter
+→ lazy-load ONLY that chapter's pre-generated lesson chunk
+→ lookup questionId
+→ validate source/content hash
+→ validate Detailed lesson completeness
+→ verify frozen final-answer equality
+→ render instantly
+
+Valid pre-generated lesson:
+
+- 0 runtime AI calls
+- target complete paint ≤1 second under normal warm-app conditions
+
+Missing/stale/invalid lesson:
+
+→ existing streamed Detailed fallback unchanged
+
+Do NOT:
+- use one giant global lesson file
+- use one file per question
+- add database
+- add Redis
+- add object storage
+- add new backend service
+- create duplicate curriculum registry
+- create manual questionId→chunk map requiring maintenance
+
+Generated loader metadata is allowed ONLY if automatically generated from authoritative chapter/question metadata.
+
+==================================================
+MIGRATE THE EXISTING 20 ONLY
+==================================================
+
+Move the current 20 pre-generated lessons into the chapter-level lazy structure.
+
+DO NOT regenerate them.
+
+AI calls during this migration must be:
+
+0
+
+Preserve exactly:
+
+- lesson content
+- questionId
+- source hash
+- frozen final answer validation
+
+After validation:
+
+retire the old eager lesson-serving path.
+
+Do NOT leave two active pre-generated lesson architectures.
+
+==================================================
+GENERATOR REQUIREMENTS
+==================================================
+
+The existing generator must remain/support:
+
+- one question ID
+- selected IDs
+- missing-only
+- stale-only
+- resume after interruption
+- automatic destination into correct chapter chunk
+- skip valid existing lessons
+
+It must NOT depend on:
+- current 1,375 count
+- CBSE-only structure
+- current IT unit count
+- today's subjects
+
+Future:
+
+IT Unit 4
+IT Unit 5
+Bengal Board
+other boards/classes/subjects
+
+must enter the same generated lesson architecture without redesign.
+
+==================================================
+STRICTLY PROTECTED
+==================================================
+
+Do NOT alter:
+
+- frozen Q&A content
+- Gold Standard answers
+- curriculum content
+- canonical curriculum rules
+- Detailed visible 8-section teaching contract
+- Detailed teaching quality
+- AI model
+- prompt teaching content
+- planner
+- streamed fallback behaviour
+- Practice mastery/progress logic
+- analytics
+- auth
+- unrelated UI
+- existing approved question IDs
+
+Do not reopen runtime AI latency/schema optimisation.
+
+Do not generate more lessons.
+
+==================================================
+VALIDATION
+==================================================
+
+A. IT numbering
+
+Verify EVERY current IT chapter student-facing surface shows:
+
+Ch 1
+Ch 2
+Ch 3
+
+and zero occurrences of:
+
+Ch 4021
+Ch 4022
+Ch 4023
+
+in student-facing rendered UI.
+
+Verify future display logic would show unit4 as Ch 4 without another patch.
+
+Verify Maths/Science chapter numbers unchanged.
+
+B. Solution Q-number
+
+Test:
+
+- Maths
+- Science
+- IT
+
+Confirm visible Q-number matches actual Practice question serial.
+
+C. Find Question
+
+Test at least:
+
+irrational number
+plasma membrane
+BPO
+coordinates
+velocity
+
+Verify results return correct:
+
+subject
+chapter
+visible chapter number
+visible Q-number
+question text
+questionId
+
+Click result → exact Solution.
+
+Questions → returns to correct question list.
+
+Search AI calls = 0.
+
+D. Lazy lessons
+
+Test all existing 20 pilot lessons.
+
+Confirm:
+
+- complete Detailed lesson still renders
+- 0 runtime AI calls
+- lesson content unchanged
+- source hashes unchanged
+- frozen final-answer equality unchanged
+- unrelated lesson chunks do NOT load
+
+Measure actual browser:
+
+click → URL
+click → complete Detailed DOM
+click → next paint
+lazy chunk bytes
+new network bytes
+
+Target:
+
+complete Detailed paint ≤1 second under normal warm-app test conditions.
+
+E. Persistence
+
+Representative Maths / Science / IT:
+
+- clear localStorage
+- hard refresh
+- restart API
+- reopen
+
+Pre-generated lesson must still work with 0 runtime AI calls.
+
+F. Non-pregenerated question
+
+Do NOT unnecessarily consume AI tokens.
+
+Verify structurally that a missing pre-generated lesson still falls through to the current streamed path.
+
+G. Scale projection
+
+Report:
+
+1,375
+5,000
+10,000
+50,000
+100,000
+
+For each:
+
+- projected total stored lesson size
+- expected number of chapter chunks
+- expected lesson bytes downloaded for ONE ordinary question
+- whether one-question browser payload materially increases with GLOBAL lesson count
+
+Desired:
+
+NO proportional global payload growth.
+
+H. TypeScript/build/tests
+
+Run all relevant checks.
+
+==================================================
+REPORT ONLY
+==================================================
+
+Return:
+
+1. files changed/added/deleted
+2. root cause of IT 4021 numbering persistence
+3. exact global numbering fix
+4. proof all IT student-facing surfaces now use Ch 1/2/3
+5. Q-number derivation method
+6. Find Question implementation/search algorithm
+7. search navigation verification
+8. search AI calls
+9. final lazy lesson chunk structure
+10. question→chunk resolution method
+11. confirmation no duplicate manual registry
+12. confirmation existing 20 lessons MIGRATED, not regenerated
+13. AI calls during migration
+14. browser latency for pilot lessons
+15. chunk/network payload
+16. proof unrelated chunks not loaded
+17. persistence results
+18. scale projections
+19. generator missing/stale/resume compatibility
+20. TypeScript/build/test results
+21. regressions/blockers
+22. git/worktree status
+
+DO NOT MASS-GENERATE.
+
+DO NOT GENERATE LESSON #21.
+
+DO NOT CREATE ANOTHER TASK AUTOMATICALLY.
+
+If all gates pass, end exactly:
+
+QUESTION DISCOVERY + IT NUMBERING + SCALABLE INSTANT LESSON ARCHITECTURE READY — AWAITING FOUNDER ACCEPTANCE
+
+Then STOP.
+
+TRACE:
+CHAT #009
+REPLIT PROMPT #009
+IT NUMBERING + Q-NUMBER + FIND QUESTION + TASK #6
+19-Aug-2026 22:02 IST

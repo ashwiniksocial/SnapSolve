@@ -11,6 +11,9 @@ import { useMasteryScore }  from "@/hooks/useMasteryScore";
 import { useProgress }      from "@/hooks/useProgress";
 import {
   getChapters,
+  getChapterDisplayNumber,
+  getQuestionDisplayNumber,
+  getStudentFacingSubject,
   getTopics,
   getQuestions,
   preloadQBank,
@@ -347,6 +350,7 @@ export default function Practice() {
   const [selectedTopicId,   setSelectedTopicId]   = useState<string>("all");
   const [selectedDiff,      setSelectedDiff]      = useState<Difficulty | "All">("All");
   const [selectedType,      setSelectedType]      = useState<EffectiveQuestionType | "All">("All");
+  const [searchQuery,       setSearchQuery]       = useState("");
 
   const topics = useMemo(() => getTopics(selectedChapterId), [selectedChapterId]);
 
@@ -400,6 +404,29 @@ export default function Practice() {
     () => bankReady ? ALL_SUBJECTS.filter((s) => getChapters(practiceClass, s).length > 0) : [],
     [bankReady, practiceClass],
   );
+
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLocaleLowerCase();
+    if (!query || !bankReady) return [];
+    const terms = query.split(/\s+/).filter(Boolean);
+    const activeChapterIds = new Set(
+      availableSubjects.flatMap((subject) =>
+        getChapters(practiceClass, subject).map((chapter) => chapter.id),
+      ),
+    );
+    const candidates = availableSubjects.flatMap((subject) =>
+      getQuestions({ classNum: practiceClass, subject }),
+    ).filter((question) => activeChapterIds.has(question.chapterId));
+
+    return candidates.filter((question) => {
+      const searchableText = [
+        question.question,
+        question.topicName,
+        ...question.keyConcepts,
+      ].join(" ").toLocaleLowerCase();
+      return terms.every((term) => searchableText.includes(term));
+    }).slice(0, 12);
+  }, [availableSubjects, bankReady, practiceClass, searchQuery]);
 
   const handleSubjectChange = useCallback((s: Subject) => {
     setSelectedSubject(s);                    // sync — clears stale chapters immediately
@@ -616,6 +643,53 @@ export default function Practice() {
               <span className="text-[11px] text-slate-400">{adaptiveMastery}% avg mastery</span>
             </div>
           )}
+
+          <div className="mt-4">
+            <label htmlFor="practice-question-search" className="block text-xs font-bold text-slate-600 mb-1.5">
+              Find a Question
+            </label>
+            <input
+              id="practice-question-search"
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search by words, topic or part of a question..."
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100"
+            />
+            {searchQuery.trim() && (
+              <div className="mt-2 rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+                {searchResults.length > 0 ? (
+                  <div className="divide-y divide-slate-100">
+                    {searchResults.map((question) => {
+                      const chapterNumber = getChapterDisplayNumber(
+                        question.classNum,
+                        question.subject,
+                        question.chapterId,
+                      );
+                      const questionNumber = getQuestionDisplayNumber(question);
+                      return (
+                        <button
+                          key={question.id}
+                          type="button"
+                          onClick={() => handleOpenQuestion(question)}
+                          className="w-full px-3.5 py-3 text-left hover:bg-slate-50 active:bg-slate-100 transition"
+                        >
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 truncate">
+                            {getStudentFacingSubject(question.subject)} · Ch {chapterNumber ?? "—"} · {question.chapterName} · Q{questionNumber ?? "—"}
+                          </p>
+                          <p className="mt-1 text-sm font-medium leading-snug text-slate-700 line-clamp-2">
+                            {question.question}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="px-3.5 py-3 text-sm text-slate-500">No active questions match that search.</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -716,9 +790,7 @@ export default function Practice() {
             </div>
             <div className="divide-y divide-slate-100">
               {weakChapters.map((cs) => {
-                const chNum   = cs.displayChapterNumber !== undefined
-                  ? String(cs.displayChapterNumber)
-                  : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const chNum   = String(cs.displayChapterNumber ?? "—");
                 const chLabel = "Ch";
                 return (
                   <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`} className="px-4 py-3 flex items-center gap-3">
@@ -764,6 +836,9 @@ export default function Practice() {
               ✦ Recommended Next Action
             </p>
             <p className="text-sm font-semibold text-slate-800 mt-0.5 leading-snug">
+              <span className="text-slate-400 font-normal text-xs mr-1">
+                Ch {recommendedChapter.chapter.displayChapterNumber ?? "—"}.
+              </span>
               {recommendedChapter.chapter.chapterName}
             </p>
             <p className="text-[12px] text-slate-500 mt-0.5">{recommendedChapter.reason}</p>
@@ -817,9 +892,7 @@ export default function Practice() {
                 const status     = getChapterStatus(cs.accuracy, cs.attempted, cs.completionPct);
                 const isSelected = selectedChapterId === cs.chapterId;
                 const isOpen     = isSelected && drilldownOpen;
-                const chNum      = cs.displayChapterNumber !== undefined
-                  ? String(cs.displayChapterNumber)
-                  : cs.chapterId.replace(/\D/g, "").replace(/^0+/, "");
+                const chNum      = String(cs.displayChapterNumber ?? "—");
                 const chLabel    = "Ch";
 
                 return (

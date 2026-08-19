@@ -10,7 +10,14 @@ import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
 import { callDevLesson, toAIResponse, solveBankWithStream, getBankCachedLesson, type BankQuestionContext } from "@/services/ai/openaiSolver";
 import { useCelebration } from "@/hooks/useCelebration";
-import { getQuestionById, type Difficulty } from "@/services/questionService";
+import {
+  getChapterDisplayNumber,
+  getQuestionById,
+  getQuestionDisplayNumber,
+  getStudentFacingSubject,
+  preloadQBank,
+  type Difficulty,
+} from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
 import { getPreGeneratedBankLesson } from "@/data/preGeneratedLessons";
 import SolutionCard from "@/components/SolutionCard";
@@ -46,6 +53,9 @@ export default function Solution() {
   const [needsReview, setNeedsReview] = useState<boolean | null>(null);
   // practiceMode result: null = not yet rated, true = got it, false = needs review
   const [practiceResult, setPracticeResult] = useState<boolean | null>(null);
+  const [visibleQuestionNumber, setVisibleQuestionNumber] = useState<number | null>(null);
+  const [visibleChapterNumber, setVisibleChapterNumber] = useState<number | null>(null);
+  const [visiblePracticeSubject, setVisiblePracticeSubject] = useState<string | null>(null);
 
   const solutionParams = new URLSearchParams(window.location.search);
   // Practice mode preserves a question ID in the URL so a direct load or
@@ -79,8 +89,14 @@ export default function Solution() {
       // Step 3: on completion, cache lesson by questionId for future instant loads.
       // One lesson serves all 3 teaching modes — switching is instant, 0 AI calls.
       if (practiceMode && practiceQuestionId) {
+        await preloadQBank();
         const bankQ = getQuestionById(practiceQuestionId);
         if (bankQ) {
+          setVisibleQuestionNumber(getQuestionDisplayNumber(bankQ) ?? null);
+          setVisibleChapterNumber(
+            getChapterDisplayNumber(bankQ.classNum, bankQ.subject, bankQ.chapterId) ?? null,
+          );
+          setVisiblePracticeSubject(getStudentFacingSubject(bankQ.subject));
           const bankContext: BankQuestionContext = {
             questionId:  bankQ.id,
             answer:      bankQ.answer,
@@ -109,7 +125,7 @@ export default function Solution() {
           // This is validated against the current frozen question source on every
           // lookup. Missing/stale entries intentionally continue to the existing
           // secondary localStorage cache and then the unchanged SSE path.
-          const preGenerated = getPreGeneratedBankLesson(bankQ);
+          const preGenerated = await getPreGeneratedBankLesson(bankQ);
           if (preGenerated) {
             setSolution(preGenerated);
             setPageState("done");
@@ -226,7 +242,7 @@ export default function Solution() {
       setSolveError(msg);
       setPageState("error");
     }
-  }, [session.subject, session.question, session.ocrConfidence, practiceMode, session.practiceQuestionId]);
+  }, [session.subject, session.question, session.ocrConfidence, practiceMode, practiceQuestionId]);
 
   useEffect(() => { runSolver(); }, []);
 
@@ -263,7 +279,8 @@ export default function Solution() {
           <div className="min-w-0">
             <h1 className="text-xl font-bold text-slate-900">Solution</h1>
             <p className="text-sm mt-0.5 truncate" style={{ color: cfg.color }}>
-              {cfg.icon} {session.subject}
+              {cfg.icon} {visiblePracticeSubject ?? session.subject}
+              {visibleChapterNumber !== null && <> · Ch {visibleChapterNumber}</>}
               {solution && <> · {solution.topic}</>}
             </p>
           </div>
@@ -312,6 +329,11 @@ export default function Solution() {
         {/* Solution content */}
         {pageState === "done" && solution && (
           <div className="space-y-5 fade-up">
+            {practiceMode && visibleQuestionNumber !== null && (
+              <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                Question detected · Q{visibleQuestionNumber}
+              </p>
+            )}
 
             <SolutionCard
               key={solution.id}

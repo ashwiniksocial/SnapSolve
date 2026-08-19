@@ -27,3 +27,4 @@
 - [Detailed schema field order](detailed-schema-field-order.md) — guidedReasoning+finalAnswer moved before support fields in JSON_SCHEMA; first step now 2.3–3.6 s; do NOT revert order.
 - [Detailed invisible fields](detailed-invisible-fields.md) — hidden fields are excluded from all Detailed output prompts; parser defaults mean telemetry, not returned keys, proves savings.
 - [Persistent bank lesson assets](persistent-bank-lessons.md) — static derived lessons are hash-verified against frozen bank content; invalid entries must fall through to existing streaming.
+- [Lazy lesson chunks](lazy-lesson-chunks.md) — direct Vite glob syntax is required for metadata-derived, chapter-level lesson code splitting.
