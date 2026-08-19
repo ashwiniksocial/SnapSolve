@@ -1,0 +1,392 @@
+SNAPSOLVE BUILD HQ — REPLIT PROMPT #016
+DATE/TIME: 19-Aug-2026 | 23:27 IST
+PURPOSE: Audit existing Practice Mastery system against approved subject-wise Beta progress design
+STATUS: READ-ONLY DIAGNOSTIC — NO IMPLEMENTATION YET
+
+Recall and obey ALL PrePromptConditions.
+
+ROLE / PRIORITY:
+
+We are currently PERFECTING PRACTICE FOR BETA.
+
+Do not expand into unrelated features.
+
+Founder-approved sequence remains:
+
+PRACTICE → VALIDATE → FREEZE → SCAN → VALIDATE → FREEZE → LOGIN/ACCESS → CONTROLLED BETA
+
+The current Practice Mastery Overview is now under review.
+
+Founder does NOT want generic/repetitive metrics such as:
+
+- Mastery 93/100 / Expert without defensible evidence
+- Accuracy if it is not based on real student answering
+- generic Difficulty score
+- Consistency
+- Recency
+- Streak
+- Study Time as separate overlapping engagement metrics
+
+The intended student-facing system is SUBJECT-SPECIFIC.
+
+Mathematics, Science and Information Technology must ultimately have their OWN progress/readiness view.
+
+DO NOT IMPLEMENT IT YET.
+
+FIRST audit the existing architecture and determine the smallest safe path.
+
+==================================================
+APPROVED CONCEPTUAL MODEL
+==================================================
+
+For EACH SUBJECT separately, founder ultimately wants:
+
+1. QUESTIONS PRACTISED
+
+Count genuinely practised unique questions.
+
+Merely opening/browsing a question must NOT automatically imply mastery.
+
+Determine what existing event/state can accurately support this.
+
+--------------------------------------------------
+2. I AM CONFIDENT
+
+This replaces the current "Got it" concept.
+
+Student-facing choice:
+
+✓ I Am Confident
+
+Meaning:
+
+"I understand this and believe I can answer a similar question in my exam."
+
+IMPORTANT:
+
+This is SELF-REPORTED CONFIDENCE.
+
+It must NOT automatically be represented as objectively proven mastery.
+
+Audit whether existing Got It state can safely be renamed/reused without schema duplication.
+
+--------------------------------------------------
+3. NEED MORE PRACTICE
+
+Second student choice:
+
+↻ Need More Practice
+
+Meaning:
+
+"I need to revise or practise this again."
+
+Audit whether existing Needs Review state/revision planner can be reused.
+
+Do NOT create another review system.
+
+--------------------------------------------------
+4. EASY / MEDIUM / HARD ABILITY
+
+Founder wants SnapSolve eventually to judge how the student is performing across:
+
+Easy
+Medium
+Hard
+
+But this must be based on meaningful evidence.
+
+Opening an Easy/Medium/Hard question alone must NOT constitute ability.
+
+"I Am Confident" alone is also self-reported confidence, not objectively demonstrated ability.
+
+Audit what CURRENT student-answer/check-answer/attempt data exists that could eventually support demonstrated difficulty ability.
+
+Return separately:
+
+A. what can be measured NOW truthfully
+B. what requires future student-answer evidence
+
+Do NOT build a new testing engine in this task.
+
+--------------------------------------------------
+5. NEEDS MORE WORK
+
+Founder wants subject-specific identification of:
+
+- weak topics
+- question types needing more work
+- Easy/Medium/Hard areas where student is struggling
+- repeated Need More Practice behaviour
+- other existing legitimate learning signals
+
+Audit whether existing:
+
+revision planner
+attempt log
+weak areas
+topic analytics
+mastery engine
+
+already provide reusable signals.
+
+Avoid duplicate architecture.
+
+--------------------------------------------------
+6. COVERAGE
+
+Evaluate adding a simple subject-specific coverage indicator such as:
+
+Topics Practised: X / Y
+
+and/or
+
+Questions Practised: X / Total
+
+Determine which is more educationally useful and technically reliable using existing question-bank metadata.
+
+Do not implement yet.
+
+--------------------------------------------------
+7. ACTIVE LEARNING TIME
+
+Founder considers:
+
+Consistency
+Recency
+Streak
+Study Time
+
+too repetitive/cluttered for this Practice view.
+
+The preferred Beta concept is ONE consolidated metric:
+
+ACTIVE LEARNING TIME
+
+Audit current timing architecture.
+
+Determine:
+
+- what existing timing data exists
+- whether it measures real active interaction
+- whether idle/background time is counted
+- whether fixed estimated minutes are being added
+- whether reliable active learning time can be calculated WITHOUT building a complex tracking system
+
+If current data is unreliable, recommend hiding time for Beta rather than inventing false precision.
+
+==================================================
+CURRENT MASTERY PANEL
+==================================================
+
+Screenshot/current state shows examples such as:
+
+Mastery Score 93/100
+Expert
+Questions Solved 17
+Accuracy 100%
+Difficulty
+Consistency
+Recency
+Streak
+Study Time 1h 7m
+
+Audit every one.
+
+For each provide:
+
+Metric
+Exact source file/function
+Exact formula
+Input data
+Events that change it
+Whether it is educationally trustworthy
+Whether it can be reused in approved design
+
+Grade each:
+
+A = trustworthy
+B = approximate but usable
+C = misleading/provisional
+
+==================================================
+CRITICAL SEMANTIC RULES
+==================================================
+
+Keep these concepts separate:
+
+PRACTISED
+= student genuinely engaged with a question
+
+CONFIDENT
+= student self-reports understanding/confidence
+
+NEEDS MORE PRACTICE
+= student self-reports further work required
+
+DEMONSTRATED ABILITY
+= actual evidence from independently answering/checking questions
+
+DO NOT collapse these four concepts into one "Mastery" number.
+
+Do not call self-reported confidence objective mastery.
+
+==================================================
+SUBJECT SEPARATION
+==================================================
+
+Determine how existing progress data can be separated reliably into:
+
+MATHEMATICS
+SCIENCE
+INFORMATION TECHNOLOGY
+
+Science may internally contain Physics/Chemistry/Biology.
+
+Audit whether the student-facing Science progress should aggregate these while still allowing weakness identification by Physics/Chemistry/Biology/topic underneath.
+
+Do not change curriculum architecture.
+
+==================================================
+BETA UX TARGET — CONCEPT ONLY
+==================================================
+
+Evaluate the smallest truthful subject page approximately like:
+
+MATHEMATICS
+
+Questions Practised
+17 / total
+
+I Am Confident
+11
+
+Need More Practice
+6
+
+Coverage
+8 / 12 topics practised
+
+MY QUESTION LEVELS
+
+Easy
+[truthful status]
+
+Medium
+[truthful status]
+
+Hard
+[truthful status]
+
+NEEDS MORE WORK
+
+Coordinate Geometry
+Irrational Numbers
+etc.
+
+ACTIVE LEARNING TIME
+[only if trustworthy]
+
+Do NOT implement this layout yet.
+
+Recommend improvements if they materially help the student understand:
+
+"What have I practised?"
+"What am I confident about?"
+"Where am I struggling?"
+"What should I practise next?"
+"How prepared am I for increasingly difficult questions?"
+
+Keep the page simple.
+
+==================================================
+IMPORTANT PRODUCT PRINCIPLE
+==================================================
+
+The purpose of this page is NOT gamification.
+
+The purpose is to help a Class 9 student and parent understand actual learning progress and exam readiness.
+
+No vanity metrics.
+
+No fake precision.
+
+No misleading Expert labels.
+
+No metric merely because data exists.
+
+Every displayed metric must cause a useful student action or provide trustworthy learning information.
+
+==================================================
+BUILD IMPACT GATE
+==================================================
+
+For every proposed metric ask:
+
+1. Does the student understand it immediately?
+2. Is it based on real evidence?
+3. Does it help the student decide what to do next?
+4. Is it required for Beta?
+5. Can existing architecture provide it?
+6. Would hiding it be safer than showing misleading data?
+
+==================================================
+RETURN
+==================================================
+
+Return:
+
+1. Exact current Mastery formula
+2. Why current account can show 93/100 Expert
+3. Exact Questions Solved logic
+4. Exact Accuracy logic
+5. Exact Difficulty logic
+6. Exact Consistency logic
+7. Exact Recency logic
+8. Exact Streak logic
+9. Exact Study Time logic
+10. Existing reusable progress data/hooks
+11. Whether Got It can safely become "I Am Confident"
+12. Whether Needs Review can safely become "Need More Practice"
+13. Best truthful definition of Questions Practised
+14. Available evidence for Easy/Medium/Hard ability
+15. Available evidence for Needs More Work
+16. Best Coverage calculation
+17. Whether trustworthy Active Learning Time is possible now
+18. Subject-separation architecture
+19. KEEP / REUSE / REMOVE / HIDE / DEFER table for every current metric
+20. Smallest recommended Beta implementation
+21. Exact files that WOULD need modification
+22. Risks/regressions
+23. Confirmation ZERO code changes
+24. Git/worktree status
+
+DO NOT MODIFY CODE.
+
+DO NOT create new progress architecture.
+
+DO NOT modify Practice search.
+
+DO NOT modify question banks.
+
+DO NOT modify curriculum.
+
+DO NOT modify generated lessons.
+
+DO NOT generate lessons.
+
+DO NOT modify Scan.
+
+DO NOT implement anything after completing the audit.
+
+End exactly:
+
+SUBJECT-WISE PRACTICE READINESS AUDIT COMPLETE — AWAITING FOUNDER APPROVAL
+
+Then STOP.
+
+TRACE:
+CHAT #016
+REPLIT PROMPT #016
+SUBJECT-WISE PRACTICE READINESS AUDIT
+19-Aug-2026 23:27 IST
