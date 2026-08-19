@@ -1,0 +1,83 @@
+Recall ALL PrePromptConditions.
+
+STOP before any batch generation.
+
+The Founder must PERSONALLY review the teaching quality of every one of the 20 pre-generated Detailed lessons before this generation approach is approved for expansion.
+
+DO NOT CHANGE CODE.
+
+DO NOT GENERATE OR REGENERATE ANY LESSON.
+
+DO NOT CALL AI.
+
+DO NOT create additional lessons.
+
+Read the existing 20-entry pilot manifest/generated lesson assets and return the EXACT 20 lessons.
+
+For each lesson provide:
+
+1. Serial number 1–20
+2. Subject
+3. Exact student-visible chapter name
+4. Student-visible chapter serial
+5. Internal chapter ID
+6. Exact question ID
+7. Question serial number as displayed in Practice
+8. Exact question text
+9. Difficulty
+10. Whether HOTS/reasoning/factual/numerical/procedural, where determinable from existing metadata
+11. Confirmation pre-generated Detailed lesson exists and validates
+12. Confirmation opening it should require 0 runtime AI calls
+
+Group them:
+
+MATHEMATICS — 6
+PHYSICS — 3
+CHEMISTRY — 3
+BIOLOGY — 4
+INFORMATION TECHNOLOGY — 4
+
+IMPORTANT:
+
+We already discovered that Mathematics internal chapter IDs do NOT necessarily equal the student-visible chapter serial.
+
+Therefore DO NOT tell the Founder merely to open "ch1".
+
+Give explicit navigation such as:
+
+Practice
+→ Mathematics
+→ Ch 3 — The World of Numbers
+→ Q1 — "Which of the following is an irrational number?"
+
+Use the ACTUAL current student-facing serial/name/question number.
+
+Do this for every one of the 20 so the Founder can locate each question without ambiguity.
+
+At the end provide a compact:
+
+FOUNDER REVIEW CHECKLIST
+
+For each #1–#20 include empty fields:
+
+Teaching clarity: ___ /10
+Weak-student friendliness: ___ /10
+Step-by-step quality: ___ /10
+Teacher/examiner acceptability: ___ /10
+Answer completeness: ___ /10
+Too much / Just right / Too little: ___
+Load speed observed: ___ sec
+Problem/feedback: ___
+Founder verdict: PASS / REVISE
+
+DO NOT perform the review yourself.
+
+DO NOT modify anything based on presumed problems.
+
+The Founder will personally inspect the actual rendered lessons and provide feedback.
+
+End exactly:
+
+**20 PRE-GENERATED LESSONS READY FOR FOUNDER ACADEMIC REVIEW — NO BATCH GENERATION AUTHORIZED**
+
+Then STOP.
