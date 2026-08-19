@@ -3,13 +3,10 @@ import { flushSync } from "react-dom";
 import { Link } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
-import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
-import { useAttemptLog } from "@/hooks/useAttemptLog";
-import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
+import { useRevisionPlanner, type SelfAssessmentStatus } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
 import { callDevLesson, toAIResponse, solveBankWithStream, getBankCachedLesson, type BankQuestionContext } from "@/services/ai/openaiSolver";
-import { useCelebration } from "@/hooks/useCelebration";
 import {
   getChapterDisplayNumber,
   getQuestionById,
@@ -23,7 +20,6 @@ import { getPreGeneratedBankLesson } from "@/data/preGeneratedLessons";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
-import StarBurst from "@/components/StarBurst";
 import SocraticTutor from "@/components/socratic/SocraticTutor";
 import { getMasteryEntry } from "@/services/studentModel";
 
@@ -31,11 +27,8 @@ type PageState = "loading" | "done" | "error";
 
 export default function Solution() {
   const { session, update } = useSession();
-  const { completeToday, isTodayCompleted } = useStreak();
-  const { recordSolve } = useProgress();
-  const { logAttempt } = useAttemptLog();
-  const { recordAttempt } = useRevisionPlanner();
-  const celebrate = useCelebration();
+  const { recordSolve, recordPractice } = useProgress();
+  const { setSelfAssessment, selfAssessments } = useRevisionPlanner();
   const cfg = SUBJECTS[session.subject];
 
   const [pageState, setPageState]   = useState<PageState>("loading");
@@ -45,14 +38,10 @@ export default function Solution() {
   const [phaseIdx, setPhaseIdx]     = useState(0);
   const [progressMsg, setProgressMsg] = useState("");
   const [progressPct, setProgressPct] = useState(0);
-  const [marked,      setMarked]      = useState(false);
-  const [burst,       setBurst]       = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
   const [showTutor,   setShowTutor]   = useState(false);
   // null = not yet rated, false = got it, true = needs review
   const [needsReview, setNeedsReview] = useState<boolean | null>(null);
-  // practiceMode result: null = not yet rated, true = got it, false = needs review
-  const [practiceResult, setPracticeResult] = useState<boolean | null>(null);
   const [visibleQuestionNumber, setVisibleQuestionNumber] = useState<number | null>(null);
   const [visibleChapterNumber, setVisibleChapterNumber] = useState<number | null>(null);
   const [visiblePracticeSubject, setVisiblePracticeSubject] = useState<string | null>(null);
@@ -81,7 +70,7 @@ export default function Solution() {
     }
 
     try {
-      // ── Bank question path: streaming TeachingLesson grounded in frozen answer ─
+    // ── Bank question path: streaming TeachingLesson grounded in frozen answer ─
       // Step 1: check localStorage cache by questionId (7-day TTL) — 0 AI calls.
       // Step 2: cache miss → stream full Detailed lesson grounded in frozen bank
       //         answer via POST /api/solveQuestion/stream with bankContext.
@@ -105,21 +94,9 @@ export default function Solution() {
             keyConcepts: bankQ.keyConcepts,
           };
 
-          // Analytics — same whether cache hit or miss
-          recordSolve(session.subject, session.practiceTopic ?? bankQ.topicName, true, bankQ.id);
+          // Lesson viewing alone is not a practice outcome. The explicit
+          // self-assessment controls below record genuine, deduplicated practice.
           update({ practiceTopic: bankQ.topicName });
-          if (session.practiceChapterId) {
-            logAttempt(
-              bankQ.id,
-              bankQ.question,
-              true,
-              bankQ.difficulty,
-              session.practiceChapterId,
-              session.practiceChapterName ?? "",
-              bankQ.subject as Subject,
-              session.practiceClassNum ?? 9,
-            );
-          }
 
           // ── Persistent derived lesson: instant display, 0 AI calls ──────────
           // This is validated against the current frozen question source on every
@@ -210,30 +187,10 @@ export default function Solution() {
       const topicKey = (practiceMode && session.practiceTopic)
         ? session.practiceTopic
         : result.topic;
-      recordSolve(
-        session.subject,
-        topicKey,
-        true,
-        practiceMode ? session.practiceQuestionId : undefined,
-      );
-      update({ practiceTopic: result.topic });
-
-      if (
-        practiceMode &&
-        session.practiceQuestionId &&
-        session.practiceChapterId
-      ) {
-        logAttempt(
-          session.practiceQuestionId,
-          session.question,
-          true,
-          session.practiceQuestionDiff ?? "Medium",
-          session.practiceChapterId,
-          session.practiceChapterName ?? "",
-          session.subject,
-          session.practiceClassNum ?? 9,
-        );
+      if (!practiceMode) {
+        recordSolve(session.subject, topicKey, true);
       }
+      update({ practiceTopic: result.topic });
 
       setPageState("done");
     } catch (err) {
@@ -246,18 +203,31 @@ export default function Solution() {
 
   useEffect(() => { runSolver(); }, []);
 
-  const handleMark = () => {
-    completeToday();
-    setMarked(true);
-    celebrate();
-    setBurst(true);
-    setTimeout(() => setBurst(false), 2500);
+  const practiceAssessment = practiceQuestionId
+    ? selfAssessments[practiceQuestionId]?.status ?? "UNSET"
+    : "UNSET";
+
+  const setPracticeAssessment = (status: Exclude<SelfAssessmentStatus, "UNSET">) => {
+    if (!practiceQuestionId) return;
+    const bankQuestion = getQuestionById(practiceQuestionId);
+    if (!bankQuestion) return;
+
+    recordPractice(bankQuestion.subject as Subject, bankQuestion.topicName, bankQuestion.id);
+    setSelfAssessment(
+      {
+        questionId: bankQuestion.id,
+        question: bankQuestion.question,
+        subject: bankQuestion.subject as Subject,
+        topic: bankQuestion.topicName,
+        chapter: bankQuestion.chapterName,
+        difficulty: bankQuestion.difficulty,
+      },
+      status,
+    );
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <StarBurst active={burst} />
-
       {/* Header */}
       <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-5">
         <div className="max-w-lg mx-auto">
@@ -358,86 +328,37 @@ export default function Solution() {
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   <button
-                    onClick={() => {
-                      setNeedsReview(false);
-                      if (practiceResult !== true) {
-                        setPracticeResult(true);
-                        logAttempt(
-                          session.practiceQuestionId!,
-                          session.question,
-                          true,
-                          session.practiceQuestionDiff ?? "Medium",
-                          session.practiceChapterId ?? "",
-                          session.practiceChapterName ?? "",
-                          session.subject,
-                          session.practiceClassNum ?? 9,
-                        );
-                        recordAttempt(
-                          session.practiceQuestionId!,
-                          session.question,
-                          session.subject,
-                          session.practiceTopic ?? "",
-                          session.practiceChapterName ?? "",
-                          (session.practiceQuestionDiff ?? "Medium") as Difficulty,
-                          true,
-                        );
-                      }
-                    }}
+                    onClick={() => setPracticeAssessment("CONFIDENT")}
                     className={`py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
-                      practiceResult === true
+                      practiceAssessment === "CONFIDENT"
                         ? "bg-emerald-500 border-emerald-500 text-white"
                         : "border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100"
                     }`}
                   >
-                    ✓ Got it
+                    ✓ I Am Confident
                   </button>
                   <button
-                    onClick={() => {
-                      setNeedsReview(true);
-                      if (practiceResult !== false) {
-                        setPracticeResult(false);
-                        logAttempt(
-                          session.practiceQuestionId!,
-                          session.question,
-                          false,
-                          session.practiceQuestionDiff ?? "Medium",
-                          session.practiceChapterId ?? "",
-                          session.practiceChapterName ?? "",
-                          session.subject,
-                          session.practiceClassNum ?? 9,
-                        );
-                        recordAttempt(
-                          session.practiceQuestionId!,
-                          session.question,
-                          session.subject,
-                          session.practiceTopic ?? "",
-                          session.practiceChapterName ?? "",
-                          (session.practiceQuestionDiff ?? "Medium") as Difficulty,
-                          false,
-                        );
-                        recordSolve(session.subject, session.practiceTopic, false);
-                      }
-                    }}
+                    onClick={() => setPracticeAssessment("NEEDS_PRACTICE")}
                     className={`py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
-                      practiceResult === false
+                      practiceAssessment === "NEEDS_PRACTICE"
                         ? "bg-red-500 border-red-500 text-white"
                         : "border-red-300 text-red-700 bg-red-50 hover:bg-red-100"
                     }`}
                   >
-                    ✗ Needs Review
+                    ↻ Need More Practice
                   </button>
                 </div>
-                {practiceResult !== null && (
+                {practiceAssessment !== "UNSET" && (
                   <p className="text-[11px] text-center text-slate-400 mt-2">
-                    {practiceResult
-                      ? "Recorded as correct — great work!"
-                      : "Marked for review — keep practising!"}
+                    {practiceAssessment === "CONFIDENT"
+                      ? "Saved as your confidence check-in."
+                      : "Saved for your revision practice."}
                   </p>
                 )}
               </div>
             )}
 
-            {/* ── Got it / Needs Review — shown for non-practiceMode flows ── */}
+            {/* ── Self-assessment wording for non-bank solution flows ───────── */}
             {!practiceMode && needsReview === null && (
               <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
                 <p className="text-xs font-bold text-slate-500 mb-3 text-center">How did you find this?</p>
@@ -446,47 +367,34 @@ export default function Solution() {
                     onClick={() => setNeedsReview(false)}
                     className="py-2.5 rounded-xl text-sm font-semibold border-2 border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 active:scale-95 transition-all"
                   >
-                    ✓ Got it
+                    ✓ I Am Confident
                   </button>
                   <button
                     onClick={() => setNeedsReview(true)}
                     className="py-2.5 rounded-xl text-sm font-semibold border-2 border-red-300 text-red-700 bg-red-50 hover:bg-red-100 active:scale-95 transition-all"
                   >
-                    ✗ Needs Review
+                    ↻ Need More Practice
                   </button>
                 </div>
               </div>
             )}
 
-            {/* ── Needs Review confirmation — no action panel ───────────── */}
+            {/* ── Need More Practice confirmation — no action panel ─────── */}
             {needsReview === true && (
               <p className="text-center text-xs text-slate-500 fade-up py-1">
-                Marked for review — we'll help you practise this again.
+                We’ll help you practise this again.
               </p>
             )}
 
-            {/* ── Utility controls ─────────────────────────────────────────── */}
-            <div className="flex items-center justify-end gap-2">
-              <button
-                onClick={handleMark}
-                disabled={isTodayCompleted || marked}
-                className={`py-2.5 px-3 rounded-xl text-xs font-semibold transition-all active:scale-95 ${
-                  isTodayCompleted || marked
-                    ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
-                    : "text-white shadow-sm"
-                }`}
-                style={!(isTodayCompleted || marked) ? { backgroundColor: cfg.color } : {}}
-              >
-                {isTodayCompleted || marked ? "✓ Marked Done" : "✓ Mark Solved"}
-              </button>
-              {!practiceMode && (
+            {!practiceMode && (
+              <div className="flex items-center justify-end">
                 <Link href="/scan">
                   <button className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 active:scale-95 transition-all text-center">
                     ← New Question
                   </button>
                 </Link>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* ── Bottom navigation — Chapter + Questions (practice mode only) ── */}
             {practiceMode && session.practiceChapterId && (

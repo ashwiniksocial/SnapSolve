@@ -3,12 +3,11 @@ import { Link, useLocation } from "wouter";
 import { SUBJECTS, type SubjectConfig, type Subject } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useProfile } from "@/hooks/useProfile";
-import { useAdaptiveLearning } from "@/hooks/useAdaptiveLearning";
 import { useChapterStats } from "@/hooks/useChapterStats";
-import { useAttemptLog }   from "@/hooks/useAttemptLog";
-import { useStreak }        from "@/hooks/useStreak";
-import { useMasteryScore }  from "@/hooks/useMasteryScore";
+import { useAttemptLog } from "@/hooks/useAttemptLog";
 import { useProgress }      from "@/hooks/useProgress";
+import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
+import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import {
   getChapters,
   getChapterDisplayNumber,
@@ -19,12 +18,6 @@ import {
   preloadQBank,
 } from "@/services/questionService";
 import type { Question, Difficulty, QuestionType, EffectiveQuestionType } from "@/services/questionService";
-import {
-  overallAccuracy,
-  strongestChapter,
-  weakestChapter,
-  buildQuestionMap,
-} from "@/services/analytics";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const DIFFICULTIES: (Difficulty | "All")[] = ["All", "Easy", "Medium", "Hard"];
@@ -243,10 +236,10 @@ function QuestionCard({ q, cfg, onOpen, index }: { q: Question; cfg: SubjectConf
 export default function Practice() {
   const { session, update }                    = useSession();
   const { profile }                            = useProfile();
-  const { getSubjectTier, getSubjectMastery }  = useAdaptiveLearning();
-  const { log, getChapterAttempts }            = useAttemptLog();
-  const { streak }                             = useStreak();
-  const { getSubjectStats }                    = useProgress();
+  const { getChapterAttempts }                 = useAttemptLog();
+  const { progress }                           = useProgress();
+  const { revisionItems, selfAssessments }     = useRevisionPlanner();
+  const { getTopicsNeedingRevision }           = useMistakeJournal();
 
   const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
   const [bankReady,       setBankReady]      = useState(false);
@@ -256,10 +249,7 @@ export default function Practice() {
   // update({ subject }) keeps session / localStorage in sync asynchronously.
   const [selectedSubject, setSelectedSubject] = useState<Subject>(session.subject);
 
-  const mastery      = useMasteryScore(selectedSubject, practiceClass, bankReady);
-  const cfg          = SUBJECTS[selectedSubject];
-  const adaptiveTier = getSubjectTier(selectedSubject);
-  const adaptiveMastery = getSubjectMastery(selectedSubject);
+  const cfg = SUBJECTS[selectedSubject];
 
   const chapterStats = useChapterStats(selectedSubject, practiceClass, bankReady);
 
@@ -268,72 +258,139 @@ export default function Practice() {
     [bankReady, practiceClass, selectedSubject],
   );
 
-  const questionMap = useMemo(() => {
-    const all = chapters.flatMap((ch) =>
-      getQuestions({ classNum: practiceClass, subject: selectedSubject, chapterId: ch.id })
+  const readiness = useMemo(() => {
+    const activeQuestions = bankReady
+      ? getQuestions({ classNum: practiceClass, subject: selectedSubject })
+      : [];
+    const activeById = new Map(activeQuestions.map((question) => [question.id, question]));
+    const activeTopicMeta = new Map<string, { label: string; chapterId: string }>();
+
+    for (const question of activeQuestions) {
+      const key = `${question.subject}::${question.topicName}`;
+      if (!activeTopicMeta.has(key)) {
+        activeTopicMeta.set(key, {
+          label: selectedSubject === "Science"
+            ? `${question.subject} — ${question.topicName}`
+            : question.topicName,
+          chapterId: question.chapterId,
+        });
+      }
+    }
+
+    const practicedIds = new Set<string>();
+    for (const [subject, topics] of Object.entries(progress)) {
+      if (getStudentFacingSubject(subject) !== selectedSubject) continue;
+      for (const record of Object.values(topics)) {
+        for (const questionId of record.attempted ?? []) {
+          if (activeById.has(questionId)) practicedIds.add(questionId);
+        }
+      }
+    }
+
+    const practicedTopicKeys = new Set(
+      [...practicedIds]
+        .map((questionId) => activeById.get(questionId))
+        .filter((question): question is Question => Boolean(question))
+        .map((question) => `${question.subject}::${question.topicName}`),
     );
-    return buildQuestionMap(all);
-  }, [chapters, practiceClass, selectedSubject]);
 
-  // ── Metrics ─────────────────────────────────────────────────────────────────
-  const totalSolved = chapterStats.reduce((s, ch) => s + ch.solved, 0);
-  const overallAcc  = overallAccuracy(chapterStats);
+    const practiceByDifficulty = (["Easy", "Medium", "Hard"] as const).map((difficulty) => {
+      const questionsAtLevel = activeQuestions.filter((question) => question.difficulty === difficulty);
+      return {
+        difficulty,
+        total: questionsAtLevel.length,
+        practised: questionsAtLevel.filter((question) => practicedIds.has(question.id)).length,
+      };
+    });
 
-  const studyMinutes = useMemo(() => {
-    const relevant = Object.values(log).filter(
-      (r) => r.subject === selectedSubject && r.classNum === practiceClass,
+    const activeAssessments = Object.values(selfAssessments).filter((assessment) =>
+      activeById.has(assessment.questionId),
     );
-    return relevant.reduce((sum, r) => sum + Math.min(5 + (r.attempts - 1) * 2, 12), 0);
-  }, [log, selectedSubject, practiceClass]);
+    const confidentCount = activeAssessments.filter(
+      (assessment) => assessment.status === "CONFIDENT",
+    ).length;
+    const needsPracticeCount = activeAssessments.filter(
+      (assessment) => assessment.status === "NEEDS_PRACTICE",
+    ).length;
 
-  // ── Topic stats from useProgress ────────────────────────────────────────────
-  const subjectStats = useMemo(
-    () => getSubjectStats(selectedSubject),
-    [getSubjectStats, selectedSubject],
-  );
+    const evidence = new Map<string, {
+      label: string;
+      chapterId: string;
+      needsPractice: number;
+      due: number;
+      repeatedWrong: number;
+    }>();
+    const addEvidence = (question: Question, field: "needsPractice" | "due" | "repeatedWrong", value: number) => {
+      const key = `${question.subject}::${question.topicName}`;
+      const meta = activeTopicMeta.get(key);
+      if (!meta) return;
+      const current = evidence.get(key) ?? {
+        label: meta.label,
+        chapterId: meta.chapterId,
+        needsPractice: 0,
+        due: 0,
+        repeatedWrong: 0,
+      };
+      current[field] += value;
+      evidence.set(key, current);
+    };
 
-  const strongTopicsList = useMemo(
-    () =>
-      subjectStats.topicStats
-        .filter((t) => t.solved >= 3 && t.accuracy >= 70)
-        .sort((a, b) => b.accuracy - a.accuracy)
-        .slice(0, 5),
-    [subjectStats],
-  );
+    for (const assessment of activeAssessments) {
+      if (assessment.status !== "NEEDS_PRACTICE") continue;
+      const question = activeById.get(assessment.questionId);
+      if (question) addEvidence(question, "needsPractice", 1);
+    }
 
-  // ── Weak CHAPTERS (chapter-level) ───────────────────────────────────────────
-  const weakChapters = useMemo(
-    () =>
-      chapterStats
-        .filter((cs) => cs.attempted > 0 && cs.accuracy < 65)
-        .sort((a, b) => a.accuracy - b.accuracy)
-        .slice(0, 3),
-    [chapterStats],
-  );
+    const today = new Date().toISOString().slice(0, 10);
+    for (const item of revisionItems) {
+      if (item.mastered || item.nextReview > today) continue;
+      const question = activeById.get(item.questionId);
+      if (question) addEvidence(question, "due", 1);
+    }
 
-  // ── Recommended chapter ─────────────────────────────────────────────────────
-  const recommendedChapter = useMemo(() => {
-    // 1. Weakest chapter being practised
-    const weakChs = chapterStats
-      .filter((cs) => cs.attempted > 0 && cs.accuracy < 65)
-      .sort((a, b) => a.accuracy - b.accuracy);
-    if (weakChs.length > 0)
-      return { chapter: weakChs[0], reason: `Only ${weakChs[0].accuracy}% accuracy — needs improvement`, cta: "Practice Weak Chapter" };
+    for (const topic of getTopicsNeedingRevision()) {
+      if (topic.wrongCount < 2) continue;
+      const key = `${topic.subject}::${topic.topic}`;
+      const meta = activeTopicMeta.get(key);
+      if (!meta) continue;
+      const current = evidence.get(key) ?? {
+        label: meta.label,
+        chapterId: meta.chapterId,
+        needsPractice: 0,
+        due: 0,
+        repeatedWrong: 0,
+      };
+      current.repeatedWrong += topic.wrongCount;
+      evidence.set(key, current);
+    }
 
-    // 2. Never started chapter
-    const newChs = chapterStats.filter((cs) => cs.attempted === 0);
-    if (newChs.length > 0)
-      return { chapter: newChs[0], reason: "Not started yet — build your foundation", cta: "Start Chapter" };
+    const needsMoreWork = [...evidence.values()]
+      .filter((item) => item.needsPractice > 0 || item.due > 0 || item.repeatedWrong >= 2)
+      .sort((a, b) =>
+        (b.needsPractice * 3 + b.due * 2 + b.repeatedWrong)
+        - (a.needsPractice * 3 + a.due * 2 + a.repeatedWrong),
+      )
+      .slice(0, 3);
 
-    // 3. Lowest completion
-    const incomplete = [...chapterStats]
-      .filter((cs) => cs.completionPct < 80)
-      .sort((a, b) => a.completionPct - b.completionPct);
-    if (incomplete.length > 0)
-      return { chapter: incomplete[0], reason: `${incomplete[0].completionPct}% done — keep going`, cta: "Continue Chapter" };
-
-    return null;
-  }, [chapterStats]);
+    return {
+      questionsPractised: practicedIds.size,
+      totalQuestions: activeQuestions.length,
+      topicsPractised: practicedTopicKeys.size,
+      totalTopics: activeTopicMeta.size,
+      confidentCount,
+      needsPracticeCount,
+      practiceByDifficulty,
+      needsMoreWork,
+    };
+  }, [
+    bankReady,
+    practiceClass,
+    selectedSubject,
+    progress,
+    selfAssessments,
+    revisionItems,
+    getTopicsNeedingRevision,
+  ]);
 
   // ── Chapter progress sorted ─────────────────────────────────────────────────
   // selectedSubject is explicit here so sortedChapters invalidates in the same
@@ -344,7 +401,6 @@ export default function Practice() {
   );
 
   // ── Filter state ────────────────────────────────────────────────────────────
-  const [masteryOpen,       setMasteryOpen]       = useState(false);
   const [selectedChapterId, setSelectedChapterId] = useState<string>(chapters[0]?.id ?? "");
   const [drilldownOpen,     setDrilldownOpen]     = useState(false);
   const [selectedTopicId,   setSelectedTopicId]   = useState<string>("all");
@@ -630,20 +686,6 @@ export default function Practice() {
             })}
           </div>
 
-          {/* AI adaptive recommendation */}
-          {adaptiveMastery > 0 && (
-            <div className="flex items-center gap-2 mt-3 flex-wrap">
-              <span className="text-[11px] text-slate-400">✦ AI Recommends:</span>
-              <button
-                onClick={() => setSelectedDiff(adaptiveTier === "Challenge" ? "Hard" : adaptiveTier)}
-                className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${ADAPTIVE_TIER_STYLE[adaptiveTier]}`}
-              >
-                {adaptiveTier === "Challenge" ? "⚡ Challenge (Hard)" : `${adaptiveTier} questions`}
-              </button>
-              <span className="text-[11px] text-slate-400">{adaptiveMastery}% avg mastery</span>
-            </div>
-          )}
-
           <div className="mt-4">
             <label htmlFor="practice-question-search" className="block text-xs font-bold text-slate-600 mb-1.5">
               Find a Question
@@ -695,189 +737,146 @@ export default function Practice() {
 
       <div className="max-w-lg mx-auto px-5 py-5 space-y-5">
 
-        {/* ── Mastery Overview — collapsed by default so chapters appear first ── */}
-        <div>
-          <button
-            onClick={() => setMasteryOpen((v) => !v)}
-            className="w-full flex items-center justify-between px-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600 hover:bg-slate-50 active:scale-95 transition-all shadow-sm"
-          >
-            <span className="flex items-center gap-2">
-              <span>📊</span>
-              <span>Mastery Overview</span>
-              {mastery.score > 0 && (
-                <span
-                  className="text-xs font-bold px-2 py-0.5 rounded-full"
-                  style={{ backgroundColor: `${mastery.color}18`, color: mastery.color }}
-                >
-                  {mastery.score}/100
-                </span>
-              )}
-            </span>
-            <span className="text-xs text-slate-400">{masteryOpen ? "▲ Hide" : "▼ View"}</span>
-          </button>
+        {/* ── Subject readiness — evidence, not a composite mastery score ─── */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wide" style={{ color: cfg.color }}>
+              {selectedSubject} readiness
+            </p>
+            <p className="text-xs text-slate-500 mt-1">
+              Your practice coverage and your own check-ins.
+            </p>
+          </div>
 
-          {masteryOpen && (
-            <div className="mt-3 space-y-3">
-              <MasteryProgressBar score={mastery.score} label={mastery.label} color={mastery.color} />
-
-              <div className="grid grid-cols-2 gap-3">
-                {/* Questions Solved */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Questions Solved</p>
-                  <p className="text-2xl font-black" style={{ color: cfg.color }}>
-                    {totalSolved > 0 ? totalSolved : "—"}
-                  </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {totalSolved > 0 ? "attempts logged" : "Start practicing"}
-                  </p>
-                </div>
-
-                {/* Accuracy */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Accuracy</p>
-                  <p className="text-2xl font-black" style={{ color: cfg.color }}>
-                    {totalSolved > 0 ? `${overallAcc}%` : "—"}
-                  </p>
-                  {totalSolved > 0 && (
-                    <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${overallAcc}%`, backgroundColor: cfg.color }}
-                      />
-                    </div>
-                  )}
-                  {totalSolved === 0 && <p className="text-[11px] text-slate-400 mt-0.5">No data yet</p>}
-                </div>
-
-                {/* Streak */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Streak</p>
-                  <div className="flex items-baseline gap-1">
-                    <p className="text-2xl font-black text-amber-500">
-                      {streak > 0 ? streak : "—"}
-                    </p>
-                    {streak > 0 && <span className="text-sm font-bold text-amber-400">🔥</span>}
-                  </div>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {streak === 1 ? "day streak" : streak > 1 ? "day streak" : "Start today"}
-                  </p>
-                </div>
-
-                {/* Study Time */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Study Time</p>
-                  <p className="text-2xl font-black text-blue-500">
-                    {studyMinutes > 0
-                      ? studyMinutes < 60
-                        ? `${studyMinutes}m`
-                        : `${Math.floor(studyMinutes / 60)}h ${studyMinutes % 60}m`
-                      : "—"}
-                  </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">estimated total</p>
-                </div>
+          <div>
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Questions Practised</p>
+                <p className="text-2xl font-black text-slate-800 mt-0.5">
+                  {readiness.questionsPractised} <span className="text-base text-slate-400">/ {readiness.totalQuestions}</span>
+                </p>
               </div>
+              <p className="text-xs font-semibold text-slate-500">
+                {readiness.totalQuestions > 0
+                  ? `${Math.round((readiness.questionsPractised / readiness.totalQuestions) * 100)}% covered`
+                  : "No active questions"}
+              </p>
             </div>
+            <div className="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: `${readiness.totalQuestions > 0
+                    ? (readiness.questionsPractised / readiness.totalQuestions) * 100
+                    : 0}%`,
+                  backgroundColor: cfg.color,
+                }}
+              />
+            </div>
+            <p className="text-[11px] text-slate-400 mt-2">
+              Topics Practised: {readiness.topicsPractised} / {readiness.totalTopics}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
+              <p className="text-[10px] font-semibold text-emerald-700 uppercase tracking-wide">I Am Confident</p>
+              <p className="text-2xl font-black text-emerald-700 mt-1">{readiness.confidentCount}</p>
+              <p className="text-[10px] text-emerald-700/70 mt-1">Your self-report</p>
+            </div>
+            <div className="rounded-xl border border-amber-100 bg-amber-50 p-3">
+              <p className="text-[10px] font-semibold text-amber-700 uppercase tracking-wide">Need More Practice</p>
+              <p className="text-2xl font-black text-amber-700 mt-1">{readiness.needsPracticeCount}</p>
+              <p className="text-[10px] text-amber-700/70 mt-1">Saved for revision</p>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-100 pt-3">
+            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2">Practice by Difficulty</p>
+            <div className="space-y-2">
+              {readiness.practiceByDifficulty.map((item) => (
+                <div key={item.difficulty} className="flex items-center gap-2">
+                  <span className={`w-16 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[item.difficulty]}`}>
+                    {item.difficulty}
+                  </span>
+                  <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${item.total > 0 ? (item.practised / item.total) * 100 : 0}%`,
+                        backgroundColor: cfg.color,
+                      }}
+                    />
+                  </div>
+                  <span className="w-11 text-right text-[11px] font-semibold text-slate-600">
+                    {item.practised} / {item.total}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div className="px-4 pt-4 pb-2 border-b border-slate-100">
+            <p className="text-xs font-bold text-slate-700 uppercase tracking-wide">Needs More Work</p>
+          </div>
+          {readiness.needsMoreWork.length > 0 ? (
+            <div className="divide-y divide-slate-100">
+              {readiness.needsMoreWork.map((area) => (
+                <div key={area.label} className="px-4 py-3 flex items-center gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-800 truncate">{area.label}</p>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      {area.needsPractice > 0
+                        ? `${area.needsPractice} question${area.needsPractice === 1 ? "" : "s"} marked for more practice`
+                        : area.due > 0
+                          ? `${area.due} revision question${area.due === 1 ? "" : "s"} due`
+                          : `${area.repeatedWrong} repeated incorrect answers`}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => openChapter(area.chapterId)}
+                    className="flex-shrink-0 text-[11px] font-bold px-3 py-1.5 rounded-xl text-white shadow-sm transition-all"
+                    style={{ backgroundColor: cfg.color }}
+                  >
+                    Practise →
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="px-4 py-4 text-sm text-slate-500">
+              Keep practising — we’ll identify areas that need more work as you answer more questions.
+            </p>
           )}
         </div>
 
-        {/* ── 3. Weak Areas (chapter-level) ── */}
-        {weakChapters.length > 0 && (
-          <div className="bg-white rounded-2xl border border-red-200 overflow-hidden shadow-sm">
-            <div className="px-4 pt-4 pb-2 border-b border-red-100">
-              <p className="text-xs font-bold text-red-600 uppercase tracking-wide">
-                🎯 Weak Areas — needs attention
-              </p>
-            </div>
-            <div className="divide-y divide-slate-100">
-              {weakChapters.map((cs) => {
-                const chNum   = String(cs.displayChapterNumber ?? "—");
-                const chLabel = "Ch";
-                return (
-                  <div key={`${selectedSubject}-${practiceClass}-${cs.chapterId}`} className="px-4 py-3 flex items-center gap-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 truncate">
-                        <span className="text-slate-400 font-normal text-xs mr-1">{chLabel} {chNum}.</span>
-                        {cs.chapterName}
-                      </p>
-                      <div className="flex items-center gap-3 mt-1.5">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-20 h-1.5 bg-red-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-red-400 rounded-full"
-                              style={{ width: `${cs.accuracy}%` }}
-                            />
-                          </div>
-                          <span className="text-[11px] font-bold text-red-600">{cs.accuracy}%</span>
-                        </div>
-                        <span className="text-[11px] text-slate-400">{cs.attempted} attempt{cs.attempted !== 1 ? "s" : ""}</span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => openChapter(cs.chapterId)}
-                      className="flex-shrink-0 text-[11px] font-bold px-3 py-1.5 rounded-xl text-white shadow-sm transition-all"
-                      style={{ backgroundColor: cfg.color }}
-                    >
-                      Practice Now →
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ── 4. Recommended Next Action ── */}
-        {recommendedChapter ? (
+        {readiness.needsMoreWork[0] && (
           <div
             className="rounded-2xl border p-4"
             style={{ backgroundColor: `${cfg.color}08`, borderColor: `${cfg.color}25` }}
           >
             <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: cfg.color }}>
-              ✦ Recommended Next Action
+              What to Practise Next
             </p>
-            <p className="text-sm font-semibold text-slate-800 mt-0.5 leading-snug">
-              <span className="text-slate-400 font-normal text-xs mr-1">
-                Ch {recommendedChapter.chapter.displayChapterNumber ?? "—"}.
-              </span>
-              {recommendedChapter.chapter.chapterName}
+            <p className="text-sm font-semibold text-slate-800 mt-0.5">
+              {readiness.needsMoreWork[0].label}
             </p>
-            <p className="text-[12px] text-slate-500 mt-0.5">{recommendedChapter.reason}</p>
+            <p className="text-[12px] text-slate-500 mt-0.5">
+              {readiness.needsMoreWork[0].needsPractice > 0
+                ? `${readiness.needsMoreWork[0].needsPractice} question${readiness.needsMoreWork[0].needsPractice === 1 ? "" : "s"} need more practice`
+                : readiness.needsMoreWork[0].due > 0
+                  ? `${readiness.needsMoreWork[0].due} revision question${readiness.needsMoreWork[0].due === 1 ? "" : "s"} are due`
+                  : "Repeated mistakes show this area needs another look"}
+            </p>
             <button
-              onClick={() => openChapter(recommendedChapter.chapter.chapterId)}
+              onClick={() => openChapter(readiness.needsMoreWork[0].chapterId)}
               className="mt-3 text-sm font-bold px-4 py-2 rounded-xl text-white shadow-sm transition-all"
               style={{ backgroundColor: cfg.color }}
             >
-              {recommendedChapter.cta} →
+              Practise this area →
             </button>
-          </div>
-        ) : (
-          <div
-            className="rounded-2xl border p-4"
-            style={{ backgroundColor: `${cfg.color}08`, borderColor: `${cfg.color}25` }}
-          >
-            <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: cfg.color }}>
-              ✦ Recommended Next Action
-            </p>
-            {totalSolved === 0 ? (
-              <>
-                <p className="text-sm text-slate-700 mt-1">Start with Chapter 1 — build your foundation step by step.</p>
-                <button
-                  onClick={() => openChapter(chapters[0]?.id ?? "")}
-                  className="mt-3 text-sm font-bold px-4 py-2 rounded-xl text-white shadow-sm"
-                  style={{ backgroundColor: cfg.color }}
-                >
-                  Start Chapter 1 →
-                </button>
-              </>
-            ) : (
-              <p className="text-sm text-slate-700 mt-1">
-                {mastery.consistency < 40
-                  ? "Explore more chapters to build breadth across topics."
-                  : overallAcc >= 80 && totalSolved >= 10
-                  ? "Challenge yourself with Hard & HOTS questions to level up!"
-                  : "Great progress — keep practicing consistently!"}
-              </p>
-            )}
           </div>
         )}
 
@@ -889,7 +888,6 @@ export default function Practice() {
             </p>
             <div className="space-y-2">
               {sortedChapters.map((cs) => {
-                const status     = getChapterStatus(cs.accuracy, cs.attempted, cs.completionPct);
                 const isSelected = selectedChapterId === cs.chapterId;
                 const isOpen     = isSelected && drilldownOpen;
                 const chNum      = String(cs.displayChapterNumber ?? "—");
@@ -909,16 +907,16 @@ export default function Practice() {
                     >
                       {/* Row top */}
                       <div className="flex items-center gap-2.5">
-                        <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${STATUS_DOT[status]}`} />
+                        <span
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: cs.attempted > 0 ? cfg.color : "#cbd5e1" }}
+                        />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-slate-800 truncate">
                             <span className="text-slate-400 font-normal text-xs mr-1">{chLabel} {chNum}.</span>
                             {cs.chapterName}
                           </p>
                         </div>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${STATUS_BADGE[status]}`}>
-                          {STATUS_LABEL[status]}
-                        </span>
                         <svg
                           className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${isOpen ? "rotate-90" : ""}`}
                           fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
@@ -927,33 +925,19 @@ export default function Practice() {
                         </svg>
                       </div>
 
-                      {/* Row stats + bars */}
+                      {/* Coverage bar */}
                       {cs.attempted > 0 ? (
-                        <div className="mt-2.5 space-y-1.5">
-                          {/* Completion bar */}
+                        <div className="mt-2.5">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-slate-400 w-16 flex-shrink-0">Completion</span>
+                            <span className="text-[10px] text-slate-400 w-16 flex-shrink-0">Practised</span>
                             <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                               <div
-                                className="h-full rounded-full bg-slate-400 transition-all"
-                                style={{ width: `${Math.min(cs.completionPct, 100)}%` }}
+                                className="h-full rounded-full transition-all"
+                                style={{ width: `${Math.min(cs.completionPct, 100)}%`, backgroundColor: cfg.color }}
                               />
                             </div>
                             <span className="text-[10px] font-semibold text-slate-500 w-8 text-right">
-                              {Math.round(cs.completionPct)}%
-                            </span>
-                          </div>
-                          {/* Accuracy bar */}
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-slate-400 w-16 flex-shrink-0">Accuracy</span>
-                            <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                              <div
-                                className={`h-full rounded-full transition-all ${STATUS_BAR[status]}`}
-                                style={{ width: `${cs.accuracy}%` }}
-                              />
-                            </div>
-                            <span className={`text-[10px] font-bold w-8 text-right ${STATUS_ACC[status]}`}>
-                              {cs.accuracy}%
+                              {cs.attempted}/{cs.totalQuestions}
                             </span>
                           </div>
                         </div>
@@ -979,7 +963,7 @@ export default function Practice() {
                             className="flex-shrink-0 text-xs font-bold px-3 py-1.5 rounded-full text-white shadow-sm transition-all"
                             style={{ backgroundColor: cfg.color }}
                           >
-                            {status === "learning" ? "Practice Weak Areas" : status === "new" ? "Start Practicing" : status === "mastered" ? "Revise" : "Continue Practice"}
+                            View Questions
                           </button>
                         </div>
 
@@ -1027,34 +1011,6 @@ export default function Practice() {
                   </div>
                 );
               })}
-            </div>
-          </div>
-        )}
-
-        {/* ── 6. Strongest Topics ── */}
-        {strongTopicsList.length > 0 && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
-            <p className="text-xs font-bold text-emerald-700 uppercase tracking-wide mb-3">
-              💪 Strongest Topics
-            </p>
-            <div className="space-y-2.5">
-              {strongTopicsList.map((t) => (
-                <div key={t.topic} className="flex items-center gap-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-700 truncate">{t.topic}</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">{t.solved} solved</p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <div className="w-20 h-1.5 bg-emerald-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-500 rounded-full"
-                        style={{ width: `${t.accuracy}%` }}
-                      />
-                    </div>
-                    <span className="text-xs font-bold text-emerald-600 w-8 text-right">{t.accuracy}%</span>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         )}

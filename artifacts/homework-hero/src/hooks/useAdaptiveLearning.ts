@@ -23,6 +23,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import type { Subject } from "@/data/subjects";
+import { unwrapRevisionItems } from "@/services/revisionStorage";
 
 // ─── localStorage keys ────────────────────────────────────────────────────────
 const PROGRESS_KEY = "studyai-progress-v2";
@@ -237,7 +238,7 @@ function computeAll(): TopicProfile[] {
   return computeTopicProfiles(
     safeRead<ProgressStore>(PROGRESS_KEY, { Physics: {}, Chemistry: {}, Mathematics: {}, Economics: {} }),
     safeRead<JournalStore>(MISTAKES_KEY, { events: [], attempts: {} }),
-    safeRead<RevisionStore>(REVISION_KEY, {}),
+    unwrapRevisionItems<RevItem>(safeRead<unknown>(REVISION_KEY, {})),
   );
 }
 

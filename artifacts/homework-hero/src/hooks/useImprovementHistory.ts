@@ -17,6 +17,7 @@
  */
 
 import { useMemo } from "react";
+import { unwrapRevisionItems } from "@/services/revisionStorage";
 
 // ─── Storage key ───────────────────────────────────────────────────────────────
 const HISTORY_KEY = "studyai-history-v1";
@@ -163,7 +164,9 @@ function buildTodaySnapshot(): StoredSnapshot {
   const prog = safeRead<ProgressData>("studyai-progress-v2", {
     Physics: {}, Chemistry: {}, Mathematics: {},
   });
-  const revData = safeRead<Record<string, RevisionItem>>("studyai-revision-v1", {});
+  const revData = unwrapRevisionItems<RevisionItem>(
+    safeRead<unknown>("studyai-revision-v1", {}),
+  );
 
   const physicsAcc = subjectAccuracy(prog.Physics);
   const chemAcc    = subjectAccuracy(prog.Chemistry);

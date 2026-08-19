@@ -35,12 +35,18 @@ export async function preloadQBank(_classNum?: number): Promise<void> {
 
 // ─── Chapter / topic navigation ───────────────────────────────────────────────
 
-/** Internal domain labels that make up the student-facing "Science" subject. */
-const SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology", "Earth Science"];
+/**
+ * Internal domains that make up the student-facing Beta "Science" subject.
+ * Earth Science remains in the question bank, but is deliberately outside the
+ * current Beta readiness scope and therefore is not aggregated here.
+ */
+export const BETA_SCIENCE_DOMAINS = ["Physics", "Chemistry", "Biology"] as const;
 
 /** Maps a native science domain to the student-facing Practice subject. */
 export function getStudentFacingSubject(subject: string): string {
-  return SCIENCE_DOMAINS.includes(subject) ? "Science" : subject;
+  return BETA_SCIENCE_DOMAINS.includes(subject as typeof BETA_SCIENCE_DOMAINS[number])
+    ? "Science"
+    : subject;
 }
 
 /**
@@ -55,7 +61,7 @@ export function getStudentFacingSubject(subject: string): string {
 export function getChapters(classNum: number, subject: string): ChapterMeta[] {
   if (subject === "Science") {
     const scienceChapters = ALL_CHAPTERS.filter(
-      (c) => c.classNum === classNum && SCIENCE_DOMAINS.includes(c.subject)
+      (c) => c.classNum === classNum && BETA_SCIENCE_DOMAINS.includes(c.subject as typeof BETA_SCIENCE_DOMAINS[number])
         && !c.cbseDeleted && c.curriculumStatus === "ACTIVE"
     );
     return scienceChapters.sort(
@@ -110,7 +116,7 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
     if (filter.classNum  !== undefined && q.classNum  !== filter.classNum)  return false;
     if (filter.subject   !== undefined) {
       if (isScience) {
-        if (!SCIENCE_DOMAINS.includes(q.subject)) return false;
+        if (!BETA_SCIENCE_DOMAINS.includes(q.subject as typeof BETA_SCIENCE_DOMAINS[number])) return false;
       } else if (q.subject !== filter.subject) {
         return false;
       }

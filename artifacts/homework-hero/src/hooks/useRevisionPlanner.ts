@@ -23,6 +23,7 @@ const KEY = "studyai-revision-v1";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type SRInterval = 1 | 3 | 7 | 14;
+export type SelfAssessmentStatus = "CONFIDENT" | "NEEDS_PRACTICE" | "UNSET";
 
 const NEXT_INTERVAL: Record<SRInterval, SRInterval> = {
   1: 3,
@@ -52,7 +53,23 @@ export interface RevisionItem {
   mastered:     boolean;
 }
 
-type RevisionStore = Record<string, RevisionItem>;  // keyed by questionId
+type RevisionItems = Record<string, RevisionItem>;  // keyed by questionId
+
+export interface SelfAssessmentRecord {
+  questionId: string;
+  question: string;
+  subject: Subject;
+  topic: string;
+  chapter: string;
+  difficulty: Difficulty;
+  status: Exclude<SelfAssessmentStatus, "UNSET">;
+  updatedAt: string;
+}
+
+interface RevisionStore {
+  items: RevisionItems;
+  selfAssessments: Record<string, SelfAssessmentRecord>;
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -69,9 +86,22 @@ function addDays(fromDate: string, days: number): string {
 function load(): RevisionStore {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as RevisionStore;
+    if (raw) {
+      const parsed = JSON.parse(raw) as RevisionStore | RevisionItems;
+      if (
+        "items" in parsed &&
+        "selfAssessments" in parsed &&
+        typeof parsed.items === "object" &&
+        typeof parsed.selfAssessments === "object"
+      ) {
+        return parsed as RevisionStore;
+      }
+      // Preserve legacy revision items while adding the canonical self-assessment
+      // map to this same existing persistence boundary.
+      return { items: parsed as RevisionItems, selfAssessments: {} };
+    }
   } catch {}
-  return {};
+  return { items: {}, selfAssessments: {} };
 }
 
 function persist(store: RevisionStore): void {
@@ -132,12 +162,14 @@ export function useRevisionPlanner() {
     ) => {
       mutate((prev) => {
         const today    = todayStr();
-        const existing = prev[questionId];
+        const existing = prev.items[questionId];
 
         if (!existing) {
           return {
             ...prev,
-            [questionId]: {
+            items: {
+              ...prev.items,
+              [questionId]: {
               questionId, question, subject, topic, chapter, difficulty,
               interval:     1,
               nextReview:   addDays(today, 1),
@@ -146,6 +178,7 @@ export function useRevisionPlanner() {
               timesCorrect: correct ? 1 : 0,
               timesWrong:   correct ? 0 : 1,
               mastered:     false,
+              },
             },
           };
         }
@@ -157,7 +190,9 @@ export function useRevisionPlanner() {
 
         return {
           ...prev,
-          [questionId]: {
+          items: {
+            ...prev.items,
+            [questionId]: {
             ...existing,
             interval:     newInterval,
             nextReview,
@@ -165,11 +200,71 @@ export function useRevisionPlanner() {
             timesCorrect: existing.timesCorrect + (correct ? 1 : 0),
             timesWrong:   existing.timesWrong   + (correct ? 0 : 1),
             mastered,
+            },
           },
         };
       });
     },
     [mutate]
+  );
+
+  /**
+   * Canonical student self-assessment. CONFIDENT and NEEDS_PRACTICE are mutually
+   * exclusive per question ID; absence from the map represents UNSET.
+   *
+   * NEEDS_PRACTICE also schedules the existing revision lifecycle, without
+   * fabricating a wrong-answer event.
+   */
+  const setSelfAssessment = useCallback(
+    (
+      question: Omit<SelfAssessmentRecord, "status" | "updatedAt">,
+      status: Exclude<SelfAssessmentStatus, "UNSET">,
+    ) => {
+      mutate((prev) => {
+        const today = todayStr();
+        const existingItem = prev.items[question.questionId];
+        const items = status === "NEEDS_PRACTICE"
+          ? {
+              ...prev.items,
+              [question.questionId]: existingItem
+                ? {
+                    ...existingItem,
+                    interval: 1 as SRInterval,
+                    nextReview: addDays(today, 1),
+                    mastered: false,
+                  }
+                : {
+                    questionId: question.questionId,
+                    question: question.question,
+                    subject: question.subject,
+                    topic: question.topic,
+                    chapter: question.chapter,
+                    difficulty: question.difficulty,
+                    interval: 1 as SRInterval,
+                    nextReview: addDays(today, 1),
+                    addedDate: today,
+                    lastReview: null,
+                    timesCorrect: 0,
+                    timesWrong: 0,
+                    mastered: false,
+                  },
+            }
+          : prev.items;
+
+        return {
+          items,
+          selfAssessments: {
+            ...prev.selfAssessments,
+            [question.questionId]: {
+              ...question,
+              status,
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        };
+      });
+    },
+    [mutate],
   );
 
   /**
@@ -179,7 +274,7 @@ export function useRevisionPlanner() {
   const completeReview = useCallback(
     (questionId: string, correct: boolean) => {
       mutate((prev) => {
-        const item = prev[questionId];
+        const item = prev.items[questionId];
         if (!item) return prev;
 
         const today       = todayStr();
@@ -189,7 +284,9 @@ export function useRevisionPlanner() {
 
         return {
           ...prev,
-          [questionId]: {
+          items: {
+            ...prev.items,
+            [questionId]: {
             ...item,
             interval:     newInterval,
             nextReview,
@@ -197,6 +294,7 @@ export function useRevisionPlanner() {
             timesCorrect: item.timesCorrect + (correct ? 1 : 0),
             timesWrong:   item.timesWrong   + (correct ? 0 : 1),
             mastered,
+            },
           },
         };
       });
@@ -213,7 +311,7 @@ export function useRevisionPlanner() {
   const getDueItems = useCallback(
     (weakTopics: string[] = []): RevisionItem[] => {
       const today = todayStr();
-      return Object.values(store)
+      return Object.values(store.items)
         .filter((item) => !item.mastered && item.nextReview <= today)
         .sort(
           (a, b) =>
@@ -231,7 +329,7 @@ export function useRevisionPlanner() {
     (): Array<{ date: string; items: RevisionItem[] }> => {
       const today  = todayStr();
       const cutoff = addDays(today, 14);
-      const upcoming = Object.values(store).filter(
+      const upcoming = Object.values(store.items).filter(
         (item) =>
           !item.mastered &&
           item.nextReview > today &&
@@ -252,7 +350,7 @@ export function useRevisionPlanner() {
   // Derived counts (cheap — no full sort)
   const dueCount = useMemo(() => {
     const today = todayStr();
-    return Object.values(store).filter(
+    return Object.values(store.items).filter(
       (item) => !item.mastered && item.nextReview <= today
     ).length;
   }, [store]);
@@ -260,7 +358,7 @@ export function useRevisionPlanner() {
   const next7Count = useMemo(() => {
     const today  = todayStr();
     const cutoff = addDays(today, 7);
-    return Object.values(store).filter(
+    return Object.values(store.items).filter(
       (item) =>
         !item.mastered &&
         item.nextReview > today &&
@@ -269,17 +367,18 @@ export function useRevisionPlanner() {
   }, [store]);
 
   const masteredCount = useMemo(
-    () => Object.values(store).filter((item) => item.mastered).length,
+    () => Object.values(store.items).filter((item) => item.mastered).length,
     [store]
   );
 
   const totalScheduled = useMemo(
-    () => Object.values(store).filter((item) => !item.mastered).length,
+    () => Object.values(store.items).filter((item) => !item.mastered).length,
     [store]
   );
 
   return {
     recordAttempt,
+    setSelfAssessment,
     completeReview,
     getDueItems,
     getUpcomingSchedule,
@@ -287,5 +386,7 @@ export function useRevisionPlanner() {
     next7Count,
     masteredCount,
     totalScheduled,
+    revisionItems: Object.values(store.items),
+    selfAssessments: store.selfAssessments,
   };
 }

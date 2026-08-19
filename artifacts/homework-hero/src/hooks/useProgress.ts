@@ -88,6 +88,36 @@ export function useProgress() {
     []
   );
 
+  /**
+   * Records a genuine practice outcome without treating a self-assessment as a
+   * correct/incorrect answer. The question ID remains deduplicated within its
+   * existing topic record, so coverage never increases on a repeat action.
+   */
+  const recordPractice = useCallback(
+    (subject: Subject, topic: string, questionId: string) => {
+      setProgress((prev) => {
+        const subj = { ...(prev[subject] ?? {}) };
+        const current = subj[topic] ?? { solved: 0, correct: 0, attempted: [] };
+
+        if (current.attempted.includes(questionId)) return prev;
+
+        const next = {
+          ...prev,
+          [subject]: {
+            ...subj,
+            [topic]: {
+              ...current,
+              attempted: [...current.attempted, questionId],
+            },
+          },
+        };
+        persist(next);
+        return next;
+      });
+    },
+    [],
+  );
+
   // Full stats for a subject
   const getSubjectStats = useCallback(
     (subject: Subject): SubjectStats => {
@@ -190,6 +220,7 @@ export function useProgress() {
   return {
     progress,
     recordSolve,
+    recordPractice,
     getSubjectStats,
     getTopicStat,
     totalSolved,

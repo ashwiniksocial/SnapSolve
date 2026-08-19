@@ -1,0 +1,595 @@
+SNAPSOLVE BUILD HQ — REPLIT PROMPT #018
+DATE: 19-Aug-2026
+PURPOSE: Implement truthful subject-wise Practice Readiness for Beta
+STATUS: CONTROLLED IMPLEMENTATION
+
+Recall and obey ALL PrePromptConditions.
+
+This implementation follows the completed SUBJECT-WISE PRACTICE READINESS AUDIT.
+
+FOUNDER DECISION:
+
+The existing Practice Mastery system is NOT acceptable for Beta.
+
+REMOVE/HIDE from the student-facing Practice page:
+
+- Mastery Score
+- 93/100 style score
+- Expert / Advanced / Proficient / Developing / Beginner labels
+- Accuracy
+- generic Difficulty score
+- Consistency
+- Recency
+- Streak
+- Study Time
+
+Do NOT delete underlying legacy engines unless deletion is required.
+Prefer removing them only from the Beta Practice UI so unrelated consumers do not regress.
+
+DO NOT rebuild analytics.
+
+==================================================
+TARGET
+==================================================
+
+Practice must show truthful SUBJECT-SPECIFIC learning/readiness information for:
+
+1. Mathematics
+2. Science
+3. Information Technology
+
+The page must help answer:
+
+- What have I practised?
+- What am I confident about?
+- What needs more practice?
+- What difficulty levels have I practised?
+- Where do I need more work?
+- What should I practise next?
+
+NO arbitrary overall mastery score.
+
+NO fake precision.
+
+==================================================
+1. QUESTIONS PRACTISED
+==================================================
+
+Replace "Questions Solved" with:
+
+QUESTIONS PRACTISED
+
+Definition:
+
+unique active question IDs with a genuine recorded practice outcome.
+
+Use the existing de-duplicated attempted question identity from the existing progress architecture.
+
+Do NOT use:
+
+- page opens
+- total solved counter
+- repeated attempt count
+- generated-answer count
+
+Display:
+
+Questions Practised
+X / Total Active Questions
+
+separately for Mathematics, Science and Information Technology.
+
+Also show percentage/progress bar if already visually compatible with the current Practice design.
+
+==================================================
+2. COVERAGE
+==================================================
+
+Also calculate:
+
+Topics Practised
+X / Total Active Topics
+
+A topic counts as practised when at least one active question belonging to that topic has a genuine recorded practice outcome.
+
+Questions Practised remains PRIMARY.
+Topics Practised is SECONDARY.
+
+Use active student-visible bank data as denominator.
+
+==================================================
+3. I AM CONFIDENT
+==================================================
+
+Rename the existing student action:
+
+Got It
+→
+I Am Confident
+
+Meaning:
+
+"I understand this and believe I can answer a similar question in my exam."
+
+This is SELF-REPORTED CONFIDENCE.
+
+It is NOT objective mastery.
+
+It must never automatically produce:
+
+Expert
+Mastered
+100% accuracy
+or any equivalent objective claim.
+
+IMPORTANT:
+
+The audit found current Got It / Needs Review boolean semantics inconsistent between flows.
+
+FIRST normalize those semantics.
+
+Use ONE canonical per-question self-assessment status:
+
+CONFIDENT
+NEEDS_PRACTICE
+UNSET
+
+Prefer extending/reusing the existing question/revision lifecycle rather than creating a new progress architecture.
+
+There must be one unambiguous question-ID keyed source of truth.
+
+When student clicks:
+
+I Am Confident
+→ status for that question becomes CONFIDENT.
+
+If previously NEEDS_PRACTICE, replace that status.
+
+Do NOT double count.
+
+Display subject count:
+
+I Am Confident
+X
+
+Count UNIQUE active question IDs currently marked CONFIDENT.
+
+==================================================
+4. NEED MORE PRACTICE
+==================================================
+
+Rename:
+
+Needs Review
+→
+Need More Practice
+
+Meaning:
+
+"I need to revise or practise this again."
+
+When selected:
+
+question self-assessment status = NEEDS_PRACTICE.
+
+Reuse the existing Revision Planner for the actual review/practice lifecycle.
+
+DO NOT create another revision queue.
+
+If the question was previously CONFIDENT, change its current status to NEEDS_PRACTICE.
+
+Display:
+
+Need More Practice
+X
+
+Count unique active question IDs currently marked NEEDS_PRACTICE.
+
+==================================================
+5. DO NOT REINTRODUCE MARK SOLVED
+==================================================
+
+Do not add another overlapping completion control.
+
+The meaningful student feedback controls on the answer page should remain:
+
+I Am Confident
+Need More Practice
+
+Do not add Mark Solved as a third competing learning-status action.
+
+If legacy Mark Solved functionality still exists elsewhere, do not delete it blindly.
+Ensure it is not required for the new readiness counts.
+
+==================================================
+6. PRACTICE BY DIFFICULTY
+==================================================
+
+Founder ultimately wants Easy / Medium / Hard ability.
+
+BUT current evidence is insufficient to claim demonstrated ability.
+
+Therefore Beta must show:
+
+PRACTICE BY DIFFICULTY
+
+Easy
+X / total Easy practised
+
+Medium
+X / total Medium practised
+
+Hard
+X / total Hard practised
+
+Use UNIQUE genuinely practised active question IDs.
+
+Do NOT label this:
+
+Ability
+Mastery
+Strength
+Ready
+Proficient
+
+Do NOT infer ability merely because a question was opened or marked confident.
+
+Future demonstrated ability will be implemented only when independent-answer evidence is sufficient.
+
+==================================================
+7. NEEDS MORE WORK
+==================================================
+
+Show a compact subject-specific:
+
+NEEDS MORE WORK
+
+Use EXISTING signals only:
+
+- NEEDS_PRACTICE self-assessment
+- Revision Planner due/overdue questions
+- Mistake Journal repeated wrong outcomes
+- existing trustworthy repeated evidence
+
+Rank topics/question areas needing attention.
+
+Do NOT mark a topic weak because:
+
+- it was merely opened
+- it has low coverage
+- global mastery score is low
+- one question exists
+
+Keep this section small.
+
+Suggested maximum:
+Top 3 areas.
+
+If insufficient evidence exists, show a neutral message such as:
+
+"Keep practising — we'll identify areas that need more work as you answer more questions."
+
+Do not fabricate weakness.
+
+==================================================
+8. WHAT TO PRACTISE NEXT
+==================================================
+
+Where existing Revision Planner / Adaptive Learning data can safely provide a recommendation, show ONE concise:
+
+WHAT TO PRACTISE NEXT
+
+Example:
+
+Coordinate Geometry — 3 questions need more practice
+
+Reuse existing recommendation/revision signals.
+
+No new recommendation engine.
+
+If insufficient evidence:
+do not invent a recommendation.
+
+==================================================
+9. SCIENCE AGGREGATION — P0
+==================================================
+
+The audit found a real defect:
+
+Solution progress can be recorded under:
+
+Physics
+Chemistry
+Biology
+
+while Practice reads:
+
+Science
+
+Fix this centrally and safely.
+
+Student-facing subject remains:
+
+SCIENCE
+
+Science progress must aggregate unique active question IDs from the approved Beta Science domains:
+
+Physics
+Chemistry
+Biology
+
+IMPORTANT:
+
+Earth Science is OUT OF CURRENT BETA SCOPE.
+
+Do NOT include Earth Science in:
+
+- Science Questions Practised denominator
+- Topics denominator
+- difficulty coverage
+- confidence counts
+- Need More Practice counts
+- Needs More Work
+- recommendations
+
+Do not modify Earth Science curriculum data.
+Simply exclude it from current Beta Science aggregation.
+
+Do NOT duplicate question IDs while aggregating.
+
+Under Science, allow weakness information to retain its native domain context where useful:
+
+Physics
+Chemistry
+Biology
+
+Example:
+
+Needs More Work
+Physics — Motion
+Chemistry — Mixtures
+
+==================================================
+10. ACTIVE LEARNING TIME
+==================================================
+
+DO NOT DISPLAY IT FOR BETA.
+
+Audit confirmed current Study Time is estimated, not actual.
+
+Do NOT build a new timer in this task.
+
+Hide:
+
+Study Time
+Active Learning Time
+Streak
+Consistency
+Recency
+
+We can implement genuine active-time tracking later only if Beta evidence shows it adds student value.
+
+==================================================
+11. SUBJECT READINESS UI
+==================================================
+
+Keep UI SIMPLE.
+
+Do NOT create a dashboard full of analytics.
+
+Each subject should have its own readiness/progress view.
+
+Preferred hierarchy:
+
+[SUBJECT NAME]
+
+Questions Practised
+X / Total
+
+Topics Practised
+X / Y
+
+I Am Confident
+X
+
+Need More Practice
+X
+
+PRACTICE BY DIFFICULTY
+
+Easy     X / Total
+Medium   X / Total
+Hard     X / Total
+
+NEEDS MORE WORK
+[maximum 3]
+
+WHAT TO PRACTISE NEXT
+[one concise recommendation if evidence exists]
+
+Do NOT show:
+
+Mastery Score
+Expert
+Accuracy
+Consistency
+Recency
+Streak
+Study Time
+generic Difficulty score
+
+==================================================
+12. SUBJECT NAVIGATION
+==================================================
+
+Provide simple subject selection/tabs/cards for:
+
+Mathematics
+Science
+Information Technology
+
+Do not clutter Practice home.
+
+Reuse current styling/components wherever possible.
+
+No redesign of the whole Practice page.
+
+Find a Question is already founder-tested and working.
+
+DO NOT MODIFY FIND A QUESTION.
+
+IT chapter numbering is already fixed.
+
+DO NOT REGRESS IT.
+
+Question numbering is already fixed.
+
+DO NOT REGRESS IT.
+
+Floating page navigation is already approved.
+
+DO NOT REGRESS IT.
+
+==================================================
+13. DATA MIGRATION / OLD DATA
+==================================================
+
+Be conservative.
+
+Existing stored progress may contain mixed legacy semantics.
+
+Do NOT silently reinterpret old "correct" or "solved" data as CONFIDENT.
+
+Only populate CONFIDENT / NEEDS_PRACTICE from unambiguous self-assessment actions after this implementation, unless an existing historical record is provably equivalent.
+
+Old attempted[] question IDs may be reused for Questions Practised where they satisfy the approved definition.
+
+Do not wipe legitimate user progress.
+
+Do not create duplicate stores unless absolutely unavoidable.
+
+==================================================
+14. ACCEPTANCE TESTS
+==================================================
+
+Test Mathematics, Science and IT.
+
+For each:
+
+A. Opening a question only:
+- must NOT increase I Am Confident
+- must NOT increase Need More Practice
+
+B. Genuine practice outcome:
+- Questions Practised increments once
+- repeat same question does NOT increase unique count
+
+C. I Am Confident:
+- count increments once
+- repeat click does not duplicate
+- changing to Need More Practice moves the question between statuses
+
+D. Need More Practice:
+- persists
+- feeds existing revision lifecycle
+- does not create duplicate review queue
+
+E. Science:
+- Physics question contributes to Science
+- Chemistry question contributes to Science
+- Biology question contributes to Science
+- Earth Science does NOT contribute
+
+F. Difficulty:
+- Easy/Medium/Hard counts use unique practised IDs
+- opening alone does not count as demonstrated ability
+- no "ability" claim shown
+
+G. Needs More Work:
+- only evidence-based areas appear
+- no fabricated weak areas
+
+H. Refresh:
+- all approved persistent counts survive browser refresh
+
+I. Existing functionality:
+- Find a Question unchanged
+- IT Ch 1/2/3 unchanged
+- Q-number unchanged
+- Questions return navigation unchanged
+- lazy pre-generated lessons unchanged
+- instant pilot lessons unchanged
+- streamed fallback unchanged
+
+==================================================
+15. PROTECTED SYSTEMS
+==================================================
+
+DO NOT modify:
+
+- frozen question content
+- question IDs
+- curriculum
+- canonical chapter registry
+- pre-generated Detailed lesson bodies
+- lesson generator
+- lesson chunk architecture
+- OpenAI model
+- prompts
+- token budgets
+- streaming architecture
+- planner
+- Scan
+- Find a Question
+- IT chapter numbering architecture
+- Q-number architecture
+
+No unrelated refactors.
+
+No new analytics engine.
+
+No gamification.
+
+No feature expansion.
+
+==================================================
+16. RETURN
+==================================================
+
+Return:
+
+1. Files changed
+2. Exact old Mastery UI removed/hidden
+3. Exact definition used for Questions Practised
+4. Exact persistence used for CONFIDENT / NEEDS_PRACTICE
+5. Confirmation Got It → I Am Confident
+6. Confirmation Needs Review → Need More Practice
+7. Confirmation Mark Solved not reintroduced as competing action
+8. Mathematics test results
+9. Science aggregation test results
+10. IT test results
+11. Easy/Medium/Hard coverage results
+12. Needs More Work logic
+13. What to Practise Next logic
+14. Earth Science exclusion confirmation
+15. Refresh/persistence results
+16. Regression results for Find Question / numbering / navigation / instant lessons
+17. TypeScript result
+18. Browser/console result
+19. AI calls caused by this feature
+20. Git/worktree status
+21. Remaining blockers
+
+Do not perform further work after this implementation.
+
+End exactly:
+
+BETA PRACTICE READINESS IMPLEMENTED — AWAITING FOUNDER ACCEPTANCE
+
+Then STOP.
+
+TRACE:
+CHAT #018
+REPLIT PROMPT #018
+BETA PRACTICE READINESS IMPLEMENTATION
+19-Aug-2026

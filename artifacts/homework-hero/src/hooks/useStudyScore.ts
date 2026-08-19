@@ -19,6 +19,7 @@
  */
 
 import { useMemo } from "react";
+import { unwrapRevisionItems } from "@/services/revisionStorage";
 
 // ─── Storage keys ─────────────────────────────────────────────────────────────
 const PROGRESS_KEY = "studyai-progress-v2";
@@ -107,7 +108,9 @@ export function useStudyScore(): StudyScore {
     const practice = Math.min(totalSolved / 50, 1) * 100;
 
     // ── 3. Revision completion ────────────────────────────────────────────
-    const revData  = safeRead<Record<string, RevisionItem>>(REVISION_KEY, {});
+    const revData  = unwrapRevisionItems<RevisionItem>(
+      safeRead<unknown>(REVISION_KEY, {}),
+    );
     const revItems = Object.values(revData);
     const today    = new Date().toISOString().slice(0, 10);
     const overdue  = revItems.filter((r) => r.dueDate <= today).length;

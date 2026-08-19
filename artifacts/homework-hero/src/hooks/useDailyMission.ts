@@ -13,6 +13,7 @@
  */
 
 import { useState, useCallback } from "react";
+import { unwrapRevisionItems } from "@/services/revisionStorage";
 
 // ─── Storage key ──────────────────────────────────────────────────────────────
 const KEY = "studyai-mission-v1";
@@ -80,7 +81,9 @@ function makeid(prefix: string): string {
 
 function buildTasks(): MissionTask[] {
   const progress = safeRead<ProgressStore>("studyai-progress-v2", {});
-  const revision = safeRead<RevisionStore>("studyai-revision-v1", {});
+  const revision = unwrapRevisionItems<RevItem>(
+    safeRead<unknown>("studyai-revision-v1", {}),
+  );
   const adaptive = safeRead<AdaptiveCache | null>("studyai-adaptive-v1", null);
   const todayStr = today();
 

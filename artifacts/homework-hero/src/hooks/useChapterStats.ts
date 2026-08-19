@@ -47,14 +47,18 @@ export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boo
 
   return useMemo(() => {
     const chapters = getChapters(classNum, subject);
-    const subjectProgress = (progress as Record<string, Record<string, { solved: number; correct: number; attempted: string[] }>>)[subject] ?? {};
+    const progressBySubject = progress as Record<string, Record<string, { solved: number; correct: number; attempted: string[] }>>;
 
     return chapters.map((ch, idx) => {
       const chapterQuestions = getQuestions({ classNum, subject, chapterId: ch.id });
+      // Science is student-facing aggregation, while practice events are stored
+      // under native Physics/Chemistry/Biology. Use the chapter's native subject
+      // so both coverage and legacy chapter counters read the same records.
+      const chapterProgress = progressBySubject[subject === "Science" ? ch.subject : subject] ?? {};
 
       const topicCompletions: TopicCompletion[] = ch.topics.map((t) => {
         const topicQs = chapterQuestions.filter((q) => q.topicId === t.id);
-        const rec = subjectProgress[t.name] ?? { solved: 0, correct: 0, attempted: [] };
+        const rec = chapterProgress[t.name] ?? { solved: 0, correct: 0, attempted: [] };
         const attemptedSet = new Set<string>(rec.attempted ?? []);
         const attemptedCount = topicQs.filter((q) => attemptedSet.has(q.id)).length;
         const accuracy = rec.solved > 0 ? Math.round((rec.correct / rec.solved) * 100) : 0;
@@ -78,7 +82,7 @@ export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boo
       let chCorrect = 0;
       let chSolved = 0;
       for (const t of ch.topics) {
-        const rec = subjectProgress[t.name];
+        const rec = chapterProgress[t.name];
         if (rec) {
           chCorrect += rec.correct ?? 0;
           chSolved += rec.solved ?? 0;
