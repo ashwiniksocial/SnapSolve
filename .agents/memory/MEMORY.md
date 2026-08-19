@@ -15,6 +15,7 @@
 - [Implementation Gate](implementation-gate.md) — No question authoring may begin without a completed official-source audit for that exact subject/grade; gate file at .local/governance/IMPLEMENTATION_GATE.md; re-tagging is exempt.
 - [useSession navigation race fix](usesession-navigation-race.md) — React 18 batching defers setSession updaters; save() inside updater runs AFTER navigate(); use eager save+setSession pattern instead.
 - [Canonical Academic System](canonical-curriculum-system.md) — single-source curriculum contract; canonicalCurriculum.ts → canonical IDs; browser mirror in canonicalIdLookup.ts; V2 chapterId needs bio-/chem- prefix before lookup.
+- [Canonical Bank Display Metadata](canonical-bank-display-metadata.md) — bank identity overrides streamed, cached, and generated lesson labels in Practice, Solution, and readiness.
 - [Model Benchmark Findings](model-benchmark-findings.md) — Luna fails 42% of questions at production token budget (reasoning exhaustion); Terra +3pts quality vs mini but +51% cost; stay on gpt-4o-mini.
 - [Hard-Question Proof Defect](hard-question-proof-defect.md) — CMF-1/CMF-2 defect on M4/P4 is real but unfixable via prompt engineering; skip all prompt approaches; fix requires post-generation content injection.
 - [Standard Mode Schema](standard-mode-schema.md) — 4-step schema + questionTranslation + finalAnswer (no practiceQuestion); maxTokens=1100; practiceQuestion stripped post-generation if model hallucinates it.

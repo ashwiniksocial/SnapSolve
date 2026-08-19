@@ -23,6 +23,7 @@ import {
   readinessDrilldownLabel,
   type ReadinessDrilldown,
 } from "@/services/practiceReadiness";
+import { getCanonicalPracticeMetadata } from "@/services/canonicalPracticeMetadata";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const DIFFICULTIES: (Difficulty | "All")[] = ["All", "Easy", "Medium", "Hard"];
@@ -213,6 +214,8 @@ function QuestionCard({
   onOpen: () => void;
   questionNumber: number | undefined;
 }) {
+  const metadata = getCanonicalPracticeMetadata(q);
+
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all hover:border-slate-300 hover:shadow-md">
       <button className="w-full text-left p-4 active:bg-slate-50 transition-colors" onClick={onOpen}>
@@ -224,15 +227,15 @@ function QuestionCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="text-[11px] font-bold text-slate-400 mr-0.5">Q{questionNumber ?? "—"}.</span>
-              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[q.difficulty]}`}>
-                {q.difficulty}
+              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${diffStyle[metadata.difficulty]}`}>
+                {metadata.difficulty}
               </span>
-              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${typeStyle[q.questionType ?? "Unclassified"]}`}>
-                {TYPE_LABELS[q.questionType ?? "Unclassified"]}
+              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${typeStyle[metadata.questionType]}`}>
+                {TYPE_LABELS[metadata.questionType]}
               </span>
             </div>
-            <p className="text-[11px] font-medium text-slate-400 mb-1.5">{q.topicName}</p>
-            <p className="text-sm font-medium text-slate-800 leading-relaxed">{q.question}</p>
+            <p className="text-[11px] font-medium text-slate-400 mb-1.5">{metadata.topicName}</p>
+            <p className="text-sm font-medium text-slate-800 leading-relaxed">{metadata.question}</p>
           </div>
           <div className="flex flex-col items-end gap-0.5 flex-shrink-0 mt-1 ml-2">
             <span className="text-[10px] font-black uppercase tracking-wide" style={{ color: cfg.color }}>
@@ -450,23 +453,24 @@ export default function Practice() {
   const [, navigate] = useLocation();
 
   const handleOpenQuestion = useCallback((q: Question) => {
+    const metadata = getCanonicalPracticeMetadata(q);
     update({
       // Use the question's native domain subject ("Physics", "Chemistry",
       // "Biology", "Mathematics") rather than the student-facing "Science"
       // umbrella so the backend API receives a subject it recognises.
-      subject:               q.subject as Subject,
-      question:              q.question,
-      practiceTopic:         q.topicName,
-      practiceQuestionId:    q.id,
-      practiceQuestionDiff:  q.difficulty,
-      practiceChapterId:     q.chapterId,
-      practiceChapterName:   q.chapterName,
+      subject:               metadata.subject,
+      question:              metadata.question,
+      practiceTopic:         metadata.topicName,
+      practiceQuestionId:    metadata.questionId,
+      practiceQuestionDiff:  metadata.difficulty,
+      practiceChapterId:     metadata.chapterId,
+      practiceChapterName:   metadata.chapterName,
       practiceClassNum:      q.classNum,
     });
     // Keep the frozen bank ID in the route as well as session storage. This
     // makes a refreshed/new Solution mount deterministic even if React route
     // state has not observed the session update yet.
-    navigate(`/solution?practiceMode=1&questionId=${encodeURIComponent(q.id)}`);
+    navigate(`/solution?practiceMode=1&questionId=${encodeURIComponent(metadata.questionId)}`);
   }, [selectedSubject, update, navigate]);
 
   const handleReopenQuestion = useCallback((questionId: string) => {

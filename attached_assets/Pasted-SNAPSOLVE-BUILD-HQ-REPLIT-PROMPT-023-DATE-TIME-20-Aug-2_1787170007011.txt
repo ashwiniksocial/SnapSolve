@@ -1,0 +1,319 @@
+SNAPSOLVE BUILD HQ — REPLIT PROMPT #023
+DATE/TIME: 20-Aug-2026 | 01:35 IST
+PURPOSE: Fix proven Practice → Solution difficulty inconsistency at root cause
+PRIORITY: P0
+MODE: TRACE → ROOT CAUSE → FIX → RENDERED VALIDATION
+
+Recall and obey ALL PrePromptConditions.
+
+FOUNDER HAS NOW VISUALLY PROVEN THAT THE PREVIOUS HARD/MEDIUM DEFECT IS STILL PRESENT.
+
+DO NOT rely on the previous audit result saying:
+"0 canonical metadata mismatches."
+
+THE ACTUAL RENDERED UI CONTRADICTS THAT AUDIT.
+
+==================================================
+PROVEN DEFECT
+==================================================
+
+EXACT SAME QUESTION:
+
+Mathematics
+Chapter 2
+Q10
+
+Question:
+"A student says that x^(1/2) + 3 is a polynomial because it involves a variable x. Is the student correct? Explain with the formal definition."
+
+PRACTICE QUESTION LIST:
+Q10 = HARD
+
+SOLUTION PAGE FOR THE SAME QUESTION:
+Q10 = MEDIUM
+
+Founder screenshots prove this.
+
+Therefore the previous integrity audit has a blind spot.
+
+DO NOT patch Q10 manually.
+
+DO NOT modify its difficulty merely to make the two screens match.
+
+Find why the SAME canonical question receives different difficulty values in different student-facing paths.
+
+==================================================
+STEP 1 — TRACE THE EXACT VALUE
+==================================================
+
+For this exact Q10 trace difficulty from:
+
+canonical question object
+→ questionService
+→ Practice question list
+→ navigation/routing state
+→ Solution question lookup
+→ lesson/fallback input
+→ Solution display metadata
+→ readiness/progress difficulty
+
+For EACH stage print/report:
+
+question ID
+difficulty value
+source file/object/function providing that value
+
+Identify the FIRST point at which HARD becomes MEDIUM.
+
+That is the root cause.
+
+Possible causes must be investigated, not assumed:
+
+- duplicate question representation
+- topic-derived metadata
+- streamed lesson metadata
+- solutionEngine metadata
+- stale fallback metadata
+- route state
+- default difficulty
+- transformed question object
+- topic matcher
+- historical generated metadata
+- incorrect canonical lookup
+- different question registries
+- normalization logic
+- cache
+- legacy metadata
+- hardcoded fallback
+- another source
+
+==================================================
+STEP 2 — ESTABLISH ONE SOURCE OF TRUTH
+==================================================
+
+For Practice-mode bank questions:
+
+CANONICAL ACTIVE QUESTION BANK DIFFICULTY
+must be the ONLY authority for student-facing difficulty.
+
+Solution must NOT trust difficulty from:
+
+- generated AI lesson
+- streamed response
+- stored lesson metadata
+- topic metadata
+- route metadata
+- fallback defaults
+
+when the canonical question ID exists.
+
+Resolve question by canonical question ID and derive difficulty directly from the canonical active bank.
+
+Same rule for:
+
+topic
+question type
+chapter
+subject
+student-facing Q-number
+
+where canonical metadata exists.
+
+Generated lesson content teaches the answer.
+It must NOT redefine canonical question metadata.
+
+==================================================
+STEP 3 — FIND WHY PREVIOUS AUDIT MISSED THIS
+==================================================
+
+This is mandatory.
+
+The previous audit reported:
+
+1,375 questions
+0 canonical metadata mismatches
+
+yet Founder immediately found a rendered mismatch.
+
+Explain exactly why the audit passed.
+
+Determine whether it compared:
+
+canonical → canonical
+
+instead of:
+
+canonical → ACTUAL Practice rendered model
+and
+canonical → ACTUAL Solution rendered model.
+
+Fix the validator so this class of defect cannot falsely pass again.
+
+==================================================
+STEP 4 — FULL 1,375 QUESTION DETERMINISTIC AUDIT
+==================================================
+
+After root-cause correction, audit ALL 1,375 active questions.
+
+For every question compare the effective metadata produced by the actual student-facing data paths:
+
+canonical difficulty
+Practice effective difficulty
+Solution effective difficulty
+readiness/progress difficulty
+
+Required invariant:
+
+canonical
+=
+Practice
+=
+Solution
+=
+readiness
+
+for every question.
+
+Do this WITHOUT opening 1,375 browser pages and WITHOUT AI calls.
+
+Exercise the same selectors/resolvers/adapters used by the real UI.
+
+Report separately:
+
+Easy questions
+Medium questions
+Hard questions
+
+and:
+
+Practice mismatches
+Solution mismatches
+Readiness mismatches
+
+Required result:
+
+0
+0
+0
+
+==================================================
+STEP 5 — RENDERED REGRESSION TEST
+==================================================
+
+After deterministic validation, browser-test REAL rendered pages.
+
+MANDATORY TEST #1:
+Maths Ch 2 Q10
+
+Practice must show:
+HARD
+
+Open exact Solution.
+
+Solution must also show:
+HARD
+
+Capture/report actual rendered text.
+
+MANDATORY TEST #2:
+Choose at least:
+- 2 Easy questions
+- 2 Medium questions
+- 2 Hard questions
+
+across Mathematics, Science and Information Technology.
+
+For each:
+
+Practice difficulty
+→ open exact Solution
+→ Solution difficulty
+
+must match.
+
+Do NOT use synthetic DOM data.
+
+Use real question routes.
+
+==================================================
+STEP 6 — DO NOT TOUCH OTHER COMPLETED WORK
+==================================================
+
+Do NOT:
+
+- change question-bank content
+- regenerate questions
+- regenerate lessons
+- modify confidence logic
+- modify Practice readiness UI
+- modify Find a Question
+- modify floating navigation
+- modify chapter numbering
+- modify Q-numbering
+- modify Scan
+- change curriculum scope
+- work on the 11 lesson-quality flags
+
+Smallest root-cause fix only.
+
+==================================================
+IMPORTANT — DETAILED ANSWER TASK REMAINS SEPARATE
+==================================================
+
+Do NOT claim that all Detailed answers are quality-approved.
+
+Current architecture indicates:
+
+20 pre-generated
+1,355 streamed fallback
+= 1,375 answer routes
+
+That proves answer-route availability, NOT academic quality of all 1,375 answers.
+
+We will audit the Detailed teaching contract separately after this P0 metadata defect is genuinely closed.
+
+==================================================
+RETURN
+==================================================
+
+Report:
+
+1. Exact canonical difficulty for Maths Ch2 Q10
+2. Practice difficulty before fix
+3. Solution difficulty before fix
+4. Exact point HARD became MEDIUM
+5. Root cause
+6. Why previous audit falsely passed
+7. Files changed
+8. Architecture fix
+9. Q10 Practice difficulty after fix
+10. Q10 Solution difficulty after fix
+11. Full 1,375-question results:
+    - Easy count
+    - Medium count
+    - Hard count
+    - Practice mismatches
+    - Solution mismatches
+    - Readiness mismatches
+12. Six real rendered regression examples
+13. Confirmation no question content changed
+14. Confirmation no lessons regenerated
+15. AI calls made
+16. TypeScript/test/build results
+17. Git/worktree status
+
+DO NOT call this resolved merely because static metadata matches.
+
+It is resolved only when the ACTUAL rendered Practice and Solution pages show the same canonical difficulty.
+
+End exactly:
+
+P0 PRACTICE/SOLUTION DIFFICULTY SOURCE-OF-TRUTH VERIFIED IN RENDERED UI — AWAITING FOUNDER REVIEW
+
+Then STOP.
+
+TRACE:
+CHAT #023
+REPLIT PROMPT #023
+P0 DIFFICULTY SOURCE-OF-TRUTH FIX
+20-Aug-2026 01:35 IST

@@ -12,6 +12,12 @@ import {
   isCompleteDetailedLesson,
   type PreGeneratedLessonChunk,
 } from "../../artifacts/homework-hero/src/data/preGeneratedLessons.ts";
+import {
+  applyCanonicalBankMetadata,
+  getCanonicalPracticeDifficulty,
+  getCanonicalPracticeMetadata,
+} from "../../artifacts/homework-hero/src/services/canonicalPracticeMetadata.ts";
+import type { AIResponse } from "../../artifacts/homework-hero/src/data/solutionBank.ts";
 import type { Question } from "../../artifacts/homework-hero/src/data/questions/types.ts";
 
 const repoRoot = resolve(fileURLToPath(new URL("../..", import.meta.url)));
@@ -56,6 +62,9 @@ async function main() {
   const questionsById = new Map<string, Question>();
   const structuralErrors: string[] = [];
   const metadataMismatches: string[] = [];
+  const practicePathMismatches: string[] = [];
+  const solutionPathMismatches: string[] = [];
+  const readinessPathMismatches: string[] = [];
   const questionNumbers = new Map<string, Set<number>>();
   const counts = {
     subject: {} as Record<string, number>,
@@ -83,6 +92,41 @@ async function main() {
     }
     if (!question.topicId || !question.topicName || !question.question || !question.answer || !question.difficulty) {
       metadataMismatches.push(`${question.id}: missing required Practice metadata.`);
+    }
+
+    // Exercise the exact pure resolvers used by the student-facing paths.
+    const practiceMetadata = getCanonicalPracticeMetadata(question);
+    if (practiceMetadata.difficulty !== question.difficulty) {
+      practicePathMismatches.push(`${question.id}: Practice resolver ${practiceMetadata.difficulty} ≠ canonical ${question.difficulty}.`);
+    }
+    if (getCanonicalPracticeDifficulty(question) !== question.difficulty) {
+      readinessPathMismatches.push(`${question.id}: readiness resolver differs from canonical difficulty.`);
+    }
+    // Deliberately start with non-authoritative lesson metadata. The Solution
+    // overlay must replace it with the bank authority for every active ID.
+    const solutionMetadata = applyCanonicalBankMetadata({
+      id: `audit-${question.id}`,
+      subject: "Mathematics",
+      topic: "non-canonical topic",
+      difficulty: "Medium",
+      detectedQuestion: "non-canonical question",
+      keyConcepts: [],
+      similarQuestions: [],
+      steps: [],
+      finalAnswer: "",
+      lesson: {
+        topic: "non-canonical topic",
+        difficulty: "Medium",
+      },
+    } as AIResponse, question);
+    if (
+      solutionMetadata.difficulty !== question.difficulty ||
+      solutionMetadata.topic !== question.topicName ||
+      solutionMetadata.subject !== question.subject ||
+      solutionMetadata.detectedQuestion !== question.question ||
+      solutionMetadata.lesson?.difficulty !== question.difficulty
+    ) {
+      solutionPathMismatches.push(`${question.id}: Solution overlay differs from canonical metadata.`);
     }
     const numberKey = `${question.subject}::${question.chapterId}`;
     const used = questionNumbers.get(numberKey) ?? new Set<number>();
@@ -128,7 +172,11 @@ async function main() {
   }
 
   const report = {
-    passed: structuralErrors.length === 0 && metadataMismatches.length === 0,
+    passed: structuralErrors.length === 0 &&
+      metadataMismatches.length === 0 &&
+      practicePathMismatches.length === 0 &&
+      solutionPathMismatches.length === 0 &&
+      readinessPathMismatches.length === 0,
     scope: {
       activeClass9Questions: activeQuestions.length,
       activeClass9Chapters: chaptersById.size,
@@ -138,6 +186,14 @@ async function main() {
     },
     structuralErrors,
     metadataMismatches,
+    effectiveMetadataPaths: {
+      practiceMismatchCount: practicePathMismatches.length,
+      solutionMismatchCount: solutionPathMismatches.length,
+      readinessMismatchCount: readinessPathMismatches.length,
+      practiceMismatches: practicePathMismatches,
+      solutionMismatches: solutionPathMismatches,
+      readinessMismatches: readinessPathMismatches,
+    },
     derivedLessonMetadataWarnings: lessonMetadataMismatches,
     lessonQualityFlags,
     counts,

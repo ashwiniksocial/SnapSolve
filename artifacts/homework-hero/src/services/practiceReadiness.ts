@@ -1,5 +1,6 @@
 import type { Difficulty, Question } from "@/data/questions";
 import { getStudentFacingSubject } from "@/data/questions/studentFacingSubject";
+import { getCanonicalPracticeDifficulty } from "@/services/canonicalPracticeMetadata";
 
 export interface PracticeProgressTopicRecord {
   attempted?: string[];
@@ -75,9 +76,9 @@ export function derivePracticeReadiness(
   );
 
   const practisedByDifficulty = {
-    Easy: questionsPractised.filter((question) => question.difficulty === "Easy"),
-    Medium: questionsPractised.filter((question) => question.difficulty === "Medium"),
-    Hard: questionsPractised.filter((question) => question.difficulty === "Hard"),
+    Easy: questionsPractised.filter((question) => getCanonicalPracticeDifficulty(question) === "Easy"),
+    Medium: questionsPractised.filter((question) => getCanonicalPracticeDifficulty(question) === "Medium"),
+    Hard: questionsPractised.filter((question) => getCanonicalPracticeDifficulty(question) === "Hard"),
   };
   const topicKeys = new Set(
     activeQuestions.map((question) => `${question.subject}::${question.topicId}`),

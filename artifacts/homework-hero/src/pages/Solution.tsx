@@ -17,6 +17,10 @@ import {
 } from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
 import { getPreGeneratedBankLesson } from "@/data/preGeneratedLessons";
+import {
+  applyCanonicalBankMetadata,
+  getCanonicalPracticeMetadata,
+} from "@/services/canonicalPracticeMetadata";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
@@ -104,7 +108,7 @@ export default function Solution() {
           // secondary localStorage cache and then the unchanged SSE path.
           const preGenerated = await getPreGeneratedBankLesson(bankQ);
           if (preGenerated) {
-            setSolution(preGenerated);
+            setSolution(applyCanonicalBankMetadata(preGenerated, bankQ));
             setPageState("done");
             return;
           }
@@ -112,7 +116,7 @@ export default function Solution() {
           // ── Secondary browser cache: instant display, 0 AI calls ────────────
           const cached = getBankCachedLesson(bankQ.id);
           if (cached) {
-            setSolution(cached);
+            setSolution(applyCanonicalBankMetadata(cached, bankQ));
             setPageState("done");
             return;
           }
@@ -132,17 +136,17 @@ export default function Solution() {
               bankContext,
               (partial) => {
                 flushSync(() => {
-                  setSolution(partial);
+                  setSolution(applyCanonicalBankMetadata(partial, bankQ));
                   setPageState("done"); // switch from spinner to card on first content
                 });
               },
             );
-            setSolution(result);
+            setSolution(applyCanonicalBankMetadata(result, bankQ));
             setPageState("done");
           } catch (err) {
             // Streaming failed — show the minimal bank entry so student isn't stuck
             console.warn("[BANK:STREAM] TeachingLesson generation failed:", String(err));
-            setSolution({
+            setSolution(applyCanonicalBankMetadata({
               id:               `bank-${bankQ.id}`,
               subject:          bankQ.subject as Subject,
               topic:            bankQ.topicName,
@@ -153,7 +157,7 @@ export default function Solution() {
               finalAnswer:      bankQ.answer,
               similarQuestions: [],
               source:           "bank",
-            });
+            }, bankQ));
             setPageState("done");
           }
           return;
@@ -211,16 +215,17 @@ export default function Solution() {
     if (!practiceQuestionId) return;
     const bankQuestion = getQuestionById(practiceQuestionId);
     if (!bankQuestion) return;
+    const metadata = getCanonicalPracticeMetadata(bankQuestion);
 
-    recordPractice(bankQuestion.subject as Subject, bankQuestion.topicName, bankQuestion.id);
+    recordPractice(metadata.subject, metadata.topicName, metadata.questionId);
     setSelfAssessment(
       {
-        questionId: bankQuestion.id,
-        question: bankQuestion.question,
-        subject: bankQuestion.subject as Subject,
-        topic: bankQuestion.topicName,
-        chapter: bankQuestion.chapterName,
-        difficulty: bankQuestion.difficulty,
+        questionId: metadata.questionId,
+        question: metadata.question,
+        subject: metadata.subject,
+        topic: metadata.topicName,
+        chapter: metadata.chapterName,
+        difficulty: metadata.difficulty,
       },
       status,
     );
