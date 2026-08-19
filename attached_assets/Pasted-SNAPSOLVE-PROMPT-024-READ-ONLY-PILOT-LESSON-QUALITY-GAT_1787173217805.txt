@@ -1,0 +1,105 @@
+SNAPSOLVE — PROMPT #024 — READ-ONLY PILOT LESSON QUALITY GATE
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate, architecture rules, cost-control rules, regression-prevention rules, and Build → Validate → Freeze → Next discipline BEFORE taking any action.
+
+MODE: READ-ONLY AUDIT ONLY.
+
+DO NOT MODIFY ANY FILE.
+DO NOT GENERATE OR REGENERATE ANY LESSON.
+DO NOT MAKE ANY AI/API CALL.
+DO NOT REFACTOR.
+DO NOT CREATE A NEW VALIDATOR OR PARALLEL SYSTEM.
+DO NOT TOUCH PRACTICE.
+
+FOUNDER-VERIFIED + FROZEN STATE:
+- Practice core flow: FROZEN
+- Mathematics/Science/Information Technology Practice → Solution flows manually verified
+- Questions Practised drill-down verified
+- I Am Confident verified
+- Need More Practice verified
+- Easy / Medium / Hard drill-downs verified
+- Canonical difficulty parity verified
+- Floating Top/Middle/Bottom navigation verified
+- Active Beta bank: 1,375 questions / 22 chapters
+- 20 pre-generated instant pilot lessons
+- 1,355 streamed fallback lessons
+
+KNOWN OPEN ITEM:
+Existing validation reports 11 advisory teaching-quality flags among the 20 pre-generated pilot lessons.
+
+TASK:
+
+Determine whether each of those 11 flags represents a REAL student-facing teaching-quality defect or merely an advisory/false-positive validator warning.
+
+For EACH flagged lesson inspect:
+
+1. Exact question ID.
+2. Subject / chapter / topic.
+3. Difficulty and question type.
+4. Exact advisory flag(s).
+5. Actual stored lesson content relevant to the flag.
+6. Whether the supposedly missing content is genuinely required for THAT specific question.
+7. Whether the lesson already answers the question correctly and sufficiently elsewhere.
+8. Whether the answer is:
+   - curriculum appropriate,
+   - factually/mathematically/scientifically correct,
+   - understandable by a weak Class 9 student,
+   - sufficiently step-by-step where the question requires working,
+   - suitable for exam preparation and teacher/examiner expectations,
+   - neither unnecessarily verbose nor insufficiently explained.
+9. Confirm canonical question/lesson linkage remains correct.
+
+IMPORTANT:
+
+A validator warning is NOT automatically a defect.
+
+Examples:
+- Do not require worked-math steps for a question that genuinely needs no mathematical working.
+- Do not require translation/rephrasing if it adds no teaching value.
+- Do not recommend expanding a short-answer question into an unnecessarily long lesson.
+- Do not change frozen content merely to satisfy a mechanical validator.
+
+CLASSIFY every flag as exactly:
+
+A — GENUINE BETA-BLOCKING TEACHING DEFECT
+B — MINOR NON-BLOCKING QUALITY ISSUE
+C — FALSE POSITIVE / NOT REQUIRED FOR THIS QUESTION
+
+Then perform a SYSTEM-WIDE IMPACT CHECK before recommending any implementation.
+
+If a correction would affect anything beyond the specific lesson content, identify that dependency explicitly.
+
+OUTPUT ONLY A COMPACT TABLE:
+
+Question ID | Subject | Difficulty | Flag | Classification A/B/C | Evidence | Smallest Required Fix (if any)
+
+Then provide:
+
+A count: __
+B count: __
+C count: __
+
+BETA DECISION:
+PASS / REPAIR REQUIRED
+
+If REPAIR REQUIRED:
+List ONLY the exact A-class defects that must be repaired before Beta and the smallest safe correction for each.
+
+Do NOT implement those corrections in this task.
+
+Also report:
+- Files changed: MUST BE 0
+- AI/API calls: MUST BE 0
+- Lessons regenerated: MUST BE 0
+- Question-bank changes: MUST BE 0
+- Practice changes: MUST BE 0
+
+Do not propose unrelated improvements.
+Do not open another workstream.
+Do not create follow-up tasks automatically.
+
+STOP after the report and await Founder approval.
+
+End exactly:
+
+PILOT LESSON QUALITY GATE COMPLETE — NO CHANGES MADE — AWAITING FOUNDER DECISION
