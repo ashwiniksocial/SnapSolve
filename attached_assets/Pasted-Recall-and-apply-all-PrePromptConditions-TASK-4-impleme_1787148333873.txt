@@ -1,0 +1,185 @@
+Recall and apply all PrePromptConditions.
+
+TASK #4 implementation has passed its technical pilot.
+
+DO NOT CHANGE ANY CODE.
+
+DO NOT GENERATE ANY NEW LESSON.
+
+DO NOT REGENERATE THE EXISTING 20.
+
+DO NOT OPTIMIZE, REFACTOR, CLEAN UP, PUBLISH OR CREATE ANOTHER TASK.
+
+This is a READ-ONLY FINAL ACCEPTANCE TEST.
+
+## 1. REAL BROWSER SPEED TEST
+
+Using the actual student journey:
+
+Practice → Chapter → Question → Solution
+
+Test all 20 pre-generated pilot questions.
+
+For EACH question record:
+
+* question ID
+* subject
+* click-to-Solution-page mount
+* click-to-first visible teaching content
+* click-to-COMPLETE Detailed lesson visible
+* whether any `/api/solveQuestion` request occurred
+* whether any `/api/solveQuestion/stream` request occurred
+
+Acceptance target:
+
+**Complete Detailed lesson visible ≤1 second wherever realistically measurable.**
+
+There must be:
+
+**0 runtime AI calls across all 20.**
+
+Do not use server/static estimates. Measure the actual browser journey.
+
+---
+
+## 2. TEACHING QUALITY / CONTENT INTEGRITY
+
+For all 20 confirm the complete Detailed lesson contains the intended visible teaching structure:
+
+1. Key Concept
+2. Build Intuition
+3. Understand the Question — only where pedagogically appropriate
+4. Step-by-Step Solution
+5. Common Mistakes
+6. Final Answer
+7. One Similar Example
+8. Practice Question
+
+IMPORTANT:
+
+A legitimately conditional section must not be fabricated merely to make the count eight.
+
+Check that:
+
+* explanation is descriptive and student-friendly;
+* weakest Class 9 student can reasonably follow it;
+* steps logically answer the actual question;
+* no irrelevant filler;
+* no wrong-topic leakage;
+* no contradictory statements;
+* mathematical/scientific/IT facts remain correct;
+* final answer exactly preserves the frozen approved answer;
+* answer style remains suitable for curriculum/exam preparation and teacher/examiner acceptance.
+
+Report any questionable lesson rather than silently fixing it.
+
+---
+
+## 3. PERSISTENCE TEST
+
+For representative Maths, Science and IT pilot questions:
+
+A. clear localStorage
+B. hard refresh
+C. restart API
+D. reopen question
+
+Confirm:
+
+* complete Detailed lesson still loads;
+* persistent bundled lesson is used;
+* 0 runtime AI calls.
+
+---
+
+## 4. FALLBACK REGRESSION TEST
+
+Without generating anything:
+
+Test ONE active bank question outside the pilot.
+
+Confirm:
+
+* persistent lookup misses;
+* existing streaming Detailed fallback activates;
+* question remains usable.
+
+Then test ONE genuinely unmatched typed question.
+
+Confirm its existing AI streaming path remains operational.
+
+Do not wait for unnecessary repeated generation.
+
+---
+
+## 5. FUTURE SCALE CHECK
+
+Read-only confirm that no runtime or generator logic contains assumptions tied to:
+
+* exactly 20 questions;
+* exactly 1,375 questions;
+* only current IT units;
+* only CBSE;
+* current chapter counts.
+
+Future approved question IDs from additional IT units, Bengal Board or other curricula must enter the same missing/stale generation mechanism without architecture changes.
+
+---
+
+## RETURN ONLY
+
+### A. Browser latency table
+
+All 20 questions.
+
+### B. AI-call result
+
+Total runtime AI calls across 20.
+
+### C. Teaching-quality result
+
+PASS / REVIEW REQUIRED per question.
+
+### D. Persistence result
+
+Maths / Science / IT.
+
+### E. Non-pilot fallback
+
+PASS / FAIL.
+
+### F. Unmatched-question fallback
+
+PASS / FAIL.
+
+### G. Future scalability
+
+PASS / FAIL with any hardcoded constraint identified.
+
+### H. Exact persistent asset size
+
+Current 20 lessons in KB/MB.
+
+### I. Projected storage
+
+Using ACTUAL pilot bytes/question, calculate:
+
+* 1,375 questions
+* 5,000
+* 10,000
+* 50,000
+* 100,000
+
+### J. Git/worktree
+
+List only files currently changed/added by Task #4.
+
+DO NOT CHANGE ANYTHING.
+
+If every acceptance gate passes, end exactly:
+
+TASK #4 FOUNDER ACCEPTANCE GATE PASSED — SAFE TO CONSIDER CONTROLLED BATCH GENERATION
+
+If anything fails, identify the exact failure and STOP.
+
+Do not fix it.
