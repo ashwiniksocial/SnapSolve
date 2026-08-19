@@ -12,6 +12,7 @@ import { callDevLesson, toAIResponse, solveBankWithStream, getBankCachedLesson, 
 import { useCelebration } from "@/hooks/useCelebration";
 import { getQuestionById, type Difficulty } from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
+import { getPreGeneratedBankLesson } from "@/data/preGeneratedLessons";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
@@ -46,8 +47,11 @@ export default function Solution() {
   // practiceMode result: null = not yet rated, true = got it, false = needs review
   const [practiceResult, setPracticeResult] = useState<boolean | null>(null);
 
-  // Practice mode: ?practiceMode=1 forces full AI pipeline (skipBank + requireLesson).
-  const practiceMode = new URLSearchParams(window.location.search).get("practiceMode") === "1";
+  const solutionParams = new URLSearchParams(window.location.search);
+  // Practice mode preserves a question ID in the URL so a direct load or
+  // immediate route transition can still resolve the frozen bank question.
+  const practiceMode = solutionParams.get("practiceMode") === "1";
+  const practiceQuestionId = solutionParams.get("questionId") ?? session.practiceQuestionId;
 
   const runSolver = useCallback(async () => {
     setPageState("loading");
@@ -74,8 +78,8 @@ export default function Solution() {
       //         First content ≤2 s target; onPartial renders progressively.
       // Step 3: on completion, cache lesson by questionId for future instant loads.
       // One lesson serves all 3 teaching modes — switching is instant, 0 AI calls.
-      if (practiceMode && session.practiceQuestionId) {
-        const bankQ = getQuestionById(session.practiceQuestionId);
+      if (practiceMode && practiceQuestionId) {
+        const bankQ = getQuestionById(practiceQuestionId);
         if (bankQ) {
           const bankContext: BankQuestionContext = {
             questionId:  bankQ.id,
@@ -101,7 +105,18 @@ export default function Solution() {
             );
           }
 
-          // ── Cache hit: instant display, 0 AI calls ───────────────────────────
+          // ── Persistent derived lesson: instant display, 0 AI calls ──────────
+          // This is validated against the current frozen question source on every
+          // lookup. Missing/stale entries intentionally continue to the existing
+          // secondary localStorage cache and then the unchanged SSE path.
+          const preGenerated = getPreGeneratedBankLesson(bankQ);
+          if (preGenerated) {
+            setSolution(preGenerated);
+            setPageState("done");
+            return;
+          }
+
+          // ── Secondary browser cache: instant display, 0 AI calls ────────────
           const cached = getBankCachedLesson(bankQ.id);
           if (cached) {
             setSolution(cached);

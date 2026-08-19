@@ -121,6 +121,7 @@ export interface ReviewableQuestion {
   topicId:     string;
   topicName:   string;
   difficulty:  string;
+  questionType?: string;
   question:    string;
   answer:      string;
   steps:       SolutionStep[];
@@ -444,6 +445,7 @@ function normalizeV1(q: AnyObj): ReviewableQuestion {
     topicId:     String(q["topicId"]     ?? ""),
     topicName:   String(q["topicName"]   ?? ""),
     difficulty:  String(q["difficulty"]  ?? ""),
+    questionType: q["questionType"] !== undefined ? String(q["questionType"]) : undefined,
     question:    String(q["question"]    ?? ""),
     answer:      String(q["answer"]      ?? ""),
     steps:       Array.isArray(q["steps"])       ? q["steps"]       as SolutionStep[] : [],
@@ -456,6 +458,18 @@ function prefixChapterId(subject: string, raw: string): string {
   if (subject === "Chemistry") return `chem-${raw}`;
   if (subject === "Biology")   return `bio-${raw}`;
   return raw;
+}
+
+/** Keep generator-side V2 metadata identical to the browser's v2adapter. */
+function mapV2QuestionType(questionType: unknown, questionFormat: unknown): string {
+  const type = String(questionType ?? "");
+  const format = String(questionFormat ?? "");
+  if (type === "hots") return "HOTS";
+  if (type === "previous-year") return "PYQ";
+  if (type === "assertion-reason" || format === "AssertionReason") return "MCQ";
+  if (format === "MCQ" || format === "TrueOrFalse") return "MCQ";
+  if (format === "LongAnswer" || format === "Proof" || format === "CaseStudy") return "LongAnswer";
+  return "ShortAnswer";
 }
 
 function normalizeV2(q: AnyObj): ReviewableQuestion {
@@ -472,6 +486,7 @@ function normalizeV2(q: AnyObj): ReviewableQuestion {
     topicId:     String(q["topicId"]     ?? ""),
     topicName:   String(q["topicName"]   ?? ""),
     difficulty:  String(q["difficulty"]  ?? ""),
+    questionType: mapV2QuestionType(q["questionType"], q["questionFormat"]),
     question:    String(q["question"]    ?? ""),
     answer:      String(q["answer"]      ?? ""),
     steps:       Array.isArray(q["steps"])       ? q["steps"]       as SolutionStep[] : [],
@@ -543,6 +558,51 @@ export async function loadAllQuestions(): Promise<ReviewableQuestion[]> {
   }
 
   return all.filter(q => q.id && q.question.trim() && q.answer.trim());
+}
+
+/**
+ * Generator-safe discovery for data derived from student-visible bank content.
+ *
+ * V1 chapter visibility comes from the same ChapterMeta objects used by the
+ * frontend. V2 content is accepted only when the canonical curriculum gateway
+ * marks its adapted chapter ID ACTIVE. This loader never changes or becomes a
+ * second source of question content; it only filters the existing bank.
+ */
+export async function loadStudentVisibleQuestions(): Promise<ReviewableQuestion[]> {
+  const activeV1QuestionIds = new Set<string>();
+
+  if (existsSync(HH_DATA)) {
+    const v1Files = readdirSync(HH_DATA)
+      .filter(f => f.endsWith(".ts") && !V1_EXCLUDED.has(f) && /^class\d/.test(f))
+      .map(f => join(HH_DATA, f));
+
+    for (const filePath of v1Files) {
+      try {
+        const mod = await import(filePath) as Record<string, unknown>;
+        const chapter = mod["CHAPTER_META"] as AnyObj | undefined;
+        const questions = mod["QUESTIONS"];
+        if (
+          chapter?.["curriculumStatus"] !== "ACTIVE" ||
+          chapter?.["cbseDeleted"] === true ||
+          !Array.isArray(questions)
+        ) continue;
+        for (const question of questions as AnyObj[]) {
+          if (question && typeof question["id"] === "string") {
+            activeV1QuestionIds.add(question["id"]);
+          }
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        process.stderr.write(`  [LOAD-ERROR] ${filePath.split("/").slice(-3).join("/")}: ${msg}\n`);
+      }
+    }
+  }
+
+  const all = await loadAllQuestions();
+  return all.filter((question) => {
+    if (question.schema === "v1") return activeV1QuestionIds.has(question.id);
+    return getCanonicalChapter(question.chapterId)?.status === "ACTIVE";
+  });
 }
 
 // ─── Filter + should-review logic ────────────────────────────────────────────

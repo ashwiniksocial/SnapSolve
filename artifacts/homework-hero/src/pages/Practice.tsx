@@ -479,7 +479,10 @@ export default function Practice() {
       practiceChapterName:   q.chapterName,
       practiceClassNum:      q.classNum,
     });
-    navigate("/solution?practiceMode=1");
+    // Keep the frozen bank ID in the route as well as session storage. This
+    // makes a refreshed/new Solution mount deterministic even if React route
+    // state has not observed the session update yet.
+    navigate(`/solution?practiceMode=1&questionId=${encodeURIComponent(q.id)}`);
   }, [selectedSubject, update, navigate]);
 
   const handleReopenQuestion = useCallback((questionId: string) => {

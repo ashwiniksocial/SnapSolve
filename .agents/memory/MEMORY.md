@@ -26,3 +26,4 @@
 - [Bank Subject Validity Rule](bank-subject-validity.md) — "Earth Science" is used by 86 bank questions but was absent from server SUBJECTS; fix: add to SUBJECTS + SYSTEM_PROMPTS in solveQuestion.ts; all subjects now pass subject validation.
 - [Detailed schema field order](detailed-schema-field-order.md) — guidedReasoning+finalAnswer moved before support fields in JSON_SCHEMA; first step now 2.3–3.6 s; do NOT revert order.
 - [Detailed invisible fields](detailed-invisible-fields.md) — hidden fields are excluded from all Detailed output prompts; parser defaults mean telemetry, not returned keys, proves savings.
+- [Persistent bank lesson assets](persistent-bank-lessons.md) — static derived lessons are hash-verified against frozen bank content; invalid entries must fall through to existing streaming.

@@ -564,7 +564,12 @@ async function benchmarkOne(
   try {
     const { body, latencyMs } = await callOpenAI(model, system, q.question, apiKey);
     const usage   = extractUsage(body, model.name);
-    rawOutput     = (body as Record<string, unknown>)?.choices?.[0]?.message?.content as string ?? "{}";
+    const choices = (body as {
+      choices?: Array<{ message?: { content?: unknown } }>;
+    }).choices;
+    rawOutput = typeof choices?.[0]?.message?.content === "string"
+      ? choices[0].message.content
+      : "{}";
 
     base.latencyMs        = latencyMs;
     base.promptTokens     = usage.promptTokens;
@@ -592,7 +597,7 @@ async function benchmarkOne(
     try {
       const lessonObj = parseLessonResponse(parsedLesson);
       const { report, usage: ru } = await reviewLesson(lessonObj, apiKey);
-      const scores = report.scores as Record<string, number>;
+      const scores = report.scores as unknown as Record<string, number>;
       const overall = Object.values(scores).reduce((s, v) => s + v, 0) / Object.values(scores).length;
       base.reviewPassed     = report.passed;
       base.reviewScores     = scores;
