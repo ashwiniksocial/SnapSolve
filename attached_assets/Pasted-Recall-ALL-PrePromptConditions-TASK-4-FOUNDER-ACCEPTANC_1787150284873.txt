@@ -1,0 +1,262 @@
+Recall ALL PrePromptConditions.
+
+TASK #4 FOUNDER ACCEPTANCE FAILED.
+
+DO NOT FIX ANYTHING YET.
+
+DO NOT GENERATE OR REGENERATE ANY LESSONS.
+
+DO NOT CHANGE CODE.
+
+DO NOT MODIFY:
+
+* question banks
+* curriculum
+* canonical registry
+* generated lessons
+* Detailed schema
+* AI model
+* streaming
+* Practice UI
+* Solution UI
+* caching
+* navigation
+* generator.
+
+This is READ-ONLY ROOT-CAUSE DIAGNOSIS ONLY.
+
+We have TWO independent failures.
+
+==================================================
+FAILURE A — WRONG QUESTION ID
+=============================
+
+Actual browser results:
+
+requested:
+c9-m-ch1-t1-q01
+→ Solution received:
+c9-m-ch3-t1-q01
+
+requested:
+c9-m-ch1-t1-q06
+→ c9-m-ch3-t1-q06
+
+requested:
+c9-m-ch1-t2-q06
+→ c9-m-ch3-t2-q06
+
+requested:
+c9-m-ch1-t3-q08
+→ c9-m-ch3-t3-q08
+
+requested:
+c9-m-ch1-t5-q09
+→ c9-m-ch3-t4-q09
+
+Trace ONE representative failure end-to-end:
+
+Practice visible chapter
+→ chapter object
+→ question object
+→ rendered question card
+→ click handler
+→ session.update
+→ practiceQuestionId
+→ URL questionId
+→ Solution mount
+→ getQuestionById
+→ persistent lesson lookup.
+
+Identify the EXACT point where:
+
+`c9-m-ch1-*`
+
+becomes:
+
+`c9-m-ch3-*`
+
+Do not infer.
+
+Show actual values at every boundary.
+
+Also determine whether:
+
+A. the wrong question object is being rendered under Chapter 1;
+
+B. Practice chapter/question filtering is wrong;
+
+C. display chapter serial differs from canonical chapter ID;
+
+D. session state is stale;
+
+E. URL construction is wrong;
+
+F. duplicate/colliding question IDs or topic IDs exist;
+
+G. pilot selected IDs that do not correspond to the student-visible Chapter 1 questions;
+
+or another exact cause.
+
+Check whether the same identity problem exists elsewhere in:
+
+* remaining Mathematics chapters;
+* Science;
+* IT.
+
+READ ONLY.
+
+==================================================
+FAILURE B — VALID PREGENERATED LESSON TAKES 8.609s
+==================================================
+
+For:
+
+`c9-m-ch3-t5-q07`
+
+the correct question ID reached Solution.
+
+There were:
+
+`/api/solveQuestion = 0`
+`/api/solveQuestion/stream = 0`
+
+Yet complete Detailed lesson visible took:
+
+**8.609 seconds**
+
+Therefore AI generation is NOT the cause of this latency.
+
+Trace actual browser timing.
+
+Instrument/read existing timing where possible for:
+
+T0 question click
+
+T1 navigate called
+
+T2 Solution route mounted
+
+T3 questionId resolved
+
+T4 persistent lesson module/store available
+
+T5 persistent record found
+
+T6 hash calculated
+
+T7 hash validation completed
+
+T8 lesson normalized/validated
+
+T9 `setSolution`
+
+T10 first teaching content DOM commit
+
+T11 complete Detailed lesson DOM commit
+
+T12 browser paint
+
+Determine where the ~8.6 seconds are spent.
+
+Specifically inspect whether the delay comes from:
+
+* lazy JS chunk loading;
+* giant question-bank bundle loading/parsing;
+* persistent lesson module loading;
+* synchronous source hashing;
+* question lookup across ALL_QUESTIONS;
+* validation/normalization;
+* React mount/effects;
+* artificial timers;
+* animations/transitions;
+* route/session initialization;
+* Clerk/auth initialization;
+* bank readiness;
+* repeated renders;
+* dynamic import;
+* network asset loading;
+* another hidden dependency.
+
+Do NOT assume React batching again.
+
+Measure it.
+
+==================================================
+CRITICAL ARCHITECTURE CHECK
+===========================
+
+Determine whether retrieving ONE pre-generated lesson currently requires loading/parsing:
+
+* the entire question bank;
+* the entire pre-generated lesson collection;
+* both;
+* another oversized frontend bundle.
+
+Report actual relevant bundle/file sizes if this is involved.
+
+Also determine whether the current static lesson-store design will remain performant when it contains:
+
+1,375
+5,000
+10,000
+50,000
+100,000
+
+lessons.
+
+Do NOT redesign it yet.
+
+==================================================
+NO GENERATION
+=============
+
+AI calls during this diagnostic should be ZERO.
+
+Do not intentionally open a non-pregenerated question if that would trigger generation.
+
+==================================================
+RETURN ONLY
+===========
+
+1. FAILURE A exact root cause.
+
+2. Exact boundary where requested question ID changes.
+
+3. Whether Failure A affects Maths only or Science/IT too.
+
+4. FAILURE B timing table T0–T12.
+
+5. Exact operation responsible for the 8.609-second delay.
+
+6. Whether pre-generated lookup itself is slow or something before/after it.
+
+7. Relevant frontend bundle/module/file sizes.
+
+8. Whether current lesson-store architecture remains viable at:
+
+   * 1,375
+   * 5,000
+   * 10,000
+   * 50,000
+   * 100,000 lessons.
+
+9. Smallest safe corrective action for Failure A.
+
+10. Smallest safe corrective action for Failure B.
+
+11. Files that WOULD need modification — but DO NOT modify them.
+
+12. AI calls made during diagnostic — must be 0.
+
+13. Git/worktree status.
+
+DO NOT IMPLEMENT THE FIXES.
+
+DO NOT CREATE ANOTHER TASK.
+
+STOP after diagnosis.
+
+End exactly:
+
+TASK #4 FAILURE ROOT CAUSES ISOLATED — NO CHANGES MADE
