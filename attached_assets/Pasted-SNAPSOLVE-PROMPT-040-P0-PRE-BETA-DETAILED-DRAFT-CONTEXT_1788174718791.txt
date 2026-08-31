@@ -1,0 +1,442 @@
+SNAPSOLVE — PROMPT #040
+P0 PRE-BETA — DETAILED DRAFT CONTEXT 17K-TOKEN ROOT-CAUSE & MINIMUM-CONTEXT BENCHMARK
+MODE: CONTROLLED EXPERIMENT ONLY
+DO NOT CHANGE PRODUCTION BEHAVIOUR
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+teaching-quality priority, cost-control, architecture-integrity,
+regression-prevention and Build → Validate → Freeze → Next rules.
+
+==================================================
+CONFIRMED FINDINGS FROM PROMPT #039
+==================================================
+
+The optimized representative Detailed Draft measured:
+
+Latency:
+15.230 sec
+
+Input:
+17,082 tokens
+
+Output:
+1,800 tokens
+
+Maximum output:
+2,800 tokens
+
+Delivery:
+non-streamed structured JSON
+
+Most importantly:
+
+The deterministic planner reported:
+
+concepts: 0
+planningUsed: false
+
+Yet buildTeachingBlueprint() still appended approximately:
+
+69,508 CHARACTERS
+
+of universal teaching context.
+
+The resulting Draft receives approximately:
+
+1. subject-specific system prompt
+2. full Detailed JSON schema
+3. depth override
+4. ~69.5K characters universal teaching context
+5. subject-expert block where available
+6. personalization context
+7. question
+
+Prompt #039 identified this enormous input context as the PRIMARY
+Draft-latency candidate.
+
+==================================================
+FOUNDER DECISION
+==================================================
+
+DO NOT implement Architecture C yet.
+
+DO NOT implement section-level repair.
+
+DO NOT remove semantic review.
+
+DO NOT change production solver architecture.
+
+First determine whether the PRIMARY Draft can become substantially faster
+by eliminating context that is redundant or irrelevant to the specific
+question.
+
+This must NOT reduce student-facing Detailed lesson quality.
+
+==================================================
+TASK 1 — MAP THE 17,082 INPUT TOKENS
+==================================================
+
+Trace the exact Draft prompt construction.
+
+Identify exact files/functions responsible for:
+
+- base/system prompt
+- subject-specific prompt
+- Detailed schema
+- depth override
+- universal teaching suffix
+- teaching blueprint
+- subject-expert context
+- personalization
+- question
+- any duplicated rubric/pedagogy/schema instructions
+
+For the SAME representative question:
+
+“Find distance between (0,0) and (3,4).”
+
+produce an approximate token/character contribution table for EACH component.
+
+The components should approximately reconcile to the observed:
+
+17,082 input tokens.
+
+==================================================
+TASK 2 — INSPECT THE 69.5K UNIVERSAL SUFFIX
+==================================================
+
+Break the ~69,508-character teaching suffix into logical components.
+
+For each component classify:
+
+A. REQUIRED FOR THIS QUESTION
+B. GENERALLY REQUIRED FOR ALL DETAILED LESSONS
+C. SUBJECT-SPECIFIC BUT NOT REQUIRED HERE
+D. QUESTION-TYPE-SPECIFIC BUT NOT REQUIRED HERE
+E. DUPLICATED ELSEWHERE IN THE PROMPT
+F. RUBRIC/REVIEW GUIDANCE THAT NEED NOT BE IN GENERATION
+G. LEGACY/DEAD/REDUNDANT CONTEXT
+H. UNCERTAIN — RETAIN UNTIL PROVEN SAFE
+
+Do not delete anything merely because it is long.
+
+Explain what teaching behaviour each retained component protects.
+
+==================================================
+TASK 3 — TRACE WHY BLUEPRINT CONTEXT IS APPENDED
+==================================================
+
+The representative trace reported:
+
+concepts: 0
+planningUsed: false
+
+Yet the large universal suffix was still appended.
+
+Determine:
+
+- Is this intentional?
+- Is it unconditional?
+- Which function makes that decision?
+- Is the suffix genuinely the output of the planner?
+- Is it static universal pedagogy?
+- Is it duplicated with the solver system prompt?
+- Does concepts:0/planningUsed:false mean substantial parts are irrelevant?
+- Can irrelevant blueprint material already be omitted using existing
+  architecture rather than introducing a new system?
+
+READ CODE FIRST.
+
+Do not assume the whole suffix can simply be removed.
+
+==================================================
+TASK 4 — DUPLICATION ANALYSIS
+==================================================
+
+Identify semantic duplication between:
+
+- main system prompt
+- Detailed schema instructions
+- universal teaching suffix
+- subject-expert instructions
+- personalization/depth instructions
+- reviewer rubric accidentally repeated in generation
+
+Examples:
+
+If “explain every step for a weak student” appears in several forms across
+multiple prompt blocks, identify that duplication.
+
+If schema fields themselves already encode a requirement that is then repeated
+at length in prose, identify it.
+
+Return a concise duplication map.
+
+==================================================
+TASK 5 — DEFINE MINIMUM SAFE CONTEXT VARIANT
+==================================================
+
+Construct ONE experimental minimum-safe Draft prompt variant.
+
+IMPORTANT:
+
+Do NOT redesign the solver.
+
+Do NOT create a new lesson schema.
+
+Do NOT reduce the final TeachingLesson sections.
+
+Do NOT remove requirements for:
+
+- correctness
+- curriculum alignment
+- weak-student teaching
+- intuition
+- question translation
+- step-by-step reasoning
+- common mistakes
+- final answer
+- simpler example
+- practice
+- hints
+- examiner/teacher usefulness where currently required
+
+The experimental variant should remove ONLY context demonstrated to be:
+
+- duplicated
+- irrelevant to the representative question
+- legacy/dead
+- review-only
+- unnecessarily verbose
+
+Preserve uncertain material.
+
+==================================================
+CONTROLLED BENCHMARK
+==================================================
+
+Run a CONTROLLED EXPERIMENT.
+
+Do not replace production behaviour.
+
+Use the same representative question:
+
+“Find distance between (0,0) and (3,4).”
+
+Compare:
+
+CURRENT OPTION-F DRAFT
+vs
+EXPERIMENTAL MINIMUM-CONTEXT DRAFT
+
+Measure:
+
+1. input tokens
+2. output tokens
+3. total tokens
+4. time to first token if measurable
+5. total Draft latency
+6. output lesson completeness
+7. estimated cost
+
+==================================================
+QUALITY COMPARISON
+==================================================
+
+Compare the two PRIMARY DRAFTS before improvement.
+
+This time RETAIN BOTH DRAFTS for the diagnostic.
+
+Evaluate:
+
+- factual correctness
+- final-answer correctness
+- curriculum alignment
+- Key Concept
+- Build Intuition
+- Question Translation
+- Step-by-Step
+- conceptual precision
+- Common Mistakes
+- Final Answer
+- Similar Example
+- Practice
+- hints
+- examiner suitability
+- teacher suitability
+- weak-student understandability
+- hallucination
+- completeness of TeachingLesson contract
+
+Return for each:
+
+BASELINE
+EXPERIMENTAL
+BETTER / SAME / WORSE
+
+==================================================
+SEMANTIC REVIEW COMPARISON
+==================================================
+
+For diagnostic purposes, run the EXISTING SAME reviewer against both retained
+drafts if required for an apples-to-apples quality comparison.
+
+Do NOT change the reviewer.
+
+Report:
+
+baseline scores
+experimental scores
+material issues
+non-material/rubric issues
+
+IMPORTANT:
+
+We now know that the existing all-dimensions-80 rubric may penalize optional
+or disproportionate requirements.
+
+Therefore report BOTH:
+
+1. existing rubric result
+2. material teaching-safety result
+
+Do not redefine the production threshold in this task.
+
+==================================================
+STRICT REVERT / EXPERIMENT RULE
+==================================================
+
+This is an experiment.
+
+Do NOT switch production to the reduced context automatically.
+
+If any material dimension worsens:
+
+REJECT the experimental variant.
+
+If quality is SAME or BETTER and latency/token reduction is material:
+
+report it as a candidate for founder approval.
+
+No production behaviour change without a separate founder decision.
+
+==================================================
+TARGET
+==================================================
+
+We are testing whether Draft latency can move materially below:
+
+15.230 sec
+
+without shortening the student lesson.
+
+Desired experimental result:
+
+approximately 5–10 sec if achievable.
+
+But DO NOT fabricate or force this target.
+
+If the safe minimum remains 12–15 sec, report that honestly.
+
+==================================================
+DO NOT TOUCH
+==================================================
+
+Option F production behaviour
+review-cycle count
+early-exit logic
+improver
+TeachingLesson schema
+production model
+streaming
+Vision
+Scan
+Camera
+OCR trust gate
+Practice
+question bank
+curriculum
+canonical metadata
+frozen pre-generated lessons
+navigation
+Progress
+Revision
+auth
+beta feedback
+deployment
+
+==================================================
+COST CONTROL
+==================================================
+
+Use the minimum calls necessary for a controlled comparison.
+
+Prefer:
+
+1 baseline Draft
+1 experimental Draft
+
+and only the minimum reviewer calls needed for comparable quality evidence.
+
+Report exact AI call count, tokens and USD cost.
+
+Do not run broad benchmarks yet.
+
+==================================================
+FILES
+==================================================
+
+Temporary diagnostic/benchmark artifacts are allowed only if required by the
+existing benchmark mechanism.
+
+Do NOT alter production solver behaviour.
+
+Report every file touched and whether it is runtime production code or
+diagnostic-only.
+
+Production runtime files changed should ideally be:
+
+0
+
+If existing architecture makes an experimental prompt impossible without a
+temporary code path, STOP and report this rather than making invasive changes.
+
+==================================================
+RETURN
+==================================================
+
+1. Exact 17,082-token prompt composition
+2. Exact source of ~69.5K-character universal suffix
+3. Why it is appended when concepts=0 / planningUsed=false
+4. Required vs irrelevant suffix components
+5. Prompt duplication map
+6. Minimum-safe experimental context definition
+7. Baseline input/output tokens
+8. Experimental input/output tokens
+9. Token reduction %
+10. Baseline Draft latency
+11. Experimental Draft latency
+12. Latency reduction %
+13. Baseline cost
+14. Experimental cost
+15. Full before/after teaching-quality comparison
+16. Existing reviewer scores for both where measured
+17. Material-teaching-safety result for both
+18. Whether final lesson detail was reduced
+19. Whether experimental variant should be considered for production
+20. Remaining Draft bottleneck
+21. Exact files touched
+22. Production files changed
+23. Diagnostic AI/API calls and cost
+24. Confirmation Architecture C / section repair NOT implemented
+25. Confirmation protected/frozen systems untouched
+
+STOP after benchmark.
+
+DO NOT publish.
+DO NOT implement Architecture C.
+DO NOT automatically change production prompt.
+
+End exactly:
+
+DETAILED DRAFT CONTEXT BENCHMARK COMPLETE — AWAITING FOUNDER DECISION
