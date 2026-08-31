@@ -1,0 +1,383 @@
+SNAPSOLVE — PROMPT #045
+P0 — CONTROLLED BETA FINAL READINESS + ARCHITECTURE C ACTIVATION PLAN
+MODE: VERIFY → FIX ONLY CONFIRMED BLOCKERS → GO/NO-GO
+DATE: 31 AUG 2026 IST
+
+Recall and apply ALL SnapSolve PrePromptConditions.
+
+Operate as:
+Co-Founder + CEO + CTO + CMO + Product Architect + Cost Controller + Risk Controller.
+
+GOAL:
+
+Determine whether SnapSolve is ready to PUBLISH for a very small controlled
+Beta and identify/fix ONLY confirmed launch blockers.
+
+This is NOT a general audit.
+
+Do NOT reopen completed/frozen systems.
+
+==================================================
+CURRENT CONFIRMED STATE
+==================================================
+
+Practice core flow: frozen.
+
+Question-bank/readiness integrity: frozen.
+
+Pilot generated lessons: frozen.
+
+Camera: frozen.
+
+Vision transcription: frozen for controlled Beta.
+
+Beta auth/access gate: implemented.
+
+Beta feedback: implemented.
+
+Architecture C fail-safe A/B: implemented and frozen.
+
+Architecture C:
+
+- server-side flag
+- default OFF
+- same primary reused
+- structural + material PASS → fast return
+- FAIL/error/timeout → existing Option-F fallback
+- hard deadline protects fallback budget
+- no duplicate primary generation
+- API typecheck/build PASS
+- latest API restart PASS
+
+Retained same-primary M6 measurement:
+
+Option F:
+51.43 sec
+4 AI calls
+18,599 tokens
+$0.00448
+
+Architecture C fast pass:
+19.86 sec
+2 AI calls
+5,641 tokens
+$0.00171
+
+Do NOT benchmark Architecture C again in this task.
+
+==================================================
+OBJECTIVE
+==================================================
+
+Answer only:
+
+“Can the founder safely publish SnapSolve and admit the first controlled
+Beta testers?”
+
+Check only operational dependencies required to answer that question.
+
+==================================================
+1. PRODUCTION ENVIRONMENT / SECRETS
+==================================================
+
+Verify required production environment variables/secrets.
+
+At minimum inspect requirements for:
+
+- DATABASE_URL
+- OpenAI server key
+- Clerk production configuration
+- APPROVED_BETA_EMAILS
+- ADMIN_EMAILS
+- VITE_ADMIN_EMAILS
+- Architecture C server-side feature flag
+
+Do NOT reveal secret values.
+
+Report only:
+
+PRESENT
+MISSING
+MISCONFIGURED
+NOT_REQUIRED
+
+Confirm APPROVED_BETA_EMAILS remains server-side.
+
+Confirm Architecture C flag remains server-side.
+
+==================================================
+2. BETA ACCESS
+==================================================
+
+Verify existing behavior supports:
+
+Approved user
+→ authentication
+→ application access.
+
+Unapproved user
+→ Beta Access Pending / blocked state.
+
+Do NOT redesign auth.
+
+Do NOT create invitation infrastructure.
+
+==================================================
+3. FOUNDER FEEDBACK ACCESS
+==================================================
+
+Verify founder can access the existing Admin Feedback area once the required
+admin environment variables are configured.
+
+Verify beta feedback persists in Postgres.
+
+Do NOT redesign Admin or feedback.
+
+==================================================
+4. DEPLOYMENT CONFIGURATION
+==================================================
+
+Verify existing intended Replit publication configuration is still valid.
+
+Frontend:
+Static deployment.
+
+API:
+Autoscale.
+
+Confirm current:
+
+frontend build command
+frontend output directory
+API build command
+API run command
+PORT behavior
+/api/healthz
+same-origin /api routing
+Clerk production/proxy requirements
+DATABASE_URL requirement
+
+Do NOT publish.
+
+Do NOT change deployment architecture unless a confirmed blocker exists.
+
+==================================================
+5. ARCHITECTURE C CONTROLLED BETA POLICY
+==================================================
+
+Architecture C must NOT be universally enabled.
+
+Determine the smallest safe way to enable it for the controlled Beta.
+
+Prefer:
+
+existing approved-beta-user context
++
+server-side Architecture C flag
+
+Do NOT build cohort infrastructure.
+
+If current implementation already allows safe controlled use, report exactly
+how to configure it.
+
+If enabling the flag would enable Architecture C for EVERY production user,
+determine whether that matters while APPROVED_BETA_EMAILS restricts the entire
+application to the controlled Beta cohort.
+
+Do not modify routing unless there is an actual safety blocker.
+
+==================================================
+6. FIRST BETA GROUP
+==================================================
+
+Operational target:
+
+5 testers maximum initially.
+
+Suggested composition:
+
+3 students
+2 parents
+
+Do NOT build anything for this.
+
+We only need the application operationally capable of supporting them.
+
+==================================================
+7. POST-PUBLISH SMOKE TEST PLAN
+==================================================
+
+Produce the exact smallest smoke-test checklist for the founder to execute
+immediately after publication.
+
+It should include only essential checks:
+
+A. Approved-user login/access.
+
+B. Unapproved-user blocked/pending behavior.
+
+C. One frozen/pregenerated Practice question:
+   verify normal answer and ZERO solver request.
+
+D. One Type Question:
+   verify Detailed solver result.
+
+E. One real phone Take Photo:
+   Vision transcription → review/confirm → answer.
+
+F. Submit one Beta feedback item.
+
+G. Founder confirms feedback appears in Admin.
+
+H. Architecture C telemetry:
+   confirm whether Type Question used:
+   - architecture_c_fast_pass
+   OR
+   - architecture_c_fallback
+
+Do NOT create automated E2E infrastructure for this checklist.
+
+==================================================
+8. ARCHITECTURE C SAFETY DURING BETA
+==================================================
+
+Do NOT tune Architecture C during this task.
+
+Define the Beta monitoring rule:
+
+If a fast-pass answer contains a confirmed material teaching error:
+
+Architecture C flag → OFF.
+
+Existing Option-F remains production path.
+
+Otherwise collect evidence on:
+
+- fast-pass rate
+- fallback rate
+- fast-pass latency
+- fallback latency
+- AI calls
+- tokens
+- estimated cost
+
+Do NOT build new analytics unless existing telemetry cannot capture these.
+
+==================================================
+9. BUILD IMPACT GATE
+==================================================
+
+If a required Beta capability already works:
+
+DO NOTHING.
+
+If configuration alone solves it:
+
+REPORT CONFIGURATION.
+
+Modify code ONLY for a confirmed blocker that prevents controlled Beta.
+
+No polish.
+
+No feature additions.
+
+No speculative fixes.
+
+==================================================
+PROTECTED / FROZEN
+==================================================
+
+DO NOT MODIFY unless a confirmed Beta-blocking regression is proven:
+
+Practice
+question bank
+curriculum
+generated lessons
+pilot corpus
+Camera
+Vision transcription
+OCR trust gate
+Navigation
+Progress
+Revision
+TeachingLesson schema
+primary Detailed prompt
+production model
+Option-F reviewer
+Option-F improver
+Architecture C validator
+Architecture C hard-deadline logic
+beta feedback design
+
+==================================================
+DO NOT
+==================================================
+
+Do NOT:
+
+- publish
+- deploy
+- invite testers
+- benchmark solver again
+- retune Architecture C
+- implement repair
+- implement streaming
+- redesign UI
+- add features
+- perform broad audit
+- create new governance documents
+- create new registries
+- create new test frameworks
+
+==================================================
+RETURN
+==================================================
+
+1. Overall status:
+   BETA_PUBLISH_READY
+   or
+   BETA_PUBLISH_BLOCKED
+
+2. Confirmed blockers only.
+
+3. Required production environment variables:
+   PRESENT / MISSING / MISCONFIGURED / NOT_REQUIRED.
+
+4. Beta access gate status.
+
+5. Founder Admin Feedback status.
+
+6. Database persistence status.
+
+7. Deployment configuration status.
+
+8. Architecture C controlled-Beta activation method.
+
+9. Confirmation Architecture C remains default OFF during readiness check.
+
+10. Exact post-publication smoke-test checklist.
+
+11. Exact environment/configuration actions founder must perform before
+    pressing Publish.
+
+12. Code files changed, if any.
+
+13. Why each code change passed Build Impact Gate.
+
+14. API/frontend TypeScript/build results only where relevant.
+
+15. Final recommendation:
+
+PUBLISH_CONTROLLED_BETA
+
+or
+
+DO_NOT_PUBLISH
+
+STOP.
+
+Do NOT publish automatically.
+
+End exactly:
+
+CONTROLLED BETA FINAL READINESS COMPLETE — AWAITING FOUNDER DECISION
