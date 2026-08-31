@@ -1,0 +1,336 @@
+SNAPSOLVE — PROMPT #038
+P0 PRE-BETA — IMPLEMENT OPTION F SOLVER LATENCY REDUCTION
+MODE: MINIMUM SAFE OPTIMIZATION → BENCHMARK → QUALITY COMPARE → STOP
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+teaching-quality priority, cost-control, architecture-integrity,
+regression-prevention and Build → Validate → Freeze → Next rules.
+
+==================================================
+CONFIRMED DIAGNOSTIC
+==================================================
+
+Prompt #037 established:
+
+Representative API latency:
+38.876 seconds
+
+Total OpenAI calls:
+4
+
+Primary root cause:
+Sequential quality-review calls plus full lesson rewrite.
+
+Smallest safe optimization candidate:
+OPTION F
+
+Option F means:
+
+REDUCE UNNECESSARY OUTPUT AND REPEATED CONTEXT IN REVIEW / IMPROVEMENT CALLS
+
+Diagnostic AI calls:
+0
+
+Diagnostic cost:
+$0
+
+Vision, Scan, Practice, frozen lessons and streaming were untouched.
+
+==================================================
+FOUNDER DECISION
+==================================================
+
+APPROVED:
+
+Implement OPTION F ONLY.
+
+DO NOT implement early-exit review yet.
+DO NOT reduce the number of quality-review stages yet.
+DO NOT remove quality review.
+DO NOT change the production model.
+DO NOT change TeachingLesson schema.
+DO NOT create another solver.
+DO NOT change curriculum/Practice/Scan/Vision.
+
+Goal:
+
+Reduce latency and token usage by making review/improvement calls
+smaller and more targeted WITHOUT materially reducing teaching quality.
+
+==================================================
+EXACT IMPLEMENTATION INTENT
+==================================================
+
+Inspect the current four-call pipeline and identify where review/improvement
+calls unnecessarily resend or regenerate:
+
+- full system instructions
+- duplicated question context
+- duplicated curriculum context
+- duplicated lesson schema descriptions
+- already-valid lesson sections
+- full TeachingLesson content when only targeted defects are needed
+- verbose evaluator output
+- repeated pedagogical instructions
+- repeated JSON examples
+- repeated unchanged section text
+
+Reduce only information proven unnecessary.
+
+==================================================
+QUALITY REVIEW BEHAVIOUR
+==================================================
+
+Preserve the PURPOSE of both quality-review stages.
+
+Do NOT remove checks for:
+
+- answer correctness
+- mathematical/scientific correctness
+- curriculum alignment
+- step-by-step reasoning
+- weak-student clarity
+- teacher/examiner appropriateness
+- final answer correctness
+- schema completeness
+- unsafe/hallucinated content where applicable
+
+The optimization should change:
+
+HOW MUCH CONTEXT/TEXT THE CALLS PROCESS
+
+not:
+
+WHAT QUALITY THEY CHECK.
+
+==================================================
+REVIEW OUTPUT
+==================================================
+
+Where architecturally safe, review calls should return compact structured
+findings rather than verbose prose.
+
+Example conceptual pattern:
+
+{
+  "pass": true/false,
+  "issues": [
+    {
+      "section": "...",
+      "problem": "...",
+      "requiredFix": "..."
+    }
+  ]
+}
+
+Do NOT introduce this exact schema if an equivalent compact existing
+structure already exists.
+
+Reuse current structures wherever possible.
+
+==================================================
+IMPROVEMENT / REWRITE
+==================================================
+
+Investigate whether the current improvement step regenerates the ENTIRE
+lesson even when only one or two sections require changes.
+
+If yes:
+
+Use the smallest existing architecture-compatible mechanism to avoid
+unnecessary regeneration/context.
+
+Preferred order:
+
+1. Preserve valid sections.
+2. Supply only required correction findings.
+3. Rewrite only what is necessary IF the existing TeachingLesson assembly
+   architecture safely supports it.
+
+HOWEVER:
+
+Do NOT introduce complicated section-merging architecture merely to save
+latency.
+
+If targeted partial rewrite would create significant complexity or regression
+risk, keep full rewrite but aggressively reduce repeated prompt/context.
+
+Build Impact Gate applies.
+
+==================================================
+PROMPT COMPRESSION
+==================================================
+
+Without weakening requirements:
+
+- remove duplicate instructions
+- remove repeated rubric language
+- remove redundant examples
+- avoid sending identical context multiple times where not needed
+- shorten evaluator response format
+- restrict output token budget where the call does not need full lesson output
+- keep only academic/context information necessary for that stage
+
+Do NOT shorten the FINAL student lesson merely to reduce latency.
+
+Student-facing teaching detail must remain at current quality.
+
+==================================================
+BENCHMARK
+==================================================
+
+After implementation, benchmark using the SAME representative question/path
+used by Prompt #037 wherever possible.
+
+Measure:
+
+1. OpenAI calls
+2. latency per call
+3. total API latency
+4. first useful content latency
+5. full lesson completion latency
+6. input tokens per call
+7. output tokens per call
+8. total tokens
+9. estimated cost
+
+Compare directly:
+
+BEFORE:
+38.876 sec
+4 calls
+
+AFTER:
+measured result
+
+Do not claim improvement without measured evidence.
+
+==================================================
+QUALITY A/B CHECK
+==================================================
+
+Compare BEFORE and AFTER lesson output for the same representative question.
+
+Check:
+
+- factual correctness
+- final answer
+- reasoning completeness
+- Key Concept
+- Build Intuition
+- Question understanding/translation
+- Step-by-Step
+- Common Mistakes
+- Final Answer
+- Similar Example
+- teacher/examiner suitability
+- weak-student usability
+
+Report:
+
+BETTER
+SAME
+WORSE
+
+for each relevant dimension.
+
+If any important teaching dimension becomes materially WORSE:
+
+REVERT the optimization.
+
+Teaching quality has priority over latency.
+
+==================================================
+ACCEPTANCE TARGET
+==================================================
+
+PASS if:
+
+- teaching quality remains SAME or BETTER
+- final answer remains correct
+- TeachingLesson contract unchanged
+- total latency materially improves
+- token/cost usage decreases or remains reasonable
+- no new solver architecture introduced
+- no frozen systems affected
+
+Desired latency:
+5–10 seconds
+
+However, do NOT fabricate success.
+
+If Option F improves 38.876 sec to, for example, 20–25 sec:
+
+report it honestly.
+
+Do NOT proceed automatically to another optimization.
+
+We will decide separately whether Option B / early-exit review is then needed.
+
+==================================================
+DO NOT TOUCH
+==================================================
+
+Vision transcription
+Scan
+Camera
+OCR trust gate
+Practice
+question bank
+curriculum
+canonical metadata
+20 frozen pre-generated lessons
+navigation
+Progress
+Revision
+beta feedback
+Clerk/auth
+deployment configuration
+production solver model
+
+==================================================
+COST CONTROL
+==================================================
+
+Use the minimum number of benchmark AI calls necessary.
+
+Prefer ONE before/after comparable generated lesson if reliable telemetry
+allows it.
+
+Report exact:
+
+OpenAI calls
+tokens
+estimated USD cost
+
+==================================================
+RETURN
+==================================================
+
+1. Exact files changed
+2. Exact Option F changes made
+3. What repeated context/output was removed
+4. Whether review semantics changed — must be NO
+5. Whether number of OpenAI calls changed — expected NO unless unavoidable
+6. Before latency
+7. After latency
+8. Per-call latency comparison
+9. Before/after token comparison
+10. Before/after cost comparison
+11. Before/after teaching-quality comparison
+12. Final-answer correctness comparison
+13. TypeScript result
+14. Production build result
+15. Regression results
+16. Confirmation Vision/Scan frozen and untouched
+17. Confirmation Practice/frozen lessons untouched
+18. Remaining latency bottleneck
+19. Recommendation whether Option B should be considered next — ANALYSIS ONLY, DO NOT IMPLEMENT
+
+STOP after validation.
+DO NOT publish.
+DO NOT create another task automatically.
+
+End exactly:
+
+OPTION F LATENCY OPTIMIZATION COMPLETE — AWAITING FOUNDER REVIEW
