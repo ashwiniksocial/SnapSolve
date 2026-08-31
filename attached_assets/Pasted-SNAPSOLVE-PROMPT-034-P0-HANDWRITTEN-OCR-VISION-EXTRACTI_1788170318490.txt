@@ -1,0 +1,308 @@
+SNAPSOLVE — PROMPT #034
+P0 HANDWRITTEN OCR — VISION EXTRACTION FEASIBILITY
+MODE: READ-ONLY ARCHITECTURE + COST INVESTIGATION
+DO NOT IMPLEMENT
+
+Apply ALL SnapSolve PrePromptConditions, Build Impact Gate, cost-control,
+architecture-integrity and Build → Validate → Freeze → Next rules.
+
+==================================================
+FOUNDER REAL-WORLD RESULT
+==================================================
+
+OCR Trust Gate has now been tested on another REAL handwritten notebook photo.
+
+Camera:
+PASS
+
+Trust Gate:
+PASS
+
+Tesseract handwriting recognition:
+FAIL
+
+The handwritten question was visibly readable to a human.
+
+Tesseract extracted approximately:
+
+“e R- Unt Jia Laohelinalls ce en”
+
+The Trust Gate correctly classified the extraction as uncertain and required
+student review.
+
+Therefore the previous P0 safety failure is closed.
+
+However, the product-usefulness problem is now confirmed:
+
+A student would effectively have to retype most/all of a readable handwritten
+question.
+
+This defeats the intended value of Take Photo.
+
+We already have multiple real handwritten failures.
+
+Do NOT spend founder time performing additional Tesseract handwriting tests
+for this investigation.
+
+==================================================
+DECISION
+==================================================
+
+Investigate Strategy C:
+
+VISION-BASED QUESTION TRANSCRIPTION
+
+DO NOT IMPLEMENT IT YET.
+
+The vision system must initially perform ONLY:
+
+IMAGE
+→ QUESTION TRANSCRIPTION
+
+It must NOT solve the question.
+
+The existing SnapSolve teaching/Solution pipeline must remain the sole
+answer-generation path.
+
+Required conceptual flow:
+
+CAMERA / GALLERY
+→ IMAGE
+→ VISION TRANSCRIPTION
+→ EDITABLE DETECTED QUESTION
+→ STUDENT REVIEW / TRUST GATE
+→ EXISTING SOLVER
+→ EXISTING TEACHING LESSON
+
+This prevents creation of a duplicate solver.
+
+==================================================
+INVESTIGATE EXISTING ARCHITECTURE
+==================================================
+
+Inspect current OpenAI integration and determine:
+
+1. Which OpenAI SDK/API is currently used.
+
+2. Which model currently powers SnapSolve solver generation.
+
+3. Whether the EXISTING OpenAI client/server infrastructure can accept
+   image input without creating a second AI architecture.
+
+4. Whether image transcription must occur server-side.
+
+5. Whether the current OPENAI_API_KEY can be reused.
+
+6. Whether a new API route is actually necessary.
+
+7. Whether an existing AI gateway/service abstraction can accommodate
+   vision transcription cleanly.
+
+8. Exact files that would need modification.
+
+9. Whether any new dependency is required.
+
+Prefer:
+REUSE EXISTING AI CLIENT / GATEWAY
+
+Avoid:
+SECOND OPENAI CLIENT
+SECOND AI ARCHITECTURE
+DUPLICATE SOLVER
+UNNECESSARY DEPENDENCY
+
+==================================================
+MODEL INVESTIGATION
+==================================================
+
+Determine the smallest/cheapest CURRENT OpenAI model already compatible with
+our architecture that can reliably transcribe:
+
+- handwritten English
+- handwritten Mathematics
+- < and >
+- equations
+- fractions
+- square roots
+- superscripts
+- common Class 9 Science notation
+- handwritten IT/English sentence questions
+
+Do not assume the previously mentioned model is automatically optimal.
+
+Report the actual model candidate and why.
+
+Do NOT change the production solver model.
+
+Vision transcription and teaching generation are separate jobs and may use
+different models if justified.
+
+==================================================
+PROMPT BEHAVIOUR
+==================================================
+
+The proposed vision request must be narrowly constrained.
+
+It should effectively instruct:
+
+“Transcribe only the academic question visible in this image.
+Do not solve it.
+Do not explain it.
+Preserve mathematical symbols and notation.
+Ignore notebook lines, page numbers and unrelated surrounding marks.
+If the question cannot be read reliably, report that it is unclear rather
+than inventing text.”
+
+Determine the smallest robust structured response required.
+
+Example conceptual response:
+
+{
+  transcription: "...",
+  readable: true/false
+}
+
+Do not build an elaborate schema unless necessary.
+
+==================================================
+TRUST ARCHITECTURE
+==================================================
+
+Vision must NOT bypass the recently implemented OCR safety principle.
+
+Determine how to preserve:
+
+HIGH CONFIDENCE / READABLE
+NEEDS REVIEW
+FAILED / UNREADABLE
+
+Do not rely on invented numerical confidence if the model does not provide
+a reliable calibrated confidence value.
+
+The student must still see/edit the transcription before solving where
+appropriate.
+
+If vision says unreadable:
+→ solver blocked
+→ Retake / Choose Photo / Type Question
+
+==================================================
+COST ANALYSIS — IMPORTANT
+==================================================
+
+Calculate realistic approximate cost PER PHOTO.
+
+Include:
+
+- image input cost
+- transcription output tokens
+- likely total cost per scan
+- INR equivalent using a clearly stated exchange-rate assumption
+- 100 scans
+- 1,000 scans
+- 10,000 scans
+- 100,000 scans
+
+Separate:
+
+VISION TRANSCRIPTION COST
+
+from:
+
+EXISTING SOLVER COST
+
+Do not combine them in a way that hides incremental Scan cost.
+
+Also determine whether resizing/compressing the existing camera image before
+vision materially reduces cost without damaging handwriting recognition.
+
+==================================================
+LATENCY
+==================================================
+
+Estimate realistic:
+
+Capture
+→ vision transcription returned
+→ review screen
+
+Report expected typical latency.
+
+Do not include teaching-generation latency because that occurs only after
+the student accepts the transcription.
+
+==================================================
+PRIVACY / SECURITY
+==================================================
+
+Confirm:
+
+- image sent only server-side to OpenAI
+- API key never exposed to browser
+- whether image needs permanent storage
+- whether image can be processed transiently and discarded
+- any existing logging that could inadvertently retain student notebook images
+
+Prefer transient processing/no permanent image storage unless existing
+SnapSolve functionality requires otherwise.
+
+==================================================
+TESSERACT FUTURE ROLE
+==================================================
+
+Evaluate whether, after vision implementation:
+
+A. remove Tesseract from Scan entirely
+B. retain it for printed-text zero-cost cases
+C. use Tesseract first and Vision only for uncertain results
+
+Compare B and C against simplicity, latency, accuracy, cost and duplicate-path
+risk.
+
+Remember:
+
+Teaching quality > tiny cost saving.
+
+Do not preserve Tesseract merely because it already exists if doing so creates
+an unreliable or complicated student experience.
+
+==================================================
+NO IMPLEMENTATION
+==================================================
+
+FILES CHANGED: 0
+
+AI/API CALLS: 0
+
+Do not make a test vision call yet.
+Do not modify OCR.
+Do not modify Scan.
+Do not modify camera.
+Do not modify Solution.
+Do not modify solver.
+Do not install dependencies.
+Do not publish.
+
+==================================================
+RETURN
+==================================================
+
+1. Current OpenAI architecture
+2. Best vision transcription model candidate
+3. Whether existing infrastructure can be reused
+4. Proposed minimal request/response architecture
+5. Exact files that implementation would affect
+6. Whether a new route is required
+7. Incremental cost per scan
+8. Cost at 100 / 1K / 10K / 100K scans
+9. Expected transcription latency
+10. Privacy/storage implications
+11. Recommended future role of Tesseract
+12. Smallest implementation plan
+13. Risks/regressions
+14. Confirmation files changed = 0
+15. Confirmation AI/API calls = 0
+
+End exactly:
+
+VISION TRANSCRIPTION FEASIBILITY COMPLETE — NO CHANGES MADE — AWAITING FOUNDER DECISION
