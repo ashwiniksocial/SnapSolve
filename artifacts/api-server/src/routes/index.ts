@@ -10,6 +10,7 @@ import devEvaluateLessonRouter from "./devEvaluateLesson";
 import betaCheckRouter        from "./betaCheck";
 import betaFeedbackRouter     from "./betaFeedback";
 import transcribeQuestionRouter from "./transcribeQuestion";
+import devArchitectureCShadowRouter from "./devArchitectureCShadow";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(devEvaluateLessonRouter);
 router.use(betaCheckRouter);
 router.use(betaFeedbackRouter);
 router.use(transcribeQuestionRouter);
+router.use(devArchitectureCShadowRouter);
 
 export default router;

@@ -1,0 +1,276 @@
+{
+  "architecture": "C-shadow",
+  "generatedAt": "2026-08-31T11:51:31.637Z",
+  "retainedSource": "/home/runner/workspace/artifacts/api-server/benchmark_results_detailed.json",
+  "retainedCaseLimit": 3,
+  "selectedCases": [
+    "M4",
+    "M6",
+    "C2"
+  ],
+  "coverageNote": "The retained Detailed artifact contains no Easy case; selected coverage is Hard proof, Medium numerical, and Medium conceptual.",
+  "productionRoutingChanged": false,
+  "repairPerformed": false,
+  "reviewerRerun": false,
+  "falsePassFalseFailNote": "Relative mismatches are signals for adjudication, not ground truth. Existing reviewer evidence is broader than the material-safety contract.",
+  "results": [
+    {
+      "questionId": "M4",
+      "subject": "Mathematics",
+      "type": "Proof",
+      "difficulty": "Hard",
+      "retainedEvidence": {
+        "source": "benchmark_results_detailed.json",
+        "primaryLatencyMs": 16560,
+        "promptTokens": 1148,
+        "completionTokens": 1917,
+        "cachedTokens": 1024,
+        "totalTokens": 3065,
+        "primaryCostUsd": 0.0012456,
+        "reviewer": {
+          "reused": true,
+          "passed": false,
+          "overall": 66,
+          "issueCount": 5,
+          "scores": {
+            "vocabulary": 75,
+            "conceptTeaching": 50,
+            "reasoning": 50,
+            "stepExplanation": 75,
+            "examples": 75,
+            "memory": 75,
+            "practice": 75,
+            "confidenceBuilding": 75,
+            "weakStudentUnderstanding": 50,
+            "overall": 62
+          },
+          "promptTokens": 5156,
+          "completionTokens": 707,
+          "costUsd": 0.0009671999999999999
+        }
+      },
+      "architectureC": {
+        "structural": {
+          "status": "STRUCTURAL_FAIL",
+          "latencyMs": 1,
+          "exactReasons": [
+            {
+              "code": "missing_field",
+              "path": "examinerThinking",
+              "message": "Required object \"examinerThinking\" is missing from raw output."
+            },
+            {
+              "code": "missing_field",
+              "path": "examinerThinking.whyAsked",
+              "message": "Required string \"examinerThinking.whyAsked\" is missing from raw output."
+            },
+            {
+              "code": "missing_field",
+              "path": "examinerThinking.conceptTested",
+              "message": "Required string \"examinerThinking.conceptTested\" is missing from raw output."
+            },
+            {
+              "code": "missing_field",
+              "path": "examinerThinking.topperInsight",
+              "message": "Required string \"examinerThinking.topperInsight\" is missing from raw output."
+            },
+            {
+              "code": "missing_field",
+              "path": "examinerThinking.examTip",
+              "message": "Required string \"examinerThinking.examTip\" is missing from raw output."
+            },
+            {
+              "code": "missing_field",
+              "path": "examinerThinking.examTrap",
+              "message": "Required string \"examinerThinking.examTrap\" is missing from raw output."
+            },
+            {
+              "code": "missing_field",
+              "path": "guidedReasoning[2].pause",
+              "message": "Required string \"pause\" is missing from raw output."
+            },
+            {
+              "code": "invalid_item_type",
+              "path": "commonMistakes[3]",
+              "message": "Expected \"commonMistakes[3]\" to be an object."
+            },
+            {
+              "code": "invalid_cardinality",
+              "path": "commonMistakes",
+              "message": "Expected \"commonMistakes\" to contain exactly 3 items; received 4."
+            }
+          ],
+          "defaultedPaths": [
+            "examinerThinking",
+            "examinerThinking.whyAsked",
+            "examinerThinking.conceptTested",
+            "examinerThinking.topperInsight",
+            "examinerThinking.examTip",
+            "examinerThinking.examTrap",
+            "guidedReasoning[2].pause"
+          ]
+        },
+        "material": {
+          "status": "NOT_RUN",
+          "latencyMs": 0,
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "costUsd": 0,
+          "issues": [],
+          "optionalPolish": [],
+          "confidence": 0
+        }
+      },
+      "comparison": {
+        "reviewerEvidenceIsNotGroundTruth": true,
+        "relation": "both_failed",
+        "interpretation": "Both systems rejected or could not approve the case; inspect material issues separately."
+      }
+    },
+    {
+      "questionId": "M6",
+      "subject": "Mathematics",
+      "type": "Numerical",
+      "difficulty": "Medium",
+      "retainedEvidence": {
+        "source": "benchmark_results_detailed.json",
+        "primaryLatencyMs": 17346,
+        "promptTokens": 1184,
+        "completionTokens": 2026,
+        "cachedTokens": 1152,
+        "totalTokens": 3210,
+        "primaryCostUsd": 0.0013067999999999999,
+        "reviewer": {
+          "reused": true,
+          "passed": false,
+          "overall": 73,
+          "issueCount": 5,
+          "scores": {
+            "vocabulary": 75,
+            "conceptTeaching": 75,
+            "reasoning": 75,
+            "stepExplanation": 75,
+            "examples": 75,
+            "memory": 75,
+            "practice": 75,
+            "confidenceBuilding": 75,
+            "weakStudentUnderstanding": 60,
+            "overall": 73
+          },
+          "promptTokens": 5226,
+          "completionTokens": 668,
+          "costUsd": 0.0009542999999999999
+        }
+      },
+      "architectureC": {
+        "structural": {
+          "status": "STRUCTURAL_PASS",
+          "latencyMs": 1,
+          "exactReasons": [],
+          "defaultedPaths": []
+        },
+        "material": {
+          "status": "MATERIAL_FAIL",
+          "latencyMs": 3370,
+          "promptTokens": 2128,
+          "completionTokens": 151,
+          "totalTokens": 2279,
+          "costUsd": 0.0004098,
+          "issues": [
+            {
+              "category": "correctness",
+              "section": "guidedReasoning",
+              "evidence": "P(Tails) = 90 / 200",
+              "explanation": "The calculation for P(Tails) is incorrect. It should be simplified to P(Tails) = 9/20, but the lesson does not clarify that this is the final answer before moving on."
+            }
+          ],
+          "optionalPolish": [
+            "Clarify the final answer for P(Tails) after simplification.",
+            "Provide a more explicit explanation of why heads and tails are complementary events."
+          ],
+          "confidence": 0.8
+        }
+      },
+      "comparison": {
+        "reviewerEvidenceIsNotGroundTruth": true,
+        "relation": "both_failed",
+        "interpretation": "Both systems rejected or could not approve the case; inspect material issues separately."
+      }
+    },
+    {
+      "questionId": "C2",
+      "subject": "Chemistry",
+      "type": "Conceptual",
+      "difficulty": "Medium",
+      "retainedEvidence": {
+        "source": "benchmark_results_detailed.json",
+        "primaryLatencyMs": 16666,
+        "promptTokens": 1166,
+        "completionTokens": 1878,
+        "cachedTokens": 1024,
+        "totalTokens": 3044,
+        "primaryCostUsd": 0.0012249,
+        "reviewer": {
+          "reused": true,
+          "passed": false,
+          "overall": 73,
+          "issueCount": 5,
+          "scores": {
+            "vocabulary": 75,
+            "conceptTeaching": 75,
+            "reasoning": 75,
+            "stepExplanation": 75,
+            "examples": 75,
+            "memory": 75,
+            "practice": 75,
+            "confidenceBuilding": 75,
+            "weakStudentUnderstanding": 60,
+            "overall": 73
+          },
+          "promptTokens": 5082,
+          "completionTokens": 653,
+          "costUsd": 0.0009237
+        }
+      },
+      "architectureC": {
+        "structural": {
+          "status": "STRUCTURAL_PASS",
+          "latencyMs": 1,
+          "exactReasons": [],
+          "defaultedPaths": []
+        },
+        "material": {
+          "status": "MATERIAL_PASS",
+          "latencyMs": 1648,
+          "promptTokens": 1996,
+          "completionTokens": 79,
+          "totalTokens": 2075,
+          "costUsd": 0.0003468,
+          "issues": [],
+          "optionalPolish": [
+            "Consider providing more examples of daily-life situations where evaporation and boiling are observed.",
+            "Add a summary section to reinforce the key points discussed in the lesson.",
+            "Include a visual diagram comparing evaporation and boiling for better understanding."
+          ],
+          "confidence": 0.95
+        }
+      },
+      "comparison": {
+        "reviewerEvidenceIsNotGroundTruth": true,
+        "relation": "shadow_pass_reviewer_fail",
+        "interpretation": "Reviewer rejected the lesson on broader teaching-quality criteria; this is not a confirmed shadow false pass."
+      }
+    }
+  ],
+  "summary": {
+    "casesRun": 3,
+    "structuralPasses": 2,
+    "structuralFailures": 1,
+    "materialPasses": 1,
+    "materialFailures": 1,
+    "validatorErrors": 0,
+    "totalValidatorCostUsd": 0.0007566000000000001,
+    "totalPrimaryCostUsd": 0.0037773
+  }
+}
