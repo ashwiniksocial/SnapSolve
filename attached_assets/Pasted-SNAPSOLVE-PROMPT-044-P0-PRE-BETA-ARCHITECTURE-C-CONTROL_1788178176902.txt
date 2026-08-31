@@ -1,0 +1,467 @@
+SNAPSOLVE — PROMPT #044
+P0 PRE-BETA — ARCHITECTURE C CONTROLLED FAIL-SAFE A/B
+MODE: MINIMUM PRODUCTION INTEGRATION → MEASURE → FREEZE
+DATE: 31 AUG 2026 IST
+
+Recall and apply ALL SnapSolve PrePromptConditions.
+
+Operate as:
+Co-Founder + CEO + CTO + CMO + Product Architect + Cost Controller + Risk Controller.
+
+Build Impact Gate is STRICT.
+
+==================================================
+DECISION
+==================================================
+
+Architecture C shadow investigation is COMPLETE.
+
+DO NOT perform additional shadow-validator tuning.
+
+Confirmed evidence:
+
+- Correct M6 → MATERIAL_PASS
+- Corrupted M6 → MATERIAL_FAIL
+- Easy correct lesson → STRUCTURAL_PASS + MATERIAL_PASS
+- C2 correct lesson → MATERIAL_FAIL false fail
+- Confirmed FALSE PASSES = 0
+- Confirmed FALSE FAILS = 1
+- API typecheck/build PASS
+- Production currently unchanged
+
+Interpretation:
+
+The validator is conservative but not yet proven suitable as a complete
+replacement for the existing quality pipeline.
+
+Therefore implement Architecture C ONLY as a FAIL-SAFE controlled A/B path.
+
+==================================================
+TARGET RUNTIME ARCHITECTURE
+==================================================
+
+For eligible Detailed non-bank solver requests:
+
+PRIMARY DETAILED GENERATION
+        ↓
+DETERMINISTIC STRUCTURAL GATE
+        ↓
+LIGHTWEIGHT MATERIAL-DEFECT VALIDATOR
+        ↓
+
+IF STRUCTURAL_PASS + MATERIAL_PASS:
+
+    RETURN THE EXISTING PRIMARY DETAILED LESSON DIRECTLY.
+
+    DO NOT run:
+    - existing full reviewer
+    - improver
+    - second reviewer
+
+IF STRUCTURAL_FAIL OR MATERIAL_FAIL:
+
+    DO NOT reject the student request.
+
+    Continue into the EXISTING Option-F production quality pipeline using
+    the SAME primary lesson wherever architecture permits:
+
+    existing reviewer
+    → existing early-exit
+    → existing improver if required
+    → existing second review
+
+This is a FAIL-SAFE FALLBACK.
+
+==================================================
+CRITICAL PRINCIPLE
+==================================================
+
+Architecture C PASS:
+potential fast path.
+
+Architecture C FAIL:
+existing production pipeline.
+
+Therefore:
+
+FALSE FAIL
+= unnecessary fallback / latency / cost
+
+FALSE PASS
+= teaching-quality risk
+
+Do not attempt to eliminate all false fails before Beta.
+
+Do not weaken the validator simply to improve pass rate.
+
+==================================================
+DO NOT DUPLICATE PRIMARY GENERATION
+==================================================
+
+This is critical.
+
+Architecture C must NOT generate a primary lesson and then cause the existing
+pipeline to generate another primary lesson when fallback occurs.
+
+Reuse the already-generated Detailed primary lesson as the input to the
+existing review/improvement pipeline wherever technically possible.
+
+Before implementation, inspect the existing solveQuestion flow and identify
+the smallest integration point that permits reuse.
+
+If reuse genuinely cannot be achieved safely without architectural
+restructuring:
+
+STOP and report.
+
+Do NOT implement duplicate generation.
+
+==================================================
+CONTROLLED A/B / FEATURE FLAG
+==================================================
+
+Do NOT enable this universally.
+
+Use the smallest existing server-side feature-control mechanism.
+
+If none exists, introduce ONE minimal server-side environment-controlled flag.
+
+Example semantic intent:
+
+ARCHITECTURE_C_FAST_PATH_ENABLED
+
+Default:
+
+FALSE
+
+No VITE_ exposure.
+
+Do not create a feature-flag framework.
+
+When FALSE:
+
+behavior must be IDENTICAL to current Option-F production.
+
+When TRUE:
+
+Architecture C fail-safe path may operate.
+
+Prefer ability to restrict it to approved Beta users if existing auth/email
+context makes this simple without creating new systems.
+
+Do not build cohort-management infrastructure.
+
+==================================================
+NO SECTION REPAIR
+==================================================
+
+Do NOT implement section-level repair.
+
+For now:
+
+validator FAIL
+→ existing complete Option-F quality pipeline.
+
+We first need real Beta evidence showing:
+
+- Architecture C pass rate
+- false-pass risk
+- latency benefit
+- fallback rate
+
+before deciding whether section repair is worth building.
+
+==================================================
+TELEMETRY
+==================================================
+
+Reuse existing aiCost / solver telemetry.
+
+Add only the minimum fields required to compare Architecture C.
+
+For each eligible request record:
+
+architecturePath:
+- option_f
+- architecture_c_fast_pass
+- architecture_c_fallback
+
+structuralGate:
+- PASS
+- FAIL
+
+materialValidator:
+- PASS
+- FAIL
+- SKIPPED
+
+Also capture/reuse existing:
+
+- primary generation latency
+- validator latency
+- full API latency
+- AI call count
+- input/output tokens
+- estimated cost
+
+For fallback requests also report existing review/improvement timings.
+
+DO NOT store full student question/answer content merely for telemetry if the
+existing system does not already do so.
+
+Do not create a new analytics platform.
+
+==================================================
+FIRST USE SAFETY
+==================================================
+
+Architecture C must initially apply only to:
+
+Detailed solver generation
+
+and only where the existing Architecture C shadow validator is compatible.
+
+Do NOT alter:
+
+- frozen bank lessons
+- pre-generated pilot lessons
+- Practice
+- Vision transcription
+- OCR
+- camera
+
+Frozen/pregenerated lessons must retain their existing zero-solver behavior.
+
+==================================================
+FAILURE BEHAVIOR
+==================================================
+
+Any Architecture C infrastructure failure must fail safely.
+
+Examples:
+
+- deterministic validator exception
+- semantic validator malformed output
+- semantic-validator API failure
+- timeout
+- parser failure
+
+must result in:
+
+FALLBACK TO EXISTING OPTION-F PIPELINE
+
+not student-visible failure,
+not automatic MATERIAL_PASS.
+
+==================================================
+NO QUALITY STANDARD CHANGES
+==================================================
+
+Do NOT change:
+
+- TeachingLesson schema
+- primary Detailed-generation prompt
+- production model
+- current full reviewer rubric
+- improver
+- review threshold
+- early-exit rules
+
+This task changes ROUTING only.
+
+Architecture C validator itself is now frozen unless production evidence
+reveals a MATERIAL SAFETY DEFECT.
+
+==================================================
+PROTECTED SYSTEMS
+==================================================
+
+DO NOT TOUCH:
+
+Vision
+Scan
+Camera
+OCR trust gate
+Practice
+question bank
+curriculum
+canonical metadata
+generated lesson bank
+pilot lessons
+navigation
+Progress
+Revision
+auth architecture
+beta feedback architecture
+deployment configuration
+
+==================================================
+VALIDATION — ABSOLUTE MINIMUM
+==================================================
+
+Do NOT run another broad AI benchmark.
+
+First validate routing deterministically/mocked where possible.
+
+Required:
+
+1. FLAG OFF
+   Confirm existing Option-F routing is unchanged.
+
+2. FLAG ON + simulated/retained MATERIAL_PASS
+   Confirm full reviewer/improver are structurally unreachable.
+
+3. FLAG ON + simulated/retained MATERIAL_FAIL
+   Confirm SAME primary lesson continues into existing Option-F review path.
+
+4. Validator exception/failure
+   Confirm safe Option-F fallback.
+
+5. Confirm no duplicate primary generation.
+
+Then perform at most TWO real controlled solver requests if genuinely
+necessary:
+
+A. one known Architecture C PASS candidate
+B. one known fallback candidate
+
+Reuse existing benchmark questions where possible.
+
+Do NOT regenerate or rerun cases merely to increase sample size.
+
+==================================================
+SUCCESS METRICS
+==================================================
+
+Report separately:
+
+FAST PASS PATH:
+- total latency
+- AI calls
+- tokens
+- cost
+
+FALLBACK PATH:
+- total latency
+- AI calls
+- tokens
+- cost
+
+CURRENT OPTION-F COMPARABLE BASELINE:
+reuse retained evidence.
+
+Calculate:
+
+- latency reduction on fast pass
+- call reduction
+- token reduction
+- cost reduction
+
+Do not claim a population-wide improvement from one or two cases.
+
+==================================================
+CRITICAL SAFETY CHECK
+==================================================
+
+Manually inspect any real Architecture C fast-pass lesson used in this task.
+
+Confirm:
+
+- final answer correct
+- reasoning materially correct
+- no factual/conceptual error
+- no misleading explanation
+- suitable for weak student
+- curriculum aligned
+
+If a confirmed false PASS is discovered:
+
+DISABLE/LEAVE FLAG FALSE.
+
+Classification:
+
+CONTROLLED_A_B_NOT_APPROVED
+
+Do not attempt another tuning loop automatically.
+
+==================================================
+VALIDATION
+==================================================
+
+Run:
+
+API TypeScript check
+API production build
+
+Only run additional checks required by actually changed files.
+
+Do not fix unrelated workspace errors.
+
+==================================================
+DO NOT
+==================================================
+
+Do NOT:
+
+- publish
+- universally enable Architecture C
+- add section repair
+- add streaming
+- add more benchmark cases
+- retune C2
+- retune general validator prompts
+- build symbolic math
+- create new reviewer architecture
+- change model
+- change solver teaching prompts
+- redesign telemetry
+- create a feature flag framework
+- duplicate primary generation
+
+==================================================
+RETURN
+==================================================
+
+1. Exact integration point
+2. Files changed
+3. Feature-control mechanism
+4. Default feature state
+5. Confirmation FLAG OFF = existing Option-F
+6. Fast-pass routing proof
+7. Fallback routing proof
+8. Validator-error fallback proof
+9. Confirmation primary generation is NOT duplicated
+10. Fast-pass AI calls
+11. Fast-pass latency
+12. Fast-pass tokens
+13. Fast-pass estimated cost
+14. Fallback AI calls
+15. Fallback latency
+16. Fallback tokens
+17. Fallback estimated cost
+18. Retained Option-F comparison
+19. Manual quality assessment of real fast-pass lesson, if executed
+20. Any confirmed FALSE PASS
+21. API TypeScript result
+22. API production-build result
+23. Production/default behavior unchanged confirmation
+24. Section repair NOT implemented
+25. Streaming NOT implemented
+26. Protected systems untouched
+27. Exact diagnostic API spend
+28. Final classification:
+
+CONTROLLED_A_B_APPROVED
+
+or
+
+CONTROLLED_A_B_NOT_APPROVED
+
+STOP.
+
+Do NOT publish.
+Leave Architecture C disabled by default.
+
+End exactly:
+
+ARCHITECTURE C FAIL-SAFE A/B INTEGRATION COMPLETE — AWAITING FOUNDER DECISION
