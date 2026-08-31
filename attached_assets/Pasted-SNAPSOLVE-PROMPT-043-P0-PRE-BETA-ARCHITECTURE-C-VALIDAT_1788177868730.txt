@@ -1,0 +1,540 @@
+SNAPSOLVE — PROMPT #043
+P0 PRE-BETA — ARCHITECTURE C VALIDATOR CONTRACT CORRECTION
+MODE: SURGICAL SHADOW FIX → RETAINED-EVIDENCE RETEST → FINAL GO/NO-GO
+DO NOT SWITCH PRODUCTION
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+teaching-quality priority, weak-student priority, curriculum/exam priority,
+cost-control, architecture-integrity, regression-prevention and
+Build → Validate → Freeze → Next rules.
+
+==================================================
+CONFIRMED PROMPT #042 RESULT
+==================================================
+
+Final classification:
+
+NOT_READY
+
+However:
+
+CONFIRMED FALSE PASSES:
+0
+
+CONFIRMED SEMANTIC FALSE FAILS:
+1
+
+Two validator-design defects are now proven.
+
+--------------------------------------------------
+DEFECT 1 — SEMANTIC VALIDATOR
+--------------------------------------------------
+
+M6 contains:
+
+90/200
+
+followed by:
+
+9/20
+
+The validator now acknowledges that 90/200 is mathematically correct and
+equivalent to 9/20.
+
+However it still returns MATERIAL_FAIL because it evaluates the separate
+simplification step as materially insufficient.
+
+The lesson's mathematical reasoning chain is valid.
+
+This is a FALSE FAIL.
+
+--------------------------------------------------
+DEFECT 2 — STRUCTURAL VALIDATOR
+--------------------------------------------------
+
+Easy Detailed question:
+
+“Is √9 rational or irrational? Justify.”
+
+Generated answer was manually assessed as correct.
+
+Generation:
+12.710 sec
+
+Input/output:
+1,126 / 1,600 tokens
+
+However the zero-AI structural gate rejected the lesson solely because it
+contained:
+
+3 reasoning steps
+
+instead of the currently enforced:
+
+4–8 reasoning steps.
+
+For this simple question, 3 complete reasoning steps can be entirely
+appropriate.
+
+Therefore the deterministic gate is incorrectly treating a pedagogical
+quantity preference as a structural/material failure.
+
+==================================================
+FOUNDER DECISION
+==================================================
+
+Do NOT abandon Architecture C.
+
+Do NOT switch Architecture C into production yet.
+
+Correct ONLY these two validator-contract defects.
+
+Do NOT create additional architecture.
+
+Do NOT create symbolic mathematics infrastructure.
+
+Do NOT generate new primary lessons unless retained artifacts are unusable.
+
+==================================================
+CORE VALIDATION PRINCIPLE
+==================================================
+
+Architecture C exists to distinguish:
+
+MATERIAL BLOCKING DEFECT
+
+from:
+
+NON-BLOCKING PEDAGOGICAL ENHANCEMENT.
+
+A validator must not return MATERIAL_FAIL merely because a correct lesson
+could be made longer, richer, more polished or differently formatted.
+
+At the same time, it must continue blocking genuinely incorrect,
+misleading or materially insufficient teaching.
+
+==================================================
+PART A — FIX STRUCTURAL GATE RESPONSIBILITY
+==================================================
+
+The deterministic structural gate should validate STRUCTURE.
+
+It should NOT attempt to enforce semantic teaching excellence using arbitrary
+counts.
+
+Review every deterministic check and classify it as:
+
+A. TRUE STRUCTURAL REQUIREMENT
+B. PEDAGOGICAL QUALITY PREFERENCE
+C. SEMANTIC REQUIREMENT
+
+The deterministic gate should BLOCK only category A.
+
+Examples of legitimate structural blocking checks:
+
+- malformed response
+- invalid TeachingLesson shape
+- missing required core section
+- empty final answer
+- missing reasoning entirely
+- malformed reasoning-step objects
+- empty question translation
+- missing practice structure where contractually mandatory
+- missing required hints if the schema contract genuinely requires them
+- invalid types
+- obvious placeholders
+- empty/null corruption
+
+==================================================
+REASONING STEP COUNT
+==================================================
+
+Remove the rigid assumption that every Detailed lesson requires 4–8
+reasoning steps to be structurally valid.
+
+Do NOT remove step-by-step teaching.
+
+Instead:
+
+A lesson must contain sufficient non-empty structured reasoning to satisfy
+the TeachingLesson contract.
+
+For structural validation:
+
+- zero reasoning steps = FAIL
+- malformed/empty reasoning = FAIL
+- an arbitrary minimum such as 4 must NOT by itself cause MATERIAL_FAIL
+
+Whether 2, 3, 4, 6 or 8 steps are pedagogically sufficient is a semantic
+judgment dependent on question complexity.
+
+Do NOT replace 4 with another arbitrary universal number.
+
+Reuse the existing difficulty/question metadata if already available only
+where it can be done without new architecture.
+
+Otherwise leave sufficiency to semantic validation.
+
+==================================================
+PART B — FIX SEMANTIC VALIDATOR REASONING MODEL
+==================================================
+
+The semantic validator must evaluate:
+
+THE COMPLETE REASONING CHAIN
+
+not isolated lines in a vacuum.
+
+For mathematical reasoning:
+
+Before classifying an intermediate step as MATERIAL_FAIL:
+
+1. inspect the preceding step,
+2. inspect the current step,
+3. inspect the immediately following relevant step,
+4. determine whether the transformation is mathematically valid in context.
+
+Examples:
+
+90/200
+→ divide numerator and denominator by 10
+→ 9/20
+
+must PASS.
+
+90/200
+→ 9/10
+
+must FAIL.
+
+Likewise:
+
+√9 = 3
+therefore 3 = 3/1
+therefore √9 is rational
+
+is a valid chain.
+
+The validator should assess whether the reasoning collectively establishes
+the answer correctly.
+
+==================================================
+IMPORTANT SAFETY DISTINCTION
+==================================================
+
+Do NOT instruct the validator simply to “be more lenient.”
+
+It must remain strict about:
+
+- wrong arithmetic
+- invalid algebra
+- wrong formula use
+- unjustified logical jumps that materially affect understanding
+- incorrect theorem application
+- contradictions
+- hallucinated facts
+- wrong final answer
+- misleading explanations
+- invalid simplification
+
+The change is:
+
+CONTEXT-AWARE EVALUATION
+
+not:
+
+LOWER QUALITY STANDARD.
+
+==================================================
+TRIVIAL TRANSFORMATIONS
+==================================================
+
+A simple valid simplification does not need an elaborate pedagogical
+explanation merely to avoid MATERIAL_FAIL.
+
+Examples:
+
+90/200 → 9/20
+6/8 → 3/4
+0.5 → 1/2
+25% → 1/4
+
+provided the transformation is correct and understandable in context.
+
+A missing optional explanation may be a quality-enhancement opportunity,
+but not necessarily a material blocking defect.
+
+==================================================
+PART C — RETAINED-EVIDENCE RETEST ONLY
+==================================================
+
+Reuse existing retained artifacts.
+
+DO NOT regenerate lessons unless technically unavoidable.
+
+Retest exactly:
+
+1. M6 ORIGINAL CORRECT LESSON
+2. M6 CORRUPTED NEGATIVE CONTROL
+3. EASY:
+   “Is √9 rational or irrational? Justify.”
+4. C2 CONCEPTUAL LESSON
+
+==================================================
+EXPECTED M6 ORIGINAL
+==================================================
+
+If no other material defect exists:
+
+Expected:
+
+STRUCTURAL_PASS
+MATERIAL_PASS
+
+The correct transformation:
+
+90/200 → 9/20
+
+must not independently cause failure.
+
+==================================================
+EXPECTED M6 NEGATIVE CONTROL
+==================================================
+
+The corrupted transformation such as:
+
+90/200 → 9/10
+
+must remain:
+
+MATERIAL_FAIL
+
+If this negative control starts passing:
+
+REJECT THE CHANGE IMMEDIATELY.
+
+That would be a FALSE PASS and is unacceptable.
+
+==================================================
+EXPECTED EASY CASE
+==================================================
+
+The retained Easy lesson with 3 valid reasoning steps must no longer fail
+solely because it does not contain 4 steps.
+
+Run:
+
+deterministic gate
+→ semantic validator
+
+Determine whether the actual teaching is:
+
+MATERIAL_PASS
+
+or
+
+MATERIAL_FAIL
+
+based on content, not arbitrary step count.
+
+==================================================
+EXPECTED C2
+==================================================
+
+C2 previously returned:
+
+MATERIAL_PASS
+
+Do not weaken or accidentally alter this behavior.
+
+Retest/reuse retained evidence as cheaply as possible.
+
+Expected:
+
+MATERIAL_PASS
+
+unless a genuine material defect is discovered.
+
+==================================================
+FALSE-PASS SAFETY GATE
+==================================================
+
+Final Architecture C approval requires:
+
+CONFIRMED FALSE PASSES = 0
+
+A single confirmed false pass means:
+
+NOT_READY
+
+Do NOT average false passes away.
+
+Do NOT trade teaching safety for latency.
+
+==================================================
+FALSE FAIL POLICY
+==================================================
+
+False fails are undesirable because they trigger unnecessary repair/cost.
+
+However:
+
+FALSE FAIL = efficiency problem
+
+FALSE PASS = student safety / teaching-quality problem
+
+Architecture C does NOT need mathematically perfect zero-false-fail behavior
+before a controlled A/B.
+
+It DOES require zero confirmed false passes in this validation set.
+
+==================================================
+NO NEW PRIMARY GENERATION
+==================================================
+
+Use retained:
+
+M6
+M6 negative control
+Easy
+C2
+
+Target:
+
+0 new primary-generation calls.
+
+Only semantic-validator calls necessary for the corrected retest are
+authorized.
+
+If any retained artifact cannot be reused:
+
+report why before generating anything new.
+
+==================================================
+FINAL CLASSIFICATION
+==================================================
+
+Classify Architecture C as:
+
+READY_FOR_CONTROLLED_PRODUCTION_A_B
+
+ONLY IF:
+
+- M6 correct lesson → MATERIAL_PASS
+- M6 corrupted control → MATERIAL_FAIL
+- Easy correct lesson → MATERIAL_PASS unless a genuine material teaching
+  defect is specifically identified
+- C2 remains MATERIAL_PASS
+- deterministic structural validation remains strict against actual malformed
+  lessons
+- zero confirmed false passes
+- semantic validator remains narrow
+- no production behavior has changed
+
+Otherwise:
+
+NOT_READY
+
+==================================================
+DO NOT IMPLEMENT
+==================================================
+
+Do NOT:
+
+- switch production routing
+- implement section repair
+- implement streaming
+- modify production reviewer
+- modify production improver
+- modify production model
+- modify TeachingLesson schema
+- modify Option F
+- change early-exit behavior
+- create symbolic algebra engine
+- create another solver
+- create another lesson schema
+- broaden benchmark
+- publish
+
+==================================================
+PROTECTED SYSTEMS
+==================================================
+
+DO NOT TOUCH:
+
+Vision
+Scan
+Camera
+OCR trust gate
+Practice
+question bank
+curriculum
+canonical metadata
+frozen lessons
+navigation
+Progress
+Revision
+auth
+beta feedback
+deployment
+
+==================================================
+VALIDATION
+==================================================
+
+Run:
+
+API TypeScript check
+API production build
+
+Run only other checks justified by changed files.
+
+Do NOT fix unrelated/pre-existing workspace errors.
+
+Confirm development shadow route remains explicitly opt-in and disabled by
+default.
+
+==================================================
+RETURN
+==================================================
+
+1. Exact structural-gate root cause
+2. Exact semantic-validator root cause
+3. Files changed
+4. Exact structural-gate correction
+5. Exact semantic-validator correction
+6. Confirmation no symbolic-math engine created
+7. M6 correct lesson result
+8. M6 negative-control result
+9. Easy structural result
+10. Easy semantic result
+11. C2 result
+12. Confirmed FALSE PASS count
+13. Confirmed FALSE FAIL count
+14. Any remaining material validator defects
+15. Semantic-validator latency per retained case
+16. Semantic-validator token usage
+17. Diagnostic AI/API call count
+18. Diagnostic USD cost
+19. API TypeScript result
+20. API production-build result
+21. Confirmation production routing unchanged
+22. Confirmation repair NOT implemented
+23. Confirmation streaming NOT implemented
+24. Confirmation all protected systems untouched
+25. Final classification:
+
+READY_FOR_CONTROLLED_PRODUCTION_A_B
+
+or
+
+NOT_READY
+
+STOP after classification.
+
+DO NOT publish.
+DO NOT switch production.
+
+End exactly:
+
+ARCHITECTURE C VALIDATOR CONTRACT VALIDATION COMPLETE — AWAITING FOUNDER DECISION

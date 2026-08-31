@@ -314,7 +314,10 @@ export function validateRawDetailedLesson(raw: unknown): StructuralGateResult {
   }
 
   checkCardinality(raw, "keyConcepts", "at least one item", length => length > 0, issues);
-  checkCardinality(raw, "guidedReasoning", "4–8 steps", length => length >= 4 && length <= 8, issues);
+  // Step count is pedagogical and question-dependent. Structure requires at
+  // least one well-formed reasoning step; semantic sufficiency is evaluated by
+  // the material validator in the context of the actual question.
+  checkCardinality(raw, "guidedReasoning", "at least one step", length => length > 0, issues);
   checkCardinality(raw, "commonMistakes", "exactly 3 items", length => length === 3, issues);
   checkCardinality(raw, "practiceQuestion.hints", "exactly 3 items", length => length === 3, issues);
   checkCardinality(raw, "confidenceCheck.options", "exactly 4 items", length => length === 4, issues);

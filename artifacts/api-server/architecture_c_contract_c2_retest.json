@@ -1,0 +1,201 @@
+{
+  "retainedOnly": true,
+  "primaryGenerationCalls": 0,
+  "reason": "Corrected diagnostic question metadata for retained C2.",
+  "c2": {
+    "architecture": "C-shadow",
+    "structural": {
+      "passed": true,
+      "issues": [],
+      "defaultedPaths": [],
+      "normalizedLesson": {
+        "topic": "Differences between Evaporation and Boiling",
+        "difficulty": "Easy",
+        "keyConcepts": [
+          "Evaporation",
+          "Boiling",
+          "Cooling effect",
+          "Daily-life examples"
+        ],
+        "aiConfidence": 0.95,
+        "beforeWeStart": {
+          "motivator": "Understanding the differences between evaporation and boiling can help you in everyday situations, like knowing how to cool a drink or dry clothes faster. These concepts are also crucial in science and nature, affecting weather patterns and even our bodies.",
+          "anxietyReducer": "It's okay if these concepts seem confusing at first. We will break them down step by step, and I will guide you through each part. You will gain confidence as we explore these ideas together.",
+          "preview": "Today, we will learn the differences between evaporation and boiling, understand why evaporation causes cooling, and see a daily-life example."
+        },
+        "prerequisites": [
+          "Understanding of states of matter (solid, liquid, gas)",
+          "Basic knowledge of temperature",
+          "Concept of heat energy"
+        ],
+        "vocabulary": [
+          {
+            "term": "Evaporation",
+            "meaning": "The process where liquid turns into gas at any temperature below its boiling point."
+          },
+          {
+            "term": "Boiling",
+            "meaning": "The rapid vaporization of a liquid when it reaches its boiling point."
+          },
+          {
+            "term": "Cooling effect",
+            "meaning": "The decrease in temperature that occurs when a substance loses heat."
+          },
+          {
+            "term": "Temperature",
+            "meaning": "A measure of how hot or cold something is."
+          },
+          {
+            "term": "Heat energy",
+            "meaning": "The energy that comes from the temperature of matter."
+          }
+        ],
+        "intuition": {
+          "story": "Imagine you have a glass of water on a sunny day. If you leave it outside, some of the water slowly disappears over time. This is evaporation. Now, think about boiling water in a pot. When you heat it, bubbles form and it turns into steam quickly. That's boiling. Both processes involve water changing from liquid to gas, but they happen in different ways.",
+          "visual": "Picture a pot on the stove. When you turn on the heat, bubbles start forming at the bottom. This is boiling. Now, think of a puddle on a hot day slowly shrinking. This is evaporation.",
+          "everyday": "When you sweat, your body cools down because the sweat evaporates. This is why you feel cooler when you sweat on a hot day."
+        },
+        "questionTranslation": {
+          "plainEnglish": "What are three ways evaporation is different from boiling? Why does evaporation make things cooler? Can you give an example from daily life?",
+          "whatWeKnow": "Evaporation happens at any temperature, while boiling happens at a specific temperature. Evaporation is slow, and boiling is fast. Evaporation can cool things down.",
+          "whatWeFind": "We will find three differences, understand the cooling effect, and see a real-life example.",
+          "wordToMath": "Not applicable in this case."
+        },
+        "teacherThinking": {
+          "firstNotice": "I notice that students often confuse evaporation with boiling because both involve liquids turning into gases.",
+          "whyThisMethod": "By breaking down the differences and relating them to everyday experiences, students can grasp these concepts better.",
+          "clues": "Look for temperature differences, speed of the process, and conditions under which each occurs."
+        },
+        "guidedReasoning": [
+          {
+            "what": "First, let's define evaporation.",
+            "why": "Evaporation occurs at any temperature below the boiling point. This means it can happen at room temperature.",
+            "math": "Not applicable.",
+            "result": "Evaporation is a slow process.",
+            "pause": "Do you understand that evaporation can happen at lower temperatures?"
+          },
+          {
+            "what": "Now, let's define boiling.",
+            "why": "Boiling happens at a specific temperature called the boiling point, where the liquid turns into gas rapidly.",
+            "math": "For water, this is 100°C (212°F) at sea level.",
+            "result": "Boiling is a fast process.",
+            "pause": "Does this make sense? Boiling is quicker than evaporation?"
+          },
+          {
+            "what": "Next, let's compare the speed.",
+            "why": "Evaporation is gradual, while boiling occurs quickly with bubbles forming.",
+            "math": "Evaporation can take hours, while boiling takes minutes.",
+            "result": "This is a key difference.",
+            "pause": "Can you see how speed is a difference?"
+          },
+          {
+            "what": "Now, let's discuss the cooling effect of evaporation.",
+            "why": "When a liquid evaporates, it takes heat energy from its surroundings, causing cooling.",
+            "math": "For example, if sweat evaporates, it cools your skin.",
+            "result": "This is why you feel cooler when sweating.",
+            "pause": "Do you understand how evaporation cools?"
+          }
+        ],
+        "confusionPoints": [
+          "Confusing evaporation with boiling because both involve liquids turning into gases.",
+          "Not understanding that evaporation can happen at any temperature, while boiling occurs at a specific temperature.",
+          "Misunderstanding the cooling effect of evaporation and how it works."
+        ],
+        "commonMistakes": [
+          {
+            "mistake": "❌ Thinking evaporation only happens when it's hot.",
+            "whyItHappens": "Students may not realize that evaporation can occur at lower temperatures.",
+            "howToAvoid": "Remember that evaporation happens at any temperature below boiling."
+          },
+          {
+            "mistake": "❌ Confusing the speed of evaporation and boiling.",
+            "whyItHappens": "Both processes involve gas formation but at different rates.",
+            "howToAvoid": "Focus on the conditions: evaporation is slow, boiling is fast."
+          },
+          {
+            "mistake": "❌ Believing boiling is the only way to turn liquid to gas.",
+            "whyItHappens": "Students may think boiling is the only process.",
+            "howToAvoid": "Remember that evaporation is another way, happening gradually."
+          }
+        ],
+        "examinerThinking": {
+          "whyAsked": "This question tests your understanding of phase changes and their characteristics.",
+          "conceptTested": "It assesses your ability to differentiate between evaporation and boiling.",
+          "topperInsight": "Top students will clearly explain differences and provide relatable examples.",
+          "examTip": "Use everyday examples to illustrate your points.",
+          "examTrap": "Be careful not to mix up the definitions and conditions for each process."
+        },
+        "finalAnswer": {
+          "answer": "Three differences are: 1) Evaporation occurs at any temperature, while boiling occurs at a specific temperature. 2) Evaporation is a slow process, while boiling is rapid. 3) Evaporation can happen from the surface of a liquid, while boiling happens throughout the liquid.",
+          "whyCorrect": "These differences highlight key characteristics of each process.",
+          "verification": "We defined both processes and compared their speeds and conditions. LHS = RHS ✓"
+        },
+        "simplerExample": {
+          "problem": "What is the difference between evaporation and boiling?",
+          "solution": "Evaporation happens slowly at any temperature, while boiling happens quickly at a specific temperature."
+        },
+        "practiceQuestion": {
+          "question": "List three ways evaporation is different from boiling and explain why evaporation cools the body.",
+          "hints": [
+            "Think about the temperature at which each occurs.",
+            "Consider the speed of each process.",
+            "Reflect on how evaporation affects temperature."
+          ],
+          "solution": "Evaporation occurs at any temperature, is a slow process, and cools the body by taking heat away. Boiling occurs at a specific temperature and is rapid."
+        },
+        "confidenceCheck": {
+          "question": "Why does evaporation cause cooling?",
+          "options": [
+            "It adds heat to the surroundings.",
+            "It takes heat away from the surroundings.",
+            "It has no effect on temperature.",
+            "It only happens when it's cold."
+          ],
+          "correctIndex": 1,
+          "explanation": "Evaporation takes heat away from the surroundings, which causes cooling."
+        },
+        "retrievalPractice": [
+          "What is evaporation?",
+          "What is boiling?",
+          "How does evaporation cause cooling?",
+          "Can evaporation happen at low temperatures?"
+        ],
+        "rememberThese": [
+          "Evaporation occurs at any temperature.",
+          "Boiling happens at a specific temperature.",
+          "Evaporation is a slow process, while boiling is fast."
+        ],
+        "confidenceBuilder": "You now understand the differences between evaporation and boiling, and how evaporation cools. You can apply this knowledge to everyday situations!"
+      },
+      "latencyMs": 1
+    },
+    "material": {
+      "status": "MATERIAL_FAIL",
+      "issues": [
+        {
+          "category": "correctness",
+          "section": "finalAnswer",
+          "evidence": "Evaporation can happen from the surface of a liquid, while boiling happens throughout the liquid.",
+          "explanation": "The statement that 'evaporation can happen from the surface of a liquid' is misleading. While it is true that evaporation occurs at the surface, it is not a defining characteristic that distinguishes it from boiling, which also occurs at the surface when bubbles form. This could lead to confusion about the nature of both processes."
+        }
+      ],
+      "optionalPolish": [
+        "Clarify the distinction between where evaporation and boiling occur to avoid confusion.",
+        "Provide more examples of daily-life situations involving evaporation and boiling.",
+        "Enhance the explanation of the cooling effect of evaporation with more detail."
+      ],
+      "confidence": 0.8,
+      "usage": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "promptTokens": 2218,
+        "completionTokens": 195,
+        "cachedTokens": 0,
+        "totalTokens": 2413,
+        "estimatedCostUsd": 0.00044970000000000003
+      },
+      "latencyMs": 3176
+    },
+    "totalLatencyMs": 3177,
+    "productionRoutingChanged": false
+  }
+}

@@ -70,10 +70,17 @@ If the lesson is safe, return an empty issues array and list polish opportunitie
 separately. Each material issue must cite concise evidence from the lesson.
 
 MATHEMATICAL EQUIVALENCE:
-- Inspect the adjacent reasoning steps before declaring an intermediate expression incorrect.
+- Evaluate the complete ordered reasoning chain, not isolated lines.
+- Before declaring an intermediate expression incorrect, inspect the preceding step,
+  the current step, and the immediately following relevant step.
 - Unsimplified and simplified fractions may both be correct (for example, 90/200 = 9/20).
 - Decimal, fraction, percentage, reordered commutative, and algebraically transformed forms
   are not contradictions when the transformation preserves the same value.
+- If an adjacent step explicitly performs a correct trivial simplification or transformation,
+  do not report the earlier unsimplified form as a correctness, reasoning, completeness, or
+  weak-student-sufficiency issue.
+- A correct trivial transformation does not need an elaborate explanation to be materially
+  safe. Any desire for more explanation belongs in optionalPolish.
 - Verify the transformation itself. Do not assume two forms are equivalent merely because
   a later final answer is correct.
 - A genuinely invalid transformation remains a material defect (for example, 90/200 ≠ 9/10).
