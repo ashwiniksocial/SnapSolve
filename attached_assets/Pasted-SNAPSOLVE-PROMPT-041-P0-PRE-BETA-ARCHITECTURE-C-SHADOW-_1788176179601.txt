@@ -1,0 +1,527 @@
+SNAPSOLVE — PROMPT #041
+P0 PRE-BETA — ARCHITECTURE C SHADOW PROTOTYPE
+PRIMARY LESSON + MATERIAL-DEFECT VALIDATOR
+MODE: BUILD SHADOW PATH → BENCHMARK → DO NOT SWITCH PRODUCTION
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+teaching-quality priority, weak-student priority, cost-control,
+architecture-integrity, regression-prevention and
+Build → Validate → Freeze → Next.
+
+==================================================
+CONFIRMED EVIDENCE
+==================================================
+
+Prompt #039 established:
+
+Current Option-F pipeline:
+
+Draft
+→ Review 1
+→ if PASS return
+→ otherwise full Improvement
+→ Review 2
+→ return
+
+Observed normal path:
+4 sequential OpenAI calls.
+
+Representative optimized pipeline:
+42.270 seconds.
+
+Prompt #040 established:
+
+Baseline primary Draft:
+
+17,062 input tokens
+1,778 output tokens
+14.090 sec
+
+Conservative context reduction:
+
+16,284 input tokens
+1,868 output tokens
+14.869 sec
+
+Result:
+
+Context reduction REJECTED.
+
+It did NOT improve latency and materially weakened weak-student vocabulary
+and preparation.
+
+DO NOT implement Prompt #040 experimental context.
+
+==================================================
+FOUNDER DECISION
+==================================================
+
+Stop incremental prompt trimming.
+
+Do NOT attempt another general-context reduction.
+
+Proceed to a SHADOW prototype of Architecture C:
+
+PRIMARY DETAILED GENERATION
+→ STRICT DETERMINISTIC STRUCTURAL VALIDATION
+→ LIGHTWEIGHT MATERIAL-DEFECT SEMANTIC VALIDATOR
+→ PASS / MATERIAL_FAIL
+
+For this task:
+
+DO NOT replace production behavior.
+
+DO NOT implement section repair yet.
+
+DO NOT remove the existing production quality pipeline.
+
+The purpose is to determine whether Architecture C can safely identify
+lessons that are materially safe enough to return without the expensive
+full reviewer → improvement → reviewer sequence.
+
+==================================================
+CRITICAL PRINCIPLE
+==================================================
+
+The new validator must NOT reproduce the current reviewer.
+
+The current reviewer evaluates broad pedagogical excellence and optional
+support dimensions.
+
+The shadow validator must answer a narrower question:
+
+“Is this lesson materially SAFE AND GOOD ENOUGH to teach this student
+without requiring AI repair?”
+
+PASS requires:
+
+1. final answer materially correct
+2. reasoning materially correct
+3. no factual/conceptual error
+4. no misleading explanation
+5. curriculum appropriate
+6. sufficient explanation for a weak student
+7. no hallucinated premise/fact
+8. no blocking prerequisite gap
+9. no contradiction between lesson sections
+10. complete enough to satisfy the required TeachingLesson contract
+
+It must NOT fail solely because:
+
+- vocabulary could be richer
+- memory section could be richer
+- confidence wording is generic
+- examiner guidance could be longer
+- another example could be better
+- arithmetic could be split into more microsteps
+- an optional analogy is absent
+- pedagogical excellence could be improved from “good” to “excellent”
+
+Those are enhancement issues, not automatic blocking defects.
+
+==================================================
+PART 1 — STRICT DETERMINISTIC GATE
+==================================================
+
+Implement/reuse the smallest local validator necessary to catch structural
+failures BEFORE semantic validation.
+
+IMPORTANT:
+
+Do NOT create another lesson schema.
+
+Reuse TeachingLesson.
+
+Do NOT silently accept parser defaults as evidence that generation supplied
+the field.
+
+Where possible inspect the raw parsed generation and/or record default usage.
+
+Check:
+
+- valid structured response
+- required field types
+- required sections
+- non-empty final answer
+- non-empty final-answer explanation
+- guided reasoning present
+- valid reasoning-step structure
+- question translation present
+- intuition present where required
+- common mistakes present
+- simpler example present
+- practice question present
+- exactly required hints
+- practice solution present
+- malformed/empty/duplicate content
+- placeholder text
+- obvious schema corruption
+
+Return:
+
+STRUCTURAL_PASS
+
+or
+
+STRUCTURAL_FAIL with exact reasons.
+
+This gate must require ZERO AI calls.
+
+==================================================
+PART 2 — LIGHTWEIGHT MATERIAL-DEFECT VALIDATOR
+==================================================
+
+Create a SHADOW-ONLY semantic validation path.
+
+Reuse existing OpenAI infrastructure.
+
+Do NOT create a second solver.
+
+Do NOT generate another lesson.
+
+Do NOT request a full pedagogical review.
+
+The validator receives only the minimum information required to determine
+material safety:
+
+- original question
+- subject/class/topic metadata where available
+- final answer
+- key concept
+- question translation
+- guided reasoning
+- essential explanation/context required to judge correctness
+- any other section genuinely necessary to detect contradiction
+
+Do NOT automatically send:
+
+- full giant generation system prompt
+- universal 69.5K teaching suffix
+- full Detailed generation schema instructions
+- broad teaching-quality rubric
+- optional tutoring sections unless required for validation
+- verbose policy context already irrelevant to correctness judgment
+
+==================================================
+SEMANTIC VALIDATOR OUTPUT
+==================================================
+
+Use the smallest architecture-compatible structured output.
+
+Conceptually:
+
+{
+  "result": "PASS" | "MATERIAL_FAIL",
+  "materialIssues": [
+    {
+      "section": "...",
+      "type": "...",
+      "problem": "...",
+      "requiredFix": "..."
+    }
+  ]
+}
+
+Reuse existing structures if an equivalent already exists.
+
+Do not create duplicate infrastructure unnecessarily.
+
+Allowed MATERIAL_FAIL categories should be narrow, such as:
+
+FACTUAL_ERROR
+WRONG_FINAL_ANSWER
+INVALID_REASONING
+MISLEADING_EXPLANATION
+CURRICULUM_MISMATCH
+HALLUCINATION
+BLOCKING_PREREQUISITE_GAP
+CROSS_SECTION_CONTRADICTION
+MATERIALLY_INSUFFICIENT_WEAK_STUDENT_EXPLANATION
+
+Do not create a giant taxonomy.
+
+==================================================
+NO SECTION REPAIR YET
+==================================================
+
+If shadow validator reports MATERIAL_FAIL:
+
+STOP at classification.
+
+Do NOT repair.
+
+Do NOT merge sections.
+
+Do NOT invoke the existing improver merely for this shadow experiment.
+
+We first need to prove validator usefulness.
+
+==================================================
+CONTROLLED BENCHMARK
+==================================================
+
+Use a SMALL existing representative benchmark set.
+
+Prefer existing retained/generated artifacts where possible.
+
+Maximum NEW primary-generation cases:
+
+3
+
+Select enough variation to include, if existing fixtures permit:
+
+1. EASY straightforward question
+2. MEDIUM reasoning question
+3. HARD/proof/conceptual question
+
+Prefer questions already used in prior Detailed benchmarks so historical
+quality evidence exists.
+
+Do NOT create a broad new benchmark.
+
+==================================================
+FOR EACH QUESTION
+==================================================
+
+Run/obtain:
+
+PRIMARY DRAFT
+
+Then:
+
+DETERMINISTIC GATE
+
+Then:
+
+LIGHTWEIGHT MATERIAL VALIDATOR
+
+Compare against:
+
+EXISTING FULL REVIEWER
+
+where existing retained reviewer evidence is available.
+
+Do NOT rerun the expensive full reviewer if valid comparable retained evidence
+already exists.
+
+==================================================
+REPORT PER QUESTION
+==================================================
+
+For each question report:
+
+Primary generation latency
+Primary input/output tokens
+Structural gate result
+Structural gate latency
+Semantic validator latency
+Semantic validator input/output tokens
+Semantic result
+Material issues
+Existing reviewer score if available
+Existing reviewer blocking/non-blocking issues if available
+Manual material-safety assessment based on benchmark evidence
+
+Most importantly determine:
+
+Would Architecture C have returned a materially unsafe lesson?
+
+YES / NO
+
+==================================================
+FALSE PASS / FALSE FAIL ANALYSIS
+==================================================
+
+We care especially about:
+
+FALSE PASS:
+validator says PASS but lesson contains material teaching/correctness defect.
+
+This is HIGH RISK.
+
+FALSE FAIL:
+validator says MATERIAL_FAIL for merely optional/polish issues.
+
+This wastes latency but is safer.
+
+Report both separately.
+
+Do NOT approve Architecture C if any confirmed FALSE PASS exists in the
+small controlled benchmark.
+
+==================================================
+LATENCY TARGET
+==================================================
+
+Measure:
+
+Primary Draft completion
++
+deterministic gate
++
+light semantic validation
+
+Determine expected safe-path total.
+
+Target:
+
+substantially below current 42.270 sec.
+
+Desired:
+
+approximately 15–20 sec COMPLETE with current model,
+subject to measured evidence.
+
+Do NOT fabricate 5–10 sec full completion.
+
+==================================================
+PERCEIVED LATENCY
+==================================================
+
+Do NOT implement Detailed streaming in this task.
+
+However report whether the shadow architecture would make safe progressive
+delivery easier because the primary lesson is no longer expected to undergo
+a mandatory full rewrite.
+
+Report separately:
+
+ACTUAL COMPLETE LATENCY
+
+and
+
+potential future FIRST USEFUL CONTENT latency.
+
+==================================================
+QUALITY REQUIREMENT
+==================================================
+
+SnapSolve is for curriculum learning and exam preparation.
+
+A lesson cannot PASS merely because the numerical final answer is correct.
+
+The validator must protect:
+
+- concept correctness
+- reasoning correctness
+- weak-student comprehension
+- teacher/examiner acceptability
+- curriculum alignment
+
+But it should distinguish:
+
+MATERIAL DEFECT
+
+from
+
+OPTIONAL QUALITY ENHANCEMENT.
+
+==================================================
+PROTECTED SYSTEMS
+==================================================
+
+DO NOT TOUCH:
+
+production Option-F behavior
+production review cycles
+production early-exit
+production improver
+production model
+TeachingLesson schema
+Vision
+Scan
+Camera
+OCR trust gate
+Practice
+question bank
+curriculum
+canonical metadata
+20 frozen generated lessons
+navigation
+Progress
+Revision
+auth
+beta feedback
+deployment
+
+Do NOT publish.
+
+==================================================
+IMPLEMENTATION SAFEGUARD
+==================================================
+
+Architecture C must remain:
+
+SHADOW / DIAGNOSTIC ONLY.
+
+Normal student requests must continue through the existing production
+Option-F pipeline.
+
+No student should receive the shadow result.
+
+No production routing switch is authorized.
+
+If implementing a shadow path would require invasive runtime changes:
+
+STOP.
+
+Report the blocker instead.
+
+==================================================
+COST CONTROL
+==================================================
+
+Use retained artifacts aggressively.
+
+Maximum 3 new primary generations.
+
+Use the minimum semantic-validator calls required.
+
+Avoid rerunning existing expensive reviewer/improver calls.
+
+Report:
+
+new AI calls
+input tokens
+output tokens
+USD cost
+
+==================================================
+RETURN
+==================================================
+
+1. Exact shadow files changed
+2. Confirmation production behavior unchanged
+3. Deterministic gate design
+4. Semantic material-validator design
+5. Exact semantic validator input size
+6. Questions tested
+7. Results per question
+8. Primary latency per question
+9. Validator latency per question
+10. Safe-path total latency
+11. Token/cost profile
+12. Existing reviewer comparison
+13. FALSE PASS count
+14. FALSE FAIL count
+15. Material defects successfully detected
+16. Optional issues correctly ignored
+17. Whether Architecture C is safe enough for a controlled production A/B
+18. Whether section-level repair is justified NEXT
+19. Expected production latency if Architecture C were adopted
+20. Potential future first-useful-content latency
+21. TypeScript/build results
+22. Exact diagnostic AI/API calls and cost
+23. Confirmation Prompt #040 context reduction rejected/not implemented
+24. Confirmation frozen/protected systems untouched
+
+STOP.
+
+DO NOT switch production.
+DO NOT implement repair.
+DO NOT implement streaming.
+DO NOT publish.
+
+End exactly:
+
+ARCHITECTURE C SHADOW VALIDATION COMPLETE — AWAITING FOUNDER DECISION
