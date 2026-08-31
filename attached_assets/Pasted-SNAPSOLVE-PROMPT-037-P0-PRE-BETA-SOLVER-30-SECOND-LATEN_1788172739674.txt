@@ -1,0 +1,256 @@
+SNAPSOLVE — PROMPT #037
+P0 PRE-BETA — SOLVER 30-SECOND LATENCY ROOT-CAUSE PROFILE
+MODE: READ-ONLY DIAGNOSTIC
+DO NOT OPTIMIZE YET
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+teaching-quality priority, cost-control, architecture-integrity and
+Build → Validate → Freeze → Next rules.
+
+==================================================
+FOUNDER REAL-WORLD RESULT
+==================================================
+
+Vision Photo Scan has now been tested on FOUR real handwritten captures.
+
+RESULT:
+
+- 3/4 handwritten scans were materially transcribed correctly.
+- 1/4 was incorrect, likely due to a poorer/shakier capture.
+- The incorrect transcription remained in the mandatory amber review state.
+- Student confirmation/edit flow worked.
+- Existing Solution flow worked after confirmation.
+
+VISION SCAN DECISION:
+
+PASS FOR CONTROLLED BETA.
+
+Do NOT modify Vision transcription.
+Do NOT modify camera.
+Do NOT modify OCR/trust gate.
+Do NOT tune Vision prompt.
+Do NOT add blur detection.
+Do NOT pursue 100% scan accuracy before Beta.
+
+FREEZE THIS PATH unless a new confirmed safety defect appears.
+
+==================================================
+NEW P0
+==================================================
+
+After confirming a correctly transcribed question, founder observed approximately:
+
+30 SECONDS
+
+before the complete AI lesson was available.
+
+Screenshots visibly showed stages such as:
+
+“AI is working on your lesson...”
+
+“Quality review — cycle 1 of 2...”
+
+“Building step-by-step solution...”
+
+“Quality review — cycle 2 of 2...”
+
+This is consistent with earlier founder observations of approximately
+40–51 second answer-generation times on some Type Question tests.
+
+This latency is NOT acceptable as the normal student experience.
+
+TARGET:
+
+Ideally 5–10 seconds to useful/completed lesson.
+
+Do NOT assume that 20–30 seconds is acceptable.
+
+==================================================
+TASK
+==================================================
+
+Perform a READ-ONLY latency investigation of the CURRENT text-question
+→ TeachingLesson generation path.
+
+DO NOT CHANGE CODE YET.
+
+Trace the exact runtime path from:
+
+student-confirmed question
+→ frontend request
+→ API
+→ OpenAI calls
+→ draft
+→ review
+→ improvement/rewrite
+→ streaming
+→ final lesson render
+
+Identify exact files/functions.
+
+==================================================
+MEASURE EXACTLY
+==================================================
+
+Using existing logs/telemetry where available, determine for a representative
+generated question:
+
+1. Time before request leaves frontend
+2. Network/API startup time
+3. OpenAI call #1 latency
+4. Purpose of call #1
+5. OpenAI call #2 latency
+6. Purpose of call #2
+7. OpenAI call #3 latency
+8. Purpose of call #3
+9. OpenAI call #4 latency, if present
+10. Purpose of call #4
+11. Parsing/schema-validation time
+12. Quality/review computation time
+13. Streaming/render overhead
+14. Total wall-clock time
+15. Time to FIRST useful visible teaching content
+16. Time to COMPLETE lesson
+
+If actual timing telemetry already exists, use it.
+
+If timing cannot be determined without modifying code:
+report exactly what is missing.
+Do not add instrumentation in this diagnostic.
+
+==================================================
+QUALITY REVIEW CYCLES
+==================================================
+
+Investigate specifically:
+
+“Quality review — cycle 1 of 2”
+“Quality review — cycle 2 of 2”
+
+Determine:
+
+- Are these TWO additional OpenAI calls?
+- Are they sequential?
+- What does each review do?
+- What percentage of answers actually require revision?
+- Does cycle 2 materially improve teaching quality?
+- Is every question forced through both cycles?
+- Can an already-good first answer terminate early?
+- Is there an existing quality threshold that can short-circuit review?
+- Are review calls generating full lessons again or only evaluating them?
+- Are review/improvement calls using the same model and token size as generation?
+
+DO NOT remove them yet.
+
+==================================================
+CURRENT TOKEN/COST PROFILE
+==================================================
+
+For the representative question report:
+
+- number of OpenAI calls
+- input tokens per call
+- output tokens per call
+- total tokens
+- estimated cost
+- which call contributes most latency
+- which call contributes most cost
+
+Use existing aiCost telemetry if available.
+
+==================================================
+COMPARE MINIMUM SAFE OPTIONS
+==================================================
+
+Evaluate ONLY these potential optimization strategies:
+
+A. Keep current architecture unchanged
+
+B. Early-exit quality review:
+   if first generated lesson already passes quality threshold,
+   skip unnecessary review/improvement cycles
+
+C. One generation + one lightweight quality validator only
+
+D. Generate full final lesson in one high-quality call,
+   with deterministic/schema validation afterward
+
+E. Parallelize any currently independent checks
+
+F. Reduce unnecessary output/repeated context in review calls
+
+For each estimate:
+
+- expected total latency
+- expected teaching-quality risk
+- expected cost
+- code-change size
+- regression risk
+
+DO NOT recommend a cheaper/faster path if it materially reduces the
+teacher/examiner-grade teaching requirement.
+
+==================================================
+IMPORTANT ARCHITECTURE RULE
+==================================================
+
+The solution must preserve:
+
+- detailed, curriculum-aligned teaching quality
+- weak-student usability
+- step-by-step explanation
+- final-answer correctness
+- existing TeachingLesson UI contract
+- Practice compatibility
+- Type Question compatibility
+- Scan compatibility
+
+Do NOT create a second solver.
+Do NOT create another lesson schema.
+Do NOT change frozen pre-generated lessons.
+
+==================================================
+NO IMPLEMENTATION
+==================================================
+
+FILES CHANGED: 0
+
+Do not change prompts.
+Do not change model.
+Do not change review cycles.
+Do not change streaming.
+Do not publish.
+
+A SMALL number of diagnostic generation calls may be used ONLY if existing
+telemetry is insufficient and founder cost remains negligible.
+
+Prefer existing recorded telemetry first.
+
+If calls are made, report count and cost.
+
+==================================================
+RETURN
+==================================================
+
+1. Exact current solver pipeline
+2. Exact number of OpenAI calls per generated lesson
+3. Purpose of every call
+4. Measured/observed latency per call
+5. Time to first useful content
+6. Time to complete lesson
+7. Token/cost breakdown per call
+8. What “quality review cycle 1 of 2” actually does
+9. What “quality review cycle 2 of 2” actually does
+10. Whether every question requires both
+11. Primary latency root cause
+12. Smallest safe optimization
+13. Expected latency after that optimization
+14. Teaching-quality risk
+15. Files that would need modification
+16. Confirmation Scan/Vision frozen and untouched
+17. Files changed = 0
+18. Diagnostic AI/API calls and cost
+
+End exactly:
+
+SOLVER LATENCY ROOT-CAUSE PROFILE COMPLETE — NO CHANGES MADE — AWAITING FOUNDER DECISION
