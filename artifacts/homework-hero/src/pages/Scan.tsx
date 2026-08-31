@@ -1,11 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useLocation, Link }                         from "wouter";
+import { useAuth }                                   from "@clerk/react";
 import { SUBJECTS, type Subject }                    from "@/data/subjects";
 import { useSession }                                from "@/hooks/useSession";
 import { useScanHistory, compressImageToThumbnail, resizeForOCR, relativeTime } from "@/hooks/useScanHistory";
-import { safeRecognizeWithConfidence } from "@/services/ai/ocrService";
 import { cleanOcrText, detectBestTopic } from "@/services/ai/topicMatcher";
-import { classifyOcrOutput } from "@/services/ai/ocrTrustGate";
+import { transcribeQuestion } from "@/services/ai/transcriptionService";
 import type { OcrProgress } from "@/services/ai/ocrService";
 import type { OcrTrustState } from "@/services/ai/ocrTrustGate";
 import CameraCapture from "@/components/CameraCapture";
@@ -90,6 +90,7 @@ function HistoryCard({ record, onRevisit }: {
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function Scan() {
   const { session, update } = useSession();
+  const { getToken }        = useAuth();
   const [, navigate]        = useLocation();
   const { history, addRecord } = useScanHistory();
 
@@ -183,27 +184,22 @@ export default function Scan() {
     try {
       // Step 1 — compress for OCR
       const resized = await resizeForOCR(imageFile);
-      setOcrProgress({ phase: "Scanning image…", percent: 15 });
+      setOcrProgress({ phase: "Extracting question text…", percent: 20 });
 
-      // Step 2 — Tesseract OCR (captures confidence for answer engine)
-      const ocrResult = await safeRecognizeWithConfidence(resized, (p) => setOcrProgress(p));
-      const rawText   = ocrResult.text;
-      update({ ocrConfidence: ocrResult.confidence });
-      setOcrProgress({ phase: "Cleaning text…", percent: 92 });
+      // Photo Scan uses server-side Vision directly. Tesseract remains available
+      // for legacy code but is intentionally not run in this student path.
+      const visionResult = await transcribeQuestion(resized, session.subject, getToken);
+      setOcrProgress({ phase: "Checking scan quality…", percent: 90 });
 
-      const cleaned = cleanOcrText(rawText);
-
-      // Step 3 — classify the OCR output through the trust gate (Prompt #032)
-      setOcrProgress({ phase: "Checking quality…", percent: 94 });
-      const trust = classifyOcrOutput(cleaned, ocrResult.confidence);
+      const cleaned = visionResult.readable ? cleanOcrText(visionResult.transcription) : "";
+      const trust = visionResult.readable && cleaned
+        ? { state: "OCR_NEEDS_REVIEW" as const }
+        : { state: "OCR_FAILED" as const };
       setOcrTrustState(trust.state);
+      update({ ocrConfidence: visionResult.readable ? 0.5 : 0 });
 
-      // Step 4 — topic detection (only label it if trust is HIGH)
-      setOcrProgress({ phase: "Detecting topic…", percent: 97 });
-      const topic =
-        trust.state === "OCR_HIGH_CONFIDENCE"
-          ? (detectBestTopic(cleaned, session.subject)?.topic ?? "General")
-          : "";
+      // Vision is never promoted to HIGH_CONFIDENCE during the first beta.
+      const topic = "";
 
       setOcrProgress({ phase: "Done!", percent: 100 });
       await new Promise((r) => setTimeout(r, 400));
@@ -219,7 +215,7 @@ export default function Scan() {
       setDetectedText("");
       setEditedQ("");
     }
-  }, [imageFile, session.subject, update]);
+  }, [imageFile, session.subject, update, getToken]);
 
   // ── Solution generation ──
   // Structurally enforces the trust gate: FAILED never reaches this function
@@ -228,6 +224,10 @@ export default function Scan() {
   const handleSolve = useCallback(async (questionOverride?: string) => {
     const question = (questionOverride ?? editedQ).trim();
     if (!question) return;
+    if (
+      ocrTrustState === "OCR_FAILED" ||
+      (ocrTrustState === "OCR_NEEDS_REVIEW" && !reviewConfirmed)
+    ) return;
 
     setPhase("solving");
 
@@ -252,7 +252,7 @@ export default function Scan() {
     });
 
     navigate("/solution");
-  }, [editedQ, session.subject, detectedTopic, detectedText, imageFile, update, addRecord, navigate]);
+  }, [editedQ, ocrTrustState, reviewConfirmed, session.subject, detectedTopic, detectedText, imageFile, update, addRecord, navigate]);
 
   // ── Typed question solve — unchanged ──
   const handleTypedSolve = useCallback(() => {
@@ -639,7 +639,7 @@ export default function Scan() {
                 </div>
                 <div className="p-4">
                   <p className="text-sm text-slate-600 mb-4">
-                    Image ready. Tap below to extract the question text using OCR.
+                     Image ready. Tap below to extract the question text.
                   </p>
                   <button
                     onClick={runOcr}
@@ -652,7 +652,7 @@ export default function Scan() {
               </div>
             )}
 
-            {/* ── processing: OCR in progress ── */}
+            {/* ── processing: Vision transcription in progress ── */}
             {phase === "processing" && (
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 {imageUrl && (
@@ -681,7 +681,7 @@ export default function Scan() {
                     label={ocrProgress.phase || "Scanning image…"}
                   />
                   <p className="text-xs text-slate-400 text-center">
-                    First-time use downloads the OCR model (~4 MB). Subsequent scans are instant.
+                     The image is securely transcribed for review before any solution is generated.
                   </p>
                 </div>
               </div>

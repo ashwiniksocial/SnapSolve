@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: transcription
+    description: Photo Scan transcription
 paths:
   /healthz:
     get:
@@ -24,6 +26,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /transcribeQuestion:
+    post:
+      operationId: transcribeQuestion
+      tags: [transcription]
+      summary: Transcribe an academic question from an image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranscribeQuestionInput"
+      responses:
+        "200":
+          description: Transcription result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TranscribeQuestionResult"
+        "400":
+          description: Invalid image payload
+        "401":
+          description: Authentication required
+        "403":
+          description: Beta access required
+        "502":
+          description: Vision transcription failed
 components:
   schemas:
     HealthStatus:
@@ -33,4 +61,28 @@ components:
           type: string
       required:
         - status
+    TranscribeQuestionInput:
+      type: object
+      additionalProperties: false
+      required:
+        - imageDataUrl
+      properties:
+        imageDataUrl:
+          type: string
+          minLength: 1
+          maxLength: 6291456
+        subject:
+          type: string
+          maxLength: 100
+    TranscribeQuestionResult:
+      type: object
+      additionalProperties: false
+      required:
+        - transcription
+        - readable
+      properties:
+        transcription:
+          type: string
+        readable:
+          type: boolean
 

@@ -14,3 +14,20 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary Transcribe an academic question from an image
+ */
+export const transcribeQuestionBodyImageDataUrlMax = 6291456;
+
+export const transcribeQuestionBodySubjectMax = 100;
+
+export const TranscribeQuestionBody = zod.object({
+  imageDataUrl: zod.string().min(1).max(transcribeQuestionBodyImageDataUrlMax),
+  subject: zod.string().max(transcribeQuestionBodySubjectMax).optional(),
+});
+
+export const TranscribeQuestionResponse = zod.object({
+  transcription: zod.string(),
+  readable: zod.boolean(),
+});

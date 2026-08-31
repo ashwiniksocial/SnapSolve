@@ -23,3 +23,11 @@ FAILED: solver structurally blocked (no button). NEEDS_REVIEW: explicit checkbox
 - Scan OCR path ONLY. Practice, question bank, canonical metadata, pre-generated lessons all untouched.
 - Topic detection suppressed for non-HIGH states (no confident topic label shown).
 - Type Question tab: entirely unchanged (ocrConfidence set to 1, bypasses gate).
+
+## Photo Vision beta policy
+
+The active student Photo Scan path uses server-side vision for transcription only and bypasses Tesseract. A readable transcription always maps to `OCR_NEEDS_REVIEW`; unreadable, empty, or malformed output maps to `OCR_FAILED`. Vision must not map to `OCR_HIGH_CONFIDENCE` during the initial beta.
+
+**Why:** Real-world handwriting evidence is not yet sufficient to allow photographed text into the solver without an editable review and explicit student confirmation.
+
+**How to apply:** Keep image handling transient and server-side, constrain the model to transcription-only structured output, and guard the solve handler itself—not just the visible button—against failed or unconfirmed photo scans.

@@ -9,6 +9,7 @@ import devLessonRouter        from "./devLesson";
 import devEvaluateLessonRouter from "./devEvaluateLesson";
 import betaCheckRouter        from "./betaCheck";
 import betaFeedbackRouter     from "./betaFeedback";
+import transcribeQuestionRouter from "./transcribeQuestion";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(devLessonRouter);
 router.use(devEvaluateLessonRouter);
 router.use(betaCheckRouter);
 router.use(betaFeedbackRouter);
+router.use(transcribeQuestionRouter);
 
 export default router;

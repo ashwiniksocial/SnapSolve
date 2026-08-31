@@ -1,0 +1,399 @@
+SNAPSOLVE — PROMPT #035
+P0 SCAN — IMPLEMENT VISION QUESTION TRANSCRIPTION
+MODE: MINIMUM SAFE IMPLEMENTATION → VALIDATE → STOP
+BETA BLOCKER
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+cost-control, architecture-integrity, regression-prevention and
+Build → Validate → Freeze → Next rules.
+
+==================================================
+FOUNDER DECISION
+==================================================
+
+APPROVED:
+
+Replace the STUDENT-FACING Photo Scan transcription path with
+server-side OpenAI vision transcription.
+
+Use the existing OpenAI architecture.
+
+DO NOT create a second solver.
+DO NOT change the production teaching/solver model.
+DO NOT allow Vision to answer questions.
+DO NOT mass-refactor AI infrastructure.
+DO NOT publish yet.
+
+The purpose of Vision is ONLY:
+
+IMAGE → QUESTION TRANSCRIPTION
+
+==================================================
+CONFIRMED ARCHITECTURE
+==================================================
+
+Existing SnapSolve already uses:
+
+- server-side OPENAI_API_KEY
+- raw fetch
+- OpenAI Chat Completions
+- shared retryFetch()
+- gpt-4o-mini
+
+Reuse these.
+
+Do NOT install OpenAI SDK.
+Do NOT create another OpenAI client.
+Do NOT create a generic AI gateway/refactor for this task.
+
+==================================================
+REQUIRED FLOW
+==================================================
+
+CAMERA / GALLERY
+→ existing image resize/compression
+→ POST /api/transcribeQuestion
+→ server-side GPT-4o-mini vision transcription
+→ editable detected question
+→ MANDATORY student review
+→ explicit confirmation
+→ existing solver
+→ existing TeachingLesson
+
+Vision must NEVER directly produce the academic answer.
+
+Only STUDENT-CONFIRMED TEXT may enter the existing solver.
+
+==================================================
+VISION MODEL
+==================================================
+
+Use:
+
+gpt-4o-mini
+
+ONLY for vision transcription in this task.
+
+Do not change the model used by the existing solver.
+
+==================================================
+SERVER ROUTE
+==================================================
+
+Create the smallest dedicated route:
+
+POST /api/transcribeQuestion
+
+Reuse existing:
+
+retryFetch()
+OPENAI_API_KEY
+server error-handling conventions
+authentication/beta protections where applicable
+
+Do not modify the existing solveQuestion contract.
+
+Request should contain only what is required, approximately:
+
+{
+  imageDataUrl,
+  subject?
+}
+
+Subject is optional context only.
+
+It must NOT instruct the model to classify or solve the question.
+
+==================================================
+TRANSCRIPTION PROMPT
+==================================================
+
+Use a narrowly constrained instruction equivalent to:
+
+“Transcribe only the academic question visible in this image.
+
+Do not solve it.
+Do not explain it.
+Do not answer it.
+
+Preserve mathematical symbols and notation exactly where readable,
+including:
+< >
+=
++
+-
+fractions
+roots
+superscripts
+equations
+
+Ignore notebook lines, page numbers, margins and unrelated marks.
+
+Do not guess missing words or symbols.
+
+If the academic question cannot be read reliably, report it as unclear
+rather than inventing text.
+
+Return only the required structured JSON.”
+
+Keep the prompt short.
+
+==================================================
+RESPONSE CONTRACT
+==================================================
+
+Use the smallest robust structured response:
+
+{
+  "transcription": "...",
+  "readable": true
+}
+
+or
+
+{
+  "transcription": "",
+  "readable": false
+}
+
+Do NOT invent a numerical confidence score.
+
+==================================================
+MANDATORY TRUST POLICY
+==================================================
+
+IMPORTANT:
+
+For this first Beta implementation:
+
+readable:false
+→ OCR_FAILED
+
+readable:true
+→ OCR_NEEDS_REVIEW
+
+DO NOT classify Vision transcription as OCR_HIGH_CONFIDENCE yet.
+
+Therefore EVERY successfully transcribed photographed question initially
+requires student review and explicit confirmation.
+
+The student sees:
+
+“Please check the detected question before solving.”
+
+Editable transcription.
+
+Checkbox/explicit action equivalent to:
+
+“I've checked the question — it's correct.”
+
+Only after confirmation may Get AI Solution become enabled.
+
+This protects students while we collect real-world Vision evidence.
+
+==================================================
+FAILED STATE
+==================================================
+
+If readable:false OR the transcription is empty/malformed:
+
+Show:
+
+“We couldn't read this question clearly.”
+
+Actions:
+
+Retake Photo
+Choose Photo
+Type Question
+
+Solver must be structurally unreachable from this state.
+
+==================================================
+TESSERACT
+==================================================
+
+Do NOT run Tesseract before Vision in the student-facing Photo Scan path.
+
+Reason:
+
+- multiple real handwriting failures already confirmed
+- unnecessary double latency
+- duplicate transcription behaviour
+- incremental Vision cost is negligible relative to teaching-generation cost
+
+However:
+
+Do NOT aggressively delete Tesseract files/dependencies in this task.
+
+Simply remove/bypass Tesseract from the active Photo Scan transcription path.
+
+We can clean dead code later only after Vision is validated and frozen.
+
+==================================================
+IMAGE HANDLING
+==================================================
+
+Reuse existing resize/compression where safe.
+
+Target approximately:
+
+1024–1400 px maximum dimension
+JPEG quality approximately 0.85–0.90
+
+Do not aggressively downscale handwriting.
+
+SERVER MUST:
+
+- validate accepted image MIME types
+- validate maximum payload size
+- reject malformed data URLs
+- never log base64 image contents
+- never put image data in error messages
+- never write full-resolution image to PostgreSQL
+- never write full-resolution image to disk
+
+Process image transiently.
+
+Return only transcription metadata/text.
+
+OPENAI_API_KEY must remain server-only.
+
+==================================================
+COST CONTROL
+==================================================
+
+This task is authorized to make a SMALL number of Vision transcription calls
+for validation.
+
+Do NOT run the existing teaching solver for every test.
+
+Use no more than approximately 10 representative Vision transcription calls.
+
+At most ONE final end-to-end solver call may be made if necessary.
+
+Record:
+
+Vision calls
+Solver calls
+Estimated Vision cost
+Estimated solver cost
+
+==================================================
+MANDATORY VALIDATION
+==================================================
+
+Test approximately 10 representative question images.
+
+Prioritize REAL available images where possible.
+
+Include:
+
+1. The founder handwritten notebook question that just failed Tesseract.
+2. Handwritten Mathematics normal sentence.
+3. Handwritten inequality containing < and >.
+4. Handwritten equation.
+5. Fraction/root/superscript.
+6. Handwritten Science question.
+7. Handwritten IT sentence question.
+8. Printed textbook-style question.
+9. Slightly tilted/low-contrast image.
+10. Intentionally unreadable/poor image.
+
+For each report:
+
+Actual visible question
+Vision transcription
+Readable true/false
+Materially correct? YES/NO
+Math symbols preserved? YES/NO/N/A
+Student confirmation required? YES
+Solver allowed before confirmation? MUST BE NO
+Final result PASS/FAIL
+
+==================================================
+CRITICAL FOUNDER IMAGE TEST
+==================================================
+
+The founder's latest real handwritten image produced Tesseract text
+approximately:
+
+“e R- Unt Jia Laohelinalls ce en”
+
+Vision must be tested on this exact image if it remains accessible.
+
+Report the Vision transcription verbatim.
+
+This is the most important validation case.
+
+==================================================
+ACCEPTANCE GATE
+==================================================
+
+PASS requires:
+
+1. Vision materially outperforms Tesseract on real handwriting.
+2. Founder image is substantially correctly transcribed OR safely rejected.
+3. < and > survive where visibly readable.
+4. Common mathematical notation is substantially preserved.
+5. Vision NEVER solves the question.
+6. Every readable Vision transcription requires student confirmation.
+7. unreadable:false/failed state blocks solver.
+8. Student can edit transcription.
+9. Camera unchanged.
+10. Gallery unchanged.
+11. Type Question unchanged.
+12. Existing Solution pipeline unchanged.
+13. Practice unchanged.
+14. Frozen 20 lessons unchanged.
+15. Question bank/curriculum unchanged.
+16. TypeScript passes.
+17. Production build passes.
+
+==================================================
+DO NOT TOUCH
+==================================================
+
+Practice
+Question bank
+Curriculum
+Canonical metadata
+20 frozen generated lessons
+TeachingLesson architecture
+Solution.tsx unless absolutely required and proven by impact analysis
+Existing solver behaviour/model
+CameraCapture
+Beta feedback
+Clerk/auth
+Deployment configuration
+Navigation
+Progress
+Revision
+
+==================================================
+RETURN
+==================================================
+
+1. Exact files changed
+2. Exact active Photo Scan flow after change
+3. Confirmation Tesseract is bypassed in active Photo Scan
+4. Vision prompt used
+5. Image validation/security controls
+6. 10-case validation table
+7. Exact founder-image Vision transcription
+8. Vision calls made
+9. Solver calls made
+10. Estimated total validation cost
+11. TypeScript result
+12. Production build result
+13. Regression results
+14. Confirmation frozen systems untouched
+15. Remaining limitations
+
+DO NOT publish.
+DO NOT create another task automatically.
+STOP after validation.
+
+End exactly:
+
+VISION PHOTO TRANSCRIPTION IMPLEMENTED — READY FOR FOUNDER REAL-WORLD RETEST

@@ -5,9 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-export interface HealthStatus {
-  status: string;
-}
 
 export interface TranscribeQuestionInput {
   /**
@@ -17,9 +14,4 @@ export interface TranscribeQuestionInput {
   imageDataUrl: string;
   /** @maxLength 100 */
   subject?: string;
-}
-
-export interface TranscribeQuestionResult {
-  transcription: string;
-  readable: boolean;
 }

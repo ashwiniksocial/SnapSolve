@@ -70,7 +70,7 @@ export function compressImageToThumbnail(
   });
 }
 
-/** Resize an image File to max 1200px for OCR (better Tesseract accuracy). */
+/** Resize an image File for the server-side Photo Scan transcription request. */
 export function resizeForOCR(file: File, maxPx = 1400): Promise<Blob> {
   return new Promise((resolve) => {
     const img = new Image();
