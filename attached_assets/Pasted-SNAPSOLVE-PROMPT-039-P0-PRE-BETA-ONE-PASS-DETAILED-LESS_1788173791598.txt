@@ -1,0 +1,419 @@
+SNAPSOLVE — PROMPT #039
+P0 PRE-BETA — ONE-PASS DETAILED LESSON FEASIBILITY
+MODE: READ-ONLY ARCHITECTURE + EXISTING-EVIDENCE ANALYSIS
+DO NOT IMPLEMENT
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+teaching-quality priority, founder cost-control, architecture integrity,
+regression prevention and Build → Validate → Freeze → Next.
+
+==================================================
+CONFIRMED OPTION F RESULT
+==================================================
+
+Controlled identical-request A/B:
+
+Question:
+“Find distance between (0,0) and (3,4).”
+
+BASELINE API:
+48.067 sec
+
+OPTION F:
+42.270 sec
+
+Improvement:
+12.1%
+
+Tokens:
+37,428 → 34,741
+
+Measured cost:
+$0.008106 → $0.005813
+
+Teaching quality:
+No material regression.
+
+Final answer:
+5 units → 5 units.
+
+OPTION F is therefore accepted as a valid optimization.
+
+DO NOT revert it.
+
+However:
+
+42+ seconds remains unacceptable for normal SnapSolve student use.
+
+Further prompt compression alone is NOT the solution.
+
+==================================================
+IMPORTANT LATENCY FINDING
+==================================================
+
+Optimized call timings:
+
+Draft:
+15.230 sec
+
+Review 1:
+5.323 sec
+
+Improvement/full rewrite:
+15.599 sec
+
+Review 2:
+6.114 sec
+
+Therefore even eliminating all downstream review/rewrite latency would leave
+the current Draft itself around 15 seconds in this benchmark.
+
+The target remains:
+
+IDEAL:
+5–10 seconds
+
+and certainly not a normal 30–50 second experience.
+
+==================================================
+TERMINOLOGY CORRECTION
+==================================================
+
+Do NOT call section-level repair “Option B”.
+
+Prompt #037 defined Option B as:
+
+EARLY EXIT QUALITY REVIEW.
+
+Current implementation apparently ALREADY early-exits when Review 1 passes.
+
+Confirm this.
+
+Use the term:
+
+SECTION-LEVEL REPAIR
+
+for Replit's newly proposed repair-only-failed-sections approach.
+
+==================================================
+TASK
+==================================================
+
+Before building section-level repair, investigate whether the Detailed
+TeachingLesson pipeline can be reorganized around:
+
+ONE HIGH-QUALITY PRIMARY GENERATION
+
+followed by:
+
+DETERMINISTIC / LOCAL VALIDATION
+
+and AI repair/review ONLY when actually required.
+
+Do NOT implement anything.
+
+==================================================
+QUESTION 1 — WHY DID FIRST REVIEW SCORE ONLY 62/68?
+==================================================
+
+This is critical.
+
+The representative lesson remained below the existing 80-point threshold
+even AFTER improvement:
+
+Baseline reviewer score:
+62
+
+Optimized reviewer score:
+68
+
+Weak-student score:
+50
+
+Determine exactly WHY.
+
+List every failed scoring dimension and lost point.
+
+Separate:
+
+A. Genuine teaching-quality defect
+B. Schema/formatting requirement
+C. Generic rubric requirement not relevant to this question
+D. Missing optional section/content
+E. Reviewer/rubric artefact
+F. Actual factual/reasoning problem
+
+We must know whether the system is spending 25+ seconds repairing genuinely
+bad teaching or chasing an overly rigid quality rubric.
+
+==================================================
+QUESTION 2 — DOES THE DRAFT ACTUALLY NEED REPAIR?
+==================================================
+
+Take the optimized representative DRAFT before Review 1.
+
+Evaluate it against the actual SnapSolve Gold Standard and founder priorities:
+
+- factual correctness
+- final answer correctness
+- curriculum alignment
+- complete reasoning
+- weak-student understandability
+- step-by-step teaching
+- examiner/teacher suitability
+- no hallucination
+- no misleading simplification
+
+Report:
+
+WOULD A STUDENT HAVE RECEIVED A MATERIALLY GOOD/CORRECT LESSON
+FROM THE ORIGINAL DRAFT ALONE?
+
+YES / NO
+
+If NO:
+identify exact material defects.
+
+Do not count cosmetic/generic rubric omissions as material defects unless
+they genuinely affect learning.
+
+==================================================
+QUESTION 3 — CURRENT EARLY EXIT
+==================================================
+
+Confirm exact behavior:
+
+Draft
+→ Review 1
+
+If Review 1 score ≥ threshold:
+Does pipeline return immediately?
+
+If yes:
+confirm no Improvement and Review 2 calls occur.
+
+Using existing telemetry/logs if available, determine:
+
+How frequently does Review 1 PASS on existing generated lessons?
+
+If no reliable dataset exists:
+say UNKNOWN.
+
+Do NOT invent a percentage.
+
+==================================================
+QUESTION 4 — DETERMINISTIC VALIDATION
+==================================================
+
+Identify which current quality requirements can be checked locally without
+another OpenAI call.
+
+Examples to investigate:
+
+TeachingLesson schema completeness
+required sections
+non-empty final answer
+step presence
+hint count
+example presence
+practice question presence
+section length bounds
+duplicate/empty sections
+malformed JSON
+confidence field validity
+required examiner guidance
+other structural requirements
+
+Separate:
+
+DETERMINISTICALLY VALIDATABLE
+
+from:
+
+REQUIRES SEMANTIC/AI JUDGMENT
+
+Do not pretend factual correctness can be fully established through simple
+local checks.
+
+==================================================
+QUESTION 5 — ONE-PASS PRIMARY GENERATION
+==================================================
+
+Assess whether the existing Draft prompt can itself be strengthened/structured
+so it directly generates the expected FINAL Detailed TeachingLesson.
+
+The goal is NOT to make the prompt much larger.
+
+Investigate whether Review findings repeatedly reveal predictable defects
+that should simply be prevented in the primary generation prompt/schema.
+
+If recurring defects exist:
+list them.
+
+Determine whether fixing those at generation time could substantially increase
+first-pass acceptance.
+
+==================================================
+QUESTION 6 — FASTEST SAFE ARCHITECTURES
+==================================================
+
+Compare ONLY:
+
+A. CURRENT OPTION-F PIPELINE
+Draft → Review → Improve → Review
+
+B. ONE PRIMARY GENERATION
+→ deterministic validation
+→ return
+
+C. ONE PRIMARY GENERATION
+→ deterministic validation
+→ lightweight semantic validator
+→ return if PASS
+→ repair only if FAIL
+
+D. ONE PRIMARY GENERATION
+→ deterministic validation
+→ section-level repair only when required
+
+For each report:
+
+Typical OpenAI calls
+Worst-case OpenAI calls
+Expected first-content latency
+Expected completed-lesson latency
+Expected cost
+Teaching-quality risk
+Implementation complexity
+Regression risk
+
+==================================================
+QUESTION 7 — 5–10 SECOND REALITY CHECK
+==================================================
+
+Current Draft itself measured 15.230 sec.
+
+Determine what is driving Draft latency:
+
+- model time-to-first-token
+- huge input context
+- huge output
+- max output-token configuration
+- non-streamed structured response
+- prompt size
+- generated Detailed lesson size
+- network/API overhead
+- other
+
+Report actual Draft:
+
+input tokens
+output tokens
+approximate prompt/context composition
+student-facing lesson output size
+
+Determine what can realistically reduce Draft latency WITHOUT reducing
+student-facing teaching quality.
+
+Do not promise 5–10 sec if architecture/model behavior cannot support it.
+
+==================================================
+QUESTION 8 — STREAMING / PERCEIVED LATENCY
+==================================================
+
+Current Detailed flow is reported as non-progressive:
+first useful content arrives only with the completed lesson.
+
+Investigate whether existing streaming infrastructure can safely make useful
+lesson sections visible while the primary lesson is being generated.
+
+IMPORTANT:
+
+Do NOT implement streaming changes.
+
+Determine whether:
+
+Key Concept
+Question Understanding
+Step-by-Step
+
+or another stable ordered subset could become visible progressively without
+breaking the TeachingLesson contract or showing content that later gets
+invalidated.
+
+Separate:
+
+ACTUAL COMPLETION LATENCY
+
+from:
+
+PERCEIVED STUDENT WAIT TIME.
+
+==================================================
+DO NOT TOUCH
+==================================================
+
+Vision
+Scan
+Camera
+OCR trust gate
+Practice
+question bank
+curriculum
+canonical metadata
+20 frozen pre-generated lessons
+navigation
+Progress
+Revision
+auth
+beta feedback
+deployment
+
+Do NOT modify Option F.
+Do NOT modify prompts.
+Do NOT modify solver.
+Do NOT change model.
+Do NOT create section merging.
+Do NOT publish.
+
+==================================================
+COST CONTROL
+==================================================
+
+Use existing code, benchmark output, telemetry and stored logs first.
+
+AI/API calls:
+0 unless absolutely unavoidable.
+
+If evidence is unavailable:
+report UNKNOWN.
+
+Do not spend money merely to produce a prettier diagnostic.
+
+==================================================
+RETURN
+==================================================
+
+1. Why Review 1 scored below 80
+2. Why final Review 2 still scored only 68
+3. Whether original Draft was materially correct/good enough
+4. Exact material defects in Draft, if any
+5. Confirmation of current early-exit behavior
+6. Known first-review pass frequency or UNKNOWN
+7. Deterministically validatable quality checks
+8. Checks that genuinely require semantic judgment
+9. Recurring defects that could be prevented in primary generation
+10. Comparison A/B/C/D
+11. Exact Draft latency root cause
+12. Realistic minimum generation latency with current model/architecture
+13. Streaming/perceived-latency opportunity
+14. Recommended smallest NEXT optimization
+15. Whether section-level repair is actually justified
+16. Files that future implementation would affect
+17. Files changed = 0
+18. AI/API calls and cost
+19. Confirmation Vision/Scan and frozen systems untouched
+
+End exactly:
+
+ONE-PASS DETAILED LESSON FEASIBILITY COMPLETE — NO CHANGES MADE — AWAITING FOUNDER DECISION
