@@ -69,6 +69,15 @@ its teaching-quality threshold. A lesson can be MATERIAL_PASS while needing poli
 If the lesson is safe, return an empty issues array and list polish opportunities
 separately. Each material issue must cite concise evidence from the lesson.
 
+MATHEMATICAL EQUIVALENCE:
+- Inspect the adjacent reasoning steps before declaring an intermediate expression incorrect.
+- Unsimplified and simplified fractions may both be correct (for example, 90/200 = 9/20).
+- Decimal, fraction, percentage, reordered commutative, and algebraically transformed forms
+  are not contradictions when the transformation preserves the same value.
+- Verify the transformation itself. Do not assume two forms are equivalent merely because
+  a later final answer is correct.
+- A genuinely invalid transformation remains a material defect (for example, 90/200 ≠ 9/10).
+
 Return only this JSON shape:
 {
   "materialSafe": boolean,

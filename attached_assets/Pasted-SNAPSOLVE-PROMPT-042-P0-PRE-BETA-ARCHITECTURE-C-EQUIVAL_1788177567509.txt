@@ -1,0 +1,411 @@
+SNAPSOLVE — PROMPT #042
+P0 PRE-BETA — ARCHITECTURE C EQUIVALENT-MATH FALSE-FAIL FIX + FINAL VALIDATION
+MODE: SURGICAL SHADOW FIX → TARGETED RETEST → DECISION
+DO NOT SWITCH PRODUCTION
+
+Apply ALL existing SnapSolve PrePromptConditions, Build Impact Gate,
+teaching-quality priority, weak-student priority, cost-control,
+architecture-integrity, regression-prevention and
+Build → Validate → Freeze → Next rules.
+
+==================================================
+CONFIRMED TASK #12 RESULT
+==================================================
+
+Architecture C shadow validation is complete.
+
+The shadow architecture consists of:
+
+Primary Detailed lesson
+→ zero-AI deterministic structural validation
+→ narrow material-defect semantic validation
+
+Production routing remains unchanged.
+
+Important observed results:
+
+1. C2 conceptual case:
+   Shadow validator correctly allowed the lesson despite broader existing
+   reviewer polish/enhancement concerns.
+
+2. M6 numerical case:
+   Shadow validator produced a FALSE FAIL.
+
+   It treated the intermediate fraction:
+
+   90/200
+
+   as erroneous even though the following reasoning correctly simplified it to:
+
+   9/20
+
+   These expressions are mathematically equivalent.
+
+3. No prompt tuning was performed after observing the result.
+
+4. Retained Detailed benchmark evidence contained:
+   - M4 proof
+   - M6 numerical
+   - C2 conceptual
+
+5. No retained Easy Detailed case was available.
+
+6. API typecheck/build passed.
+
+7. A pre-existing unrelated scripts type error prevented workspace-wide
+   typecheck and must NOT be repaired in this task.
+
+8. Production solve/review/improve behavior was not changed.
+
+==================================================
+FOUNDER DECISION
+==================================================
+
+Architecture C remains a candidate.
+
+DO NOT switch it into production yet.
+
+Perform ONLY TWO follow-ups:
+
+A. Fix the confirmed equivalent-mathematics FALSE FAIL.
+
+B. Add ONE Easy Detailed validation case to complete minimum coverage.
+
+No broader architecture work is authorized.
+
+==================================================
+PART A — EQUIVALENT-MATH FALSE-FAIL
+==================================================
+
+Investigate the exact reason the semantic validator classified:
+
+90/200
+
+as inconsistent with:
+
+9/20.
+
+These are equivalent because:
+
+90/200 = 9/20.
+
+The validator must distinguish:
+
+MATHEMATICALLY EQUIVALENT REPRESENTATIONS
+
+from:
+
+ACTUAL MATHEMATICAL CONTRADICTIONS.
+
+Examples of equivalence may include:
+
+- reducible vs simplified fractions
+- equivalent fractions
+- decimal vs fraction representation
+- percentage vs decimal/fraction
+- algebraically equivalent expressions
+- reordered commutative expressions
+- equivalent exact forms where appropriate
+
+IMPORTANT:
+
+Do NOT build a symbolic mathematics engine.
+
+Do NOT introduce a second solver.
+
+Do NOT create broad mathematical normalization architecture unless existing
+utilities already safely support it.
+
+Use the smallest safe change.
+
+==================================================
+PREFERRED FIX ORDER
+==================================================
+
+Inspect why the semantic validator made the mistake.
+
+Prefer, in order:
+
+1. Clarify the lightweight semantic-validator instruction that intermediate
+   and final mathematical expressions may be equivalent after valid
+   simplification/transformation.
+
+2. Require the validator to inspect adjacent reasoning steps before declaring
+   an intermediate expression incorrect.
+
+3. If an existing safe/local numeric equivalence utility already exists,
+   reuse it where appropriate.
+
+Do NOT create a large new equivalence subsystem for this one defect.
+
+==================================================
+SAFETY RULE
+==================================================
+
+The fix must NOT make the validator permissive toward genuinely incorrect
+mathematics.
+
+Examples:
+
+90/200 → 9/20
+must NOT fail.
+
+But:
+
+90/200 → 9/10
+must still fail.
+
+Likewise, a later correct answer must not automatically excuse an invalid
+intermediate reasoning step.
+
+The validator must distinguish:
+
+VALID TRANSFORMATION
+
+from:
+
+WRONG INTERMEDIATE REASONING.
+
+==================================================
+TARGETED M6 RETEST
+==================================================
+
+Retest the SAME retained M6 lesson.
+
+Expected result:
+
+The equivalent fraction must no longer trigger MATERIAL_FAIL.
+
+Report whether any OTHER genuine material defect remains.
+
+Do not regenerate M6 if the retained lesson is sufficient.
+
+==================================================
+NEGATIVE CONTROL
+==================================================
+
+Create/use the smallest diagnostic-only negative control derived from M6.
+
+Change only the relevant mathematical transformation so it becomes genuinely
+incorrect.
+
+Example conceptually:
+
+90/200 → 9/10
+
+or another clearly non-equivalent transformation.
+
+The semantic validator MUST classify this as:
+
+MATERIAL_FAIL.
+
+Do NOT send this synthetic corrupted lesson anywhere in production.
+
+==================================================
+PART B — ONE EASY DETAILED CASE
+==================================================
+
+Task #12 lacked an Easy Detailed benchmark.
+
+Add exactly ONE Easy Detailed case.
+
+Prefer an existing curriculum-aligned question already available in SnapSolve.
+
+Use a simple question where:
+
+- correctness is unambiguous
+- reasoning is short
+- weak-student explanation still matters
+
+Do not create a broad benchmark.
+
+Run:
+
+Primary Detailed generation
+→ deterministic gate
+→ lightweight semantic validator
+
+Do NOT run production improvement/rewrite unless required solely for existing
+comparison evidence.
+
+==================================================
+EASY CASE REPORT
+==================================================
+
+Report:
+
+Primary generation latency
+Primary input/output tokens
+Structural gate result
+Structural latency
+Semantic validator result
+Semantic validator latency
+Semantic validator input/output tokens
+Material issues
+Whether lesson was genuinely safe/good enough
+FALSE PASS?
+FALSE FAIL?
+
+==================================================
+FINAL ARCHITECTURE C DECISION GATE
+==================================================
+
+After M6 + negative control + Easy case, classify Architecture C:
+
+READY_FOR_CONTROLLED_PRODUCTION_A_B
+
+or
+
+NOT_READY
+
+READY requires:
+
+- ZERO confirmed false passes across available shadow validation
+- M6 equivalent-math false fail corrected
+- corrupted/non-equivalent negative control correctly fails
+- Easy lesson correctly classified
+- C2 remains correctly classified
+- deterministic gate remains intact
+- semantic validator remains narrow
+- no weakening of correctness/reasoning protection
+- no production regression
+- latency remains materially below current four-call pipeline
+
+Do NOT require zero false fails forever.
+
+False fails cost latency.
+
+False passes risk teaching incorrect material.
+
+False-pass prevention therefore remains the hard safety gate.
+
+==================================================
+DO NOT IMPLEMENT
+==================================================
+
+Do NOT:
+
+- switch Architecture C to production
+- implement section-level repair
+- implement streaming
+- change production reviewer
+- change production improver
+- change production model
+- change TeachingLesson schema
+- alter Option F
+- alter existing early exit
+- redesign mathematical reasoning
+- build a symbolic algebra engine
+- run broad benchmarks
+- publish
+
+==================================================
+PROTECTED SYSTEMS
+==================================================
+
+Do NOT TOUCH:
+
+Vision
+Scan
+Camera
+OCR trust gate
+Practice
+question bank
+curriculum
+canonical metadata
+frozen generated lessons
+navigation
+Progress
+Revision
+auth
+beta feedback
+deployment
+
+==================================================
+COST CONTROL
+==================================================
+
+Reuse retained M6 and C2 evidence.
+
+New generation:
+
+MAXIMUM 1
+for the missing Easy Detailed case.
+
+Use minimum validator calls necessary for:
+
+- corrected M6
+- corrupted M6 negative control
+- Easy case
+
+Do not rerun expensive production reviewer/improver calls unless existing
+evidence is genuinely insufficient.
+
+Report exact:
+
+AI calls
+input tokens
+output tokens
+cost
+
+==================================================
+VALIDATION
+==================================================
+
+Run:
+
+API TypeScript check
+API production build
+
+Run broader checks only if required by files actually changed.
+
+Do NOT fix the unrelated pre-existing scripts type error.
+
+Confirm shadow development route remains explicitly opt-in and unavailable
+under normal production behavior.
+
+==================================================
+RETURN
+==================================================
+
+1. Root cause of M6 false fail
+2. Exact files changed
+3. Exact surgical fix
+4. Confirmation no symbolic-math subsystem created
+5. M6 before result
+6. M6 after result
+7. Negative-control result
+8. Easy question selected
+9. Easy primary-generation latency
+10. Easy validator latency
+11. Easy total shadow latency
+12. Easy token/cost profile
+13. Easy material-safety assessment
+14. Updated FALSE PASS count
+15. Updated FALSE FAIL count
+16. C2 status unchanged
+17. Deterministic gate status
+18. Semantic validator scope unchanged/narrow
+19. API TypeScript result
+20. API production-build result
+21. Diagnostic AI/API calls and cost
+22. Production files/routing changed?
+23. Confirmation section repair NOT implemented
+24. Confirmation streaming NOT implemented
+25. Confirmation protected systems untouched
+26. Final classification:
+
+READY_FOR_CONTROLLED_PRODUCTION_A_B
+
+or
+
+NOT_READY
+
+STOP.
+
+DO NOT switch production.
+DO NOT publish.
+
+End exactly:
+
+ARCHITECTURE C TARGETED VALIDATION COMPLETE — AWAITING FOUNDER DECISION

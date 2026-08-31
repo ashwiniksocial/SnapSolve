@@ -16,7 +16,9 @@
 
 import { reviewLesson }           from "../services/teachingQuality/lessonReviewer";
 import { parseLessonResponse }    from "../lib/lessonTypes";
-import { extractUsage, estimateCostUsd } from "../lib/aiCost";
+import { extractUsage, estimateCostUsd, type UsageSnapshot } from "../lib/aiCost";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 // ─── Models under test ────────────────────────────────────────────────────────
 
@@ -489,6 +491,55 @@ function extractJson(raw: string): string {
   return s;
 }
 
+/**
+ * Generate exactly one Detailed benchmark draft without invoking the production
+ * quality pipeline. Used by targeted diagnostic benchmarks only.
+ */
+export async function generateDetailedBenchmarkDraft(
+  subject: string,
+  question: string,
+  apiKey: string,
+): Promise<{
+  rawLesson: unknown;
+  rawOutput: string;
+  usage: UsageSnapshot;
+  latencyMs: number;
+}> {
+  const model = MODELS[0];
+  const system = (PREAMBLES[subject] ?? PREAMBLES["Computer Science"]) + "\n\n" + JSON_SCHEMA_DETAILED;
+  const startedAt = Date.now();
+  const response = await fetch(OPENAI_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: model.name,
+      temperature: GENERATION_TEMP,
+      max_tokens: 2800,
+      response_format: { type: "json_object" },
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: `Subject: ${subject}\n\nQuestion:\n${question}` },
+      ],
+    }),
+  });
+  const body = (await response.json()) as {
+    choices?: Array<{ message?: { content?: unknown } }>;
+  };
+  if (!response.ok) throw new Error(`detailed_benchmark_generation_${response.status}`);
+  const rawOutput = typeof body.choices?.[0]?.message?.content === "string"
+    ? body.choices[0].message.content
+    : "{}";
+  return {
+    rawLesson: JSON.parse(extractJson(rawOutput)),
+    rawOutput,
+    usage: extractUsage(body, model.name),
+    latencyMs: Date.now() - startedAt,
+  };
+}
+
 // ─── Schema validation ────────────────────────────────────────────────────────
 
 function validateSchema(obj: unknown): boolean {
@@ -781,4 +832,6 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  main().catch(console.error);
+}
