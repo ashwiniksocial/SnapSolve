@@ -1,0 +1,38 @@
+{
+  "retainedOnly": true,
+  "primaryGenerationCallsDuringMeasurement": 0,
+  "questionId": "M6",
+  "architecturePath": "option_f",
+  "totalLatencyMs": 51430,
+  "aiCalls": 4,
+  "usage": {
+    "model": "gpt-4o-mini-2024-07-18",
+    "promptTokens": 13627,
+    "completionTokens": 4972,
+    "cachedTokens": 7296,
+    "totalTokens": 18599,
+    "estimatedCostUsd": 0.004480049999999999
+  },
+  "quality": {
+    "latencyMs": 34084,
+    "reviewerCalls": 2,
+    "improverCalls": 1,
+    "cyclesRun": 2,
+    "passed": false,
+    "reviewLatencies": [
+      7134,
+      6236
+    ],
+    "improveLatencies": [
+      20712
+    ],
+    "usage": {
+      "model": "gpt-4o-mini-2024-07-18",
+      "promptTokens": 12443,
+      "completionTokens": 2946,
+      "cachedTokens": 6144,
+      "totalTokens": 15389,
+      "estimatedCostUsd": 0.00317325
+    }
+  }
+}

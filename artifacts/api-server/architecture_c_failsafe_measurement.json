@@ -1,0 +1,78 @@
+{
+  "retainedOnly": true,
+  "primaryGenerationCallsDuringMeasurement": 0,
+  "fastPass": {
+    "questionId": "M6",
+    "architecturePath": "architecture_c_fast_pass",
+    "totalLatencyMs": 19863,
+    "aiCalls": 2,
+    "usage": {
+      "model": "gpt-4o-mini-2024-07-18",
+      "promptTokens": 3535,
+      "completionTokens": 2106,
+      "cachedTokens": 1152,
+      "totalTokens": 5641,
+      "estimatedCostUsd": 0.00170745
+    },
+    "validator": {
+      "structuralLatencyMs": 1,
+      "semanticLatencyMs": 2516
+    },
+    "reviewerCalls": 0,
+    "improverCalls": 0
+  },
+  "fallback": {
+    "questionId": "C2",
+    "architecturePath": "architecture_c_fallback",
+    "totalLatencyMs": 48672,
+    "aiCalls": 5,
+    "usage": {
+      "model": "gpt-4o-mini-2024-07-18",
+      "promptTokens": 15340,
+      "completionTokens": 5263,
+      "cachedTokens": 4096,
+      "totalTokens": 20603,
+      "estimatedCostUsd": 0.0051516
+    },
+    "validator": {
+      "structuralLatencyMs": 1,
+      "semanticLatencyMs": 2935
+    },
+    "quality": {
+      "latencyMs": 29070,
+      "reviewerCalls": 2,
+      "improverCalls": 1,
+      "cyclesRun": 2,
+      "passed": false,
+      "reviewLatencies": [
+        5150,
+        6910
+      ],
+      "improveLatencies": [
+        17010
+      ],
+      "usage": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "promptTokens": 11956,
+        "completionTokens": 3190,
+        "cachedTokens": 3072,
+        "totalTokens": 15146,
+        "estimatedCostUsd": 0.003477
+      }
+    }
+  },
+  "optionFComparableBaseline": {
+    "questionId": "C2",
+    "note": "Same retained primary plus the same measured Option-F quality pipeline, excluding only the Architecture C validator overhead.",
+    "totalLatencyMs": 45736,
+    "aiCalls": 4,
+    "usage": {
+      "model": "gpt-4o-mini-2024-07-18",
+      "promptTokens": 13122,
+      "completionTokens": 5068,
+      "cachedTokens": 4096,
+      "totalTokens": 18190,
+      "estimatedCostUsd": 0.0047019
+    }
+  }
+}

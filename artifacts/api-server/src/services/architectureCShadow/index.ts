@@ -1,9 +1,10 @@
 /**
  * Architecture C shadow validation — diagnostic-only orchestration.
  *
- * This module is intentionally not imported by solveQuestion or the production
- * Teaching Quality Pipeline. It validates a raw Detailed result, runs the
- * semantic call only after a structural pass, and never repairs or routes it.
+ * This module validates a raw Detailed result, runs the semantic call only
+ * after a structural pass, and never repairs or routes it. The default-off
+ * Architecture C fast-path controller may consume its report to choose whether
+ * the existing Option-F quality pipeline still needs to run.
  */
 
 import { validateMaterialSafety, type MaterialValidationResult } from "./materialValidator";
@@ -32,13 +33,17 @@ export interface ArchitectureCShadowReport {
   productionRoutingChanged: false;
 }
 
+export interface ArchitectureCShadowOptions {
+  subject?: string;
+  question?: string;
+  apiKey?: string;
+  timeoutMs?: number;
+  onMaterialValidationStart?: () => void;
+}
+
 export async function runArchitectureCShadow(
   rawLesson: unknown,
-  options: {
-    subject?: string;
-    question?: string;
-    apiKey?: string;
-  } = {},
+  options: ArchitectureCShadowOptions = {},
 ): Promise<ArchitectureCShadowReport> {
   const startedAt = Date.now();
   const structural = validateRawDetailedLesson(rawLesson);
@@ -93,11 +98,13 @@ export async function runArchitectureCShadow(
     };
   }
 
+  options.onMaterialValidationStart?.();
   const material = await validateMaterialSafety(
     structural.normalizedLesson,
     options.subject ?? "Unknown",
     options.question ?? "Unknown question",
     options.apiKey,
+    options.timeoutMs,
   );
   return {
     architecture: "C-shadow",

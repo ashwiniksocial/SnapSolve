@@ -27,6 +27,13 @@ import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
 import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
 import { LessonStreamExtractor } from "../lib/lessonStreamExtractor";
+import {
+  evaluateArchitectureCFastPath,
+  isArchitectureCFastPathEligible,
+  isArchitectureCFastPathEnabled,
+  type ArchitecturePath,
+  type GateTelemetryStatus,
+} from "../services/architectureCFastPath";
 
 const router = Router();
 
@@ -1182,7 +1189,7 @@ async function generateDraft(
   blueprint?:      BlueprintInjection,
   timeoutMs?:      number,
   intent?:         SolveIntent,
-): Promise<{ lesson: LessonResponse; usage: UsageSnapshot; latencyMs: number }> {
+): Promise<{ lesson: LessonResponse; rawLesson: unknown; usage: UsageSnapshot; latencyMs: number }> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
@@ -1230,7 +1237,12 @@ async function generateDraft(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = JSON.parse(content) as any;
-  return { lesson: parseLessonResponse(p), usage, latencyMs: Date.now() - callStart };
+  return {
+    lesson: parseLessonResponse(p),
+    rawLesson: p,
+    usage,
+    latencyMs: Date.now() - callStart,
+  };
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -1250,6 +1262,8 @@ router.get("/solveQuestion/progress/:requestId", (req, res) => {
 // Total time budget for the entire request (ms).
 // Must be comfortably below the 120 s frontend AbortController timeout.
 const REQUEST_BUDGET_MS = 70_000;
+const OPTION_F_MIN_START_BUDGET_MS = 5_000;
+const ARCHITECTURE_C_OPTION_F_RESERVE_MS = 35_000;
 
 router.post("/solveQuestion", async (req, res) => {
   const requestStart = Date.now();
@@ -1333,6 +1347,9 @@ router.post("/solveQuestion", async (req, res) => {
         requestType:      "solve",
         intent:           intent ?? null,
         generationMode:   mode,
+        architecturePath:  "option_f",
+        structuralGate:    "SKIPPED",
+        materialValidator: "SKIPPED",
         cacheStatus:      "hit",
         ocrUsed:          ocrUsed,
         plannerCalls:     0,
@@ -1397,6 +1414,7 @@ router.post("/solveQuestion", async (req, res) => {
   }, "[PIPELINE:5] START — calling OpenAI for draft lesson generation");
   setProgress(reqId, "draft_start", "Writing your lesson…", 38);
   let draft: LessonResponse;
+  let rawDraft: unknown;
   let draftUsage: UsageSnapshot = zeroUsage(MODEL);
   let draftLatencyMs = 0;
   // Standard mode: compute the remaining wall-clock budget (subtract blueprint + cache time).
@@ -1408,6 +1426,7 @@ router.post("/solveQuestion", async (req, res) => {
   try {
     const draftResult = await generateDraft(subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent);
     draft      = draftResult.lesson;
+    rawDraft   = draftResult.rawLesson;
     draftUsage = draftResult.usage;
     draftLatencyMs = draftResult.latencyMs;
 
@@ -1460,6 +1479,13 @@ router.post("/solveQuestion", async (req, res) => {
   // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
   //    Standard and Compact modes skip this for faster responses.
   let finalLesson = draft;
+  let architecturePath: ArchitecturePath = "option_f";
+  let structuralGate: GateTelemetryStatus = "SKIPPED";
+  let materialValidator: GateTelemetryStatus = "SKIPPED";
+  let architectureCFallbackReason: string | undefined;
+  let validatorCalls = 0;
+  let validatorLatencyMs = 0;
+  let validatorUsage: UsageSnapshot = zeroUsage(MODEL);
   let qualityUsage: UsageSnapshot = zeroUsage(MODEL);
   let reviewerCalls = 0;
   let improverCalls = 0;
@@ -1469,15 +1495,54 @@ router.post("/solveQuestion", async (req, res) => {
   let reviewUsage: UsageSnapshot[] = [];
   let improveUsage: UsageSnapshot[] = [];
 
-  if (generationMode !== "basic") {
+  const architectureCEnabled = isArchitectureCFastPathEnabled();
+  const architectureCEligible = isArchitectureCFastPathEligible({ generationMode, intent });
+  const validatorTimeoutMs = architectureCEnabled && architectureCEligible
+    ? REQUEST_BUDGET_MS - (Date.now() - requestStart) - ARCHITECTURE_C_OPTION_F_RESERVE_MS
+    : undefined;
+  const architectureCDecision = await evaluateArchitectureCFastPath({
+    enabled: architectureCEnabled,
+    eligible: architectureCEligible,
+    rawLesson: rawDraft,
+    subject: subj,
+    question: q,
+    apiKey,
+    validatorTimeoutMs,
+  });
+  architecturePath = architectureCDecision.architecturePath;
+  structuralGate = architectureCDecision.structuralGate;
+  materialValidator = architectureCDecision.materialValidator;
+  architectureCFallbackReason = architectureCDecision.fallbackReason;
+  validatorCalls = architectureCDecision.validatorCalls;
+  validatorLatencyMs = architectureCDecision.validatorLatencyMs;
+  validatorUsage = architectureCDecision.validatorUsage;
+
+  if (architecturePath === "architecture_c_fast_pass") {
+    finalLesson = architectureCDecision.lesson ?? draft;
+    setProgress(reqId, "quality_fast_pass", "Lesson safety check passed!", 92);
+    req.log.info({
+      subject: subj,
+      structuralGate,
+      materialValidator,
+      validatorLatencyMs,
+    }, "[PIPELINE:6] SKIP — Architecture C fast pass");
+  } else if (generationMode !== "basic") {
     // Standard: plan + draft only (~25–30 s). Compact: draft only (~10–15 s).
     req.log.info({ subject: subj, mode }, "[PIPELINE:6] SKIP — Quality pipeline runs only for Detailed mode");
   } else {
+    if (architecturePath === "architecture_c_fallback") {
+      req.log.info({
+        subject: subj,
+        structuralGate,
+        materialValidator,
+        fallbackReason: architectureCFallbackReason,
+      }, "[PIPELINE:6] Architecture C fallback — continuing with same draft in Option F");
+    }
     req.log.info({ subject: subj, topic: draft.topic }, "[PIPELINE:6] START — Teaching Quality Pipeline (review + improve)");
 
     const qualityBudgetMs = REQUEST_BUDGET_MS - (Date.now() - requestStart);
 
-    if (qualityBudgetMs < 5_000) {
+    if (qualityBudgetMs < OPTION_F_MIN_START_BUDGET_MS) {
       req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] SKIP — insufficient budget remaining; returning draft");
     } else {
       try {
@@ -1542,19 +1607,23 @@ router.post("/solveQuestion", async (req, res) => {
   // 8. Emit single structured telemetry summary for this solve request.
   //    Raw token counts are always stored — estimatedCostUsd uses pricing from aiCost.ts.
   //    No question text, answer text, or student content is included.
-  const totalUsage     = addUsage(draftUsage, qualityUsage);
-  const totalAiCalls   = (draft !== finalLesson || generationMode === "basic" ? 1 : 1)
-                         + reviewerCalls + improverCalls;
+  const totalUsage     = addUsage(addUsage(draftUsage, validatorUsage), qualityUsage);
+  const totalAiCalls   = 1 + validatorCalls + reviewerCalls + improverCalls;
   req.log.info({
     requestId:        reqId,
     requestType:      "solve",
     intent:           intent ?? null,
     generationMode,
+    architecturePath,
+    structuralGate,
+    materialValidator,
+    architectureCFallbackReason: architectureCFallbackReason ?? null,
     cacheStatus:      (!ctx && !intent) ? "miss" : (intent ? "skip_intent" : "skip_personalised"),
     ocrUsed,
     // per-call-type counts (planner is always 0 — deterministic, no AI call)
     plannerCalls:     0,
     draftCalls:       1,
+    validatorCalls,
     reviewerCalls,
     improverCalls,
     totalAiCalls,
@@ -1565,15 +1634,18 @@ router.post("/solveQuestion", async (req, res) => {
     totalTokens:      totalUsage.totalTokens,
     // per-call-type token breakdown for detailed analysis
     draftTokens:      { prompt: draftUsage.promptTokens, completion: draftUsage.completionTokens },
+    validatorTokens:  { prompt: validatorUsage.promptTokens, completion: validatorUsage.completionTokens },
     qualityTokens:    { prompt: qualityUsage.promptTokens, completion: qualityUsage.completionTokens },
     qualityCyclesRun,
     callLatencies: {
       draft:   draftLatencyMs,
+      validator: validatorLatencyMs,
       review:  reviewLatencies,
       improve: improveLatencies,
     },
     callUsage: {
       draft:   draftUsage,
+      validator: validatorUsage,
       review:  reviewUsage,
       improve: improveUsage,
     },

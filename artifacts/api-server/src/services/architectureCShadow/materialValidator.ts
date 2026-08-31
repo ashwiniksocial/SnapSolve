@@ -154,10 +154,14 @@ export async function validateMaterialSafety(
   subject: string,
   question: string,
   apiKey: string,
+  timeoutMs: number = VALIDATOR_TIMEOUT,
 ): Promise<MaterialValidationResult> {
   const startedAt = Date.now();
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), VALIDATOR_TIMEOUT);
+  const timer = setTimeout(
+    () => controller.abort(),
+    Math.max(1, Math.min(timeoutMs, VALIDATOR_TIMEOUT)),
+  );
   let usage = zeroUsage(MODEL);
 
   try {
