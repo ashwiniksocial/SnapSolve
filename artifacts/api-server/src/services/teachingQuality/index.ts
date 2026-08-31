@@ -43,6 +43,15 @@ export interface QualityPipelineResult {
   reviewerCalls:  number;
   /** Number of improveLesson AI calls made. */
   improverCalls:  number;
+  /** Wall-clock duration of each successful quality call, in execution order. */
+  callLatencies: {
+    review:  number[];
+    improve: number[];
+  };
+  callUsage: {
+    review:  UsageSnapshot[];
+    improve: UsageSnapshot[];
+  };
 }
 
 // ─── Orchestrator ─────────────────────────────────────────────────────────────
@@ -58,6 +67,8 @@ export async function runQualityPipeline(
   let usageTotal    = zeroUsage();
   let reviewerCalls = 0;
   let improverCalls = 0;
+  const callLatencies = { review: [] as number[], improve: [] as number[] };
+  const callUsage = { review: [] as UsageSnapshot[], improve: [] as UsageSnapshot[] };
 
   for (let cycle = 1; cycle <= MAX_REVIEW_CYCLES; cycle++) {
     // Emit progress: review starts at 65, 75, 85 for cycles 1, 2, 3
@@ -72,6 +83,8 @@ export async function runQualityPipeline(
       report        = result.report;
       usageTotal    = addUsage(usageTotal, result.usage);
       reviewerCalls += 1;
+      callLatencies.review.push(result.latencyMs);
+      callUsage.review.push(result.usage);
     } catch {
       // Review call failed — stop pipeline, return best lesson so far
       break;
@@ -101,6 +114,8 @@ export async function runQualityPipeline(
         usageTotal,
         reviewerCalls,
         improverCalls,
+        callLatencies,
+        callUsage,
       };
     }
 
@@ -112,6 +127,8 @@ export async function runQualityPipeline(
         current          = improved.lesson;
         usageTotal       = addUsage(usageTotal, improved.usage);
         improverCalls   += 1;
+        callLatencies.improve.push(improved.latencyMs);
+        callUsage.improve.push(improved.usage);
         cycleEntry.improved = true;
       } catch {
         // Improve call failed — stop pipeline, return best lesson so far
@@ -133,5 +150,7 @@ export async function runQualityPipeline(
     usageTotal,
     reviewerCalls,
     improverCalls,
+    callLatencies,
+    callUsage,
   };
 }

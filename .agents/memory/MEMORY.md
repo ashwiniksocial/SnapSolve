@@ -33,3 +33,4 @@
 - [Offline question-bank audit](offline-question-bank-audit.md) — use source discovery for Node audits; direct browser-bank imports can fail on mixed legacy module exports.
 - [Runtime static lesson verification](runtime-static-lesson-verification.md) — asset validation alone cannot prove a static lesson avoids browser streaming; intercept the route in a real browser.
 - [OCR Trust Gate](ocr-trust-gate.md) — Photo Vision readable output stays review-required, never high-confidence; legacy Tesseract classifier remains for non-active paths.
+- [Quality context compression](quality-context-compression.md) — minified full-lesson payloads and concise review issue output cut controlled Detailed latency 12%; full rewrite remains dominant.

@@ -1182,7 +1182,7 @@ async function generateDraft(
   blueprint?:      BlueprintInjection,
   timeoutMs?:      number,
   intent?:         SolveIntent,
-): Promise<{ lesson: LessonResponse; usage: UsageSnapshot }> {
+): Promise<{ lesson: LessonResponse; usage: UsageSnapshot; latencyMs: number }> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
 
@@ -1195,6 +1195,7 @@ async function generateDraft(
   );
 
   let res: Response;
+  const callStart = Date.now();
   try {
     res = await retryFetch(OPENAI_URL, {
       method:  "POST",
@@ -1229,7 +1230,7 @@ async function generateDraft(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = JSON.parse(content) as any;
-  return { lesson: parseLessonResponse(p), usage };
+  return { lesson: parseLessonResponse(p), usage, latencyMs: Date.now() - callStart };
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -1397,6 +1398,7 @@ router.post("/solveQuestion", async (req, res) => {
   setProgress(reqId, "draft_start", "Writing your lesson…", 38);
   let draft: LessonResponse;
   let draftUsage: UsageSnapshot = zeroUsage(MODEL);
+  let draftLatencyMs = 0;
   // Standard mode: compute the remaining wall-clock budget (subtract blueprint + cache time).
   // This becomes the hard abort deadline for the OpenAI call.
   const standardTimeoutMs = generationMode === "standard"
@@ -1407,6 +1409,7 @@ router.post("/solveQuestion", async (req, res) => {
     const draftResult = await generateDraft(subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent);
     draft      = draftResult.lesson;
     draftUsage = draftResult.usage;
+    draftLatencyMs = draftResult.latencyMs;
 
     // Standard mode — post-process generated lesson.
     if (generationMode === "standard") {
@@ -1461,6 +1464,10 @@ router.post("/solveQuestion", async (req, res) => {
   let reviewerCalls = 0;
   let improverCalls = 0;
   let qualityCyclesRun = 0;
+  let reviewLatencies: number[] = [];
+  let improveLatencies: number[] = [];
+  let reviewUsage: UsageSnapshot[] = [];
+  let improveUsage: UsageSnapshot[] = [];
 
   if (generationMode !== "basic") {
     // Standard: plan + draft only (~25–30 s). Compact: draft only (~10–15 s).
@@ -1493,6 +1500,10 @@ router.post("/solveQuestion", async (req, res) => {
           reviewerCalls    = pipelineResult.reviewerCalls;
           improverCalls    = pipelineResult.improverCalls;
           qualityCyclesRun = pipelineResult.cyclesRun;
+          reviewLatencies  = pipelineResult.callLatencies.review;
+          improveLatencies = pipelineResult.callLatencies.improve;
+          reviewUsage      = pipelineResult.callUsage.review;
+          improveUsage     = pipelineResult.callUsage.improve;
 
           req.log.info({
             subject:    subj,
@@ -1556,6 +1567,16 @@ router.post("/solveQuestion", async (req, res) => {
     draftTokens:      { prompt: draftUsage.promptTokens, completion: draftUsage.completionTokens },
     qualityTokens:    { prompt: qualityUsage.promptTokens, completion: qualityUsage.completionTokens },
     qualityCyclesRun,
+    callLatencies: {
+      draft:   draftLatencyMs,
+      review:  reviewLatencies,
+      improve: improveLatencies,
+    },
+    callUsage: {
+      draft:   draftUsage,
+      review:  reviewUsage,
+      improve: improveUsage,
+    },
     latencyMs:        Date.now() - requestStart,
     estimatedCostUsd: totalUsage.estimatedCostUsd,
     model:            totalUsage.model || MODEL,

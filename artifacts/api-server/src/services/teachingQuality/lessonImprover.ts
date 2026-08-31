@@ -27,19 +27,7 @@ const IMPROVE_TIMEOUT = 70_000;
 // Full field instructions are not repeated — the model improves based on the
 // concrete issues found, not from scratch.
 
-const LESSON_JSON_STRUCTURE = `{
-  "topic": string,
-  "difficulty": "Easy" | "Medium" | "Hard",
-  "keyConcepts": string[],
-  "aiConfidence": number,
-  "intuition": { "story": string, "visual": string, "everyday": string },
-  "questionTranslation": { "plainEnglish": string, "whatWeKnow": string, "whatWeFind": string, "wordToMath": string },
-  "guidedReasoning": [{ "what": string, "why": string, "math": string, "result": string, "pause": string }],
-  "commonMistakes": [{ "mistake": string, "whyItHappens": string, "howToAvoid": string }],
-  "finalAnswer": { "answer": string, "whyCorrect": string },
-  "simplerExample": { "problem": string, "solution": string },
-  "practiceQuestion": { "question": string, "hints": [string, string, string], "solution": string }
-}`;
+const LESSON_JSON_STRUCTURE = `{"topic":string,"difficulty":"Easy"|"Medium"|"Hard","keyConcepts":string[],"aiConfidence":number,"intuition":{"story":string,"visual":string,"everyday":string},"questionTranslation":{"plainEnglish":string,"whatWeKnow":string,"whatWeFind":string,"wordToMath":string},"guidedReasoning":[{"what":string,"why":string,"math":string,"result":string,"pause":string}],"commonMistakes":[{"mistake":string,"whyItHappens":string,"howToAvoid":string}],"finalAnswer":{"answer":string,"whyCorrect":string},"simplerExample":{"problem":string,"solution":string},"practiceQuestion":{"question":string,"hints":[string,string,string],"solution":string}}`;
 
 // ─── Build the improve system prompt ─────────────────────────────────────────
 
@@ -52,10 +40,8 @@ function buildImproveSystem(report: ReviewReport): string {
   const criticalIssuesList = report.criticalIssues
     .filter(i => i.priority === "critical" || i.priority === "high")
     .map((i, idx) =>
-      `ISSUE ${idx + 1} [${i.priority.toUpperCase()}] — Section: ${i.section}\n` +
-      `  Problem:  ${i.problem}\n` +
-      `  Why it fails weak students: ${i.reason}\n` +
-      `  Fix:      ${i.suggestedFix}`
+      `ISSUE ${idx + 1} [${i.priority.toUpperCase()}] | section=${i.section}\n` +
+      `Problem: ${i.problem}\nRequired fix: ${i.suggestedFix}`
     )
     .join("\n\n");
 
@@ -112,11 +98,13 @@ export async function improveLesson(
   lesson:  LessonResponse,
   report:  ReviewReport,
   apiKey:  string,
-): Promise<{ lesson: LessonResponse; usage: UsageSnapshot }> {
+): Promise<{ lesson: LessonResponse; usage: UsageSnapshot; latencyMs: number }> {
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), IMPROVE_TIMEOUT);
+  const callStart  = Date.now();
 
-  const lessonText = JSON.stringify(lesson, null, 2);
+  // Preserve the complete lesson contract while removing formatting-only tokens.
+  const lessonText = JSON.stringify(lesson);
   const system     = buildImproveSystem(report);
 
   let res: Response;
@@ -155,5 +143,5 @@ export async function improveLesson(
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = JSON.parse(content) as any;
-  return { lesson: parseLessonResponse(p), usage };
+  return { lesson: parseLessonResponse(p), usage, latencyMs: Date.now() - callStart };
 }

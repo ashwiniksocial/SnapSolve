@@ -238,6 +238,8 @@ If even ONE score is below ${PASS_THRESHOLD}, set passed = false.
 
 ══════════════════════════════════════════════════════════
 RESPONSE FORMAT — Return ONLY valid JSON. No other text.
+Keep confusions concise. Keep each critical issue actionable and concise:
+do not repeat full lesson sections inside problem, reason, or suggestedFix.
 ══════════════════════════════════════════════════════════
 {
   "scores": {
@@ -269,11 +271,14 @@ RESPONSE FORMAT — Return ONLY valid JSON. No other text.
 export async function reviewLesson(
   lesson:  LessonResponse,
   apiKey:  string,
-): Promise<{ report: ReviewReport; usage: UsageSnapshot }> {
+): Promise<{ report: ReviewReport; usage: UsageSnapshot; latencyMs: number }> {
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), REVIEW_TIMEOUT);
+  const callStart  = Date.now();
 
-  const lessonText = JSON.stringify(lesson, null, 2);
+  // Whitespace has no teaching value and inflates every review request.
+  // Keep every field so schema-completeness and empty-field checks remain intact.
+  const lessonText = JSON.stringify(lesson);
 
   let res: Response;
   try {
@@ -354,5 +359,6 @@ export async function reviewLesson(
       rubricLabel: getRubricLabel(scores.overall),
     },
     usage,
+    latencyMs: Date.now() - callStart,
   };
 }
