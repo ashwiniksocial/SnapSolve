@@ -59,9 +59,6 @@ test("simplified lesson keeps canonical identity and answer without mutating eit
   const original = response();
   const candidate = response({
     id: "new-ai-id",
-    topic: "A changed topic",
-    lessonTopic: "A changed lesson topic",
-    difficulty: "Hard",
     visual: "A changed visual",
   });
   const originalBefore = structuredClone(original);
@@ -94,6 +91,22 @@ test("simplified lesson is rejected when any answer representation changes", () 
     null,
   );
   assert.equal(createSimplifiedResponse(original, response({ question: "" })), null);
+});
+
+test("simplified lesson is rejected when canonical topic or difficulty changes", () => {
+  const original = response();
+  assert.equal(
+    createSimplifiedResponse(original, response({ topic: "Quadratics", lessonTopic: "Quadratics" })),
+    null,
+  );
+  assert.equal(
+    createSimplifiedResponse(original, response({ difficulty: "Hard" })),
+    null,
+  );
+  assert.equal(
+    createSimplifiedResponse(original, response({ lessonTopic: "Quadratics" })),
+    null,
+  );
 });
 
 test("actions are offered only when their lesson content is supported", () => {

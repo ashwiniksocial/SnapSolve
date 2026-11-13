@@ -63,6 +63,10 @@ export function createSimplifiedResponse(
     !originalLesson ||
     !candidateLesson ||
     candidate.detectedQuestion !== original.detectedQuestion ||
+    candidate.topic !== original.topic ||
+    candidateLesson.topic !== original.topic ||
+    candidate.difficulty !== original.difficulty ||
+    candidateLesson.difficulty !== original.difficulty ||
     !canonicalAnswer?.trim() ||
     original.finalAnswer !== canonicalAnswer ||
     candidate.finalAnswer !== canonicalAnswer ||
@@ -73,15 +77,8 @@ export function createSimplifiedResponse(
 
   return {
     ...original,
-    finalAnswer: canonicalAnswer,
     lesson: {
       ...candidateLesson,
-      topic: original.topic,
-      difficulty: original.difficulty,
-      finalAnswer: {
-        ...candidateLesson.finalAnswer,
-        answer: canonicalAnswer,
-      },
     },
   };
 }
