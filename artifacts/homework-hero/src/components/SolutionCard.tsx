@@ -8,7 +8,11 @@ import TeachingLayout     from "@/components/teaching/TeachingLayout";
 import TutorInsightBanner from "@/components/tutor/TutorInsightBanner";
 import type { ReadingLevel } from "@/services/explanation/readingModeEngine";
 import {
+  cacheSimplifiedResponse,
   createSimplifiedResponse,
+  discardCachedSimplifiedResponse,
+  getCachedSimplifiedResponse,
+  getSimplifySourceSignature,
   INITIAL_SIMPLIFY_ACTION_STATE,
   simplifyActionReducer,
   supportsSimplify,
@@ -46,6 +50,9 @@ const BETA1_LEVEL: ReadingLevel = "basic";
 
 export default function SolutionCard({ solution }: Props) {
   const level = BETA1_LEVEL;
+  const sourceSignature = getSimplifySourceSignature(solution);
+  const sourceSignatureRef = useRef(sourceSignature);
+  sourceSignatureRef.current = sourceSignature;
   const [simplifyState, dispatchSimplify] = useReducer(
     simplifyActionReducer,
     INITIAL_SIMPLIFY_ACTION_STATE,
@@ -65,6 +72,15 @@ export default function SolutionCard({ solution }: Props) {
     if (simplifyState.response && simplifyState.selectedLevel === level) {
       dispatchSimplify({ type: "show" });
       return;
+    }
+
+    const cached = getCachedSimplifiedResponse(solution, level);
+    if (cached) {
+      if (isCompleteLessonSafely(cached.lesson)) {
+        dispatchSimplify({ type: "success", response: cached, level });
+        return;
+      }
+      discardCachedSimplifiedResponse(solution, level);
     }
 
     dispatchSimplify({ type: "start", level });
@@ -95,8 +111,17 @@ export default function SolutionCard({ solution }: Props) {
         throw new Error("simplification did not preserve the canonical answer");
       }
 
+      if (sourceSignatureRef.current !== getSimplifySourceSignature(solution)) {
+        dispatchSimplify({ type: "reset" });
+        return;
+      }
+      cacheSimplifiedResponse(solution, level, simplified);
       dispatchSimplify({ type: "success", response: simplified, level });
     } catch {
+      if (sourceSignatureRef.current !== getSimplifySourceSignature(solution)) {
+        dispatchSimplify({ type: "reset" });
+        return;
+      }
       dispatchSimplify({
         type: "failure",
         message: "A simpler version could not be verified. Your original lesson is unchanged.",
@@ -124,7 +149,7 @@ export default function SolutionCard({ solution }: Props) {
       );
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [solution.id]);
+  }, [solution.id, sourceSignature]);
 
   // Record full session on unmount
   useEffect(() => {

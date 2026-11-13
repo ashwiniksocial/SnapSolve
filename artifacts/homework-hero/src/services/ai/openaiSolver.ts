@@ -894,8 +894,9 @@ export async function solveWithOpenAI(
   // Read the stored mode so the backend generates only the sections this mode needs.
   const mode = getStoredLevel();
 
-  // Simplify is deliberately fresh: a normal cached lesson must never be
-  // returned for an intent-specific regeneration.
+  // Simplify variants are reused only after client-side verification. Any
+  // simplify request reaching this solver must be fresh; a normal lesson-cache
+  // entry must never satisfy an intent-specific regeneration.
   if (!intent) {
     const cached = getCachedSolution(subject, question, mode);
     if (cached) {

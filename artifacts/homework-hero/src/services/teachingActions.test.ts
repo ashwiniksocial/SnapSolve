@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { AIResponse, TeachingLesson } from "../data/solutionBank";
 import {
+  cacheSimplifiedResponse,
   createSimplifiedResponse,
+  getCachedSimplifiedResponse,
   INITIAL_SIMPLIFY_ACTION_STATE,
   simplifyActionReducer,
   supportsSimplify,
@@ -136,6 +138,43 @@ test("simplified lesson is rejected when canonical topic or difficulty changes",
     createSimplifiedResponse(original, response({ lessonTopic: "Quadratics" })),
     null,
   );
+});
+
+test("verified simplification is reused only for the same frozen source and level", () => {
+  const entries = new Map<string, string>();
+  const previousStorage = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    value: {
+      getItem: (key: string) => entries.get(key) ?? null,
+      setItem: (key: string, value: string) => entries.set(key, value),
+    },
+  });
+
+  try {
+    const original = response();
+    const candidate = response({ visual: "A saved simpler explanation." });
+    const verified = createSimplifiedResponse(original, candidate);
+    assert.ok(verified);
+
+    cacheSimplifiedResponse(original, "clearer", verified);
+    assert.equal(
+      getCachedSimplifiedResponse(original, "clearer")?.lesson?.intuition.visual,
+      "A saved simpler explanation.",
+    );
+    assert.equal(getCachedSimplifiedResponse(original, "step_by_step"), null);
+
+    const changedFrozenSource = structuredClone(original);
+    changedFrozenSource.lesson!.finalAnswer.whyCorrect = "Updated source rationale.";
+    assert.equal(getCachedSimplifiedResponse(changedFrozenSource, "clearer"), null);
+    assert.equal(getCachedSimplifiedResponse(original, "clearer"), null);
+  } finally {
+    if (previousStorage) {
+      Object.defineProperty(globalThis, "localStorage", previousStorage);
+    } else {
+      delete (globalThis as typeof globalThis & { localStorage?: Storage }).localStorage;
+    }
+  }
 });
 
 test("actions are offered only when their lesson content is supported", () => {
