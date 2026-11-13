@@ -16,6 +16,7 @@ import {
   applyCanonicalBankMetadata,
   getCanonicalPracticeDifficulty,
   getCanonicalPracticeMetadata,
+  getEffectiveQuestionType,
 } from "../../artifacts/homework-hero/src/services/canonicalPracticeMetadata.ts";
 import type { AIResponse } from "../../artifacts/homework-hero/src/data/solutionBank.ts";
 import type { Question } from "../../artifacts/homework-hero/src/data/questions/types.ts";
@@ -65,6 +66,8 @@ async function main() {
   const practicePathMismatches: string[] = [];
   const solutionPathMismatches: string[] = [];
   const readinessPathMismatches: string[] = [];
+  const unclassifiedClass9Mathematics: string[] = [];
+  const inferredClass9MathematicsTypes: Record<string, number> = {};
   const questionNumbers = new Map<string, Set<number>>();
   const counts = {
     subject: {} as Record<string, number>,
@@ -96,8 +99,19 @@ async function main() {
 
     // Exercise the exact pure resolvers used by the student-facing paths.
     const practiceMetadata = getCanonicalPracticeMetadata(question);
+    const effectiveQuestionType = getEffectiveQuestionType(question);
     if (practiceMetadata.difficulty !== question.difficulty) {
       practicePathMismatches.push(`${question.id}: Practice resolver ${practiceMetadata.difficulty} ≠ canonical ${question.difficulty}.`);
+    }
+    if (question.classNum === 9 && question.subject === "Mathematics") {
+      if (!question.questionType) increment(inferredClass9MathematicsTypes, effectiveQuestionType);
+      if (effectiveQuestionType === "Unclassified") {
+        unclassifiedClass9Mathematics.push(question.id);
+        metadataMismatches.push(`${question.id}: active Class 9 Mathematics question has no resolvable type.`);
+      }
+      if (!question.questionType && effectiveQuestionType === "PYQ") {
+        metadataMismatches.push(`${question.id}: PYQ was inferred without stored provenance.`);
+      }
     }
     if (getCanonicalPracticeDifficulty(question) !== question.difficulty) {
       readinessPathMismatches.push(`${question.id}: readiness resolver differs from canonical difficulty.`);
@@ -118,7 +132,7 @@ async function main() {
         topic: "non-canonical topic",
         difficulty: "Medium",
       },
-    } as AIResponse, question);
+    } as unknown as AIResponse, question);
     if (
       solutionMetadata.difficulty !== question.difficulty ||
       solutionMetadata.topic !== question.topicName ||
@@ -138,7 +152,7 @@ async function main() {
     increment(counts.studentFacingSubject, getStudentFacingSubject(question.subject));
     increment(counts.chapter, `${question.subject} · ${question.chapterName}`);
     increment(counts.difficulty, question.difficulty);
-    increment(counts.type, question.questionType ?? "Unclassified");
+    increment(counts.type, effectiveQuestionType);
     increment(counts.topic, `${question.subject} · ${question.topicName}`);
   }
 
@@ -196,6 +210,8 @@ async function main() {
     },
     derivedLessonMetadataWarnings: lessonMetadataMismatches,
     lessonQualityFlags,
+    unclassifiedClass9Mathematics,
+    inferredClass9MathematicsTypes,
     counts,
   };
   console.log(JSON.stringify(report, null, 2));

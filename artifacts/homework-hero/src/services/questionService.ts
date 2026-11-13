@@ -20,6 +20,7 @@ import {
   makeChapterContextKey,
   type BoardId,
 } from "@/data/questions/academicContext";
+import { getEffectiveQuestionType } from "@/services/canonicalPracticeMetadata";
 
 export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType };
 export { BETA_SCIENCE_DOMAINS, getStudentFacingSubject };
@@ -175,9 +176,7 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
     if (filter.topicName !== undefined && q.topicName !== filter.topicName) return false;
     if (filter.difficulty && filter.difficulty !== "All" && q.difficulty !== filter.difficulty) return false;
     if (filter.questionType && filter.questionType !== "All") {
-      // Map missing metadata → "Unclassified" so the filter works correctly.
-      // Never infer a specific type from question text alone.
-      const effectiveType: EffectiveQuestionType = q.questionType ?? "Unclassified";
+      const effectiveType: EffectiveQuestionType = getEffectiveQuestionType(q);
       if (effectiveType !== filter.questionType) return false;
     }
     if (filter.boardId !== "CBSE") {
@@ -308,7 +307,8 @@ export function getAllChapterStats(classNum: number, subject: string, boardId?: 
       MCQ: 0, ShortAnswer: 0, LongAnswer: 0, HOTS: 0, PYQ: 0,
     };
     for (const q of qs) {
-      if (q.questionType) byType[q.questionType]++;
+      const questionType = getEffectiveQuestionType(q);
+      if (questionType !== "Unclassified") byType[questionType]++;
     }
     const displayChapterNumber = getChapterDisplayNumber(ch.classNum, ch.subject, ch.id, boardId);
     return {

@@ -342,7 +342,7 @@ export default function Practice() {
         subject:   selectedSubject,
         chapterId: selectedChapterId || undefined,
         ...(selectedTopicId !== "all" ? { topicId: selectedTopicId } : {}),
-      }).some((q) => q.questionType === undefined),
+      }).some((q) => getCanonicalPracticeMetadata(q).questionType === "Unclassified"),
     [bankReady, boardId, practiceClass, selectedSubject, selectedChapterId, selectedTopicId],
   );
 
