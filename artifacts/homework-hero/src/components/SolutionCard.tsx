@@ -68,7 +68,17 @@ export default function SolutionCard({ solution }: Props) {
         solution.detectedQuestion,
         1,
         undefined,
-        { skipBank: true, requireLesson: true, intent: "simplify" },
+        {
+          skipBank: true,
+          requireLesson: true,
+          intent: "simplify",
+          simplifyContext: {
+            topic: solution.topic,
+            difficulty: solution.difficulty,
+            answer: solution.lesson!.finalAnswer.answer,
+            lesson: solution.lesson!,
+          },
+        },
       );
       const simplified = isCompleteLessonSafely(candidate.lesson)
         ? createSimplifiedResponse(solution, candidate)

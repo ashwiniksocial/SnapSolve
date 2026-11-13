@@ -23,6 +23,11 @@
 import { Router }             from "express";
 import { parseLessonResponse, type LessonResponse, type LessonStep } from "../lib/lessonTypes";
 import { runQualityPipeline }    from "../services/teachingQuality";
+import {
+  matchesSimplifyCanonicalFields,
+  parseSimplifyContext,
+  type SimplifyContext,
+} from "../services/simplifyContract";
 import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
 import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
@@ -1042,6 +1047,7 @@ function buildDraftPrompts(
   studentContext?: string,
   blueprint?:      BlueprintInjection,
   intent?:         SolveIntent,
+  simplifyContext?: SimplifyContext,
 ): { systemContent: string; userContent: string; maxTokens: number } {
   const depth         = extractDepth(studentContext);
   const depthOverride = mode === "basic" ? DEPTH_SYSTEM_OVERRIDES[depth] : "";
@@ -1059,7 +1065,12 @@ function buildDraftPrompts(
 Rewrite this same lesson in genuinely simpler language for a younger or struggling student.
 Keep the mathematics, facts, method, and final answer correct. Use shorter sentences,
 define technical words immediately, explain one idea at a time, and avoid unnecessary
-exam jargon. Do not change the question or invent a different answer.`
+exam jargon. Do not change the question or invent a different answer.
+Treat the supplied topic, difficulty, and final answer as frozen canonical values.
+Copy finalAnswer.answer exactly, character for character. Preserve the topic and difficulty
+exactly. Explain each step plainly; avoid analogies unless they are mathematically accurate
+and directly helpful. Never omit proof steps, conditions, or facts needed to justify the
+canonical answer.`
     : "";
 
   const systemContent = baseSystem + depthOverride + intentInstruction;
@@ -1068,9 +1079,21 @@ exam jargon. Do not change the question or invent a different answer.`
     ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
     : `Subject: ${subject}\n\nQuestion:\n${question.trim()}`;
 
-  const userContent = blueprint?.userPrefix
-    ? blueprint.userPrefix + baseUserContent
-    : baseUserContent;
+  const simplifySource = simplifyContext
+    ? [
+        "CANONICAL SIMPLIFY CONSTRAINTS — these values must be reproduced exactly:",
+        `Topic: ${simplifyContext.topic}`,
+        `Difficulty: ${simplifyContext.difficulty}`,
+        `Exact final answer: ${JSON.stringify(simplifyContext.answer)}`,
+        "SOURCE LESSON — rewrite its explanation more clearly without changing its mathematics:",
+        JSON.stringify(simplifyContext.lesson),
+      ].join("\n")
+    : "";
+  const userContent = [
+    blueprint?.userPrefix,
+    baseUserContent,
+    simplifySource,
+  ].filter(Boolean).join("\n\n");
 
   const maxTokens = mode === "basic" ? 2800 : mode === "standard" ? 1100 : 800;
 
@@ -1218,6 +1241,7 @@ async function generateDraft(
   blueprint?:      BlueprintInjection,
   timeoutMs?:      number,
   intent?:         SolveIntent,
+  simplifyContext?: SimplifyContext,
 ): Promise<{ lesson: LessonResponse; rawLesson: unknown; usage: UsageSnapshot; latencyMs: number }> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("no_key");
@@ -1227,7 +1251,7 @@ async function generateDraft(
 
   // Build prompts using the shared helper (avoids duplication with the streaming route).
   const { systemContent, userContent, maxTokens } = buildDraftPrompts(
-    subject, question, mode, studentContext, blueprint, intent,
+    subject, question, mode, studentContext, blueprint, intent, simplifyContext,
   );
 
   let res: Response;
@@ -1317,6 +1341,7 @@ router.post("/solveQuestion", async (req, res) => {
     requestId: rawRequestId,
     mode: rawMode,
     intent: rawIntent,
+    simplifyContext: rawSimplifyContext,
     ocrUsed: rawOcrUsed,
     boardId: rawBoardId,
     classNum: rawClassNum,
@@ -1328,6 +1353,7 @@ router.post("/solveQuestion", async (req, res) => {
     requestId?:      unknown;
     mode?:           unknown;
     intent?:         unknown;
+    simplifyContext?: unknown;
     ocrUsed?:        unknown;
     boardId?:        unknown;
     classNum?:       unknown;
@@ -1338,6 +1364,9 @@ router.post("/solveQuestion", async (req, res) => {
   const ocrUsed = rawOcrUsed === true;
   const mode: LessonMode = LESSON_MODES.includes(rawMode as LessonMode) ? rawMode as LessonMode : "standard";
   const intent: SolveIntent | undefined = rawIntent === "simplify" ? "simplify" : undefined;
+  const simplifyContext = intent === "simplify"
+    ? parseSimplifyContext(rawSimplifyContext) ?? undefined
+    : undefined;
   // Intent is resolved server-side. It does not mutate the student's saved
   // reading preference, but it does request a sufficiently detailed lesson for
   // a genuinely simpler rewrite.
@@ -1357,6 +1386,13 @@ router.post("/solveQuestion", async (req, res) => {
     req.log.warn({ receivedSubject: subject },
       "[PIPELINE:2] REJECTED — invalid_subject (expected one of: Mathematics, Physics, Chemistry, Biology, …)");
     res.status(400).json({ error: "invalid_subject", message: `subject must be one of: ${SUBJECTS.join(", ")}` });
+    return;
+  }
+  if (intent === "simplify" && !simplifyContext) {
+    res.status(400).json({
+      error: "invalid_simplify_context",
+      message: "Simplify requests must include the original lesson and canonical answer.",
+    });
     return;
   }
 
@@ -1420,6 +1456,9 @@ router.post("/solveQuestion", async (req, res) => {
   let blueprint: BlueprintInjection | undefined;
   if (!apiKey) {
     req.log.warn("[PIPELINE:4] SKIP — no OPENAI_API_KEY; blueprint and generation both unavailable");
+  } else if (intent === "simplify") {
+    req.log.info({ subject: subj }, "[PIPELINE:4] SKIP — Simplify uses the original lesson as its authority");
+    setProgress(reqId, "blueprint_done", "Using your original lesson as the source…", 35);
   } else if (generationMode === "advanced") {
     // Compact mode: skip planning to reduce latency — a steps-only response doesn't benefit from a blueprint.
     req.log.info({ subject: subj, mode: generationMode }, "[PIPELINE:4] SKIP — Compact mode does not use blueprint");
@@ -1460,7 +1499,9 @@ router.post("/solveQuestion", async (req, res) => {
     : undefined;
 
   try {
-    const draftResult = await generateDraft(subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent);
+    const draftResult = await generateDraft(
+      subj, q, generationMode, ctx, blueprint, standardTimeoutMs, intent, simplifyContext,
+    );
     draft      = draftResult.lesson;
     rawDraft   = draftResult.rawLesson;
     draftUsage = draftResult.usage;
@@ -1510,6 +1551,15 @@ router.post("/solveQuestion", async (req, res) => {
     } else {
       res.status(502).json({ error: "openai_error", message: msg }); return;
     }
+  }
+
+  if (simplifyContext && !matchesSimplifyCanonicalFields(draft, simplifyContext)) {
+    req.log.warn({ subject: subj }, "[PIPELINE:5] REJECTED — simplify draft changed frozen answer or metadata");
+    res.status(422).json({
+      error: "simplify_drift",
+      message: "The simpler lesson did not preserve the original answer, topic, and difficulty.",
+    });
+    return;
   }
 
   // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
@@ -1632,6 +1682,15 @@ router.post("/solveQuestion", async (req, res) => {
         req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
       }
     }
+  }
+
+  if (simplifyContext && !matchesSimplifyCanonicalFields(finalLesson, simplifyContext)) {
+    req.log.warn({ subject: subj }, "[PIPELINE:6] REJECTED — simplify review changed frozen answer or metadata");
+    res.status(422).json({
+      error: "simplify_drift",
+      message: "The simpler lesson did not preserve the original answer, topic, and difficulty.",
+    });
+    return;
   }
 
   // 7. Cache the reviewed lesson (not the draft)

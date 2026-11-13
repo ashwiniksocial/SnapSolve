@@ -1,4 +1,11 @@
-import type { AIResponse } from "../data/solutionBank";
+import type { AIResponse, TeachingLesson } from "../data/solutionBank";
+
+export interface SimplifyContext {
+  topic: string;
+  difficulty: TeachingLesson["difficulty"];
+  answer: string;
+  lesson: TeachingLesson;
+}
 
 export interface SimplifyActionState {
   loading: boolean;

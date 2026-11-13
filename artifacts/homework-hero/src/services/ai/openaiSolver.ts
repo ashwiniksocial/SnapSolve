@@ -17,6 +17,7 @@
 import type { Subject }                    from "@/data/subjects";
 import { getStoredAcademicContext, makeChapterContextKey, type BoardId } from "@/data/questions/academicContext";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
+import type { SimplifyContext } from "@/services/teachingActions";
 import { buildStudentContext }             from "@/services/studentModel";
 import { getStoredLevel, type ReadingLevel } from "@/services/explanation/readingModeEngine";
 
@@ -323,6 +324,7 @@ async function callBackend(
   studentContext?: string,
   onProgress?:     (message: string, percent: number) => void,
   intent?:         SolveIntent,
+  simplifyContext?: SimplifyContext,
 ): Promise<BackendLessonResponse> {
   const academicContext = getStoredAcademicContext();
   // Generate a requestId so the backend can key progress entries to this request
@@ -358,6 +360,7 @@ async function callBackend(
         } : {}),
         requestId,
         ...(intent ? { intent } : {}),
+        ...(simplifyContext ? { simplifyContext } : {}),
       }),
     });
   } finally {
@@ -878,6 +881,7 @@ export async function solveWithOpenAI(
   onProgress?: (message: string, percent: number) => void,
   intent?:     SolveIntent,
   onPartial?:  (partial: AIResponse) => void,
+  simplifyContext?: SimplifyContext,
 ): Promise<AIResponse> {
   // ── Dev audit path: bypass API key, return hardcoded fixture ──────────────
   // Must be checked BEFORE the min-length guard.
@@ -979,6 +983,7 @@ export async function solveWithOpenAI(
     studentContext || undefined,
     onProgress,
     intent,
+    simplifyContext,
   );
 
   const result = toAIResponse(data, subject, question);

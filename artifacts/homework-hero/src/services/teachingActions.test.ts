@@ -82,6 +82,35 @@ test("simplified lesson keeps canonical identity and answer without mutating eit
   assert.deepEqual(candidate, candidateBefore);
 });
 
+test("a Hard proof can be simplified while keeping its exact frozen conclusion", () => {
+  const answer = "Therefore, the triangles are congruent by the SSS criterion.";
+  const original = response({
+    answer,
+    topAnswer: answer,
+    topic: "Triangle congruence",
+    lessonTopic: "Triangle congruence",
+    difficulty: "Hard",
+    visual: "Compare each of the three corresponding side pairs.",
+  });
+  const candidate = response({
+    answer,
+    topAnswer: answer,
+    topic: "Triangle congruence",
+    lessonTopic: "Triangle congruence",
+    difficulty: "Hard",
+    visual: "Check the first side pair, then the second, then the third. Since all three match, SSS proves the triangles are congruent.",
+  });
+
+  const simplified = createSimplifiedResponse(original, candidate);
+
+  assert.ok(simplified);
+  assert.equal(simplified.finalAnswer, answer);
+  assert.equal(simplified.lesson?.finalAnswer.answer, answer);
+  assert.equal(simplified.topic, "Triangle congruence");
+  assert.equal(simplified.difficulty, "Hard");
+  assert.match(simplified.lesson?.intuition.visual ?? "", /first side pair/);
+});
+
 test("simplified lesson is rejected when any answer representation changes", () => {
   const original = response();
   assert.equal(createSimplifiedResponse(original, response({ answer: "x = 5", topAnswer: "x = 5" })), null);

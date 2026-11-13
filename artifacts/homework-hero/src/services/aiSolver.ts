@@ -15,6 +15,7 @@
 
 import { matchSolutionWithScore, type AIResponse } from "@/data/solutionBank";
 import { solveWithOpenAI, isOpenAIAvailable, type SolveIntent } from "@/services/ai/openaiSolver";
+import type { SimplifyContext } from "@/services/teachingActions";
 import { detectBestTopic }                          from "@/services/ai/topicMatcher";
 import { computeConfidenceBreakdown }               from "@/services/confidenceEngine";
 import { verifySolution }                           from "@/services/verificationEngine";
@@ -65,7 +66,12 @@ export async function solve(
   question:      string,
   ocrConfidence  = 1.0,
   onPhase?:      (msg: string, index: number) => void,
-  opts?:         { skipBank?: boolean; requireLesson?: boolean; intent?: SolveIntent },
+  opts?:         {
+    skipBank?: boolean;
+    requireLesson?: boolean;
+    intent?: SolveIntent;
+    simplifyContext?: SimplifyContext;
+  },
   onDetail?:     (message: string, percent: number) => void,
   onPartial?:    (partial: AIResponse) => void,
 ): Promise<AIResponse> {
@@ -125,7 +131,14 @@ export async function solve(
     onPhase?.(PHASES_AI[2], 2);
 
     try {
-      const aiResp = await solveWithOpenAI(subject, question, onDetail, opts?.intent, onPartial);
+      const aiResp = await solveWithOpenAI(
+        subject,
+        question,
+        onDetail,
+        opts?.intent,
+        onPartial,
+        opts?.simplifyContext,
+      );
 
       onPhase?.(PHASES_AI[3], 3);
       await delay(280);
