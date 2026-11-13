@@ -6,17 +6,22 @@
  *   Task 2 — REVISION   : due spaced-repetition item or recent struggle topic
  *   Task 3 — CHALLENGE  : weakest topic by accuracy, or general weak-topic drill
  *
- * Mission is generated once per day and cached in `studyai-mission-v1`.
+ * Mission is generated once per day and cached in a board/class-scoped store.
  * Completion (checklist) is also stored there and resets at midnight.
  *
  * Self-contained: reads localStorage directly. No hook composition needed.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { unwrapRevisionItems } from "@/services/revisionStorage";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
 // ─── Storage key ──────────────────────────────────────────────────────────────
-const KEY = "studyai-mission-v1";
+const MISSION_PREFIX = "studyai-mission-v2";
+const PROGRESS_PREFIX = "studyai-progress-v3";
+const REVISION_PREFIX = "studyai-revision-v2";
+const ADAPTIVE_PREFIX = "studyai-adaptive-v2";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,7 +69,8 @@ function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function safeRead<T>(key: string, fallback: T): T {
+function safeRead<T>(key: string | null, fallback: T): T {
+  if (!key) return fallback;
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
@@ -79,12 +85,12 @@ function makeid(prefix: string): string {
 
 // ─── Mission builder ──────────────────────────────────────────────────────────
 
-function buildTasks(): MissionTask[] {
-  const progress = safeRead<ProgressStore>("studyai-progress-v2", {});
+function buildTasks(progressKey: string | null, revisionKey: string | null, adaptiveKey: string | null): MissionTask[] {
+  const progress = safeRead<ProgressStore>(progressKey, {});
   const revision = unwrapRevisionItems<RevItem>(
-    safeRead<unknown>("studyai-revision-v1", {}),
+    safeRead<unknown>(revisionKey, {}),
   );
-  const adaptive = safeRead<AdaptiveCache | null>("studyai-adaptive-v1", null);
+  const adaptive = safeRead<AdaptiveCache | null>(adaptiveKey, null);
   const todayStr = today();
 
   // ── Flatten topic stats ──────────────────────────────────────────────────
@@ -228,38 +234,61 @@ function buildTasks(): MissionTask[] {
 
 // ─── Storage helpers ──────────────────────────────────────────────────────────
 
-function loadMission(): DailyMission {
-  const stored = safeRead<DailyMission | null>(KEY, null);
+function loadMission(
+  missionKey: string | null,
+  progressKey: string | null,
+  revisionKey: string | null,
+  adaptiveKey: string | null,
+): DailyMission {
+  const stored = safeRead<DailyMission | null>(missionKey, null);
   if (stored && stored.date === today()) return stored;
 
   // New day — generate fresh tasks
-  const mission: DailyMission = { date: today(), tasks: buildTasks(), doneIds: [] };
-  localStorage.setItem(KEY, JSON.stringify(mission));
+  const mission: DailyMission = {
+    date: today(),
+    tasks: buildTasks(progressKey, revisionKey, adaptiveKey),
+    doneIds: [],
+  };
+  if (missionKey) localStorage.setItem(missionKey, JSON.stringify(mission));
   return mission;
 }
 
-function saveMission(m: DailyMission): void {
-  localStorage.setItem(KEY, JSON.stringify(m));
+function saveMission(missionKey: string | null, m: DailyMission): void {
+  if (missionKey) localStorage.setItem(missionKey, JSON.stringify(m));
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useDailyMission(): UseDailyMissionReturn {
-  const [mission, setMission] = useState<DailyMission>(loadMission);
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, profile.classLevel);
+  const missionKey = scopedStorageKey(MISSION_PREFIX, context);
+  const progressKey = scopedStorageKey(PROGRESS_PREFIX, context);
+  const revisionKey = scopedStorageKey(REVISION_PREFIX, context);
+  const adaptiveKey = scopedStorageKey(ADAPTIVE_PREFIX, context);
+  const load = () => loadMission(missionKey, progressKey, revisionKey, adaptiveKey);
+  const [stored, setStored] = useState(() => ({ key: missionKey, mission: load() }));
+
+  useEffect(() => {
+    setStored({ key: missionKey, mission: load() });
+  }, [missionKey, progressKey, revisionKey, adaptiveKey]);
+
+  const mission = stored.key === missionKey ? stored.mission : load();
 
   const toggleDone = useCallback((id: string) => {
-    setMission((prev) => {
-      const already = prev.doneIds.includes(id);
+    setStored((prev) => {
+      const current = prev.key === missionKey ? prev.mission : load();
+      const already = current.doneIds.includes(id);
       const next: DailyMission = {
-        ...prev,
+        ...current,
         doneIds: already
-          ? prev.doneIds.filter((d) => d !== id)
-          : [...prev.doneIds, id],
+          ? current.doneIds.filter((d) => d !== id)
+          : [...current.doneIds, id],
       };
-      saveMission(next);
-      return next;
+      saveMission(missionKey, next);
+      return { key: missionKey, mission: next };
     });
-  }, []);
+  }, [missionKey, progressKey, revisionKey, adaptiveKey]);
 
   const completedCount = mission.doneIds.length;
   const totalMins      = mission.tasks.reduce((s, t) => s + t.estimateMins, 0);

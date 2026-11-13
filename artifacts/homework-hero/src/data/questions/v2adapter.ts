@@ -9,6 +9,11 @@
 import type { Question, ChapterMeta, CurriculumStatus } from "./types";
 import type { Difficulty, QuestionType } from "./types";
 import { lookupCanonical } from "./canonicalChapterRegistry.gen";
+import {
+  makeChapterContextKey,
+  type BoardApplicability,
+  type BoardId,
+} from "./academicContext";
 
 /**
  * Minimal interface covering the V2 fields we actually read.
@@ -18,6 +23,9 @@ export interface QuestionV2Like {
   id:              string;
   classNum:        number;
   subject:         string;
+  board:           BoardApplicability;
+  verifiedBoards?: BoardId[];
+  academicSession?: string;
   chapterId:       string;
   chapterName:     string;
   topicId:         string;
@@ -74,22 +82,41 @@ function prefixChapterId(subject: string, chapterId: string): string {
 
 /** Convert an array of QuestionV2-shaped objects to the frontend Question type. */
 export function adaptV2Questions(qs: QuestionV2Like[]): Question[] {
-  return qs.map((q) => ({
-    id:           q.id,
-    classNum:     q.classNum,
-    subject:      q.subject,
-    chapterId:    prefixChapterId(q.subject, q.chapterId),
-    chapterName:  q.chapterName,
-    topicId:      q.topicId,
-    topicName:    q.topicName,
-    difficulty:   mapDifficulty(q.difficulty),
-    questionType: mapQuestionType(q.questionType, q.questionFormat),
-    question:     q.question,
-    hint:         q.hint,
-    answer:       q.answer,
-    steps:        q.steps,
-    keyConcepts:  q.keyConcepts,
-  }));
+  return qs.map((q) => {
+    const chapterId = prefixChapterId(q.subject, q.chapterId);
+    // "Both" is not evidence that a chapter matches every board. The current
+    // canonical source is CBSE-only, so use that context only for its registry
+    // lookup; service-level applicability still requires explicit verification
+    // before serving the content outside CBSE.
+    const canonicalBoard = q.board === "Both" ? "CBSE" : q.board;
+    const registry = lookupCanonical(
+      chapterId,
+      canonicalBoard,
+      q.classNum,
+      q.subject,
+      q.academicSession,
+    );
+    return {
+      id:                q.id,
+      classNum:          q.classNum,
+      subject:           q.subject,
+      chapterId,
+      boardApplicability: q.board,
+      verifiedBoards:    q.verifiedBoards,
+      academicSession:   registry?.academicSession ?? q.academicSession,
+      canonicalChapterId: registry?.canonicalChapterId ?? null,
+      chapterName:       q.chapterName,
+      topicId:           q.topicId,
+      topicName:         q.topicName,
+      difficulty:        mapDifficulty(q.difficulty),
+      questionType:      mapQuestionType(q.questionType, q.questionFormat),
+      question:          q.question,
+      hint:              q.hint,
+      answer:            q.answer,
+      steps:             q.steps,
+      keyConcepts:       q.keyConcepts,
+    };
+  });
 }
 
 /**
@@ -105,34 +132,73 @@ export function adaptV2Questions(qs: QuestionV2Like[]): Question[] {
 export function buildChapterMeta(qs: Question[]): ChapterMeta[] {
   const chMap = new Map<
     string,
-    { name: string; classNum: number; subject: string; topics: Map<string, { name: string; count: number }> }
+    {
+      id: string;
+      name: string;
+      classNum: number;
+      subject: string;
+      boardId: BoardId;
+      applicability: BoardApplicability;
+      verifiedBoards: Set<BoardId>;
+      academicSession?: string;
+      canonicalChapterId: string | null;
+      topics: Map<string, { name: string; count: number }>;
+    }
   >();
 
   for (const q of qs) {
-    if (!chMap.has(q.chapterId)) {
-      chMap.set(q.chapterId, {
+    const canonicalBoard = q.boardApplicability === "Both" ? "CBSE" : q.boardApplicability;
+    if (!canonicalBoard) continue;
+    const contextKey = makeChapterContextKey({
+      boardId: canonicalBoard,
+      classNum: q.classNum,
+      subject: q.subject,
+      canonicalChapterId: q.canonicalChapterId ?? null,
+      chapterId: q.chapterId,
+      academicSession: q.academicSession,
+    });
+    if (!chMap.has(contextKey)) {
+      chMap.set(contextKey, {
+        id: q.chapterId,
         name:     q.chapterName,
         classNum: q.classNum,
         subject:  q.subject,
+        boardId: canonicalBoard,
+        applicability: q.boardApplicability!,
+        verifiedBoards: new Set(q.verifiedBoards ?? []),
+        academicSession: q.academicSession,
+        canonicalChapterId: q.canonicalChapterId ?? null,
         topics:   new Map(),
       });
     }
-    const ch = chMap.get(q.chapterId)!;
+    const ch = chMap.get(contextKey)!;
+    if (q.boardApplicability === "Both") ch.applicability = "Both";
+    for (const board of q.verifiedBoards ?? []) ch.verifiedBoards.add(board);
     if (!ch.topics.has(q.topicId)) {
       ch.topics.set(q.topicId, { name: q.topicName, count: 0 });
     }
     ch.topics.get(q.topicId)!.count++;
   }
 
-  return Array.from(chMap.entries()).map(([id, ch]) => {
-    const reg = lookupCanonical(id);
-    const canonicalChapterId: string | null   = reg?.canonicalChapterId ?? null;
-    const curriculumStatus:   CurriculumStatus = reg?.curriculumStatus   ?? "SOURCE_UNRESOLVED";
+  return Array.from(chMap.values()).map((ch) => {
+    const reg = lookupCanonical(
+      ch.id,
+      ch.boardId,
+      ch.classNum,
+      ch.subject,
+      ch.academicSession,
+    );
+    const canonicalChapterId: string | null   = ch.canonicalChapterId ?? reg?.canonicalChapterId ?? null;
+    const curriculumStatus:   CurriculumStatus = reg?.curriculumStatus ?? "SOURCE_UNRESOLVED";
     return {
-      id,
+      id:          ch.id,
       name:        ch.name,
       classNum:    ch.classNum,
       subject:     ch.subject,
+      boardId:     ch.boardId,
+      boardApplicability: ch.applicability,
+      verifiedBoards: [...ch.verifiedBoards],
+      academicSession: ch.academicSession ?? reg?.academicSession,
       canonicalChapterId,
       curriculumStatus,
       topics:      Array.from(ch.topics.entries()).map(([tid, t]) => ({

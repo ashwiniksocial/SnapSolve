@@ -16,6 +16,8 @@
 import { readAllMastery }      from "./syncManager";
 import { readAllMistakes }     from "./syncManager";
 
+import { scopedStorageKey } from "@/data/questions/academicContext";
+
 const KEY = "studyai-v1-knowledge-gaps";
 
 export interface KnowledgeGap {
@@ -40,10 +42,14 @@ export interface KnowledgeGapReport {
 }
 
 function lsRead<T>(key: string, fallback: T): T {
-  try { return JSON.parse(localStorage.getItem(key) ?? "null") ?? fallback; } catch { return fallback; }
+  const scopedKey = scopedStorageKey(key);
+  if (!scopedKey) return fallback;
+  try { return JSON.parse(localStorage.getItem(scopedKey) ?? "null") ?? fallback; } catch { return fallback; }
 }
 function lsWrite(val: unknown): void {
-  try { localStorage.setItem(KEY, JSON.stringify(val)); } catch {}
+  const scopedKey = scopedStorageKey(KEY);
+  if (!scopedKey) return;
+  try { localStorage.setItem(scopedKey, JSON.stringify(val)); } catch {}
 }
 
 const DEFAULT: KnowledgeGapReport = {

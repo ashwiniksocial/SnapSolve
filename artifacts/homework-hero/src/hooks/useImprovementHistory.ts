@@ -1,7 +1,7 @@
 /**
  * useImprovementHistory
  *
- * Manages a 30-day daily snapshot ring buffer stored in `studyai-history-v1`.
+ * Manages a board/class-scoped 30-day snapshot ring buffer.
  * Reads cumulative progress/revision data from localStorage directly
  * (self-contained, no hook composition needed).
  *
@@ -18,9 +18,13 @@
 
 import { useMemo } from "react";
 import { unwrapRevisionItems } from "@/services/revisionStorage";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
 // ─── Storage key ───────────────────────────────────────────────────────────────
-const HISTORY_KEY = "studyai-history-v1";
+const HISTORY_PREFIX = "studyai-history-v2";
+const PROGRESS_PREFIX = "studyai-progress-v3";
+const REVISION_PREFIX = "studyai-revision-v2";
 
 // ─── Data shapes ───────────────────────────────────────────────────────────────
 
@@ -64,7 +68,8 @@ interface RevisionItem { interval: number; dueDate: string }
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
-function safeRead<T>(key: string, fallback: T): T {
+function safeRead<T>(key: string | null, fallback: T): T {
+  if (!key) return fallback;
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
@@ -124,8 +129,8 @@ function linReg(values: number[]): Regression {
 type StoredSnapshot = Omit<DailySnapshot, "label">;
 interface StoredHistory { snapshots: StoredSnapshot[]; seeded: boolean }
 
-function buildSeedData(): StoredSnapshot[] {
-  const prog = safeRead<ProgressData>("studyai-progress-v2", {
+function buildSeedData(progressKey: string | null): StoredSnapshot[] {
+  const prog = safeRead<ProgressData>(progressKey, {
     Physics: {}, Chemistry: {}, Mathematics: {},
   });
 
@@ -160,12 +165,12 @@ function buildSeedData(): StoredSnapshot[] {
 
 // ─── Today snapshot ───────────────────────────────────────────────────────────
 
-function buildTodaySnapshot(): StoredSnapshot {
-  const prog = safeRead<ProgressData>("studyai-progress-v2", {
+function buildTodaySnapshot(progressKey: string | null, revisionKey: string | null): StoredSnapshot {
+  const prog = safeRead<ProgressData>(progressKey, {
     Physics: {}, Chemistry: {}, Mathematics: {},
   });
   const revData = unwrapRevisionItems<RevisionItem>(
-    safeRead<unknown>("studyai-revision-v1", {}),
+    safeRead<unknown>(revisionKey, {}),
   );
 
   const physicsAcc = subjectAccuracy(prog.Physics);
@@ -202,8 +207,12 @@ function buildTodaySnapshot(): StoredSnapshot {
 
 // ─── History loader ───────────────────────────────────────────────────────────
 
-function loadHistory(): { snapshots: StoredSnapshot[]; seeded: boolean } {
-  const stored = safeRead<StoredHistory | null>(HISTORY_KEY, null);
+function loadHistory(
+  historyKey: string | null,
+  progressKey: string | null,
+  revisionKey: string | null,
+): { snapshots: StoredSnapshot[]; seeded: boolean } {
+  const stored = safeRead<StoredHistory | null>(historyKey, null);
   const today  = new Date().toISOString().slice(0, 10);
 
   if (stored && stored.snapshots.length >= 3) {
@@ -211,25 +220,30 @@ function loadHistory(): { snapshots: StoredSnapshot[]; seeded: boolean } {
     if (!alreadyDone) {
       const updated: StoredHistory = {
         ...stored,
-        snapshots: [...stored.snapshots.slice(-29), buildTodaySnapshot()],
+        snapshots: [...stored.snapshots.slice(-29), buildTodaySnapshot(progressKey, revisionKey)],
       };
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+      if (historyKey) localStorage.setItem(historyKey, JSON.stringify(updated));
       return updated;
     }
     return stored;
   }
 
   // First visit: seed plausible 30-day data
-  const fresh: StoredHistory = { snapshots: buildSeedData(), seeded: true };
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(fresh));
+  const fresh: StoredHistory = { snapshots: buildSeedData(progressKey), seeded: true };
+  if (historyKey) localStorage.setItem(historyKey, JSON.stringify(fresh));
   return fresh;
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useImprovementHistory(): ImprovementData {
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, profile.classLevel);
+  const historyKey = scopedStorageKey(HISTORY_PREFIX, context);
+  const progressKey = scopedStorageKey(PROGRESS_PREFIX, context);
+  const revisionKey = scopedStorageKey(REVISION_PREFIX, context);
   return useMemo(() => {
-    const { snapshots: raw, seeded } = loadHistory();
+    const { snapshots: raw, seeded } = loadHistory(historyKey, progressKey, revisionKey);
 
     const snapshots: DailySnapshot[] = raw.map((s) => ({ ...s, label: toLabel(s.date) }));
 
@@ -238,7 +252,7 @@ export function useImprovementHistory(): ImprovementData {
     const { slope, project } = linReg(last14Acc);
 
     // Find the topic with the best 30-day projection
-    const prog = safeRead<ProgressData>("studyai-progress-v2", {
+    const prog = safeRead<ProgressData>(progressKey, {
       Physics: {}, Chemistry: {}, Mathematics: {},
     });
 
@@ -276,5 +290,5 @@ export function useImprovementHistory(): ImprovementData {
     }
 
     return { snapshots, isSeeded: seeded, topPrediction, overallSlope: slope };
-  }, []);
+  }, [historyKey, progressKey, revisionKey]);
 }

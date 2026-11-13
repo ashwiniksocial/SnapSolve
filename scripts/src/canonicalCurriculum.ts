@@ -339,6 +339,7 @@ export function getRawRegistryEntries(): Array<{
   subjectId:           string;
   classId:             number;
   boardId:             string;
+  academicSession:     string;
   displayOrder:        number;
 }> {
   return Object.entries(INTERNAL_TO_CANONICAL).map(([internalId, reg]) => ({
@@ -350,6 +351,7 @@ export function getRawRegistryEntries(): Array<{
     subjectId:    reg.subjectId,
     classId:      reg.classId,
     boardId:      reg.boardId,
+    academicSession: reg.academicSession,
     displayOrder: reg.displayOrder,
   }));
 }

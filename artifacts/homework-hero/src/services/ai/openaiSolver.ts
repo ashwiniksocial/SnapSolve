@@ -15,6 +15,7 @@
  */
 
 import type { Subject }                    from "@/data/subjects";
+import { getStoredAcademicContext, makeChapterContextKey, type BoardId } from "@/data/questions/academicContext";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
 import { buildStudentContext }             from "@/services/studentModel";
 import { getStoredLevel, type ReadingLevel } from "@/services/explanation/readingModeEngine";
@@ -43,7 +44,9 @@ function normaliseQ(q: string): string {
 }
 
 function hashKey(subject: string, question: string, mode: ReadingLevel): string {
-  const raw = `${mode}::${subject}::${normaliseQ(question)}`;
+  const context = getStoredAcademicContext();
+  const contextKey = context ? `${context.boardId}:${context.classNum}:${context.academicSession ?? ""}` : "unscoped";
+  const raw = `${contextKey}::${mode}::${subject}::${normaliseQ(question)}`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
@@ -127,25 +130,46 @@ function isBankLessonComplete(response: AIResponse): boolean {
   return true;
 }
 
-export function getBankCachedLesson(questionId: string): AIResponse | null {
+function bankLessonCacheKey(
+  questionId: string,
+  context: Pick<BankQuestionContext, "boardId" | "classNum" | "canonicalChapterId" | "academicSession">,
+  subject: string,
+): string {
+  const chapterKey = makeChapterContextKey({
+    boardId: context.boardId,
+    classNum: context.classNum,
+    subject,
+    canonicalChapterId: context.canonicalChapterId,
+    chapterId: context.canonicalChapterId ?? `question:${questionId}`,
+    academicSession: context.academicSession,
+  });
+  return `${chapterKey}|${encodeURIComponent(questionId)}`;
+}
+
+export function getBankCachedLesson(questionId: string, context?: BankQuestionContext): AIResponse | null {
+  if (!context) return null;
   const store = readBankCache();
-  const entry = store[questionId];
+  const key = bankLessonCacheKey(questionId, context, context.subject);
+  // Preserve the old CBSE-only cache as a read-only compatibility path. It is
+  // never considered for ICSE, WBBSE, or an unknown board.
+  const legacyEntry = context.boardId === "CBSE" ? store[questionId] : undefined;
+  const entry = store[key] ?? legacyEntry;
   if (!entry) return null;
   if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
-    delete store[questionId];
+    delete store[key];
     writeBankCache(store);
     return null;
   }
   // Treat incomplete cached entries as a cache miss — regenerate once
   if (!isBankLessonComplete(entry.lesson)) {
-    delete store[questionId];
+    delete store[key];
     writeBankCache(store);
     return null;
   }
   return entry.lesson;
 }
 
-function cacheBankLesson(questionId: string, lesson: AIResponse): void {
+function cacheBankLesson(questionId: string, context: BankQuestionContext, lesson: AIResponse): void {
   // Only cache a complete, validated lesson — never partial stream state or skeletons
   if (!isBankLessonComplete(lesson)) {
     console.warn("[BANK:CACHE] Lesson failed validity check — not caching (partial/fallback)");
@@ -157,7 +181,7 @@ function cacheBankLesson(questionId: string, lesson: AIResponse): void {
   for (const k of Object.keys(store)) {
     if (now - store[k].timestamp > CACHE_TTL_MS) delete store[k];
   }
-  store[questionId] = { lesson, timestamp: now };
+  store[bankLessonCacheKey(questionId, context, context.subject)] = { lesson, timestamp: now };
   writeBankCache(store);
 }
 
@@ -300,6 +324,7 @@ async function callBackend(
   onProgress?:     (message: string, percent: number) => void,
   intent?:         SolveIntent,
 ): Promise<BackendLessonResponse> {
+  const academicContext = getStoredAcademicContext();
   // Generate a requestId so the backend can key progress entries to this request
   const requestId = (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function")
     ? crypto.randomUUID()
@@ -326,6 +351,11 @@ async function callBackend(
         question: question.trim(),
         mode,
         studentContext,
+        ...(academicContext ? {
+          boardId: academicContext.boardId,
+          classNum: academicContext.classNum,
+          academicSession: academicContext.academicSession,
+        } : {}),
         requestId,
         ...(intent ? { intent } : {}),
       }),
@@ -601,6 +631,7 @@ async function callBackendStream(
   studentContext?: string,
   onSection?:      (ev: { field: string; index?: number; value: unknown }) => void,
 ): Promise<BackendLessonResponse> {
+  const academicContext = getStoredAcademicContext();
   const controller = new AbortController();
   const timer      = setTimeout(() => controller.abort(), FRONTEND_TIMEOUT_MS);
 
@@ -610,7 +641,14 @@ async function callBackendStream(
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       signal:  controller.signal,
-      body:    JSON.stringify({ subject, question: question.trim(), mode, studentContext }),
+      body:    JSON.stringify({
+        subject, question: question.trim(), mode, studentContext,
+        ...(academicContext ? {
+          boardId: academicContext.boardId,
+          classNum: academicContext.classNum,
+          academicSession: academicContext.academicSession,
+        } : {}),
+      }),
     });
   } finally {
     clearTimeout(timer);
@@ -685,6 +723,11 @@ async function callBackendStream(
 
 export interface BankQuestionContext {
   questionId:  string;
+  boardId:     BoardId;
+  classNum:    number;
+  subject:     string;
+  canonicalChapterId: string | null;
+  academicSession?: string;
   answer:      string;
   hint:        string;
   steps:       { title: string; explanation: string; formula?: string; result?: string }[];
@@ -715,6 +758,9 @@ async function callBankStream(
         subject,
         question:    question.trim(),
         mode:        "basic",    // Full Detailed schema → all sections → all 3 modes work
+        boardId:     bankContext.boardId,
+        classNum:    bankContext.classNum,
+        academicSession: bankContext.academicSession,
         bankContext,             // Authoritative grounding: frozen answer, steps, hint
       }),
     });
@@ -787,7 +833,7 @@ export async function solveBankWithStream(
   onPartial:   (partial: AIResponse) => void,
 ): Promise<AIResponse> {
   // Stable ID shared across partial and final renders — prevents SolutionCard remount
-  const streamId = `bank-${bankContext.questionId}`;
+  const streamId = `bank-${bankContext.boardId}-${bankContext.classNum}-${bankContext.questionId}`;
 
   const sectionMap      = new Map<string, unknown>();
   let   firstMeaningful = false;
@@ -820,7 +866,7 @@ export async function solveBankWithStream(
   );
 
   const result: AIResponse = { ...toAIResponse(data, subject, question), id: streamId, source: "bank" };
-  cacheBankLesson(bankContext.questionId, result);
+  cacheBankLesson(bankContext.questionId, bankContext, result);
   return result;
 }
 

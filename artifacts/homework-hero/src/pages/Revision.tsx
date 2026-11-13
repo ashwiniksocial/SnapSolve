@@ -16,6 +16,7 @@ import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import { getQuestionById, preloadQBank } from "@/services/questionService";
 import { useSession }  from "@/hooks/useSession";
 import { useProfile }  from "@/hooks/useProfile";
+import { getStoredAcademicContext } from "@/data/questions/academicContext";
 import type { RevisionItem, SRInterval } from "@/hooks/useRevisionPlanner";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -73,7 +74,8 @@ function RevisionCard({ item, isOverdue, onReview }: CardProps) {
   const { update } = useSession();
   const [, navigate] = useLocation();
 
-  const fullQ      = getQuestionById(item.questionId);
+  const academicContext = getStoredAcademicContext();
+  const fullQ      = getQuestionById(item.questionId, academicContext?.boardId, academicContext?.classNum);
   const isDone     = result !== null;
   const nextIv     = NEXT_IV[item.interval];
   const willMaster = result === "correct" && item.interval === 14;

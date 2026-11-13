@@ -60,7 +60,7 @@ const CLASS9_PHYSICS_QUESTIONS: Question[] = [
 const CLASS9_IT_CHAPTERS: ChapterMeta[]  = [IT402_U1_META, IT402_U2_META, IT402_U3_META];
 const CLASS9_IT_QUESTIONS: Question[]    = [...IT402_U1_QUESTIONS, ...IT402_U2_QUESTIONS, ...IT402_U3_QUESTIONS];
 
-export const ALL_CHAPTERS: ChapterMeta[] = [
+const RAW_ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS9_MATHS_CHAPTERS,
   ...CLASS9_PHYSICS_CHAPTERS,
   ...CLASS9_CHEMISTRY_CHAPTERS,
@@ -69,7 +69,7 @@ export const ALL_CHAPTERS: ChapterMeta[] = [
   ...CLASS9_IT_CHAPTERS,
 ];
 
-export const ALL_QUESTIONS: Question[] = [
+const RAW_ALL_QUESTIONS: Question[] = [
   ...CLASS9_MATHS_QUESTIONS,
   ...CLASS9_PHYSICS_QUESTIONS,
   ...CLASS9_CHEMISTRY_QUESTIONS,
@@ -77,6 +77,22 @@ export const ALL_QUESTIONS: Question[] = [
   ...CLASS9_SCIENCE_PLACEHOLDER_QUESTIONS,
   ...CLASS9_IT_QUESTIONS,
 ];
+
+// The legacy Class 9 files registered here belong to the existing CBSE bank.
+// V2 applicability metadata is retained as-authored; this declaration only
+// supplies identity for legacy V1 entries that have no board field.
+export const ALL_CHAPTERS: ChapterMeta[] = RAW_ALL_CHAPTERS.map((chapter) => ({
+  ...chapter,
+  boardId: chapter.boardId ?? "CBSE",
+  boardApplicability: chapter.boardApplicability ?? "CBSE",
+  academicSession: chapter.academicSession ?? "2026-27",
+}));
+
+export const ALL_QUESTIONS: Question[] = RAW_ALL_QUESTIONS.map((question) => ({
+  ...question,
+  boardApplicability: question.boardApplicability ?? "CBSE",
+  academicSession: question.academicSession ?? "2026-27",
+}));
 
 export type { ChapterMeta, Question };
 export type { Difficulty, TopicMeta, SolutionStep, QuestionType, EffectiveQuestionType } from "./types";

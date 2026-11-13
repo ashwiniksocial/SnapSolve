@@ -17,6 +17,7 @@ import { matchSolution, type AIResponse } from "@/data/solutionBank";
 import { getQuestions }                    from "@/services/questionService";
 import type { Subject }                    from "@/data/subjects";
 import type { TopicMatch }                 from "./topicMatcher";
+import { getStoredAcademicContext } from "@/data/questions/academicContext";
 
 // ─── Text similarity ──────────────────────────────────────────────────────────
 
@@ -101,7 +102,13 @@ export function generateSolution(
   const { subject, topic, confidence } = match;
 
   // 1. Get all questions for this topic from the bank
-  const bankQuestions = getQuestions({ subject, topicName: topic });
+  const context = getStoredAcademicContext();
+  const bankQuestions = getQuestions({
+    boardId: context?.boardId,
+    classNum: context?.classNum,
+    subject,
+    topicName: topic,
+  });
 
   // 2. Find the closest matching question by Jaccard similarity
   let bestQ = bankQuestions[0];

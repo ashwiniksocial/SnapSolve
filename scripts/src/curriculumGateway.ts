@@ -486,10 +486,25 @@ function checkGeneratedRegistrySync(): Finding[] {
     return findings;
   }
 
-  // Recompute from current canonical contract — must match the 4-field form used by generateCanonicalRegistry.ts
+  // Recompute from current canonical contract — must include curriculum context
+  // so chapters with the same internal ID cannot share a stale registry digest.
   const entries = getRawRegistryEntries()
-    .map(e => ({ internalId: e.internalId, canonicalChapterId: e.canonicalChapterId, status: e.status, displayOrder: e.displayOrder }))
-    .sort((a, b) => a.internalId.localeCompare(b.internalId));
+    .map(e => ({
+      boardId: e.boardId,
+      classId: e.classId,
+      subjectId: e.subjectId,
+      academicSession: e.academicSession,
+      internalId: e.internalId,
+      canonicalChapterId: e.canonicalChapterId,
+      status: e.status,
+      displayOrder: e.displayOrder,
+    }))
+    .sort((a, b) =>
+      [a.boardId, a.classId, a.subjectId, a.academicSession, a.internalId]
+        .map(encodeURIComponent).join("|")
+        .localeCompare([b.boardId, b.classId, b.subjectId, b.academicSession, b.internalId]
+          .map(encodeURIComponent).join("|")),
+    );
   const currentChecksum = createHash("sha256").update(JSON.stringify(entries)).digest("hex").slice(0, 16);
 
   if (currentChecksum !== stored.checksum) {

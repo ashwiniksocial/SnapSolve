@@ -29,12 +29,20 @@ const CHECKSUM_OUT = resolve(ROOT, "curriculum/generated/canonical-registry-chec
 function run(): void {
   const entries = getRawRegistryEntries();
 
-  // Deterministic sort for stable output (and stable checksum).
-  entries.sort((a, b) => a.internalId.localeCompare(b.internalId));
+  // Context identity prevents same-named chapters from different curricula
+  // sharing one browser registry entry.
+  const registryKey = (e: typeof entries[number]) =>
+    [e.boardId, e.classId, e.subjectId, e.academicSession, e.internalId]
+      .map(encodeURIComponent).join("|");
+  entries.sort((a, b) => registryKey(a).localeCompare(registryKey(b)));
 
-  // ── Checksum — computed from the compact 4-field form stored in the JSON ──
+  // ── Checksum — covers both content mapping and curriculum identity ────────
   // The gateway re-derives the same compact form; both must match exactly.
   const compactEntries = entries.map(e => ({
+    boardId:            e.boardId,
+    classId:            e.classId,
+    subjectId:          e.subjectId,
+    academicSession:    e.academicSession,
     internalId:         e.internalId,
     canonicalChapterId: e.canonicalChapterId,
     status:             e.status,
@@ -55,9 +63,11 @@ function run(): void {
     `  /** Official NCERT/board book code. null when SOURCE_UNRESOLVED or SOURCE_PENDING. */`,
     `  canonicalChapterId: string | null;`,
     `  curriculumStatus:   CurriculumStatus;`,
+    `  internalId:         string;`,
     `  subjectId:          string;`,
     `  classId:            number;`,
     `  boardId:            string;`,
+    `  academicSession:    string;`,
     `  /** Student-facing 1-based ordinal position within the subject group. */`,
     `  displayOrder:       number;`,
     `}`,
@@ -71,16 +81,21 @@ function run(): void {
 
   for (const e of entries) {
     const cid = e.canonicalChapterId === null ? "null" : `"${e.canonicalChapterId}"`;
+    const key = registryKey(e);
     lines.push(
-      `  "${e.internalId}": { canonicalChapterId: ${cid}, curriculumStatus: "${e.status}", subjectId: "${e.subjectId}", classId: ${e.classId}, boardId: "${e.boardId}", displayOrder: ${e.displayOrder} },`,
+      `  "${key}": { canonicalChapterId: ${cid}, curriculumStatus: "${e.status}", internalId: "${e.internalId}", subjectId: "${e.subjectId}", classId: ${e.classId}, boardId: "${e.boardId}", academicSession: "${e.academicSession}", displayOrder: ${e.displayOrder} },`,
     );
   }
 
   lines.push(`} as const;`);
   lines.push(``);
-  lines.push(`/** Look up the canonical registry entry for a question-bank internal chapter ID. */`);
-  lines.push(`export function lookupCanonical(internalId: string): CanonicalRegistryEntry | undefined {`);
-  lines.push(`  return CANONICAL_CHAPTER_REGISTRY[internalId];`);
+  lines.push(`/** Look up a chapter only within its exact board/class/subject context. */`);
+  lines.push(`export function lookupCanonical(internalId: string, boardId: string, classId: number, subjectId: string, academicSession?: string): CanonicalRegistryEntry | undefined {`);
+  lines.push(`  const matches = Object.values(CANONICAL_CHAPTER_REGISTRY).filter((entry) =>`);
+  lines.push(`    entry.internalId === internalId && entry.boardId === boardId && entry.classId === classId && entry.subjectId === subjectId &&`);
+  lines.push(`    (academicSession === undefined || entry.academicSession === academicSession),`);
+  lines.push(`  );`);
+  lines.push(`  return matches.length === 1 ? matches[0] : undefined;`);
   lines.push(`}`);
   lines.push(``);
 
@@ -116,6 +131,10 @@ function run(): void {
     checksum,
     entryCount: entries.length,
     entries:    entries.map(e => ({
+      boardId:            e.boardId,
+      classId:            e.classId,
+      subjectId:          e.subjectId,
+      academicSession:    e.academicSession,
       internalId:         e.internalId,
       canonicalChapterId: e.canonicalChapterId,
       status:             e.status,

@@ -1,5 +1,7 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Subject } from "@/data/subjects";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
 // ─── Data shapes ──────────────────────────────────────────────────────────────
 
@@ -15,18 +17,23 @@ type ProgressData  = Record<Subject, SubjectRecord>;
 
 // ─── localStorage ─────────────────────────────────────────────────────────────
 
-const KEY = "studyai-progress-v2";
+const KEY_PREFIX = "studyai-progress-v3";
 
-function load(): ProgressData {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as ProgressData;
-  } catch {}
+function emptyProgress(): ProgressData {
   return { Science: {}, Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {}, "Information Technology": {} };
 }
 
-function persist(data: ProgressData) {
-  localStorage.setItem(KEY, JSON.stringify(data));
+function load(key: string | null): ProgressData {
+  if (!key) return emptyProgress();
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) return JSON.parse(raw) as ProgressData;
+  } catch {}
+  return emptyProgress();
+}
+
+function persist(key: string | null, data: ProgressData) {
+  if (key) localStorage.setItem(key, JSON.stringify(data));
 }
 
 /** Pure unique-coverage transition used by the Practice outcome workflow. */
@@ -82,13 +89,24 @@ export interface SubjectStats {
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-export function useProgress() {
-  const [progress, setProgress] = useState<ProgressData>(load);
+export function useProgress(classNumOverride?: number) {
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, classNumOverride ?? profile.classLevel);
+  const scopeKey = scopedStorageKey(KEY_PREFIX, context);
+  const [stored, setStored] = useState(() => ({ key: scopeKey, data: load(scopeKey) }));
+
+  useEffect(() => {
+    setStored({ key: scopeKey, data: load(scopeKey) });
+  }, [scopeKey]);
+
+  const progress = stored.key === scopeKey ? stored.data : emptyProgress();
 
   // Record a single question attempt
   const recordSolve = useCallback(
     (subject: Subject, topic: string, correct: boolean, questionId?: string) => {
-      setProgress((prev) => {
+      if (!scopeKey) return;
+      setStored((storedPrev) => {
+        const prev = storedPrev.key === scopeKey ? storedPrev.data : load(scopeKey);
         const subj    = { ...(prev[subject] ?? {}) };
         const current = subj[topic] ?? { solved: 0, correct: 0, attempted: [] };
 
@@ -105,11 +123,11 @@ export function useProgress() {
         };
 
         const next = { ...prev, [subject]: subj };
-        persist(next);
-        return next;
+        persist(scopeKey, next);
+        return { key: scopeKey, data: next };
       });
     },
-    []
+    [scopeKey]
   );
 
   /**
@@ -119,14 +137,16 @@ export function useProgress() {
    */
   const recordPractice = useCallback(
     (subject: Subject, topic: string, questionId: string) => {
-      setProgress((prev) => {
+      if (!scopeKey) return;
+      setStored((storedPrev) => {
+        const prev = storedPrev.key === scopeKey ? storedPrev.data : load(scopeKey);
         const next = recordUniquePractice(prev, subject, topic, questionId);
-        if (next === prev) return prev;
-        persist(next);
-        return next;
+        if (next === prev) return storedPrev;
+        persist(scopeKey, next);
+        return { key: scopeKey, data: next };
       });
     },
-    [],
+    [scopeKey],
   );
 
   // Full stats for a subject
@@ -223,10 +243,11 @@ export function useProgress() {
 
   // Reset all data (settings / debug)
   const resetProgress = useCallback(() => {
-    const empty: ProgressData = { Science: {}, Physics: {}, Chemistry: {}, Mathematics: {}, Biology: {}, Economics: {}, "Computer Science": {}, "Information Technology": {} };
-    persist(empty);
-    setProgress(empty);
-  }, []);
+    if (!scopeKey) return;
+    const empty = emptyProgress();
+    persist(scopeKey, empty);
+    setStored({ key: scopeKey, data: empty });
+  }, [scopeKey]);
 
   return {
     progress,

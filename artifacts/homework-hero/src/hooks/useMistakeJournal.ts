@@ -8,18 +8,22 @@
  *   - "How many tries before I finally solved this?"
  *   - "Which topics need the most revision?"
  *
- * Data is persisted in localStorage under `studyai-mistakes-v1`.
+ * Data is persisted in a board/class-scoped localStorage store.
  * The events array is append-only; resolution is tracked in a separate map.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { Subject } from "@/data/subjects";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
-const KEY = "studyai-mistakes-v1";
+const KEY_PREFIX = "studyai-mistakes-v2";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface MistakeEvent {
+  boardId:    string;
+  classNum:   number;
   id:         string;
   subject:    Subject;
   topic:      string;      // q.topicName
@@ -31,6 +35,8 @@ export interface MistakeEvent {
 }
 
 interface AttemptRecord {
+  boardId:  string;
+  classNum: number;
   subject:  Subject;
   topic:    string;
   chapter:  string;
@@ -82,31 +88,47 @@ function nanoId(): string {
 
 // ─── localStorage ─────────────────────────────────────────────────────────────
 
-function load(): JournalData {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as JournalData;
-  } catch {}
+function emptyJournal(): JournalData {
   return { events: [], attempts: {} };
 }
 
-function persist(data: JournalData): void {
-  localStorage.setItem(KEY, JSON.stringify(data));
+function load(key: string | null): JournalData {
+  if (!key) return emptyJournal();
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) return JSON.parse(raw) as JournalData;
+  } catch {}
+  return emptyJournal();
+}
+
+function persist(key: string | null, data: JournalData): void {
+  if (key) localStorage.setItem(key, JSON.stringify(data));
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-export function useMistakeJournal() {
-  const [data, setData] = useState<JournalData>(load);
+export function useMistakeJournal(classNumOverride?: number) {
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, classNumOverride ?? profile.classLevel);
+  const storageKey = scopedStorageKey(KEY_PREFIX, context);
+  const [stored, setStored] = useState(() => ({ key: storageKey, data: load(storageKey) }));
+
+  useEffect(() => {
+    setStored({ key: storageKey, data: load(storageKey) });
+  }, [storageKey]);
+
+  const data = stored.key === storageKey ? stored.data : emptyJournal();
 
   // Single mutate helper so persist is always called
   const mutate = useCallback((fn: (prev: JournalData) => JournalData) => {
-    setData((prev) => {
-      const next = fn(prev);
-      persist(next);
-      return next;
+    if (!storageKey || !context) return;
+    setStored((prev) => {
+      const current = prev.key === storageKey ? prev.data : load(storageKey);
+      const next = fn(current);
+      persist(storageKey, next);
+      return { key: storageKey, data: next };
     });
-  }, []);
+  }, [context, storageKey]);
 
   // ── Write operations ──────────────────────────────────────────────────────
 
@@ -122,12 +144,16 @@ export function useMistakeJournal() {
       mutate((prev) => {
         const event: MistakeEvent = {
           id: nanoId(),
+          boardId: context!.boardId,
+          classNum: context!.classNum,
           subject, topic, chapter, questionId, question,
           timestamp: Date.now(),
           date: todayStr(),
         };
 
         const prevRec = prev.attempts[questionId] ?? {
+          boardId: context!.boardId,
+          classNum: context!.classNum,
           subject, topic, chapter, question, wrong: 0, solved: false,
         };
 
@@ -140,7 +166,7 @@ export function useMistakeJournal() {
         };
       });
     },
-    [mutate]
+    [context, mutate]
   );
 
   /** Call when the student gets a question right — marks it as resolved. */
@@ -258,10 +284,11 @@ export function useMistakeJournal() {
   }, [data]);
 
   const clearAll = useCallback(() => {
-    const empty: JournalData = { events: [], attempts: {} };
-    persist(empty);
-    setData(empty);
-  }, []);
+    if (!storageKey) return;
+    const empty = emptyJournal();
+    persist(storageKey, empty);
+    setStored({ key: storageKey, data: empty });
+  }, [storageKey]);
 
   return {
     recordMistake,

@@ -3,6 +3,8 @@ import { flushSync } from "react-dom";
 import { Link } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
+import { useProfile } from "@/hooks/useProfile";
+import { normalizeBoardId } from "@/data/questions/academicContext";
 import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner, type SelfAssessmentStatus } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
@@ -31,8 +33,11 @@ type PageState = "loading" | "done" | "error";
 
 export default function Solution() {
   const { session, update } = useSession();
-  const { recordSolve, recordPractice } = useProgress();
-  const { setSelfAssessment, selfAssessments } = useRevisionPlanner();
+  const { profile } = useProfile();
+  const boardId = normalizeBoardId(profile.board);
+  const classNum = session.practiceClassNum ?? profile.classLevel ?? undefined;
+  const { recordSolve, recordPractice } = useProgress(classNum);
+  const { setSelfAssessment, selfAssessments } = useRevisionPlanner(classNum);
   const cfg = SUBJECTS[session.subject];
 
   const [pageState, setPageState]   = useState<PageState>("loading");
@@ -106,15 +111,20 @@ export default function Solution() {
       // One lesson serves all 3 teaching modes — switching is instant, 0 AI calls.
       if (practiceMode && practiceQuestionId) {
         await preloadQBank();
-        const bankQ = getQuestionById(practiceQuestionId);
+        const bankQ = getQuestionById(practiceQuestionId, boardId ?? undefined, classNum);
         if (bankQ) {
           setVisibleQuestionNumber(getQuestionDisplayNumber(bankQ) ?? null);
           setVisibleChapterNumber(
-            getChapterDisplayNumber(bankQ.classNum, bankQ.subject, bankQ.chapterId) ?? null,
+            getChapterDisplayNumber(bankQ.classNum, bankQ.subject, bankQ.chapterId, bankQ.boardId) ?? null,
           );
           setVisiblePracticeSubject(getStudentFacingSubject(bankQ.subject));
           const bankContext: BankQuestionContext = {
             questionId:  bankQ.id,
+            boardId:     bankQ.boardId!,
+            classNum:    bankQ.classNum,
+            subject:     bankQ.subject,
+            canonicalChapterId: bankQ.canonicalChapterId ?? null,
+            academicSession: bankQ.academicSession,
             answer:      bankQ.answer,
             hint:        bankQ.hint,
             steps:       bankQ.steps,
@@ -141,7 +151,7 @@ export default function Solution() {
           }
 
           // ── Secondary browser cache: instant display, 0 AI calls ────────────
-          const cached = getBankCachedLesson(bankQ.id);
+          const cached = getBankCachedLesson(bankQ.id, bankContext);
           if (cached) {
             setSolution(applyCanonicalBankMetadata(cached, bankQ));
             setPageState("done");
@@ -240,7 +250,7 @@ export default function Solution() {
 
   const setPracticeAssessment = (status: Exclude<SelfAssessmentStatus, "UNSET">) => {
     if (!practiceQuestionId) return;
-    const bankQuestion = getQuestionById(practiceQuestionId);
+    const bankQuestion = getQuestionById(practiceQuestionId, boardId ?? undefined, classNum);
     if (!bankQuestion) return;
     const metadata = getCanonicalPracticeMetadata(bankQuestion);
 

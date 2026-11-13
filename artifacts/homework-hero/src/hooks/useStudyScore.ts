@@ -20,10 +20,12 @@
 
 import { useMemo } from "react";
 import { unwrapRevisionItems } from "@/services/revisionStorage";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
 // ─── Storage keys ─────────────────────────────────────────────────────────────
-const PROGRESS_KEY = "studyai-progress-v2";
-const REVISION_KEY = "studyai-revision-v1";
+const PROGRESS_PREFIX = "studyai-progress-v3";
+const REVISION_PREFIX = "studyai-revision-v2";
 const STREAK_KEY   = "homework-hero-streak";
 
 // ─── Formula weights ──────────────────────────────────────────────────────────
@@ -52,7 +54,8 @@ export interface StudyScore {
 
 // ─── localStorage helpers ─────────────────────────────────────────────────────
 
-function safeRead<T>(key: string, fallback: T): T {
+function safeRead<T>(key: string | null, fallback: T): T {
+  if (!key) return fallback;
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
@@ -86,9 +89,13 @@ function toGrade(score: number): { grade: string; emoji: string; color: string }
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useStudyScore(): StudyScore {
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, profile.classLevel);
+  const progressKey = scopedStorageKey(PROGRESS_PREFIX, context);
+  const revisionKey = scopedStorageKey(REVISION_PREFIX, context);
   return useMemo(() => {
     // ── 1. Accuracy ────────────────────────────────────────────────────────
-    const prog = safeRead<ProgressData>(PROGRESS_KEY, {
+    const prog = safeRead<ProgressData>(progressKey, {
       Physics: {}, Chemistry: {}, Mathematics: {},
     });
 
@@ -109,7 +116,7 @@ export function useStudyScore(): StudyScore {
 
     // ── 3. Revision completion ────────────────────────────────────────────
     const revData  = unwrapRevisionItems<RevisionItem>(
-      safeRead<unknown>(REVISION_KEY, {}),
+      safeRead<unknown>(revisionKey, {}),
     );
     const revItems = Object.values(revData);
     const today    = new Date().toISOString().slice(0, 10);
@@ -145,5 +152,5 @@ export function useStudyScore(): StudyScore {
         streak:   Math.round(streak),
       },
     };
-  }, []);
+  }, [progressKey, revisionKey]);
 }

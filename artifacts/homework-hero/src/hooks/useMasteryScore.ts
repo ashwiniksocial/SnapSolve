@@ -20,6 +20,7 @@ import { useMemo } from "react";
 import type { Subject } from "@/data/subjects";
 import { useAttemptLog, type AttemptRecord } from "@/hooks/useAttemptLog";
 import { getChapters } from "@/services/questionService";
+import { getStoredAcademicContext } from "@/data/questions/academicContext";
 
 const DIFF_WEIGHT: Record<string, number> = {
   Easy: 1.0,
@@ -63,7 +64,7 @@ function consistencyScore(
   classNum: number,
 ): number {
   if (records.length === 0) return 0;
-  const totalChapters = getChapters(classNum, subject).length;
+  const totalChapters = getChapters(classNum, subject, getStoredAcademicContext()?.boardId).length;
   if (totalChapters === 0) return 0;
   const practiced = new Set(records.map((r) => r.chapterId)).size;
   return Math.min((practiced / totalChapters) * 100, 100);

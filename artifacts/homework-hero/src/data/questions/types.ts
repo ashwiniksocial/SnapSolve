@@ -8,6 +8,10 @@
  * - All arrays are flat (no nested arrays).
  */
 
+import type { BoardApplicability, BoardId } from "./academicContext";
+
+export type { BoardApplicability, BoardId } from "./academicContext";
+
 /**
  * Curriculum lifecycle status for a chapter.
  * Mirrors CanonicalStatus in scripts/src/canonicalCurriculum.ts.
@@ -46,6 +50,11 @@ export interface Question {
   classNum: number;               // 9
   subject: string;                // "Mathematics"
   chapterId: string;              // "ch1"
+  boardId?: BoardId;              // Selected board context when returned by questionService
+  boardApplicability?: BoardApplicability;
+  verifiedBoards?: BoardId[];     // Required for serving a "Both" question outside CBSE
+  academicSession?: string;
+  canonicalChapterId?: string | null;
   chapterName: string;            // "Number Systems"
   topicId: string;                // "t1"
   topicName: string;              // "Real Numbers and Their Types"
@@ -70,6 +79,10 @@ export interface ChapterMeta {
   name: string;
   classNum: number;
   subject: string;
+  boardId?: BoardId;
+  boardApplicability?: BoardApplicability;
+  verifiedBoards?: BoardId[];
+  academicSession?: string;
   /**
    * Official NCERT/board book code (e.g. "iemh101", "iesc104").
    * null when no canonical 2026-27 chapter is confirmed (SOURCE_UNRESOLVED / SOURCE_PENDING).

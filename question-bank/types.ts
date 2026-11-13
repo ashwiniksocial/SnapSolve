@@ -23,10 +23,10 @@
 
 export type SupportedClass   = 6 | 7 | 8 | 9;
 export type SupportedSubject = "Mathematics" | "Physics" | "Chemistry" | "Biology" | "Computer Science" | "Economics";
-export type SupportedBoard   = "CBSE" | "ICSE";
+export type SupportedBoard   = "CBSE" | "ICSE" | "WBBSE";
 
 /** Which board(s) a question or chapter applies to */
-export type BoardApplicability = "CBSE" | "ICSE" | "Both";
+export type BoardApplicability = SupportedBoard | "Both";
 
 // ─── Question type taxonomy ──────────────────────────────────────────────────
 
@@ -166,6 +166,8 @@ export interface QuestionV2 {
   classNum:        SupportedClass;
   subject:         SupportedSubject;
   board:           BoardApplicability; // V2: explicit board (V1 had no board field)
+  verifiedBoards?: SupportedBoard[];   // Additional boards explicitly verified for shared content
+  academicSession?: string;
   chapterId:       string;             // format: "ch01", "ch02", ...
   chapterName:     string;
   topicId:         string;             // format: "t1", "t2", ...

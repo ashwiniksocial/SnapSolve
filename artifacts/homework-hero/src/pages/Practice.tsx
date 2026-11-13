@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { SUBJECTS, type SubjectConfig, type Subject } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useProfile } from "@/hooks/useProfile";
+import { normalizeBoardId } from "@/data/questions/academicContext";
 import { useChapterStats } from "@/hooks/useChapterStats";
 import { useAttemptLog } from "@/hooks/useAttemptLog";
 import { useProgress }      from "@/hooks/useProgress";
@@ -255,11 +256,11 @@ function QuestionCard({
 export default function Practice() {
   const { session, update }                    = useSession();
   const { profile }                            = useProfile();
-  const { getChapterAttempts }                 = useAttemptLog();
-  const { progress }                           = useProgress();
-  const { selfAssessments }                    = useRevisionPlanner();
-
+  const boardId = normalizeBoardId(profile.board);
   const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
+  const { getChapterAttempts }                 = useAttemptLog(practiceClass);
+  const { progress }                           = useProgress(practiceClass);
+  const { selfAssessments }                    = useRevisionPlanner(practiceClass);
   const [bankReady,       setBankReady]      = useState(false);
   // selectedSubject is the synchronous source of truth for all chapter
   // rendering and computation. It updates immediately in the event handler so
@@ -269,16 +270,16 @@ export default function Practice() {
 
   const cfg = SUBJECTS[selectedSubject];
 
-  const chapterStats = useChapterStats(selectedSubject, practiceClass, bankReady);
+  const chapterStats = useChapterStats(selectedSubject, practiceClass, bankReady, boardId ?? undefined);
 
   const chapters = useMemo(
-    () => bankReady ? getChapters(practiceClass, selectedSubject) : [],
-    [bankReady, practiceClass, selectedSubject],
+    () => bankReady && boardId ? getChapters(practiceClass, selectedSubject, boardId) : [],
+    [bankReady, boardId, practiceClass, selectedSubject],
   );
 
   const activeReadinessQuestions = useMemo(
-    () => bankReady ? getQuestions({ classNum: practiceClass, subject: selectedSubject }) : [],
-    [bankReady, practiceClass, selectedSubject],
+    () => bankReady && boardId ? getQuestions({ boardId, classNum: practiceClass, subject: selectedSubject }) : [],
+    [bankReady, boardId, practiceClass, selectedSubject],
   );
   const readiness = useMemo(
     () => derivePracticeReadiness(activeReadinessQuestions, progress, selfAssessments, selectedSubject),
@@ -302,11 +303,15 @@ export default function Practice() {
   const [searchQuery,       setSearchQuery]       = useState("");
   const [readinessDrilldown, setReadinessDrilldown] = useState<ReadinessDrilldown | null>(null);
 
-  const topics = useMemo(() => getTopics(selectedChapterId), [selectedChapterId]);
+  const topics = useMemo(
+    () => boardId ? getTopics(selectedChapterId, practiceClass, selectedSubject, boardId) : [],
+    [boardId, practiceClass, selectedChapterId, selectedSubject],
+  );
 
   const questions = useMemo(
     () =>
       getQuestions({
+        boardId:      boardId ?? undefined,
         classNum:     practiceClass,
         subject:      selectedSubject,
         chapterId:    selectedChapterId,
@@ -314,7 +319,7 @@ export default function Practice() {
         difficulty:   selectedDiff,
         questionType: selectedType,
       }),
-    [practiceClass, selectedSubject, selectedChapterId, selectedTopicId, selectedDiff, selectedType],
+    [boardId, practiceClass, selectedSubject, selectedChapterId, selectedTopicId, selectedDiff, selectedType],
   );
 
   const readinessQuestions = useMemo(
@@ -332,12 +337,13 @@ export default function Practice() {
     () =>
       bankReady &&
       getQuestions({
+        boardId:   boardId ?? undefined,
         classNum:  practiceClass,
         subject:   selectedSubject,
         chapterId: selectedChapterId || undefined,
         ...(selectedTopicId !== "all" ? { topicId: selectedTopicId } : {}),
       }).some((q) => q.questionType === undefined),
-    [bankReady, practiceClass, selectedSubject, selectedChapterId, selectedTopicId],
+    [bankReady, boardId, practiceClass, selectedSubject, selectedChapterId, selectedTopicId],
   );
 
   // Only expose "Unclassified" pill when the chapter actually contains such
@@ -359,8 +365,10 @@ export default function Practice() {
 
   // ── Subject helpers ─────────────────────────────────────────────────────────
   const availableSubjects = useMemo(
-    () => bankReady ? ALL_SUBJECTS.filter((s) => getChapters(practiceClass, s).length > 0) : [],
-    [bankReady, practiceClass],
+    () => bankReady && boardId
+      ? ALL_SUBJECTS.filter((s) => getChapters(practiceClass, s, boardId).length > 0)
+      : [],
+    [bankReady, boardId, practiceClass],
   );
 
   const searchResults = useMemo(() => {
@@ -369,11 +377,11 @@ export default function Practice() {
     const terms = query.split(/\s+/).filter(Boolean);
     const activeChapterIds = new Set(
       availableSubjects.flatMap((subject) =>
-        getChapters(practiceClass, subject).map((chapter) => chapter.id),
+        boardId ? getChapters(practiceClass, subject, boardId).map((chapter) => chapter.id) : [],
       ),
     );
     const candidates = availableSubjects.flatMap((subject) =>
-      getQuestions({ classNum: practiceClass, subject }),
+      boardId ? getQuestions({ boardId, classNum: practiceClass, subject }) : [],
     ).filter((question) => activeChapterIds.has(question.chapterId));
 
     return candidates.filter((question) => {
@@ -384,11 +392,11 @@ export default function Practice() {
       ].join(" ").toLocaleLowerCase();
       return terms.every((term) => searchableText.includes(term));
     }).slice(0, 12);
-  }, [availableSubjects, bankReady, practiceClass, searchQuery]);
+  }, [availableSubjects, bankReady, boardId, practiceClass, searchQuery]);
 
   const handleSubjectChange = useCallback((s: Subject) => {
     setSelectedSubject(s);                    // sync — clears stale chapters immediately
-    const next = getChapters(practiceClass, s);
+    const next = boardId ? getChapters(practiceClass, s, boardId) : [];
     update({ subject: s });                   // async persist to session / localStorage
     setSelectedChapterId(next[0]?.id ?? "");
     setSelectedTopicId("all");
@@ -396,7 +404,7 @@ export default function Practice() {
     setSelectedType("All");
     setDrilldownOpen(false);
     setReadinessDrilldown(null);
-  }, [practiceClass, update]);
+  }, [boardId, practiceClass, update]);
 
   useEffect(() => {
     if (availableSubjects.length > 0 && !availableSubjects.includes(selectedSubject)) {
@@ -418,7 +426,7 @@ export default function Practice() {
     if (paramChapter) {
       // Find which Practice-level subject owns this chapter ID.
       const owningSubject = ALL_SUBJECTS.find((s) =>
-        getChapters(practiceClass, s).some((ch) => ch.id === paramChapter),
+        boardId ? getChapters(practiceClass, s, boardId).some((ch) => ch.id === paramChapter) : false,
       );
       if (owningSubject) {
         setSelectedSubject(owningSubject);
@@ -436,12 +444,12 @@ export default function Practice() {
     }
 
     // Default: first chapter, no drilldown
-    const next = getChapters(practiceClass, selectedSubject);
+    const next = boardId ? getChapters(practiceClass, selectedSubject, boardId) : [];
     setSelectedChapterId(next[0]?.id ?? "");
     setDrilldownOpen(false);
     setSelectedTopicId("all");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bankReady, practiceClass]);
+  }, [bankReady, boardId, practiceClass]);
 
   // ── Preload question bank for the selected class ──────────────────────────
   useEffect(() => {
@@ -475,10 +483,12 @@ export default function Practice() {
 
   const handleReopenQuestion = useCallback((questionId: string) => {
     const found = chapters
-      .flatMap((ch) => getQuestions({ classNum: practiceClass, subject: selectedSubject, chapterId: ch.id }))
+      .flatMap((ch) => boardId
+        ? getQuestions({ boardId, classNum: practiceClass, subject: selectedSubject, chapterId: ch.id })
+        : [])
       .find((q) => q.id === questionId);
     if (found) handleOpenQuestion(found);
-  }, [chapters, practiceClass, selectedSubject, handleOpenQuestion]);
+  }, [boardId, chapters, practiceClass, selectedSubject, handleOpenQuestion]);
 
   const openChapter = useCallback((chapterId: string) => {
     setSelectedChapterId(chapterId);
@@ -531,6 +541,21 @@ export default function Practice() {
     );
   }
 
+  if (!boardId || availableSubjects.length === 0) {
+    const label = profile.board?.trim() || "an unsupported or unset board";
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-5">
+        <div className="max-w-sm rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+          <h1 className="text-lg font-bold text-slate-900">Practice content unavailable</h1>
+          <p className="mt-2 text-sm text-slate-600">
+            SnapSolve has no validated Practice question bank for {label}, Class {practiceClass}.
+            No questions from another board will be shown.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-slate-50">
@@ -551,7 +576,7 @@ export default function Practice() {
           <div className="flex gap-2 mb-3">
             {CLASS_OPTIONS.map((cn) => {
               const active     = practiceClass === cn;
-              const hasContent = getChapters(cn, selectedSubject).length > 0;
+              const hasContent = !!boardId && getChapters(cn, selectedSubject, boardId).length > 0;
               return (
                 <button
                   key={cn}
@@ -625,6 +650,7 @@ export default function Practice() {
                         question.classNum,
                         question.subject,
                         question.chapterId,
+                        boardId,
                       );
                       const questionNumber = getQuestionDisplayNumber(question);
                       return (

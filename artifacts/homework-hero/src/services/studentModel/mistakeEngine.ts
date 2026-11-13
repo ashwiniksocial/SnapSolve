@@ -9,7 +9,7 @@
  * tutor can pro-actively address them in the next explanation.
  */
 
-import { readAllMistakes, recordMistake } from "./syncManager";
+import { readAllMistakes, recordMistake, writeAllMistakes } from "./syncManager";
 import type { MistakeRecord } from "./syncManager";
 
 const PERSISTENT_THRESHOLD = 3; // seen ≥ 3 times = persistent pattern
@@ -73,6 +73,6 @@ export function resolveMistake(subject: string, topic: string, description: stri
   const entry = (all[key] ?? []).find((m) => m.description === description);
   if (entry) {
     entry.resolved = true;
-    try { localStorage.setItem("studyai-v1-mistakes", JSON.stringify(all)); } catch {}
+    writeAllMistakes(all);
   }
 }

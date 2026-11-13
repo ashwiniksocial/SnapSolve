@@ -5,16 +5,19 @@
  * for every question the student attempts. Powers the Question Drilldown
  * section in Analytics.
  *
- * localStorage key: "studyai-attempt-log-v1"
+ * Records use a board/class-scoped localStorage key.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { Subject } from "@/data/subjects";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
-const KEY = "studyai-attempt-log-v1";
+const KEY_PREFIX = "studyai-attempt-log-v2";
 
 export interface AttemptRecord {
   questionId:    string;
+  boardId?:      string;
   questionText:  string;
   correct:       boolean;
   difficulty:    string;
@@ -28,22 +31,33 @@ export interface AttemptRecord {
 
 type AttemptLog = Record<string, AttemptRecord>;
 
-function load(): AttemptLog {
+function load(key: string | null): AttemptLog {
+  if (!key) return {};
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(key);
     if (raw) return JSON.parse(raw) as AttemptLog;
   } catch {}
   return {};
 }
 
-function persist(log: AttemptLog) {
+function persist(key: string | null, log: AttemptLog) {
+  if (!key) return;
   try {
-    localStorage.setItem(KEY, JSON.stringify(log));
+    localStorage.setItem(key, JSON.stringify(log));
   } catch {}
 }
 
-export function useAttemptLog() {
-  const [log, setLog] = useState<AttemptLog>(load);
+export function useAttemptLog(classNumOverride?: number) {
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, classNumOverride ?? profile.classLevel);
+  const storageKey = scopedStorageKey(KEY_PREFIX, context);
+  const [stored, setStored] = useState(() => ({ key: storageKey, log: load(storageKey) }));
+
+  useEffect(() => {
+    setStored({ key: storageKey, log: load(storageKey) });
+  }, [storageKey]);
+
+  const log = stored.key === storageKey ? stored.log : {};
 
   /** Record or update an attempt for a question. */
   const logAttempt = useCallback(
@@ -57,12 +71,15 @@ export function useAttemptLog() {
       subject:      Subject,
       classNum:     number,
     ) => {
-      setLog((prev) => {
+      if (!storageKey) return;
+      setStored((storedPrev) => {
+        const prev = storedPrev.key === storageKey ? storedPrev.log : load(storageKey);
         const existing = prev[questionId];
         const next: AttemptLog = {
           ...prev,
           [questionId]: {
             questionId,
+            boardId: storageKey.split(":")[1],
             questionText,
             correct,
             difficulty,
@@ -74,11 +91,11 @@ export function useAttemptLog() {
             attempts: (existing?.attempts ?? 0) + 1,
           },
         };
-        persist(next);
-        return next;
+        persist(storageKey, next);
+        return { key: storageKey, log: next };
       });
     },
-    [],
+    [storageKey],
   );
 
   /** All attempts for a specific chapter. */

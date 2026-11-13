@@ -97,31 +97,60 @@ function normaliseQuestion(q: string): string {
   return q.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,;:]+$/, "");
 }
 
-function makeCacheKey(subject: string, question: string, mode: LessonMode): string {
-  const raw = `${mode}::${subject}::${normaliseQuestion(question)}`;
+function solverContextKey(boardId: unknown, classNum: unknown, academicSession: unknown): string {
+  const boards = ["CBSE", "ICSE", "WBBSE"];
+  if (
+    typeof boardId !== "string" ||
+    !boards.includes(boardId) ||
+    typeof classNum !== "number" ||
+    !Number.isInteger(classNum) ||
+    classNum < 6 ||
+    classNum > 12
+  ) return "unscoped";
+  const session = typeof academicSession === "string" ? academicSession.trim() : "";
+  return `${boardId}:${classNum}:${session || "session-unresolved"}`;
+}
+
+function makeCacheKey(subject: string, question: string, mode: LessonMode, contextKey: string): string {
+  const raw = `${contextKey}::${mode}::${subject}::${normaliseQuestion(question)}`;
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return Math.abs(h).toString(36);
 }
 
-/** Stable cache key for bank questions — keyed by questionId, not question text. */
-function makeBankCacheKey(questionId: string): string {
-  const raw = `bank::${questionId}`;
+/** Stable bank cache key includes the full selected curriculum context. */
+function makeBankCacheKey(context: {
+  questionId: string;
+  boardId: string;
+  classNum: number;
+  subject: string;
+  canonicalChapterId: string | null;
+  academicSession?: string;
+}): string {
+  const raw = [
+    "bank",
+    context.boardId,
+    context.classNum,
+    context.subject,
+    context.academicSession ?? "session-unresolved",
+    context.canonicalChapterId ?? "canonical-unresolved",
+    context.questionId,
+  ].join("::");
   let h = 0;
   for (let i = 0; i < raw.length; i++) h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
   return `b${Math.abs(h).toString(36)}`;
 }
 
-function getCached(subject: string, question: string, mode: LessonMode): LessonResponse | null {
-  const key   = makeCacheKey(subject, question, mode);
+function getCached(subject: string, question: string, mode: LessonMode, contextKey: string): LessonResponse | null {
+  const key   = makeCacheKey(subject, question, mode, contextKey);
   const entry = responseCache.get(key);
   if (!entry) return null;
   if (Date.now() > entry.expiresAt) { responseCache.delete(key); return null; }
   return { ...entry.data, cached: true };
 }
 
-function setCached(subject: string, question: string, mode: LessonMode, data: LessonResponse): void {
-  responseCache.set(makeCacheKey(subject, question, mode), {
+function setCached(subject: string, question: string, mode: LessonMode, data: LessonResponse, contextKey: string): void {
+  responseCache.set(makeCacheKey(subject, question, mode, contextKey), {
     data,
     expiresAt: Date.now() + CACHE_TTL_MS,
   });
@@ -1289,6 +1318,9 @@ router.post("/solveQuestion", async (req, res) => {
     mode: rawMode,
     intent: rawIntent,
     ocrUsed: rawOcrUsed,
+    boardId: rawBoardId,
+    classNum: rawClassNum,
+    academicSession: rawAcademicSession,
   } = req.body as {
     question?:       unknown;
     subject?:        unknown;
@@ -1297,6 +1329,9 @@ router.post("/solveQuestion", async (req, res) => {
     mode?:           unknown;
     intent?:         unknown;
     ocrUsed?:        unknown;
+    boardId?:        unknown;
+    classNum?:       unknown;
+    academicSession?: unknown;
   };
   // ocrUsed is a client-supplied boolean hint — OCR runs client-side so this is
   // metadata only. Never trusted for access control; just recorded in telemetry.
@@ -1330,13 +1365,14 @@ router.post("/solveQuestion", async (req, res) => {
   const ctx  = typeof studentContext === "string" && studentContext.length > 0
     ? studentContext.slice(0, 2000)
     : undefined;
+  const contextKey = solverContextKey(rawBoardId, rawClassNum, rawAcademicSession);
 
   req.log.info({ subject: subj, questionLen: q.length, hasStudentCtx: !!ctx },
     "[PIPELINE:2] input validated");
 
   // 3. Server-side cache — skip for personalised responses
   if (!ctx && !intent) {
-    const cached = getCached(subj, q, mode);
+    const cached = getCached(subj, q, mode, contextKey);
     if (cached) {
       req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
       setProgress(reqId, "cache_hit", "Lesson ready!", 100);
@@ -1600,7 +1636,7 @@ router.post("/solveQuestion", async (req, res) => {
 
   // 7. Cache the reviewed lesson (not the draft)
   if (!ctx && !intent) {
-    setCached(subj, q, mode, finalLesson);
+    setCached(subj, q, mode, finalLesson, contextKey);
     req.log.info({ subject: subj, mode }, "[PIPELINE:7] lesson cached on server");
   }
 
@@ -1690,12 +1726,16 @@ router.post("/solveQuestion/stream", async (req, res) => {
   const {
     question, subject, studentContext: rawCtx,
     mode: rawMode, bankContext: rawBankCtx,
+    boardId: rawBoardId, classNum: rawClassNum, academicSession: rawAcademicSession,
   } = req.body as {
     question?:       unknown;
     subject?:        unknown;
     studentContext?: unknown;
     mode?:           unknown;
     bankContext?:    unknown;
+    boardId?:        unknown;
+    classNum?:       unknown;
+    academicSession?: unknown;
   };
 
   // mode: "basic" generates the full Detailed schema (bank questions); "standard" default
@@ -1704,11 +1744,36 @@ router.post("/solveQuestion/stream", async (req, res) => {
 
   // bankContext: present when request is for a frozen bank question
   type BankStep = { title: string; explanation: string; formula?: string; result?: string };
-  interface BankCtx { questionId: string; answer: string; hint: string; steps: BankStep[]; keyConcepts: string[]; }
-  const bankCtx: BankCtx | undefined = (
-    rawBankCtx && typeof rawBankCtx === "object" &&
-    typeof (rawBankCtx as Record<string, unknown>).questionId === "string"
-  ) ? rawBankCtx as BankCtx : undefined;
+  interface BankCtx {
+    questionId: string;
+    boardId: "CBSE" | "ICSE" | "WBBSE";
+    classNum: number;
+    subject: string;
+    canonicalChapterId: string | null;
+    academicSession?: string;
+    answer: string;
+    hint: string;
+    steps: BankStep[];
+    keyConcepts: string[];
+  }
+  const rawBankRecord = rawBankCtx && typeof rawBankCtx === "object"
+    ? rawBankCtx as Record<string, unknown>
+    : null;
+  const validBankContext = !!rawBankRecord &&
+    typeof rawBankRecord.questionId === "string" &&
+    ["CBSE", "ICSE", "WBBSE"].includes(String(rawBankRecord.boardId)) &&
+    Number.isInteger(rawBankRecord.classNum) &&
+    Number(rawBankRecord.classNum) >= 6 &&
+    Number(rawBankRecord.classNum) <= 12 &&
+    typeof rawBankRecord.subject === "string" &&
+    rawBankRecord.subject === subject &&
+    (rawBankRecord.academicSession === undefined || typeof rawBankRecord.academicSession === "string") &&
+    (rawBankRecord.canonicalChapterId === null || typeof rawBankRecord.canonicalChapterId === "string");
+  const bankCtx: BankCtx | undefined = validBankContext ? rawBankRecord as unknown as BankCtx : undefined;
+  if (rawBankCtx && !bankCtx) {
+    res.status(400).json({ error: "invalid_bank_context" });
+    return;
+  }
 
   if (typeof question !== "string" || question.trim().length < 5) {
     res.status(400).json({ error: "invalid_question" }); return;
@@ -1723,6 +1788,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
   const subj = subject as Subject;
   const q    = question.trim();
   const ctx  = typeof rawCtx === "string" && rawCtx.length > 0 ? rawCtx.slice(0, 2000) : undefined;
+  const contextKey = solverContextKey(rawBoardId, rawClassNum, rawAcademicSession);
 
   // Helper: write one SSE event to the response stream.
   const emit = (data: unknown): void => {
@@ -1733,7 +1799,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // Bank questions: cache by questionId (survives until server restart).
   // Standard questions: cache by question text + mode (existing behaviour).
   if (bankCtx) {
-    const entry = responseCache.get(makeBankCacheKey(bankCtx.questionId));
+    const entry = responseCache.get(makeBankCacheKey(bankCtx));
     if (entry && Date.now() <= entry.expiresAt) {
       req.log.info({ questionId: bankCtx.questionId }, "[STREAM] bank server-cache hit");
       res.setHeader("Content-Type",     "text/event-stream");
@@ -1745,7 +1811,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       return;
     }
   } else if (!ctx) {
-    const cached = getCached(subj, q, "standard");
+    const cached = getCached(subj, q, "standard", contextKey);
     if (cached) {
       req.log.info({ subject: subj, cached: true }, "[STREAM] cache hit — returning via SSE");
       res.setHeader("Content-Type",    "text/event-stream");
@@ -1951,13 +2017,13 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // ── 10. Cache + telemetry ─────────────────────────────────────────────────────
   if (bankCtx) {
     // Cache bank lesson by questionId (server-side in-memory, survives until restart)
-    responseCache.set(makeBankCacheKey(bankCtx.questionId), {
+    responseCache.set(makeBankCacheKey(bankCtx), {
       data:      finalLesson,
       expiresAt: Date.now() + CACHE_TTL_MS,
     });
     req.log.info({ questionId: bankCtx.questionId }, "[STREAM] bank lesson cached on server");
   } else if (!ctx) {
-    setCached(subj, q, "standard", finalLesson);
+    setCached(subj, q, "standard", finalLesson, contextKey);
   }
 
   const totalMs = Date.now() - requestStart;

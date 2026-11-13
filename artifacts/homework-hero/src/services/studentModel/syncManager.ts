@@ -12,14 +12,30 @@
  * with the matching Firestore SDK call. The method signatures stay identical.
  */
 
+import { getStoredAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+
 const KEYS = {
   profile:  "studyai-v1-profile",
-  mastery:  "studyai-v1-mastery",
-  sessions: "studyai-v1-sessions",
-  mistakes: "studyai-v1-mistakes",
-  patterns: "studyai-v1-patterns",
+  mastery:  "studyai-v2-mastery",
+  sessions: "studyai-v2-sessions",
+  mistakes: "studyai-v2-mistakes",
+  patterns: "studyai-v2-patterns",
   events:   "studyai-v1-events",
 } as const;
+
+function scopedKey(key: string): string | null {
+  return scopedStorageKey(key);
+}
+
+function readScoped<T>(key: string, fallback: T): T {
+  const scoped = scopedKey(key);
+  return scoped ? lsRead(scoped, fallback) : fallback;
+}
+
+function writeScoped(key: string, value: unknown): void {
+  const scoped = scopedKey(key);
+  if (scoped) lsWrite(scoped, value);
+}
 
 function lsRead<T>(key: string, fallback: T): T {
   try {
@@ -63,6 +79,8 @@ export function writeProfile(p: StoredProfile): void {
 // ─── Topic Mastery ─── students/{id}/topicMastery ─────────────────────────────
 
 export interface TopicMasteryEntry {
+  boardId?:         string;
+  classNum?:        number;
   topic:            string;
   subject:          string;
   masteryScore:     number;   // 0–100
@@ -78,18 +96,22 @@ export interface TopicMasteryEntry {
 }
 
 export function readAllMastery(): Record<string, TopicMasteryEntry> {
-  return lsRead<Record<string, TopicMasteryEntry>>(KEYS.mastery, {});
+  return readScoped<Record<string, TopicMasteryEntry>>(KEYS.mastery, {});
 }
 
 export function writeMasteryEntry(topicKey: string, entry: TopicMasteryEntry): void {
+  const context = getStoredAcademicContext();
+  if (!context) return;
   const all = readAllMastery();
-  all[topicKey] = entry;
-  lsWrite(KEYS.mastery, all);
+  all[topicKey] = { ...entry, boardId: context.boardId, classNum: context.classNum };
+  writeScoped(KEYS.mastery, all);
 }
 
 // ─── Sessions ─── students/{id}/sessions ──────────────────────────────────────
 
 export interface SessionRecord {
+  boardId?:          string;
+  classNum?:         number;
   sessionId:         string;
   topic:             string;
   subject:           string;
@@ -107,19 +129,23 @@ export interface SessionRecord {
 }
 
 export function readSessions(): SessionRecord[] {
-  return lsRead<SessionRecord[]>(KEYS.sessions, []);
+  return readScoped<SessionRecord[]>(KEYS.sessions, []);
 }
 
 export function appendSession(s: SessionRecord): void {
+  const context = getStoredAcademicContext();
+  if (!context) return;
   const all = readSessions();
-  all.push(s);
+  all.push({ ...s, boardId: context.boardId, classNum: context.classNum });
   if (all.length > 200) all.splice(0, all.length - 200);
-  lsWrite(KEYS.sessions, all);
+  writeScoped(KEYS.sessions, all);
 }
 
 // ─── Mistakes ─── students/{id}/mistakes ──────────────────────────────────────
 
 export interface MistakeRecord {
+  boardId?:     string;
+  classNum?:    number;
   mistakeId:    string;
   topic:        string;
   subject:      string;
@@ -131,21 +157,28 @@ export interface MistakeRecord {
 }
 
 export function readAllMistakes(): Record<string, MistakeRecord[]> {
-  return lsRead<Record<string, MistakeRecord[]>>(KEYS.mistakes, {});
+  return readScoped<Record<string, MistakeRecord[]>>(KEYS.mistakes, {});
+}
+
+export function writeAllMistakes(value: Record<string, MistakeRecord[]>): void {
+  writeScoped(KEYS.mistakes, value);
 }
 
 export function recordMistake(topicKey: string, m: Omit<MistakeRecord, "occurrences" | "firstSeen" | "lastSeen">): void {
+  const context = getStoredAcademicContext();
+  if (!context) return;
   const all = readAllMistakes();
   if (!all[topicKey]) all[topicKey] = [];
-  const existing = all[topicKey].find((r) => r.description === m.description);
+  const scopedMistake = { ...m, boardId: context.boardId, classNum: context.classNum };
+  const existing = all[topicKey].find((r) => r.description === scopedMistake.description);
   if (existing) {
     existing.occurrences++;
     existing.lastSeen = Date.now();
   } else {
-    all[topicKey].push({ ...m, occurrences: 1, firstSeen: Date.now(), lastSeen: Date.now() });
+    all[topicKey].push({ ...scopedMistake, occurrences: 1, firstSeen: Date.now(), lastSeen: Date.now() });
   }
   if (all[topicKey].length > 30) all[topicKey].splice(0, all[topicKey].length - 30);
-  lsWrite(KEYS.mistakes, all);
+  writeScoped(KEYS.mistakes, all);
 }
 
 // ─── Study Patterns ─── students/{id}/studyPatterns ──────────────────────────
@@ -161,7 +194,7 @@ export interface StudyPatternsRecord {
 }
 
 export function readPatterns(): StudyPatternsRecord {
-  return lsRead<StudyPatternsRecord>(KEYS.patterns, {
+  return readScoped<StudyPatternsRecord>(KEYS.patterns, {
     hourFrequency: Array(24).fill(0),
     dayFrequency:  Array(7).fill(0),
     avgSessionMs:  0,
@@ -173,7 +206,7 @@ export function readPatterns(): StudyPatternsRecord {
 }
 
 export function writePatterns(p: StudyPatternsRecord): void {
-  lsWrite(KEYS.patterns, p);
+  writeScoped(KEYS.patterns, p);
 }
 
 // ─── Raw event log ─── for future analytics / ML ─────────────────────────────

@@ -11,14 +11,16 @@
  *   3. Weak topic (from Mistake Journal)
  *   4. Short interval (less confident)
  *
- * Persisted in localStorage under `studyai-revision-v1`.
+ * Persisted in a board/class-scoped localStorage store.
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Subject } from "@/data/subjects";
 import type { Difficulty } from "@/services/questionService";
+import { scopedStorageKey, makeAcademicContext } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
-const KEY = "studyai-revision-v1";
+const KEY_PREFIX = "studyai-revision-v2";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -34,6 +36,10 @@ const NEXT_INTERVAL: Record<SRInterval, SRInterval> = {
 
 export interface RevisionItem {
   questionId:   string;
+  boardId?:     string;
+  classNum?:    number;
+  canonicalChapterId?: string | null;
+  academicSession?: string;
   question:     string;
   subject:      Subject;
   topic:        string;
@@ -57,6 +63,10 @@ export type RevisionItems = Record<string, RevisionItem>;  // keyed by questionI
 
 export interface SelfAssessmentRecord {
   questionId: string;
+  boardId?: string;
+  classNum?: number;
+  canonicalChapterId?: string | null;
+  academicSession?: string;
   question: string;
   subject: Subject;
   topic: string;
@@ -85,9 +95,10 @@ function addDays(fromDate: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-function load(): RevisionStore {
+function load(key: string | null): RevisionStore {
+  if (!key) return { items: {}, selfAssessments: {} };
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(key);
     if (raw) {
       const parsed = JSON.parse(raw) as RevisionStore | RevisionItems;
       if (
@@ -106,8 +117,8 @@ function load(): RevisionStore {
   return { items: {}, selfAssessments: {} };
 }
 
-function persist(store: RevisionStore): void {
-  localStorage.setItem(KEY, JSON.stringify(store));
+function persist(key: string | null, store: RevisionStore): void {
+  if (key) localStorage.setItem(key, JSON.stringify(store));
 }
 
 /** Pure self-assessment transition for deterministic readiness-state tests. */
@@ -184,16 +195,29 @@ function priorityScore(item: RevisionItem, weakTopics: string[], today: string):
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
-export function useRevisionPlanner() {
-  const [store, setStore] = useState<RevisionStore>(load);
+export function useRevisionPlanner(classNumOverride?: number) {
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, classNumOverride ?? profile.classLevel);
+  const storageKey = scopedStorageKey(KEY_PREFIX, context);
+  const [stored, setStored] = useState(() => ({ key: storageKey, value: load(storageKey) }));
+
+  useEffect(() => {
+    setStored({ key: storageKey, value: load(storageKey) });
+  }, [storageKey]);
+
+  const store: RevisionStore = stored.key === storageKey
+    ? stored.value
+    : { items: {}, selfAssessments: {} };
 
   const mutate = useCallback((fn: (prev: RevisionStore) => RevisionStore) => {
-    setStore((prev) => {
-      const next = fn(prev);
-      persist(next);
-      return next;
+    if (!storageKey) return;
+    setStored((prev) => {
+      const current = prev.key === storageKey ? prev.value : load(storageKey);
+      const next = fn(current);
+      persist(storageKey, next);
+      return { key: storageKey, value: next };
     });
-  }, []);
+  }, [storageKey]);
 
   // ── Write operations ──────────────────────────────────────────────────────
 
@@ -223,6 +247,8 @@ export function useRevisionPlanner() {
               ...prev.items,
               [questionId]: {
               questionId, question, subject, topic, chapter, difficulty,
+                boardId: context?.boardId,
+                classNum: context?.classNum,
               interval:     1,
               nextReview:   addDays(today, 1),
               addedDate:    today,
@@ -257,7 +283,7 @@ export function useRevisionPlanner() {
         };
       });
     },
-    [mutate]
+    [context?.boardId, context?.classNum, mutate]
   );
 
   /**
@@ -272,9 +298,14 @@ export function useRevisionPlanner() {
       question: SelfAssessmentInput,
       status: Exclude<SelfAssessmentStatus, "UNSET">,
     ) => {
-      mutate((prev) => applySelfAssessment(prev, question, status));
+      if (!context) return;
+      mutate((prev) => applySelfAssessment(prev, {
+        ...question,
+        boardId: context.boardId,
+        classNum: context.classNum,
+      }, status));
     },
-    [mutate],
+    [context?.boardId, context?.classNum, mutate],
   );
 
   /**

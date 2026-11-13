@@ -12,6 +12,7 @@ import { useMemo } from "react";
 import { useProgress } from "./useProgress";
 import { getChapters, getQuestions } from "@/services/questionService";
 import { CLASS9_DISPLAY_ORDER } from "@/data/questions/canonicalChapterRegistry.gen";
+import { getStoredAcademicContext } from "@/data/questions/academicContext";
 import type { Subject } from "@/data/subjects";
 
 export interface TopicCompletion {
@@ -42,15 +43,21 @@ export interface ChapterCompletion {
 }
 
 /** @param _bankReady Pass the bankReady flag from the page so the memo re-runs when the lazy bundle finishes loading. */
-export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boolean): ChapterCompletion[] {
-  const { progress } = useProgress();
+export function useChapterStats(
+  subject: Subject,
+  classNum = 9,
+  _bankReady?: boolean,
+  boardId = getStoredAcademicContext()?.boardId,
+): ChapterCompletion[] {
+  const { progress } = useProgress(classNum);
 
   return useMemo(() => {
-    const chapters = getChapters(classNum, subject);
+    if (!boardId) return [];
+    const chapters = getChapters(classNum, subject, boardId);
     const progressBySubject = progress as Record<string, Record<string, { solved: number; correct: number; attempted: string[] }>>;
 
     return chapters.map((ch, idx) => {
-      const chapterQuestions = getQuestions({ classNum, subject, chapterId: ch.id });
+      const chapterQuestions = getQuestions({ boardId, classNum, subject, chapterId: ch.id });
       // Science is student-facing aggregation, while practice events are stored
       // under native Physics/Chemistry/Biology. Use the chapter's native subject
       // so both coverage and legacy chapter counters read the same records.
@@ -115,5 +122,5 @@ export function useChapterStats(subject: Subject, classNum = 9, _bankReady?: boo
         topics: topicCompletions,
       };
     });
-  }, [progress, subject, classNum, _bankReady]);
+  }, [progress, subject, classNum, _bankReady, boardId]);
 }

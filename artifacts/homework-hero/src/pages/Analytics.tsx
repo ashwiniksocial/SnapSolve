@@ -25,6 +25,7 @@ import {
 } from "@/services/analytics";
 import { getQuestions, preloadQBank } from "@/services/questionService";
 import { SUBJECTS, type Subject } from "@/data/subjects";
+import { getStoredAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -77,7 +78,7 @@ export default function Analytics() {
   // Question map for difficulty-weighted weak area detection
   const questionMap = useMemo(() => {
     const qs = chapterStats.flatMap((ch) =>
-      getQuestions({ classNum, subject, chapterId: ch.chapterId }),
+      getQuestions({ boardId: getStoredAcademicContext()?.boardId, classNum, subject, chapterId: ch.chapterId }),
     );
     return buildQuestionMap(qs);
   }, [chapterStats, classNum, subject]);
@@ -123,6 +124,10 @@ export default function Analytics() {
   // Chapter 3: 10 attempts, ~70%
   function seedTestData() {
     const chapters = chapterStats.slice(0, 4);
+    const academicContext = getStoredAcademicContext();
+    const PROGRESS_KEY = scopedStorageKey("studyai-progress-v3", academicContext);
+    const ATTEMPT_KEY = scopedStorageKey("studyai-attempt-log-v2", academicContext);
+    if (!PROGRESS_KEY || !ATTEMPT_KEY) return;
     const plans: boolean[][] = [
       [true,true,true,true,false,true,true,true,true,false,true,true],
       [true,false,false,true,false,false,true,false,false,true,false],
@@ -131,9 +136,6 @@ export default function Analytics() {
     ];
 
     // Read existing data directly from localStorage
-    const PROGRESS_KEY = "studyai-progress-v2";
-    const ATTEMPT_KEY  = "studyai-attempt-log-v1";
-
     type TopicRec = { solved: number; correct: number; attempted: string[] };
     type ProgressStore = Record<string, Record<string, TopicRec>>;
     type AttemptStore  = Record<string, {
@@ -151,7 +153,12 @@ export default function Analytics() {
 
     chapters.forEach((ch, i) => {
       const outcomes  = plans[i] ?? [true, false, true];
-      const questions = getQuestions({ classNum, subject, chapterId: ch.chapterId });
+      const questions = getQuestions({
+        boardId: getStoredAcademicContext()?.boardId,
+        classNum,
+        subject,
+        chapterId: ch.chapterId,
+      });
       outcomes.forEach((correct, qi) => {
         const q = questions[qi % Math.max(questions.length, 1)];
         if (!q) return;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useProfile } from "@/hooks/useProfile";
 
-const BOARDS = ["CBSE", "ICSE", "State Board", "Other"] as const;
+const BOARDS = ["CBSE", "ICSE", "WBBSE", "State Board", "Other"] as const;
 const CLASSES = [6, 7, 8, 9] as const;
 // Only classes with an active question bank are selectable.
 const AVAILABLE_CLASSES: ReadonlyArray<number> = [9];

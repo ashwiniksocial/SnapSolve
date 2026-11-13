@@ -1,18 +1,21 @@
 /**
  * useExamMode — Exam countdown + smart daily task tracking.
  *
- * Stores exam config in localStorage under `studyai-exam-v1`.
- * Per-day completed tasks stored under `studyai-exam-done-YYYY-MM-DD`.
+ * Stores exam config and daily completions in board/class-scoped localStorage.
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Subject } from "@/data/subjects";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ExamSubject = "All" | Subject;
 
 export interface ExamConfig {
+  boardId?: string;
+  classNum?: number;
   examName:  string;
   subject:   ExamSubject;
   examDate:  string;   // YYYY-MM-DD
@@ -59,23 +62,24 @@ export function urgencyColors(u: Urgency) {
 
 // ─── localStorage helpers ─────────────────────────────────────────────────────
 
-const CONFIG_KEY = "studyai-exam-v1";
-const doneKey = (date: string) => `studyai-exam-done-${date}`;
+const CONFIG_PREFIX = "studyai-exam-v2";
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function loadConfig(): ExamConfig | null {
+function loadConfig(key: string | null): ExamConfig | null {
+  if (!key) return null;
   try {
-    const raw = localStorage.getItem(CONFIG_KEY);
+    const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as ExamConfig) : null;
   } catch { return null; }
 }
 
-function loadDone(date: string): Set<string> {
+function loadDone(key: string | null): Set<string> {
+  if (!key) return new Set();
   try {
-    const raw = localStorage.getItem(doneKey(date));
+    const raw = localStorage.getItem(key);
     return new Set(raw ? (JSON.parse(raw) as string[]) : []);
   } catch { return new Set(); }
 }
@@ -83,28 +87,57 @@ function loadDone(date: string): Set<string> {
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useExamMode() {
-  const [config, setConfig] = useState<ExamConfig | null>(loadConfig);
-  const [completedIds, setCompletedIds] = useState<Set<string>>(() => loadDone(todayStr()));
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, profile.classLevel);
+  const storageKey = scopedStorageKey(CONFIG_PREFIX, context);
+  const completionKey = storageKey ? `${storageKey}:done:${todayStr()}` : null;
+  const [stored, setStored] = useState(() => ({
+    key: storageKey,
+    completionKey,
+    config: loadConfig(storageKey),
+    completedIds: loadDone(completionKey),
+  }));
+
+  useEffect(() => {
+    setStored({
+      key: storageKey,
+      completionKey,
+      config: loadConfig(storageKey),
+      completedIds: loadDone(completionKey),
+    });
+  }, [storageKey, completionKey]);
+
+  const sameScope = stored.key === storageKey && stored.completionKey === completionKey;
+  const config = sameScope ? stored.config : null;
+  const completedIds = sameScope ? stored.completedIds : new Set<string>();
 
   const saveConfig = useCallback((cfg: ExamConfig) => {
-    localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
-    setConfig(cfg);
-  }, []);
+    if (!storageKey || !context) return;
+    const scopedConfig = { ...cfg, boardId: context.boardId, classNum: context.classNum };
+    localStorage.setItem(storageKey, JSON.stringify(scopedConfig));
+    setStored((prev) => ({
+      ...prev,
+      key: storageKey,
+      config: scopedConfig,
+    }));
+  }, [context?.boardId, context?.classNum, storageKey]);
 
   const clearConfig = useCallback(() => {
-    localStorage.removeItem(CONFIG_KEY);
-    setConfig(null);
-  }, []);
+    if (!storageKey) return;
+    localStorage.removeItem(storageKey);
+    setStored((prev) => ({ ...prev, key: storageKey, config: null }));
+  }, [storageKey]);
 
   const markDone = useCallback((taskId: string) => {
-    const today = todayStr();
-    setCompletedIds((prev) => {
-      const next = new Set(prev);
+    if (!completionKey) return;
+    setStored((prev) => {
+      const current = prev.completionKey === completionKey ? prev.completedIds : loadDone(completionKey);
+      const next = new Set(current);
       next.add(taskId);
-      localStorage.setItem(doneKey(today), JSON.stringify([...next]));
-      return next;
+      localStorage.setItem(completionKey, JSON.stringify([...next]));
+      return { ...prev, key: storageKey, completionKey, completedIds: next };
     });
-  }, []);
+  }, [completionKey, storageKey]);
 
   const daysRemaining = useMemo((): number | null => {
     if (!config) return null;

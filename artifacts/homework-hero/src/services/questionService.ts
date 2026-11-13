@@ -13,6 +13,13 @@ import {
   BETA_SCIENCE_DOMAINS,
   getStudentFacingSubject,
 } from "@/data/questions/studentFacingSubject";
+import { lookupCanonical } from "@/data/questions/canonicalChapterRegistry.gen";
+import {
+  isBoardApplicable,
+  matchesAcademicContentContext,
+  makeChapterContextKey,
+  type BoardId,
+} from "@/data/questions/academicContext";
 
 export type { Question, ChapterMeta, TopicMeta, Difficulty, QuestionType, EffectiveQuestionType };
 export { BETA_SCIENCE_DOMAINS, getStudentFacingSubject };
@@ -54,39 +61,83 @@ export async function preloadQBank(_classNum?: number): Promise<void> {
  * Display order is derived from CLASS9_DISPLAY_ORDER (generated from
  * scripts/src/canonicalCurriculum.ts). No manual order map is maintained here.
  */
-export function getChapters(classNum: number, subject: string): ChapterMeta[] {
+function matchesSubject(chapterSubject: string, requestedSubject: string): boolean {
+  return requestedSubject === "Science"
+    ? BETA_SCIENCE_DOMAINS.includes(chapterSubject as typeof BETA_SCIENCE_DOMAINS[number])
+    : chapterSubject === requestedSubject;
+}
+
+function chapterForBoard(chapter: ChapterMeta, boardId: BoardId): ChapterMeta | null {
+  if (!isBoardApplicable(chapter.boardApplicability, chapter.verifiedBoards, boardId)) return null;
+  if (boardId === "CBSE") {
+    return { ...chapter, boardId };
+  }
+  const canonical = lookupCanonical(
+    chapter.id,
+    boardId,
+    chapter.classNum,
+    chapter.subject,
+    chapter.academicSession,
+  );
+  if (!canonical || canonical.curriculumStatus !== "ACTIVE") return null;
+  return {
+    ...chapter,
+    boardId,
+    canonicalChapterId: canonical.canonicalChapterId,
+    curriculumStatus: canonical.curriculumStatus,
+    academicSession: canonical.academicSession,
+  };
+}
+
+export function getChapters(classNum: number, subject: string, boardId?: BoardId): ChapterMeta[] {
+  if (!boardId) return [];
+  const eligible = ALL_CHAPTERS
+    .filter((chapter) =>
+      chapter.classNum === classNum &&
+      matchesSubject(chapter.subject, subject) &&
+      !chapter.cbseDeleted &&
+      chapter.curriculumStatus === "ACTIVE",
+    )
+    .map((chapter) => chapterForBoard(chapter, boardId))
+    .filter((chapter): chapter is ChapterMeta => chapter !== null)
+    .map((chapter) => ({
+      ...chapter,
+      contextKey: makeChapterContextKey({
+        boardId,
+        classNum,
+        subject: chapter.subject,
+        canonicalChapterId: chapter.canonicalChapterId,
+        chapterId: chapter.id,
+        academicSession: chapter.academicSession,
+      }),
+    }));
+
   if (subject === "Science") {
-    const scienceChapters = ALL_CHAPTERS.filter(
-      (c) => c.classNum === classNum && BETA_SCIENCE_DOMAINS.includes(c.subject as typeof BETA_SCIENCE_DOMAINS[number])
-        && !c.cbseDeleted && c.curriculumStatus === "ACTIVE"
-    );
-    return scienceChapters.sort(
-      (a, b) => (CLASS9_DISPLAY_ORDER[a.id] ?? 999) - (CLASS9_DISPLAY_ORDER[b.id] ?? 999)
+    return eligible.sort((a, b) =>
+      (boardId === "CBSE" ? CLASS9_DISPLAY_ORDER[a.id] ?? 999 : 999) -
+      (boardId === "CBSE" ? CLASS9_DISPLAY_ORDER[b.id] ?? 999 : 999),
     );
   }
   if (subject === "Mathematics" && classNum === 9) {
-    const mathChapters = ALL_CHAPTERS.filter(
-      (c) => c.classNum === classNum && c.subject === subject
-        && !c.cbseDeleted && c.curriculumStatus === "ACTIVE"
-    );
-    return mathChapters.sort(
-      (a, b) => (CLASS9_DISPLAY_ORDER[a.id] ?? 999) - (CLASS9_DISPLAY_ORDER[b.id] ?? 999)
+    return eligible.sort((a, b) =>
+      (boardId === "CBSE" ? CLASS9_DISPLAY_ORDER[a.id] ?? 999 : 999) -
+      (boardId === "CBSE" ? CLASS9_DISPLAY_ORDER[b.id] ?? 999 : 999),
     );
   }
-  return ALL_CHAPTERS.filter(
-    (c) => c.classNum === classNum && c.subject === subject
-      && !c.cbseDeleted && c.curriculumStatus === "ACTIVE"
-  );
+  return eligible;
 }
 
-/** All topics for a specific chapter. */
-export function getTopics(chapterId: string): TopicMeta[] {
-  return ALL_CHAPTERS.find((c) => c.id === chapterId)?.topics ?? [];
+/** All topics for a chapter in its full board/class/subject context. */
+export function getTopics(chapterId: string, classNum?: number, subject?: string, boardId?: BoardId): TopicMeta[] {
+  if (classNum === undefined || !subject || !boardId) return [];
+  return getChapters(classNum, subject, boardId)
+    .find((chapter) => chapter.id === chapterId)?.topics ?? [];
 }
 
 // ─── Question querying ────────────────────────────────────────────────────────
 
 export interface QuestionFilter {
+  boardId?: BoardId;
   classNum?: number;
   subject?: string;
   chapterId?: string;
@@ -107,16 +158,18 @@ export interface QuestionFilter {
  * They are never silently assigned a false type such as MCQ or ShortAnswer.
  */
 export function getQuestions(filter: QuestionFilter = {}): Question[] {
+  if (!filter.boardId || filter.classNum === undefined) return [];
   const isScience = filter.subject === "Science";
   const results = ALL_QUESTIONS.filter((q) => {
-    if (filter.classNum  !== undefined && q.classNum  !== filter.classNum)  return false;
-    if (filter.subject   !== undefined) {
-      if (isScience) {
-        if (!BETA_SCIENCE_DOMAINS.includes(q.subject as typeof BETA_SCIENCE_DOMAINS[number])) return false;
-      } else if (q.subject !== filter.subject) {
-        return false;
-      }
-    }
+    const subjectMatches = filter.subject === undefined ||
+      (isScience
+        ? BETA_SCIENCE_DOMAINS.includes(q.subject as typeof BETA_SCIENCE_DOMAINS[number])
+        : q.subject === filter.subject);
+    if (!matchesAcademicContentContext(
+      q,
+      { boardId: filter.boardId!, classNum: filter.classNum!, subject: filter.subject ?? q.subject },
+      subjectMatches,
+    )) return false;
     if (filter.chapterId !== undefined && q.chapterId !== filter.chapterId) return false;
     if (filter.topicId   !== undefined && q.topicId   !== filter.topicId)   return false;
     if (filter.topicName !== undefined && q.topicName !== filter.topicName) return false;
@@ -127,14 +180,41 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
       const effectiveType: EffectiveQuestionType = q.questionType ?? "Unclassified";
       if (effectiveType !== filter.questionType) return false;
     }
+    if (filter.boardId !== "CBSE") {
+      const chapter = chapterForBoard(
+        ALL_CHAPTERS.find((candidate) =>
+          candidate.id === q.chapterId &&
+          candidate.classNum === q.classNum &&
+          candidate.subject === q.subject,
+        ) ?? {
+          id: q.chapterId, name: q.chapterName, classNum: q.classNum,
+          subject: q.subject, canonicalChapterId: q.canonicalChapterId ?? null,
+          curriculumStatus: "SOURCE_UNRESOLVED", topics: [],
+          boardApplicability: q.boardApplicability, verifiedBoards: q.verifiedBoards,
+          academicSession: q.academicSession,
+        },
+        filter.boardId!,
+      );
+      if (!chapter) return false;
+    }
     return true;
   });
-  return results;
+  return results.map((question) => ({
+    ...question,
+    boardId: filter.boardId,
+    canonicalChapterId: question.canonicalChapterId ??
+      ALL_CHAPTERS.find((chapter) =>
+        chapter.id === question.chapterId &&
+        chapter.classNum === question.classNum &&
+        chapter.subject === question.subject,
+      )?.canonicalChapterId ?? null,
+  }));
 }
 
-/** Get a single question by id. */
-export function getQuestionById(id: string): Question | undefined {
-  return ALL_QUESTIONS.find((q) => q.id === id);
+/** Get a single question only within a validated board/class context. */
+export function getQuestionById(id: string, boardId?: BoardId, classNum?: number): Question | undefined {
+  if (!boardId) return undefined;
+  return getQuestions({ boardId, classNum }).find((q) => q.id === id);
 }
 
 /**
@@ -145,9 +225,11 @@ export function getChapterDisplayNumber(
   classNum: number,
   subject: string,
   chapterId: string,
+  boardId?: BoardId,
 ): number | undefined {
+  if (!boardId) return undefined;
   const practiceSubject = getStudentFacingSubject(subject);
-  const chapterIndex = getChapters(classNum, practiceSubject)
+  const chapterIndex = getChapters(classNum, practiceSubject, boardId)
     .findIndex((chapter) => chapter.id === chapterId);
   return chapterIndex >= 0 ? chapterIndex + 1 : undefined;
 }
@@ -158,7 +240,9 @@ export function getChapterDisplayNumber(
  * inspecting question IDs.
  */
 export function getQuestionDisplayNumber(question: Question): number | undefined {
+  if (!question.boardId) return undefined;
   const chapterQuestions = getQuestions({
+    boardId: question.boardId,
     classNum: question.classNum,
     subject: question.subject,
     chapterId: question.chapterId,
@@ -211,28 +295,29 @@ export interface ChapterStats {
   byType: Record<QuestionType, number>;
 }
 
-/** Get stats for all chapters of a given class + subject. */
-export function getAllChapterStats(classNum: number, subject: string): ChapterStats[] {
-  const chapters = getChapters(classNum, subject);
+/** Get stats for all chapters of a given class + subject + board. */
+export function getAllChapterStats(classNum: number, subject: string, boardId?: BoardId): ChapterStats[] {
+  if (!boardId) return [];
+  const chapters = getChapters(classNum, subject, boardId);
   return chapters.map((ch, idx) => {
     // Use ch.subject (the chapter's native domain) so "Science" sessions correctly
     // fetch Physics / Chemistry / Biology questions for each chapter.
     const chSubject = ch.subject;
-    const qs = getQuestions({ classNum, subject: chSubject, chapterId: ch.id });
+    const qs = getQuestions({ boardId, classNum, subject: chSubject, chapterId: ch.id });
     const byType: Record<QuestionType, number> = {
       MCQ: 0, ShortAnswer: 0, LongAnswer: 0, HOTS: 0, PYQ: 0,
     };
     for (const q of qs) {
       if (q.questionType) byType[q.questionType]++;
     }
-    const displayChapterNumber = getChapterDisplayNumber(ch.classNum, ch.subject, ch.id);
+    const displayChapterNumber = getChapterDisplayNumber(ch.classNum, ch.subject, ch.id, boardId);
     return {
       chapterId: ch.id,
       chapterName: ch.name,
       chapterNumber: parseInt(ch.id.replace("ch", ""), 10),
       displayChapterNumber,
       totalQuestions: qs.length,
-      byDifficulty: getDifficultyBreakdown({ classNum, subject: chSubject, chapterId: ch.id }),
+      byDifficulty: getDifficultyBreakdown({ boardId, classNum, subject: chSubject, chapterId: ch.id }),
       byType,
     };
   });
@@ -241,11 +326,18 @@ export function getAllChapterStats(classNum: number, subject: string): ChapterSt
 // ─── Analytics helpers ────────────────────────────────────────────────────────
 
 /** Unique topic names for a chapter (preserving the order they appear in the data). */
-export function getTopicNames(chapterId: string): string[] {
+export function getTopicNames(chapterId: string, classNum?: number, subject?: string, boardId?: BoardId): string[] {
+  if (classNum === undefined || !subject || !boardId) return [];
   const seen = new Set<string>();
   const result: string[] = [];
   for (const q of ALL_QUESTIONS) {
-    if (q.chapterId === chapterId && !seen.has(q.topicName)) {
+    if (
+      q.chapterId === chapterId &&
+      q.classNum === classNum &&
+      q.subject === subject &&
+      isBoardApplicable(q.boardApplicability, q.verifiedBoards, boardId) &&
+      !seen.has(q.topicName)
+    ) {
       seen.add(q.topicName);
       result.push(q.topicName);
     }
@@ -254,8 +346,17 @@ export function getTopicNames(chapterId: string): string[] {
 }
 
 /** Total question count for a topic across all difficulties. */
-export function getTopicQuestionCount(chapterId: string, topicId: string): number {
+export function getTopicQuestionCount(
+  chapterId: string,
+  topicId: string,
+  classNum?: number,
+  subject?: string,
+  boardId?: BoardId,
+): number {
+  if (classNum === undefined || !subject || !boardId) return 0;
   return ALL_QUESTIONS.filter(
-    (q) => q.chapterId === chapterId && q.topicId === topicId
+    (q) => q.chapterId === chapterId && q.topicId === topicId &&
+      q.classNum === classNum && q.subject === subject &&
+      isBoardApplicable(q.boardApplicability, q.verifiedBoards, boardId)
   ).length;
 }

@@ -38,6 +38,7 @@ export const BOARD_CODES: Record<BoardApplicability, string> = {
   Both: "bo",
   CBSE: "cb",
   ICSE: "ic",
+  WBBSE: "wb",
 };
 
 export const SUBJECT_CODES: Record<SupportedSubject, string> = {

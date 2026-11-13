@@ -17,19 +17,21 @@
  *   70 ≤ mastery < 90   → Hard
  *   ≥ 90                → Challenge
  *
- * Daily recommendations are cached in `studyai-adaptive-v1` and regenerated
+ * Daily recommendations are cached by board/class and regenerated
  * automatically when the calendar date changes.
  */
 
 import { useState, useCallback, useRef } from "react";
 import type { Subject } from "@/data/subjects";
 import { unwrapRevisionItems } from "@/services/revisionStorage";
+import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { useProfile } from "@/hooks/useProfile";
 
 // ─── localStorage keys ────────────────────────────────────────────────────────
-const PROGRESS_KEY = "studyai-progress-v2";
-const MISTAKES_KEY = "studyai-mistakes-v1";
-const REVISION_KEY = "studyai-revision-v1";
-const ADAPTIVE_KEY = "studyai-adaptive-v1";
+const PROGRESS_PREFIX = "studyai-progress-v3";
+const MISTAKES_PREFIX = "studyai-mistakes-v2";
+const REVISION_PREFIX = "studyai-revision-v2";
+const ADAPTIVE_PREFIX = "studyai-adaptive-v2";
 
 // ─── Minimal local storage shapes ─────────────────────────────────────────────
 // These mirror the storage format of the sibling hooks but are scoped to
@@ -94,7 +96,8 @@ function todayStr(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function safeRead<T>(key: string, fallback: T): T {
+function safeRead<T>(key: string | null, fallback: T): T {
+  if (!key) return fallback;
   try {
     const raw = localStorage.getItem(key);
     if (raw) return JSON.parse(raw) as T;
@@ -202,7 +205,7 @@ function buildReason(p: TopicProfile): string {
 
 // ─── Daily recommendation persistence ─────────────────────────────────────────
 
-function generateAndCache(profiles: TopicProfile[]): DailyRecommendation[] {
+function generateAndCache(profiles: TopicProfile[], cacheKey: string | null): DailyRecommendation[] {
   const today = todayStr();
   const recs  = profiles.slice(0, 3).map((p, i) => ({
     rank:                  (i + 1) as 1 | 2 | 3,
@@ -215,13 +218,13 @@ function generateAndCache(profiles: TopicProfile[]): DailyRecommendation[] {
     priorityScore:         p.priorityScore,
   }));
   try {
-    localStorage.setItem(ADAPTIVE_KEY, JSON.stringify({ date: today, recommendations: recs }));
+    if (cacheKey) localStorage.setItem(cacheKey, JSON.stringify({ date: today, recommendations: recs }));
   } catch {}
   return recs;
 }
 
-function loadCachedRecommendations(): DailyRecommendation[] | null {
-  const cache = safeRead<AdaptiveCache | null>(ADAPTIVE_KEY, null);
+function loadCachedRecommendations(cacheKey: string | null): DailyRecommendation[] | null {
+  const cache = safeRead<AdaptiveCache | null>(cacheKey, null);
   if (
     cache?.date === todayStr() &&
     Array.isArray(cache.recommendations) &&
@@ -234,23 +237,35 @@ function loadCachedRecommendations(): DailyRecommendation[] | null {
 
 // ─── Engine snapshot ──────────────────────────────────────────────────────────
 
-function computeAll(): TopicProfile[] {
+function computeAll(
+  progressKey: string | null,
+  mistakesKey: string | null,
+  revisionKey: string | null,
+): TopicProfile[] {
   return computeTopicProfiles(
-    safeRead<ProgressStore>(PROGRESS_KEY, { Physics: {}, Chemistry: {}, Mathematics: {}, Economics: {} }),
-    safeRead<JournalStore>(MISTAKES_KEY, { events: [], attempts: {} }),
-    unwrapRevisionItems<RevItem>(safeRead<unknown>(REVISION_KEY, {})),
+    safeRead<ProgressStore>(progressKey, { Physics: {}, Chemistry: {}, Mathematics: {}, Economics: {} }),
+    safeRead<JournalStore>(mistakesKey, { events: [], attempts: {} }),
+    unwrapRevisionItems<RevItem>(safeRead<unknown>(revisionKey, {})),
   );
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useAdaptiveLearning() {
-  const [profiles, setProfiles] = useState<TopicProfile[]>(() => computeAll());
+  const { profile } = useProfile();
+  const context = makeAcademicContext(profile.board, profile.classLevel);
+  const progressKey = scopedStorageKey(PROGRESS_PREFIX, context);
+  const mistakesKey = scopedStorageKey(MISTAKES_PREFIX, context);
+  const revisionKey = scopedStorageKey(REVISION_PREFIX, context);
+  const adaptiveKey = scopedStorageKey(ADAPTIVE_PREFIX, context);
+  const compute = () => computeAll(progressKey, mistakesKey, revisionKey);
+
+  const [profiles, setProfiles] = useState<TopicProfile[]>(compute);
 
   const [recommendations, setRecommendations] = useState<DailyRecommendation[]>(() => {
-    const cached = loadCachedRecommendations();
+    const cached = loadCachedRecommendations(adaptiveKey);
     if (cached) return cached;
-    return generateAndCache(computeAll());
+    return generateAndCache(compute(), adaptiveKey);
   });
 
   // Auto-regenerate on calendar day change (e.g. tab left open overnight)
@@ -258,9 +273,9 @@ export function useAdaptiveLearning() {
   const currentDay  = todayStr();
   if (lastDayRef.current !== currentDay) {
     lastDayRef.current = currentDay;
-    const fresh = computeAll();
+    const fresh = compute();
     setProfiles(fresh);
-    setRecommendations(generateAndCache(fresh));
+    setRecommendations(generateAndCache(fresh, adaptiveKey));
   }
 
   /**
@@ -268,10 +283,10 @@ export function useAdaptiveLearning() {
    * recommendations reflect the latest attempts before the next day.
    */
   const refresh = useCallback(() => {
-    const fresh = computeAll();
+    const fresh = compute();
     setProfiles(fresh);
-    setRecommendations(generateAndCache(fresh));
-  }, []);
+    setRecommendations(generateAndCache(fresh, adaptiveKey));
+  }, [progressKey, mistakesKey, revisionKey, adaptiveKey]);
 
   // ── Queries ────────────────────────────────────────────────────────────────
 

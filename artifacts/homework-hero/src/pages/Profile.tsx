@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 import { useProfile } from "@/hooks/useProfile";
 import BetaFeedback from "@/components/BetaFeedback";
 
-const BOARDS   = ["CBSE", "ICSE", "State Board", "Other"] as const;
+const BOARDS   = ["CBSE", "ICSE", "WBBSE", "State Board", "Other"] as const;
 const CLASSES  = [6, 7, 8, 9, 10, 11, 12] as const;
 
 export default function Profile() {
