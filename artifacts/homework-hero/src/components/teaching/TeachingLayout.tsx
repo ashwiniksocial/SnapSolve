@@ -270,6 +270,9 @@ function LessonRenderer({ lesson, level, cfg }: {
     practice:  !isCompact && !!(lesson.practiceQuestion?.question),
     remember:  isCompact,
   };
+  const prerequisites = Array.isArray(lesson.prerequisites)
+    ? lesson.prerequisites.filter((prerequisite) => typeof prerequisite === "string" && prerequisite.trim())
+    : [];
 
   let _n = 0;
   const num = {
@@ -433,6 +436,18 @@ function LessonRenderer({ lesson, level, cfg }: {
           }
         >
           <div className="space-y-2.5">
+            {prerequisites.length > 0 && (
+              <div className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3">
+                <p className="mb-1 text-[10px] font-black uppercase tracking-wider text-indigo-700">
+                  Before we start
+                </p>
+                <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-indigo-950">
+                  {prerequisites.map((prerequisite, index) => (
+                    <li key={index}>{prerequisite}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {lesson.guidedReasoning.map((step, i) => (
               <GuidedStepCard
                 key={i}

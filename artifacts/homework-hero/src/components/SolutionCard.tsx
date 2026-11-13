@@ -105,7 +105,7 @@ export default function SolutionCard({ solution }: Props) {
         },
       );
       const simplified = isCompleteLessonSafely(candidate.lesson)
-        ? createSimplifiedResponse(solution, candidate)
+        ? createSimplifiedResponse(solution, candidate, level)
         : null;
 
       if (!simplified) {

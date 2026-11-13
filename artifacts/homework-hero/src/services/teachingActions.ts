@@ -10,7 +10,7 @@ export interface SimplifyContext {
   level: SimplifyLevel;
 }
 
-const SIMPLIFY_CACHE_STORE_KEY = "studyai-simplified-lesson-cache-v1";
+const SIMPLIFY_CACHE_STORE_KEY = "studyai-simplified-lesson-cache-v2";
 const SIMPLIFY_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const SIMPLIFY_CACHE_MAX_ENTRIES = 40;
 const SIMPLIFY_EXPLANATION_FIELDS = [
@@ -97,9 +97,54 @@ export function hasMaterialSimplifyChange(
   return explanationSignature(original) !== explanationSignature(candidate);
 }
 
+function wordCount(value: unknown): number {
+  return typeof value === "string" ? value.trim().split(/\s+/u).filter(Boolean).length : 0;
+}
+
+function hasText(record: Record<string, unknown>, field: string): boolean {
+  return typeof record[field] === "string" && !!(record[field] as string).trim();
+}
+
+export function matchesSimplifyLevelStructure(
+  original: TeachingLesson,
+  candidate: TeachingLesson,
+  level: SimplifyLevel,
+): boolean {
+  const sourceSteps = Array.isArray(original.guidedReasoning) ? original.guidedReasoning : [];
+  const candidateSteps = Array.isArray(candidate.guidedReasoning) ? candidate.guidedReasoning : [];
+  if (sourceSteps.length === 0 || candidateSteps.length === 0) return false;
+
+  if (level === "clearer") {
+    return candidateSteps.length === sourceSteps.length &&
+      candidateSteps.every((step) => !!step.what.trim() && !!step.why.trim()) &&
+      !!candidate.simplerExample?.problem.trim() &&
+      !!candidate.simplerExample?.solution.trim();
+  }
+
+  const prerequisites = Array.isArray(candidate.prerequisites)
+    ? candidate.prerequisites.filter((prerequisite) =>
+        typeof prerequisite === "string" && !!prerequisite.trim())
+    : [];
+  return prerequisites.length > 0 &&
+    candidateSteps.length >= 3 &&
+    candidateSteps.length > sourceSteps.length &&
+    candidateSteps.every((step) =>
+      !!step.what.trim() &&
+      !!step.why.trim() &&
+      !!step.pause.trim() &&
+      step.pause.includes("?") &&
+      wordCount(step.what) <= 20 &&
+      wordCount(step.why) <= 45 &&
+      wordCount(step.pause) <= 24
+    );
+}
+
 export function getSimplifyFailureMessage(error: unknown): string {
   if (error instanceof Error && error.message === "simplify_unchanged") {
     return "The explanation did not change enough to count as a simpler version. Your original lesson is unchanged.";
+  }
+  if (error instanceof Error && error.message === "simplify_level_mismatch") {
+    return "The lesson did not meet the selected explanation style. Your original lesson is unchanged.";
   }
   return "A simpler version could not be verified. Your original lesson is unchanged.";
 }
@@ -162,6 +207,7 @@ export function simplifyActionReducer(
 export function createSimplifiedResponse(
   original: AIResponse,
   candidate: AIResponse,
+  level: SimplifyLevel,
 ): AIResponse | null {
   const originalLesson = original.lesson;
   const candidateLesson = candidate.lesson;
@@ -180,7 +226,8 @@ export function createSimplifiedResponse(
     original.finalAnswer !== canonicalAnswer ||
     candidate.finalAnswer !== canonicalAnswer ||
     candidateAnswer !== canonicalAnswer ||
-    !hasMaterialSimplifyChange(originalLesson, candidateLesson)
+    !hasMaterialSimplifyChange(originalLesson, candidateLesson) ||
+    !matchesSimplifyLevelStructure(originalLesson, candidateLesson, level)
   ) {
     return null;
   }
@@ -279,7 +326,7 @@ export function getCachedSimplifiedResponse(
     return null;
   }
 
-  const verified = createSimplifiedResponse(original, entry.response);
+  const verified = createSimplifiedResponse(original, entry.response, level);
   if (!verified) {
     delete store[key];
     writeSimplifyCache(store);
@@ -298,7 +345,7 @@ export function cacheSimplifiedResponse(
   response: AIResponse,
 ): void {
   const sourceSignature = getSimplifySourceSignature(original);
-  const verified = createSimplifiedResponse(original, response);
+  const verified = createSimplifiedResponse(original, response, level);
   if (!sourceSignature || !verified) return;
 
   const identity = simplifyCacheIdentity(original, level);

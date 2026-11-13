@@ -26,6 +26,7 @@ import { runQualityPipeline }    from "../services/teachingQuality";
 import {
   getSimplifyLevelInstruction,
   hasMaterialSimplifyChange,
+  matchesSimplifyLevelStructure,
   matchesSimplifyCanonicalFields,
   parseSimplifyContext,
   type SimplifyContext,
@@ -1066,6 +1067,7 @@ function buildDraftPrompts(
     ? `\n\nSIMPLIFY INTENT — The student is still confused by the existing solution.
 Rewrite this same lesson for the student's selected support level:
 ${simplifyContext ? getSimplifyLevelInstruction(simplifyContext.level) : ""}
+Treat that level's field-by-field structure as mandatory, even when it differs from the generic BASIC length guidance above. Return only the selected level; do not reuse or imitate another support level.
 Keep the mathematics, facts, method, and final answer correct. Do not change the question or invent a different answer.
 Treat the supplied topic, difficulty, and final answer as frozen canonical values.
 Copy finalAnswer.answer exactly, character for character. Preserve the topic and difficulty
@@ -1570,6 +1572,19 @@ router.post("/solveQuestion", async (req, res) => {
     });
     return;
   }
+  if (simplifyContext && !matchesSimplifyLevelStructure(
+    simplifyContext.lesson,
+    draft,
+    simplifyContext.level,
+  )) {
+    req.log.warn({ subject: subj, level: simplifyContext.level },
+      "[PIPELINE:5] REJECTED — generated lesson did not meet selected Simplify structure");
+    res.status(422).json({
+      error: "simplify_level_mismatch",
+      message: "The lesson did not meet the selected explanation style. Your original lesson is unchanged.",
+    });
+    return;
+  }
 
   // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
   //    Standard and Compact modes skip this for faster responses.
@@ -1746,6 +1761,19 @@ router.post("/solveQuestion", async (req, res) => {
     res.status(422).json({
       error: "simplify_unchanged",
       message: "The selected support level did not materially change the explanation.",
+    });
+    return;
+  }
+  if (simplifyContext && !matchesSimplifyLevelStructure(
+    simplifyContext.lesson,
+    finalLesson,
+    simplifyContext.level,
+  )) {
+    req.log.warn({ subject: subj, level: simplifyContext.level },
+      "[PIPELINE:6] REJECTED — reviewed lesson did not meet selected Simplify structure");
+    res.status(422).json({
+      error: "simplify_level_mismatch",
+      message: "The lesson did not meet the selected explanation style. Your original lesson is unchanged.",
     });
     return;
   }
