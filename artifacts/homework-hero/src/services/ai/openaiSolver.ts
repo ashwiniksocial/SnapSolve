@@ -373,6 +373,7 @@ async function callBackend(
     try { errBody = (await res.json()) as BackendErrorResponse; } catch {}
 
     const code = errBody.error ?? "";
+    if (code === "simplify_unchanged") throw new Error(code);
     if (res.status === 429 || code.includes("rate_limit")) throw new Error("rate_limit");
     if (res.status === 503 || code === "no_key")           throw new Error("no_key");
     if (res.status === 503 || code === "invalid_key")      throw new Error("invalid_key");

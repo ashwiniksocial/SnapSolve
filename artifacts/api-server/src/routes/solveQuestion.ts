@@ -25,6 +25,7 @@ import { parseLessonResponse, type LessonResponse, type LessonStep } from "../li
 import { runQualityPipeline }    from "../services/teachingQuality";
 import {
   getSimplifyLevelInstruction,
+  hasMaterialSimplifyChange,
   matchesSimplifyCanonicalFields,
   parseSimplifyContext,
   type SimplifyContext,
@@ -1561,6 +1562,14 @@ router.post("/solveQuestion", async (req, res) => {
     });
     return;
   }
+  if (simplifyContext && !hasMaterialSimplifyChange(simplifyContext.lesson, draft)) {
+    req.log.warn({ subject: subj }, "[PIPELINE:5] REJECTED — simplify draft did not change explanatory content");
+    res.status(422).json({
+      error: "simplify_unchanged",
+      message: "The selected support level did not materially change the explanation.",
+    });
+    return;
+  }
 
   // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
   //    Standard and Compact modes skip this for faster responses.
@@ -1629,6 +1638,14 @@ router.post("/solveQuestion", async (req, res) => {
     const qualityBudgetMs = REQUEST_BUDGET_MS - (Date.now() - requestStart);
 
     if (qualityBudgetMs < OPTION_F_MIN_START_BUDGET_MS) {
+      if (simplifyContext) {
+        req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] REJECTED — insufficient budget for Simplify review");
+        res.status(504).json({
+          error: "simplify_review_timeout",
+          message: "The simpler lesson could not be academically reviewed in time.",
+        });
+        return;
+      }
       req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] SKIP — insufficient budget remaining; returning draft");
     } else {
       try {
@@ -1639,13 +1656,37 @@ router.post("/solveQuestion", async (req, res) => {
         const pipelineResult = await Promise.race([
           runQualityPipeline(draft, apiKey, (msg, pct) => {
             setProgress(reqId, "quality", msg, pct);
-          }),
+          }, simplifyContext
+            ? { maxReviewCycles: 1, allowImprovements: false, requireReviewerPass: true }
+            : undefined),
           timeoutSignal,
         ]);
 
         if (pipelineResult === null) {
+          if (simplifyContext) {
+            req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] REJECTED — Simplify review exceeded request budget");
+            res.status(504).json({
+              error: "simplify_review_timeout",
+              message: "The simpler lesson could not be academically reviewed in time.",
+            });
+            return;
+          }
           req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] TIMEOUT — budget exceeded; returning draft");
         } else {
+          if (simplifyContext && !pipelineResult.passed) {
+            req.log.warn({
+              subject: subj,
+              reviewFailed: pipelineResult.reviewFailed,
+              cyclesRun: pipelineResult.cyclesRun,
+            }, "[PIPELINE:6] REJECTED — Simplify lesson did not pass academic review");
+            res.status(pipelineResult.reviewFailed ? 503 : 422).json({
+              error: pipelineResult.reviewFailed ? "simplify_review_unavailable" : "simplify_review_failed",
+              message: pipelineResult.reviewFailed
+                ? "The simpler lesson could not be verified by the academic reviewer."
+                : "The simpler lesson did not pass the academic quality review.",
+            });
+            return;
+          }
           finalLesson      = pipelineResult.lesson;
           qualityUsage     = pipelineResult.usageTotal;
           reviewerCalls    = pipelineResult.reviewerCalls;
@@ -1678,6 +1719,14 @@ router.post("/solveQuestion", async (req, res) => {
           }
         }
       } catch (err) {
+        if (simplifyContext) {
+          req.log.warn({ err: String(err) }, "[PIPELINE:6] REJECTED — Simplify academic review failed");
+          res.status(503).json({
+            error: "simplify_review_unavailable",
+            message: "The simpler lesson could not be verified by the academic reviewer.",
+          });
+          return;
+        }
         // Quality pipeline failure is non-fatal — we still return the draft
         req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
       }
@@ -1689,6 +1738,14 @@ router.post("/solveQuestion", async (req, res) => {
     res.status(422).json({
       error: "simplify_drift",
       message: "The simpler lesson did not preserve the original answer, topic, and difficulty.",
+    });
+    return;
+  }
+  if (simplifyContext && !hasMaterialSimplifyChange(simplifyContext.lesson, finalLesson)) {
+    req.log.warn({ subject: subj }, "[PIPELINE:6] REJECTED — reviewed Simplify lesson did not change explanatory content");
+    res.status(422).json({
+      error: "simplify_unchanged",
+      message: "The selected support level did not materially change the explanation.",
     });
     return;
   }

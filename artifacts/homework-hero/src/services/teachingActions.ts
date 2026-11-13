@@ -13,6 +13,26 @@ export interface SimplifyContext {
 const SIMPLIFY_CACHE_STORE_KEY = "studyai-simplified-lesson-cache-v1";
 const SIMPLIFY_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const SIMPLIFY_CACHE_MAX_ENTRIES = 40;
+const SIMPLIFY_EXPLANATION_FIELDS = [
+  "keyConcepts",
+  "beforeWeStart",
+  "prerequisites",
+  "vocabulary",
+  "intuition",
+  "questionTranslation",
+  "teacherThinking",
+  "guidedReasoning",
+  "confusionPoints",
+  "commonMistakes",
+  "examinerThinking",
+  "simplerExample",
+  "practiceQuestion",
+  "confidenceCheck",
+  "retrievalPractice",
+  "rememberThese",
+  "confidenceBuilder",
+  "finalAnswer",
+] as const;
 
 interface SimplifyCacheEntry {
   identity: string;
@@ -36,6 +56,53 @@ export const INITIAL_SIMPLIFY_ACTION_STATE: SimplifyActionState = {
   showingSimplified: false,
   error: null,
 };
+
+function explanationSignature(lesson: TeachingLesson): string {
+  const parts: string[] = [];
+  const collect = (value: unknown, path: string): void => {
+    if (typeof value === "string") {
+      const text = value.normalize("NFC").replace(/\s+/gu, " ").trim();
+      if (text) parts.push(`${path}:${text}`);
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach((entry, index) => collect(entry, `${path}[${index}]`));
+      return;
+    }
+    if (typeof value !== "object" || value === null) return;
+
+    for (const key of Object.keys(value).sort()) {
+      if (
+        key === "aiConfidence" ||
+        key === "cached" ||
+        key === "correctIndex" ||
+        (path === "finalAnswer" && key === "answer")
+      ) {
+        continue;
+      }
+      collect((value as Record<string, unknown>)[key], `${path}.${key}`);
+    }
+  };
+
+  for (const field of SIMPLIFY_EXPLANATION_FIELDS) {
+    collect(lesson[field], field);
+  }
+  return JSON.stringify(parts);
+}
+
+export function hasMaterialSimplifyChange(
+  original: TeachingLesson,
+  candidate: TeachingLesson,
+): boolean {
+  return explanationSignature(original) !== explanationSignature(candidate);
+}
+
+export function getSimplifyFailureMessage(error: unknown): string {
+  if (error instanceof Error && error.message === "simplify_unchanged") {
+    return "The explanation did not change enough to count as a simpler version. Your original lesson is unchanged.";
+  }
+  return "A simpler version could not be verified. Your original lesson is unchanged.";
+}
 
 export type SimplifyAction =
   | { type: "start"; level: SimplifyLevel }
@@ -112,7 +179,8 @@ export function createSimplifiedResponse(
     !canonicalAnswer?.trim() ||
     original.finalAnswer !== canonicalAnswer ||
     candidate.finalAnswer !== canonicalAnswer ||
-    candidateAnswer !== canonicalAnswer
+    candidateAnswer !== canonicalAnswer ||
+    !hasMaterialSimplifyChange(originalLesson, candidateLesson)
   ) {
     return null;
   }

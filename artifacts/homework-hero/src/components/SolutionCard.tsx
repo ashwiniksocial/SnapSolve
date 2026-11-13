@@ -11,6 +11,7 @@ import {
   cacheSimplifiedResponse,
   createSimplifiedResponse,
   discardCachedSimplifiedResponse,
+  getSimplifyFailureMessage,
   getCachedSimplifiedResponse,
   getSimplifySourceSignature,
   INITIAL_SIMPLIFY_ACTION_STATE,
@@ -117,14 +118,14 @@ export default function SolutionCard({ solution }: Props) {
       }
       cacheSimplifiedResponse(solution, level, simplified);
       dispatchSimplify({ type: "success", response: simplified, level });
-    } catch {
+    } catch (error) {
       if (sourceSignatureRef.current !== getSimplifySourceSignature(solution)) {
         dispatchSimplify({ type: "reset" });
         return;
       }
       dispatchSimplify({
         type: "failure",
-        message: "A simpler version could not be verified. Your original lesson is unchanged.",
+        message: getSimplifyFailureMessage(error),
       });
     }
   };

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  hasMaterialSimplifyChange,
   getSimplifyLevelInstruction,
   matchesSimplifyCanonicalFields,
   parseSimplifyContext,
@@ -63,6 +64,26 @@ test("each selected level has a distinct instruction while preserving full reaso
   assert.match(stepByStep, /smallest useful steps/);
   assert.match(clearer, /proof steps/);
   assert.match(stepByStep, /proof steps/);
+});
+
+test("both levels reject unchanged explanations but accept material wording changes", () => {
+  for (const level of ["clearer", "step_by_step"] as const) {
+    const levelContext = parseSimplifyContext({ ...contextInput, level });
+    assert.ok(levelContext);
+
+    const unchanged = structuredClone(levelContext.lesson);
+    assert.equal(hasMaterialSimplifyChange(levelContext.lesson, unchanged), false);
+
+    const formattingOnly = structuredClone(levelContext.lesson);
+    const step = formattingOnly.guidedReasoning as Array<Record<string, unknown>>;
+    step[0].why = "SSS   requires three equal side pairs.\n";
+    assert.equal(hasMaterialSimplifyChange(levelContext.lesson, formattingOnly), false);
+
+    const changed = structuredClone(levelContext.lesson);
+    const changedSteps = changed.guidedReasoning as Array<Record<string, unknown>>;
+    changedSteps[0].why = "SSS proves congruence because all three matching side pairs are known.";
+    assert.equal(hasMaterialSimplifyChange(levelContext.lesson, changed), true);
+  }
 });
 
 test("rejects generated lessons whose answer or metadata drifted", () => {

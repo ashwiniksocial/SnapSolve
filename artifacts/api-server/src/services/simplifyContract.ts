@@ -11,6 +11,71 @@ export interface SimplifyContext {
   level: SimplifyLevel;
 }
 
+const SIMPLIFY_EXPLANATION_FIELDS = [
+  "keyConcepts",
+  "beforeWeStart",
+  "prerequisites",
+  "vocabulary",
+  "intuition",
+  "questionTranslation",
+  "teacherThinking",
+  "guidedReasoning",
+  "confusionPoints",
+  "commonMistakes",
+  "examinerThinking",
+  "simplerExample",
+  "practiceQuestion",
+  "confidenceCheck",
+  "retrievalPractice",
+  "rememberThese",
+  "confidenceBuilder",
+  "finalAnswer",
+] as const;
+
+function normalizedExplanationSignature(lesson: Record<string, unknown>): string {
+  const parts: string[] = [];
+
+  const collect = (value: unknown, path: string): void => {
+    if (typeof value === "string") {
+      const text = value.normalize("NFC").replace(/\s+/gu, " ").trim();
+      if (text) parts.push(`${path}:${text}`);
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach((entry, index) => collect(entry, `${path}[${index}]`));
+      return;
+    }
+    if (!isRecord(value)) return;
+
+    for (const key of Object.keys(value).sort()) {
+      if (
+        key === "aiConfidence" ||
+        key === "cached" ||
+        key === "correctIndex" ||
+        (path === "finalAnswer" && key === "answer")
+      ) {
+        continue;
+      }
+      collect(value[key], `${path}.${key}`);
+    }
+  };
+
+  for (const field of SIMPLIFY_EXPLANATION_FIELDS) {
+    collect(lesson[field], field);
+  }
+  return JSON.stringify(parts);
+}
+
+/**
+ * Compare student-facing explanation text only. Unicode normalization and
+ * whitespace collapsing ignore formatting noise; wording and punctuation
+ * remain significant. The canonical final answer is deliberately excluded.
+ */
+export function hasMaterialSimplifyChange(original: unknown, candidate: unknown): boolean {
+  if (!isRecord(original) || !isRecord(candidate)) return false;
+  return normalizedExplanationSignature(original) !== normalizedExplanationSignature(candidate);
+}
+
 export function getSimplifyLevelInstruction(level: SimplifyLevel): string {
   if (level === "step_by_step") {
     return `SIMPLIFICATION LEVEL: VERY SIMPLE STEPS.

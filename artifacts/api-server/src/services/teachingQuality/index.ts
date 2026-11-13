@@ -35,6 +35,7 @@ export interface QualityPipelineResult {
   lesson:         LessonResponse;
   finalScore:     DimensionScores;
   passed:         boolean;
+  reviewFailed:   boolean;
   cyclesRun:      number;
   qualityLog:     CycleLog[];
   /** Accumulated token usage across all reviewer + improver calls in this pipeline run. */
@@ -54,32 +55,50 @@ export interface QualityPipelineResult {
   };
 }
 
+export interface QualityPipelineOptions {
+  maxReviewCycles?: number;
+  allowImprovements?: boolean;
+  requireReviewerPass?: boolean;
+}
+
+export interface QualityPipelineServices {
+  reviewLesson: typeof reviewLesson;
+  improveLesson: typeof improveLesson;
+}
+
 // ─── Orchestrator ─────────────────────────────────────────────────────────────
 
 export async function runQualityPipeline(
   draft:       LessonResponse,
   apiKey:      string,
   onProgress?: (message: string, percent: number) => void,
+  options:     QualityPipelineOptions = {},
+  services:    QualityPipelineServices = { reviewLesson, improveLesson },
 ): Promise<QualityPipelineResult> {
+  const configuredCycles = options.maxReviewCycles ?? MAX_REVIEW_CYCLES;
+  const maxReviewCycles = Number.isInteger(configuredCycles) && configuredCycles > 0
+    ? Math.min(configuredCycles, MAX_REVIEW_CYCLES)
+    : MAX_REVIEW_CYCLES;
+  const allowImprovements = options.allowImprovements ?? true;
   let current       = draft;
   const qualityLog: CycleLog[] = [];
   let lastReport:   ReviewReport | null = null;
+  let reviewFailed  = false;
   let usageTotal    = zeroUsage();
   let reviewerCalls = 0;
   let improverCalls = 0;
   const callLatencies = { review: [] as number[], improve: [] as number[] };
   const callUsage = { review: [] as UsageSnapshot[], improve: [] as UsageSnapshot[] };
 
-  for (let cycle = 1; cycle <= MAX_REVIEW_CYCLES; cycle++) {
-    // Emit progress: review starts at 65, 75, 85 for cycles 1, 2, 3
+  for (let cycle = 1; cycle <= maxReviewCycles; cycle++) {
     const reviewPct  = 65 + (cycle - 1) * 10;
     const improvePct = reviewPct + 5;
-    onProgress?.(`Quality review — cycle ${cycle} of ${MAX_REVIEW_CYCLES}…`, reviewPct);
+    onProgress?.(`Quality review — cycle ${cycle} of ${maxReviewCycles}…`, reviewPct);
 
     // ── Review ────────────────────────────────────────────────────────────────
     let report: ReviewReport;
     try {
-      const result  = await reviewLesson(current, apiKey);
+      const result  = await services.reviewLesson(current, apiKey);
       report        = result.report;
       usageTotal    = addUsage(usageTotal, result.usage);
       reviewerCalls += 1;
@@ -87,6 +106,7 @@ export async function runQualityPipeline(
       callUsage.review.push(result.usage);
     } catch {
       // Review call failed — stop pipeline, return best lesson so far
+      reviewFailed = true;
       break;
     }
 
@@ -102,13 +122,17 @@ export async function runQualityPipeline(
       improved:   false,
     };
 
-    if (report.passed || validation.passed) {
+    const reviewPassed = options.requireReviewerPass
+      ? report.passed && validation.passed
+      : report.passed || validation.passed;
+    if (reviewPassed) {
       // Lesson passed all thresholds — we're done
       qualityLog.push(cycleEntry);
       return {
         lesson:        current,
         finalScore:    report.scores,
         passed:        true,
+        reviewFailed:  false,
         cyclesRun:     cycle,
         qualityLog,
         usageTotal,
@@ -120,10 +144,10 @@ export async function runQualityPipeline(
     }
 
     // ── Improve (not on the last cycle — just accept) ─────────────────────────
-    if (cycle < MAX_REVIEW_CYCLES) {
+    if (allowImprovements && cycle < maxReviewCycles) {
       onProgress?.(`Improving lesson — cycle ${cycle}…`, improvePct);
       try {
-        const improved   = await improveLesson(current, report, apiKey);
+        const improved   = await services.improveLesson(current, report, apiKey);
         current          = improved.lesson;
         usageTotal       = addUsage(usageTotal, improved.usage);
         improverCalls   += 1;
@@ -145,6 +169,7 @@ export async function runQualityPipeline(
     lesson:        current,
     finalScore:    lastReport?.scores ?? ({} as DimensionScores),
     passed:        false,
+    reviewFailed,
     cyclesRun:     qualityLog.length,
     qualityLog,
     usageTotal,

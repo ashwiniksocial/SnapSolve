@@ -15,10 +15,10 @@ generateDraft()  →  runQualityPipeline(draft, apiKey)
                        ↓
                    reviewLesson()   ← one OpenAI call: scores + confusions + issues
                        ↓
-                   if failed + cycles remaining:
+                    if failed + cycles remaining (standard lesson flow):
                    improveLesson()  ← one OpenAI call: returns full improved lesson
                        ↓
-                   re-review (max 3 cycles total)
+                    re-review (max 2 cycles total)
                        ↓
                    return best lesson + QualityPipelineResult
 ```
@@ -28,10 +28,17 @@ ALL nine dimension scores must be ≥ 95:
 `vocabulary`, `conceptTeaching`, `reasoning`, `stepExplanation`, `examples`, `memory`, `practice`, `confidenceBuilding`, `weakStudentUnderstanding`
 
 ## Max cycles
-`MAX_REVIEW_CYCLES = 3` — after the third review cycle, the best lesson is returned regardless.
+`MAX_REVIEW_CYCLES = 2` — after the second review cycle, the best lesson is returned regardless for the standard lesson flow.
 
 ## Graceful degradation
-If any review or improve call throws (timeout, API error), the pipeline stops and returns the best lesson seen so far. The route handler also wraps the entire pipeline in a try/catch so a pipeline failure never 500s the request — the original draft is returned instead.
+For standard lesson generation, a review or improve error stops the pipeline and returns the best lesson seen so far. Simplify is intentionally stricter: it must pass the existing reviewer and canonical checks; reviewer rejection, timeout, or failure is not approval and must not return the candidate as a successful simplification.
+
+## Simplify rule
+Simplify uses one review of the candidate and does not invoke the generic lesson improver. The selected level's generation instruction must remain distinct; a candidate is accepted only when the reviewer explicitly passes it, canonical fields still match, and student-facing explanatory text materially differs from the source (ignoring only whitespace/Unicode normalization). Failure leaves the original lesson displayed.
+
+**Why:** The generic improver's expansion-only instruction conflicts with shorter explanations, and returning an unreviewed or unchanged candidate falsely reports success.
+
+**How to apply:** Keep Simplify fail-closed and review-only. Do not add another generation cycle or weaken the reviewer or canonical checks to force a visible difference.
 
 ## Logging
 All quality data logged server-side via `req.log`. Nothing sent to the client:

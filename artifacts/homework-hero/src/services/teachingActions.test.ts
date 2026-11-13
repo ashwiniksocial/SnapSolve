@@ -5,6 +5,7 @@ import {
   cacheSimplifiedResponse,
   createSimplifiedResponse,
   getCachedSimplifiedResponse,
+  getSimplifyFailureMessage,
   INITIAL_SIMPLIFY_ACTION_STATE,
   simplifyActionReducer,
   supportsSimplify,
@@ -113,6 +114,20 @@ test("a Hard proof can be simplified while keeping its exact frozen conclusion",
   assert.match(simplified.lesson?.intuition.visual ?? "", /first side pair/);
 });
 
+test("unchanged explanations and formatting-only edits are not accepted or cached", () => {
+  const original = response();
+  assert.equal(createSimplifiedResponse(original, structuredClone(original)), null);
+
+  const formattingOnly = response({ visual: "  Imagine   two equal groups of four.\n" });
+  assert.equal(createSimplifiedResponse(original, formattingOnly), null);
+
+  cacheSimplifiedResponse(original, "clearer", structuredClone(original));
+  assert.equal(getCachedSimplifiedResponse(original, "clearer"), null);
+
+  const changed = response({ visual: "Picture two equal groups, each holding four." });
+  assert.ok(createSimplifiedResponse(original, changed));
+});
+
 test("simplified lesson is rejected when any answer representation changes", () => {
   const original = response();
   assert.equal(createSimplifiedResponse(original, response({ answer: "x = 5", topAnswer: "x = 5" })), null);
@@ -162,6 +177,9 @@ test("verified simplification is reused only for the same frozen source and leve
       getCachedSimplifiedResponse(original, "clearer")?.lesson?.intuition.visual,
       "A saved simpler explanation.",
     );
+    assert.equal(getCachedSimplifiedResponse(original, "step_by_step"), null);
+
+    cacheSimplifiedResponse(original, "step_by_step", structuredClone(original));
     assert.equal(getCachedSimplifiedResponse(original, "step_by_step"), null);
 
     const changedFrozenSource = structuredClone(original);
@@ -229,6 +247,14 @@ test("simplify action state supports loading, toggling, failure, and reset", () 
   assert.equal(failed.selectedLevel, null);
   assert.equal(failed.showingSimplified, false);
   assert.equal(failed.error, "No safe simplified result.");
+  assert.equal(
+    getSimplifyFailureMessage(new Error("simplify_unchanged")),
+    "The explanation did not change enough to count as a simpler version. Your original lesson is unchanged.",
+  );
+  assert.equal(
+    getSimplifyFailureMessage(new Error("backend_503")),
+    "A simpler version could not be verified. Your original lesson is unchanged.",
+  );
   assert.equal(simplifyActionReducer(state, { type: "reset" }), INITIAL_SIMPLIFY_ACTION_STATE);
   assert.equal(original.finalAnswer, "x = 4");
 });
