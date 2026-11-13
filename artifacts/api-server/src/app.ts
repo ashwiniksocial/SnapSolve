@@ -37,8 +37,8 @@ app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 app.use(cors({ credentials: true, origin: true }));
 // Photo Scan sends a resized base64 JPEG; keep this limit narrowly above the
 // route's 6 MB data-URL cap while preserving Express's default for smaller APIs.
-app.use(express.json({ limit: "8mb" }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "8mb", inflate: false }));
+app.use(express.urlencoded({ extended: true, inflate: false }));
 
 // Resolve the publishable key from the incoming host so the same server can
 // serve multiple Clerk custom domains. Falls back to CLERK_PUBLISHABLE_KEY.
