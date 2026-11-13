@@ -23,6 +23,7 @@ import {
   applyCanonicalBankMetadata,
   getCanonicalPracticeMetadata,
 } from "@/services/canonicalPracticeMetadata";
+import { getSolutionScrollTarget } from "@/services/solutionPageKeyboardScroll";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
@@ -53,7 +54,52 @@ export default function Solution() {
   const [needsReview, setNeedsReview] = useState<boolean | null>(null);
   const [visibleQuestionNumber, setVisibleQuestionNumber] = useState<number | null>(null);
   const [visibleChapterNumber, setVisibleChapterNumber] = useState<number | null>(null);
+  const [visibleChapterName, setVisibleChapterName] = useState<string | null>(null);
   const [visiblePracticeSubject, setVisiblePracticeSubject] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      if (
+        target?.closest(
+          'input, textarea, select, [contenteditable="true"], [contenteditable="plaintext-only"], ' +
+          '[role="textbox"], [role="combobox"], [role="listbox"], [role="option"], [role="slider"], ' +
+          '[role="spinbutton"], [role="menu"], [role="menuitem"], [role="tablist"], [role="tab"], ' +
+          '[role="radio"], [role="tree"], [role="treeitem"]',
+        )
+      ) {
+        return;
+      }
+
+      let ancestor = target;
+      while (ancestor && ancestor !== document.body && ancestor !== document.documentElement) {
+        const style = window.getComputedStyle(ancestor);
+        if (
+          (style.overflowY === "auto" || style.overflowY === "scroll") &&
+          ancestor.scrollHeight > ancestor.clientHeight
+        ) {
+          return;
+        }
+        ancestor = ancestor.parentElement;
+      }
+
+      const scroller = document.scrollingElement ?? document.documentElement;
+      const nextTop = getSolutionScrollTarget(event.key, {
+        scrollTop: scroller.scrollTop,
+        scrollHeight: scroller.scrollHeight,
+        clientHeight: window.innerHeight || scroller.clientHeight,
+      });
+      if (nextTop === null || Math.abs(nextTop - scroller.scrollTop) < 1) return;
+
+      event.preventDefault();
+      window.scrollTo({ top: nextTop, behavior: "auto" });
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const solutionParams = new URLSearchParams(window.location.search);
   // Practice mode preserves a question ID in the URL so a direct load or
@@ -114,6 +160,7 @@ export default function Solution() {
         const bankQ = getQuestionById(practiceQuestionId, boardId ?? undefined, classNum);
         if (bankQ) {
           setVisibleQuestionNumber(getQuestionDisplayNumber(bankQ) ?? null);
+          setVisibleChapterName(bankQ.chapterName ?? null);
           setVisibleChapterNumber(
             getChapterDisplayNumber(bankQ.classNum, bankQ.subject, bankQ.chapterId, bankQ.boardId) ?? null,
           );
@@ -159,6 +206,26 @@ export default function Solution() {
           }
 
           // ── Miss/invalid ONLY: stream a full TeachingLesson from frozen answer ─
+          // The same frozen bank entry used on stream failure is shown immediately
+          // while the on-demand TeachingLesson is generated. This avoids a blank
+          // loading screen without changing any academic source content.
+          const frozenFallback = applyCanonicalBankMetadata({
+            id:               `bank-${bankQ.id}`,
+            subject:          bankQ.subject as Subject,
+            topic:            bankQ.topicName,
+            difficulty:       bankQ.difficulty,
+            detectedQuestion: bankQ.question,
+            keyConcepts:      bankQ.keyConcepts,
+            steps:            bankQ.steps,
+            finalAnswer:      bankQ.answer,
+            similarQuestions: [],
+            source:           "bank",
+          }, bankQ);
+          flushSync(() => {
+            setSolution(frozenFallback);
+            setPageState("done");
+          });
+
           // onPartial fires on first keyConcepts or step (≤2 s) → switches from
           // loading spinner to solution card while remaining sections arrive.
           // flushSync forces an immediate React re-render on each partial so the
@@ -181,20 +248,9 @@ export default function Solution() {
             setSolution(applyCanonicalBankMetadata(result, bankQ));
             setPageState("done");
           } catch (err) {
-            // Streaming failed — show the minimal bank entry so student isn't stuck
+            // Streaming failed — retain the frozen bank entry so student isn't stuck
             console.warn("[BANK:STREAM] TeachingLesson generation failed:", String(err));
-            setSolution(applyCanonicalBankMetadata({
-              id:               `bank-${bankQ.id}`,
-              subject:          bankQ.subject as Subject,
-              topic:            bankQ.topicName,
-              difficulty:       bankQ.difficulty,
-              detectedQuestion: bankQ.question,
-              keyConcepts:      bankQ.keyConcepts,
-              steps:            bankQ.steps,
-              finalAnswer:      bankQ.answer,
-              similarQuestions: [],
-              source:           "bank",
-            }, bankQ));
+            setSolution(frozenFallback);
             setPageState("done");
           }
           return;
@@ -295,6 +351,11 @@ export default function Solution() {
               {visibleChapterNumber !== null && <> · Ch {visibleChapterNumber}</>}
               {solution && <> · {solution.topic}</>}
             </p>
+            {visibleChapterName && (
+              <p className="mt-0.5 truncate text-xs text-slate-500" title={visibleChapterName}>
+                {visibleChapterName}
+              </p>
+            )}
           </div>
         </div>
       </div>
