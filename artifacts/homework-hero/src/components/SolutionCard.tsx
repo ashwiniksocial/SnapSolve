@@ -1,10 +1,18 @@
-import { useEffect, useRef } from "react";
-import type { AIResponse } from "@/services/aiSolver";
+import { useEffect, useReducer, useRef } from "react";
+import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
+import { solve } from "@/services/aiSolver";
 import type { Subject } from "@/data/subjects";
 import { SUBJECTS } from "@/data/subjects";
+import { isCompleteDetailedLesson } from "@/data/preGeneratedLessons";
 import TeachingLayout     from "@/components/teaching/TeachingLayout";
 import TutorInsightBanner from "@/components/tutor/TutorInsightBanner";
 import type { ReadingLevel } from "@/services/explanation/readingModeEngine";
+import {
+  createSimplifiedResponse,
+  INITIAL_SIMPLIFY_ACTION_STATE,
+  simplifyActionReducer,
+  supportsSimplify,
+} from "@/services/teachingActions";
 import {
   recordQuestionAnswered,
   recordTopicVisit,
@@ -15,6 +23,15 @@ import {
 interface Props {
   solution: AIResponse;
   initialLevel?: ReadingLevel; // kept for API compat; ignored — Beta 1 always Detailed
+}
+
+function isCompleteLessonSafely(lesson?: TeachingLesson): boolean {
+  if (!lesson) return false;
+  try {
+    return isCompleteDetailedLesson(lesson);
+  } catch {
+    return false;
+  }
 }
 
 const DIFF_BADGE: Record<string, string> = {
@@ -28,9 +45,47 @@ const BETA1_LEVEL: ReadingLevel = "basic";
 
 export default function SolutionCard({ solution }: Props) {
   const level = BETA1_LEVEL;
+  const [simplifyState, dispatchSimplify] = useReducer(
+    simplifyActionReducer,
+    INITIAL_SIMPLIFY_ACTION_STATE,
+  );
+  const canSimplify = supportsSimplify(solution) &&
+    isCompleteLessonSafely(solution.lesson);
+  const displayedSolution = simplifyState.showingSimplified && simplifyState.response
+    ? simplifyState.response
+    : solution;
 
   const cfg  = SUBJECTS[solution.subject as Subject];
   const isAI = solution.source === "openai";
+
+  const handleSimplify = async () => {
+    if (!canSimplify || simplifyState.loading) return;
+
+    dispatchSimplify({ type: "start" });
+    try {
+      const candidate = await solve(
+        solution.subject as Subject,
+        solution.detectedQuestion,
+        1,
+        undefined,
+        { skipBank: true, requireLesson: true, intent: "simplify" },
+      );
+      const simplified = isCompleteLessonSafely(candidate.lesson)
+        ? createSimplifiedResponse(solution, candidate)
+        : null;
+
+      if (!simplified) {
+        throw new Error("simplification did not preserve the canonical answer");
+      }
+
+      dispatchSimplify({ type: "success", response: simplified });
+    } catch {
+      dispatchSimplify({
+        type: "failure",
+        message: "A simpler version could not be verified. Your original lesson is unchanged.",
+      });
+    }
+  };
 
   // ── Student model: session tracking ──────────────────────────────────────
   const sessionStart = useRef<number>(Date.now());
@@ -40,6 +95,7 @@ export default function SolutionCard({ solution }: Props) {
 
   // Record topic visit + mistakes on mount (once per solution render)
   useEffect(() => {
+    dispatchSimplify({ type: "reset" });
     sessionStart.current = Date.now();
     recordTopicVisit(solution.subject, solution.topic, 0, levelRef.current);
     if (solution.commonMistakes?.length) {
@@ -92,6 +148,27 @@ export default function SolutionCard({ solution }: Props) {
             ✦ AI Generated
           </span>
         )}
+        {canSimplify && (
+          <button
+            type="button"
+            onClick={() => {
+              if (simplifyState.response) {
+                dispatchSimplify({ type: "toggle" });
+              } else {
+                void handleSimplify();
+              }
+            }}
+            disabled={simplifyState.loading}
+            aria-pressed={simplifyState.showingSimplified}
+            className="min-h-9 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-700 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-wait disabled:opacity-60"
+          >
+            {simplifyState.loading
+              ? "Simplifying…"
+              : simplifyState.response
+                ? simplifyState.showingSimplified ? "Show original lesson" : "Show simpler explanation"
+                : "Simplify explanation"}
+          </button>
+        )}
         <span
           className="text-xs font-semibold px-2.5 py-1 rounded-full border"
           style={{ backgroundColor: cfg.light, color: cfg.color, borderColor: cfg.border }}
@@ -102,6 +179,17 @@ export default function SolutionCard({ solution }: Props) {
           {solution.difficulty}
         </span>
       </div>
+
+      {simplifyState.error && (
+        <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          {simplifyState.error}
+        </p>
+      )}
+      {simplifyState.showingSimplified && (
+        <p role="status" aria-live="polite" className="text-xs text-indigo-700">
+          Showing a simpler explanation. The original lesson and canonical answer are preserved.
+        </p>
+      )}
 
       {/* ── Detected question ───────────────────────────────────────────── */}
       {solution.detectedQuestion && (
@@ -114,7 +202,7 @@ export default function SolutionCard({ solution }: Props) {
       )}
 
       {/* ── Teaching Engine ─────────────────────────────────────────────── */}
-      <TeachingLayout solution={solution} level={level} />
+      <TeachingLayout solution={displayedSolution} level={level} />
 
     </div>
   );

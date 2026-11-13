@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { AIResponse, TeachingLesson, LessonStep } from "@/data/solutionBank";
 import type { Subject }     from "@/data/subjects";
 import { SUBJECTS }         from "@/data/subjects";
 import type { ReadingLevel } from "@/services/explanation/readingModeEngine";
 
 import TeachingSection    from "./TeachingSection";
+import VisualCard from "@/components/teaching/VisualCard";
+import { supportsVisualization } from "@/services/teachingActions";
 import StepReasoningCard  from "./StepReasoningCard";
 import MistakeCard        from "./MistakeCard";
 import MemoryCard         from "./MemoryCard";
@@ -239,6 +241,9 @@ function LessonRenderer({ lesson, level, cfg }: {
 }) {
   const isDetailed = level === "basic";
   const isCompact  = level === "advanced";
+  const visualCardId = useId();
+  const [visualized, setVisualized] = useState(false);
+  const hasVisualRepresentation = supportsVisualization(lesson);
 
   // Section visibility: mode-driven, except `translate` which is also
   // data-driven — hidden when all four questionTranslation fields are empty
@@ -330,10 +335,27 @@ function LessonRenderer({ lesson, level, cfg }: {
                 <P>{lesson.intuition.story}</P>
               </div>
             )}
-            {lesson.intuition.visual && (
+            {hasVisualRepresentation && (
               <div className="bg-sky-50 border border-sky-200 rounded-xl px-4 py-3">
-                <Label>Picture this</Label>
-                <P>{lesson.intuition.visual}</P>
+                <div className="flex items-center justify-between gap-3">
+                  <Label>Picture this</Label>
+                  <button
+                    type="button"
+                    aria-expanded={visualized}
+                    aria-controls={visualCardId}
+                    onClick={() => setVisualized((current) => !current)}
+                    className="min-h-9 shrink-0 rounded-full border border-sky-200 bg-white px-3 py-1.5 text-xs font-bold text-sky-800 transition hover:bg-sky-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+                  >
+                    {visualized ? "Show text view" : "Visualize"}
+                  </button>
+                </div>
+                {!visualized && <P>{lesson.intuition.visual}</P>}
+                <div id={visualCardId} hidden={!visualized} className="mt-3">
+                  <VisualCard visualThinking={lesson.intuition.visual} />
+                  <p className="mt-2 text-[11px] text-sky-800">
+                    Text-based visual explanation from this lesson.
+                  </p>
+                </div>
               </div>
             )}
             {lesson.intuition.everyday && (
