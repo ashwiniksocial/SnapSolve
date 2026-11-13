@@ -1,15 +1,19 @@
 import type { AIResponse, TeachingLesson } from "../data/solutionBank";
 
+export type SimplifyLevel = "clearer" | "step_by_step";
+
 export interface SimplifyContext {
   topic: string;
   difficulty: TeachingLesson["difficulty"];
   answer: string;
   lesson: TeachingLesson;
+  level: SimplifyLevel;
 }
 
 export interface SimplifyActionState {
   loading: boolean;
   response: AIResponse | null;
+  selectedLevel: SimplifyLevel | null;
   showingSimplified: boolean;
   error: string | null;
 }
@@ -17,15 +21,17 @@ export interface SimplifyActionState {
 export const INITIAL_SIMPLIFY_ACTION_STATE: SimplifyActionState = {
   loading: false,
   response: null,
+  selectedLevel: null,
   showingSimplified: false,
   error: null,
 };
 
 export type SimplifyAction =
-  | { type: "start" }
-  | { type: "success"; response: AIResponse }
+  | { type: "start"; level: SimplifyLevel }
+  | { type: "success"; response: AIResponse; level: SimplifyLevel }
   | { type: "failure"; message: string }
-  | { type: "toggle" }
+  | { type: "show" }
+  | { type: "showOriginal" }
   | { type: "reset" };
 
 export function simplifyActionReducer(
@@ -34,19 +40,37 @@ export function simplifyActionReducer(
 ): SimplifyActionState {
   switch (action.type) {
     case "start":
-      return { ...state, loading: true, error: null };
+      return {
+        loading: true,
+        response: null,
+        selectedLevel: action.level,
+        showingSimplified: false,
+        error: null,
+      };
     case "success":
       return {
         loading: false,
         response: action.response,
+        selectedLevel: action.level,
         showingSimplified: true,
         error: null,
       };
     case "failure":
-      return { ...state, loading: false, showingSimplified: false, error: action.message };
-    case "toggle":
+      return {
+        ...state,
+        loading: false,
+        response: null,
+        selectedLevel: null,
+        showingSimplified: false,
+        error: action.message,
+      };
+    case "show":
       return state.response && !state.loading
-        ? { ...state, showingSimplified: !state.showingSimplified, error: null }
+        ? { ...state, showingSimplified: true, error: null }
+        : state;
+    case "showOriginal":
+      return state.response && !state.loading
+        ? { ...state, showingSimplified: false, error: null }
         : state;
     case "reset":
       return INITIAL_SIMPLIFY_ACTION_STATE;

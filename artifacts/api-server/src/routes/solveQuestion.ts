@@ -24,6 +24,7 @@ import { Router }             from "express";
 import { parseLessonResponse, type LessonResponse, type LessonStep } from "../lib/lessonTypes";
 import { runQualityPipeline }    from "../services/teachingQuality";
 import {
+  getSimplifyLevelInstruction,
   matchesSimplifyCanonicalFields,
   parseSimplifyContext,
   type SimplifyContext,
@@ -1062,10 +1063,9 @@ function buildDraftPrompts(
 
   const intentInstruction = intent === "simplify"
     ? `\n\nSIMPLIFY INTENT — The student is still confused by the existing solution.
-Rewrite this same lesson in genuinely simpler language for a younger or struggling student.
-Keep the mathematics, facts, method, and final answer correct. Use shorter sentences,
-define technical words immediately, explain one idea at a time, and avoid unnecessary
-exam jargon. Do not change the question or invent a different answer.
+Rewrite this same lesson for the student's selected support level:
+${simplifyContext ? getSimplifyLevelInstruction(simplifyContext.level) : ""}
+Keep the mathematics, facts, method, and final answer correct. Do not change the question or invent a different answer.
 Treat the supplied topic, difficulty, and final answer as frozen canonical values.
 Copy finalAnswer.answer exactly, character for character. Preserve the topic and difficulty
 exactly. Explain each step plainly; avoid analogies unless they are mathematically accurate

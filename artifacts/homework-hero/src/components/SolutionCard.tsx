@@ -12,6 +12,7 @@ import {
   INITIAL_SIMPLIFY_ACTION_STATE,
   simplifyActionReducer,
   supportsSimplify,
+  type SimplifyLevel,
 } from "@/services/teachingActions";
 import {
   recordQuestionAnswered,
@@ -58,10 +59,15 @@ export default function SolutionCard({ solution }: Props) {
   const cfg  = SUBJECTS[solution.subject as Subject];
   const isAI = solution.source === "openai";
 
-  const handleSimplify = async () => {
+  const handleSimplify = async (level: SimplifyLevel) => {
     if (!canSimplify || simplifyState.loading) return;
 
-    dispatchSimplify({ type: "start" });
+    if (simplifyState.response && simplifyState.selectedLevel === level) {
+      dispatchSimplify({ type: "show" });
+      return;
+    }
+
+    dispatchSimplify({ type: "start", level });
     try {
       const candidate = await solve(
         solution.subject as Subject,
@@ -77,6 +83,7 @@ export default function SolutionCard({ solution }: Props) {
             difficulty: solution.difficulty,
             answer: solution.lesson!.finalAnswer.answer,
             lesson: solution.lesson!,
+            level,
           },
         },
       );
@@ -88,7 +95,7 @@ export default function SolutionCard({ solution }: Props) {
         throw new Error("simplification did not preserve the canonical answer");
       }
 
-      dispatchSimplify({ type: "success", response: simplified });
+      dispatchSimplify({ type: "success", response: simplified, level });
     } catch {
       dispatchSimplify({
         type: "failure",
@@ -159,25 +166,45 @@ export default function SolutionCard({ solution }: Props) {
           </span>
         )}
         {canSimplify && (
-          <button
-            type="button"
-            onClick={() => {
-              if (simplifyState.response) {
-                dispatchSimplify({ type: "toggle" });
-              } else {
-                void handleSimplify();
-              }
-            }}
-            disabled={simplifyState.loading}
-            aria-pressed={simplifyState.showingSimplified}
-            className="min-h-9 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-700 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-wait disabled:opacity-60"
-          >
-            {simplifyState.loading
-              ? "Simplifying…"
-              : simplifyState.response
-                ? simplifyState.showingSimplified ? "Show original lesson" : "Show simpler explanation"
-                : "Simplify explanation"}
-          </button>
+          <div className="w-full rounded-2xl border border-indigo-100 bg-indigo-50/60 p-3">
+            <p className="mb-2 text-xs font-bold text-indigo-950">Choose how much support you want</p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => void handleSimplify("clearer")}
+                disabled={simplifyState.loading}
+                aria-pressed={simplifyState.showingSimplified && simplifyState.selectedLevel === "clearer"}
+                className="min-h-10 rounded-xl border border-indigo-200 bg-white px-3 py-2 text-left text-xs font-bold text-indigo-800 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-wait disabled:opacity-60 aria-pressed:border-indigo-500 aria-pressed:bg-indigo-100"
+              >
+                <span className="block">Clearer explanation</span>
+                <span className="mt-0.5 block font-normal text-indigo-700">Same detail, simpler wording</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleSimplify("step_by_step")}
+                disabled={simplifyState.loading}
+                aria-pressed={simplifyState.showingSimplified && simplifyState.selectedLevel === "step_by_step"}
+                className="min-h-10 rounded-xl border border-indigo-200 bg-white px-3 py-2 text-left text-xs font-bold text-indigo-800 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-wait disabled:opacity-60 aria-pressed:border-indigo-500 aria-pressed:bg-indigo-100"
+              >
+                <span className="block">Very simple steps</span>
+                <span className="mt-0.5 block font-normal text-indigo-700">One small idea at a time</span>
+              </button>
+              {simplifyState.loading && (
+                <span role="status" className="self-center px-1 text-xs text-indigo-700">
+                  Preparing your version…
+                </span>
+              )}
+              {simplifyState.showingSimplified && (
+                <button
+                  type="button"
+                  onClick={() => dispatchSimplify({ type: "showOriginal" })}
+                  className="min-h-10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 underline underline-offset-2 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                >
+                  Show original lesson
+                </button>
+              )}
+            </div>
+          </div>
         )}
         <span
           className="text-xs font-semibold px-2.5 py-1 rounded-full border"
@@ -197,7 +224,7 @@ export default function SolutionCard({ solution }: Props) {
       )}
       {simplifyState.showingSimplified && (
         <p role="status" aria-live="polite" className="text-xs text-indigo-700">
-          Showing a simpler explanation. The original lesson and canonical answer are preserved.
+          Showing the {simplifyState.selectedLevel === "step_by_step" ? "very simple step-by-step" : "clearer"} version. The original lesson and canonical answer are preserved.
         </p>
       )}
 

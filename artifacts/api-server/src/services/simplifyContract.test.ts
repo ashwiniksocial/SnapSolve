@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  getSimplifyLevelInstruction,
   matchesSimplifyCanonicalFields,
   parseSimplifyContext,
   type SimplifyContext,
@@ -19,6 +20,7 @@ const contextInput = {
   difficulty: "Hard",
   answer,
   lesson: sourceLesson,
+  level: "clearer",
 } as const;
 const context = parseSimplifyContext(contextInput) as SimplifyContext;
 const lesson = (
@@ -43,6 +45,24 @@ test("rejects source contexts whose answer, topic, or difficulty drifted", () =>
   assert.equal(parseSimplifyContext({ ...context, answer: "The triangles match." }), null);
   assert.equal(parseSimplifyContext({ ...context, topic: "Similarity" }), null);
   assert.equal(parseSimplifyContext({ ...context, difficulty: "Medium" }), null);
+  assert.equal(parseSimplifyContext({ ...context, level: "advanced" }), null);
+  assert.equal(parseSimplifyContext({
+    topic: context.topic,
+    difficulty: context.difficulty,
+    answer: context.answer,
+    lesson: context.lesson,
+  }), null);
+});
+
+test("each selected level has a distinct instruction while preserving full reasoning", () => {
+  const clearer = getSimplifyLevelInstruction("clearer");
+  const stepByStep = getSimplifyLevelInstruction("step_by_step");
+
+  assert.notEqual(clearer, stepByStep);
+  assert.match(clearer, /Keep the source lesson's structure and depth/);
+  assert.match(stepByStep, /smallest useful steps/);
+  assert.match(clearer, /proof steps/);
+  assert.match(stepByStep, /proof steps/);
 });
 
 test("rejects generated lessons whose answer or metadata drifted", () => {

@@ -157,19 +157,29 @@ test("simplify action state supports loading, toggling, failure, and reset", () 
   const simplified = response({ visual: "An easier picture." });
   let state = INITIAL_SIMPLIFY_ACTION_STATE;
 
-  state = simplifyActionReducer(state, { type: "start" });
+  state = simplifyActionReducer(state, { type: "start", level: "clearer" });
   assert.equal(state.loading, true);
-  assert.equal(simplifyActionReducer(state, { type: "toggle" }), state);
+  assert.equal(simplifyActionReducer(state, { type: "showOriginal" }), state);
 
-  state = simplifyActionReducer(state, { type: "success", response: simplified });
+  state = simplifyActionReducer(state, {
+    type: "success",
+    response: simplified,
+    level: "clearer",
+  });
   assert.equal(state.loading, false);
   assert.equal(state.response, simplified);
+  assert.equal(state.selectedLevel, "clearer");
   assert.equal(state.showingSimplified, true);
 
-  state = simplifyActionReducer(state, { type: "toggle" });
+  state = simplifyActionReducer(state, { type: "showOriginal" });
   assert.equal(state.showingSimplified, false);
-  state = simplifyActionReducer(state, { type: "toggle" });
+  state = simplifyActionReducer(state, { type: "show" });
   assert.equal(state.showingSimplified, true);
+
+  state = simplifyActionReducer(state, { type: "start", level: "step_by_step" });
+  assert.equal(state.response, null);
+  assert.equal(state.selectedLevel, "step_by_step");
+  assert.equal(state.showingSimplified, false);
 
   const failed = simplifyActionReducer(INITIAL_SIMPLIFY_ACTION_STATE, {
     type: "failure",
@@ -177,6 +187,7 @@ test("simplify action state supports loading, toggling, failure, and reset", () 
   });
   assert.equal(failed.loading, false);
   assert.equal(failed.response, null);
+  assert.equal(failed.selectedLevel, null);
   assert.equal(failed.showingSimplified, false);
   assert.equal(failed.error, "No safe simplified result.");
   assert.equal(simplifyActionReducer(state, { type: "reset" }), INITIAL_SIMPLIFY_ACTION_STATE);
