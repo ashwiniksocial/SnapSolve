@@ -8,7 +8,7 @@ import { normalizeBoardId } from "@/data/questions/academicContext";
 import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner, type SelfAssessmentStatus } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
-import { callDevLesson, toAIResponse, solveBankWithStream, getBankCachedLesson, type BankQuestionContext } from "@/services/ai/openaiSolver";
+import { awaitFinalBankLesson, callDevLesson, toAIResponse, solveBankWithStream, getBankCachedLesson, type BankQuestionContext } from "@/services/ai/openaiSolver";
 import {
   getChapterDisplayNumber,
   getQuestionById,
@@ -205,54 +205,20 @@ export default function Solution() {
             return;
           }
 
-          // ── Miss/invalid ONLY: stream a full TeachingLesson from frozen answer ─
-          // The same frozen bank entry used on stream failure is shown immediately
-          // while the on-demand TeachingLesson is generated. This avoids a blank
-          // loading screen without changing any academic source content.
-          const frozenFallback = applyCanonicalBankMetadata({
-            id:               `bank-${bankQ.id}`,
-            subject:          bankQ.subject as Subject,
-            topic:            bankQ.topicName,
-            difficulty:       bankQ.difficulty,
-            detectedQuestion: bankQ.question,
-            keyConcepts:      bankQ.keyConcepts,
-            steps:            bankQ.steps,
-            finalAnswer:      bankQ.answer,
-            similarQuestions: [],
-            source:           "bank",
-          }, bankQ);
-          flushSync(() => {
-            setSolution(frozenFallback);
-            setPageState("done");
-          });
-
-          // onPartial fires on first keyConcepts or step (≤2 s) → switches from
-          // loading spinner to solution card while remaining sections arrive.
-          // flushSync forces an immediate React re-render on each partial so the
-          // student sees content within 2–3 s instead of waiting for the full
-          // 20-22 s stream. Without flushSync, React 18 automatic batching defers
-          // all setSolution/setPageState updates inside the async SSE reading loop
-          // until the stream completes — causing the spinner to spin for 20+ s.
-          try {
-            const result = await solveBankWithStream(
+          // ── Miss/invalid ONLY: wait for the definitive streamed lesson ─────
+          // Keep the loading view while SSE sections arrive. Neither the frozen
+          // legacy answer nor incomplete TeachingLesson partials are presented as
+          // a finished lesson. The same single stream resolves the final result.
+          const result = await awaitFinalBankLesson((onPartial) =>
+            solveBankWithStream(
               bankQ.subject as Subject,
               bankQ.question,
               bankContext,
-              (partial) => {
-                flushSync(() => {
-                  setSolution(applyCanonicalBankMetadata(partial, bankQ));
-                  setPageState("done"); // switch from spinner to card on first content
-                });
-              },
-            );
-            setSolution(applyCanonicalBankMetadata(result, bankQ));
-            setPageState("done");
-          } catch (err) {
-            // Streaming failed — retain the frozen bank entry so student isn't stuck
-            console.warn("[BANK:STREAM] TeachingLesson generation failed:", String(err));
-            setSolution(frozenFallback);
-            setPageState("done");
-          }
+              onPartial,
+            ),
+          );
+          setSolution(applyCanonicalBankMetadata(result, bankQ));
+          setPageState("done");
           return;
         }
       }

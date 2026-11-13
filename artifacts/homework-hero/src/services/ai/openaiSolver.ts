@@ -874,6 +874,21 @@ export async function solveBankWithStream(
   return result;
 }
 
+/**
+ * Keep the Solution page in its loading state while a bank lesson streams.
+ * Partial SSE sections are useful to other callers, but must not replace the
+ * legacy fallback with an incomplete TeachingLesson in the student display.
+ */
+export async function awaitFinalBankLesson(
+  runStream: (onPartial: (partial: AIResponse) => void) => Promise<AIResponse>,
+): Promise<AIResponse> {
+  const result = await runStream(() => undefined);
+  if (!isBankLessonComplete(result)) {
+    throw new Error("bank_lesson_incomplete");
+  }
+  return result;
+}
+
 // ─── Public API ─────────────────────────────────────────────────────────────
 
 export async function solveWithOpenAI(

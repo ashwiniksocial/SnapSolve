@@ -25,7 +25,7 @@ description: How bank questions generate a TeachingLesson via streaming — cach
    - Skips Standard post-processing guards (questionTranslation clearing, practiceQuestion clearing) for bank questions
    - Caches completed lesson by `makeBankCacheKey(questionId)` in `responseCache` Map
 
-4. **Progressive rendering** — `LessonStreamExtractor` emits sections as they arrive. `solveBankWithStream` triggers `onPartial` on first `keyConcepts` or `step` section (~300–500ms). Frontend calls `setSolution(partial)` + `setPageState("done")` → spinner disappears, partial lesson renders.
+4. **Stream completion and presentation** — `LessonStreamExtractor` still emits sections as they arrive, but the student Solution page ignores interim callbacks and stays in its loading state until the final SSE response resolves. It then displays the complete `TeachingLesson`; the legacy fallback is not shown as a finished AI lesson.
 
 5. **Client-side cache write** — After `done` event, full lesson cached by `questionId` in localStorage.
 
@@ -46,7 +46,7 @@ Bank questions have a Gold Standard answer from subject-expert review. The quali
 - Frontend: `artifacts/homework-hero/src/services/ai/openaiSolver.ts` — `getBankCachedLesson`, `cacheBankLesson`, `callBankStream`, `solveBankWithStream`
 - Frontend: `artifacts/homework-hero/src/pages/Solution.tsx` — bank fast-path (~line 74)
 
-**Fallback:** If streaming fails, Solution.tsx catches and shows the minimal `bankResult` skeleton (question text + keyConcepts + steps + finalAnswer) so the student isn't blocked.
+**Failure handling:** If streaming fails or the final response lacks the existing bank-completeness markers, the Solution page shows its error/retry state rather than presenting a provisional fallback as a completed AI lesson. The frozen bank question and answer remain unchanged.
 
 **Why:**
 Founder explicitly rejected P0-D first attempt (manually reinterpreting bank fields into TeachingLesson). Required architecture: frozen question → ONE streaming AI call grounded in frozen answer → one lesson → all 3 modes. No quality cycles. Cache by questionId.
