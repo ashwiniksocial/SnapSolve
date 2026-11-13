@@ -15,6 +15,7 @@ import {
   getCachedSimplifiedResponse,
   getSimplifySourceSignature,
   INITIAL_SIMPLIFY_ACTION_STATE,
+  SIMPLIFY_BETA_UI_ENABLED,
   simplifyActionReducer,
   supportsSimplify,
   type SimplifyLevel,
@@ -58,9 +59,11 @@ export default function SolutionCard({ solution }: Props) {
     simplifyActionReducer,
     INITIAL_SIMPLIFY_ACTION_STATE,
   );
-  const canSimplify = supportsSimplify(solution) &&
+  const canSimplify = SIMPLIFY_BETA_UI_ENABLED &&
+    supportsSimplify(solution) &&
     isCompleteLessonSafely(solution.lesson);
-  const displayedSolution = simplifyState.showingSimplified && simplifyState.response
+  const displayedSolution = SIMPLIFY_BETA_UI_ENABLED &&
+    simplifyState.showingSimplified && simplifyState.response
     ? simplifyState.response
     : solution;
 
@@ -243,12 +246,12 @@ export default function SolutionCard({ solution }: Props) {
         </span>
       </div>
 
-      {simplifyState.error && (
+      {SIMPLIFY_BETA_UI_ENABLED && simplifyState.error && (
         <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
           {simplifyState.error}
         </p>
       )}
-      {simplifyState.showingSimplified && (
+      {SIMPLIFY_BETA_UI_ENABLED && simplifyState.showingSimplified && (
         <p role="status" aria-live="polite" className="text-xs text-indigo-700">
           Showing the {simplifyState.selectedLevel === "step_by_step" ? "very simple step-by-step" : "clearer"} version. The original lesson and canonical answer are preserved.
         </p>

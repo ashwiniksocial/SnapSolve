@@ -7,6 +7,7 @@ import {
   getCachedSimplifiedResponse,
   getSimplifyFailureMessage,
   INITIAL_SIMPLIFY_ACTION_STATE,
+  SIMPLIFY_BETA_UI_ENABLED,
   simplifyActionReducer,
   supportsSimplify,
   supportsVisualization,
@@ -232,6 +233,11 @@ test("actions are offered only when their lesson content is supported", () => {
   const partial = { ...supported, lesson: {} as TeachingLesson };
   assert.equal(supportsSimplify(partial), false);
   assert.equal(supportsVisualization(partial.lesson), false);
+});
+
+test("initial beta hides Simplify while preserving its underlying eligibility logic", () => {
+  assert.equal(SIMPLIFY_BETA_UI_ENABLED, false);
+  assert.equal(supportsSimplify(response()), true);
 });
 
 test("Class 9 irrational MCQ keeps its question and answer while rejecting cross-level fallbacks", () => {

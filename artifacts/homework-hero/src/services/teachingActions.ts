@@ -2,6 +2,9 @@ import type { AIResponse, TeachingLesson } from "../data/solutionBank";
 
 export type SimplifyLevel = "clearer" | "step_by_step";
 
+// The initial beta omits Simplify from the student UI; keep its implementation intact.
+export const SIMPLIFY_BETA_UI_ENABLED = false;
+
 export interface SimplifyContext {
   topic: string;
   difficulty: TeachingLesson["difficulty"];
