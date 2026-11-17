@@ -234,6 +234,31 @@ export function createFrozenBankFallback(question: Question): AIResponse {
   };
 }
 
+export function isValidFrozenBankSolution(
+  question: Question | null | undefined,
+): question is Question {
+  if (
+    !question ||
+    typeof question.id !== "string" ||
+    !question.id.trim() ||
+    typeof question.question !== "string" ||
+    !question.question.trim() ||
+    typeof question.answer !== "string" ||
+    !question.answer.trim() ||
+    !Array.isArray(question.steps) ||
+    question.steps.length === 0
+  ) {
+    return false;
+  }
+
+  return question.steps.every((step) =>
+    step != null &&
+    [step.title, step.explanation, step.formula, step.result].some(
+      (value) => typeof value === "string" && value.trim().length > 0,
+    )
+  );
+}
+
 export function getBankAnswerIntegrityNotice(code: string): string | null {
   if (code === "bank_answer_mismatch") {
     return "The generated lesson did not match the approved answer. The original question-bank solution is shown instead.";
@@ -241,7 +266,19 @@ export function getBankAnswerIntegrityNotice(code: string): string | null {
   if (code === "bank_answer_unverified") {
     return "The generated lesson could not be verified against the approved answer. The original question-bank solution is shown instead.";
   }
+  if (code === "timeout" || code === "stream_interrupted") {
+    return "The AI lesson could not finish. The original question-bank solution is shown instead.";
+  }
   return null;
+}
+
+export function resolveFrozenBankFallback(
+  question: Question | null | undefined,
+  code: string,
+): { response: AIResponse; notice: string } | null {
+  const notice = getBankAnswerIntegrityNotice(code);
+  if (!notice || !isValidFrozenBankSolution(question)) return null;
+  return { response: createFrozenBankFallback(question), notice };
 }
 
 // ─── Backend lesson response shape (mirrors solveQuestion.ts LessonResponse) ──
@@ -835,6 +872,8 @@ async function callBankStream(
     let errBody: BackendErrorResponse = { error: `http_${res.status}` };
     try { errBody = (await res.json()) as BackendErrorResponse; } catch {}
     const code = errBody.error ?? "";
+    if (res.status === 504 || code === "timeout") throw new Error("timeout");
+    if (code === "stream_interrupted") throw new Error("stream_interrupted");
     if (res.status === 429 || code.includes("rate_limit")) throw new Error("rate_limit");
     if (code === "no_key")      throw new Error("no_key");
     if (code === "invalid_key") throw new Error("invalid_key");

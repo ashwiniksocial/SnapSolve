@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import type { Subject } from "@/data/subjects";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
 import { QUESTIONS } from "@/data/questions/class9-maths-iemh102";
 import { hashQuestionContent, isStoredLessonValid, type PreGeneratedLessonEntry } from "@/data/preGeneratedLessons";
@@ -8,6 +9,9 @@ import {
   createFrozenBankFallback,
   getBankAnswerIntegrityNotice,
   getBankCachedLesson,
+  isValidFrozenBankSolution,
+  resolveFrozenBankFallback,
+  solveBankWithStream,
   type BankQuestionContext,
 } from "./openaiSolver";
 import { compareBankAnswers, isBankLessonAnswerSafe } from "@workspace/api-zod/bank-answer-integrity";
@@ -292,7 +296,103 @@ test("safe fallback preserves the frozen answer, question steps, and no generate
   assert.deepEqual(fallbackResponse.steps, question.steps);
   assert.match(getBankAnswerIntegrityNotice("bank_answer_mismatch") ?? "", /original question-bank solution/i);
   assert.match(getBankAnswerIntegrityNotice("bank_answer_unverified") ?? "", /could not be verified/i);
-  assert.equal(getBankAnswerIntegrityNotice("timeout"), null);
+  assert.equal(
+    getBankAnswerIntegrityNotice("timeout"),
+    "The AI lesson could not finish. The original question-bank solution is shown instead.",
+  );
+  assert.equal(
+    getBankAnswerIntegrityNotice("stream_interrupted"),
+    "The AI lesson could not finish. The original question-bank solution is shown instead.",
+  );
+  assert.equal(getBankAnswerIntegrityNotice("stream_incomplete"), null);
+  assert.equal(getBankAnswerIntegrityNotice("openai_error"), null);
+});
+
+test("recognized bank failures resolve only to a valid frozen bank solution", () => {
+  assert.equal(isValidFrozenBankSolution(question), true);
+  assert.equal(isValidFrozenBankSolution(undefined), false);
+  assert.equal(isValidFrozenBankSolution({ ...question, answer: "" }), false);
+  assert.equal(isValidFrozenBankSolution({ ...question, steps: [] }), false);
+
+  for (const code of [
+    "bank_answer_mismatch",
+    "bank_answer_unverified",
+    "timeout",
+    "stream_interrupted",
+  ]) {
+    const fallbackResult = resolveFrozenBankFallback(question, code);
+    assert.ok(fallbackResult);
+    assert.equal(fallbackResult.notice, getBankAnswerIntegrityNotice(code));
+    assert.equal(fallbackResult.response.finalAnswer, question.answer);
+    assert.deepEqual(fallbackResult.response.steps, question.steps);
+    assert.equal(fallbackResult.response.lesson, undefined);
+  }
+
+  assert.equal(
+    resolveFrozenBankFallback({ ...question, answer: "" }, "timeout"),
+    null,
+  );
+  assert.equal(resolveFrozenBankFallback(question, "stream_incomplete"), null);
+  assert.equal(resolveFrozenBankFallback(question, "bank_lesson_incomplete"), null);
+  assert.equal(resolveFrozenBankFallback(question, "openai_error"), null);
+});
+
+test("bank timeout and stream interruption neither retry nor write a cached lesson", async () => {
+  const localStorageState = installLocalStorage({});
+  const originalFetch = globalThis.fetch;
+
+  try {
+    for (const code of ["timeout", "stream_interrupted"] as const) {
+      let fetchCalls = 0;
+      globalThis.fetch = async () => {
+        fetchCalls += 1;
+        return new Response(
+          `data: ${JSON.stringify({ type: "error", code })}\n\n`,
+          { status: 200, headers: { "Content-Type": "text/event-stream" } },
+        );
+      };
+
+      await assert.rejects(
+        solveBankWithStream(
+          question.subject as Subject,
+          question.question,
+          bankContext(),
+          () => undefined,
+        ),
+        new RegExp(code),
+      );
+      assert.equal(fetchCalls, 1);
+      assert.deepEqual(
+        JSON.parse(localStorageState.storage.getItem("studyai-bank-lesson-cache-v1") ?? "{}"),
+        {},
+      );
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+    localStorageState.restore();
+  }
+});
+
+test("HTTP 504 is normalized to the known bank timeout error", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response(
+    JSON.stringify({ error: "timeout" }),
+    { status: 504, headers: { "Content-Type": "application/json" } },
+  );
+
+  try {
+    await assert.rejects(
+      solveBankWithStream(
+        question.subject as Subject,
+        question.question,
+        bankContext(),
+        () => undefined,
+      ),
+      /^Error: timeout$/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("cache answer validity requires both the source revision and a deterministic answer match", () => {

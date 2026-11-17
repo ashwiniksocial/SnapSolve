@@ -45,7 +45,11 @@ Bank questions have a Gold Standard answer from subject-expert review. The quali
 - Frontend: `artifacts/homework-hero/src/services/ai/openaiSolver.ts` — `getBankCachedLesson`, `cacheBankLesson`, `callBankStream`, `solveBankWithStream`
 - Frontend: `artifacts/homework-hero/src/pages/Solution.tsx` — bank fast-path (~line 74)
 
-**Failure handling:** Incomplete streams and ordinary network/model failures keep the existing error/retry behavior. Confirmed answer mismatches or indeterminate answer comparisons never cache or display the generated lesson; the Solution page instead shows the frozen question-bank answer and steps with a clear notice.
+**Failure handling:** Explicit backend `timeout` and `stream_interrupted` errors use the existing frozen-bank solution with a distinct “AI lesson could not finish” notice, but only when the active bank record has a non-empty question and answer plus usable steps. A missing or invalid bank solution stays in the safe error state. Confirmed answer mismatches and indeterminate comparisons keep their existing frozen-bank fallback. Incomplete lessons and other errors remain errors; no partial or failed generated lesson is displayed as complete, cached, or automatically retried.
+
+**Why:** A known generation-budget abort should not leave a student without the original solution, while generated content must remain subordinate to the frozen answer and must never be presented as verified unless it passes the existing integrity gate.
+
+**How to apply:** Keep timeout fallback limited to the bank-question path and explicit timeout/interruption codes. Do not broaden it to generic network/OCR errors, raise the backend budget, retry generation, or cache failed responses.
 
 ## Frozen-answer integrity and telemetry
 

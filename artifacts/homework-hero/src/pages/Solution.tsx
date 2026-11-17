@@ -11,10 +11,10 @@ import { solve, type AIResponse } from "@/services/aiSolver";
 import {
   awaitFinalBankLesson,
   callDevLesson,
-  createFrozenBankFallback,
-  getBankAnswerIntegrityNotice,
   getBankCachedLesson,
+  isValidFrozenBankSolution,
   logBankLessonTiming,
+  resolveFrozenBankFallback,
   solveBankWithStream,
   toAIResponse,
   type BankQuestionContext,
@@ -170,6 +170,9 @@ export default function Solution() {
       if (practiceMode && practiceQuestionId) {
         await preloadQBank();
         const bankQ = getQuestionById(practiceQuestionId, boardId ?? undefined, classNum);
+        if (!bankQ || !isValidFrozenBankSolution(bankQ)) {
+          throw new Error("bank_solution_unavailable");
+        }
         if (bankQ) {
           setVisibleQuestionNumber(getQuestionDisplayNumber(bankQ) ?? null);
           setVisibleChapterName(bankQ.chapterName ?? null);
@@ -254,13 +257,13 @@ export default function Solution() {
             return;
           } catch (error) {
             const code = error instanceof Error ? error.message : "";
-            const notice = getBankAnswerIntegrityNotice(code);
-            if (!notice) throw error;
+            const fallback = resolveFrozenBankFallback(bankQ, code);
+            if (!fallback) throw error;
 
             logBankLessonTiming("model-generated", code, performance.now() - modelStartedAt);
             logBankLessonTiming("final-ready", "frozen-bank-fallback", performance.now() - modelStartedAt);
-            setIntegrityNotice(notice);
-            setSolution(applyCanonicalBankMetadata(createFrozenBankFallback(bankQ), bankQ));
+            setIntegrityNotice(fallback.notice);
+            setSolution(applyCanonicalBankMetadata(fallback.response, bankQ));
             setPageState("done");
             return;
           }
