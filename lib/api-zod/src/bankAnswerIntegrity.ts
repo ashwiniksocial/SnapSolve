@@ -3,6 +3,12 @@ export type BankAnswerComparison =
   | { status: "mismatch"; method: "choice" | "rational" | "multipart" | "polynomial" }
   | { status: "indeterminate"; method: "unsupported" };
 
+export interface BankAnswerFormatAssessment {
+  format: "missing" | "choice" | "multipart" | "rational" | "polynomial" | "exact-text-only";
+  support: "missing" | "structured" | "partial" | "exact-only";
+  reason: string;
+}
+
 interface RationalAnswer {
   numerator: bigint;
   denominator: bigint;
@@ -362,6 +368,7 @@ function parseLabeledParts(value: string): Map<string, string> | null {
       .trim()
       .replace(/[;,]+\s*$/, "")
       .replace(/\s+(?:and|while|&)\s*$/i, "")
+      .replace(/[;,]+\s*$/, "")
       .trim();
     if (!part || parts.has(label)) return null;
     parts.set(label, part);
@@ -409,6 +416,92 @@ function compareMultipartAnswers(candidate: string, canonical: string): BankAnsw
     if (comparison.status === "indeterminate") return comparison;
   }
   return { status: "match", method: "multipart" };
+}
+
+/**
+ * Describes which existing deterministic comparison rules can inspect a
+ * canonical answer's format. This is an inventory aid, not an academic review.
+ */
+export function classifyBankAnswerFormat(answer: string): BankAnswerFormatAssessment {
+  if (typeof answer !== "string" || !answer.trim()) {
+    return {
+      format: "missing",
+      support: "missing",
+      reason: "No canonical answer text is present.",
+    };
+  }
+
+  const normalized = normalizeAnswer(answer);
+  const choice = parseChoice(normalized);
+  if (choice) {
+    return {
+      format: "choice",
+      support: "structured",
+      reason: "Explicit option labels and answer text can be checked without guessing.",
+    };
+  }
+
+  const parts = parseLabeledParts(normalized);
+  if (parts && parts.size > 1) {
+    const parsedParts = [...parts.values()].map((part) => {
+      const assignment = parseAnswerAssignment(part);
+      if (!assignment) {
+        return {
+          structured: Boolean(parseRational(part) || parseSupportedPolynomial(part)),
+          partiallyStructured: false,
+        };
+      }
+      const rightIsSupported = Boolean(
+        parseRational(assignment.right) || parseSupportedPolynomial(assignment.right)
+      );
+      return {
+        structured:
+          rightIsSupported &&
+          Boolean(parseSupportedPolynomial(assignment.left) || parseRational(assignment.left)),
+        partiallyStructured: rightIsSupported,
+      };
+    });
+    const allStructured = parsedParts.every((part) => part.structured);
+    const allAtLeastPartial = parsedParts.every(
+      (part) => part.structured || part.partiallyStructured
+    );
+    return {
+      format: "multipart",
+      support: allStructured ? "structured" : allAtLeastPartial ? "partial" : "exact-only",
+      reason: allStructured
+        ? "All labeled parts have deterministic numeric or restricted-polynomial structure."
+        : allAtLeastPartial
+          ? "Every part has a checkable value; some symbolic left sides are verified only by exact text."
+          : "Part boundaries are visible, but at least one part is outside the supported exact subset.",
+    };
+  }
+  if (parts) {
+    return {
+      format: "multipart",
+      support: "exact-only",
+      reason: "A labeled answer is present, but a complete multi-part mapping is not established.",
+    };
+  }
+
+  if (parseRational(normalized)) {
+    return {
+      format: "rational",
+      support: "structured",
+      reason: "Exact rational arithmetic is supported; unit conversion is not inferred.",
+    };
+  }
+  if (parseSupportedPolynomial(normalized)) {
+    return {
+      format: "polynomial",
+      support: "structured",
+      reason: "The expression is within the bounded exact integer-polynomial subset.",
+    };
+  }
+  return {
+    format: "exact-text-only",
+    support: "exact-only",
+    reason: "Only formatting-normalized text equality is established; alternatives remain unverified.",
+  };
 }
 
 /**

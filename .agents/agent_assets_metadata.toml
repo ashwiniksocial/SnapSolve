@@ -6,87 +6,116 @@ id = "IENe1Esc6p7HzAsX0wTrR"
 uri = "file://PROJECT_LAUNCH_CURRICULUM_MAP_2026_27.md"
 type = "text"
 title = "Project Launch Curriculum Map 2026-27"
+logical_id = "42b070d5-5f24-415c-a1bc-29976b7c60c0"
 
 [[outputs]]
 id = "ukc6XS-NN8uezGSKXXQTE"
 uri = "file://PROJECT_LAUNCH_READINESS.md"
 type = "text"
 title = "Project Launch Readiness"
+logical_id = "2a5eac6c-409d-493f-acc5-62961198e9b1"
 
 [[outputs]]
 id = "2HjbGDaDxz4wTowQ_RkG1"
 uri = "file://PROJECT_MASTER_STATUS_2026_27.md"
 type = "text"
 title = "Project Master Status 2026-27"
+logical_id = "e45ab394-1680-4c33-bc49-fdb238271d0f"
 
 [[outputs]]
 id = "0V4EiAB-NvQs-zy_miD6P"
 uri = "file://GATEWAY_CHANGE_APPROVAL.md"
 type = "text"
 title = "GATEWAY_CHANGE_APPROVAL.md"
+logical_id = "d955afb1-2b53-445a-9b75-28f48492406a"
 
 [[outputs]]
 id = "IcVigzW6oYnHVbof9VGpS"
 uri = "file://GATEWAY_FIX_VERIFICATION.md"
 type = "text"
 title = "GATEWAY_FIX_VERIFICATION.md"
+logical_id = "d2c4ad3b-e1f9-4be6-ab51-3f72b1c931bf"
 
 [[outputs]]
 id = "V7UGmgTxvGtAjYL_vX69H"
 uri = "file://CLASS9_SCIENCE_LAUNCH_READINESS.md"
 type = "text"
 title = "CLASS9_SCIENCE_LAUNCH_READINESS.md"
+logical_id = "671cf332-4b24-46e1-b59d-f532dc079bbb"
 
 [[outputs]]
 id = "VC2zV2lnML4BL9QjxARC3"
 uri = "file://CLASS9_SCIENCE_EXECUTIVE_DECISION.md"
 type = "text"
 title = "CLASS9_SCIENCE_EXECUTIVE_DECISION.md"
+logical_id = "8c0a91b9-f2b5-44b2-ba38-2cf133e810ea"
 
 [[outputs]]
 id = "0YFBJiC_Qz9mx5hgF21D0"
 uri = "file://docs/GOVERNANCE/PROJECT_MASTER_CONTEXT.md"
 type = "text"
 title = "PROJECT_MASTER_CONTEXT.md — all 9 sections"
+logical_id = "bd8c9af5-749b-439c-9d17-d7da15f3a449"
 
 [[outputs]]
 id = "_kEaAAho80o5_Dj3y6hHJ"
 uri = "file://docs/GOVERNANCE/PROJECT_MEMORY.md"
 type = "text"
 title = "PROJECT_MEMORY.md"
+logical_id = "689654d0-1bb1-4c9e-8b52-efafa4a8beb6"
 
 [[outputs]]
 id = "5g2zv4rt7wfc5ouiK3YuI"
 uri = "file://docs/GOVERNANCE/PROJECT_STATUS.md"
 type = "text"
 title = "PROJECT_STATUS.md — updated 2026-07-09"
+logical_id = "ded71668-6b5f-4a62-8217-f36aa4f43a6b"
 
 [[outputs]]
 id = "CsEMtZAOjrtCRGJjqfAse"
 uri = "file://docs/GOVERNANCE/DECISION_LOG.md"
 type = "text"
 title = "DECISION_LOG.md — DEC-012 and DEC-013 added"
+logical_id = "dafe8823-3bef-4957-874f-5e72fc6ee422"
 
 [[outputs]]
 id = "5U9fG-zwUjBsw8XLOIjKg"
 uri = "file://docs/GOVERNANCE/CHECKPOINT_GATEWAYS.md"
 type = "text"
 title = "CHECKPOINT_GATEWAYS.md — 7 gates"
+logical_id = "b75542ff-56ba-4d80-9015-54f7487be079"
 
 [[outputs]]
 id = "3M3QXTeSPU6qGnh0AGuyD"
 uri = "file://GOVERNANCE_AUDIT.md"
 type = "text"
 title = "GOVERNANCE_AUDIT.md — 2026-07-09"
+logical_id = "1cd56836-e716-4a05-9349-f2712168762f"
 
 [[outputs]]
 id = "zvGnMtMfgrXoo0a2capAc"
 uri = "file://docs/GOVERNANCE/PROJECT_STRUCTURE.md"
 type = "text"
 title = "PROJECT_STRUCTURE.md — 2026-07-09"
+logical_id = "65130605-46cd-4a63-b782-ee5330b1664a"
 
 [[outputs]]
 id = "U7KN4OWBh1ZINx6QE5Tko"
 uri = "file://docs/GOVERNANCE/ROADMAP.md"
 type = "text"
 title = "ROADMAP.md — Milestones M1–M6 added"
+logical_id = "ce9ff213-51a0-4b39-8f4a-c8135f9f5b29"
+
+[[outputs]]
+id = "8C-n4X71GUby7hScg3cil"
+uri = "file://generated-artifacts/class9-answer-compatibility.csv"
+type = "table"
+title = "Class 9 answer compatibility report"
+description = "Offline format classification of all 1,375 active Class 9 questions across 22 chapters. Format support does not assess academic correctness."
+logical_id = "b759d157-8b7e-4920-93af-71c1ec6c43f9"
+content_hash = "sha256:6df3e097dc399a905fd0d96a4bd152597d0f676cc1bb28d171813cb02c2787a5"
+size = 220454
+mtime_ms = 1794919330269
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:6c13eb22-7a7d-4530-bbe8-41ed17d019d2/b759d157-8b7e-4920-93af-71c1ec6c43f9/fadb2db3-d8c0-4746-9637-5f1f21518fa7"
+storage_version_token = "1794919534380258"
+content_type = "text/csv"

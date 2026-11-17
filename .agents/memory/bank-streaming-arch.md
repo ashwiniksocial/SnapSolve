@@ -59,7 +59,7 @@ Bank questions have a Gold Standard answer from subject-expert review. The quali
 
 ## Frozen-answer integrity and telemetry
 
-- Compare generated final answers conservatively: normalized text, explicit multiple-choice labels, and exact rational values with matching units can be verified; unsupported algebra or prose differences are indeterminate.
+- Compare generated final answers conservatively: normalized text, explicit multiple-choice labels, exact bounded rational/scientific values, complete labeled multipart answers, and the restricted exact integer-polynomial subset can be verified. Unsupported algebra, unit conversions, or prose differences stay indeterminate.
 - A cache or pre-generated lesson is reusable only when its source hash matches the active frozen question and its answer is deterministically verified.
 - The API suppresses partial bank lesson SSE sections until the answer passes validation. A mismatch or indeterminate result is not cached; the student receives the frozen bank solution with a distinct notice.
 - Performance logs record path, outcome, and elapsed time only; do not include student data, question IDs, question text, answers, or credentials.
@@ -67,6 +67,12 @@ Bank questions have a Gold Standard answer from subject-expert review. The quali
 **Why:** A Gold Standard answer is the source of truth; generated and cached lessons must not be presented as verified when comparison is uncertain.
 
 **How to apply:** Keep future changes to bank generation, caches, pre-generated assets, or telemetry behind these same source-hash and answer-integrity checks.
+
+Format inventories describe comparator coverage, not academic correctness. A partial or exact-only result means some alternate representations cannot be proven; it does not show the frozen answer is wrong.
+
+**Why:** The offline inventory found many prose/symbolic answers outside the safe equivalence subset, and no answer-content review is implied by that classification.
+
+**How to apply:** Keep unsupported or ambiguous generated answers unverified. Expand comparison only with deterministic positive and negative fixtures; do not relax cache or delivery guards based on format counts.
 
 **Why:**
 Founder explicitly rejected P0-D first attempt (manually reinterpreting bank fields into TeachingLesson). Required architecture: frozen question → ONE streaming AI call grounded in frozen answer → one lesson → all 3 modes. No quality cycles. Cache by questionId.

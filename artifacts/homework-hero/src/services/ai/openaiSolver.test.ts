@@ -242,7 +242,10 @@ test("answer comparison distinguishes confirmed mismatches from indeterminate ex
     method: "choice",
   });
   assert.equal(compareBankAnswers("2/3", "1/2").status, "mismatch");
-  assert.equal(compareBankAnswers("x + x", "2x").status, "indeterminate");
+  assert.deepEqual(compareBankAnswers("x + x", "2x"), {
+    status: "match",
+    method: "polynomial",
+  });
   assert.equal(compareBankAnswers("99 °F", "37 °C").status, "indeterminate");
 });
 
@@ -301,7 +304,7 @@ test("pre-generated lessons remain valid only for the current source and a verif
 test("confirmed and indeterminate generated answers are rejected without a retry", async () => {
   for (const [candidate, canonical, expectedCode] of [
     ["2/3", "1/2", "bank_answer_mismatch"],
-    ["x + x", "2x", "bank_answer_unverified"],
+    ["root(2)", "√2", "bank_answer_unverified"],
   ]) {
     let streamCalls = 0;
     await assert.rejects(
@@ -510,5 +513,5 @@ test("cache answer validity requires both the source revision and a deterministi
   const sourceHash = hashQuestionContent(question);
   assert.equal(isBankLessonAnswerSafe(question.answer, question.answer, sourceHash, sourceHash), true);
   assert.equal(isBankLessonAnswerSafe(question.answer, question.answer, "stale", sourceHash), false);
-  assert.equal(isBankLessonAnswerSafe("x + x", "2x", sourceHash, sourceHash), false);
+  assert.equal(isBankLessonAnswerSafe("root(2)", "√2", sourceHash, sourceHash), false);
 });
