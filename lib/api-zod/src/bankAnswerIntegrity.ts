@@ -1,6 +1,6 @@
 export type BankAnswerComparison =
-  | { status: "match"; method: "normalized" | "choice" | "rational" }
-  | { status: "mismatch"; method: "choice" | "rational" }
+  | { status: "match"; method: "normalized" | "choice" | "rational" | "multipart" | "polynomial" }
+  | { status: "mismatch"; method: "choice" | "rational" | "multipart" | "polynomial" }
   | { status: "indeterminate"; method: "unsupported" };
 
 interface RationalAnswer {
@@ -101,14 +101,18 @@ function parseChoice(value: string): ChoiceAnswer | null {
 
 function decimalRational(value: string): { numerator: bigint; denominator: bigint } | null {
   if (value.length > 64) return null;
-  const match = value.match(/^([+-]?)(?:(\d+)(?:\.(\d*))?|\.(\d+))$/);
+  const match = value.match(/^([+-]?)(?:(\d+)(?:\.(\d*))?|\.(\d+))(?:e([+-]?\d+))?$/i);
   if (!match) return null;
 
   const sign = match[1] === "-" ? -1n : 1n;
   const whole = match[2] ?? "0";
   const fraction = match[3] ?? match[4] ?? "";
-  const denominator = 10n ** BigInt(fraction.length);
-  const numerator = BigInt(`${whole}${fraction}` || "0") * sign;
+  const exponent = BigInt(match[5] ?? "0");
+  if (exponent > 128n || exponent < -128n) return null;
+  let denominator = 10n ** BigInt(fraction.length);
+  let numerator = BigInt(`${whole}${fraction}` || "0") * sign;
+  if (exponent > 0n) numerator *= 10n ** exponent;
+  else if (exponent < 0n) denominator *= 10n ** -exponent;
   return { numerator, denominator };
 }
 
@@ -121,7 +125,7 @@ function gcd(a: bigint, b: bigint): bigint {
 
 function parseRational(value: string): RationalAnswer | null {
   const match = value.match(
-    /^([+-]?(?:\d+(?:\.\d*)?|\.\d+))(?:\/([+-]?(?:\d+(?:\.\d*)?|\.\d+)))?\s*([a-z°][a-z0-9°^/]*|%)?$/i,
+    /^([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)(?:\/([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?))?\s*([a-z°][a-z0-9°^/]*|%)?$/i,
   );
   if (!match) return null;
 
@@ -149,26 +153,269 @@ function parseRational(value: string): RationalAnswer | null {
   };
 }
 
+type Polynomial = Map<string, bigint>;
+
+function monomialKey(variables: Map<string, number>): string {
+  const parts = [...variables.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([variable, power]) => power === 1 ? variable : `${variable}^${power}`);
+  return parts.join("*") || "1";
+}
+
+function parsePolynomialTerm(value: string): { key: string; coefficient: bigint } | null {
+  let term = value.replace(/\s+/g, "");
+  if (!term) return null;
+
+  let sign = 1n;
+  if (term[0] === "+" || term[0] === "-") {
+    if (term[0] === "-") sign = -1n;
+    term = term.slice(1);
+  }
+  if (!term) return null;
+
+  const coefficientMatch = term.match(/^\d+/);
+  const coefficientText = coefficientMatch?.[0] ?? "";
+  if (coefficientText.length > 24) return null;
+  let coefficient = BigInt(coefficientText || "1") * sign;
+  term = term.slice(coefficientText.length);
+
+  if (!term) return { key: "1", coefficient };
+  if (term.endsWith("*")) return null;
+
+  const variables = new Map<string, number>();
+  while (term) {
+    if (term[0] === "*") term = term.slice(1);
+    const match = term.match(/^([a-z])(?:\^(\d+))?/i);
+    if (!match) return null;
+
+    const variable = match[1].toLowerCase();
+    const powerText = match[2] ?? "1";
+    if (powerText.length > 2) return null;
+    const power = Number(powerText);
+    if (!Number.isInteger(power) || power < 0 || power > 16) return null;
+    variables.set(variable, (variables.get(variable) ?? 0) + power);
+    term = term.slice(match[0].length);
+
+    // Adjacent letters can be a multi-character name or prose, not a proven
+    // multiplication. Require an explicit * between variable factors.
+    if (term && /^[a-z]/i.test(term)) return null;
+  }
+
+  return { key: monomialKey(variables), coefficient };
+}
+
+function parseExpandedPolynomial(value: string): Polynomial | null {
+  const expression = stripRedundantOuterParentheses(value).replace(/\s+/g, "");
+  if (
+    !expression ||
+    expression.length > 128 ||
+    /[(),=<>]/.test(expression) ||
+    /\d+e[+-]?\d+/i.test(expression)
+  ) {
+    return null;
+  }
+
+  const terms: string[] = [];
+  let start = 0;
+  for (let index = 1; index < expression.length; index += 1) {
+    const character = expression[index];
+    if (character === "+" || character === "-") {
+      if (expression[index - 1] === "^") return null;
+      terms.push(expression.slice(start, index));
+      start = index;
+    }
+  }
+  terms.push(expression.slice(start));
+  if (terms.length > 32) return null;
+
+  const polynomial: Polynomial = new Map();
+  for (const term of terms) {
+    const parsed = parsePolynomialTerm(term);
+    if (!parsed) return null;
+    polynomial.set(parsed.key, (polynomial.get(parsed.key) ?? 0n) + parsed.coefficient);
+  }
+  for (const [key, coefficient] of polynomial) {
+    if (coefficient === 0n) polynomial.delete(key);
+  }
+  return polynomial;
+}
+
+function multiplyMonomialKeys(left: string, right: string): string | null {
+  const powers = new Map<string, number>();
+  for (const key of [left, right]) {
+    if (key === "1") continue;
+    for (const part of key.split("*")) {
+      const match = part.match(/^([a-z])(?:\^(\d+))?$/i);
+      if (!match) return null;
+      const variable = match[1].toLowerCase();
+      const power = Number(match[2] ?? "1");
+      const combined = (powers.get(variable) ?? 0) + power;
+      if (combined > 16) return null;
+      powers.set(variable, combined);
+    }
+  }
+  return monomialKey(powers);
+}
+
+function multiplyPolynomials(left: Polynomial, right: Polynomial): Polynomial | null {
+  const product: Polynomial = new Map();
+  for (const [leftKey, leftCoefficient] of left) {
+    for (const [rightKey, rightCoefficient] of right) {
+      const key = multiplyMonomialKeys(leftKey, rightKey);
+      if (!key) return null;
+      product.set(key, (product.get(key) ?? 0n) + leftCoefficient * rightCoefficient);
+      if (product.size > 32) return null;
+    }
+  }
+  for (const [key, coefficient] of product) {
+    if (coefficient === 0n) product.delete(key);
+  }
+  return product;
+}
+
+/**
+ * Intentionally small exact subset: sums/products of integer monomials and a
+ * product of two binomials. Unsupported algebra stays indeterminate.
+ */
+function parseSupportedPolynomial(value: string): Polynomial | null {
+  const expression = stripRedundantOuterParentheses(value);
+  const expanded = parseExpandedPolynomial(expression);
+  if (expanded) return expanded;
+
+  const factors = expression.match(/^\(([^()]+)\)\s*\*?\s*\(([^()]+)\)$/);
+  if (!factors) return null;
+  const left = parseExpandedPolynomial(factors[1]);
+  const right = parseExpandedPolynomial(factors[2]);
+  if (!left || !right || left.size !== 2 || right.size !== 2) return null;
+  return multiplyPolynomials(left, right);
+}
+
 function compareNormalizedValues(left: string, right: string): BankAnswerComparison {
   if (left === right) return { status: "match", method: "normalized" };
 
   const leftRational = parseRational(left);
   const rightRational = parseRational(right);
-  if (!leftRational || !rightRational || leftRational.unit !== rightRational.unit) {
-    return { status: "indeterminate", method: "unsupported" };
+  if (leftRational && rightRational && leftRational.unit === rightRational.unit) {
+    return leftRational.numerator * rightRational.denominator ===
+      rightRational.numerator * leftRational.denominator
+      ? { status: "match", method: "rational" }
+      : { status: "mismatch", method: "rational" };
   }
 
-  return leftRational.numerator * rightRational.denominator ===
-    rightRational.numerator * leftRational.denominator
-    ? { status: "match", method: "rational" }
-    : { status: "mismatch", method: "rational" };
+  const leftPolynomial = parseSupportedPolynomial(left);
+  const rightPolynomial = parseSupportedPolynomial(right);
+  if (leftPolynomial && rightPolynomial) {
+    const same =
+      leftPolynomial.size === rightPolynomial.size &&
+      [...leftPolynomial].every(([key, coefficient]) => rightPolynomial.get(key) === coefficient);
+    return same
+      ? { status: "match", method: "polynomial" }
+      : { status: "mismatch", method: "polynomial" };
+  }
+  return { status: "indeterminate", method: "unsupported" };
+}
+
+function parseAnswerAssignment(value: string): { left: string; right: string } | null {
+  const equalityIndex = value.indexOf("=");
+  if (equalityIndex >= 0) {
+    if (
+      value.indexOf("=", equalityIndex + 1) >= 0 ||
+      ["<", ">", "!"].includes(value[equalityIndex - 1] ?? "")
+    ) {
+      return null;
+    }
+    const left = value.slice(0, equalityIndex).trim();
+    const right = value.slice(equalityIndex + 1).trim();
+    return left && right ? { left, right } : null;
+  }
+
+  const prose = value.match(/^(.+?)\s+(?:is\s+equal\s+to|equals?|is)\s+(.+)$/i);
+  return prose && prose[1].trim() && prose[2].trim()
+    ? { left: prose[1].trim(), right: prose[2].trim() }
+    : null;
+}
+
+function parseLabeledParts(value: string): Map<string, string> | null {
+  const labelPattern = /\(\s*([a-h]|[ivxlcdm]+)\s*\)\s*/gi;
+  const matches = [...value.matchAll(labelPattern)];
+  if (matches.length === 0 || matches.length > 8) return null;
+
+  const firstIndex = matches[0].index ?? 0;
+  const prefix = value.slice(0, firstIndex).trim().replace(/[:;,.\s]+$/, "").trim();
+  if (
+    prefix &&
+    !/^(?:(?:the\s+)?(?:final\s+)?answers?)(?:\s+(?:are|is))?$|^(?:the\s+)?values\s+are$/i.test(prefix)
+  ) {
+    return null;
+  }
+
+  const parts = new Map<string, string>();
+  for (let index = 0; index < matches.length; index += 1) {
+    const current = matches[index];
+    const label = current[1].toLowerCase();
+    const contentStart = (current.index ?? 0) + current[0].length;
+    const contentEnd = index + 1 < matches.length
+      ? matches[index + 1].index ?? value.length
+      : value.length;
+    const part = value
+      .slice(contentStart, contentEnd)
+      .trim()
+      .replace(/[;,]+\s*$/, "")
+      .replace(/\s+(?:and|while|&)\s*$/i, "")
+      .trim();
+    if (!part || parts.has(label)) return null;
+    parts.set(label, part);
+  }
+  return parts;
+}
+
+function compareMultipartPart(candidate: string, canonical: string): BankAnswerComparison {
+  const canonicalAssignment = parseAnswerAssignment(canonical);
+  const candidateAssignment = parseAnswerAssignment(candidate);
+
+  if (canonicalAssignment) {
+    if (!candidateAssignment) {
+      return compareNormalizedValues(candidate, canonicalAssignment.right);
+    }
+    const leftComparison = compareNormalizedValues(candidateAssignment.left, canonicalAssignment.left);
+    if (leftComparison.status !== "match") {
+      // A different left side could be a reversed or unsupported equivalent
+      // equation. Do not call it correct or wrong without a complete proof.
+      return { status: "indeterminate", method: "unsupported" };
+    }
+    return compareNormalizedValues(candidateAssignment.right, canonicalAssignment.right);
+  }
+
+  if (candidateAssignment) return { status: "indeterminate", method: "unsupported" };
+  return compareNormalizedValues(candidate, canonical);
+}
+
+function compareMultipartAnswers(candidate: string, canonical: string): BankAnswerComparison | null {
+  const canonicalParts = parseLabeledParts(canonical);
+  if (!canonicalParts || canonicalParts.size < 2) return null;
+
+  const candidateParts = parseLabeledParts(candidate);
+  if (!candidateParts) return { status: "indeterminate", method: "unsupported" };
+  if (
+    candidateParts.size !== canonicalParts.size ||
+    [...canonicalParts.keys()].some((label) => !candidateParts.has(label))
+  ) {
+    return { status: "mismatch", method: "multipart" };
+  }
+
+  for (const [label, canonicalPart] of canonicalParts) {
+    const comparison = compareMultipartPart(candidateParts.get(label)!, canonicalPart);
+    if (comparison.status === "mismatch") return { status: "mismatch", method: "multipart" };
+    if (comparison.status === "indeterminate") return comparison;
+  }
+  return { status: "match", method: "multipart" };
 }
 
 /**
  * Conservatively compares a generated answer with the frozen bank answer.
  * It proves matches only for formatting-normalized text, explicit MCQ choices,
- * and exact rational scalars (including simple fractions and percentages).
- * Unhandled symbolic or prose differences are indeterminate, never guessed.
+ * exact rational scalars, fully mapped multipart values, and a bounded exact
+ * integer-polynomial subset. Other symbolic or prose differences stay unknown.
  */
 export function compareBankAnswers(candidate: string, canonical: string): BankAnswerComparison {
   if (typeof candidate !== "string" || typeof canonical !== "string") {
@@ -184,6 +431,9 @@ export function compareBankAnswers(candidate: string, canonical: string): BankAn
   if (normalizedCandidate === normalizedCanonical) {
     return { status: "match", method: "normalized" };
   }
+
+  const multipartComparison = compareMultipartAnswers(normalizedCandidate, normalizedCanonical);
+  if (multipartComparison) return multipartComparison;
 
   const candidateChoice = parseChoice(normalizedCandidate);
   const canonicalChoice = parseChoice(normalizedCanonical);
