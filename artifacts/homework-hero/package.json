@@ -78,6 +78,7 @@
   "dependencies": {
     "@clerk/react": "^6.11.0",
     "@clerk/themes": "^2.4.57",
+    "@workspace/api-zod": "workspace:*",
     "canvas-confetti": "^1.9.4",
     "tesseract.js": "^7.0.0"
   }

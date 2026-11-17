@@ -8,7 +8,17 @@ import { normalizeBoardId } from "@/data/questions/academicContext";
 import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner, type SelfAssessmentStatus } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
-import { awaitFinalBankLesson, callDevLesson, toAIResponse, solveBankWithStream, getBankCachedLesson, type BankQuestionContext } from "@/services/ai/openaiSolver";
+import {
+  awaitFinalBankLesson,
+  callDevLesson,
+  createFrozenBankFallback,
+  getBankAnswerIntegrityNotice,
+  getBankCachedLesson,
+  logBankLessonTiming,
+  solveBankWithStream,
+  toAIResponse,
+  type BankQuestionContext,
+} from "@/services/ai/openaiSolver";
 import {
   getChapterDisplayNumber,
   getQuestionById,
@@ -18,7 +28,7 @@ import {
   type Difficulty,
 } from "@/services/questionService";
 import type { Subject } from "@/data/subjects";
-import { resolvePreGeneratedBankLesson } from "@/data/preGeneratedLessons";
+import { hashQuestionContent, resolvePreGeneratedBankLesson } from "@/data/preGeneratedLessons";
 import {
   applyCanonicalBankMetadata,
   getCanonicalPracticeMetadata,
@@ -44,6 +54,7 @@ export default function Solution() {
   const [pageState, setPageState]   = useState<PageState>("loading");
   const [solution, setSolution]     = useState<AIResponse | null>(null);
   const [solveError, setSolveError] = useState<string | null>(null);
+  const [integrityNotice, setIntegrityNotice] = useState<string | null>(null);
   const [phaseMsg, setPhaseMsg]     = useState("");
   const [phaseIdx, setPhaseIdx]     = useState(0);
   const [progressMsg, setProgressMsg] = useState("");
@@ -134,6 +145,7 @@ export default function Solution() {
     setPageState("loading");
     setSolution(null);
     setSolveError(null);
+    setIntegrityNotice(null);
     setShowSimilar(false);
     setNeedsReview(null);
 
@@ -167,6 +179,7 @@ export default function Solution() {
           setVisiblePracticeSubject(getStudentFacingSubject(bankQ.subject));
           const bankContext: BankQuestionContext = {
             questionId:  bankQ.id,
+            sourceHash:  hashQuestionContent(bankQ),
             boardId:     bankQ.boardId!,
             classNum:    bankQ.classNum,
             subject:     bankQ.subject,
@@ -190,16 +203,30 @@ export default function Solution() {
           // first, never treated as a miss) and the stored lesson has been
           // validated against current frozen source content. Streaming is
           // structurally unreachable until this returns "MISS_OR_INVALID".
+          const preGeneratedStartedAt = performance.now();
           const resolution = await resolvePreGeneratedBankLesson(bankQ);
+          logBankLessonTiming(
+            "pre-generated",
+            resolution.status === "VALID" ? "hit" : "miss",
+            performance.now() - preGeneratedStartedAt,
+          );
           if (resolution.status === "VALID") {
+            logBankLessonTiming("final-ready", "pre-generated", performance.now() - preGeneratedStartedAt);
             setSolution(applyCanonicalBankMetadata(resolution.response, bankQ));
             setPageState("done");
             return;
           }
 
           // ── Secondary browser cache: instant display, 0 AI calls ────────────
+          const browserCacheStartedAt = performance.now();
           const cached = getBankCachedLesson(bankQ.id, bankContext);
+          logBankLessonTiming(
+            "browser-cache",
+            cached ? "hit" : "miss",
+            performance.now() - browserCacheStartedAt,
+          );
           if (cached) {
+            logBankLessonTiming("final-ready", "browser-cache", performance.now() - browserCacheStartedAt);
             setSolution(applyCanonicalBankMetadata(cached, bankQ));
             setPageState("done");
             return;
@@ -209,17 +236,34 @@ export default function Solution() {
           // Keep the loading view while SSE sections arrive. Neither the frozen
           // legacy answer nor incomplete TeachingLesson partials are presented as
           // a finished lesson. The same single stream resolves the final result.
-          const result = await awaitFinalBankLesson((onPartial) =>
-            solveBankWithStream(
-              bankQ.subject as Subject,
-              bankQ.question,
-              bankContext,
-              onPartial,
-            ),
-          );
-          setSolution(applyCanonicalBankMetadata(result, bankQ));
-          setPageState("done");
-          return;
+          const modelStartedAt = performance.now();
+          try {
+            const result = await awaitFinalBankLesson(
+              (onPartial) =>
+                solveBankWithStream(
+                  bankQ.subject as Subject,
+                  bankQ.question,
+                  bankContext,
+                  onPartial,
+                ),
+              bankQ.answer,
+            );
+            logBankLessonTiming("final-ready", "stream-validated", performance.now() - modelStartedAt);
+            setSolution(applyCanonicalBankMetadata(result, bankQ));
+            setPageState("done");
+            return;
+          } catch (error) {
+            const code = error instanceof Error ? error.message : "";
+            const notice = getBankAnswerIntegrityNotice(code);
+            if (!notice) throw error;
+
+            logBankLessonTiming("model-generated", code, performance.now() - modelStartedAt);
+            logBankLessonTiming("final-ready", "frozen-bank-fallback", performance.now() - modelStartedAt);
+            setIntegrityNotice(notice);
+            setSolution(applyCanonicalBankMetadata(createFrozenBankFallback(bankQ), bankQ));
+            setPageState("done");
+            return;
+          }
         }
       }
 
@@ -368,6 +412,14 @@ export default function Solution() {
         {/* Solution content */}
         {pageState === "done" && solution && (
           <div className="space-y-5 fade-up">
+            {integrityNotice && (
+              <div
+                role="status"
+                className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+              >
+                {integrityNotice}
+              </div>
+            )}
             {practiceMode && visibleQuestionNumber !== null && (
               <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
                 Question detected · Q{visibleQuestionNumber}

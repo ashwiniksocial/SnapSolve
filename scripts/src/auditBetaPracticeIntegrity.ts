@@ -7,6 +7,7 @@ import {
 } from "./academicReview.ts";
 import { getStudentFacingSubject } from "../../artifacts/homework-hero/src/data/questions/studentFacingSubject.ts";
 import {
+  compareBankAnswers,
   getDetailedLessonQualityFlags,
   hashQuestionContent,
   isCompleteDetailedLesson,
@@ -176,7 +177,9 @@ async function main() {
       if (chunkKey(question) !== key) lessonMetadataMismatches.push(`${questionId}: lesson is stored in the wrong chapter chunk.`);
       if (entry.questionId !== questionId) lessonMetadataMismatches.push(`${questionId}: entry ID and object key differ.`);
       if (entry.sourceHash !== hashQuestionContent(question)) lessonMetadataMismatches.push(`${questionId}: source hash is stale.`);
-      if (entry.lesson.finalAnswer.answer !== question.answer) lessonMetadataMismatches.push(`${questionId}: final answer differs from frozen answer.`);
+      if (compareBankAnswers(entry.lesson.finalAnswer.answer, question.answer).status !== "match") {
+        lessonMetadataMismatches.push(`${questionId}: final answer is not deterministically verified against the frozen answer.`);
+      }
       if (entry.lesson.topic !== question.topicName) lessonMetadataMismatches.push(`${questionId}: lesson topic differs from canonical topic.`);
       if (entry.lesson.difficulty !== question.difficulty) lessonMetadataMismatches.push(`${questionId}: lesson difficulty differs from canonical difficulty.`);
       if (!isCompleteDetailedLesson(entry.lesson)) lessonMetadataMismatches.push(`${questionId}: lesson is structurally incomplete.`);

@@ -4,6 +4,7 @@ import { gunzipSync, gzipSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { loadStudentVisibleQuestions, type ReviewableQuestion } from "./academicReview.ts";
 import {
+  compareBankAnswers,
   hashQuestionContent,
   isStoredLessonValid,
   type PreGeneratedLessonChunk,
@@ -215,6 +216,7 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
       mode: "basic",
       bankContext: {
         questionId: question.id,
+        sourceHash: hashQuestionContent(question),
         answer: question.answer,
         hint: question.hint,
         steps: question.steps,
@@ -358,7 +360,7 @@ async function main(): Promise<void> {
       const lesson = result.lesson;
       console.error(JSON.stringify({
         id,
-        answerMatches: lesson.finalAnswer.answer === question.answer,
+        answerMatches: compareBankAnswers(lesson.finalAnswer.answer, question.answer).status === "match",
         keyConcepts: lesson.keyConcepts.length,
         intuition: {
           story: Boolean(lesson.intuition.story),

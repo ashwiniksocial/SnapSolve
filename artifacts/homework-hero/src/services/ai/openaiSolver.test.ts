@@ -2,7 +2,15 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
 import { QUESTIONS } from "@/data/questions/class9-maths-iemh102";
-import { awaitFinalBankLesson } from "./openaiSolver";
+import { hashQuestionContent, isStoredLessonValid, type PreGeneratedLessonEntry } from "@/data/preGeneratedLessons";
+import {
+  awaitFinalBankLesson,
+  createFrozenBankFallback,
+  getBankAnswerIntegrityNotice,
+  getBankCachedLesson,
+  type BankQuestionContext,
+} from "./openaiSolver";
+import { compareBankAnswers, isBankLessonAnswerSafe } from "@workspace/api-zod/bank-answer-integrity";
 
 const questionId = "c9-math-iemh102-t5-q09";
 const question = QUESTIONS.find((entry) => entry.id === questionId)!;
@@ -105,6 +113,44 @@ const partial = response(streamId, {
 });
 const finalLesson = response(streamId, completeLesson(5, question.answer));
 
+function bankContext(): BankQuestionContext {
+  return {
+    questionId,
+    sourceHash: hashQuestionContent(question),
+    boardId: "CBSE",
+    classNum: 9,
+    subject: "Mathematics",
+    canonicalChapterId: question.canonicalChapterId ?? null,
+    academicSession: question.academicSession,
+    answer: question.answer,
+    hint: question.hint,
+    steps: question.steps,
+    keyConcepts: question.keyConcepts,
+  };
+}
+
+function installLocalStorage(seed: Record<string, unknown>) {
+  const key = "studyai-bank-lesson-cache-v1";
+  const values = new Map([[key, JSON.stringify(seed)]]);
+  const original = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+  const storage = {
+    getItem: (name: string) => values.get(name) ?? null,
+    setItem: (name: string, value: string) => { values.set(name, value); },
+    removeItem: (name: string) => { values.delete(name); },
+    clear: () => values.clear(),
+    key: (index: number) => [...values.keys()][index] ?? null,
+    get length() { return values.size; },
+  } as Storage;
+  Object.defineProperty(globalThis, "localStorage", { configurable: true, value: storage });
+  return {
+    storage,
+    restore: () => {
+      if (original) Object.defineProperty(globalThis, "localStorage", original);
+      else Reflect.deleteProperty(globalThis, "localStorage");
+    },
+  };
+}
+
 test("Q59 remains loading through legacy and partial responses, then accepts the final five-step lesson", async () => {
   assert.equal(QUESTIONS.indexOf(question), 58);
   assert.equal(question.steps.length, 3);
@@ -121,7 +167,7 @@ test("Q59 remains loading through legacy and partial responses, then accepts the
     onPartial(partial);
     assert.equal(displayed, null);
     return finalLesson;
-  }).then((lesson) => {
+  }, question.answer).then((lesson) => {
     displayed = lesson;
     return lesson;
   });
@@ -138,13 +184,120 @@ test("a final response missing bank completeness markers is rejected", async () 
     awaitFinalBankLesson(async (onPartial) => {
       onPartial(partial);
       return partial;
-    }),
+    }, question.answer),
     /bank_lesson_incomplete/,
   );
 });
 
 test("valid lesson completeness does not impose eight reasoning steps", async () => {
   const twoStepLesson = response(streamId, completeLesson(2, question.answer));
-  const resolved = await awaitFinalBankLesson(async () => twoStepLesson);
+  const resolved = await awaitFinalBankLesson(async () => twoStepLesson, question.answer);
   assert.equal(resolved.lesson?.guidedReasoning.length, 2);
+});
+
+test("canonical answer comparison accepts exact and supported equivalent forms", () => {
+  assert.deepEqual(compareBankAnswers("(c) √2", "Option C: \\sqrt{2}"), {
+    status: "match",
+    method: "choice",
+  });
+  assert.equal(compareBankAnswers("\\frac{1}{2}", "0.5").status, "match");
+  assert.equal(compareBankAnswers("50%", "0.5").status, "match");
+  assert.equal(compareBankAnswers("−0.5", "-1/2").status, "match");
+  assert.equal(compareBankAnswers("  final answer: 42.  ", "42").status, "match");
+});
+
+test("answer comparison distinguishes confirmed mismatches from indeterminate expressions", () => {
+  assert.deepEqual(compareBankAnswers("(d) √3", "(c) √2"), {
+    status: "mismatch",
+    method: "choice",
+  });
+  assert.equal(compareBankAnswers("2/3", "1/2").status, "mismatch");
+  assert.equal(compareBankAnswers("x + x", "2x").status, "indeterminate");
+  assert.equal(compareBankAnswers("99 °F", "37 °C").status, "indeterminate");
+});
+
+test("bank cached lessons require matching source hash and verified frozen answer", () => {
+  const context = bankContext();
+  const entry = {
+    lesson: finalLesson,
+    timestamp: Date.now(),
+    sourceHash: context.sourceHash,
+  };
+  const validStorage = installLocalStorage({ [questionId]: entry });
+  try {
+    assert.deepEqual(getBankCachedLesson(questionId, context), finalLesson);
+  } finally {
+    validStorage.restore();
+  }
+
+  const staleStorage = installLocalStorage({
+    [questionId]: { ...entry, sourceHash: "fnv1a64:0000000000000000" },
+  });
+  try {
+    assert.equal(getBankCachedLesson(questionId, context), null);
+    assert.equal(JSON.parse(staleStorage.storage.getItem("studyai-bank-lesson-cache-v1") ?? "{}")[questionId], undefined);
+  } finally {
+    staleStorage.restore();
+  }
+
+  const wrongAnswer = response(streamId, completeLesson(5, "A different answer"));
+  const invalidStorage = installLocalStorage({
+    [questionId]: { ...entry, lesson: wrongAnswer },
+  });
+  try {
+    assert.equal(getBankCachedLesson(questionId, context), null);
+  } finally {
+    invalidStorage.restore();
+  }
+});
+
+test("pre-generated lessons remain valid only for the current source and a verified answer", () => {
+  const entry = {
+    questionId,
+    sourceHash: hashQuestionContent(question),
+    lesson: completeLesson(5, question.answer),
+  } as PreGeneratedLessonEntry;
+  assert.equal(isStoredLessonValid(entry, question), true);
+  assert.equal(isStoredLessonValid({ ...entry, sourceHash: "stale" }, question), false);
+  assert.equal(
+    isStoredLessonValid({
+      ...entry,
+      lesson: completeLesson(5, "A different answer"),
+    }, question),
+    false,
+  );
+});
+
+test("confirmed and indeterminate generated answers are rejected without a retry", async () => {
+  for (const [candidate, canonical, expectedCode] of [
+    ["2/3", "1/2", "bank_answer_mismatch"],
+    ["x + x", "2x", "bank_answer_unverified"],
+  ]) {
+    let streamCalls = 0;
+    await assert.rejects(
+      awaitFinalBankLesson(async () => {
+        streamCalls += 1;
+        return response(streamId, completeLesson(5, candidate));
+      }, canonical),
+      new RegExp(expectedCode),
+    );
+    assert.equal(streamCalls, 1);
+  }
+});
+
+test("safe fallback preserves the frozen answer, question steps, and no generated lesson", () => {
+  const fallbackResponse = createFrozenBankFallback(question);
+  assert.equal(fallbackResponse.lesson, undefined);
+  assert.equal(fallbackResponse.finalAnswer, question.answer);
+  assert.deepEqual(fallbackResponse.steps, question.steps);
+  assert.match(getBankAnswerIntegrityNotice("bank_answer_mismatch") ?? "", /original question-bank solution/i);
+  assert.match(getBankAnswerIntegrityNotice("bank_answer_unverified") ?? "", /could not be verified/i);
+  assert.equal(getBankAnswerIntegrityNotice("timeout"), null);
+});
+
+test("cache answer validity requires both the source revision and a deterministic answer match", () => {
+  const sourceHash = hashQuestionContent(question);
+  assert.equal(isBankLessonAnswerSafe(question.answer, question.answer, sourceHash, sourceHash), true);
+  assert.equal(isBankLessonAnswerSafe(question.answer, question.answer, "stale", sourceHash), false);
+  assert.equal(isBankLessonAnswerSafe("x + x", "2x", sourceHash, sourceHash), false);
 });

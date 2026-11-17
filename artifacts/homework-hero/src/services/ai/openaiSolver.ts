@@ -16,7 +16,9 @@
 
 import type { Subject }                    from "@/data/subjects";
 import { getStoredAcademicContext, makeChapterContextKey, type BoardId } from "@/data/questions/academicContext";
+import type { Question }                   from "@/data/questions/types";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
+import { compareBankAnswers, isBankLessonAnswerSafe } from "@workspace/api-zod/bank-answer-integrity";
 import type { SimplifyContext } from "@/services/teachingActions";
 import { buildStudentContext }             from "@/services/studentModel";
 import { getStoredLevel, type ReadingLevel } from "@/services/explanation/readingModeEngine";
@@ -97,6 +99,7 @@ const BANK_CACHE_STORE_KEY = "studyai-bank-lesson-cache-v1";
 interface BankCacheEntry {
   lesson:    AIResponse;
   timestamp: number;
+  sourceHash?: string;
 }
 
 function readBankCache(): Record<string, BankCacheEntry> {
@@ -154,16 +157,21 @@ export function getBankCachedLesson(questionId: string, context?: BankQuestionCo
   // Preserve the old CBSE-only cache as a read-only compatibility path. It is
   // never considered for ICSE, WBBSE, or an unknown board.
   const legacyEntry = context.boardId === "CBSE" ? store[questionId] : undefined;
+  const entryKey = store[key] ? key : legacyEntry ? questionId : null;
   const entry = store[key] ?? legacyEntry;
   if (!entry) return null;
   if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
-    delete store[key];
+    if (entryKey) delete store[entryKey];
     writeBankCache(store);
     return null;
   }
-  // Treat incomplete cached entries as a cache miss — regenerate once
-  if (!isBankLessonComplete(entry.lesson)) {
-    delete store[key];
+  const candidateAnswer = entry.lesson.lesson?.finalAnswer?.answer ?? "";
+  if (
+    !entry.sourceHash ||
+    !isBankLessonAnswerSafe(candidateAnswer, context.answer, entry.sourceHash, context.sourceHash) ||
+    !isBankLessonComplete(entry.lesson)
+  ) {
+    if (entryKey) delete store[entryKey];
     writeBankCache(store);
     return null;
   }
@@ -171,9 +179,12 @@ export function getBankCachedLesson(questionId: string, context?: BankQuestionCo
 }
 
 function cacheBankLesson(questionId: string, context: BankQuestionContext, lesson: AIResponse): void {
-  // Only cache a complete, validated lesson — never partial stream state or skeletons
-  if (!isBankLessonComplete(lesson)) {
-    console.warn("[BANK:CACHE] Lesson failed validity check — not caching (partial/fallback)");
+  const candidateAnswer = lesson.lesson?.finalAnswer?.answer ?? "";
+  if (
+    !isBankLessonComplete(lesson) ||
+    compareBankAnswers(candidateAnswer, context.answer).status !== "match"
+  ) {
+    console.warn("[BANK:CACHE] Lesson failed completeness or answer integrity — not caching");
     return;
   }
   const store = readBankCache();
@@ -182,8 +193,55 @@ function cacheBankLesson(questionId: string, context: BankQuestionContext, lesso
   for (const k of Object.keys(store)) {
     if (now - store[k].timestamp > CACHE_TTL_MS) delete store[k];
   }
-  store[bankLessonCacheKey(questionId, context, context.subject)] = { lesson, timestamp: now };
+  store[bankLessonCacheKey(questionId, context, context.subject)] = {
+    lesson,
+    timestamp: now,
+    sourceHash: context.sourceHash,
+  };
   writeBankCache(store);
+}
+
+function assertBankAnswer(response: AIResponse, canonicalAnswer: string): void {
+  const comparison = compareBankAnswers(response.lesson?.finalAnswer?.answer ?? "", canonicalAnswer);
+  if (comparison.status === "mismatch") throw new Error("bank_answer_mismatch");
+  if (comparison.status !== "match") throw new Error("bank_answer_unverified");
+}
+
+export function logBankLessonTiming(
+  stage: "pre-generated" | "browser-cache" | "model-generated" | "final-ready",
+  outcome: string,
+  elapsedMs: number,
+): void {
+  console.info("[BANK:PERF]", JSON.stringify({
+    stage,
+    outcome,
+    elapsedMs: Math.max(0, Math.round(elapsedMs)),
+  }));
+}
+
+export function createFrozenBankFallback(question: Question): AIResponse {
+  return {
+    id: `bank-${question.id}`,
+    subject: question.subject as Subject,
+    topic: question.topicName,
+    difficulty: question.difficulty,
+    detectedQuestion: question.question,
+    keyConcepts: question.keyConcepts,
+    similarQuestions: [],
+    steps: question.steps,
+    finalAnswer: question.answer,
+    source: "bank",
+  };
+}
+
+export function getBankAnswerIntegrityNotice(code: string): string | null {
+  if (code === "bank_answer_mismatch") {
+    return "The generated lesson did not match the approved answer. The original question-bank solution is shown instead.";
+  }
+  if (code === "bank_answer_unverified") {
+    return "The generated lesson could not be verified against the approved answer. The original question-bank solution is shown instead.";
+  }
+  return null;
 }
 
 // ─── Backend lesson response shape (mirrors solveQuestion.ts LessonResponse) ──
@@ -727,6 +785,7 @@ async function callBackendStream(
 
 export interface BankQuestionContext {
   questionId:  string;
+  sourceHash:  string;
   boardId:     BoardId;
   classNum:    number;
   subject:     string;
@@ -870,6 +929,7 @@ export async function solveBankWithStream(
   );
 
   const result: AIResponse = { ...toAIResponse(data, subject, question), id: streamId, source: "bank" };
+  assertBankAnswer(result, bankContext.answer);
   cacheBankLesson(bankContext.questionId, bankContext, result);
   return result;
 }
@@ -881,11 +941,13 @@ export async function solveBankWithStream(
  */
 export async function awaitFinalBankLesson(
   runStream: (onPartial: (partial: AIResponse) => void) => Promise<AIResponse>,
+  canonicalAnswer: string,
 ): Promise<AIResponse> {
   const result = await runStream(() => undefined);
   if (!isBankLessonComplete(result)) {
     throw new Error("bank_lesson_incomplete");
   }
+  assertBankAnswer(result, canonicalAnswer);
   return result;
 }
 

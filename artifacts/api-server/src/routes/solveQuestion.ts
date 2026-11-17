@@ -35,6 +35,7 @@ import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
 import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
 import { LessonStreamExtractor } from "../lib/lessonStreamExtractor";
+import { compareBankAnswers, isBankLessonAnswerSafe } from "@workspace/api-zod/bank-answer-integrity";
 import {
   evaluateArchitectureCFastPath,
   isArchitectureCFastPathEligible,
@@ -96,7 +97,7 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
 
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-interface CacheEntry { data: LessonResponse; expiresAt: number; }
+interface CacheEntry { data: LessonResponse; expiresAt: number; sourceHash?: string; }
 const responseCache = new Map<string, CacheEntry>();
 
 // Normalise before hashing so "Find x?" and "find x" share the same cache entry.
@@ -1890,6 +1891,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
   type BankStep = { title: string; explanation: string; formula?: string; result?: string };
   interface BankCtx {
     questionId: string;
+    sourceHash?: string;
     boardId: "CBSE" | "ICSE" | "WBBSE";
     classNum: number;
     subject: string;
@@ -1912,7 +1914,10 @@ router.post("/solveQuestion/stream", async (req, res) => {
     typeof rawBankRecord.subject === "string" &&
     rawBankRecord.subject === subject &&
     (rawBankRecord.academicSession === undefined || typeof rawBankRecord.academicSession === "string") &&
-    (rawBankRecord.canonicalChapterId === null || typeof rawBankRecord.canonicalChapterId === "string");
+    (rawBankRecord.canonicalChapterId === null || typeof rawBankRecord.canonicalChapterId === "string") &&
+    typeof rawBankRecord.answer === "string" &&
+    (rawBankRecord.sourceHash === undefined ||
+      (typeof rawBankRecord.sourceHash === "string" && /^fnv1a64:[0-9a-f]{16}$/.test(rawBankRecord.sourceHash)));
   const bankCtx: BankCtx | undefined = validBankContext ? rawBankRecord as unknown as BankCtx : undefined;
   if (rawBankCtx && !bankCtx) {
     res.status(400).json({ error: "invalid_bank_context" });
@@ -1943,9 +1948,21 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // Bank questions: cache by questionId (survives until server restart).
   // Standard questions: cache by question text + mode (existing behaviour).
   if (bankCtx) {
-    const entry = responseCache.get(makeBankCacheKey(bankCtx));
-    if (entry && Date.now() <= entry.expiresAt) {
-      req.log.info({ questionId: bankCtx.questionId }, "[STREAM] bank server-cache hit");
+    const cacheLookupStartedAt = Date.now();
+    const cacheKey = makeBankCacheKey(bankCtx);
+    const entry = responseCache.get(cacheKey);
+    const isCurrentAndSafe = !!entry && isBankLessonAnswerSafe(
+      entry.data.finalAnswer?.answer ?? "",
+      bankCtx.answer,
+      entry.sourceHash,
+      bankCtx.sourceHash,
+    );
+    if (entry && Date.now() <= entry.expiresAt && isCurrentAndSafe) {
+      req.log.info({
+        stage: "server-cache",
+        outcome: "hit",
+        elapsedMs: Date.now() - cacheLookupStartedAt,
+      }, "[BANK:PERF]");
       res.setHeader("Content-Type",     "text/event-stream");
       res.setHeader("Cache-Control",    "no-cache");
       res.setHeader("X-Accel-Buffering", "no");
@@ -1954,6 +1971,12 @@ router.post("/solveQuestion/stream", async (req, res) => {
       res.end();
       return;
     }
+    if (entry) responseCache.delete(cacheKey);
+    req.log.info({
+      stage: "server-cache",
+      outcome: "miss",
+      elapsedMs: Date.now() - cacheLookupStartedAt,
+    }, "[BANK:PERF]");
   } else if (!ctx) {
     const cached = getCached(subj, q, "standard", contextKey);
     if (cached) {
@@ -2040,6 +2063,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // budget than Standard (1100 tokens, 15 s).  Standard keeps its 15 s guarantee.
   const budgetMs    = bankCtx ? 50_000 : STANDARD_BUDGET_MS;
   const budgetTimer = setTimeout(() => abortCtrl.abort(), budgetMs);
+  const modelStartedAt = Date.now();
 
   let openaiRes: Response;
   try {
@@ -2116,7 +2140,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
         const sections = extractor.feed(content);
         for (const sec of sections) {
           if (firstContentMs < 0) firstContentMs = Date.now() - requestStart;
-          emit({ type: "section", field: sec.field, index: sec.index, value: sec.value });
+          // Bank lessons are held until the final answer passes the integrity gate.
+          if (!bankCtx) emit({ type: "section", field: sec.field, index: sec.index, value: sec.value });
         }
       }
     }
@@ -2158,19 +2183,64 @@ router.post("/solveQuestion/stream", async (req, res) => {
     }
   }
 
+  if (bankCtx) {
+    const modelElapsedMs = Date.now() - modelStartedAt;
+    req.log.info({
+      stage: "model-generated",
+      outcome: "received",
+      elapsedMs: modelElapsedMs,
+    }, "[BANK:PERF]");
+
+    const answerCheckStartedAt = Date.now();
+    const answerComparison = compareBankAnswers(
+      finalLesson.finalAnswer?.answer ?? "",
+      bankCtx.answer,
+    );
+    req.log.info({
+      stage: "answer-integrity",
+      outcome: answerComparison.status,
+      method: answerComparison.method,
+      elapsedMs: Date.now() - answerCheckStartedAt,
+    }, "[BANK:INTEGRITY]");
+
+    if (answerComparison.status !== "match") {
+      const code = answerComparison.status === "mismatch"
+        ? "bank_answer_mismatch"
+        : "bank_answer_unverified";
+      req.log.warn({
+        stage: "model-generated",
+        outcome: code,
+        elapsedMs: modelElapsedMs,
+      }, "[BANK:INTEGRITY]");
+      emit({ type: "error", code });
+      res.end();
+      return;
+    }
+  }
+
   // ── 10. Cache + telemetry ─────────────────────────────────────────────────────
   if (bankCtx) {
-    // Cache bank lesson by questionId (server-side in-memory, survives until restart)
-    responseCache.set(makeBankCacheKey(bankCtx), {
-      data:      finalLesson,
-      expiresAt: Date.now() + CACHE_TTL_MS,
-    });
-    req.log.info({ questionId: bankCtx.questionId }, "[STREAM] bank lesson cached on server");
+    // Backward-compatible clients without source hashes can use the validated
+    // response, but cannot read or populate the bank cache.
+    if (bankCtx.sourceHash) {
+      responseCache.set(makeBankCacheKey(bankCtx), {
+        data:      finalLesson,
+        expiresAt: Date.now() + CACHE_TTL_MS,
+        sourceHash: bankCtx.sourceHash,
+      });
+    }
   } else if (!ctx) {
     setCached(subj, q, "standard", finalLesson, contextKey);
   }
 
   const totalMs = Date.now() - requestStart;
+  if (bankCtx) {
+    req.log.info({
+      stage: "final-ready",
+      outcome: "validated",
+      elapsedMs: totalMs,
+    }, "[BANK:PERF]");
+  }
   req.log.info({
     requestType:      "solve_stream",
     firstContentMs,
