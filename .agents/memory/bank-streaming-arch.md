@@ -51,6 +51,12 @@ Bank questions have a Gold Standard answer from subject-expert review. The quali
 
 **How to apply:** Keep timeout fallback limited to the bank-question path and explicit timeout/interruption codes. Do not broaden it to generic network/OCR errors, raise the backend budget, retry generation, or cache failed responses.
 
+**Repeated-failure suppression:** After a recognized bank failure displays the frozen solution, record only the canonical question ID, source hash, and failure category in per-question `sessionStorage`. Check the marker after validated pre-generated and browser-cache lookups, but before streaming. A matching marker reuses the frozen fallback; a stale hash is removed, and a verified pre-generated, cached, or streamed lesson clears the marker. The marker expires with the browser tab session and never applies to another question or the non-bank/OCR path.
+
+**Why:** The failed generation is deliberately not cached, but retrying it on every visit would repeatedly cost students 30–50 seconds without improving the frozen fallback.
+
+**How to apply:** Keep this as a small session marker, not a lesson cache. Store no question text or generated content; use only the four confirmed failure categories, and keep pre-generated/verified cache precedence.
+
 ## Frozen-answer integrity and telemetry
 
 - Compare generated final answers conservatively: normalized text, explicit multiple-choice labels, and exact rational values with matching units can be verified; unsupported algebra or prose differences are indeterminate.

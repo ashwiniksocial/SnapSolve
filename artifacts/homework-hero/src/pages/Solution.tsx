@@ -11,10 +11,12 @@ import { solve, type AIResponse } from "@/services/aiSolver";
 import {
   awaitFinalBankLesson,
   callDevLesson,
+  clearBankFailureMarker,
   getBankCachedLesson,
   isValidFrozenBankSolution,
   logBankLessonTiming,
-  resolveFrozenBankFallback,
+  recordBankFailureFallback,
+  resolveBankFailureFallback,
   solveBankWithStream,
   toAIResponse,
   type BankQuestionContext,
@@ -161,12 +163,9 @@ export default function Solution() {
 
     try {
     // ── Bank question path: streaming TeachingLesson grounded in frozen answer ─
-      // Step 1: check localStorage cache by questionId (7-day TTL) — 0 AI calls.
-      // Step 2: cache miss → stream full Detailed lesson grounded in frozen bank
-      //         answer via POST /api/solveQuestion/stream with bankContext.
-      //         First content ≤2 s target; onPartial renders progressively.
-      // Step 3: on completion, cache lesson by questionId for future instant loads.
-      // One lesson serves all 3 teaching modes — switching is instant, 0 AI calls.
+      // Prefer validated pre-generated/browser lessons, then a matching failure
+      // marker; stream only when all instant paths miss. Verified lessons clear
+      // markers, and one generated lesson still serves all three teaching modes.
       if (practiceMode && practiceQuestionId) {
         await preloadQBank();
         const bankQ = getQuestionById(practiceQuestionId, boardId ?? undefined, classNum);
@@ -180,9 +179,10 @@ export default function Solution() {
             getChapterDisplayNumber(bankQ.classNum, bankQ.subject, bankQ.chapterId, bankQ.boardId) ?? null,
           );
           setVisiblePracticeSubject(getStudentFacingSubject(bankQ.subject));
+          const sourceHash = hashQuestionContent(bankQ);
           const bankContext: BankQuestionContext = {
             questionId:  bankQ.id,
-            sourceHash:  hashQuestionContent(bankQ),
+            sourceHash,
             boardId:     bankQ.boardId!,
             classNum:    bankQ.classNum,
             subject:     bankQ.subject,
@@ -214,6 +214,7 @@ export default function Solution() {
             performance.now() - preGeneratedStartedAt,
           );
           if (resolution.status === "VALID") {
+            clearBankFailureMarker(bankQ.id);
             logBankLessonTiming("final-ready", "pre-generated", performance.now() - preGeneratedStartedAt);
             setSolution(applyCanonicalBankMetadata(resolution.response, bankQ));
             setPageState("done");
@@ -229,8 +230,17 @@ export default function Solution() {
             performance.now() - browserCacheStartedAt,
           );
           if (cached) {
+            clearBankFailureMarker(bankQ.id);
             logBankLessonTiming("final-ready", "browser-cache", performance.now() - browserCacheStartedAt);
             setSolution(applyCanonicalBankMetadata(cached, bankQ));
+            setPageState("done");
+            return;
+          }
+
+          const priorFailure = resolveBankFailureFallback(bankQ, sourceHash);
+          if (priorFailure) {
+            setIntegrityNotice(priorFailure.notice);
+            setSolution(applyCanonicalBankMetadata(priorFailure.response, bankQ));
             setPageState("done");
             return;
           }
@@ -252,12 +262,13 @@ export default function Solution() {
               bankQ.answer,
             );
             logBankLessonTiming("final-ready", "stream-validated", performance.now() - modelStartedAt);
+            clearBankFailureMarker(bankQ.id);
             setSolution(applyCanonicalBankMetadata(result, bankQ));
             setPageState("done");
             return;
           } catch (error) {
             const code = error instanceof Error ? error.message : "";
-            const fallback = resolveFrozenBankFallback(bankQ, code);
+            const fallback = recordBankFailureFallback(bankQ, sourceHash, code);
             if (!fallback) throw error;
 
             logBankLessonTiming("model-generated", code, performance.now() - modelStartedAt);

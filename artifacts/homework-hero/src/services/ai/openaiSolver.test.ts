@@ -6,10 +6,15 @@ import { QUESTIONS } from "@/data/questions/class9-maths-iemh102";
 import { hashQuestionContent, isStoredLessonValid, type PreGeneratedLessonEntry } from "@/data/preGeneratedLessons";
 import {
   awaitFinalBankLesson,
+  clearBankFailureMarker,
   createFrozenBankFallback,
+  getBankFailureCategory,
   getBankAnswerIntegrityNotice,
   getBankCachedLesson,
   isValidFrozenBankSolution,
+  recordBankFailureFallback,
+  rememberBankFailure,
+  resolveBankFailureFallback,
   resolveFrozenBankFallback,
   solveBankWithStream,
   type BankQuestionContext,
@@ -151,6 +156,27 @@ function installLocalStorage(seed: Record<string, unknown>) {
     restore: () => {
       if (original) Object.defineProperty(globalThis, "localStorage", original);
       else Reflect.deleteProperty(globalThis, "localStorage");
+    },
+  };
+}
+
+function installSessionStorage() {
+  const values = new Map<string, string>();
+  const original = Object.getOwnPropertyDescriptor(globalThis, "sessionStorage");
+  const storage = {
+    getItem: (name: string) => values.get(name) ?? null,
+    setItem: (name: string, value: string) => { values.set(name, value); },
+    removeItem: (name: string) => { values.delete(name); },
+    clear: () => values.clear(),
+    key: (index: number) => [...values.keys()][index] ?? null,
+    get length() { return values.size; },
+  } as Storage;
+  Object.defineProperty(globalThis, "sessionStorage", { configurable: true, value: storage });
+  return {
+    storage,
+    restore: () => {
+      if (original) Object.defineProperty(globalThis, "sessionStorage", original);
+      else Reflect.deleteProperty(globalThis, "sessionStorage");
     },
   };
 }
@@ -335,6 +361,91 @@ test("recognized bank failures resolve only to a valid frozen bank solution", ()
   assert.equal(resolveFrozenBankFallback(question, "stream_incomplete"), null);
   assert.equal(resolveFrozenBankFallback(question, "bank_lesson_incomplete"), null);
   assert.equal(resolveFrozenBankFallback(question, "openai_error"), null);
+});
+
+test("a failed visit stores only a session marker and revisits use the frozen solution without streaming", async () => {
+  const sessionState = installSessionStorage();
+  const originalFetch = globalThis.fetch;
+  let fetchCalls = 0;
+  globalThis.fetch = async () => {
+    fetchCalls += 1;
+    throw new Error("A revisit must not start a stream");
+  };
+
+  try {
+    const sourceHash = hashQuestionContent(question);
+    const firstVisit = recordBankFailureFallback(question, sourceHash, "bank_answer_unverified");
+    assert.ok(firstVisit);
+    assert.equal(firstVisit.response.finalAnswer, question.answer);
+    assert.deepEqual(firstVisit.response.steps, question.steps);
+
+    const storageKey = `studyai-bank-failure-v1:${encodeURIComponent(questionId)}`;
+    assert.deepEqual(JSON.parse(sessionState.storage.getItem(storageKey) ?? "null"), {
+      questionId,
+      sourceHash,
+      category: "bank_answer_unverified",
+    });
+
+    const revisit = resolveBankFailureFallback(question, sourceHash);
+    assert.ok(revisit);
+    assert.equal(revisit.notice, getBankAnswerIntegrityNotice("bank_answer_unverified"));
+    assert.equal(revisit.response.finalAnswer, question.answer);
+    assert.equal(fetchCalls, 0);
+
+    const otherQuestion = QUESTIONS.find((entry) => entry.id !== questionId)!;
+    assert.equal(
+      resolveBankFailureFallback(otherQuestion, hashQuestionContent(otherQuestion)),
+      null,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+    sessionState.restore();
+  }
+});
+
+test("changed source hashes invalidate failure markers and verified success clears them", () => {
+  const sessionState = installSessionStorage();
+  try {
+    const sourceHash = hashQuestionContent(question);
+    for (const category of [
+      "bank_answer_unverified",
+      "bank_answer_mismatch",
+      "timeout",
+      "stream_interrupted",
+    ] as const) {
+      rememberBankFailure(questionId, sourceHash, category);
+      assert.equal(getBankFailureCategory(questionId, sourceHash), category);
+    }
+
+    assert.equal(getBankFailureCategory(questionId, "changed-source-hash"), null);
+    const storageKey = `studyai-bank-failure-v1:${encodeURIComponent(questionId)}`;
+    assert.equal(sessionState.storage.getItem(storageKey), null);
+
+    rememberBankFailure(questionId, sourceHash, "timeout");
+    clearBankFailureMarker(questionId);
+    assert.equal(getBankFailureCategory(questionId, sourceHash), null);
+
+    assert.equal(recordBankFailureFallback(question, sourceHash, "openai_error"), null);
+    assert.equal(recordBankFailureFallback({ ...question, answer: "" }, sourceHash, "timeout"), null);
+    assert.equal(sessionState.storage.getItem(storageKey), null);
+  } finally {
+    sessionState.restore();
+  }
+});
+
+test("a verified generated lesson clears a prior failure marker", async () => {
+  const sessionState = installSessionStorage();
+  try {
+    const sourceHash = hashQuestionContent(question);
+    rememberBankFailure(questionId, sourceHash, "timeout");
+    const verified = await awaitFinalBankLesson(async () => finalLesson, question.answer);
+    assert.equal(verified, finalLesson);
+
+    clearBankFailureMarker(questionId);
+    assert.equal(getBankFailureCategory(questionId, sourceHash), null);
+  } finally {
+    sessionState.restore();
+  }
 });
 
 test("bank timeout and stream interruption neither retry nor write a cached lesson", async () => {

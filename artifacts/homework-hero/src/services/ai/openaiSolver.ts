@@ -281,6 +281,102 @@ export function resolveFrozenBankFallback(
   return { response: createFrozenBankFallback(question), notice };
 }
 
+export type BankFailureCategory =
+  | "bank_answer_unverified"
+  | "bank_answer_mismatch"
+  | "timeout"
+  | "stream_interrupted";
+
+const BANK_FAILURE_SESSION_KEY_PREFIX = "studyai-bank-failure-v1:";
+
+function isBankFailureCategory(value: unknown): value is BankFailureCategory {
+  return value === "bank_answer_unverified" ||
+    value === "bank_answer_mismatch" ||
+    value === "timeout" ||
+    value === "stream_interrupted";
+}
+
+function bankFailureSessionKey(questionId: string): string {
+  return `${BANK_FAILURE_SESSION_KEY_PREFIX}${encodeURIComponent(questionId)}`;
+}
+
+export function rememberBankFailure(
+  questionId: string,
+  sourceHash: string,
+  category: string,
+): void {
+  if (!questionId || !sourceHash || !isBankFailureCategory(category)) return;
+  try {
+    globalThis.sessionStorage.setItem(
+      bankFailureSessionKey(questionId),
+      JSON.stringify({ questionId, sourceHash, category }),
+    );
+  } catch {
+    // If session storage is unavailable, preserve normal lesson behavior.
+  }
+}
+
+export function getBankFailureCategory(
+  questionId: string,
+  sourceHash: string,
+): BankFailureCategory | null {
+  if (!questionId || !sourceHash) return null;
+  const key = bankFailureSessionKey(questionId);
+
+  try {
+    const stored = globalThis.sessionStorage.getItem(key);
+    if (!stored) return null;
+
+    const marker = JSON.parse(stored) as {
+      questionId?: unknown;
+      sourceHash?: unknown;
+      category?: unknown;
+    };
+    if (
+      marker.questionId !== questionId ||
+      typeof marker.sourceHash !== "string" ||
+      !isBankFailureCategory(marker.category) ||
+      marker.sourceHash !== sourceHash
+    ) {
+      globalThis.sessionStorage.removeItem(key);
+      return null;
+    }
+    return marker.category;
+  } catch {
+    try { globalThis.sessionStorage.removeItem(key); } catch {}
+    return null;
+  }
+}
+
+export function clearBankFailureMarker(questionId: string): void {
+  if (!questionId) return;
+  try {
+    globalThis.sessionStorage.removeItem(bankFailureSessionKey(questionId));
+  } catch {
+    // If session storage is unavailable, preserve normal lesson behavior.
+  }
+}
+
+export function resolveBankFailureFallback(
+  question: Question | null | undefined,
+  sourceHash: string,
+): { response: AIResponse; notice: string } | null {
+  if (!question) return null;
+  const category = getBankFailureCategory(question.id, sourceHash);
+  return category ? resolveFrozenBankFallback(question, category) : null;
+}
+
+export function recordBankFailureFallback(
+  question: Question,
+  sourceHash: string,
+  code: string,
+): { response: AIResponse; notice: string } | null {
+  const fallback = resolveFrozenBankFallback(question, code);
+  if (!fallback) return null;
+  rememberBankFailure(question.id, sourceHash, code);
+  return fallback;
+}
+
 // ─── Backend lesson response shape (mirrors solveQuestion.ts LessonResponse) ──
 
 interface BackendLessonStep {
