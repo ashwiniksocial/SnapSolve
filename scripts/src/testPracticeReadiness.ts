@@ -76,9 +76,9 @@ async function main() {
     activeChapters,
   );
   const expectedVisibleIds = activeQuestions.map((question) => question.id).sort();
-  assert.equal(activeQuestions.length, 1375, "Canonical student-visible Class 9 question total must remain 1,375.");
-  assert.equal(filteredQuestions.length, 1375, "Active-chapter filtering must preserve all 1,375 student-visible questions.");
-  assert.equal(new Set(filteredQuestions.map((question) => question.id)).size, 1375, "Active Practice questions must not contain duplicate IDs.");
+  assert.equal(activeQuestions.length, 1387, "Canonical student-visible Class 9 question total must include the 12 Simple Machines additions.");
+  assert.equal(filteredQuestions.length, 1387, "Active-chapter filtering must preserve all 1,387 student-visible questions.");
+  assert.equal(new Set(filteredQuestions.map((question) => question.id)).size, 1387, "Active Practice questions must not contain duplicate IDs.");
   assert.deepEqual(
     filteredQuestions.map((question) => question.id).sort(),
     expectedVisibleIds,
@@ -88,7 +88,7 @@ async function main() {
 
   const practiceSubjectGroups = [
     { label: "Mathematics", sources: ["Mathematics"], expectedCount: 500, expectedChapters: 8 },
-    { label: "Science", sources: ["Physics", "Chemistry", "Biology"], expectedCount: 725, expectedChapters: 11 },
+    { label: "Science", sources: ["Physics", "Chemistry", "Biology"], expectedCount: 737, expectedChapters: 11 },
     { label: "IT", sources: ["Information Technology"], expectedCount: 150, expectedChapters: 3 },
   ];
   const chapterNavigationCoverage = Object.fromEntries(practiceSubjectGroups.map((group) => {
