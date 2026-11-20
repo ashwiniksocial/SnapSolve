@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  assessTeachingLessonAnswerLast,
   classifyBankAnswerFormat,
   compareBankAnswers,
   isBankLessonAnswerSafe,
@@ -95,4 +96,80 @@ test("cached answer safety requires the matching source hash and a verified answ
   assert.equal(isBankLessonAnswerSafe("42", "42", "source-old", "source-a"), false);
   assert.equal(isBankLessonAnswerSafe("41", "42", "source-a", "source-a"), false);
   assert.equal(isBankLessonAnswerSafe("root(2)", "√2", "source-a", "source-a"), false);
+});
+
+test("answer-last gate rejects direct and equivalent Math answers in earlier sections", () => {
+  const direct = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ what: "The answer is (c) √2.", why: "This follows from the definition." }],
+    finalAnswer: { answer: "(c) √2" },
+  });
+  assert.equal(direct.status, "leak");
+  if (direct.status === "leak") assert.equal(direct.section, "guidedReasoning[1].what");
+
+  const answerValueOnly = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ what: "The irrational option is √2." }],
+    finalAnswer: { answer: "(c) √2" },
+  });
+  assert.equal(answerValueOnly.status, "leak");
+
+  const synonym = assessTeachingLessonAnswerLast({
+    teacherThinking: { firstNotice: "This is another name for the XY-plane." },
+    finalAnswer: { answer: "The Cartesian plane is also called the coordinate plane." },
+  });
+  assert.equal(synonym.status, "leak");
+  if (synonym.status === "leak") assert.equal(synonym.section, "teacherThinking.firstNotice");
+});
+
+test("answer-last gate rejects Biology quantities disclosed in whatWeKnow", () => {
+  const result = assessTeachingLessonAnswerLast({
+    questionTranslation: {
+      whatWeKnow: "Scientists estimate 10–14 million species, and roughly 1.8 million have been named.",
+    },
+    finalAnswer: {
+      answer: "There may be 10–14 million species; about 1.8 million have been formally named.",
+    },
+  });
+  assert.equal(result.status, "leak");
+  if (result.status === "leak") assert.equal(result.section, "questionTranslation.whatWeKnow");
+});
+
+test("answer-last gate blocks a final numerical result before finalAnswer", () => {
+  const result = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ what: "Compute the expression.", result: "Therefore, the final result is 42." }],
+    finalAnswer: { answer: "42" },
+  });
+  assert.equal(result.status, "leak");
+});
+
+test("answer-last gate reviews an earlier answer summary and does not accept it silently", () => {
+  const answer = "The sum of the two values is 42.";
+  const result = assessTeachingLessonAnswerLast({
+    examinerThinking: { topperInsight: answer },
+    finalAnswer: { answer },
+  });
+  assert.notEqual(result.status, "clear");
+  if (result.status !== "clear") assert.equal(result.section, "examinerThinking.topperInsight");
+});
+
+test("answer-last gate accepts methods, definitions, and intermediate quantities", () => {
+  const result = assessTeachingLessonAnswerLast({
+    keyConcepts: ["An irrational number cannot be written as a ratio of integers."],
+    guidedReasoning: [{
+      what: "Use the definition and simplify the expression.",
+      why: "The intermediate calculation is part of the method.",
+      math: "6 + 4 = 10",
+      result: "The intermediate value is 10 before the final comparison.",
+    }],
+    finalAnswer: { answer: "(c) √2" },
+  });
+  assert.deepEqual(result, { status: "clear" });
+});
+
+test("answer-last gate permits a complete answer only in finalAnswer", () => {
+  const result = assessTeachingLessonAnswerLast({
+    beforeWeStart: { preview: "We will identify a point in the coordinate system." },
+    guidedReasoning: [{ what: "Compare each option against the definition of a rational number." }],
+    finalAnswer: { answer: "The answer is (c) √2, which is irrational." },
+  });
+  assert.deepEqual(result, { status: "clear" });
 });

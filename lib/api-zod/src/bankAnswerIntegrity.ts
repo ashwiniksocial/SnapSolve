@@ -9,6 +9,28 @@ export interface BankAnswerFormatAssessment {
   reason: string;
 }
 
+export type AnswerLastAssessment =
+  | { status: "clear" }
+  | { status: "leak"; section: string; disclosure: string; reason: string }
+  | { status: "review"; section: string; disclosure: string; reason: string };
+
+interface AnswerLastLesson {
+  topic?: unknown;
+  difficulty?: unknown;
+  keyConcepts?: unknown;
+  beforeWeStart?: unknown;
+  prerequisites?: unknown;
+  vocabulary?: unknown;
+  intuition?: unknown;
+  questionTranslation?: unknown;
+  teacherThinking?: unknown;
+  guidedReasoning?: unknown;
+  confusionPoints?: unknown;
+  commonMistakes?: unknown;
+  examinerThinking?: unknown;
+  finalAnswer?: { answer?: unknown };
+}
+
 interface RationalAnswer {
   numerator: bigint;
   denominator: bigint;
@@ -559,6 +581,320 @@ export function compareBankAnswers(candidate: string, canonical: string): BankAn
   }
 
   return compareNormalizedValues(normalizedCandidate, normalizedCanonical);
+}
+
+const ANSWER_STOP_WORDS = new Set([
+  "a", "an", "and", "as", "at", "be", "by", "for", "from", "in", "into",
+  "is", "it", "of", "on", "or", "the", "to", "was", "were", "with",
+]);
+
+const NUMBER_WORDS: Readonly<Record<string, string>> = {
+  zero: "0", one: "1", two: "2", three: "3", four: "4", five: "5",
+  six: "6", seven: "7", eight: "8", nine: "9", ten: "10",
+  eleven: "11", twelve: "12", thirteen: "13", fourteen: "14",
+  fifteen: "15", sixteen: "16", seventeen: "17", eighteen: "18",
+  nineteen: "19", twenty: "20",
+};
+
+const ANSWER_SYNONYM_GROUPS = [
+  ["coordinate plane", "xy plane", "plane of coordinates"],
+] as const;
+
+const ANSWER_UNIT_WORDS = new Set([
+  "ampere", "amperes", "centimeter", "centimeters", "cm", "degree", "degrees",
+  "dollar", "dollars", "gram", "grams", "g", "hour", "hours", "hr", "hrs",
+  "joule", "joules", "kg", "kilogram", "kilograms", "km", "kilometer",
+  "kilometers", "liter", "liters", "litre", "litres", "m", "meter", "meters",
+  "metre", "metres", "mg", "milligram", "milligrams", "milliliter",
+  "milliliters", "millilitre", "millilitres", "minute", "minutes", "ml",
+  "mm", "millimeter", "millimeters", "month", "months", "mol", "mole", "moles",
+  "newton", "newtons", "n", "pascal", "pascals", "pa", "percent", "percentage",
+  "person", "people", "point", "points", "rupee", "rupees", "second", "seconds",
+  "sec", "secs", "species", "student", "students", "year", "years", "°c", "°f",
+]);
+
+function normalizeSpelledQuantities(value: string): string {
+  const wordPattern = new RegExp(`\\b(${Object.keys(NUMBER_WORDS).join("|")})\\b`, "gi");
+  return value.replace(wordPattern, (word, _capture, offset: number, source: string) => {
+    const tail = source.slice(offset + word.length, offset + word.length + 32);
+    return /\b(?:to\s+(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+)?(?:thousand|million|billion|trillion|species|students?|people|years?|meters?|metres?|kilometers?|kilometres?|centimeters?|centimetres?|degrees?|points?|items?|apples?)\b/i.test(tail)
+      ? NUMBER_WORDS[word.toLowerCase()] ?? word
+      : word;
+  });
+}
+
+function normalizeAnswerLastText(value: string): string {
+  return value
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/\\sqrt\s*\{([^{}]*)\}/g, " square root of $1 ")
+    .replace(/√\s*(\([^()]*\)|[\p{L}\p{N}]+)/gu, " square root of $1 ")
+    .replace(/\bsquare\s+root\s+of\b/g, " square root ")
+    .replace(/\bplane\s+of\s+coordinates\b/g, " coordinate plane ")
+    .replace(/\bxy[\s-]*plane\b/g, " xy plane ")
+    .replace(/[−–—]/g, "-")
+    .replace(/,/g, "")
+    .replace(/[^\p{L}\p{N}%°.+*/=-]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function flattenAnswerLastText(value: unknown, prefix: string, result: Array<{ section: string; text: string }>): void {
+  if (typeof value === "string") {
+    if (value.trim()) result.push({ section: prefix, text: value });
+    return;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => flattenAnswerLastText(item, `${prefix}[${index + 1}]`, result));
+    return;
+  }
+  if (value && typeof value === "object") {
+    for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+      flattenAnswerLastText(child, `${prefix}.${key}`, result);
+    }
+  }
+}
+
+function precedingAnswerSections(lesson: AnswerLastLesson): Array<{ section: string; text: string }> {
+  const result: Array<{ section: string; text: string }> = [];
+  const fields: Array<[string, unknown]> = [
+    ["topic", lesson.topic],
+    ["difficulty", lesson.difficulty],
+    ["keyConcepts", lesson.keyConcepts],
+    ["beforeWeStart", lesson.beforeWeStart],
+    ["prerequisites", lesson.prerequisites],
+    ["vocabulary", lesson.vocabulary],
+    ["intuition", lesson.intuition],
+    ["questionTranslation", lesson.questionTranslation],
+    ["teacherThinking", lesson.teacherThinking],
+    ["guidedReasoning", lesson.guidedReasoning],
+    ["confusionPoints", lesson.confusionPoints],
+    ["commonMistakes", lesson.commonMistakes],
+    ["examinerThinking", lesson.examinerThinking],
+  ];
+  for (const [name, value] of fields) flattenAnswerLastText(value, name, result);
+  return result;
+}
+
+function answerPhraseCandidates(answer: string): string[] {
+  const candidates = new Set<string>();
+  const normalizedAnswer = normalizeAnswerLastText(answer);
+  if (normalizedAnswer) candidates.add(normalizedAnswer);
+  const rationalAnswer = parseRational(normalizeAnswer(answer));
+  if (rationalAnswer) {
+    let remainingDenominator = rationalAnswer.denominator;
+    while (remainingDenominator % 2n === 0n) remainingDenominator /= 2n;
+    while (remainingDenominator % 5n === 0n) remainingDenominator /= 5n;
+    const numerator = Number(rationalAnswer.numerator);
+    const denominator = Number(rationalAnswer.denominator);
+    const decimal = numerator / denominator;
+    if (
+      remainingDenominator === 1n &&
+      Number.isFinite(decimal) &&
+      Number.isSafeInteger(numerator) &&
+      Number.isSafeInteger(denominator)
+    ) {
+      candidates.add(normalizeAnswerLastText(`${decimal} ${rationalAnswer.unit}`));
+    }
+  }
+  const choice = answer.match(/^\s*(?:option\s+)?\(?([a-d])\)?\s*[:.)-]\s*(.+)$/i);
+  if (choice) {
+    candidates.add(`option ${choice[1]}`);
+    const choiceValue = normalizeAnswerLastText(choice[2]);
+    if (choiceValue) candidates.add(choiceValue);
+  }
+
+  const equivalencePatterns = [
+    /\b(?:also\s+)?called\s+(?:the|a|an)?\s*([^.!?;]+)/gi,
+    /\bknown\s+as\s+(?:the|a|an)?\s*([^.!?;]+)/gi,
+    /\breferred\s+to\s+as\s+(?:the|a|an)?\s*([^.!?;]+)/gi,
+    /\bdefined\s+as\s+([^.!?;]+)/gi,
+    /\b(?:means|refers\s+to)\s+([^.!?;]+)/gi,
+  ];
+  for (const pattern of equivalencePatterns) {
+    for (const match of answer.matchAll(pattern)) {
+      for (const alternative of (match[1] ?? "").split(/\s+(?:or|and)\s+/i)) {
+        const candidate = normalizeAnswerLastText(alternative)
+          .replace(/^(?:the|a|an)\s+/, "")
+          .trim();
+        if (candidate) candidates.add(candidate);
+      }
+    }
+  }
+
+  for (const group of ANSWER_SYNONYM_GROUPS) {
+    const normalizedGroup = group.map(normalizeAnswerLastText);
+    if (normalizedGroup.some((alias) => candidates.has(alias))) {
+      normalizedGroup.forEach((alias) => candidates.add(alias));
+    }
+  }
+  return [...candidates].filter((candidate) => candidate.length > 0);
+}
+
+interface NumericAnswerCandidate {
+  display: string;
+  normalizedValue: string;
+  strongUnit: boolean;
+  conciseAnswer: boolean;
+}
+
+function canonicalNumber(value: string, scaleWord?: string): string | null {
+  const parsed = Number(value.replace(/,/g, ""));
+  if (!Number.isFinite(parsed)) return null;
+  const scale = scaleWord?.toLowerCase();
+  const multiplier = scale === "thousand" ? 1e3
+    : scale === "million" ? 1e6
+      : scale === "billion" ? 1e9
+        : scale === "trillion" ? 1e12
+          : 1;
+  const scaled = parsed * multiplier;
+  return Number.isFinite(scaled) ? String(Number(scaled.toPrecision(12))) : null;
+}
+
+function numericAnswerCandidates(answer: string): NumericAnswerCandidate[] {
+  const candidates: NumericAnswerCandidate[] = [];
+  const normalizedAnswer = normalizeAnswerLastText(answer);
+  const conciseAnswer = normalizedAnswer.split(" ").length <= 6 &&
+    !/[√=^+*/]|\\sqrt|[a-z]\s*\(/i.test(answer);
+  const normalizedForNumbers = normalizeSpelledQuantities(answer.normalize("NFKC"));
+  const pattern = /(?<![\p{L}\p{N}])([+-]?\d[\d,]*(?:\.\d+)?)(?:\s*(?:to|[-–—])\s*([+-]?\d[\d,]*(?:\.\d+)?))?(?:\s*(thousand|million|billion|trillion))?(?:\s+([a-z°%]+))?/giu;
+  for (const match of normalizedForNumbers.matchAll(pattern)) {
+    const first = match[1];
+    const second = match[2];
+    const scale = match[3];
+    const unit = match[4]?.toLowerCase();
+    const firstValue = canonicalNumber(first, scale);
+    const secondValue = second ? canonicalNumber(second, scale) : null;
+    if (!firstValue) continue;
+
+    const strongUnit = Boolean(scale || (unit && ANSWER_UNIT_WORDS.has(unit)));
+    const beforeNumber = normalizedForNumbers.slice(Math.max(0, (match.index ?? 0) - 48), match.index ?? 0);
+    const answerCue = /\b(?:answer|therefore|thus|hence|final\s+result|we\s+get|equals?|is)\b[^.!?;]*$/i.test(beforeNumber);
+    if (!strongUnit && !conciseAnswer && !answerCue) continue;
+
+    const normalizedValue = [
+      firstValue,
+      ...(secondValue ? [secondValue] : []),
+      unit && ANSWER_UNIT_WORDS.has(unit) ? unit.replace(/s$/, "") : "",
+    ].filter(Boolean).join("..");
+    const display = match[0].trim();
+    if (!candidates.some((candidate) => candidate.normalizedValue === normalizedValue)) {
+      candidates.push({ display, normalizedValue, strongUnit, conciseAnswer });
+    }
+  }
+  return candidates;
+}
+
+function phraseTokens(value: string): string[] {
+  return normalizeAnswerLastText(value)
+    .split(" ")
+    .filter((token) => token.length > 1 && !ANSWER_STOP_WORDS.has(token));
+}
+
+function quantityMatches(value: string, candidate: NumericAnswerCandidate): boolean {
+  return numericAnswerCandidates(value).some(
+    (match) => match.normalizedValue === candidate.normalizedValue,
+  );
+}
+
+function hasAnswerCue(text: string, candidate: string): boolean {
+  const normalized = normalizeAnswerLastText(text);
+  const value = normalizeAnswerLastText(candidate);
+  const index = normalized.indexOf(value);
+  if (index < 0) return false;
+  const nearby = normalized.slice(Math.max(0, index - 48), Math.min(normalized.length, index + value.length + 12));
+  return /\b(?:answer|therefore|thus|hence|final\s+result|we\s+get|equals?|is)\b/.test(nearby);
+}
+
+/**
+ * Checks the lesson sections rendered before finalAnswer. Definite answer
+ * disclosures fail; close but uncertain matches are marked for human review.
+ * No model, external service, or question-bank mutation is involved.
+ */
+export function assessTeachingLessonAnswerLast(
+  lessonValue: unknown,
+  canonicalAnswer?: string,
+): AnswerLastAssessment {
+  if (!lessonValue || typeof lessonValue !== "object") {
+    return { status: "review", section: "lesson", disclosure: "", reason: "Lesson shape is unavailable for answer-last review." };
+  }
+  const lesson = lessonValue as AnswerLastLesson;
+  const answer = typeof canonicalAnswer === "string" && canonicalAnswer.trim()
+    ? canonicalAnswer
+    : typeof lesson.finalAnswer?.answer === "string" ? lesson.finalAnswer.answer : "";
+  if (!answer.trim()) {
+    return { status: "review", section: "finalAnswer", disclosure: "", reason: "Canonical final answer is unavailable for answer-last review." };
+  }
+
+  const sections = precedingAnswerSections(lesson);
+  const phrases = answerPhraseCandidates(answer);
+  const quantities = numericAnswerCandidates(answer);
+  let review: AnswerLastAssessment | null = null;
+
+  for (const item of sections) {
+    const normalizedText = normalizeAnswerLastText(item.text);
+    if (!normalizedText) continue;
+
+    for (const phrase of phrases) {
+      if (phrase.length < 3) continue;
+      if (` ${normalizedText} `.includes(` ${phrase} `)) {
+        const tokenCount = phraseTokens(phrase).length;
+        if (tokenCount >= 2) {
+          return {
+            status: "leak",
+            section: item.section,
+            disclosure: phrase,
+            reason: `Answer-equivalent wording appears before finalAnswer in ${item.section}.`,
+          };
+        }
+        review ??= {
+          status: "review",
+          section: item.section,
+          disclosure: phrase,
+          reason: `A short answer term appears before finalAnswer in ${item.section}; context needs review.`,
+        };
+        continue;
+      }
+
+      const tokens = [...new Set(phraseTokens(phrase))];
+      if (tokens.length < 2) continue;
+      const sentences = item.text.split(/[.!?;\n]+/);
+      for (const sentence of sentences) {
+        const sentenceTokens = new Set(phraseTokens(sentence));
+        const overlap = tokens.filter((token) => sentenceTokens.has(token)).length / tokens.length;
+        if (overlap >= 0.8) {
+          review ??= {
+            status: "review",
+            section: item.section,
+            disclosure: phrase,
+            reason: `Wording closely overlaps the final answer before finalAnswer in ${item.section}; review required.`,
+          };
+        }
+      }
+    }
+
+    for (const quantity of quantities) {
+      if (!quantityMatches(item.text, quantity)) continue;
+      const isMathField = /\.math$/.test(item.section);
+      if (isMathField || (!quantity.strongUnit && !quantity.conciseAnswer && !hasAnswerCue(item.text, quantity.display))) {
+        review ??= {
+          status: "review",
+          section: item.section,
+          disclosure: quantity.display,
+          reason: `A possible final numerical result appears before finalAnswer in ${item.section}; it may be an intermediate value.`,
+        };
+      } else {
+        return {
+          status: "leak",
+          section: item.section,
+          disclosure: quantity.display,
+          reason: `Final numerical result appears before finalAnswer in ${item.section}.`,
+        };
+      }
+    }
+  }
+
+  return review ?? { status: "clear" };
 }
 
 /**

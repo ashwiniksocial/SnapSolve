@@ -1,7 +1,10 @@
 /// <reference types="vite/client" />
 
 import type { AIResponse, TeachingLesson } from "./solutionBank";
-import { compareBankAnswers } from "@workspace/api-zod/bank-answer-integrity";
+import {
+  assessTeachingLessonAnswerLast,
+  compareBankAnswers,
+} from "@workspace/api-zod/bank-answer-integrity";
 export { compareBankAnswers } from "@workspace/api-zod/bank-answer-integrity";
 import type { Subject } from "./subjects";
 import type { Question } from "./questions/types";
@@ -301,7 +304,8 @@ export function isStoredLessonValid(
     entry.questionId === question.id &&
     entry.sourceHash === hashQuestionContent(question) &&
     compareBankAnswers(entry.lesson.finalAnswer.answer, question.answer).status === "match" &&
-    isCompleteDetailedLesson(entry.lesson);
+    isCompleteDetailedLesson(entry.lesson) &&
+    assessTeachingLessonAnswerLast(entry.lesson, question.answer).status === "clear";
 }
 
 /**

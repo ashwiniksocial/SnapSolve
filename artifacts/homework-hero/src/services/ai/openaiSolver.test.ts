@@ -219,6 +219,24 @@ test("a final response missing bank completeness markers is rejected", async () 
   );
 });
 
+test("bank lessons that disclose the frozen answer before finalAnswer are rejected", async () => {
+  const leakedLesson = completeLesson(5, question.answer);
+  leakedLesson.guidedReasoning[0].what = `Therefore, the answer is ${question.answer}.`;
+  const responseWithLeak = response(streamId, leakedLesson);
+
+  await assert.rejects(
+    awaitFinalBankLesson(async () => responseWithLeak, question.answer),
+    /bank_answer_leakage/,
+  );
+
+  const entry = {
+    questionId,
+    sourceHash: hashQuestionContent(question),
+    lesson: leakedLesson,
+  } as PreGeneratedLessonEntry;
+  assert.equal(isStoredLessonValid(entry, question), false);
+});
+
 test("valid lesson completeness does not impose eight reasoning steps", async () => {
   const twoStepLesson = response(streamId, completeLesson(2, question.answer));
   const resolved = await awaitFinalBankLesson(async () => twoStepLesson, question.answer);
@@ -282,6 +300,20 @@ test("bank cached lessons require matching source hash and verified frozen answe
   } finally {
     invalidStorage.restore();
   }
+
+  const leaked = completeLesson(5, question.answer);
+  leaked.guidedReasoning[0].what = `The final answer is ${question.answer}.`;
+  const leakingStorage = installLocalStorage({
+    [questionId]: {
+      ...entry,
+      lesson: response(streamId, leaked),
+    },
+  });
+  try {
+    assert.equal(getBankCachedLesson(questionId, context), null);
+  } finally {
+    leakingStorage.restore();
+  }
 });
 
 test("pre-generated lessons remain valid only for the current source and a verified answer", () => {
@@ -325,6 +357,8 @@ test("safe fallback preserves the frozen answer, question steps, and no generate
   assert.deepEqual(fallbackResponse.steps, question.steps);
   assert.match(getBankAnswerIntegrityNotice("bank_answer_mismatch") ?? "", /original question-bank solution/i);
   assert.match(getBankAnswerIntegrityNotice("bank_answer_unverified") ?? "", /could not be verified/i);
+  assert.match(getBankAnswerIntegrityNotice("bank_answer_leakage") ?? "", /revealed the answer too early/i);
+  assert.match(getBankAnswerIntegrityNotice("bank_answer_last_review") ?? "", /could not be verified/i);
   assert.equal(
     getBankAnswerIntegrityNotice("timeout"),
     "The AI lesson could not finish. The original question-bank solution is shown instead.",
@@ -346,6 +380,8 @@ test("recognized bank failures resolve only to a valid frozen bank solution", ()
   for (const code of [
     "bank_answer_mismatch",
     "bank_answer_unverified",
+    "bank_answer_leakage",
+    "bank_answer_last_review",
     "timeout",
     "stream_interrupted",
   ]) {

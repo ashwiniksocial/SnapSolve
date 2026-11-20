@@ -18,7 +18,11 @@ import type { Subject }                    from "@/data/subjects";
 import { getStoredAcademicContext, makeChapterContextKey, type BoardId } from "@/data/questions/academicContext";
 import type { Question }                   from "@/data/questions/types";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
-import { compareBankAnswers, isBankLessonAnswerSafe } from "@workspace/api-zod/bank-answer-integrity";
+import {
+  assessTeachingLessonAnswerLast,
+  compareBankAnswers,
+  isBankLessonAnswerSafe,
+} from "@workspace/api-zod/bank-answer-integrity";
 import type { SimplifyContext } from "@/services/teachingActions";
 import { buildStudentContext }             from "@/services/studentModel";
 import { getStoredLevel, type ReadingLevel } from "@/services/explanation/readingModeEngine";
@@ -66,10 +70,19 @@ function writeCache(store: Record<string, CacheEntry>): void {
 
 export function getCachedSolution(subject: string, question: string, mode: ReadingLevel = "standard"): AIResponse | null {
   const store = readCache();
-  const entry = store[hashKey(subject, question, mode)];
+  const key = hashKey(subject, question, mode);
+  const entry = store[key];
   if (!entry) return null;
   if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
-    delete store[hashKey(subject, question, mode)];
+    delete store[key];
+    writeCache(store);
+    return null;
+  }
+  if (
+    entry.response.lesson &&
+    assessTeachingLessonAnswerLast(entry.response.lesson).status !== "clear"
+  ) {
+    delete store[key];
     writeCache(store);
     return null;
   }
@@ -77,6 +90,10 @@ export function getCachedSolution(subject: string, question: string, mode: Readi
 }
 
 function cacheSolution(subject: string, question: string, mode: ReadingLevel, response: AIResponse): void {
+  if (
+    response.lesson &&
+    assessTeachingLessonAnswerLast(response.lesson).status !== "clear"
+  ) return;
   const store = readCache();
   const now   = Date.now();
   for (const k of Object.keys(store)) {
@@ -169,6 +186,7 @@ export function getBankCachedLesson(questionId: string, context?: BankQuestionCo
   if (
     !entry.sourceHash ||
     !isBankLessonAnswerSafe(candidateAnswer, context.answer, entry.sourceHash, context.sourceHash) ||
+    assessTeachingLessonAnswerLast(entry.lesson.lesson, context.answer).status !== "clear" ||
     !isBankLessonComplete(entry.lesson)
   ) {
     if (entryKey) delete store[entryKey];
@@ -182,7 +200,8 @@ function cacheBankLesson(questionId: string, context: BankQuestionContext, lesso
   const candidateAnswer = lesson.lesson?.finalAnswer?.answer ?? "";
   if (
     !isBankLessonComplete(lesson) ||
-    compareBankAnswers(candidateAnswer, context.answer).status !== "match"
+    compareBankAnswers(candidateAnswer, context.answer).status !== "match" ||
+    assessTeachingLessonAnswerLast(lesson.lesson, context.answer).status !== "clear"
   ) {
     console.warn("[BANK:CACHE] Lesson failed completeness or answer integrity — not caching");
     return;
@@ -205,6 +224,9 @@ function assertBankAnswer(response: AIResponse, canonicalAnswer: string): void {
   const comparison = compareBankAnswers(response.lesson?.finalAnswer?.answer ?? "", canonicalAnswer);
   if (comparison.status === "mismatch") throw new Error("bank_answer_mismatch");
   if (comparison.status !== "match") throw new Error("bank_answer_unverified");
+  const answerLast = assessTeachingLessonAnswerLast(response.lesson, canonicalAnswer);
+  if (answerLast.status === "leak") throw new Error("bank_answer_leakage");
+  if (answerLast.status === "review") throw new Error("bank_answer_last_review");
 }
 
 export function logBankLessonTiming(
@@ -266,6 +288,12 @@ export function getBankAnswerIntegrityNotice(code: string): string | null {
   if (code === "bank_answer_unverified") {
     return "The generated lesson could not be verified against the approved answer. The original question-bank solution is shown instead.";
   }
+  if (code === "bank_answer_leakage") {
+    return "The generated lesson revealed the answer too early. The original question-bank solution is shown instead.";
+  }
+  if (code === "bank_answer_last_review") {
+    return "The generated lesson may reveal the answer too early and could not be verified. The original question-bank solution is shown instead.";
+  }
   if (code === "timeout" || code === "stream_interrupted") {
     return "The AI lesson could not finish. The original question-bank solution is shown instead.";
   }
@@ -284,6 +312,8 @@ export function resolveFrozenBankFallback(
 export type BankFailureCategory =
   | "bank_answer_unverified"
   | "bank_answer_mismatch"
+  | "bank_answer_leakage"
+  | "bank_answer_last_review"
   | "timeout"
   | "stream_interrupted";
 
@@ -292,6 +322,8 @@ const BANK_FAILURE_SESSION_KEY_PREFIX = "studyai-bank-failure-v1:";
 function isBankFailureCategory(value: unknown): value is BankFailureCategory {
   return value === "bank_answer_unverified" ||
     value === "bank_answer_mismatch" ||
+    value === "bank_answer_leakage" ||
+    value === "bank_answer_last_review" ||
     value === "timeout" ||
     value === "stream_interrupted";
 }

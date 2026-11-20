@@ -35,7 +35,11 @@ import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
 import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
 import { LessonStreamExtractor } from "../lib/lessonStreamExtractor";
-import { compareBankAnswers, isBankLessonAnswerSafe } from "@workspace/api-zod/bank-answer-integrity";
+import {
+  assessTeachingLessonAnswerLast,
+  compareBankAnswers,
+  isBankLessonAnswerSafe,
+} from "@workspace/api-zod/bank-answer-integrity";
 import {
   evaluateArchitectureCFastPath,
   isArchitectureCFastPathEligible,
@@ -1039,6 +1043,16 @@ const OPENAI_URL      = "https://api.openai.com/v1/chat/completions";
 const MODEL           = "gpt-4o-mini";
 const OPENAI_TIMEOUT  = 90_000;
 const STANDARD_BUDGET_MS = 15_000; // wall-clock guarantee for Standard mode
+const ANSWER_LAST_CONTRACT = `
+ANSWER-LAST CONTRACT — required for every lesson:
+Keep the complete answer, any equivalent answer wording, and the final requested
+numerical result exclusively in finalAnswer. Do not disclose them in topic,
+keyConcepts, question translation (including whatWeKnow), prerequisites,
+vocabulary, intuition, teacherThinking, guided reasoning, confusion points,
+common mistakes, examinerThinking, or summaries. Earlier sections must still
+teach the relevant definitions, evidence, formulas, and method. Intermediate
+calculations and quantities are allowed only when they do not identify the
+requested final result. Do not remove necessary proof or teaching coverage.`;
 
 // ─── Shared prompt builder ────────────────────────────────────────────────────
 // Factored out of generateDraft so the streaming route can reuse the same
@@ -1077,7 +1091,7 @@ and directly helpful. Never omit proof steps, conditions, or facts needed to jus
 canonical answer.`
     : "";
 
-  const systemContent = baseSystem + depthOverride + intentInstruction;
+  const systemContent = `${baseSystem}${depthOverride}${intentInstruction}\n\n${ANSWER_LAST_CONTRACT}`;
 
   const baseUserContent = studentContext
     ? `${studentContext}\n\nSubject: ${subject}\n\nQuestion:\n${question.trim()}`
@@ -1413,7 +1427,8 @@ router.post("/solveQuestion", async (req, res) => {
   // 3. Server-side cache — skip for personalised responses
   if (!ctx && !intent) {
     const cached = getCached(subj, q, mode, contextKey);
-    if (cached) {
+    const cachedAnswerLast = cached ? assessTeachingLessonAnswerLast(cached) : null;
+    if (cached && cachedAnswerLast?.status === "clear") {
       req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
       setProgress(reqId, "cache_hit", "Lesson ready!", 100);
       res.json(cached);
@@ -1444,6 +1459,13 @@ router.post("/solveQuestion", async (req, res) => {
       }, "solveQuestion: telemetry");
       if (reqId) progressStore.delete(reqId);
       return;
+    }
+    if (cached) {
+      responseCache.delete(makeCacheKey(subj, q, mode, contextKey));
+      req.log.warn({
+        outcome: cachedAnswerLast?.status,
+        section: cachedAnswerLast && "section" in cachedAnswerLast ? cachedAnswerLast.section : null,
+      }, "[PIPELINE:3] REJECTED — cached lesson failed answer-last validation");
     }
     req.log.info({ subject: subj }, "[PIPELINE:3] MISS — server cache empty for this question");
     setProgress(reqId, "cache_miss", "No cached lesson — building fresh…", 10);
@@ -1779,6 +1801,22 @@ router.post("/solveQuestion", async (req, res) => {
     return;
   }
 
+  const answerLast = assessTeachingLessonAnswerLast(finalLesson);
+  if (answerLast.status !== "clear") {
+    req.log.warn({
+      outcome: answerLast.status,
+      section: "section" in answerLast ? answerLast.section : null,
+      reason: answerLast.reason,
+    }, "solveQuestion: rejected lesson that disclosed or may disclose its answer early");
+    res.status(422).json({
+      error: answerLast.status === "leak" ? "answer_last_leakage" : "answer_last_review",
+      message: answerLast.status === "leak"
+        ? "The lesson disclosed its answer before the final-answer section."
+        : "The lesson may disclose its answer early and requires review.",
+    });
+    return;
+  }
+
   // 7. Cache the reviewed lesson (not the draft)
   if (!ctx && !intent) {
     setCached(subj, q, mode, finalLesson, contextKey);
@@ -1956,7 +1994,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       bankCtx.answer,
       entry.sourceHash,
       bankCtx.sourceHash,
-    );
+    ) && assessTeachingLessonAnswerLast(entry.data, bankCtx.answer).status === "clear";
     if (entry && Date.now() <= entry.expiresAt && isCurrentAndSafe) {
       req.log.info({
         stage: "server-cache",
@@ -1979,7 +2017,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
     }, "[BANK:PERF]");
   } else if (!ctx) {
     const cached = getCached(subj, q, "standard", contextKey);
-    if (cached) {
+    const cachedAnswerLast = cached ? assessTeachingLessonAnswerLast(cached) : null;
+    if (cached && cachedAnswerLast?.status === "clear") {
       req.log.info({ subject: subj, cached: true }, "[STREAM] cache hit — returning via SSE");
       res.setHeader("Content-Type",    "text/event-stream");
       res.setHeader("Cache-Control",   "no-cache");
@@ -1988,6 +2027,13 @@ router.post("/solveQuestion/stream", async (req, res) => {
       emit({ type: "cached", lesson: cached });
       res.end();
       return;
+    }
+    if (cached) {
+      responseCache.delete(makeCacheKey(subj, q, "standard", contextKey));
+      req.log.warn({
+        outcome: cachedAnswerLast?.status,
+        section: cachedAnswerLast && "section" in cachedAnswerLast ? cachedAnswerLast.section : null,
+      }, "[STREAM] rejected cached lesson that failed answer-last validation");
     }
   }
 
@@ -2210,6 +2256,28 @@ router.post("/solveQuestion/stream", async (req, res) => {
       req.log.warn({
         stage: "model-generated",
         outcome: code,
+        elapsedMs: modelElapsedMs,
+      }, "[BANK:INTEGRITY]");
+      emit({ type: "error", code });
+      res.end();
+      return;
+    }
+
+    const answerLast = assessTeachingLessonAnswerLast(finalLesson, bankCtx.answer);
+    req.log.info({
+      stage: "answer-last-integrity",
+      outcome: answerLast.status,
+      section: "section" in answerLast ? answerLast.section : null,
+    }, "[BANK:INTEGRITY]");
+    if (answerLast.status !== "clear") {
+      const code = answerLast.status === "leak"
+        ? "bank_answer_leakage"
+        : "bank_answer_last_review";
+      req.log.warn({
+        stage: "model-generated",
+        outcome: code,
+        section: "section" in answerLast ? answerLast.section : null,
+        reason: answerLast.reason,
         elapsedMs: modelElapsedMs,
       }, "[BANK:INTEGRITY]");
       emit({ type: "error", code });

@@ -4,11 +4,17 @@ import { gunzipSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { loadStudentVisibleQuestions } from "./academicReview.ts";
 import {
+  hashQuestionContent,
+  isCompleteDetailedLesson,
   isStoredLessonValid,
   type PreGeneratedLessonChunk,
 } from "../../artifacts/homework-hero/src/data/preGeneratedLessons.ts";
 import type { Question } from "../../artifacts/homework-hero/src/data/questions/types.ts";
 import { PILOT_QUESTION_IDS, PILOT_QUESTION_COUNT } from "./preGeneratedLessonPilot.ts";
+import {
+  assessTeachingLessonAnswerLast,
+  compareBankAnswers,
+} from "../../lib/api-zod/src/bankAnswerIntegrity.ts";
 
 const repoRoot = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const chunksDirectory = resolve(repoRoot, "artifacts/homework-hero/src/data/generatedLessonChunks");
@@ -79,6 +85,14 @@ async function main(): Promise<void> {
   );
   const { chunks, entryIds, bytes } = await readChunks();
   const errors: string[] = [];
+  const lessonChecks: Array<{
+    questionId: string;
+    structural: "PASS" | "FAIL";
+    answerLast: "CLEAR" | "LEAK" | "REVIEW" | "NOT CHECKED";
+    section?: string;
+    disclosure?: string;
+    reason?: string;
+  }> = [];
 
   if (PILOT_QUESTION_IDS.length !== 20 || PILOT_QUESTION_COUNT !== 20) {
     errors.push(`Pilot manifest must contain exactly 20 IDs; found ${PILOT_QUESTION_IDS.length}.`);
@@ -88,11 +102,41 @@ async function main(): Promise<void> {
     const question = questions.get(id);
     if (!question) {
       errors.push(`${id}: not active/student-visible.`);
+      lessonChecks.push({ questionId: id, structural: "FAIL", answerLast: "NOT CHECKED" });
       continue;
     }
     const entry = chunks.get(chunkKey(question))?.lessons[id];
+    if (!entry) {
+      lessonChecks.push({ questionId: id, structural: "FAIL", answerLast: "NOT CHECKED" });
+      errors.push(`${id}: missing derived lesson.`);
+      continue;
+    }
+    const structural = isCompleteDetailedLesson(entry.lesson);
+    const answerComparison = compareBankAnswers(entry.lesson.finalAnswer?.answer ?? "", question.answer);
+    const answerLast = assessTeachingLessonAnswerLast(entry.lesson, question.answer);
+    lessonChecks.push({
+      questionId: id,
+      structural: structural ? "PASS" : "FAIL",
+      answerLast: answerLast.status === "clear"
+        ? "CLEAR"
+        : answerLast.status === "leak" ? "LEAK" : "REVIEW",
+      ...("section" in answerLast ? { section: answerLast.section } : {}),
+      ...("disclosure" in answerLast ? { disclosure: answerLast.disclosure } : {}),
+      ...("reason" in answerLast ? { reason: answerLast.reason } : {}),
+    });
+    const sourceHashMatches = entry.sourceHash === hashQuestionContent(question);
     if (!isStoredLessonValid(entry, question)) {
-      errors.push(`${id}: missing, stale, incomplete, or frozen-answer-mismatched.`);
+      const details = [
+        !structural ? "structural invalidity" : "",
+        answerComparison.status !== "match" ? `canonical answer ${answerComparison.status}` : "",
+        answerLast.status !== "clear"
+          ? `answer-last ${answerLast.status} in ${"section" in answerLast ? answerLast.section : "finalAnswer"}`
+          : "",
+        !sourceHashMatches
+          ? "source hash mismatch"
+          : "",
+      ].filter(Boolean).join(", ");
+      errors.push(`${id}: ${details || "stored lesson failed validation"}.`);
     }
   }
 
@@ -117,17 +161,23 @@ async function main(): Promise<void> {
     errors.push("Unknown future question IDs must not match a derived lesson.");
   }
 
-  if (errors.length > 0) throw new Error(errors.join("\n"));
-
   console.log(JSON.stringify({
     pilotCount: PILOT_QUESTION_IDS.length,
-    validLessons: PILOT_QUESTION_IDS.length,
+    structuralValidLessons: lessonChecks.filter((check) => check.structural === "PASS").length,
+    answerLastClearLessons: lessonChecks.filter((check) => check.answerLast === "CLEAR").length,
+    answerLastLeaks: lessonChecks.filter((check) => check.answerLast === "LEAK").length,
+    answerLastReviews: lessonChecks.filter((check) => check.answerLast === "REVIEW").length,
+    validLessons: lessonChecks.filter(
+      (check) => check.structural === "PASS" && check.answerLast === "CLEAR",
+    ).length,
+    lessonChecks,
     nonPregeneratedFallsThrough: true,
     unknownUniqueIdFallsThrough: true,
     chapterChunks: chunks.size,
     staticChunkBytes: bytes,
     staticChunkPath: "artifacts/homework-hero/src/data/generatedLessonChunks/",
   }, null, 2));
+  if (errors.length > 0) throw new Error(errors.join("\n"));
 }
 
 void main().catch((error: unknown) => {
