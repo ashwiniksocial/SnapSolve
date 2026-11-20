@@ -515,6 +515,8 @@ export default function Practice() {
     } else {
       setSelectedChapterId(chapterId);
       setSelectedTopicId("all");
+      setSelectedDiff("All");
+      setSelectedType("All");
       setReadinessDrilldown(null);
       setDrilldownOpen(true);
     }

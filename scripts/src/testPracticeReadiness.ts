@@ -86,6 +86,44 @@ async function main() {
   );
   assert.ok(!filteredQuestions.some((question) => question.chapterId === "ch4" || question.chapterId === "chem-ch01"), "Source-unresolved chapter fixtures must not enter active Practice totals.");
 
+  const practiceSubjectGroups = [
+    { label: "Mathematics", sources: ["Mathematics"], expectedCount: 500, expectedChapters: 8 },
+    { label: "Science", sources: ["Physics", "Chemistry", "Biology"], expectedCount: 725, expectedChapters: 11 },
+    { label: "IT", sources: ["Information Technology"], expectedCount: 150, expectedChapters: 3 },
+  ];
+  const chapterNavigationCoverage = Object.fromEntries(practiceSubjectGroups.map((group) => {
+    const subjectQuestions = filteredQuestions.filter((question) => group.sources.includes(question.subject));
+    assert.equal(
+      subjectQuestions.length,
+      group.expectedCount,
+      `${group.label} chapter navigation must preserve its active question count.`,
+    );
+    const subjectChapterKeys = new Set(
+      subjectQuestions.map((question) => JSON.stringify([question.subject, question.chapterId])),
+    );
+    assert.equal(
+      subjectChapterKeys.size,
+      group.expectedChapters,
+      `${group.label} must retain the expected active chapter count.`,
+    );
+    for (const chapterKey of subjectChapterKeys) {
+      const [chapterSubject, chapterId] = JSON.parse(chapterKey) as [string, string];
+      const chapterQuestions = subjectQuestions.filter(
+        (question) => question.subject === chapterSubject && question.chapterId === chapterId,
+      );
+      const selectedChapterQuestions = filterQuestionsToActiveChapters(chapterQuestions, [{
+        id: chapterId,
+        subject: chapterSubject,
+      }]);
+      assert.ok(selectedChapterQuestions.length > 0, `${group.label} active chapter ${chapterId} must remain navigable.`);
+      assert.deepEqual(
+        selectedChapterQuestions.map((question) => question.id).sort(),
+        chapterQuestions.map((question) => question.id).sort(),
+      );
+    }
+    return [group.label, { questions: subjectQuestions.length, chapters: subjectChapterKeys.size }];
+  }));
+
   const mathQuestions = allQuestions.filter(
     (question) => question.classNum === 9 && question.subject === "Mathematics",
   );
@@ -156,6 +194,7 @@ async function main() {
     activeClass9Questions: activeQuestions.length,
     uniqueActiveQuestionIds: new Set(activeQuestions.map((question) => question.id)).size,
     sourceUnresolvedChaptersExcluded: ["ch4", "chem-ch01"],
+    chapterNavigationCoverage,
     openingAloneCounts: 0,
     selfAssessmentTransitions: "CONFIDENT → NEEDS_PRACTICE → NEEDS_PRACTICE → CONFIDENT",
     duplicatePracticeSelectionsDeduplicated: true,
