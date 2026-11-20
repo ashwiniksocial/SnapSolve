@@ -13,6 +13,9 @@ import {
   derivePracticeReadiness,
   getReadinessDrilldownQuestions,
 } from "../../artifacts/homework-hero/src/services/practiceReadiness.ts";
+import {
+  filterQuestionsToActiveChapters,
+} from "../../artifacts/homework-hero/src/services/questionService.ts";
 import type { Question } from "../../artifacts/homework-hero/src/data/questions/types.ts";
 import type { Subject } from "../../artifacts/homework-hero/src/data/subjects.ts";
 
@@ -52,6 +55,37 @@ async function main() {
     difficulty: question.difficulty as Question["difficulty"],
     questionType: question.questionType as Question["questionType"],
   })) as Question[];
+
+  const activeQuestions = allQuestions
+    .filter((question) =>
+      question.classNum === 9 &&
+      ["Mathematics", "Physics", "Chemistry", "Biology", "Information Technology"].includes(question.subject),
+    );
+  const activeChapters = [
+    ...new Map(
+      activeQuestions.map((question) => [
+        JSON.stringify([question.subject, question.chapterId]),
+        { id: question.chapterId, subject: question.subject },
+      ]),
+    ).values(),
+  ];
+  const unresolvedMathFixture = { ...activeQuestions.find((question) => question.subject === "Mathematics")!, chapterId: "ch4" };
+  const unresolvedChemistryFixture = { ...activeQuestions.find((question) => question.subject === "Chemistry")!, chapterId: "chem-ch01" };
+  const filteredQuestions = filterQuestionsToActiveChapters(
+    [...activeQuestions, unresolvedMathFixture, unresolvedChemistryFixture],
+    activeChapters,
+  );
+  const expectedVisibleIds = activeQuestions.map((question) => question.id).sort();
+  assert.equal(activeQuestions.length, 1375, "Canonical student-visible Class 9 question total must remain 1,375.");
+  assert.equal(filteredQuestions.length, 1375, "Active-chapter filtering must preserve all 1,375 student-visible questions.");
+  assert.equal(new Set(filteredQuestions.map((question) => question.id)).size, 1375, "Active Practice questions must not contain duplicate IDs.");
+  assert.deepEqual(
+    filteredQuestions.map((question) => question.id).sort(),
+    expectedVisibleIds,
+    "Active-chapter filtering must preserve the exact canonical student-visible Class 9 IDs.",
+  );
+  assert.ok(!filteredQuestions.some((question) => question.chapterId === "ch4" || question.chapterId === "chem-ch01"), "Source-unresolved chapter fixtures must not enter active Practice totals.");
+
   const mathQuestions = allQuestions.filter(
     (question) => question.classNum === 9 && question.subject === "Mathematics",
   );
@@ -119,6 +153,9 @@ async function main() {
   );
 
   console.log(JSON.stringify({
+    activeClass9Questions: activeQuestions.length,
+    uniqueActiveQuestionIds: new Set(activeQuestions.map((question) => question.id)).size,
+    sourceUnresolvedChaptersExcluded: ["ch4", "chem-ch01"],
     openingAloneCounts: 0,
     selfAssessmentTransitions: "CONFIDENT → NEEDS_PRACTICE → NEEDS_PRACTICE → CONFIDENT",
     duplicatePracticeSelectionsDeduplicated: true,

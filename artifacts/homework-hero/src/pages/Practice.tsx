@@ -10,6 +10,7 @@ import { useProgress }      from "@/hooks/useProgress";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import {
   getChapters,
+  getActiveQuestions,
   getChapterDisplayNumber,
   getQuestionDisplayNumber,
   getStudentFacingSubject,
@@ -278,7 +279,7 @@ export default function Practice() {
   );
 
   const activeReadinessQuestions = useMemo(
-    () => bankReady && boardId ? getQuestions({ boardId, classNum: practiceClass, subject: selectedSubject }) : [],
+    () => bankReady && boardId ? getActiveQuestions(practiceClass, selectedSubject, boardId) : [],
     [bankReady, boardId, practiceClass, selectedSubject],
   );
   const readiness = useMemo(
@@ -375,14 +376,9 @@ export default function Practice() {
     const query = searchQuery.trim().toLocaleLowerCase();
     if (!query || !bankReady) return [];
     const terms = query.split(/\s+/).filter(Boolean);
-    const activeChapterIds = new Set(
-      availableSubjects.flatMap((subject) =>
-        boardId ? getChapters(practiceClass, subject, boardId).map((chapter) => chapter.id) : [],
-      ),
-    );
     const candidates = availableSubjects.flatMap((subject) =>
-      boardId ? getQuestions({ boardId, classNum: practiceClass, subject }) : [],
-    ).filter((question) => activeChapterIds.has(question.chapterId));
+      boardId ? getActiveQuestions(practiceClass, subject, boardId) : [],
+    );
 
     return candidates.filter((question) => {
       const searchableText = [

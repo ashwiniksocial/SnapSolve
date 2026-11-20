@@ -210,6 +210,31 @@ export function getQuestions(filter: QuestionFilter = {}): Question[] {
   }));
 }
 
+/**
+ * Returns questions only from chapters currently exposed by getChapters.
+ * Keep aggregate Practice surfaces (readiness and search) on the same
+ * canonical eligibility boundary as chapter selection.
+ */
+export function filterQuestionsToActiveChapters(
+  questions: readonly Question[],
+  chapters: readonly Pick<ChapterMeta, "id" | "subject">[],
+): Question[] {
+  const activeChapterKeys = new Set(
+    chapters.map((chapter) => JSON.stringify([chapter.subject, chapter.id])),
+  );
+  return questions.filter((question) =>
+    activeChapterKeys.has(JSON.stringify([question.subject, question.chapterId])),
+  );
+}
+
+export function getActiveQuestions(classNum: number, subject: string, boardId?: BoardId): Question[] {
+  if (!boardId) return [];
+  return filterQuestionsToActiveChapters(
+    getQuestions({ boardId, classNum, subject }),
+    getChapters(classNum, subject, boardId),
+  );
+}
+
 /** Get a single question only within a validated board/class context. */
 export function getQuestionById(id: string, boardId?: BoardId, classNum?: number): Question | undefined {
   if (!boardId) return undefined;
