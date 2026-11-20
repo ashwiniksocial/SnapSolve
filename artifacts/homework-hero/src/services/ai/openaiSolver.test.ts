@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import type { Subject } from "@/data/subjects";
 import type { AIResponse, TeachingLesson } from "@/data/solutionBank";
+import { QUESTIONS as PHYSICS_CH4_QUESTIONS } from "@/data/questions/class9-physics-ch4";
 import { QUESTIONS } from "@/data/questions/class9-maths-iemh102";
 import { hashQuestionContent, isStoredLessonValid, type PreGeneratedLessonEntry } from "@/data/preGeneratedLessons";
+import TeachingLayout from "@/components/teaching/TeachingLayout";
 import {
   awaitFinalBankLesson,
   clearBankFailureMarker,
@@ -369,6 +373,53 @@ test("safe fallback preserves the frozen answer, question steps, and no generate
   );
   assert.equal(getBankAnswerIntegrityNotice("stream_incomplete"), null);
   assert.equal(getBankAnswerIntegrityNotice("openai_error"), null);
+});
+
+function escapeHtmlForAssertion(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#x27;");
+}
+
+test("Simple Machines saved explanations render every saved step and answer without generation", () => {
+  const questions = PHYSICS_CH4_QUESTIONS.filter((entry) => entry.topicId === "t6");
+  assert.equal(questions.length, 12);
+
+  const originalFetch = globalThis.fetch;
+  const originalReact = Object.getOwnPropertyDescriptor(globalThis, "React");
+  let fetchCalls = 0;
+  Object.defineProperty(globalThis, "React", { configurable: true, value: React });
+  globalThis.fetch = async () => {
+    fetchCalls += 1;
+    throw new Error("Saved-answer rendering must not make a network request");
+  };
+
+  try {
+    for (const bankQuestion of questions) {
+      assert.equal(isValidFrozenBankSolution(bankQuestion), true, `${bankQuestion.id} must be a valid saved bank answer`);
+      const fallbackResponse = createFrozenBankFallback(bankQuestion);
+      assert.equal(fallbackResponse.lesson, undefined, `${bankQuestion.id} must remain distinct from TeachingLesson`);
+      const html = renderToStaticMarkup(
+        React.createElement(TeachingLayout, { solution: fallbackResponse, level: "basic" }),
+      );
+
+      for (const step of bankQuestion.steps) {
+        assert.ok(html.includes(escapeHtmlForAssertion(step.title)), `${bankQuestion.id} is missing step title: ${step.title}`);
+        assert.ok(html.includes(escapeHtmlForAssertion(step.explanation)), `${bankQuestion.id} is missing a saved explanation`);
+        if (step.formula) assert.ok(html.includes(escapeHtmlForAssertion(step.formula)), `${bankQuestion.id} is missing a saved formula`);
+        if (step.result) assert.ok(html.includes(escapeHtmlForAssertion(step.result)), `${bankQuestion.id} is missing a saved result`);
+      }
+      assert.ok(html.includes(escapeHtmlForAssertion(bankQuestion.answer)), `${bankQuestion.id} is missing its canonical final answer`);
+    }
+    assert.equal(fetchCalls, 0, "Saved-answer rendering must not invoke a network or AI request");
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalReact) Object.defineProperty(globalThis, "React", originalReact);
+    else Reflect.deleteProperty(globalThis, "React");
+  }
 });
 
 test("recognized bank failures resolve only to a valid frozen bank solution", () => {

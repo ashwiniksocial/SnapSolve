@@ -12,6 +12,7 @@ import {
   awaitFinalBankLesson,
   callDevLesson,
   clearBankFailureMarker,
+  createFrozenBankFallback,
   getBankCachedLesson,
   isValidFrozenBankSolution,
   logBankLessonTiming,
@@ -118,6 +119,7 @@ export default function Solution() {
   // Practice mode preserves a question ID in the URL so a direct load or
   // immediate route transition can still resolve the frozen bank question.
   const practiceMode = solutionParams.get("practiceMode") === "1";
+  const savedAnswerMode = practiceMode && solutionParams.get("savedAnswer") === "1";
   const practiceQuestionId = solutionParams.get("questionId") ?? session.practiceQuestionId;
 
   // ── In-flight guard ──────────────────────────────────────────────────────────
@@ -141,7 +143,7 @@ export default function Solution() {
     } finally {
       solveInFlight.current = false;
     }
-  }, [session.subject, session.question, session.ocrConfidence, practiceMode, practiceQuestionId]);
+  }, [session.subject, session.question, session.ocrConfidence, practiceMode, savedAnswerMode, practiceQuestionId]);
 
   const runSolverInner = useCallback(async () => {
     setPageState("loading");
@@ -179,6 +181,17 @@ export default function Solution() {
             getChapterDisplayNumber(bankQ.classNum, bankQ.subject, bankQ.chapterId, bankQ.boardId) ?? null,
           );
           setVisiblePracticeSubject(getStudentFacingSubject(bankQ.subject));
+          update({ practiceTopic: bankQ.topicName });
+
+          // Explicit saved-answer view: render the complete bank steps and
+          // canonical answer immediately, without resolving lessons, reading a
+          // lesson cache, or starting the generation stream.
+          if (savedAnswerMode) {
+            setSolution(applyCanonicalBankMetadata(createFrozenBankFallback(bankQ), bankQ));
+            setPageState("done");
+            return;
+          }
+
           const sourceHash = hashQuestionContent(bankQ);
           const bankContext: BankQuestionContext = {
             questionId:  bankQ.id,
@@ -196,8 +209,6 @@ export default function Solution() {
 
           // Lesson viewing alone is not a practice outcome. The explicit
           // self-assessment controls below record genuine, deduplicated practice.
-          update({ practiceTopic: bankQ.topicName });
-
           // ── Persistent derived lesson: instant display, 0 AI calls ──────────
           // GUARANTEED INVARIANT (Prompt #027 P0-A): the pre-generated lookup is
           // awaited to a DEFINITIVE resolution before any fallback is reachable.
@@ -320,7 +331,7 @@ export default function Solution() {
       setSolveError(msg);
       setPageState("error");
     }
-  }, [session.subject, session.question, session.ocrConfidence, practiceMode, practiceQuestionId]);
+  }, [session.subject, session.question, session.ocrConfidence, practiceMode, savedAnswerMode, practiceQuestionId]);
 
   useEffect(() => { runSolver(); }, []);
 
@@ -426,6 +437,18 @@ export default function Solution() {
         {/* Solution content */}
         {pageState === "done" && solution && (
           <div className="space-y-5 fade-up">
+            {savedAnswerMode && (
+              <div
+                role="note"
+                data-testid="status-saved-answer-mode"
+                className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950"
+              >
+                <p className="font-semibold">Saved question-bank explanation · no AI generation</p>
+                <p className="mt-1 text-xs leading-relaxed">
+                  This shows the saved steps and answer, not the full TeachingLesson. The existing AI Lesson action remains available from Practice.
+                </p>
+              </div>
+            )}
             {integrityNotice && (
               <div
                 role="status"

@@ -209,18 +209,36 @@ function QuestionCard({
   q,
   cfg,
   onOpen,
+  onOpenSaved,
   questionNumber,
 }: {
   q: Question;
   cfg: SubjectConfig;
   onOpen: () => void;
+  onOpenSaved: () => void;
   questionNumber: number | undefined;
 }) {
   const metadata = getCanonicalPracticeMetadata(q);
+  const hasSavedExplanation = Boolean(
+    q.id.trim() &&
+    q.question.trim() &&
+    q.answer.trim() &&
+    q.steps.length > 0 &&
+    q.steps.every((step) =>
+      step != null &&
+      [step.title, step.explanation, step.formula, step.result].some(
+        (value) => typeof value === "string" && value.trim().length > 0,
+      ),
+    ),
+  );
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all hover:border-slate-300 hover:shadow-md">
-      <button className="w-full text-left p-4 active:bg-slate-50 transition-colors" onClick={onOpen}>
+      <button
+        data-testid={`button-ai-lesson-${q.id}`}
+        className="w-full text-left p-4 active:bg-slate-50 transition-colors"
+        onClick={onOpen}
+      >
         <div className="flex items-start gap-3">
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-0.5 font-bold"
@@ -249,6 +267,20 @@ function QuestionCard({
           </div>
         </div>
       </button>
+      {hasSavedExplanation && (
+        <div className="border-t border-slate-100 px-4 pb-3 pt-2">
+          <button
+            type="button"
+            data-testid={`button-saved-explanation-${q.id}`}
+            aria-label={`View saved explanation for ${q.id} without AI generation`}
+            className="flex min-h-10 w-full items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-left transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            onClick={onOpenSaved}
+          >
+            <span className="text-xs font-semibold text-slate-700">View saved explanation</span>
+            <span className="text-[10px] font-medium text-slate-500">Saved steps · no AI</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -456,7 +488,7 @@ export default function Practice() {
   // ── Navigation ──────────────────────────────────────────────────────────────
   const [, navigate] = useLocation();
 
-  const handleOpenQuestion = useCallback((q: Question) => {
+  const handleOpenQuestion = useCallback((q: Question, openSavedExplanation = false) => {
     const metadata = getCanonicalPracticeMetadata(q);
     update({
       // Use the question's native domain subject ("Physics", "Chemistry",
@@ -474,7 +506,8 @@ export default function Practice() {
     // Keep the frozen bank ID in the route as well as session storage. This
     // makes a refreshed/new Solution mount deterministic even if React route
     // state has not observed the session update yet.
-    navigate(`/solution?practiceMode=1&questionId=${encodeURIComponent(metadata.questionId)}`);
+    const savedAnswerParam = openSavedExplanation ? "&savedAnswer=1" : "";
+    navigate(`/solution?practiceMode=1&questionId=${encodeURIComponent(metadata.questionId)}${savedAnswerParam}`);
   }, [selectedSubject, update, navigate]);
 
   const handleReopenQuestion = useCallback((questionId: string) => {
@@ -973,6 +1006,7 @@ export default function Practice() {
                     cfg={cfg}
                     questionNumber={getQuestionDisplayNumber(q)}
                     onOpen={() => handleOpenQuestion(q)}
+                    onOpenSaved={() => handleOpenQuestion(q, true)}
                   />
                 ))}
               </div>
