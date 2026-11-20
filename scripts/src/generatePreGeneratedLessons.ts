@@ -14,6 +14,7 @@ import type { Question } from "../../artifacts/homework-hero/src/data/questions/
 import type { TeachingLesson } from "../../artifacts/homework-hero/src/data/solutionBank.ts";
 import { parseLessonResponse } from "../../artifacts/api-server/src/lib/lessonTypes.ts";
 import { PILOT_QUESTION_IDS } from "./preGeneratedLessonPilot.ts";
+import { getCanonicalChapter } from "./canonicalCurriculum.js";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const chunksDirectory = resolve(repoRoot, "artifacts/homework-hero/src/data/generatedLessonChunks");
@@ -83,6 +84,32 @@ type ChunkRecord = {
 
 function chunkKey(question: Pick<Question, "classNum" | "subject" | "chapterId">): string {
   return JSON.stringify([question.classNum, question.subject, question.chapterId]);
+}
+
+function canonicalContextFor(question: Question): {
+  boardId: string;
+  classNum: number;
+  subject: string;
+  canonicalChapterId: string;
+} {
+  const chapter = getCanonicalChapter(question.chapterId);
+  if (
+    !chapter ||
+    chapter.status !== "ACTIVE" ||
+    chapter.bookId === "SOURCE_UNRESOLVED" ||
+    chapter.classId !== question.classNum ||
+    chapter.subjectId !== question.subject ||
+    !["CBSE", "ICSE", "WBBSE"].includes(chapter.boardId)
+  ) {
+    throw new Error(`No matching active canonical context for ${question.id}.`);
+  }
+
+  return {
+    boardId: chapter.boardId,
+    classNum: chapter.classId,
+    subject: chapter.subjectId,
+    canonicalChapterId: chapter.bookId,
+  };
 }
 
 /**
@@ -207,6 +234,7 @@ function normalizeOptionalSections(lesson: TeachingLesson): TeachingLesson {
 }
 
 async function generateOne(question: Question, baseUrl: string): Promise<GenerationResult> {
+  const canonicalContext = canonicalContextFor(question);
   const response = await fetch(`${baseUrl}/api/solveQuestion/stream`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -216,6 +244,7 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
       mode: "basic",
       bankContext: {
         questionId: question.id,
+        ...canonicalContext,
         sourceHash: hashQuestionContent(question),
         answer: question.answer,
         hint: question.hint,
