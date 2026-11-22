@@ -188,6 +188,49 @@ test("answer-last permits a source-supported evaluated calculation in guided rea
   assert.deepEqual(result, { status: "clear" });
 });
 
+test("answer-last permits source-supported calculations inside guided explanation fields", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const context = {
+    canonicalQuestion:
+      "A machine raises a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: [
+      "Mechanical advantage = 180 N ÷ 45 N = 4",
+      "Mechanical advantage = 4 (no unit)",
+    ],
+  };
+
+  const result = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      what: "Substitute the forces in the load-to-effort relationship.",
+      why: "The newtons cancel because both values are forces: mechanical advantage = 180 N / 45 N = 4.",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+
+  assert.deepEqual(result, { status: "clear" });
+});
+
+test("guided explanation rejects unsupported extra calculations and explicit answer claims", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const context = {
+    canonicalQuestion:
+      "A machine raises a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    approvedCalculationText: ["Mechanical advantage = 180 N ÷ 45 N = 4"],
+  };
+
+  for (const why of [
+    "Mechanical advantage = 180 N / 45 N = 4, and 180 N / 45 N = 3.",
+    "The final answer is mechanical advantage = 180 N / 45 N = 4.",
+  ]) {
+    const result = assessTeachingLessonAnswerLast({
+      guidedReasoning: [{ why }],
+      finalAnswer: { answer },
+    }, answer, context);
+    assert.notEqual(result.status, "clear", why);
+  }
+});
+
 test("a supported calculation is not whitelisted in introductory sections", () => {
   const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
   const result = assessTeachingLessonAnswerLast({

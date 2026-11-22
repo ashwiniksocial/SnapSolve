@@ -950,6 +950,40 @@ function approvedCalculationOutputs(context?: AnswerLastContext): Set<string> {
   return outputs;
 }
 
+function containsOnlyApprovedCalculationContent(
+  text: string,
+  approvedCalculations: readonly string[],
+): boolean {
+  let residual = normalizeCalculationText(text);
+  let matchedCalculation = false;
+
+  for (const calculation of approvedCalculations) {
+    const signature = calculationSignature(calculation);
+    if (!signature) continue;
+
+    let index = residual.indexOf(signature);
+    while (index >= 0) {
+      const end = index + signature.length;
+      const before = index > 0 ? residual[index - 1] : "";
+      const after = end < residual.length ? residual[end] : "";
+      const wholeExpression =
+        (!before || !/[a-z0-9]/i.test(before)) &&
+        (!after || !/[a-z0-9]/i.test(after));
+      if (wholeExpression) {
+        residual = `${residual.slice(0, index)}${residual.slice(end)}`;
+        matchedCalculation = true;
+        index = residual.indexOf(signature);
+        continue;
+      }
+      index = residual.indexOf(signature, index + 1);
+    }
+  }
+
+  // Plain explanatory words may surround a supported equation. Any remaining
+  // number or operator signals additional working that must be checked.
+  return matchedCalculation && /^[a-z,;:'"()_-]*=?$/i.test(residual);
+}
+
 function isSupportedGuidedCalculation(
   section: string,
   text: string,
@@ -960,8 +994,10 @@ function isSupportedGuidedCalculation(
     return false;
   }
 
-  const candidateSignature = calculationSignature(text);
   const approvedCalculations = context?.approvedCalculationText ?? [];
+  if (containsOnlyApprovedCalculationContent(text, approvedCalculations)) return true;
+
+  const candidateSignature = calculationSignature(text);
   const normalizedCandidate = normalizeCalculationText(text);
   if (
     approvedCalculations.some(

@@ -93,6 +93,7 @@ Each source file carries a `// @frozen` marker. The registry is at
 ## User preferences
 
 _Populate as you build — explicit user instructions worth remembering across sessions._
+- Use Replit Free mode by default for SnapSolve development, coding, debugging, testing, and routine implementation whenever it is available. Do not change account settings or upgrade plans automatically.
 
 ## Gotchas
 
