@@ -889,6 +889,33 @@ function calculationSignature(value: string): string | null {
   return `${left}=${right}`;
 }
 
+function calculationExpressionParts(value: string): string[] {
+  return normalizeCalculationText(value)
+    .split("=")
+    .map((part) => part.trim())
+    .filter((part) => /\d/.test(part) && /[+*/-]/.test(part));
+}
+
+function isSupportedCalculationAssignment(
+  text: string,
+  approvedCalculations: readonly string[],
+): boolean {
+  const parts = normalizeCalculationText(text).split("=");
+  if (parts.length !== 2) return false;
+  const [label, expression] = parts;
+  if (
+    /\d/.test(label) ||
+    !/^[a-z\s]+$/.test(label) ||
+    !/\d/.test(expression) ||
+    !/[+*/-]/.test(expression)
+  ) {
+    return false;
+  }
+  return approvedCalculations.some((calculation) =>
+    calculationExpressionParts(calculation).includes(expression)
+  );
+}
+
 function guidedReasoningField(section: string): boolean {
   return /^guidedReasoning\[\d+\]\.[\w]+$/.test(section);
 }
@@ -932,12 +959,21 @@ function isSupportedGuidedCalculation(
 
   const candidateSignature = calculationSignature(text);
   const approvedCalculations = context?.approvedCalculationText ?? [];
+  const normalizedCandidate = normalizeCalculationText(text);
+  if (
+    approvedCalculations.some(
+      (calculation) => normalizeCalculationText(calculation) === normalizedCandidate,
+    )
+  ) {
+    return true;
+  }
   if (
     candidateSignature &&
     approvedCalculations.some((calculation) => calculationSignature(calculation) === candidateSignature)
   ) {
     return true;
   }
+  if (isSupportedCalculationAssignment(text, approvedCalculations)) return true;
 
   if (!section.endsWith(".result")) return false;
   const textValues = numericAnswerCandidates(text, true);
