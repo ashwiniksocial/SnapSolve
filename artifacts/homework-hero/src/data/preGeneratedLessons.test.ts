@@ -69,6 +69,28 @@ test("saved Q5 verifies effort, mechanical advantage, direction, and misconcepti
   assert.ok(isCompleteDetailedLesson(response.lesson));
 });
 
+test("newly reviewed lesson assets require a passing versioned quality attestation", () => {
+  const question = QUESTIONS.find((item) => item.id === "c9-phy-ch4-t6-q05");
+  assert.ok(question, "canonical Q5 exists");
+  const entry = chunk.lessons[question.id];
+  assert.ok(entry, "saved Q5 asset exists");
+
+  assert.equal(resolveStoredLessonEntry({
+    ...entry,
+    qualityReviewVersion: 1,
+    qualityReviewPassed: false,
+  }, question), null);
+  assert.equal(resolveStoredLessonEntry({
+    ...entry,
+    qualityReviewPassed: true,
+  }, question), null);
+  assert.ok(resolveStoredLessonEntry({
+    ...entry,
+    qualityReviewVersion: 1,
+    qualityReviewPassed: true,
+  }, question));
+});
+
 test("saved MCQ lesson explains the formula and each distractor", () => {
   const lesson = chunk.lessons["c9-phy-ch4-t6-q01"].lesson;
   assert.match(lesson.guidedReasoning[4].why, /reverses the defined ratio/i);

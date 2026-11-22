@@ -35,6 +35,7 @@ type GenerationEvent = {
   estimatedCostUsd?: number;
   totalLatencyMs?: number;
   firstContentMs?: number;
+  qualityReview?: { version?: number; passed?: boolean; reviewerCalls?: number };
 };
 
 type GenerationResult = {
@@ -47,6 +48,8 @@ type GenerationResult = {
   estimatedCostUsd: number;
   totalLatencyMs: number;
   firstContentMs: number;
+  qualityReviewVersion: 1;
+  qualityReviewPassed: true;
 };
 
 function asBankQuestion(question: ReviewableQuestion): Question {
@@ -304,6 +307,9 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
       // its atomic store write. Reusing this exact in-memory response is a
       // safe resume and does not make another model call.
       if (!event.lesson) throw new Error(`Cached response for ${question.id} has no lesson payload.`);
+      if (event.qualityReview?.version !== 1 || event.qualityReview.passed !== true) {
+        throw new Error(`Cached response for ${question.id} lacks a passing teaching-quality review.`);
+      }
       completed = event;
       servedFromCache = true;
     }
@@ -351,6 +357,9 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
   }
 
   if (!completed?.lesson) throw new Error(`Generation stream ended without a complete lesson for ${question.id}.`);
+  if (completed.qualityReview?.version !== 1 || completed.qualityReview.passed !== true) {
+    throw new Error(`Generation for ${question.id} did not pass the teaching-quality gate.`);
+  }
 
   const parsed = normalizeOptionalSections(parseLessonResponse(completed.lesson) as TeachingLesson);
   // Preserve the frozen bank answer verbatim. Pedagogy is AI-derived; the
@@ -371,6 +380,8 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
     estimatedCostUsd: completed.estimatedCostUsd ?? 0,
     totalLatencyMs: completed.totalLatencyMs ?? 0,
     firstContentMs: completed.firstContentMs ?? -1,
+    qualityReviewVersion: 1,
+    qualityReviewPassed: true,
   };
 }
 
@@ -459,6 +470,8 @@ async function main(): Promise<void> {
       questionId: id,
       sourceHash: hashQuestionContent(question),
       lesson: result.lesson,
+      qualityReviewVersion: result.qualityReviewVersion,
+      qualityReviewPassed: result.qualityReviewPassed,
     };
     if (!isStoredLessonValid(entry, question)) {
       const lesson = result.lesson;

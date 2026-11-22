@@ -52,6 +52,7 @@ import {
   type LessonStreamFailureCategory,
 } from "../lib/lessonStreamExtractor";
 import {
+  buildAnswerLastContext,
   repairTeachingLessonAnswerLeakage,
   assessTeachingLessonAnswerLast,
   compareBankAnswers,
@@ -101,17 +102,7 @@ function answerLastContextFor(
     result?: string;
   }[] = [],
 ): AnswerLastContext {
-  const approvedIntermediates = approvedSteps
-    .slice(0, -1)
-    .flatMap((step) => [step.title, step.explanation, step.formula, step.result])
-    .filter((value): value is string => typeof value === "string");
-  return {
-    canonicalQuestion,
-    intermediateText: approvedIntermediates,
-    approvedCalculationText: approvedSteps
-      .flatMap((step) => [step.formula, step.result])
-      .filter((value): value is string => typeof value === "string"),
-  };
+  return buildAnswerLastContext(canonicalQuestion, approvedSteps);
 }
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
@@ -141,7 +132,13 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
 
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-interface CacheEntry { data: LessonResponse; expiresAt: number; sourceHash?: string; }
+interface CacheEntry {
+  data: LessonResponse;
+  expiresAt: number;
+  sourceHash?: string;
+  qualityReviewVersion?: 1;
+  qualityReviewPassed?: boolean;
+}
 const responseCache = new Map<string, CacheEntry>();
 
 // Normalise before hashing so "Find x?" and "find x" share the same cache entry.
@@ -2221,7 +2218,10 @@ router.post("/solveQuestion/stream", async (req, res) => {
     const cacheLookupStartedAt = Date.now();
     const cacheKey = makeBankCacheKey(bankCtx);
     const entry = responseCache.get(cacheKey);
-    const isCurrentAndSafe = !!entry && isBankLessonAnswerSafe(
+    const isCurrentAndSafe = !!entry &&
+      entry.qualityReviewVersion === 1 &&
+      entry.qualityReviewPassed === true &&
+      isBankLessonAnswerSafe(
       entry.data.finalAnswer?.answer ?? "",
       bankCtx.answer,
       entry.sourceHash,
@@ -2241,7 +2241,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
       res.setHeader("Cache-Control",    "no-cache");
       res.setHeader("X-Accel-Buffering", "no");
       res.flushHeaders();
-      emit({ type: "cached", lesson: { ...entry.data, cached: true } });
+      emit({
+        type: "cached",
+        lesson: { ...entry.data, cached: true },
+        qualityReview: { version: 1, passed: true },
+      });
       res.end();
       return;
     }
@@ -2518,6 +2522,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
 
   // ── 8. Parse + post-process ───────────────────────────────────────────────────
   let finalLesson = generation.outcome.value;
+  let qualityReview: { version: 1; passed: true; reviewerCalls: number } | undefined;
+  let finalEstimatedCostUsd = estimatedCostUsd;
+  let finalPromptTokens = promptTok;
+  let finalCompletionTokens = completionTok;
+  let finalCachedTokens = cachedTok;
 
   // Post-processing guards — Standard mode, non-bank questions only.
   // Bank questions are generated at "basic" (Detailed) mode — all fields intentionally populated.
@@ -2638,6 +2647,56 @@ router.post("/solveQuestion/stream", async (req, res) => {
       res.end();
       return;
     }
+
+    const qualityReviewStartedAt = Date.now();
+    const qualityResult = await runQualityPipeline(
+      finalLesson,
+      apiKey,
+      undefined,
+      {
+        maxReviewCycles: 1,
+        allowImprovements: false,
+        requireReviewerPass: true,
+      },
+    );
+    req.log.info({
+      stage: "bank-teaching-quality-review",
+      outcome: qualityResult.passed
+        ? "passed"
+        : qualityResult.reviewFailed
+          ? "review_failed"
+          : "rejected",
+      reviewerCalls: qualityResult.reviewerCalls,
+      improverCalls: qualityResult.improverCalls,
+      elapsedMs: Date.now() - qualityReviewStartedAt,
+      estimatedCostUsd: qualityResult.usageTotal.estimatedCostUsd,
+    }, "[BANK:QUALITY]");
+    if (!qualityResult.passed || qualityResult.reviewFailed) {
+      emit({
+        type: "error",
+        code: "bank_teaching_quality_review_failed",
+        failureCategory: "validation_failure",
+        qualityReview: {
+          version: 1,
+          passed: false,
+          reviewFailed: qualityResult.reviewFailed,
+          reviewerCalls: qualityResult.reviewerCalls,
+        },
+        ...streamTelemetry,
+      });
+      res.end();
+      return;
+    }
+
+    qualityReview = {
+      version: 1,
+      passed: true,
+      reviewerCalls: qualityResult.reviewerCalls,
+    };
+    finalEstimatedCostUsd += qualityResult.usageTotal.estimatedCostUsd;
+    finalPromptTokens += qualityResult.usageTotal.promptTokens;
+    finalCompletionTokens += qualityResult.usageTotal.completionTokens;
+    finalCachedTokens += qualityResult.usageTotal.cachedTokens;
   }
 
   // ── 10. Cache + telemetry ─────────────────────────────────────────────────────
@@ -2649,6 +2708,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
         data:      finalLesson,
         expiresAt: Date.now() + CACHE_TTL_MS,
         sourceHash: bankCtx.sourceHash,
+        qualityReviewVersion: qualityReview?.version,
+        qualityReviewPassed: qualityReview?.passed,
       });
     }
   } else if (!ctx) {
@@ -2670,10 +2731,10 @@ router.post("/solveQuestion/stream", async (req, res) => {
     attemptCount:     generation.attempts,
     maxOutputTokens:  maxOutputTokensUsed,
     finishReason,
-    promptTokens:     promptTok,
-    completionTokens: completionTok,
-    cachedTokens:     cachedTok,
-    estimatedCostUsd,
+    promptTokens:     finalPromptTokens,
+    completionTokens: finalCompletionTokens,
+    cachedTokens:     finalCachedTokens,
+    estimatedCostUsd: finalEstimatedCostUsd,
   }, "[STREAM] telemetry");
 
   // ── 11. Emit done ─────────────────────────────────────────────────────────────
@@ -2682,13 +2743,14 @@ router.post("/solveQuestion/stream", async (req, res) => {
     lesson:          finalLesson,
     firstContentMs,
     totalLatencyMs:  totalMs,
-    promptTokens:    promptTok,
-    completionTokens: completionTok,
-    cachedTokens:    cachedTok,
+    promptTokens:    finalPromptTokens,
+    completionTokens: finalCompletionTokens,
+    cachedTokens:    finalCachedTokens,
     attemptCount:    generation.attempts,
     maxOutputTokens: maxOutputTokensUsed,
     finishReason,
-    estimatedCostUsd,
+    estimatedCostUsd: finalEstimatedCostUsd,
+    ...(qualityReview ? { qualityReview } : {}),
   });
   res.end();
 });

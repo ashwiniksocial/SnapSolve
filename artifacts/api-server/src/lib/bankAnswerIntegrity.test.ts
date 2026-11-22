@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   assessTeachingLessonAnswerLast,
+  buildAnswerLastContext,
   classifyBankAnswerFormat,
   compareBankAnswers,
   isBankLessonAnswerSafe,
@@ -266,6 +267,112 @@ test("answer-last permits source-supported calculations inside guided explanatio
   }, answer, context);
 
   assert.deepEqual(result, { status: "clear" });
+});
+
+test("the shared evidence builder supports source explanation equations and given assignments", () => {
+  const context = buildAnswerLastContext(
+    "A stone is dropped for 4 s; g = 10 m/s².",
+    [
+      {
+        title: "Known values",
+        explanation: "u = 0 (dropped from rest), t = 4 s, and g = 10 m/s².",
+      },
+      {
+        title: "Decimal transformation",
+        explanation: "100x = 23.232323… = 23 + 0.232323… = 23 + x.",
+      },
+      {
+        title: "Distance",
+        explanation: "Distance = 60 km + 80 km = 140 km (sum of all path lengths).",
+      },
+    ],
+  );
+  const answer = "Height = 80 m; final velocity = 40 m/s.";
+
+  const givenValues = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      what: "Known values: u = 0 (dropped from rest), t = 4 s, and g = 10 m/s².",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.deepEqual(givenValues, { status: "clear" });
+
+  const repeatingDecimal = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "100x = 23 + 0.232323…" }],
+    finalAnswer: { answer: "23/99" },
+  }, "23/99", context);
+  assert.deepEqual(repeatingDecimal, { status: "clear" });
+
+  const wrongGiven = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ what: "Known values: u = 0, t = 4 s, and g = 11 m/s²." }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(wrongGiven.status, "review");
+});
+
+test("supported intermediate math never skips an independent answer-disclosure check", () => {
+  const context = buildAnswerLastContext("Convert the recurring decimal to a fraction.", [
+    {
+      title: "Shift the decimal",
+      explanation: "100x = 23.232323… = 23 + 0.232323… = 23 + x.",
+    },
+  ]);
+  const answer = "23/99";
+  const result = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      math: "100x = 23 + 0.232323…",
+      why: "The answer is 23/99.",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+
+  assert.equal(result.status, "leak");
+  assert.equal(
+    "section" in result ? result.section : undefined,
+    "guidedReasoning[1].why",
+  );
+});
+
+test("equation-equivalent transformations pass only when both sides match approved source math", () => {
+  const context = buildAnswerLastContext("Convert the recurring decimal to a fraction.", [
+    {
+      title: "Isolate x",
+      explanation: "100x - x = 99x; 99x = 23; x = 23/99.",
+    },
+  ]);
+  const answer = "x = 23/99";
+
+  const equivalent = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "100x - x = 23" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.deepEqual(equivalent, { status: "clear" });
+
+  const incorrect = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "100x + x = 23" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(incorrect.status, "review");
+});
+
+test("a supporting definition within a longer answer is not mistaken for a standalone answer", () => {
+  const answer =
+    "Data and information are related but distinct. Data is raw facts or figures that have not yet been processed. Information is meaningful output after processing data, such as a class average used for decisions.";
+  const explanatoryLesson = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      why: "Data refers to raw facts or figures that have not yet been processed. That alone has no useful meaning; processing and comparing the values turns them into information.",
+    }],
+    finalAnswer: { answer },
+  });
+  assert.deepEqual(explanatoryLesson, { status: "clear" });
+
+  const standaloneAnswer = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      why: "The answer is: data is raw facts or figures that have not yet been processed.",
+    }],
+    finalAnswer: { answer },
+  });
+  assert.equal(standaloneAnswer.status, "leak");
 });
 
 test("guided explanation rejects unsupported extra calculations and explicit answer claims", () => {

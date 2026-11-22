@@ -22,6 +22,13 @@ export interface AnswerLastContext {
   approvedCalculationText?: readonly string[];
 }
 
+export interface AnswerLastEvidenceStep {
+  title?: string;
+  explanation?: string;
+  formula?: string;
+  result?: string;
+}
+
 export interface AnswerLastRepairResult {
   status: "clear" | "repaired" | "rejected";
   lesson: unknown;
@@ -873,6 +880,69 @@ function normalizeCalculationText(value: string): string {
   return normalizeAnswer(withoutLatexWrappers).replace(/\s+/g, "");
 }
 
+function trimCalculationSide(value: string, side: "left" | "right"): string {
+  let result = value.trim();
+  if (side === "left") {
+    result = result.slice(result.lastIndexOf(",") + 1).trim();
+    if (!/[+\-*/×÷]/.test(result)) {
+      result = result.split(/\s+/).at(-1) ?? result;
+    }
+  } else {
+    result = result.replace(/\s+\([^)]*[a-z][^)]*\)\s*$/i, "");
+    result = result.replace(/[.!?;,:]+$/, "").trim();
+  }
+  return result;
+}
+
+function approvedEquationLinks(value: string): string[] {
+  const clauses = value
+    .split(/[\n;]+|(?<=[!?])\s+|(?<=\.)\s+(?=[A-Z])/u)
+    .flatMap((sentence) => sentence.split(/,\s*(?=[a-z]{1,8}\s*=)/i));
+  const links: string[] = [];
+
+  for (const clause of clauses) {
+    const parts = clause.split("=");
+    if (parts.length < 2) continue;
+    const operands = parts.map((part, index) =>
+      trimCalculationSide(part, index === parts.length - 1 ? "right" : "left")
+    );
+    for (let index = 0; index < operands.length - 1; index += 1) {
+      const left = normalizeCalculationText(operands[index]);
+      const right = normalizeCalculationText(operands[index + 1]);
+      if (left && right && left.length <= 120 && right.length <= 120) {
+        links.push(`${left}=${right}`);
+      }
+    }
+  }
+  return links;
+}
+
+/**
+ * Builds the one canonical evidence context used by generation, persistence,
+ * retrieval, and the pilot validator. Explicit equations in approved
+ * explanations are retained as equality links, not treated as arbitrary prose.
+ */
+export function buildAnswerLastContext(
+  canonicalQuestion: string,
+  steps: readonly AnswerLastEvidenceStep[],
+): AnswerLastContext {
+  const intermediateText = steps.slice(0, -1).flatMap((step) =>
+    [step.title, step.explanation, step.formula, step.result]
+      .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+  );
+  const sourceText = steps
+    .flatMap((step) => [step.title, step.explanation, step.formula, step.result])
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+  const approvedCalculationText = [
+    ...steps.flatMap((step) => [step.formula, step.result]),
+    ...sourceText.flatMap(approvedEquationLinks),
+  ]
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+    .filter((value, index, values) => values.indexOf(value) === index);
+
+  return { canonicalQuestion, intermediateText, approvedCalculationText };
+}
+
 function calculationSignature(value: string): string | null {
   const normalized = normalizeCalculationText(value);
   const equalsIndex = normalized.lastIndexOf("=");
@@ -889,6 +959,83 @@ function calculationSignature(value: string): string | null {
     return null;
   }
   return `${left}=${right}`;
+}
+
+function approvedEquationConnected(
+  candidateText: string,
+  approvedCalculations: readonly string[],
+): boolean {
+  const candidateParts = normalizeCalculationText(candidateText).split("=");
+  if (candidateParts.length < 2) return false;
+  const candidateLeft = candidateParts.at(-2)?.trim() ?? "";
+  const candidateRight = candidateParts.at(-1)?.trim() ?? "";
+  if (!candidateLeft || !candidateRight) return false;
+
+  const graph = new Map<string, Set<string>>();
+  const connect = (left: string, right: string): void => {
+    const leftEdges = graph.get(left) ?? new Set<string>();
+    const rightEdges = graph.get(right) ?? new Set<string>();
+    leftEdges.add(right);
+    rightEdges.add(left);
+    graph.set(left, leftEdges);
+    graph.set(right, rightEdges);
+  };
+
+  for (const calculation of approvedCalculations) {
+    const parts = normalizeCalculationText(calculation).split("=");
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const left = parts[index].trim();
+      const right = parts[index + 1].trim();
+      if (left && right) connect(left, right);
+    }
+  }
+
+  const pending = [candidateLeft];
+  const visited = new Set<string>();
+  while (pending.length > 0) {
+    const current = pending.shift()!;
+    if (current === candidateRight) return true;
+    if (visited.has(current)) continue;
+    visited.add(current);
+    pending.push(...(graph.get(current) ?? []));
+  }
+  return false;
+}
+
+function allCandidateEquationsApproved(
+  text: string,
+  approvedCalculations: readonly string[],
+): boolean {
+  const links = approvedEquationLinks(text);
+  return links.length > 0 &&
+    links.every((link) =>
+      approvedEquationConnected(link, approvedCalculations) ||
+      isSupportedCalculationAssignment(link, approvedCalculations) ||
+      isEquivalentApprovedEquation(link, approvedCalculations)
+    );
+}
+
+/**
+ * Accepts a transformed equation only when both sides are independently
+ * equivalent to the corresponding sides of an approved source equation. The
+ * existing answer comparator supplies bounded exact/polynomial equivalence;
+ * unsupported symbolic or radical transformations remain under review.
+ */
+function isEquivalentApprovedEquation(
+  candidate: string,
+  approvedCalculations: readonly string[],
+): boolean {
+  const candidateParts = normalizeCalculationText(candidate).split("=");
+  if (candidateParts.length !== 2) return false;
+  const [candidateLeft, candidateRight] = candidateParts;
+
+  return approvedCalculations.some((approved) => {
+    const approvedParts = normalizeCalculationText(approved).split("=");
+    if (approvedParts.length !== 2) return false;
+    const [approvedLeft, approvedRight] = approvedParts;
+    return compareBankAnswers(candidateLeft, approvedLeft).status === "match" &&
+      compareBankAnswers(candidateRight, approvedRight).status === "match";
+  });
 }
 
 function calculationExpressionParts(value: string): string[] {
@@ -972,16 +1119,35 @@ function guidedReasoningField(section: string): boolean {
 function isExplicitAnswerAnnouncement(text: string, answer: string): boolean {
   const normalized = normalizeAnswerLastText(text);
   if (
-    /\b(?:final\s+(?:(?:numeric(?:al)?)\s+)?(?:answer|result|value)|correct\s+answer|answer)\b[^.!?;]{0,80}(?:\bis\b|\bequals?\b|:|=)/i.test(normalized) ||
-    /\b(?:the\s+)?(?:result|value)\s+(?:is|equals?|:|=)\b/i.test(normalized) ||
+    /(?:^|[.!?;]\s*|\bthe\s+|\bfinal\s+)(?:answer|result|value)\s*(?:(?:is|equals?)\s*:?\s*|[:=])/i.test(normalized) ||
+    /\b(?:the\s+)?correct\s+answer\s*(?:(?:is|equals?)\s*:?\s*|[:=])/i.test(normalized) ||
     /\b(?:correct|right)\s+(?:option|choice)\b/i.test(normalized) ||
     /\b(?:option|choice)\s+[a-d]\b[^.!?;]{0,32}\b(?:is\s+)?(?:correct|right)\b/i.test(normalized)
   ) {
     return true;
   }
 
-  if (!isChoiceAnswer(answer)) return false;
-  return /\b(?:option|choice)\s*[\[(]?[a-d][)\]]?\b/i.test(normalized);
+  const choice = parseChoice(normalizeAnswer(answer));
+  if (!choice) return false;
+  return new RegExp(
+    `\\b(?:option|choice)\\s*[\\[(]?${choice.letter}[)\\]]?\\b`,
+    "i",
+  ).test(normalized);
+}
+
+function isEmbeddedChoiceBodyExplanation(
+  text: string,
+  answer: string,
+  phrase: string,
+): boolean {
+  const choice = parseChoice(normalizeAnswer(answer));
+  if (!choice) return false;
+  const choiceBody = normalizeAnswerLastText(choice.body);
+  if (!choiceBody || choiceBody !== normalizeAnswerLastText(phrase)) return false;
+  return text.split(/[.!?;\n]+/).some((sentence) => {
+    const normalizedSentence = normalizeAnswerLastText(sentence);
+    return normalizedSentence !== choiceBody && containsWholePhrase(normalizedSentence, choiceBody);
+  });
 }
 
 function approvedCalculationOutputs(context?: AnswerLastContext): Set<string> {
@@ -1059,6 +1225,8 @@ function isSupportedGuidedCalculation(
   ) {
     return true;
   }
+  if (approvedEquationConnected(text, approvedCalculations)) return true;
+  if (allCandidateEquationsApproved(text, approvedCalculations)) return true;
   if (isSupportedCalculationAssignment(text, approvedCalculations)) return true;
 
   if (!section.endsWith(".result")) return false;
@@ -1300,6 +1468,14 @@ export function assessTeachingLessonAnswerLast(
 
   const sections = precedingAnswerSections(lesson);
   const phrases = answerPhraseCandidates(answer);
+  const canonicalAnswerCalculationSignature = calculationSignature(answer);
+  const canonicalAnswerIsApprovedCalculation = Boolean(
+    canonicalAnswerCalculationSignature &&
+    (context?.approvedCalculationText ?? []).some(
+      (calculation) =>
+        calculationSignature(calculation) === canonicalAnswerCalculationSignature,
+    ),
+  );
   const quantities = numericAnswerCandidates(answer);
   const contextTexts = answerLastContextTexts(context);
   let review: AnswerLastAssessment | null = null;
@@ -1308,11 +1484,26 @@ export function assessTeachingLessonAnswerLast(
     const normalizedText = normalizeAnswerLastText(item.text);
     if (!normalizedText) continue;
 
-    if (isSupportedGuidedCalculation(item.section, item.text, answer, context)) {
-      continue;
+    const supportedGuidedCalculation = isSupportedGuidedCalculation(
+      item.section,
+      item.text,
+      answer,
+      context,
+    );
+    if (
+      guidedReasoningField(item.section) &&
+      isExplicitAnswerAnnouncement(item.text, answer)
+    ) {
+      return {
+        status: "leak",
+        section: item.section,
+        disclosure: canonicalAnswer ?? answer,
+        reason: `An explicit answer announcement appears before finalAnswer in ${item.section}.`,
+        offendingText: item.text,
+      };
     }
 
-    const requestedClaim = guidedReasoningField(item.section)
+    const requestedClaim = !supportedGuidedCalculation && guidedReasoningField(item.section)
       ? requestedTargetClaim(item.text, context?.canonicalQuestion)
       : null;
     if (requestedClaim) {
@@ -1344,6 +1535,7 @@ export function assessTeachingLessonAnswerLast(
 
     const hasApprovedCalculationContext = Boolean(context?.approvedCalculationText?.length);
     const isUnverifiedGuidedCalculation =
+      !supportedGuidedCalculation &&
       hasApprovedCalculationContext &&
       guidedReasoningField(item.section) &&
       (
@@ -1364,6 +1556,7 @@ export function assessTeachingLessonAnswerLast(
     }
 
     const isUnsupportedGuidedResult =
+      !supportedGuidedCalculation &&
       hasApprovedCalculationContext &&
       guidedReasoningField(item.section) &&
       item.section.endsWith(".result") &&
@@ -1381,6 +1574,14 @@ export function assessTeachingLessonAnswerLast(
     }
 
     for (const phrase of phrases) {
+      const phraseMatchesApprovedCalculation =
+        supportedGuidedCalculation &&
+        canonicalAnswerIsApprovedCalculation &&
+        normalizeAnswerLastText(phrase) === normalizeAnswerLastText(answer);
+      if (isEmbeddedChoiceBodyExplanation(item.text, answer, phrase)) continue;
+      if (phraseMatchesApprovedCalculation) {
+        continue;
+      }
       if (phrase.length < 3) {
         if (
           numericAnswerCandidates(phrase).length === 0 &&
@@ -1427,10 +1628,12 @@ export function assessTeachingLessonAnswerLast(
       const tokens = [...new Set(phraseTokens(phrase))];
       if (tokens.length < 2) continue;
       const sentences = item.text.split(/[.!?;\n]+/);
+      const fullAnswerTokenCount = new Set(phraseTokens(answer)).size;
+      const phraseShareOfAnswer = tokens.length / Math.max(1, fullAnswerTokenCount);
       for (const sentence of sentences) {
         const sentenceTokens = new Set(phraseTokens(sentence));
         const overlap = tokens.filter((token) => sentenceTokens.has(token)).length / tokens.length;
-        if (overlap >= 0.8) {
+        if (overlap >= 0.8 && phraseShareOfAnswer >= 0.5) {
           review ??= {
             status: "review",
             section: item.section,
@@ -1441,6 +1644,8 @@ export function assessTeachingLessonAnswerLast(
         }
       }
     }
+
+    if (supportedGuidedCalculation) continue;
 
     for (const quantity of quantities) {
       if (!quantityMatches(item.text, quantity)) continue;

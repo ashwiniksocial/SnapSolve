@@ -13,6 +13,7 @@ import type { Question } from "../../artifacts/homework-hero/src/data/questions/
 import { PILOT_QUESTION_IDS, PILOT_QUESTION_COUNT } from "./preGeneratedLessonPilot.ts";
 import {
   assessTeachingLessonAnswerLast,
+  buildAnswerLastContext,
   compareBankAnswers,
 } from "../../lib/api-zod/src/bankAnswerIntegrity.ts";
 
@@ -134,23 +135,11 @@ async function main(): Promise<void> {
     }
     const structural = isCompleteDetailedLesson(entry.lesson);
     const answerComparison = compareBankAnswers(entry.lesson.finalAnswer?.answer ?? "", question.answer);
-    const intermediateText = [
-      ...question.steps.slice(0, -1).flatMap((step) => [
-        step.title,
-        step.explanation,
-        step.formula,
-        step.result,
-      ]),
-    ].filter((value): value is string => typeof value === "string");
-    const approvedCalculationText = question.steps.flatMap((step) => [
-      step.formula,
-      step.result,
-    ]).filter((value): value is string => typeof value === "string");
-    const answerLast = assessTeachingLessonAnswerLast(entry.lesson, question.answer, {
-      canonicalQuestion: question.question,
-      intermediateText,
-      approvedCalculationText,
-    });
+    const answerLast = assessTeachingLessonAnswerLast(
+      entry.lesson,
+      question.answer,
+      buildAnswerLastContext(question.question, question.steps),
+    );
     const storedValid = isStoredLessonValid(entry, question);
     lessonChecks.push({
       questionId: id,

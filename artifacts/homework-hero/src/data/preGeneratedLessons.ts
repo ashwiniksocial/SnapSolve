@@ -3,6 +3,7 @@
 import type { AIResponse, TeachingLesson } from "./solutionBank";
 import {
   assessTeachingLessonAnswerLast,
+  buildAnswerLastContext,
   compareBankAnswers,
 } from "@workspace/api-zod/bank-answer-integrity";
 export { compareBankAnswers } from "@workspace/api-zod/bank-answer-integrity";
@@ -18,6 +19,8 @@ export interface PreGeneratedLessonEntry {
   questionId: string;
   sourceHash: string;
   lesson: TeachingLesson;
+  qualityReviewVersion?: 1;
+  qualityReviewPassed?: boolean;
 }
 
 export interface PreGeneratedLessonStore {
@@ -300,27 +303,18 @@ export function isStoredLessonValid(
   entry: PreGeneratedLessonEntry | undefined,
   question: Question,
 ): entry is PreGeneratedLessonEntry {
-  const intermediateText = [
-    ...question.steps.slice(0, -1).flatMap((step) => [
-      step.title,
-      step.explanation,
-      step.formula,
-      step.result,
-    ]),
-  ].filter((value): value is string => typeof value === "string");
   return !!entry &&
     entry.questionId === question.id &&
     entry.sourceHash === hashQuestionContent(question) &&
+    ((entry.qualityReviewVersion === undefined && entry.qualityReviewPassed === undefined) ||
+      (entry.qualityReviewVersion === 1 && entry.qualityReviewPassed === true)) &&
     compareBankAnswers(entry.lesson.finalAnswer.answer, question.answer).status === "match" &&
     isCompleteDetailedLesson(entry.lesson) &&
-    assessTeachingLessonAnswerLast(entry.lesson, question.answer, {
-      canonicalQuestion: question.question,
-      intermediateText,
-      approvedCalculationText: question.steps.flatMap((step) => [
-        step.formula,
-        step.result,
-      ]).filter((value): value is string => typeof value === "string"),
-    }).status === "clear";
+    assessTeachingLessonAnswerLast(
+      entry.lesson,
+      question.answer,
+      buildAnswerLastContext(question.question, question.steps),
+    ).status === "clear";
 }
 
 /**
