@@ -79,7 +79,12 @@ IMPROVEMENT RULES — Follow every rule without exception
 □ ANSWER every student confusion proactively in the appropriate section.
 □ Define every term, symbol, and phrase in the visible questionTranslation or guidedReasoning where it first appears.
 □ guidedReasoning — add explicit WHY for every step. Show every algebra and arithmetic line.
+□ For numerical reasoning, keep units visible through substitution and calculation; explain unit cancellation and what the result means.
 □ Address student confusions directly in guidedReasoning and commonMistakes.
+□ Give the student a short reusable method for solving a similar problem independently.
+□ Use only accurate, relevant analogies. Do not imply an unspecified device or mechanism is part of the question.
+□ State assumptions such as ideal or frictionless before applying them, and distinguish ideal results from real-world friction or losses.
+□ For MCQs, explain why distractors fail without announcing the correct option before finalAnswer.
 □ simplerExample — use even simpler numbers. Show every single step.
 □ practiceQuestion — hints must guide WITHOUT solving. Three separate ideas, each one step closer.
 □ Read the result as a student scoring 20/100. If they would be confused anywhere — fix it.

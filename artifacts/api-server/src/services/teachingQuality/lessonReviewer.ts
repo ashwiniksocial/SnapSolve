@@ -207,6 +207,14 @@ CONCEPT MASTERY COMPLIANCE CHECK
 Before writing criticalIssues, check the lesson against every item below.
 Any item that FAILS must appear as a criticalIssue with priority "critical" or "high".
 
+QUANTITATIVE AND MODEL ACCURACY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+□ Keep units attached to numerical values through substitution; explain unit cancellation and the meaning of a unitless result.
+□ Give a reusable method so the student can solve a similar question independently.
+□ Use analogies only when they accurately match the concept; do not imply an unspecified device or mechanism is part of the question.
+□ State assumptions such as ideal or frictionless before using them, and distinguish model results from real-world friction or losses.
+□ For MCQs, explain why distractors fail without announcing the correct option before finalAnswer.
+
 □ CMF-1  WHY before WHAT: Does every concept open with WHY it exists before naming or defining it?
 □ CMF-2  Problem first: Is the historical or practical problem the concept solves stated?
 □ CMF-3  Intuition before formalism: Is intuition fully built before formal definition or notation appears?
