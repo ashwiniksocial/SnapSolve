@@ -14,8 +14,8 @@ const chunk = JSON.parse(
 
 test("saved Q1-Q3 lessons resolve from the chapter asset without invoking a model", () => {
   for (const [id, expectedSteps] of [
-    ["c9-phy-ch4-t6-q01", 7],
-    ["c9-phy-ch4-t6-q02", 4],
+    ["c9-phy-ch4-t6-q01", 6],
+    ["c9-phy-ch4-t6-q02", 3],
     ["c9-phy-ch4-t6-q03", 4],
   ] as const) {
     const question = QUESTIONS.find((item) => item.id === id);
@@ -34,9 +34,9 @@ test("saved Q1-Q3 lessons resolve from the chapter asset without invoking a mode
 
 test("saved MCQ lesson explains the formula and each distractor", () => {
   const lesson = chunk.lessons["c9-phy-ch4-t6-q01"].lesson;
-  assert.match(lesson.guidedReasoning[4].why, /inverse value/i);
+  assert.match(lesson.guidedReasoning[4].why, /reverses the defined ratio/i);
   assert.match(lesson.guidedReasoning[5].why, /N²/);
-  assert.match(lesson.guidedReasoning[6].why, /force difference/i);
+  assert.match(lesson.guidedReasoning[5].why, /force difference/i);
   for (const choice of ["(a)", "(b)", "(c)", "(d)"]) {
     assert.ok(lesson.finalAnswer.whyCorrect.includes(choice));
   }
@@ -46,8 +46,9 @@ test("Q2 teaches the general ratio without a machine-specific analogy", () => {
   const lesson = chunk.lessons["c9-phy-ch4-t6-q02"].lesson;
   const intuition = Object.values(lesson.intuition).join(" ");
   assert.doesNotMatch(intuition, /\b(lever|seesaw|ramp|pulley|wheelbarrow)\b/i);
-  assert.match(lesson.guidedReasoning[3].math, /N ÷ N/);
-  assert.match(lesson.guidedReasoning[3].why, /similar problem/i);
+  assert.match(lesson.guidedReasoning[1].math, /180 N ÷ 45 N = 4/);
+  assert.match(lesson.guidedReasoning[2].why, /units cancel/i);
+  assert.match(lesson.guidedReasoning[2].why, /(?:similar|another) problem/i);
 });
 
 test("Q3 distinguishes ideal work balance from friction losses", () => {
