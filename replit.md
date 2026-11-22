@@ -93,7 +93,8 @@ Each source file carries a `// @frozen` marker. The registry is at
 ## User preferences
 
 _Populate as you build — explicit user instructions worth remembering across sessions._
-- Use Replit Free mode by default for SnapSolve development, coding, debugging, testing, and routine implementation whenever it is available. Do not change account settings or upgrade plans automatically.
+- SnapSolve Founder has permanently selected Replit Free mode. The agent must not voluntarily recommend Power or Max, request an upgrade, or interrupt development for mode selection. Continue in Free mode whenever supported, including for complex or long-running tasks. This preference applies to every future SnapSolve task unless the Founder explicitly changes it.
+- For complex tasks, divide the work into smaller executable steps rather than recommending a paid mode or stopping because a higher tier might be faster.
 
 ## Gotchas
 
