@@ -11,8 +11,10 @@ export interface BankAnswerFormatAssessment {
 
 export type AnswerLastAssessment =
   | { status: "clear" }
-  | { status: "leak"; section: string; disclosure: string; reason: string }
-  | { status: "review"; section: string; disclosure: string; reason: string };
+  // offendingText is transient diagnostic context. Callers must not persist or
+  // include it in request logs or student-facing error responses.
+  | { status: "leak"; section: string; disclosure: string; reason: string; offendingText?: string }
+  | { status: "review"; section: string; disclosure: string; reason: string; offendingText?: string };
 
 export interface AnswerLastContext {
   canonicalQuestion?: string;
@@ -923,7 +925,8 @@ function guidedReasoningField(section: string): boolean {
 function isExplicitAnswerAnnouncement(text: string, answer: string): boolean {
   const normalized = normalizeAnswerLastText(text);
   if (
-    /\b(?:final\s+answer|correct\s+answer|answer)\b[^.!?;]{0,80}\b(?:is|equals?|:|=)\b/i.test(normalized) ||
+    /\b(?:final\s+(?:(?:numeric(?:al)?)\s+)?(?:answer|result|value)|correct\s+answer|answer)\b[^.!?;]{0,80}(?:\bis\b|\bequals?\b|:|=)/i.test(normalized) ||
+    /\b(?:the\s+)?(?:result|value)\s+(?:is|equals?|:|=)\b/i.test(normalized) ||
     /\b(?:correct|right)\s+(?:option|choice)\b/i.test(normalized) ||
     /\b(?:option|choice)\s+[a-d]\b[^.!?;]{0,32}\b(?:is\s+)?(?:correct|right)\b/i.test(normalized)
   ) {
@@ -1026,6 +1029,19 @@ function contextContainsQuantity(
       (match) => match.normalizedValue === quantity.normalizedValue,
     ),
   );
+}
+
+function isFaithfulWordToMathGiven(
+  section: string,
+  text: string,
+  quantity: NumericAnswerCandidate,
+  answer: string,
+  contextTexts: readonly string[],
+): boolean {
+  return section === "questionTranslation.wordToMath" &&
+    contextContainsQuantity(quantity, contextTexts) &&
+    !isExplicitAnswerAnnouncement(text, answer) &&
+    compareBankAnswers(quantity.display, answer).status !== "match";
 }
 
 function sameCanonicalAnswerOrDisclosure(
@@ -1152,6 +1168,7 @@ export function assessTeachingLessonAnswerLast(
         section: item.section,
         disclosure: item.text.slice(0, 120),
         reason: `A guided calculation in ${item.section} is not supported by the approved source calculations.`,
+        offendingText: item.text,
       };
     }
 
@@ -1168,6 +1185,7 @@ export function assessTeachingLessonAnswerLast(
         section: item.section,
         disclosure: item.text.slice(0, 120),
         reason: `A guided result in ${item.section} is not established by an approved source calculation.`,
+        offendingText: item.text,
       };
     }
 
@@ -1183,6 +1201,7 @@ export function assessTeachingLessonAnswerLast(
             section: item.section,
             disclosure: phrase,
             reason: `A short answer term appears before finalAnswer in ${item.section}; explicit answer wording requires deterministic correction or review.`,
+            offendingText: item.text,
           };
         }
         continue;
@@ -1201,6 +1220,7 @@ export function assessTeachingLessonAnswerLast(
             section: item.section,
             disclosure: phrase,
             reason: `Answer-equivalent wording appears before finalAnswer in ${item.section}.`,
+            offendingText: item.text,
           };
         }
         review ??= {
@@ -1208,6 +1228,7 @@ export function assessTeachingLessonAnswerLast(
           section: item.section,
           disclosure: phrase,
           reason: `A short answer term appears before finalAnswer in ${item.section}; context needs review.`,
+          offendingText: item.text,
         };
         continue;
       }
@@ -1224,6 +1245,7 @@ export function assessTeachingLessonAnswerLast(
             section: item.section,
             disclosure: phrase,
             reason: `Wording closely overlaps the final answer before finalAnswer in ${item.section}; review required.`,
+            offendingText: item.text,
           };
         }
       }
@@ -1232,8 +1254,9 @@ export function assessTeachingLessonAnswerLast(
     for (const quantity of quantities) {
       if (!quantityMatches(item.text, quantity)) continue;
       if (
-        contextContainsQuantity(quantity, contextTexts) &&
-        !hasExplicitAnswerCue(item.text, quantity.display)
+        (contextContainsQuantity(quantity, contextTexts) &&
+          !hasExplicitAnswerCue(item.text, quantity.display)) ||
+        isFaithfulWordToMathGiven(item.section, item.text, quantity, answer, contextTexts)
       ) {
         continue;
       }
@@ -1244,6 +1267,7 @@ export function assessTeachingLessonAnswerLast(
           section: item.section,
           disclosure: quantity.display,
           reason: `A possible final numerical result appears before finalAnswer in ${item.section}; it may be an intermediate value.`,
+          offendingText: item.text,
         };
       } else {
         return {
@@ -1251,6 +1275,7 @@ export function assessTeachingLessonAnswerLast(
           section: item.section,
           disclosure: quantity.display,
           reason: `Final numerical result appears before finalAnswer in ${item.section}.`,
+          offendingText: item.text,
         };
       }
     }
