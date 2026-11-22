@@ -6,6 +6,30 @@
 
 ---
 
+## Permanent development checkpoint
+
+### PPC-CTO-01 — System-wide root-cause analysis and permanent prevention
+
+Before proposing or executing any development change:
+
+1. Evaluate the problem against SnapSolve's full architecture and educational mission, not only the affected question, chapter, or component.
+2. Trace the cause across relevant stages: official source, canonical Q&A, generation, academic validation, teaching quality, persistence, retrieval, performance, and cost.
+3. Identify other existing and future components that may share the failure mechanism.
+4. Prefer the smallest permanent shared correction over repeated local patches.
+5. Verify that the correction works across supported boards, classes, subjects, and question types without hardcoded exceptions.
+6. Add focused regression coverage for the cause.
+7. Preserve existing architecture; avoid duplicate systems, unrelated features, unnecessary governance, and excessive expenditure.
+8. Protect these outcomes:
+   - Official-curriculum-valid, academically correct Q&A.
+   - Exceptional, descriptive teaching for the weakest students.
+   - Millisecond-class delivery of complete saved lessons without repeated AI calls.
+9. Anticipate credible systemic risks from technical evidence; do not wait for the Founder to identify them.
+10. Give every development task executable actions, objective acceptance criteria, and a clear validation/freeze condition.
+
+This is a lightweight, proportionate checkpoint—not a requirement for an exhaustive repository audit before every task. Focus investigation on credible shared failure mechanisms.
+
+---
+
 ## 1. Product objective
 
 **SnapSolve** is a CBSE-focused learning application for Class 6–9 students.
