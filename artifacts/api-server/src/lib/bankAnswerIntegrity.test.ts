@@ -252,6 +252,85 @@ test("answer and option announcements are not accepted as guided calculations", 
   assert.notEqual(choiceAnnouncement.status, "clear");
 });
 
+test("Q2 wordToMath may restate canonical numerical givens faithfully", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const result = assessTeachingLessonAnswerLast({
+    questionTranslation: {
+      wordToMath: "Therefore, load = 180 N and effort = 45 N.",
+    },
+    finalAnswer: { answer },
+  }, answer, {
+    canonicalQuestion:
+      "A machine is used to raise a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: [
+      "Mechanical advantage = 180 N ÷ 45 N = 4",
+      "Mechanical advantage = 4 (no unit)",
+    ],
+  });
+
+  assert.deepEqual(result, { status: "clear" });
+});
+
+test("Q2 mathematical translation still rejects a premature result or answer claim", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const context = {
+    canonicalQuestion:
+      "A machine is used to raise a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: [
+      "Mechanical advantage = 180 N ÷ 45 N = 4",
+      "Mechanical advantage = 4 (no unit)",
+    ],
+  };
+  for (const wordToMath of [
+    "The final result is 180 N.",
+    "Mechanical advantage = 180 N ÷ 45 N = 4.",
+    "Mechanical advantage = 180 N ÷ 45 N = 3.",
+  ]) {
+    const result = assessTeachingLessonAnswerLast({
+      questionTranslation: { wordToMath },
+      finalAnswer: { answer },
+    }, answer, context);
+    assert.notEqual(result.status, "clear", wordToMath);
+  }
+});
+
+test("answer-last diagnostics retain exact rejected field text only in memory", () => {
+  const offendingText = "The final answer is 180 N.";
+  const lesson = {
+    questionTranslation: { wordToMath: offendingText },
+    guidedReasoning: [{ what: "Use the load and effort relationship." }],
+    finalAnswer: { answer: "Mechanical advantage = 180 N ÷ 45 N = 4." },
+  };
+  const context = {
+    canonicalQuestion:
+      "A machine is used to raise a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+  };
+
+  const assessment = assessTeachingLessonAnswerLast(
+    lesson,
+    lesson.finalAnswer.answer,
+    context,
+  );
+  assert.equal(assessment.status, "leak");
+  assert.equal(assessment.section, "questionTranslation.wordToMath");
+  assert.equal(assessment.offendingText, offendingText);
+
+  const repair = repairTeachingLessonAnswerLeakage(
+    lesson,
+    lesson.finalAnswer.answer,
+    context,
+  );
+  assert.equal(repair.status, "rejected");
+  assert.equal(repair.lesson, lesson);
+  assert.equal(lesson.questionTranslation.wordToMath, offendingText);
+  assert.equal(
+    "offendingText" in repair.assessment ? repair.assessment.offendingText : undefined,
+    offendingText,
+  );
+});
+
 test("answer-last gate permits a complete answer only in finalAnswer", () => {
   const result = assessTeachingLessonAnswerLast({
     beforeWeStart: { preview: "We will identify a point in the coordinate system." },

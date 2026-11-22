@@ -2370,6 +2370,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
       bankCtx.answer,
       answerLastContext,
     );
+    // Keep the complete rejected lesson and answerLast.offendingText request-local
+    // for safe inspection/correction. Do not log or emit either payload.
     req.log.info({
       stage: "answer-last-integrity",
       outcome: answerLast.status,
