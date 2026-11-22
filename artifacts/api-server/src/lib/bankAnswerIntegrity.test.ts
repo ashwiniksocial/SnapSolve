@@ -166,6 +166,92 @@ test("answer-last gate accepts methods, definitions, and intermediate quantities
   assert.deepEqual(result, { status: "clear" });
 });
 
+test("answer-last permits a source-supported evaluated calculation in guided reasoning", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const context = {
+    canonicalQuestion:
+      "A machine raises a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: [
+      "Mechanical advantage = 180 N ÷ 45 N = 4",
+      "Mechanical advantage = 4 (no unit)",
+    ],
+  };
+  const result = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      what: "Substitute the given forces and divide.",
+      math: "Therefore, mechanical advantage = 180 N / 45 N = 4",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+
+  assert.deepEqual(result, { status: "clear" });
+});
+
+test("a supported calculation is not whitelisted in introductory sections", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const result = assessTeachingLessonAnswerLast({
+    questionTranslation: {
+      whatWeKnow: "Mechanical advantage = 180 N / 45 N = 4.",
+    },
+    finalAnswer: { answer },
+  }, answer, {
+    canonicalQuestion:
+      "A machine raises a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: ["Mechanical advantage = 180 N ÷ 45 N = 4"],
+  });
+
+  assert.notEqual(result.status, "clear");
+});
+
+test("incorrect calculations remain under review even when the wrong result is a given", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const result = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      what: "Substitute and divide.",
+      math: "Mechanical advantage = 180 N / 45 N = 45",
+    }],
+    finalAnswer: { answer },
+  }, answer, {
+    canonicalQuestion:
+      "A machine raises a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: [
+      "Mechanical advantage = 180 N ÷ 45 N = 4",
+      "Mechanical advantage = 4 (no unit)",
+    ],
+  });
+
+  assert.notEqual(result.status, "clear");
+  if (result.status !== "clear") {
+    assert.equal(result.section, "guidedReasoning[1].math");
+    assert.equal(result.status, "review");
+  }
+});
+
+test("answer and option announcements are not accepted as guided calculations", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const announced = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      math: "The final answer is mechanical advantage = 180 N / 45 N = 4.",
+    }],
+    finalAnswer: { answer },
+  }, answer, {
+    canonicalQuestion: "Load 180 N; effort 45 N.",
+    approvedCalculationText: ["Mechanical advantage = 180 N ÷ 45 N = 4"],
+  });
+  assert.notEqual(announced.status, "clear");
+
+  const choiceAnnouncement = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "Correct option (b): 2 + 2 = 4." }],
+    finalAnswer: { answer: "(b) 2 + 2 = 4" },
+  }, "(b) 2 + 2 = 4", {
+    approvedCalculationText: ["2 + 2 = 4"],
+  });
+  assert.notEqual(choiceAnnouncement.status, "clear");
+});
+
 test("answer-last gate permits a complete answer only in finalAnswer", () => {
   const result = assessTeachingLessonAnswerLast({
     beforeWeStart: { preview: "We will identify a point in the coordinate system." },

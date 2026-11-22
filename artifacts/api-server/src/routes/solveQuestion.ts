@@ -92,6 +92,9 @@ function answerLastContextFor(
   return {
     canonicalQuestion,
     intermediateText: approvedIntermediates,
+    approvedCalculationText: approvedSteps
+      .flatMap((step) => [step.formula, step.result])
+      .filter((value): value is string => typeof value === "string"),
   };
 }
 

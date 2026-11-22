@@ -316,6 +316,10 @@ export function isStoredLessonValid(
     assessTeachingLessonAnswerLast(entry.lesson, question.answer, {
       canonicalQuestion: question.question,
       intermediateText,
+      approvedCalculationText: question.steps.flatMap((step) => [
+        step.formula,
+        step.result,
+      ]).filter((value): value is string => typeof value === "string"),
     }).status === "clear";
 }
 

@@ -17,6 +17,7 @@ export type AnswerLastAssessment =
 export interface AnswerLastContext {
   canonicalQuestion?: string;
   intermediateText?: readonly string[];
+  approvedCalculationText?: readonly string[];
 }
 
 export interface AnswerLastRepairResult {
@@ -862,6 +863,94 @@ function answerLastContextTexts(context?: AnswerLastContext): string[] {
   ].filter((value): value is string => typeof value === "string" && value.trim().length > 0);
 }
 
+function normalizeCalculationText(value: string): string {
+  const withoutLatexWrappers = value.replace(
+    /\\(?:mathrm|operatorname|text)\s*\{([^{}]*)\}/gi,
+    "$1",
+  );
+  return normalizeAnswer(withoutLatexWrappers).replace(/\s+/g, "");
+}
+
+function calculationSignature(value: string): string | null {
+  const normalized = normalizeCalculationText(value);
+  const equalsIndex = normalized.lastIndexOf("=");
+  if (equalsIndex <= 0 || equalsIndex === normalized.length - 1) return null;
+
+  const priorEqualsIndex = normalized.lastIndexOf("=", equalsIndex - 1);
+  const left = normalized.slice(priorEqualsIndex + 1, equalsIndex);
+  const right = normalized.slice(equalsIndex + 1);
+  if (
+    !/\d/.test(left) ||
+    !/\d/.test(right) ||
+    !/[+*/-]/.test(left)
+  ) {
+    return null;
+  }
+  return `${left}=${right}`;
+}
+
+function guidedReasoningField(section: string): boolean {
+  return /^guidedReasoning\[\d+\]\.[\w]+$/.test(section);
+}
+
+function isExplicitAnswerAnnouncement(text: string, answer: string): boolean {
+  const normalized = normalizeAnswerLastText(text);
+  if (
+    /\b(?:final\s+answer|correct\s+answer|answer)\b[^.!?;]{0,80}\b(?:is|equals?|:|=)\b/i.test(normalized) ||
+    /\b(?:correct|right)\s+(?:option|choice)\b/i.test(normalized) ||
+    /\b(?:option|choice)\s+[a-d]\b[^.!?;]{0,32}\b(?:is\s+)?(?:correct|right)\b/i.test(normalized)
+  ) {
+    return true;
+  }
+
+  if (!isChoiceAnswer(answer)) return false;
+  return /\b(?:option|choice)\s*[\[(]?[a-d][)\]]?\b/i.test(normalized);
+}
+
+function approvedCalculationOutputs(context?: AnswerLastContext): Set<string> {
+  const outputs = new Set<string>();
+  for (const calculation of context?.approvedCalculationText ?? []) {
+    const signature = calculationSignature(calculation);
+    if (!signature) continue;
+    const rightSide = signature.slice(signature.lastIndexOf("=") + 1);
+    for (const candidate of numericAnswerCandidates(rightSide, true)) {
+      outputs.add(candidate.normalizedValue);
+    }
+  }
+  return outputs;
+}
+
+function isSupportedGuidedCalculation(
+  section: string,
+  text: string,
+  canonicalAnswer: string,
+  context?: AnswerLastContext,
+): boolean {
+  if (!guidedReasoningField(section) || isExplicitAnswerAnnouncement(text, canonicalAnswer)) {
+    return false;
+  }
+
+  const candidateSignature = calculationSignature(text);
+  const approvedCalculations = context?.approvedCalculationText ?? [];
+  if (
+    candidateSignature &&
+    approvedCalculations.some((calculation) => calculationSignature(calculation) === candidateSignature)
+  ) {
+    return true;
+  }
+
+  if (!section.endsWith(".result")) return false;
+  const textValues = numericAnswerCandidates(text, true);
+  if (textValues.length === 0) return false;
+  const approvedOutputs = approvedCalculationOutputs(context);
+  return textValues.every((value) => approvedOutputs.has(value.normalizedValue));
+}
+
+function hasNumericGuidedCalculation(text: string): boolean {
+  const normalized = normalizeCalculationText(text);
+  return /\d/.test(normalized) && /=/.test(normalized) && /[+*/-]/.test(normalized);
+}
+
 function containsWholePhrase(text: string, phrase: string): boolean {
   if (!phrase) return false;
   let start = text.indexOf(phrase);
@@ -1011,6 +1100,40 @@ export function assessTeachingLessonAnswerLast(
   for (const item of sections) {
     const normalizedText = normalizeAnswerLastText(item.text);
     if (!normalizedText) continue;
+
+    if (isSupportedGuidedCalculation(item.section, item.text, answer, context)) {
+      continue;
+    }
+
+    const hasApprovedCalculationContext = Boolean(context?.approvedCalculationText?.length);
+    const isUnverifiedGuidedCalculation =
+      hasApprovedCalculationContext &&
+      guidedReasoningField(item.section) &&
+      hasNumericGuidedCalculation(item.text);
+    if (isUnverifiedGuidedCalculation) {
+      review ??= {
+        status: "review",
+        section: item.section,
+        disclosure: item.text.slice(0, 120),
+        reason: `A guided calculation in ${item.section} is not supported by the approved source calculations.`,
+      };
+    }
+
+    const isUnsupportedGuidedResult =
+      hasApprovedCalculationContext &&
+      guidedReasoningField(item.section) &&
+      item.section.endsWith(".result") &&
+      numericAnswerCandidates(item.text, true).some((value) =>
+        quantities.some((answerQuantity) => answerQuantity.normalizedValue === value.normalizedValue)
+      );
+    if (isUnsupportedGuidedResult) {
+      review ??= {
+        status: "review",
+        section: item.section,
+        disclosure: item.text.slice(0, 120),
+        reason: `A guided result in ${item.section} is not established by an approved source calculation.`,
+      };
+    }
 
     for (const phrase of phrases) {
       if (phrase.length < 3) {
