@@ -242,6 +242,7 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
       subject: question.subject,
       question: question.question,
       mode: "basic",
+      studentContext: "Preferred explanation depth: BASIC",
       bankContext: {
         questionId: question.id,
         ...canonicalContext,
