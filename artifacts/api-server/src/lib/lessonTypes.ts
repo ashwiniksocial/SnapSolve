@@ -236,3 +236,50 @@ export function parseLessonResponse(p: any): LessonResponse {
     confidenceBuilder: safeStr(p?.confidenceBuilder),
   };
 }
+
+/**
+ * Detailed bank lessons are cached only when their unconditional teaching
+ * sections are complete. Optional question translation and practice sections
+ * remain all-or-nothing, matching the existing student renderer contract.
+ */
+export function isCompleteDetailedLessonResponse(lesson: LessonResponse): boolean {
+  const hasText = (value: unknown): value is string =>
+    typeof value === "string" && value.trim().length > 0;
+  const translationValues = [
+    lesson.questionTranslation.plainEnglish,
+    lesson.questionTranslation.whatWeKnow,
+    lesson.questionTranslation.whatWeFind,
+    lesson.questionTranslation.wordToMath,
+  ];
+  const hasNoTranslation = translationValues.every((value) => !hasText(value));
+  const hasFullTranslation = translationValues.every(hasText);
+  const practice = lesson.practiceQuestion;
+  const hasNoPractice = !hasText(practice.question);
+  const hasFullPractice =
+    hasText(practice.question) &&
+    hasText(practice.solution) &&
+    practice.hints.length > 0 &&
+    practice.hints.every(hasText);
+
+  return (
+    lesson.keyConcepts.length > 0 &&
+    lesson.keyConcepts.every(hasText) &&
+    hasText(lesson.intuition.story) &&
+    hasText(lesson.intuition.visual) &&
+    hasText(lesson.intuition.everyday) &&
+    (hasNoTranslation || hasFullTranslation) &&
+    lesson.guidedReasoning.length > 0 &&
+    lesson.guidedReasoning.every((step) => hasText(step.what) && hasText(step.why)) &&
+    lesson.commonMistakes.length > 0 &&
+    lesson.commonMistakes.every((mistake) =>
+      hasText(mistake.mistake) &&
+      hasText(mistake.whyItHappens) &&
+      hasText(mistake.howToAvoid),
+    ) &&
+    hasText(lesson.finalAnswer.answer) &&
+    hasText(lesson.finalAnswer.whyCorrect) &&
+    hasText(lesson.simplerExample.problem) &&
+    hasText(lesson.simplerExample.solution) &&
+    (hasNoPractice || hasFullPractice)
+  );
+}

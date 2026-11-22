@@ -21,7 +21,12 @@
  */
 
 import { Router }             from "express";
-import { parseLessonResponse, type LessonResponse, type LessonStep } from "../lib/lessonTypes";
+import {
+  isCompleteDetailedLessonResponse,
+  parseLessonResponse,
+  type LessonResponse,
+  type LessonStep,
+} from "../lib/lessonTypes";
 import { runQualityPipeline }    from "../services/teachingQuality";
 import {
   getSimplifyLevelInstruction,
@@ -33,8 +38,19 @@ import {
 } from "../services/simplifyContract";
 import { retryFetch }            from "../lib/retryFetch";
 import { buildTeachingBlueprint, type BlueprintInjection } from "../services/masterTeacher";
-import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
-import { LessonStreamExtractor } from "../lib/lessonStreamExtractor";
+import {
+  addUsage,
+  estimateCostUsd,
+  extractUsage,
+  zeroUsage,
+  type UsageSnapshot,
+} from "../lib/aiCost";
+import {
+  classifyLessonStreamCompletion,
+  LessonStreamExtractor,
+  runWithSingleLessonStreamRecovery,
+  type LessonStreamFailureCategory,
+} from "../lib/lessonStreamExtractor";
 import {
   repairTeachingLessonAnswerLeakage,
   assessTeachingLessonAnswerLast,
@@ -1069,6 +1085,169 @@ const OPENAI_URL      = "https://api.openai.com/v1/chat/completions";
 const MODEL           = "gpt-4o-mini";
 const OPENAI_TIMEOUT  = 90_000;
 const STANDARD_BUDGET_MS = 15_000; // wall-clock guarantee for Standard mode
+const BANK_DETAILED_OUTPUT_TOKENS = 8_192;
+const BANK_TRUNCATION_RECOVERY_TOKENS = 16_000;
+const MAX_BANK_STREAM_ATTEMPTS = 2;
+
+interface OpenAIStreamAttempt {
+  rawText: string;
+  finishReason: string | null;
+  sawDoneMarker: boolean;
+  promptTokens: number;
+  completionTokens: number;
+  cachedTokens: number;
+  firstContentMs: number;
+  elapsedMs: number;
+  responseStatus: number;
+  interrupted: boolean;
+}
+
+async function collectOpenAIStream(input: {
+  apiKey: string;
+  systemContent: string;
+  userContent: string;
+  maxOutputTokens: number;
+  signal: AbortSignal;
+  requestStart: number;
+}): Promise<OpenAIStreamAttempt> {
+  const startedAt = Date.now();
+  const result: OpenAIStreamAttempt = {
+    rawText: "",
+    finishReason: null,
+    sawDoneMarker: false,
+    promptTokens: 0,
+    completionTokens: 0,
+    cachedTokens: 0,
+    firstContentMs: -1,
+    elapsedMs: 0,
+    responseStatus: 0,
+    interrupted: false,
+  };
+
+  let response: Response;
+  try {
+    response = await fetch(OPENAI_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${input.apiKey}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        temperature: 0.3,
+        max_tokens: input.maxOutputTokens,
+        response_format: { type: "json_object" },
+        stream: true,
+        stream_options: { include_usage: true },
+        messages: [
+          { role: "system", content: input.systemContent },
+          { role: "user", content: input.userContent },
+        ],
+      }),
+      signal: input.signal,
+    });
+  } catch {
+    result.interrupted = true;
+    result.elapsedMs = Date.now() - startedAt;
+    return result;
+  }
+
+  result.responseStatus = response.status;
+  if (!response.ok || !response.body) {
+    result.interrupted = !response.ok;
+    result.elapsedMs = Date.now() - startedAt;
+    return result;
+  }
+
+  const extractor = new LessonStreamExtractor();
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let lineBuffer = "";
+
+  const processSseLine = (line: string): void => {
+    if (!line.startsWith("data: ")) return;
+    const raw = line.slice(6).trim();
+    if (raw === "[DONE]") {
+      result.sawDoneMarker = true;
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let chunk: any;
+    try {
+      chunk = JSON.parse(raw);
+    } catch {
+      return;
+    }
+    if (chunk.usage) {
+      result.promptTokens = chunk.usage.prompt_tokens ?? result.promptTokens;
+      result.completionTokens = chunk.usage.completion_tokens ?? result.completionTokens;
+      result.cachedTokens =
+        chunk.usage.prompt_tokens_details?.cached_tokens ?? result.cachedTokens;
+    }
+    const choice = chunk.choices?.[0];
+    if (typeof choice?.finish_reason === "string") result.finishReason = choice.finish_reason;
+    const content: unknown = choice?.delta?.content;
+    if (typeof content !== "string" || !content) return;
+    result.rawText += content;
+    const sections = extractor.feed(content);
+    if (sections.length > 0 && result.firstContentMs < 0) {
+      result.firstContentMs = Date.now() - input.requestStart;
+    }
+  };
+
+  try {
+    let endedByReader = false;
+    while (!result.sawDoneMarker) {
+      const { done, value } = await reader.read();
+      if (done) {
+        endedByReader = true;
+        break;
+      }
+      lineBuffer += decoder.decode(value, { stream: true });
+      const lines = lineBuffer.split("\n");
+      lineBuffer = lines.pop() ?? "";
+      for (const line of lines) processSseLine(line);
+    }
+    if (endedByReader) {
+      lineBuffer += decoder.decode();
+      for (const line of lineBuffer.split("\n")) processSseLine(line);
+    }
+  } catch {
+    result.interrupted = true;
+  } finally {
+    try { reader.releaseLock(); } catch { /* already released */ }
+  }
+
+  result.elapsedMs = Date.now() - startedAt;
+  return result;
+}
+
+function streamFailureCode(category: LessonStreamFailureCategory, httpStatus?: number): string {
+  switch (category) {
+    case "output_truncation": return "stream_output_truncated";
+    case "interrupted_stream": return "stream_interrupted";
+    case "invalid_json": return "stream_invalid_json";
+    case "empty_response": return "stream_empty";
+    case "incomplete_lesson": return "stream_incomplete_lesson";
+    case "validation_failure": return "bank_lesson_validation_failed";
+    case "timeout": return "timeout";
+    case "client_disconnected": return "client_disconnected";
+    case "http_error":
+      if (httpStatus === 429) return "rate_limit";
+      if (httpStatus === 401) return "invalid_key";
+      return `openai_${httpStatus ?? "error"}`;
+    case "provider_error": return "stream_provider_completion";
+  }
+}
+
+function estimatedStreamCostUsd(
+  promptTokens: number,
+  completionTokens: number,
+  cachedTokens: number,
+): number {
+  return estimateCostUsd(MODEL, promptTokens, completionTokens, cachedTokens);
+}
+
 const ANSWER_LAST_CONTRACT = `
 ANSWER-LAST CONTRACT — required for every lesson:
 Keep the complete answer, any equivalent answer wording, and the final requested
@@ -2103,9 +2282,15 @@ router.post("/solveQuestion/stream", async (req, res) => {
   res.setHeader("X-Accel-Buffering", "no");
   res.flushHeaders();
 
-  // Abort OpenAI stream when client disconnects.
-  const abortCtrl = new AbortController();
-  res.on("close", () => abortCtrl.abort());
+  // Abort the active model attempt when the requesting client disconnects.
+  let clientDisconnected = false;
+  let activeAttemptController: AbortController | undefined;
+  res.on("close", () => {
+    if (!res.writableEnded) {
+      clientDisconnected = true;
+      activeAttemptController?.abort();
+    }
+  });
 
   // ── 5. Blueprint planning ─────────────────────────────────────────────────────
   const apiKey = process.env.OPENAI_API_KEY ?? "";
@@ -2126,10 +2311,9 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // systemContent and maxTokens from buildDraftPrompts (handles mode-specific schema).
   // userContent is overridden for bank questions to inject authoritative grounding.
   const { systemContent, maxTokens: baseStreamMaxTokens } = buildDraftPrompts(subj, q, streamMode, ctx, blueprint);
-  // Full bank TeachingLessons can exceed the generic BASIC generation ceiling.
-  // Keep the larger output allowance scoped to bank-grounded lessons only.
+  // Full bank TeachingLessons need room for all Detailed fields and calculations.
   const streamMaxTokens = bankCtx
-    ? Math.max(baseStreamMaxTokens, 4_000)
+    ? Math.max(baseStreamMaxTokens, BANK_DETAILED_OUTPUT_TOKENS)
     : baseStreamMaxTokens;
   let userContent: string;
   if (bankCtx) {
@@ -2169,112 +2353,171 @@ router.post("/solveQuestion/stream", async (req, res) => {
     ({ userContent } = buildDraftPrompts(subj, q, "standard", ctx, blueprint));
   }
 
-  // ── 7. Call OpenAI with stream: true ──────────────────────────────────────────
-  // Bank questions use the full BASIC schema and may need up to 4,000 output
-  // tokens; allow enough time for a complete lesson. Standard keeps its 15 s guarantee.
-  const budgetMs    = bankCtx ? 75_000 : STANDARD_BUDGET_MS;
-  const budgetTimer = setTimeout(() => abortCtrl.abort(), budgetMs);
+  // ── 7. Call OpenAI with one bounded recovery for bank lessons ─────────────────
+  const budgetMs = bankCtx ? 75_000 : STANDARD_BUDGET_MS;
   const modelStartedAt = Date.now();
+  const recordedAttempts: Array<{
+    stream: OpenAIStreamAttempt;
+    maxOutputTokens: number;
+    failureCategory?: LessonStreamFailureCategory;
+  }> = [];
+  let previousFailure: LessonStreamFailureCategory | undefined;
 
-  let openaiRes: Response;
-  try {
-    openaiRes = await fetch(OPENAI_URL, {
-      method:  "POST",
-      headers: {
-        "Content-Type":  "application/json",
-        "Authorization": `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model:          MODEL,
-        temperature:    0.3,
-        max_tokens:     streamMaxTokens,
-        stream:         true,
-        stream_options: { include_usage: true },
-        messages: [
-          { role: "system", content: systemContent },
-          { role: "user",   content: userContent  },
-        ],
-      }),
-      signal: abortCtrl.signal,
-    });
-  } catch (err) {
-    clearTimeout(budgetTimer);
-    const msg  = err instanceof Error ? err.message : String(err);
-    const code = msg.includes("abort") ? "timeout" : "openai_error";
-    req.log.warn({ code, msg }, "[STREAM] OpenAI fetch failed");
-    if (!res.writableEnded) { emit({ type: "error", code, message: msg }); res.end(); }
-    return;
-  }
+  const generation = await runWithSingleLessonStreamRecovery(async (attemptNumber) => {
+    if (clientDisconnected) {
+      return { status: "failed", category: "client_disconnected" as const };
+    }
 
-  if (openaiRes.status === 429) { clearTimeout(budgetTimer); emit({ type: "error", code: "rate_limit"   }); res.end(); return; }
-  if (openaiRes.status === 401) { clearTimeout(budgetTimer); emit({ type: "error", code: "invalid_key"  }); res.end(); return; }
-  if (!openaiRes.ok)            { clearTimeout(budgetTimer); emit({ type: "error", code: `openai_${openaiRes.status}` }); res.end(); return; }
+    const maxOutputTokens = bankCtx
+      ? attemptNumber === 2 && previousFailure === "output_truncation"
+        ? BANK_TRUNCATION_RECOVERY_TOKENS
+        : streamMaxTokens
+      : baseStreamMaxTokens;
+    const attemptController = new AbortController();
+    activeAttemptController = attemptController;
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      attemptController.abort();
+    }, budgetMs);
 
-  // ── 8. Stream chunks → LessonStreamExtractor → SSE ───────────────────────────
-  const extractor   = new LessonStreamExtractor();
-  const reader      = openaiRes.body!.getReader();
-  const decoder     = new TextDecoder();
-  let   sseLineBuf  = "";
-  let   accumJson   = "";
-  let   promptTok   = 0;
-  let   completionTok = 0;
-  let   firstContentMs = -1;
+    let stream: OpenAIStreamAttempt;
+    try {
+      stream = await collectOpenAIStream({
+        apiKey,
+        systemContent,
+        userContent,
+        maxOutputTokens,
+        signal: attemptController.signal,
+        requestStart,
+      });
+    } catch {
+      stream = {
+        rawText: "",
+        finishReason: null,
+        sawDoneMarker: false,
+        promptTokens: 0,
+        completionTokens: 0,
+        cachedTokens: 0,
+        firstContentMs: -1,
+        elapsedMs: Date.now() - modelStartedAt,
+        responseStatus: 0,
+        interrupted: true,
+      };
+    } finally {
+      clearTimeout(timer);
+      if (activeAttemptController === attemptController) activeAttemptController = undefined;
+    }
 
-  try {
-    outer: while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      sseLineBuf += decoder.decode(value, { stream: true });
-      const lines = sseLineBuf.split("\n");
-      sseLineBuf  = lines.pop() ?? "";
-
-      for (const line of lines) {
-        if (!line.startsWith("data: ")) continue;
-        const raw = line.slice(6).trim();
-        if (raw === "[DONE]") { break outer; }
-
+    let category: LessonStreamFailureCategory | undefined;
+    let candidate: LessonResponse | undefined;
+    if (stream.responseStatus !== 0 && (stream.responseStatus < 200 || stream.responseStatus >= 300)) {
+      category = "http_error";
+    } else {
+      const completion = classifyLessonStreamCompletion({
+        text: stream.rawText,
+        finishReason: stream.finishReason,
+        sawDoneMarker: stream.sawDoneMarker,
+        interrupted: stream.interrupted,
+        timedOut,
+        clientDisconnected,
+      });
+      if (completion.status === "failed") {
+        category = completion.category;
+      } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let chunk: any;
-        try { chunk = JSON.parse(raw); } catch { continue; }
-
-        if (chunk.usage) {
-          promptTok     = chunk.usage.prompt_tokens     ?? promptTok;
-          completionTok = chunk.usage.completion_tokens ?? completionTok;
+        candidate = parseLessonResponse(completion.json as any);
+        if (bankCtx && !isCompleteDetailedLessonResponse(candidate)) {
+          category = "incomplete_lesson";
         }
-
-        const content: string | undefined = chunk.choices?.[0]?.delta?.content;
-        if (!content) continue;
-
-        accumJson += content;
-
-        const sections = extractor.feed(content);
-        if (sections.length > 0 && firstContentMs < 0) firstContentMs = Date.now() - requestStart;
-        // Do not expose model-generated lesson content before the completed
-        // TeachingLesson passes answer and academic integrity validation.
       }
     }
-  } catch (err) {
-    clearTimeout(budgetTimer);
-    const msg = err instanceof Error ? err.message : String(err);
-    req.log.warn({ err: msg }, "[STREAM] interrupted during chunk read");
-    if (!res.writableEnded) { emit({ type: "error", code: "stream_interrupted", message: msg }); res.end(); }
+
+    const attemptRecord = {
+      stream,
+      maxOutputTokens,
+      ...(category ? { failureCategory: category } : {}),
+    };
+    recordedAttempts.push(attemptRecord);
+    const attemptCostUsd = estimatedStreamCostUsd(
+      stream.promptTokens,
+      stream.completionTokens,
+      stream.cachedTokens,
+    );
+    req.log.info({
+      stage: "model-stream-attempt",
+      attempt: attemptNumber,
+      maxOutputTokens,
+      finishReason: stream.finishReason,
+      sawDoneMarker: stream.sawDoneMarker,
+      failureCategory: category ?? null,
+      responseStatus: stream.responseStatus || null,
+      promptTokens: stream.promptTokens,
+      completionTokens: stream.completionTokens,
+      elapsedMs: stream.elapsedMs,
+      estimatedCostUsd: attemptCostUsd,
+      responseChars: stream.rawText.length,
+    }, "[STREAM] model attempt");
+
+    if (category) {
+      previousFailure = category;
+      return { status: "failed", category };
+    }
+    if (!candidate) {
+      previousFailure = "validation_failure";
+      return { status: "failed", category: "validation_failure" as const };
+    }
+    return { status: "complete", value: candidate };
+  }, Boolean(bankCtx));
+
+  const promptTok = recordedAttempts.reduce((sum, item) => sum + item.stream.promptTokens, 0);
+  const completionTok = recordedAttempts.reduce((sum, item) => sum + item.stream.completionTokens, 0);
+  const cachedTok = recordedAttempts.reduce((sum, item) => sum + item.stream.cachedTokens, 0);
+  const firstContentMs =
+    recordedAttempts.find((item) => item.stream.firstContentMs >= 0)?.stream.firstContentMs ?? -1;
+  const totalModelLatencyMs = recordedAttempts.reduce((sum, item) => sum + item.stream.elapsedMs, 0);
+  const estimatedCostUsd = estimatedStreamCostUsd(promptTok, completionTok, cachedTok);
+  const lastAttempt = recordedAttempts.at(-1);
+  const maxOutputTokensUsed = lastAttempt?.maxOutputTokens ?? streamMaxTokens;
+  const finishReason = lastAttempt?.stream.finishReason ?? null;
+  const streamTelemetry = {
+    attemptCount: generation.attempts,
+    maxOutputTokens: maxOutputTokensUsed,
+    finishReason,
+    promptTokens: promptTok,
+    completionTokens: completionTok,
+    cachedTokens: cachedTok,
+    totalLatencyMs: totalModelLatencyMs,
+    estimatedCostUsd,
+  };
+
+  if (generation.outcome.status === "failed") {
+    const category = generation.outcome.category;
+    const httpStatus = lastAttempt?.stream.responseStatus || undefined;
+    const code = streamFailureCode(category, httpStatus);
+    req.log.warn({
+      stage: "model-stream-failed",
+      category,
+      code,
+      ...streamTelemetry,
+      responseStatus: httpStatus ?? null,
+      responseChars: lastAttempt?.stream.rawText.length ?? 0,
+    }, "[STREAM] generation failed");
+    if (category !== "client_disconnected" && !res.writableEnded) {
+      emit({
+        type: "error",
+        code,
+        failureCategory: category,
+        responseStatus: httpStatus ?? null,
+        ...streamTelemetry,
+      });
+      res.end();
+    }
     return;
-  } finally {
-    clearTimeout(budgetTimer);
-    try { reader.releaseLock(); } catch { /* already released */ }
   }
 
-  // ── 9. Parse + post-process ───────────────────────────────────────────────────
-  let finalLesson: LessonResponse;
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    finalLesson = parseLessonResponse(JSON.parse(accumJson) as any);
-  } catch {
-    req.log.warn({ accumJsonLen: accumJson.length }, "[STREAM] response JSON incomplete/malformed");
-    emit({ type: "error", code: "stream_incomplete", message: "Response JSON was incomplete or malformed" });
-    res.end(); return;
-  }
+  // ── 8. Parse + post-process ───────────────────────────────────────────────────
+  let finalLesson = generation.outcome.value;
 
   // Post-processing guards — Standard mode, non-bank questions only.
   // Bank questions are generated at "basic" (Detailed) mode — all fields intentionally populated.
@@ -2293,7 +2536,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
   }
 
   if (bankCtx) {
-    const modelElapsedMs = Date.now() - modelStartedAt;
+    const modelElapsedMs = totalModelLatencyMs;
     req.log.info({
       stage: "model-generated",
       outcome: "received",
@@ -2321,7 +2564,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
         outcome: code,
         elapsedMs: modelElapsedMs,
       }, "[BANK:INTEGRITY]");
-      emit({ type: "error", code });
+      emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
       res.end();
       return;
     }
@@ -2360,7 +2603,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
         outcome: revalidatedAnswer.status,
         code,
       }, "[BANK:INTEGRITY] corrected lesson failed canonical answer revalidation");
-      emit({ type: "error", code });
+      emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
       res.end();
       return;
     }
@@ -2391,7 +2634,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
         repairReason: repairResult.status === "rejected" ? repairResult.reason : undefined,
         elapsedMs: modelElapsedMs,
       }, "[BANK:INTEGRITY]");
-      emit({ type: "error", code });
+       emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
       res.end();
       return;
     }
@@ -2424,9 +2667,13 @@ router.post("/solveQuestion/stream", async (req, res) => {
     requestType:      "solve_stream",
     firstContentMs,
     totalLatencyMs:   totalMs,
+    attemptCount:     generation.attempts,
+    maxOutputTokens:  maxOutputTokensUsed,
+    finishReason,
     promptTokens:     promptTok,
     completionTokens: completionTok,
-    estimatedCostUsd: (promptTok * 0.00000015) + (completionTok * 0.0000006),
+    cachedTokens:     cachedTok,
+    estimatedCostUsd,
   }, "[STREAM] telemetry");
 
   // ── 11. Emit done ─────────────────────────────────────────────────────────────
@@ -2437,6 +2684,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
     totalLatencyMs:  totalMs,
     promptTokens:    promptTok,
     completionTokens: completionTok,
+    cachedTokens:    cachedTok,
+    attemptCount:    generation.attempts,
+    maxOutputTokens: maxOutputTokensUsed,
+    finishReason,
+    estimatedCostUsd,
   });
   res.end();
 });

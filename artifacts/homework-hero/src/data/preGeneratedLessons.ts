@@ -362,6 +362,18 @@ function buildResponse(entry: PreGeneratedLessonEntry, question: Question): AIRe
 }
 
 /**
+ * Resolve an already-loaded saved entry through the same source and integrity
+ * checks used by the lazy chapter loader. This is also the deterministic,
+ * no-model seam used to verify persisted lesson retrieval.
+ */
+export function resolveStoredLessonEntry(
+  entry: PreGeneratedLessonEntry | undefined,
+  question: Question,
+): AIResponse | null {
+  return isStoredLessonValid(entry, question) ? buildResponse(entry, question) : null;
+}
+
+/**
  * Module-level dedupe of concurrent resolutions for the SAME question. Under
  * route remounts (wouter `key={location}`) and React lazy/Suspense, the same
  * question can trigger two lookups in parallel; both must observe one shared
@@ -390,7 +402,8 @@ export async function resolvePreGeneratedBankLesson(
     // pending chunk can never be misread as an absent lesson.
     const chunk = await loadChunk(question);
     const entry = chunk?.lessons[question.id];
-    const valid = isStoredLessonValid(entry, question);
+    const response = resolveStoredLessonEntry(entry, question);
+    const valid = response !== null;
     if (pregenDebugOn()) {
       // eslint-disable-next-line no-console
       console.log("[PREGEN]", JSON.stringify({
@@ -401,8 +414,8 @@ export async function resolvePreGeneratedBankLesson(
         valid,
       }));
     }
-    if (!valid) return { status: "MISS_OR_INVALID" };
-    return { status: "VALID", response: buildResponse(entry, question) };
+    if (!response) return { status: "MISS_OR_INVALID" };
+    return { status: "VALID", response };
   })();
 
   inFlightResolutions.set(question.id, pending);

@@ -38,6 +38,15 @@ Full Standard lesson takes 5–7 s with nothing shown. SSE streaming delivers fi
 - `aiSolver.ts` `solve()` gains `onPartial?` as 8th parameter, passes to `solveWithOpenAI()`.
 - `Solution.tsx` `runSolver()` defines `onPartial = (partial) => { setSolution(partial); setPageState("done"); }` and passes it as 7th arg to `solve()`.
 
+## Bank Detailed completion integrity
+- Bank Detailed streams use JSON-object response mode, an 8,192-token first output budget, and at most one bounded recovery for truncation, transport interruption, malformed/empty JSON, or structurally incomplete lessons. A truncation recovery may raise the output cap to 16,000.
+- Capture `finish_reason`, `[DONE]`, token usage, cap, attempts, latency, and estimated cost. Never log generated lesson text.
+- Do not retry canonical-answer or answer-last validation failures. Cache only after structural completeness and all existing academic integrity gates pass.
+
+**Why:** Incomplete transport and serialization are recoverable generation failures; repeating a lesson rejected for academic content can spend more without making it correct or safe.
+
+**How to apply:** Keep recovery bounded to one retry and only for recoverable stream/structure categories. Keep academic review fail-closed and outside the recovery loop.
+
 ## Benchmark results (measured, gpt-4o-mini, Standard mode)
 - First content: 849–1545 ms (median ~1.1 s) — well below 3 s target and 5 s gate
 - Full lesson: 5.1–6.4 s (unchanged from pre-streaming)

@@ -24,8 +24,15 @@ type GenerationEvent = {
   type?: string;
   lesson?: unknown;
   code?: string;
+  failureCategory?: string;
+  finishReason?: string | null;
+  responseStatus?: number | null;
+  attemptCount?: number;
+  maxOutputTokens?: number;
   promptTokens?: number;
   completionTokens?: number;
+  cachedTokens?: number;
+  estimatedCostUsd?: number;
   totalLatencyMs?: number;
   firstContentMs?: number;
 };
@@ -33,8 +40,11 @@ type GenerationEvent = {
 type GenerationResult = {
   lesson: TeachingLesson;
   servedFromCache: boolean;
+  attemptCount: number;
   promptTokens: number;
   completionTokens: number;
+  cachedTokens: number;
+  estimatedCostUsd: number;
   totalLatencyMs: number;
   firstContentMs: number;
 };
@@ -265,37 +275,63 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
   let lineBuffer = "";
   let completed: GenerationEvent | undefined;
   let servedFromCache = false;
+  let failureEvent: GenerationEvent | undefined;
+
+  const processSseLine = (line: string): void => {
+    if (!line.startsWith("data: ")) return;
+    let event: GenerationEvent;
+    try {
+      event = JSON.parse(line.slice(6)) as GenerationEvent;
+    } catch {
+      return;
+    }
+    if (event.type === "cached") {
+      // A process can stop after the API has generated a lesson but before
+      // its atomic store write. Reusing this exact in-memory response is a
+      // safe resume and does not make another model call.
+      if (!event.lesson) throw new Error(`Cached response for ${question.id} has no lesson payload.`);
+      completed = event;
+      servedFromCache = true;
+    }
+    if (event.type === "error") {
+      failureEvent = event;
+      throw new Error(`Generation stream error for ${question.id}: ${event.code ?? "unknown"}`);
+    }
+    if (event.type === "done") completed = event;
+  };
 
   try {
     while (!completed) {
       const { done, value } = await reader.read();
-      if (done) break;
+      if (done) {
+        lineBuffer += decoder.decode();
+        if (lineBuffer.trim()) processSseLine(lineBuffer.trimEnd());
+        break;
+      }
       lineBuffer += decoder.decode(value, { stream: true });
       const lines = lineBuffer.split("\n");
       lineBuffer = lines.pop() ?? "";
 
-      for (const line of lines) {
-        if (!line.startsWith("data: ")) continue;
-        let event: GenerationEvent;
-        try {
-          event = JSON.parse(line.slice(6)) as GenerationEvent;
-        } catch {
-          continue;
-        }
-        if (event.type === "cached") {
-          // A process can stop after the API has generated a lesson but before
-          // its atomic store write. Reusing this exact in-memory response is a
-          // safe resume and does not make another model call.
-          if (!event.lesson) throw new Error(`Cached response for ${question.id} has no lesson payload.`);
-          completed = event;
-          servedFromCache = true;
-        }
-        if (event.type === "error") {
-          throw new Error(`Generation stream error for ${question.id}: ${event.code ?? "unknown"}`);
-        }
-        if (event.type === "done") completed = event;
-      }
+      for (const line of lines) processSseLine(line);
     }
+  } catch (error) {
+    if (failureEvent) {
+      throw new Error(JSON.stringify({
+        questionId: question.id,
+        code: failureEvent.code,
+        failureCategory: failureEvent.failureCategory,
+        finishReason: failureEvent.finishReason,
+        responseStatus: failureEvent.responseStatus,
+        attemptCount: failureEvent.attemptCount,
+        maxOutputTokens: failureEvent.maxOutputTokens,
+        promptTokens: failureEvent.promptTokens,
+        completionTokens: failureEvent.completionTokens,
+        cachedTokens: failureEvent.cachedTokens,
+        estimatedCostUsd: failureEvent.estimatedCostUsd,
+        totalLatencyMs: failureEvent.totalLatencyMs,
+      }));
+    }
+    throw error;
   } finally {
     try { reader.releaseLock(); } catch { /* already released */ }
   }
@@ -314,8 +350,11 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
   return {
     lesson: parsed,
     servedFromCache,
+    attemptCount: servedFromCache ? 0 : completed.attemptCount ?? 1,
     promptTokens: completed.promptTokens ?? 0,
     completionTokens: completed.completionTokens ?? 0,
+    cachedTokens: completed.cachedTokens ?? 0,
+    estimatedCostUsd: completed.estimatedCostUsd ?? 0,
     totalLatencyMs: completed.totalLatencyMs ?? 0,
     firstContentMs: completed.firstContentMs ?? -1,
   };
@@ -371,6 +410,8 @@ async function main(): Promise<void> {
     cacheRecoveries: 0,
     promptTokens: 0,
     completionTokens: 0,
+    cachedTokens: 0,
+    estimatedCostUsd: 0,
     totalLatencyMs: 0,
   };
 
@@ -451,20 +492,21 @@ async function main(): Promise<void> {
     await persistChunk(record);
     chunks.set(key, record);
     if (result.servedFromCache) totals.cacheRecoveries += 1;
-    else totals.modelCalls += 1;
+    else totals.modelCalls += result.attemptCount;
     totals.promptTokens += result.promptTokens;
     totals.completionTokens += result.completionTokens;
+    totals.cachedTokens += result.cachedTokens;
+    totals.estimatedCostUsd += result.estimatedCostUsd;
     totals.totalLatencyMs += result.totalLatencyMs;
 
     console.log(
       `[${index + 1}/${ids.length}] SAVED ${id} ` +
-      `(${result.servedFromCache ? "cache recovery" : "model"}; ` +
+      `(${result.servedFromCache ? "cache recovery" : `${result.attemptCount} model attempt(s)`}; ` +
       `${result.promptTokens} prompt, ${result.completionTokens} completion, ${result.totalLatencyMs}ms)`,
     );
   }
 
-  const estimatedCost = (totals.promptTokens * 0.00000015) + (totals.completionTokens * 0.0000006);
-  console.log(JSON.stringify({ ...totals, estimatedCostUsd: estimatedCost }, null, 2));
+  console.log(JSON.stringify(totals, null, 2));
 }
 
 void main().catch((error: unknown) => {

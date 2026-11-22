@@ -26,6 +26,95 @@ export interface StreamSection {
   value:  unknown;
 }
 
+export type LessonStreamFailureCategory =
+  | "output_truncation"
+  | "interrupted_stream"
+  | "invalid_json"
+  | "empty_response"
+  | "incomplete_lesson"
+  | "validation_failure"
+  | "timeout"
+  | "client_disconnected"
+  | "http_error"
+  | "provider_error";
+
+export type LessonStreamCompletion =
+  | { status: "complete"; json: unknown }
+  | { status: "failed"; category: LessonStreamFailureCategory };
+
+export interface LessonStreamCompletionInput {
+  text: string;
+  finishReason: string | null;
+  sawDoneMarker: boolean;
+  interrupted?: boolean;
+  timedOut?: boolean;
+  clientDisconnected?: boolean;
+}
+
+/**
+ * Classify the model transport separately from lesson validation. Keep the
+ * precedence stable so finish_reason=length is never mistaken for success just
+ * because a truncated prefix happens to parse as JSON.
+ */
+export function classifyLessonStreamCompletion(
+  input: LessonStreamCompletionInput,
+): LessonStreamCompletion {
+  if (input.clientDisconnected) return { status: "failed", category: "client_disconnected" };
+  if (input.timedOut) return { status: "failed", category: "timeout" };
+  if (input.finishReason === "length") {
+    return { status: "failed", category: "output_truncation" };
+  }
+  if (input.interrupted || !input.sawDoneMarker) {
+    return { status: "failed", category: "interrupted_stream" };
+  }
+  if (input.finishReason && input.finishReason !== "stop") {
+    return { status: "failed", category: "provider_error" };
+  }
+  if (!input.text.trim()) return { status: "failed", category: "empty_response" };
+
+  try {
+    return { status: "complete", json: JSON.parse(input.text) as unknown };
+  } catch {
+    return { status: "failed", category: "invalid_json" };
+  }
+}
+
+export type LessonStreamAttemptOutcome<T> =
+  | { status: "complete"; value: T }
+  | { status: "failed"; category: LessonStreamFailureCategory };
+
+export interface LessonStreamRecoveryResult<T> {
+  outcome: LessonStreamAttemptOutcome<T>;
+  attempts: number;
+}
+
+const RECOVERABLE_STREAM_FAILURES = new Set<LessonStreamFailureCategory>([
+  "output_truncation",
+  "interrupted_stream",
+  "invalid_json",
+  "empty_response",
+  "incomplete_lesson",
+]);
+
+/**
+ * Executes at most one recovery attempt. Academic/canonical validation failures,
+ * timeouts, client disconnects, and provider/HTTP errors never trigger retries.
+ */
+export async function runWithSingleLessonStreamRecovery<T>(
+  attempt: (attemptNumber: 1 | 2) => Promise<LessonStreamAttemptOutcome<T>>,
+  recoveryEnabled: boolean,
+): Promise<LessonStreamRecoveryResult<T>> {
+  const first = await attempt(1);
+  if (
+    !recoveryEnabled ||
+    first.status === "complete" ||
+    !RECOVERABLE_STREAM_FAILURES.has(first.category)
+  ) {
+    return { outcome: first, attempts: 1 };
+  }
+  return { outcome: await attempt(2), attempts: 2 };
+}
+
 export class LessonStreamExtractor {
   private buffer   = "";
   private emitted  = new Set<string>();  // keys already emitted
