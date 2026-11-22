@@ -2025,7 +2025,7 @@ router.post("/solveQuestion", async (req, res) => {
         ? repairResult.initialAssessment.disclosure
         : null,
       outcome: "repaired",
-    }, "solveQuestion: safely corrected an introductory answer disclosure");
+    }, "solveQuestion: safely corrected a deterministic answer disclosure");
   }
   const answerLast = assessTeachingLessonAnswerLast(
     finalLesson,
@@ -2587,7 +2587,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
           ? repairResult.initialAssessment.disclosure
           : null,
         outcome: "repaired",
-      }, "[BANK:INTEGRITY] safely corrected an introductory answer disclosure");
+      }, "[BANK:INTEGRITY] safely corrected a deterministic answer disclosure");
     }
 
     const revalidatedAnswer = compareBankAnswers(

@@ -231,6 +231,136 @@ test("guided explanation rejects unsupported extra calculations and explicit ans
   }
 });
 
+test("Q2 safe repair changes only a direct requested-answer sentence and revalidates the lesson", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const question =
+    "A machine is used to raise a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.";
+  const context = {
+    canonicalQuestion: question,
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: [
+      "Mechanical advantage = 180 N ÷ 45 N = 4",
+      "Mechanical advantage = 4 (no unit)",
+    ],
+  };
+  const lesson = {
+    questionTranslation: {
+      plainEnglish: "Compare the load with the effort.",
+      whatWeKnow: "The load is 180 N and the effort is 45 N.",
+    },
+    guidedReasoning: [
+      {
+        what: "Use the load-to-effort relationship.",
+        why: "Mechanical advantage compares the load with the effort.",
+        math: "Mechanical advantage = load ÷ effort",
+      },
+      {
+        what: "Substitute the two forces.",
+        why: "Therefore, the mechanical advantage is 4.",
+        math: "Mechanical advantage = 180 N ÷ 45 N = 4",
+        result: "Mechanical advantage = 4 (no unit)",
+      },
+    ],
+    finalAnswer: { answer },
+  };
+
+  const initial = assessTeachingLessonAnswerLast(lesson, answer, context);
+  assert.equal(initial.status, "leak");
+  if (initial.status === "leak") {
+    assert.equal(initial.section, "guidedReasoning[2].why");
+    assert.equal(initial.offendingText, "Therefore, the mechanical advantage is 4.");
+  }
+
+  const repaired = repairTeachingLessonAnswerLeakage(lesson, answer, context);
+  assert.equal(repaired.status, "repaired");
+  assert.deepEqual(repaired.assessment, { status: "clear" });
+  assert.equal(
+    (repaired.lesson as typeof lesson).guidedReasoning[1].why,
+    "This establishes the mechanical advantage requested.",
+  );
+  assert.equal(
+    (repaired.lesson as typeof lesson).guidedReasoning[1].math,
+    "Mechanical advantage = 180 N ÷ 45 N = 4",
+  );
+  assert.equal((repaired.lesson as typeof lesson).finalAnswer.answer, answer);
+  assert.equal(lesson.guidedReasoning[1].why, "Therefore, the mechanical advantage is 4.");
+});
+
+test("Q2 permits the approved calculation and explanation while keeping given values intact", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const context = {
+    canonicalQuestion:
+      "A machine is used to raise a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: [
+      "Mechanical advantage = 180 N ÷ 45 N = 4",
+      "Mechanical advantage = 4 (no unit)",
+    ],
+  };
+  const lesson = {
+    questionTranslation: { whatWeKnow: "The load is 180 N and the effort is 45 N." },
+    guidedReasoning: [{
+      what: "Substitute the given forces.",
+      why: "The newtons cancel because both values are forces: mechanical advantage = 180 N / 45 N = 4.",
+      math: "Mechanical advantage = 180 N ÷ 45 N = 4",
+      result: "Mechanical advantage = 4 (no unit)",
+    }],
+    finalAnswer: { answer },
+  };
+
+  assert.deepEqual(assessTeachingLessonAnswerLast(lesson, answer, context), { status: "clear" });
+  const result = repairTeachingLessonAnswerLeakage(lesson, answer, context);
+  assert.equal(result.status, "clear");
+  assert.equal(result.lesson, lesson);
+});
+
+test("unsupported Q2 calculations and numerical conclusions remain fail-closed", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const context = {
+    canonicalQuestion:
+      "A machine is used to raise a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    intermediateText: ["Mechanical advantage = load ÷ effort"],
+    approvedCalculationText: ["Mechanical advantage = 180 N ÷ 45 N = 4"],
+  };
+  const wrongCalculation = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "Mechanical advantage = 180 N / 45 N = 5" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(wrongCalculation.status, "review");
+
+  const unsupportedConclusion = {
+    guidedReasoning: [{ why: "The mechanical advantage is 5." }],
+    finalAnswer: { answer },
+  };
+  const unsupported = assessTeachingLessonAnswerLast(unsupportedConclusion, answer, context);
+  assert.equal(unsupported.status, "review");
+  assert.equal(
+    repairTeachingLessonAnswerLeakage(unsupportedConclusion, answer, context).status,
+    "rejected",
+  );
+});
+
+test("ambiguous guided answer wording is rejected without changing the lesson", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const lesson = {
+    guidedReasoning: [{
+      why: "The mechanical advantage is 4 because the two forces are compared.",
+    }],
+    finalAnswer: { answer },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, answer, {
+    canonicalQuestion:
+      "A machine is used to raise a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+    approvedCalculationText: ["Mechanical advantage = 180 N ÷ 45 N = 4"],
+  });
+  assert.equal(result.status, "rejected");
+  assert.equal(result.lesson, lesson);
+  assert.equal(
+    lesson.guidedReasoning[0].why,
+    "The mechanical advantage is 4 because the two forces are compared.",
+  );
+});
+
 test("a supported calculation is not whitelisted in introductory sections", () => {
   const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
   const result = assessTeachingLessonAnswerLast({

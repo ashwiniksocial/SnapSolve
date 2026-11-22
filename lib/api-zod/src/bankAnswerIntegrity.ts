@@ -1157,6 +1157,78 @@ function replaceIntroField(
   };
 }
 
+function requestedTarget(question: string | undefined): string | null {
+  if (!question) return null;
+  const match = question.match(
+    /\b(?:calculate|compute|determine|find|work\s+out)\s+(?:(?:the|its|their)\s+)?(.+?)(?:[?.!]|$)/i,
+  );
+  return match?.[1]
+    ? normalizeAnswerLastText(match[1]).replace(/^(?:the|its|their)\s+/, "")
+    : null;
+}
+
+function requestedTargetClaim(
+  text: string,
+  canonicalQuestion?: string,
+): { subject: string; value: string } | null {
+  const target = requestedTarget(canonicalQuestion);
+  if (!target) return null;
+  const match = text.match(
+    /^\s*(?:(?:therefore|thus|hence|so)[,;:]?\s*)?(?:the\s+)?([a-z][a-z -]{1,48}?)\s+(?:is|equals?|:|=)\s*(.+?)\s*[.!?]?\s*$/i,
+  );
+  if (!match) return null;
+  const subject = normalizeAnswerLastText(match[1]).replace(/^(?:the|its|their)\s+/, "");
+  return subject === target ? { subject, value: match[2] } : null;
+}
+
+function correctedGuidedAnnouncement(
+  text: string,
+  canonicalAnswer: string,
+  disclosure: string,
+  canonicalQuestion?: string,
+): string | null {
+  const parts = text.split(/(\n+|(?<=[.!?])\s+(?=\p{Lu}))/u);
+  const directAnswerClaim =
+    /^\s*(?:(?:therefore|thus|hence|so)[,;:]?\s*)?(?:(?:the|our)\s+)?(?:(?:final\s+(?:(?:numeric(?:al)?)\s+)?)|(?:correct\s+))?(?:answer|result|value)\s*(?:is|equals?|:|=)\s*(.+?)\s*([.!?]?)\s*$/i;
+  for (let index = 0; index < parts.length; index += 2) {
+    const sentence = parts[index];
+    const direct = sentence.match(directAnswerClaim);
+    if (direct && sameCanonicalAnswerOrDisclosure(direct[1], canonicalAnswer, disclosure)) {
+      parts[index] = "We will confirm the result after working through the steps.";
+      return parts.join("");
+    }
+
+    const requested = requestedTargetClaim(sentence, canonicalQuestion);
+    if (requested && sameCanonicalAnswerOrDisclosure(requested.value, canonicalAnswer, disclosure)) {
+      parts[index] = `This establishes the ${requested.subject} requested.`;
+      return parts.join("");
+    }
+  }
+  return null;
+}
+
+function replaceGuidedField(
+  lessonValue: unknown,
+  section: string,
+  replacement: string,
+): unknown | null {
+  const match = section.match(/^guidedReasoning\[(\d+)\]\.([\w]+)$/);
+  if (!match || !lessonValue || typeof lessonValue !== "object") return null;
+
+  const lesson = lessonValue as Record<string, unknown>;
+  if (!Array.isArray(lesson.guidedReasoning)) return null;
+  const index = Number(match[1]) - 1;
+  const step = lesson.guidedReasoning[index];
+  if (!step || typeof step !== "object" || Array.isArray(step)) return null;
+  const field = match[2];
+  const previous = (step as Record<string, unknown>)[field];
+  if (typeof previous !== "string" || previous === replacement) return null;
+
+  const steps = [...lesson.guidedReasoning];
+  steps[index] = { ...(step as Record<string, unknown>), [field]: replacement };
+  return { ...lesson, guidedReasoning: steps };
+}
+
 /**
  * Checks the lesson sections rendered before finalAnswer. Definite answer
  * disclosures fail; close but uncertain matches are marked for human review.
@@ -1191,6 +1263,36 @@ export function assessTeachingLessonAnswerLast(
 
     if (isSupportedGuidedCalculation(item.section, item.text, answer, context)) {
       continue;
+    }
+
+    const requestedClaim = guidedReasoningField(item.section)
+      ? requestedTargetClaim(item.text, context?.canonicalQuestion)
+      : null;
+    if (requestedClaim) {
+      const approvedOutputs = approvedCalculationOutputs(context);
+      const unsupportedValue = numericAnswerCandidates(requestedClaim.value, true).find(
+        (value) =>
+          !contextContainsQuantity(value, contextTexts) &&
+          !approvedOutputs.has(value.normalizedValue),
+      );
+      if (unsupportedValue) {
+        review ??= {
+          status: "review",
+          section: item.section,
+          disclosure: unsupportedValue.display,
+          reason: `A numerical conclusion in ${item.section} is not established by the approved source calculations.`,
+          offendingText: item.text,
+        };
+      } else if (numericAnswerCandidates(requestedClaim.value, true).length > 0) {
+        const disclosedValue = numericAnswerCandidates(requestedClaim.value, true)[0];
+        return {
+          status: "leak",
+          section: item.section,
+          disclosure: disclosedValue.display,
+          reason: `The requested numerical result is announced before finalAnswer in ${item.section}.`,
+          offendingText: item.text,
+        };
+      }
     }
 
     const hasApprovedCalculationContext = Boolean(context?.approvedCalculationText?.length);
@@ -1321,8 +1423,9 @@ export function assessTeachingLessonAnswerLast(
 }
 
 /**
- * Repairs only a standalone, unambiguous answer claim in the two introductory
- * translation fields. All other leaks and all uncertain reviews fail closed.
+ * Repairs only a standalone, unambiguous answer claim in introductory fields
+ * or a guided sentence that directly announces the requested target. All other
+ * leaks and all uncertain reviews fail closed.
  * The source object is never mutated; every successful change is revalidated.
  */
 export function repairTeachingLessonAnswerLeakage(
@@ -1369,45 +1472,52 @@ export function repairTeachingLessonAnswerLeakage(
     repairCount < 2 &&
     (assessment.status === "leak" || assessment.status === "review")
   ) {
-    if (
-      assessment.section !== "questionTranslation.plainEnglish" &&
-      assessment.section !== "questionTranslation.whatWeKnow"
-    ) {
+    const isGuidedLeak = assessment.status === "leak" &&
+      guidedReasoningField(assessment.section);
+    const isIntroField =
+      assessment.section === "questionTranslation.plainEnglish" ||
+      assessment.section === "questionTranslation.whatWeKnow";
+    if (!isIntroField && !isGuidedLeak) {
       return {
         status: "rejected",
         lesson: lessonValue,
         assessment,
         repairCount,
-        reason: `The disclosure is outside the safe introductory fields (${assessment.section}).`,
+        reason: `The disclosure is outside the safe repair fields (${assessment.section}).`,
       };
     }
 
-    const translation = (lesson as AnswerLastLesson).questionTranslation as
-      | Record<string, unknown>
-      | undefined;
-    const field = assessment.section.slice("questionTranslation.".length);
-    const text = translation?.[field];
+    const text = "offendingText" in assessment ? assessment.offendingText : undefined;
     if (typeof text !== "string") {
       return {
         status: "rejected",
         lesson: lessonValue,
         assessment,
         repairCount,
-        reason: "The flagged introductory field is not available as plain text.",
+        reason: "The flagged field is not available as plain text.",
       };
     }
-    const corrected = correctedIntroSentence(text, canonicalAnswer, assessment.disclosure);
+    const corrected = isGuidedLeak
+      ? correctedGuidedAnnouncement(
+        text,
+        canonicalAnswer,
+        assessment.disclosure,
+        context?.canonicalQuestion,
+      )
+      : correctedIntroSentence(text, canonicalAnswer, assessment.disclosure);
     if (!corrected) {
       return {
         status: "rejected",
         lesson: lessonValue,
         assessment,
         repairCount,
-        reason: "No standalone answer claim could be changed without risking given values or reasoning.",
+        reason: "No standalone answer announcement could be changed without risking given values or reasoning.",
       };
     }
 
-    const nextLesson = replaceIntroField(lesson, assessment.section, corrected);
+    const nextLesson = isGuidedLeak
+      ? replaceGuidedField(lesson, assessment.section, corrected)
+      : replaceIntroField(lesson, assessment.section, corrected);
     if (!nextLesson) {
       return {
         status: "rejected",
