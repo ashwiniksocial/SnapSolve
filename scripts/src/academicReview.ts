@@ -15,7 +15,7 @@
  *   --subject <name>     Filter by subject (partial, case-insensitive)
  *   --class <n>          Filter by classNum
  *   --chapter <id>       Filter by chapterId
- *   --question <id>      Review exactly one question by ID
+ *   --question <id[,id...]> Review only the listed question IDs
  *   --batch-size <n>     Questions per progress-save batch (default: 5)
  *   --max-questions <n>  Stop after N questions are reviewed this run
  *   --delay-ms <n>       Milliseconds to wait between questions (default: 500)
@@ -35,7 +35,8 @@
 import { createHash }                                                      from "crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { resolve, join }                                                    from "path";
-import { getCanonicalChapter, formatChapterContext }                       from "./canonicalCurriculum.js";
+import { buildQuestionSourceContext, getCanonicalChapter }                 from "./canonicalCurriculum.js";
+import type { QuestionSourceContext }                                       from "./canonicalCurriculum.js";
 
 // ─── Paths ────────────────────────────────────────────────────────────────────
 
@@ -163,6 +164,9 @@ export interface ReviewRecord {
   reviewedAt:          string;
   model:               string;
   sourceContextStatus: "PRESENT" | "MISSING";
+  sourceDocument?:     string;
+  sourceSha256?:       string;
+  sourceSections?:     { number: string; title: string; pdfPages: number[] }[];
   overall:             GoldStandardOutcome | "PASS" | "FAIL"; // PASS/FAIL for legacy records
   dimensions:          Record<string, "PASS" | "FAIL"> | null;
   failEvidence:        DefectEvidence[];
@@ -177,12 +181,15 @@ type ChapterCache = Record<string, ReviewRecord>;
 
 // ─── Curriculum context resolution via canonical academic contract ────────────
 
-function resolveSourceContext(q: ReviewableQuestion): {
+export interface ResolvedSourceContext {
   status:                "PRESENT" | "MISSING";
   text:                  string;
   canonicalChapterId:    string | null;
+  sourceContext?:        QuestionSourceContext;
   missReason?:           string;
-} {
+}
+
+export function resolveSourceContext(q: ReviewableQuestion): ResolvedSourceContext {
   const canonical = getCanonicalChapter(q.chapterId);
 
   if (!canonical) {
@@ -212,11 +219,26 @@ function resolveSourceContext(q: ReviewableQuestion): {
     };
   }
 
-  return {
-    status:             "PRESENT",
-    text:               formatChapterContext(canonical),
-    canonicalChapterId: canonical.bookId,
-  };
+  try {
+    const sourceContext = buildQuestionSourceContext(canonical, {
+      topicName: q.topicName,
+      question: q.question,
+      answer: q.answer,
+    });
+    return {
+      status:             "PRESENT",
+      text:               sourceContext.text,
+      canonicalChapterId: canonical.bookId,
+      sourceContext,
+    };
+  } catch (error) {
+    return {
+      status:             "MISSING",
+      text:               "",
+      canonicalChapterId: canonical.bookId,
+      missReason:         error instanceof Error ? error.message : String(error),
+    };
+  }
 }
 
 // ─── Context audit ────────────────────────────────────────────────────────────
@@ -631,11 +653,14 @@ export async function loadStudentVisibleQuestions(): Promise<ReviewableQuestion[
 // ─── Filter + should-review logic ────────────────────────────────────────────
 
 export function applyFilters(questions: ReviewableQuestion[], args: Args): ReviewableQuestion[] {
+  const questionIds = args.question
+    ? args.question.split(",").map(id => id.trim()).filter(Boolean)
+    : null;
   return questions.filter(q => {
     if (args.classNum && q.classNum !== args.classNum)                                  return false;
     if (args.subject  && !q.subject.toLowerCase().includes(args.subject.toLowerCase())) return false;
     if (args.chapter  && q.chapterId.toLowerCase() !== args.chapter.toLowerCase())      return false;
-    if (args.question && q.id !== args.question)                                        return false;
+    if (questionIds?.length && !questionIds.includes(q.id))                             return false;
     return true;
   });
 }
@@ -1219,8 +1244,12 @@ async function reviewOneQuestion(
 
 // ─── Cost estimate ────────────────────────────────────────────────────────────
 
-function printCostEstimate(count: number, delayMs: number): void {
-  const inTok   = count * EST_IN_TOKENS_PER_Q;
+function printCostEstimate(questions: ReviewableQuestion[], delayMs: number): void {
+  const count   = questions.length;
+  const inTok   = questions.reduce((total, question) => {
+    const contextChars = resolveSourceContext(question).sourceContext?.characterCount ?? 0;
+    return total + EST_IN_TOKENS_PER_Q + Math.ceil(contextChars / 4);
+  }, 0);
   const outTok  = count * EST_OUT_TOKENS_PER_Q;
   const inCost  = (inTok  / 1_000_000) * PRICE_IN_PER_M;
   const outCost = (outTok / 1_000_000) * PRICE_OUT_PER_M;
@@ -1233,7 +1262,7 @@ function printCostEstimate(count: number, delayMs: number): void {
   console.log("═".repeat(44));
   console.log(`${pad("Questions to review:")} ${count.toLocaleString()}`);
   console.log(`${pad("Model:")} ${GS_CONFIG.REVIEWER_MODEL}`);
-  console.log(`${pad("Est. input tokens:")} ${inTok.toLocaleString()}  (~${EST_IN_TOKENS_PER_Q}/q)`);
+  console.log(`${pad("Est. input tokens:")} ${inTok.toLocaleString()}  (base ${EST_IN_TOKENS_PER_Q}/q + source text)`);
   console.log(`${pad("Est. output tokens:")} ${outTok.toLocaleString()}  (~${EST_OUT_TOKENS_PER_Q}/q)`);
   console.log(`${pad("Est. input cost:")} $${inCost.toFixed(4)}  ($${PRICE_IN_PER_M}/1M)`);
   console.log(`${pad("Est. output cost:")} $${outCost.toFixed(4)}  ($${PRICE_OUT_PER_M}/1M)`);
@@ -1401,6 +1430,13 @@ async function runReviews(
         reviewedAt:          new Date().toISOString(),
         model:               result.model,
         sourceContextStatus: "PRESENT",
+        sourceDocument:      ctx.sourceContext?.sourcePath,
+        sourceSha256:        ctx.sourceContext?.sourceSha256,
+        sourceSections:      ctx.sourceContext?.passages.map(passage => ({
+          number: passage.sectionNumber,
+          title: passage.sectionTitle,
+          pdfPages: passage.pdfPages,
+        })),
         overall:             result.outcome,
         dimensions:          result.dimensions,
         failEvidence:        result.failEvidence,
@@ -1438,6 +1474,13 @@ async function runReviews(
         reviewedAt:          new Date().toISOString(),
         model:               GS_CONFIG.REVIEWER_MODEL,
         sourceContextStatus: "PRESENT",
+        sourceDocument:      ctx.sourceContext?.sourcePath,
+        sourceSha256:        ctx.sourceContext?.sourceSha256,
+        sourceSections:      ctx.sourceContext?.passages.map(passage => ({
+          number: passage.sectionNumber,
+          title: passage.sectionTitle,
+          pdfPages: passage.pdfPages,
+        })),
         overall:             "REVIEWER_UNCERTAINTY",
         dimensions:          Object.fromEntries(CHECKLIST.map(c => [c.id, "FAIL" as const])),
         failEvidence:        [],
@@ -1459,6 +1502,26 @@ async function runReviews(
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
+
+function printSourceContextPreview(questions: ReviewableQuestion[]): void {
+  if (!questions.length) return;
+  console.log("\n[OFFICIAL SOURCE CONTEXT]");
+  for (const q of questions) {
+    const context = resolveSourceContext(q);
+    if (context.status !== "PRESENT" || !context.sourceContext) {
+      console.log(`  PENDING  ${q.id} — ${context.missReason ?? "relevant textbook passage unavailable"}`);
+      continue;
+    }
+    const references = context.sourceContext.passages.map(passage =>
+      `${passage.sectionNumber} ${passage.sectionTitle} (PDF page${passage.pdfPages.length === 1 ? "" : "s"} ${passage.pdfPages.join(", ")})`
+    ).join("; ");
+    const hasText = context.sourceContext.passages.some(passage => passage.text.trim().length > 100);
+    console.log(
+      `  ${q.id} — ${context.sourceContext.sourcePath}; ${references}; ` +
+      `${context.sourceContext.characterCount} chars; textbook text ${hasText ? "present" : "missing"}`
+    );
+  }
+}
 
 async function main(): Promise<void> {
   const args   = parseArgs();
@@ -1550,11 +1613,18 @@ async function main(): Promise<void> {
 
   if (args.costEstimate) {
     const reviewable = toReview.slice(0, queueSize).filter(q => resolveSourceContext(q).status === "PRESENT");
-    printCostEstimate(reviewable.length, args.delayMs);
+    if (args.dryRun && args.question) {
+      printSourceContextPreview(toReview.slice(0, queueSize));
+    }
+    printCostEstimate(reviewable, args.delayMs);
+    if (args.dryRun) console.log("[DRY RUN] No API calls made and no results written.\n");
     process.exit(0);
   }
 
   if (args.dryRun) {
+    if (args.question) {
+      printSourceContextPreview(toReview.slice(0, queueSize));
+    }
     console.log("\n[DRY RUN] No API calls made and no results written.");
     console.log("Remove --dry-run to execute the review.\n");
     process.exit(0);

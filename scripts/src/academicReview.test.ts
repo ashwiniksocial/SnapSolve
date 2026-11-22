@@ -20,6 +20,7 @@ import {
   normalizeReviewResult,
   shouldReview,
   applyFilters,
+  resolveSourceContext,
 } from "./academicReview.js";
 
 import type {
@@ -323,6 +324,81 @@ test("15. Targeted chapter filtering via --chapter remains functional", () => {
   assert.equal(filtered.length, 2);
   assert.ok(filtered.every(q => q.chapterId === "iemh105"));
   assert.ok(!filtered.some(q => q.id === "q2"), "iemh106 question must be excluded");
+});
+
+test("16. Comma-separated question IDs keep formal review scope exact", () => {
+  const q1 = makeQuestion({ id: "q1" });
+  const q2 = makeQuestion({ id: "q2" });
+  const q3 = makeQuestion({ id: "q3" });
+  const filtered = applyFilters([q1, q2, q3], {
+    contextAudit: false, batchSize: 5, delayMs: 0, dryRun: false,
+    failedOnly: false, force: false, costEstimate: false,
+    question: "q1,q3",
+  });
+  assert.deepEqual(filtered.map(question => question.id), ["q1", "q3"]);
+});
+
+test("17. Q1–Q3 receive bounded passages from the verified official NCERT PDF", () => {
+  const makeSimpleMachinesQuestion = (overrides: Partial<ReviewableQuestion>) =>
+    makeQuestion({
+      schema: "v1",
+      subject: "Physics",
+      chapterId: "phy-ch4",
+      topicId: "t6",
+      topicName: "Simple Machines",
+      ...overrides,
+    });
+  const q1 = resolveSourceContext(makeSimpleMachinesQuestion({
+    id: "c9-phy-ch4-t6-q01",
+    question: "A machine has a load of 120 N and effort of 30 N. Which expression gives its mechanical advantage?",
+    answer: "(b) Mechanical advantage = load ÷ effort = 120 N ÷ 30 N = 4.",
+  }));
+  const q2 = resolveSourceContext(makeSimpleMachinesQuestion({
+    id: "c9-phy-ch4-t6-q02",
+    question: "A machine raises a load of 180 N using effort of 45 N. Calculate its mechanical advantage.",
+    answer: "Mechanical advantage = 180 N ÷ 45 N = 4.",
+  }));
+  const q3 = resolveSourceContext(makeSimpleMachinesQuestion({
+    id: "c9-phy-ch4-t6-q03",
+    question: "An ideal machine has mechanical advantage 3 and raises a load of 240 N. Does it make total work smaller?",
+    answer: "Effort is 240 N ÷ 3 = 80 N. Force is reduced, but not total work; effort acts over a greater distance.",
+  }));
+
+  for (const [id, result] of [["Q1", q1], ["Q2", q2], ["Q3", q3]] as const) {
+    assert.equal(result.status, "PRESENT", `${id} source context should be present: ${result.missReason}`);
+    assert.ok(result.sourceContext, `${id} should have passage metadata`);
+    assert.equal(result.sourceContext.sourcePath, "curriculum/sources/cbse/class9/science/iesc107.pdf");
+    assert.match(result.sourceContext.sourceSha256, /^[a-f0-9]{64}$/);
+    assert.ok(result.sourceContext.characterCount < 24_000);
+    assert.ok(result.sourceContext.passages.every(passage =>
+      passage.pdfPages.length > 0 && passage.characterCount === passage.text.length
+    ));
+  }
+
+  const q1Text = q1.text.toLowerCase().replace(/\s+/g, " ");
+  const q2Text = q2.text.toLowerCase().replace(/\s+/g, " ");
+  const q3Text = q3.text.toLowerCase().replace(/\s+/g, " ");
+  assert.match(q1Text, /mechanical advantage/);
+  assert.match(q1Text, /load/);
+  assert.match(q1Text, /effort/);
+  assert.match(q2Text, /mechanical advantage/);
+  assert.deepEqual(q1.sourceContext?.passages.map(passage => passage.sectionNumber), ["7.6"]);
+  assert.deepEqual(q2.sourceContext?.passages.map(passage => passage.sectionNumber), ["7.6"]);
+  assert.deepEqual(q3.sourceContext?.passages.map(passage => passage.sectionNumber), ["7.6", "7.6.2"]);
+  assert.deepEqual(q3.sourceContext?.passages[1].pdfPages, [16, 17]);
+  assert.match(q3Text, /total work required for a task cannot be reduced/);
+  assert.match(q3Text, /larger distance/);
+});
+
+test("18. Missing topic/source passage fails closed", () => {
+  const result = resolveSourceContext(makeQuestion({
+    chapterId: "phy-ch4",
+    subject: "Physics",
+    topicName: "Unmapped invented topic",
+  }));
+  assert.equal(result.status, "MISSING");
+  assert.equal(result.text, "");
+  assert.match(result.missReason ?? "", /No unambiguous official section matches topic/);
 });
 
 // ─── Bonus: isEvidenceComplete ────────────────────────────────────────────────

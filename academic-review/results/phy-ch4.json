@@ -1,0 +1,130 @@
+{
+  "c9-phy-ch4-t6-q01": {
+    "questionId": "c9-phy-ch4-t6-q01",
+    "contentHash": "776a459ce5928794e398f0b762d8c16949ea7693efdce8712fc161228a21bcf1",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-11-22T17:08:38.342Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "sourceDocument": "curriculum/sources/cbse/class9/science/iesc107.pdf",
+    "sourceSha256": "90171eb6b71ddb64de9fc33bbd813dc483a7a284d0a063134edb14ea3567bf38",
+    "sourceSections": [
+      {
+        "number": "7.6",
+        "title": "Simple Machines",
+        "pdfPages": [
+          15
+        ]
+      }
+    ],
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 2000,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0003654
+    }
+  },
+  "c9-phy-ch4-t6-q02": {
+    "questionId": "c9-phy-ch4-t6-q02",
+    "contentHash": "8765853d324d6d0645f79ca167d4b1f2b4f470d928471ab8d9a97a7e2acae4c7",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-11-22T17:08:41.773Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "sourceDocument": "curriculum/sources/cbse/class9/science/iesc107.pdf",
+    "sourceSha256": "90171eb6b71ddb64de9fc33bbd813dc483a7a284d0a063134edb14ea3567bf38",
+    "sourceSections": [
+      {
+        "number": "7.6",
+        "title": "Simple Machines",
+        "pdfPages": [
+          15
+        ]
+      }
+    ],
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 1784,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.000333
+    }
+  },
+  "c9-phy-ch4-t6-q03": {
+    "questionId": "c9-phy-ch4-t6-q03",
+    "contentHash": "650e8479f451ef51097456d9308798c8b991e44e3c745527fda316f1da3097b7",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-11-22T17:08:44.993Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "sourceDocument": "curriculum/sources/cbse/class9/science/iesc107.pdf",
+    "sourceSha256": "90171eb6b71ddb64de9fc33bbd813dc483a7a284d0a063134edb14ea3567bf38",
+    "sourceSections": [
+      {
+        "number": "7.6",
+        "title": "Simple Machines",
+        "pdfPages": [
+          15
+        ]
+      },
+      {
+        "number": "7.6.2",
+        "title": "Inclined plane",
+        "pdfPages": [
+          16,
+          17
+        ]
+      }
+    ],
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 3507,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00059145
+    }
+  }
+}

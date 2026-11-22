@@ -117,7 +117,7 @@ interface MasterTopicEntry {
   board:          string;
   class:          number;
   subject:        string;
-  chapter_number: number;
+  chapter_number?: number;
   level:          "section" | "subsection" | string;
   number:         string;
   title:          string;
@@ -483,7 +483,6 @@ function sourceTopicsFor(ch: CanonicalChapter): MasterTopicEntry[] {
       board: ch.boardId,
       class: ch.classId,
       subject: ch.indexSubjectId,
-      chapter_number: ch.displayOrder,
       level: "section",
       number: section.number,
       title: section.title,
@@ -513,8 +512,10 @@ function loadOfficialSource(ch: CanonicalChapter): ExtractedSource {
   }
 
   const lockKey = relativePath.replace(/^curriculum\//, "");
-  const lock = JSON.parse(readFileSync(CURRICULUM_LOCK_PATH, "utf8")) as Record<string, string>;
-  const expectedHash = lock[lockKey];
+  const lock = JSON.parse(readFileSync(CURRICULUM_LOCK_PATH, "utf8")) as {
+    source_pdf_checksums?: Record<string, string>;
+  };
+  const expectedHash = lock.source_pdf_checksums?.[lockKey];
   if (!expectedHash) throw new Error(`No verified checksum exists for ${lockKey}.`);
 
   const pdfBytes = readFileSync(sourcePath);
@@ -630,10 +631,26 @@ function pagesForRange(pages: string[], start: number, end: number): number[] {
   let offset = 0;
   pages.forEach((page, index) => {
     const pageEnd = offset + page.length;
-    if (pageEnd >= start && offset <= end && page.trim()) result.push(index + 1);
+    if (pageEnd > start && offset < end && page.trim()) result.push(index + 1);
     offset = pageEnd + 1; // account for the form-feed separator
   });
   return result;
+}
+
+function pageStartForOffset(pages: string[], target: number): number {
+  let offset = 0;
+  for (const page of pages) {
+    const end = offset + page.length;
+    if (target <= end) return offset;
+    offset = end + 1;
+  }
+  return offset;
+}
+
+function isRunningPageHeaderOnly(text: string): boolean {
+  const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  const words = normalizeTitle(text).split(" ").filter(Boolean);
+  return lines.length === 1 && words.length <= 9 && /\b\d{2,3}\b/.test(text);
 }
 
 function extractTopicPassage(
@@ -651,7 +668,11 @@ function extractTopicPassage(
       candidate.position !== null && candidate.position > start
     )
     .sort((a, b) => a.position - b.position);
-  const end = boundaries[0]?.position ?? source.text.length;
+  let end = boundaries[0]?.position ?? source.text.length;
+  const endPageStart = pageStartForOffset(source.pages, end);
+  if (endPageStart < end && isRunningPageHeaderOnly(source.text.slice(endPageStart, end))) {
+    end = endPageStart;
+  }
   const excerpt = source.text.slice(start, end)
     .replace(/\u0000/g, "")
     .replace(/[ \t]+\n/g, "\n")
