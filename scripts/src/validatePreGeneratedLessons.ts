@@ -99,6 +99,7 @@ async function main(): Promise<void> {
     questionId: string;
     structural: "PASS" | "FAIL";
     answerLast: "CLEAR" | "LEAK" | "REVIEW" | "NOT CHECKED";
+    storedLesson: "VALID" | "INVALID" | "MISSING";
     section?: string;
     disclosure?: string;
     reason?: string;
@@ -112,12 +113,22 @@ async function main(): Promise<void> {
     const question = questions.get(id);
     if (!question) {
       errors.push(`${id}: not active/student-visible.`);
-      lessonChecks.push({ questionId: id, structural: "FAIL", answerLast: "NOT CHECKED" });
+      lessonChecks.push({
+        questionId: id,
+        structural: "FAIL",
+        answerLast: "NOT CHECKED",
+        storedLesson: "MISSING",
+      });
       continue;
     }
     const entry = chunks.get(chunkKey(question))?.lessons[id];
     if (!entry) {
-      lessonChecks.push({ questionId: id, structural: "FAIL", answerLast: "NOT CHECKED" });
+      lessonChecks.push({
+        questionId: id,
+        structural: "FAIL",
+        answerLast: "NOT CHECKED",
+        storedLesson: "MISSING",
+      });
       errors.push(`${id}: missing derived lesson.`);
       continue;
     }
@@ -131,22 +142,29 @@ async function main(): Promise<void> {
         step.result,
       ]),
     ].filter((value): value is string => typeof value === "string");
+    const approvedCalculationText = question.steps.flatMap((step) => [
+      step.formula,
+      step.result,
+    ]).filter((value): value is string => typeof value === "string");
     const answerLast = assessTeachingLessonAnswerLast(entry.lesson, question.answer, {
       canonicalQuestion: question.question,
       intermediateText,
+      approvedCalculationText,
     });
+    const storedValid = isStoredLessonValid(entry, question);
     lessonChecks.push({
       questionId: id,
       structural: structural ? "PASS" : "FAIL",
       answerLast: answerLast.status === "clear"
         ? "CLEAR"
         : answerLast.status === "leak" ? "LEAK" : "REVIEW",
+      storedLesson: storedValid ? "VALID" : "INVALID",
       ...("section" in answerLast ? { section: answerLast.section } : {}),
       ...("disclosure" in answerLast ? { disclosure: answerLast.disclosure } : {}),
       ...("reason" in answerLast ? { reason: answerLast.reason } : {}),
     });
     const sourceHashMatches = entry.sourceHash === hashQuestionContent(question);
-    if (!isStoredLessonValid(entry, question)) {
+    if (!storedValid) {
       const details = [
         !structural ? "structural invalidity" : "",
         answerComparison.status !== "match" ? `canonical answer ${answerComparison.status}` : "",
@@ -189,7 +207,7 @@ async function main(): Promise<void> {
     answerLastLeaks: lessonChecks.filter((check) => check.answerLast === "LEAK").length,
     answerLastReviews: lessonChecks.filter((check) => check.answerLast === "REVIEW").length,
     validLessons: lessonChecks.filter(
-      (check) => check.structural === "PASS" && check.answerLast === "CLEAR",
+      (check) => check.storedLesson === "VALID",
     ).length,
     lessonChecks,
     nonPregeneratedFallsThrough: true,

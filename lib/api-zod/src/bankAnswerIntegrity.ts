@@ -898,6 +898,27 @@ function calculationExpressionParts(value: string): string[] {
     .filter((part) => /\d/.test(part) && /[+*/-]/.test(part));
 }
 
+function approvedSourceAssignmentValues(
+  approvedCalculations: readonly string[],
+): Map<string, Set<string>> {
+  const assignments = new Map<string, Set<string>>();
+
+  for (const calculation of approvedCalculations) {
+    const parts = normalizeCalculationText(calculation).split("=");
+    if (parts.length < 2) continue;
+
+    const labels = parts.slice(0, -1).filter((part) => /^\p{L}+$/u.test(part));
+    const values = numericAnswerCandidates(parts.at(-1) ?? "", true);
+    for (const label of labels) {
+      const approvedValues = assignments.get(label) ?? new Set<string>();
+      for (const value of values) approvedValues.add(value.normalizedValue);
+      assignments.set(label, approvedValues);
+    }
+  }
+
+  return assignments;
+}
+
 function isSupportedCalculationAssignment(
   text: string,
   approvedCalculations: readonly string[],
@@ -908,14 +929,40 @@ function isSupportedCalculationAssignment(
   if (
     /\d/.test(label) ||
     !/^[a-z\s]+$/.test(label) ||
-    !/\d/.test(expression) ||
-    !/[+*/-]/.test(expression)
+    !/\d/.test(expression)
   ) {
     return false;
   }
-  return approvedCalculations.some((calculation) =>
-    calculationExpressionParts(calculation).includes(expression)
+
+  if (/[+*/-]/.test(expression)) {
+    return approvedCalculations.some((calculation) =>
+      calculationExpressionParts(calculation).includes(expression)
+    );
+  }
+
+  const candidateValues = numericAnswerCandidates(expression, true);
+  if (candidateValues.length !== 1) return false;
+  const approvedValues = approvedSourceAssignmentValues(approvedCalculations)
+    .get(normalizeCalculationText(label));
+  return candidateValues.some((candidate) =>
+    approvedValues?.has(candidate.normalizedValue)
   );
+}
+
+function isUnsupportedSourceAssignment(
+  text: string,
+  approvedCalculations: readonly string[],
+): boolean {
+  const parts = normalizeCalculationText(text).split("=");
+  if (parts.length !== 2 || !/^\p{L}+$/u.test(parts[0])) return false;
+
+  const candidateValues = numericAnswerCandidates(parts[1], true);
+  if (candidateValues.length !== 1) return false;
+
+  const approvedValues = approvedSourceAssignmentValues(approvedCalculations)
+    .get(parts[0]);
+  return !!approvedValues &&
+    !approvedValues.has(candidateValues[0].normalizedValue);
 }
 
 function guidedReasoningField(section: string): boolean {
@@ -1299,7 +1346,13 @@ export function assessTeachingLessonAnswerLast(
     const isUnverifiedGuidedCalculation =
       hasApprovedCalculationContext &&
       guidedReasoningField(item.section) &&
-      hasNumericGuidedCalculation(item.text);
+      (
+        hasNumericGuidedCalculation(item.text) ||
+        isUnsupportedSourceAssignment(
+          item.text,
+          context?.approvedCalculationText ?? [],
+        )
+      );
     if (isUnverifiedGuidedCalculation) {
       review ??= {
         status: "review",

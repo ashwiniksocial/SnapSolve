@@ -33,9 +33,10 @@ test("saved Q1-Q3 lessons resolve from the chapter asset without invoking a mode
   }
 });
 
-test("saved Q4 and Q6 lessons resolve completely from the chapter asset without a model call", () => {
+test("saved Q4-Q6 lessons resolve completely from the chapter asset without a model call", () => {
   for (const id of [
     "c9-phy-ch4-t6-q04",
+    "c9-phy-ch4-t6-q05",
     "c9-phy-ch4-t6-q06",
   ]) {
     const question = QUESTIONS.find((item) => item.id === id);
@@ -53,11 +54,19 @@ test("saved Q4 and Q6 lessons resolve completely from the chapter asset without 
   }
 });
 
-test("rejected Q5 lesson is not persisted or served as approved static content", () => {
+test("saved Q5 verifies effort, mechanical advantage, direction, and misconceptions", () => {
   const question = QUESTIONS.find((item) => item.id === "c9-phy-ch4-t6-q05");
   assert.ok(question, "canonical Q5 exists");
-  assert.equal(chunk.lessons[question.id], undefined);
-  assert.equal(resolveStoredLessonEntry(chunk.lessons[question.id], question), null);
+  const response = resolveStoredLessonEntry(chunk.lessons[question.id], question);
+  assert.ok(response, "Q5 resolves from the saved chapter chunk");
+  assert.equal(response.source, "bank");
+  assert.equal(response.lesson.finalAnswer.answer, question.answer);
+  assert.equal(response.lesson.guidedReasoning[0].result, "Effort = 150 N");
+  assert.match(response.lesson.guidedReasoning[1].math, /150 N ÷ 150 N/);
+  assert.match(response.lesson.guidedReasoning[1].result, /mechanical advantage = 1/i);
+  assert.match(response.lesson.guidedReasoning[2].why, /change the direction of the effort/i);
+  assert.ok(response.lesson.commonMistakes.some((item) => /effort remains the same/i.test(item.whyItHappens)));
+  assert.ok(isCompleteDetailedLesson(response.lesson));
 });
 
 test("saved MCQ lesson explains the formula and each distractor", () => {

@@ -188,6 +188,63 @@ test("answer-last permits a source-supported evaluated calculation in guided rea
   assert.deepEqual(result, { status: "clear" });
 });
 
+test("Q5 permits the NCERT-supported fixed-pulley effort as an intermediate result", () => {
+  const answer =
+    "(i) Effort = 150 N. (ii) Mechanical advantage = 150 N ÷ 150 N = 1. The effort may be applied downward.";
+  const context = {
+    canonicalQuestion:
+      "An ideal fixed pulley raises a load of 150 N. Ignore friction and pulley mass. Find the effort, mechanical advantage, and the pulley’s other main benefit.",
+    intermediateText: [
+      "An ideal fixed pulley does not reduce effort magnitude.",
+      "Effort = load = 150 N",
+    ],
+    approvedCalculationText: [
+      "Effort = load = 150 N",
+      "Mechanical advantage = 150 N ÷ 150 N = 1",
+    ],
+  };
+  const result = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      what: "Find the effort from the fixed-pulley relationship.",
+      why: "For an ideal fixed pulley, effort equals the load.",
+      result: "Effort = 150 N",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+
+  assert.deepEqual(result, { status: "clear" });
+});
+
+test("Q5 rejects an unsupported effort value and a premature explicit answer", () => {
+  const answer =
+    "(i) Effort = 150 N. (ii) Mechanical advantage = 150 N ÷ 150 N = 1. The effort may be applied downward.";
+  const context = {
+    canonicalQuestion:
+      "An ideal fixed pulley raises a load of 150 N. Ignore friction and pulley mass. Find the effort, mechanical advantage, and the pulley’s other main benefit.",
+    intermediateText: ["Effort = load = 150 N"],
+    approvedCalculationText: [
+      "Effort = load = 150 N",
+      "Mechanical advantage = 150 N ÷ 150 N = 1",
+    ],
+  };
+  const assess = (result: string) => assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      what: "Find the effort.",
+      why: "Use the approved fixed-pulley relationship.",
+      result,
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+
+  const unsupported = assess("Effort = 90 N");
+  assert.equal(unsupported.status, "review");
+  assert.equal(unsupported.section, "guidedReasoning[1].result");
+
+  const announced = assess("The answer is Effort = 150 N.");
+  assert.equal(announced.status, "leak");
+  assert.equal(announced.section, "guidedReasoning[1].result");
+});
+
 test("answer-last permits source-supported calculations inside guided explanation fields", () => {
   const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
   const context = {

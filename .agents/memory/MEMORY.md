@@ -20,6 +20,7 @@
 - [Standard Mode Schema](standard-mode-schema.md) — 4-step schema + questionTranslation + finalAnswer (no practiceQuestion); maxTokens=1100; practiceQuestion stripped post-generation if model hallucinates it.
 - [Planner Stop Words](planner-stop-words.md) — PLANNER_STOP_WORDS filters generic terms ("theorem","law","principle"…) from question tokens before chapter scoring; threshold raised 2→4; prevents wrong-chapter blueprint injection.
 - [Streaming SSE Architecture](streaming-sse-architecture.md) — Bank Detailed streams capture completion metadata, allow one transport/structure retry, and never retry academic validation failures.
+- [Script diagnostic module mode](tsx-eval-module-mode.md) — Inline diagnostics importing canonical curriculum scripts must run as ESM because those modules derive paths from `import.meta.dirname`.
 - [flushSync SSE fix](flushsync-sse-fix.md) — React 18 batching defers setState in async SSE loops; wrap onPartial setState calls in flushSync or spinner shows for full 20+ s stream.
 - [Bank Question Teaching Modes](bank-question-teaching-modes.md) — Bank questions now build a TeachingLesson from frozen fields; GuidedStepCard is mode-aware (Detailed: why always visible, Standard: why toggle, Compact: why hidden).
 - [Bank Question Streaming Architecture](bank-streaming-arch.md) — Bank questions stream a full Detailed lesson (mode:"basic") grounded in frozen answer via POST /stream with bankContext; one lesson serves all 3 modes; cache by questionId (localStorage 7d + server in-memory).
