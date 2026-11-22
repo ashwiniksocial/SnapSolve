@@ -985,10 +985,10 @@ async function callBackendStream(
 // ─── Bank question streaming ──────────────────────────────────────────────────
 //
 // Bank questions use a separate streaming path:
-//   1. Check client-side localStorage cache by questionId (7-day TTL)
+//   1. Solution.tsx checks the validated saved lesson, then localStorage cache.
 //   2. Cache miss → POST /api/solveQuestion/stream with mode:"basic" + bankContext
-//      Backend generates a full TeachingLesson grounded in the frozen bank answer,
-//      skipping the blueprint planner and quality reviewer pipeline.
+//      Backend skips blueprint planning, then performs one fail-closed academic
+//      review (generic improvement is disabled) before caching the full lesson.
 //   3. Progressive partial renders via onPartial as SSE sections arrive
 //   4. Cache the completed lesson by questionId for future instant loads
 //   5. One lesson serves all 3 teaching modes — mode switching is zero AI calls
@@ -1100,9 +1100,10 @@ async function callBankStream(
 }
 
 /**
- * Solve a bank question: localStorage cache check → streaming generation → cache.
+ * Stream a bank question after Solution.tsx has checked saved and browser caches.
  * Calls onPartial progressively as SSE sections arrive so the student sees
- * content within ~1 s. Returns the complete AIResponse (from cache or stream).
+ * content within ~1 s. Returns the complete AIResponse and stores it after
+ * canonical-answer and answer-last checks pass.
  */
 export async function solveBankWithStream(
   subject:     Subject,

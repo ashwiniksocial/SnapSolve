@@ -489,6 +489,7 @@ test("Q2 permits the approved calculation and explanation while keeping given va
   assert.deepEqual(assessTeachingLessonAnswerLast(lesson, answer, context), { status: "clear" });
   const result = repairTeachingLessonAnswerLeakage(lesson, answer, context);
   assert.equal(result.status, "clear");
+  assert.deepEqual(result.assessment, { status: "clear" });
   assert.equal(result.lesson, lesson);
 });
 

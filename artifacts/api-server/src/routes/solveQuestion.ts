@@ -2597,31 +2597,33 @@ router.post("/solveQuestion/stream", async (req, res) => {
           : null,
         outcome: "repaired",
       }, "[BANK:INTEGRITY] safely corrected a deterministic answer disclosure");
+
+      // Only a changed lesson needs a second canonical-answer comparison.
+      // The repair routine leaves finalAnswer untouched, but keep this gate
+      // after any successful text repair as a fail-closed invariant.
+      const revalidatedAnswer = compareBankAnswers(
+        finalLesson.finalAnswer?.answer ?? "",
+        bankCtx.answer,
+      );
+      if (revalidatedAnswer.status !== "match") {
+        const code = revalidatedAnswer.status === "mismatch"
+          ? "bank_answer_mismatch"
+          : "bank_answer_unverified";
+        req.log.warn({
+          stage: "post-repair-answer-integrity",
+          outcome: revalidatedAnswer.status,
+          code,
+        }, "[BANK:INTEGRITY] corrected lesson failed canonical answer revalidation");
+        emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
+        res.end();
+        return;
+      }
     }
 
-    const revalidatedAnswer = compareBankAnswers(
-      finalLesson.finalAnswer?.answer ?? "",
-      bankCtx.answer,
-    );
-    if (revalidatedAnswer.status !== "match") {
-      const code = revalidatedAnswer.status === "mismatch"
-        ? "bank_answer_mismatch"
-        : "bank_answer_unverified";
-      req.log.warn({
-        stage: "post-repair-answer-integrity",
-        outcome: revalidatedAnswer.status,
-        code,
-      }, "[BANK:INTEGRITY] corrected lesson failed canonical answer revalidation");
-      emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
-      res.end();
-      return;
-    }
-
-    const answerLast = assessTeachingLessonAnswerLast(
-      finalLesson,
-      bankCtx.answer,
-      answerLastContext,
-    );
+    // repairTeachingLessonAnswerLeakage already assessed this exact lesson and
+    // context, including its final state after any repair. Reuse that result
+    // instead of scanning the full TeachingLesson a second time.
+    const answerLast = repairResult.assessment;
     // Keep the complete rejected lesson and answerLast.offendingText request-local
     // for safe inspection/correction. Do not log or emit either payload.
     req.log.info({
@@ -2630,7 +2632,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       section: "section" in answerLast ? answerLast.section : null,
       disclosure: "disclosure" in answerLast ? answerLast.disclosure : null,
     }, "[BANK:INTEGRITY]");
-    if (answerLast.status !== "clear") {
+    if (repairResult.status === "rejected" || answerLast.status !== "clear") {
       const code = answerLast.status === "leak"
         ? "bank_answer_leakage"
         : "bank_answer_last_review";
@@ -2639,7 +2641,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
         outcome: code,
         section: "section" in answerLast ? answerLast.section : null,
         disclosure: "disclosure" in answerLast ? answerLast.disclosure : null,
-        reason: answerLast.reason,
+        reason: answerLast.status === "clear" ? repairResult.reason : answerLast.reason,
         repairReason: repairResult.status === "rejected" ? repairResult.reason : undefined,
         elapsedMs: modelElapsedMs,
       }, "[BANK:INTEGRITY]");
