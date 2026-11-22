@@ -22,11 +22,15 @@
  *  3. Run `pnpm --filter @workspace/scripts run curriculum-check` to verify.
  */
 
-import { readFileSync, existsSync } from "fs";
-import { resolve }                   from "path";
+import { execFileSync }               from "child_process";
+import { createHash }                 from "crypto";
+import { readFileSync, existsSync }   from "fs";
+import { basename, resolve, sep }     from "path";
 
 const ROOT              = resolve(import.meta.dirname, "../../");
 const MASTER_INDEX_PATH = resolve(ROOT, "curriculum/generated/master-curriculum-index.json");
+const MASTER_TOPIC_INDEX_PATH = resolve(ROOT, "curriculum/generated/master-topic-index.json");
+const CURRICULUM_LOCK_PATH = resolve(ROOT, "curriculum/generated/curriculum-lock.json");
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -107,6 +111,39 @@ interface MasterIndexEntry {
     sections?: { number?: string; title: string }[];
     key_terms?: string[];
   };
+}
+
+interface MasterTopicEntry {
+  board:          string;
+  class:          number;
+  subject:        string;
+  chapter_number: number;
+  level:          "section" | "subsection" | string;
+  number:         string;
+  title:          string;
+  filename:       string;
+}
+
+export interface QuestionSourceContextRequest {
+  topicName?: string;
+  question:   string;
+  answer:     string;
+}
+
+export interface QuestionSourcePassage {
+  sectionNumber: string;
+  sectionTitle:  string;
+  pdfPages:      number[];
+  characterCount: number;
+  text:          string;
+}
+
+export interface QuestionSourceContext {
+  sourcePath:    string;
+  sourceSha256:  string;
+  characterCount: number;
+  passages:      QuestionSourcePassage[];
+  text:          string;
 }
 
 // ─── Internal ID → Canonical mapping ─────────────────────────────────────────
@@ -390,17 +427,359 @@ export function getClass9DisplayOrder(): {
   return { math, science };
 }
 
+interface ExtractedSource {
+  sha256: string;
+  text:   string;
+  pages:  string[];
+}
+
+const extractedSourceCache = new Map<string, ExtractedSource>();
+let _topicIndex: MasterTopicEntry[] | null = null;
+
+const CONTEXT_STOP_WORDS = new Set([
+  "about", "above", "after", "again", "against", "along", "also", "among",
+  "because", "before", "being", "below", "between", "both", "could", "does",
+  "each", "from", "have", "having", "into", "more", "most", "other", "over",
+  "same", "some", "such", "than", "that", "their", "them", "then", "there",
+  "these", "they", "this", "those", "through", "under", "very", "what", "when",
+  "where", "which", "while", "with", "would", "your",
+]);
+
+const MAX_SOURCE_PASSAGE_CHARS = 12_000;
+const MAX_SOURCE_CONTEXT_CHARS = 24_000;
+
+function getTopicIndex(): MasterTopicEntry[] {
+  if (_topicIndex) return _topicIndex;
+  if (!existsSync(MASTER_TOPIC_INDEX_PATH)) {
+    _topicIndex = [];
+    return _topicIndex;
+  }
+  try {
+    const raw = JSON.parse(readFileSync(MASTER_TOPIC_INDEX_PATH, "utf8")) as {
+      topics?: MasterTopicEntry[];
+    };
+    _topicIndex = raw.topics ?? [];
+  } catch {
+    _topicIndex = [];
+  }
+  return _topicIndex;
+}
+
+function sourceTopicsFor(ch: CanonicalChapter): MasterTopicEntry[] {
+  const filename = basename(ch.sourcePath);
+  const indexed = getTopicIndex().filter(topic =>
+    topic.filename === filename &&
+    topic.board === ch.boardId &&
+    topic.class === ch.classId &&
+    topic.subject === ch.indexSubjectId
+  );
+  const byNumber = new Map(indexed.map(topic => [topic.number, topic]));
+
+  // The canonical chapter index remains the fallback for official top-level
+  // sections if the generated topic index has no row for one of them.
+  for (const section of ch.sections) {
+    if (!section.number || byNumber.has(section.number)) continue;
+    byNumber.set(section.number, {
+      board: ch.boardId,
+      class: ch.classId,
+      subject: ch.indexSubjectId,
+      chapter_number: ch.displayOrder,
+      level: "section",
+      number: section.number,
+      title: section.title,
+      filename,
+    });
+  }
+  return [...byNumber.values()].sort((a, b) =>
+    a.number.localeCompare(b.number, undefined, { numeric: true })
+  );
+}
+
+function loadOfficialSource(ch: CanonicalChapter): ExtractedSource {
+  const relativePath = ch.sourcePath.replace(/\\/g, "/");
+  if (!relativePath || relativePath.startsWith("/") || relativePath.split("/").includes("..")) {
+    throw new Error("The canonical source path is missing or unsafe.");
+  }
+  const sourcePath = resolve(ROOT, relativePath);
+  const sourceRoot = resolve(ROOT, "curriculum/sources");
+  if (!sourcePath.startsWith(sourceRoot + sep)) {
+    throw new Error("The canonical source is outside curriculum/sources.");
+  }
+
+  const cached = extractedSourceCache.get(sourcePath);
+  if (cached) return cached;
+  if (!existsSync(sourcePath) || !existsSync(CURRICULUM_LOCK_PATH)) {
+    throw new Error("The mapped official source PDF or curriculum lock is missing.");
+  }
+
+  const lockKey = relativePath.replace(/^curriculum\//, "");
+  const lock = JSON.parse(readFileSync(CURRICULUM_LOCK_PATH, "utf8")) as Record<string, string>;
+  const expectedHash = lock[lockKey];
+  if (!expectedHash) throw new Error(`No verified checksum exists for ${lockKey}.`);
+
+  const pdfBytes = readFileSync(sourcePath);
+  const actualHash = createHash("sha256").update(pdfBytes).digest("hex");
+  if (actualHash !== expectedHash) {
+    throw new Error(`The PDF checksum does not match curriculum-lock.json for ${lockKey}.`);
+  }
+
+  let text: string;
+  try {
+    // Reuse the existing Poppler text extractor used by the curriculum builder.
+    text = execFileSync("pdftotext", ["-layout", sourcePath, "-"], {
+      cwd: ROOT,
+      encoding: "utf8",
+      maxBuffer: 32 * 1024 * 1024,
+      timeout: 120_000,
+    });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`Official PDF text extraction failed: ${detail}`);
+  }
+  if (!text.trim()) throw new Error("The mapped PDF produced no extractable textbook text.");
+
+  const result = { sha256: actualHash, text, pages: text.split("\f") };
+  extractedSourceCache.set(sourcePath, result);
+  return result;
+}
+
+function normalizeTitle(value: string): string {
+  return value.toLocaleLowerCase().normalize("NFKC")
+    .replace(/[^\p{L}\p{N}]+/gu, " ").trim().replace(/\s+/g, " ");
+}
+
+function contextTerms(value: string): Set<string> {
+  return new Set(
+    (value.toLocaleLowerCase().normalize("NFKC").match(/[\p{L}\p{N}]+/gu) ?? [])
+      .filter(term => term.length >= 4 && !CONTEXT_STOP_WORDS.has(term))
+  );
+}
+
+function choosePrimaryTopic(
+  topics: MasterTopicEntry[],
+  request: QuestionSourceContextRequest,
+): MasterTopicEntry | null {
+  const topicName = normalizeTitle(request.topicName ?? "");
+  if (topicName) {
+    const exact = topics
+      .filter(topic => normalizeTitle(topic.title) === topicName)
+      .sort((a, b) => Number(b.level === "section") - Number(a.level === "section"));
+    if (exact.length) return exact[0];
+  }
+
+  const topicTerms = contextTerms(request.topicName ?? "");
+  const questionTerms = contextTerms(request.question);
+  const normalizedQuestion = normalizeTitle(`${request.question} ${request.answer}`);
+  const ranked = topics.map(topic => {
+    const titleTerms = contextTerms(topic.title);
+    const topicOverlap = [...topicTerms].filter(term => titleTerms.has(term)).length;
+    const questionOverlap = [...questionTerms].filter(term => titleTerms.has(term)).length;
+    const titleInQuestion = normalizedQuestion.includes(normalizeTitle(topic.title));
+    return {
+      topic,
+      score: topicOverlap * 5 + questionOverlap + (titleInQuestion ? 10 : 0),
+      topicOverlap,
+    };
+  }).sort((a, b) =>
+    b.score - a.score ||
+    Number(b.topic.level === "section") - Number(a.topic.level === "section") ||
+    a.topic.number.localeCompare(b.topic.number, undefined, { numeric: true })
+  );
+
+  const best = ranked[0];
+  if (!best || best.score < 2 || (topicName && best.topicOverlap === 0)) return null;
+  if (ranked[1]?.score === best.score) return null;
+  return best.topic;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function findTopicHeading(text: string, topic: MasterTopicEntry): number | null {
+  const titlePattern = topic.title.trim().split(/\s+/).map(escapeRegExp).join("\\s+");
+  const pattern = new RegExp(
+    `(?:^|[\\n\\f])\\s*(${escapeRegExp(topic.number)}\\s+${titlePattern})(?=[ \\t]*\\r?$)`,
+    "gim"
+  );
+  let match: RegExpExecArray | null;
+  let lastPosition: number | null = null;
+  while ((match = pattern.exec(text)) !== null) {
+    const heading = match[1];
+    lastPosition = match.index + match[0].lastIndexOf(heading);
+  }
+  return lastPosition;
+}
+
+function isPassageBoundary(current: MasterTopicEntry, candidate: MasterTopicEntry): boolean {
+  if (current.number === candidate.number) return false;
+  const currentParts = current.number.split(".");
+  const candidateParts = candidate.number.split(".");
+
+  if (current.level === "section") {
+    return candidate.level === "section" ||
+      candidate.number.startsWith(`${current.number}.`);
+  }
+  if (candidateParts.length < currentParts.length) return true;
+  return candidateParts.length === currentParts.length &&
+    candidateParts.slice(0, -1).join(".") === currentParts.slice(0, -1).join(".");
+}
+
+function pagesForRange(pages: string[], start: number, end: number): number[] {
+  const result: number[] = [];
+  let offset = 0;
+  pages.forEach((page, index) => {
+    const pageEnd = offset + page.length;
+    if (pageEnd >= start && offset <= end && page.trim()) result.push(index + 1);
+    offset = pageEnd + 1; // account for the form-feed separator
+  });
+  return result;
+}
+
+function extractTopicPassage(
+  source: ExtractedSource,
+  topics: MasterTopicEntry[],
+  topic: MasterTopicEntry,
+): QuestionSourcePassage | null {
+  const start = findTopicHeading(source.text, topic);
+  if (start === null) return null;
+
+  const boundaries = topics
+    .filter(candidate => isPassageBoundary(topic, candidate))
+    .map(candidate => ({ topic: candidate, position: findTopicHeading(source.text, candidate) }))
+    .filter((candidate): candidate is { topic: MasterTopicEntry; position: number } =>
+      candidate.position !== null && candidate.position > start
+    )
+    .sort((a, b) => a.position - b.position);
+  const end = boundaries[0]?.position ?? source.text.length;
+  const excerpt = source.text.slice(start, end)
+    .replace(/\u0000/g, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  if (excerpt.length < 100 || excerpt.length > MAX_SOURCE_PASSAGE_CHARS) return null;
+
+  return {
+    sectionNumber: topic.number,
+    sectionTitle: topic.title,
+    pdfPages: pagesForRange(source.pages, start, end),
+    characterCount: excerpt.length,
+    text: excerpt,
+  };
+}
+
+function buildRelevantPassages(
+  source: ExtractedSource,
+  topics: MasterTopicEntry[],
+  primary: MasterTopicEntry,
+  request: QuestionSourceContextRequest,
+): QuestionSourcePassage[] | null {
+  const section = primary.level === "section"
+    ? primary
+    : topics.find(topic =>
+      topic.level === "section" &&
+      topic.number === primary.number.split(".").slice(0, -1).join(".")
+    );
+  const passages: QuestionSourcePassage[] = [];
+  if (section) {
+    const intro = extractTopicPassage(source, topics, section);
+    if (!intro) return null;
+    passages.push(intro);
+  }
+
+  if (primary.level !== "section") {
+    const specific = extractTopicPassage(source, topics, primary);
+    if (!specific) return null;
+    if (!passages.some(passage => passage.sectionNumber === specific.sectionNumber)) {
+      passages.push(specific);
+    }
+  } else {
+    const parentText = passages[0]?.text ?? "";
+    const parentTerms = contextTerms(parentText);
+    const answerTerms = contextTerms(request.answer);
+    const distinctiveAnswerTerms = [...answerTerms].filter(term => !parentTerms.has(term));
+    const childTopics = topics.filter(topic =>
+      topic.level === "subsection" &&
+      topic.number.startsWith(`${primary.number}.`)
+    );
+    const rankedChildren = childTopics.map(topic => {
+      const passage = extractTopicPassage(source, topics, topic);
+      if (!passage) return null;
+      const passageTerms = contextTerms(passage.text);
+      const score = distinctiveAnswerTerms.reduce(
+        (total, term) => total + (passageTerms.has(term) ? 1 : 0),
+        0
+      );
+      return { passage, score };
+    }).filter((candidate): candidate is { passage: QuestionSourcePassage; score: number } =>
+      candidate !== null && candidate.score > 0
+    ).sort((a, b) =>
+      b.score - a.score ||
+      a.passage.sectionNumber.localeCompare(b.passage.sectionNumber, undefined, { numeric: true })
+    );
+    if (rankedChildren.length) passages.push(rankedChildren[0].passage);
+  }
+
+  return passages.length ? passages : null;
+}
+
 /**
- * Format a canonical chapter's index entry as rich text for the academic
- * reviewer's context window (sections, key terms).
+ * Build bounded, question-relevant text from the chapter's hash-verified
+ * official PDF. The canonical and generated topic indexes provide identity and
+ * headings; section text is extracted from the mapped PDF via Poppler.
  */
-export function formatChapterContext(ch: CanonicalChapter): string {
-  const sections = ch.sections
-    .map(s => `  ${s.number ? s.number + ". " : ""}${s.title}`)
-    .join("\n");
-  const keyTerms = ch.keyTerms.slice(0, 20).join(", ");
-  let text = `Official chapter: "${ch.chapterTitle}" [${ch.bookId}] (${ch.bookSeries}, ${ch.academicSession})`;
-  if (sections) text += `\nChapter sections:\n${sections}`;
-  if (keyTerms) text += `\nKey terms: ${keyTerms}`;
-  return text;
+export function buildQuestionSourceContext(
+  ch: CanonicalChapter,
+  request: QuestionSourceContextRequest,
+): QuestionSourceContext {
+  if (!ch.sourcePath || ch.status !== "ACTIVE") {
+    throw new Error(`Canonical source is not active for ${ch.internalId}.`);
+  }
+  const topics = sourceTopicsFor(ch);
+  if (!topics.length) {
+    throw new Error(`No generated section map is available for ${ch.sourcePath}.`);
+  }
+  const primary = choosePrimaryTopic(topics, request);
+  if (!primary) {
+    throw new Error(`No unambiguous official section matches topic "${request.topicName ?? ""}".`);
+  }
+  const source = loadOfficialSource(ch);
+  const passages = buildRelevantPassages(source, topics, primary, request);
+  if (!passages) {
+    throw new Error(`The mapped PDF does not contain the selected section heading ${primary.number} ${primary.title}.`);
+  }
+
+  const passageText = passages.map(passage =>
+    `Section ${passage.sectionNumber} — ${passage.sectionTitle} ` +
+    `(PDF page${passage.pdfPages.length === 1 ? "" : "s"} ${passage.pdfPages.join(", ")}):\n${passage.text}`
+  ).join("\n\n");
+  const text = [
+    `Official source: ${ch.boardId}, Grade ${ch.classId}, ${ch.subjectId}, ${ch.academicSession}; ` +
+      `${ch.bookSeries}, ${ch.bookId}; file ${ch.sourcePath}; SHA-256 ${source.sha256}.`,
+    `Official chapter: "${ch.chapterTitle}".`,
+    "Relevant textbook passages extracted from the verified PDF (layout whitespace normalized):",
+    passageText,
+  ].join("\n\n");
+  if (text.length > MAX_SOURCE_CONTEXT_CHARS) {
+    throw new Error(`Selected official source context exceeds the ${MAX_SOURCE_CONTEXT_CHARS}-character limit.`);
+  }
+
+  return {
+    sourcePath: ch.sourcePath,
+    sourceSha256: source.sha256,
+    characterCount: text.length,
+    passages,
+    text,
+  };
+}
+
+/**
+ * Format the official source passages injected into the existing academic
+ * reviewer's context. Missing or unextractable source text must fail closed.
+ */
+export function formatChapterContext(
+  ch: CanonicalChapter,
+  request: QuestionSourceContextRequest,
+): string {
+  return buildQuestionSourceContext(ch, request).text;
 }
