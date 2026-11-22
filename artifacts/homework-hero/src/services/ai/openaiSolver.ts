@@ -22,6 +22,7 @@ import {
   assessTeachingLessonAnswerLast,
   compareBankAnswers,
   isBankLessonAnswerSafe,
+  type AnswerLastContext,
 } from "@workspace/api-zod/bank-answer-integrity";
 import type { SimplifyContext } from "@/services/teachingActions";
 import { buildStudentContext }             from "@/services/studentModel";
@@ -68,6 +69,20 @@ function writeCache(store: Record<string, CacheEntry>): void {
   try { localStorage.setItem(CACHE_STORE_KEY, JSON.stringify(store)); } catch {}
 }
 
+function answerLastContextFor(
+  canonicalQuestion: string | undefined,
+  approvedSteps: readonly { title: string; explanation: string; formula?: string; result?: string }[] = [],
+): AnswerLastContext {
+  const approvedIntermediates = approvedSteps
+    .slice(0, -1)
+    .flatMap((step) => [step.title, step.explanation, step.formula, step.result])
+    .filter((value): value is string => typeof value === "string");
+  return {
+    canonicalQuestion,
+    intermediateText: approvedIntermediates,
+  };
+}
+
 export function getCachedSolution(subject: string, question: string, mode: ReadingLevel = "standard"): AIResponse | null {
   const store = readCache();
   const key = hashKey(subject, question, mode);
@@ -80,7 +95,11 @@ export function getCachedSolution(subject: string, question: string, mode: Readi
   }
   if (
     entry.response.lesson &&
-    assessTeachingLessonAnswerLast(entry.response.lesson).status !== "clear"
+    assessTeachingLessonAnswerLast(
+      entry.response.lesson,
+      undefined,
+      answerLastContextFor(question),
+    ).status !== "clear"
   ) {
     delete store[key];
     writeCache(store);
@@ -92,7 +111,11 @@ export function getCachedSolution(subject: string, question: string, mode: Readi
 function cacheSolution(subject: string, question: string, mode: ReadingLevel, response: AIResponse): void {
   if (
     response.lesson &&
-    assessTeachingLessonAnswerLast(response.lesson).status !== "clear"
+    assessTeachingLessonAnswerLast(
+      response.lesson,
+      undefined,
+      answerLastContextFor(question),
+    ).status !== "clear"
   ) return;
   const store = readCache();
   const now   = Date.now();
@@ -167,7 +190,11 @@ function bankLessonCacheKey(
   return `${chapterKey}|${encodeURIComponent(questionId)}`;
 }
 
-export function getBankCachedLesson(questionId: string, context?: BankQuestionContext): AIResponse | null {
+export function getBankCachedLesson(
+  questionId: string,
+  context?: BankQuestionContext,
+  canonicalQuestion?: string,
+): AIResponse | null {
   if (!context) return null;
   const store = readBankCache();
   const key = bankLessonCacheKey(questionId, context, context.subject);
@@ -186,7 +213,11 @@ export function getBankCachedLesson(questionId: string, context?: BankQuestionCo
   if (
     !entry.sourceHash ||
     !isBankLessonAnswerSafe(candidateAnswer, context.answer, entry.sourceHash, context.sourceHash) ||
-    assessTeachingLessonAnswerLast(entry.lesson.lesson, context.answer).status !== "clear" ||
+    assessTeachingLessonAnswerLast(
+      entry.lesson.lesson,
+      context.answer,
+      answerLastContextFor(canonicalQuestion, context.steps),
+    ).status !== "clear" ||
     !isBankLessonComplete(entry.lesson)
   ) {
     if (entryKey) delete store[entryKey];
@@ -196,12 +227,21 @@ export function getBankCachedLesson(questionId: string, context?: BankQuestionCo
   return entry.lesson;
 }
 
-function cacheBankLesson(questionId: string, context: BankQuestionContext, lesson: AIResponse): void {
+function cacheBankLesson(
+  questionId: string,
+  context: BankQuestionContext,
+  lesson: AIResponse,
+  canonicalQuestion: string,
+): void {
   const candidateAnswer = lesson.lesson?.finalAnswer?.answer ?? "";
   if (
     !isBankLessonComplete(lesson) ||
     compareBankAnswers(candidateAnswer, context.answer).status !== "match" ||
-    assessTeachingLessonAnswerLast(lesson.lesson, context.answer).status !== "clear"
+    assessTeachingLessonAnswerLast(
+      lesson.lesson,
+      context.answer,
+      answerLastContextFor(canonicalQuestion, context.steps),
+    ).status !== "clear"
   ) {
     console.warn("[BANK:CACHE] Lesson failed completeness or answer integrity — not caching");
     return;
@@ -220,11 +260,19 @@ function cacheBankLesson(questionId: string, context: BankQuestionContext, lesso
   writeBankCache(store);
 }
 
-function assertBankAnswer(response: AIResponse, canonicalAnswer: string): void {
+function assertBankAnswer(
+  response: AIResponse,
+  canonicalAnswer: string,
+  context?: AnswerLastContext,
+): void {
   const comparison = compareBankAnswers(response.lesson?.finalAnswer?.answer ?? "", canonicalAnswer);
   if (comparison.status === "mismatch") throw new Error("bank_answer_mismatch");
   if (comparison.status !== "match") throw new Error("bank_answer_unverified");
-  const answerLast = assessTeachingLessonAnswerLast(response.lesson, canonicalAnswer);
+  const answerLast = assessTeachingLessonAnswerLast(
+    response.lesson,
+    canonicalAnswer,
+    context ?? answerLastContextFor(response.detectedQuestion),
+  );
   if (answerLast.status === "leak") throw new Error("bank_answer_leakage");
   if (answerLast.status === "review") throw new Error("bank_answer_last_review");
 }
@@ -1096,8 +1144,12 @@ export async function solveBankWithStream(
   );
 
   const result: AIResponse = { ...toAIResponse(data, subject, question), id: streamId, source: "bank" };
-  assertBankAnswer(result, bankContext.answer);
-  cacheBankLesson(bankContext.questionId, bankContext, result);
+  assertBankAnswer(
+    result,
+    bankContext.answer,
+    answerLastContextFor(question, bankContext.steps),
+  );
+  cacheBankLesson(bankContext.questionId, bankContext, result, question);
   return result;
 }
 
@@ -1109,12 +1161,17 @@ export async function solveBankWithStream(
 export async function awaitFinalBankLesson(
   runStream: (onPartial: (partial: AIResponse) => void) => Promise<AIResponse>,
   canonicalAnswer: string,
+  answerLastContext?: AnswerLastContext,
 ): Promise<AIResponse> {
   const result = await runStream(() => undefined);
   if (!isBankLessonComplete(result)) {
     throw new Error("bank_lesson_incomplete");
   }
-  assertBankAnswer(result, canonicalAnswer);
+  assertBankAnswer(
+    result,
+    canonicalAnswer,
+    answerLastContext ?? answerLastContextFor(result.detectedQuestion),
+  );
   return result;
 }
 

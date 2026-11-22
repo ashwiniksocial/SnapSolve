@@ -300,12 +300,23 @@ export function isStoredLessonValid(
   entry: PreGeneratedLessonEntry | undefined,
   question: Question,
 ): entry is PreGeneratedLessonEntry {
+  const intermediateText = [
+    ...question.steps.slice(0, -1).flatMap((step) => [
+      step.title,
+      step.explanation,
+      step.formula,
+      step.result,
+    ]),
+  ].filter((value): value is string => typeof value === "string");
   return !!entry &&
     entry.questionId === question.id &&
     entry.sourceHash === hashQuestionContent(question) &&
     compareBankAnswers(entry.lesson.finalAnswer.answer, question.answer).status === "match" &&
     isCompleteDetailedLesson(entry.lesson) &&
-    assessTeachingLessonAnswerLast(entry.lesson, question.answer).status === "clear";
+    assessTeachingLessonAnswerLast(entry.lesson, question.answer, {
+      canonicalQuestion: question.question,
+      intermediateText,
+    }).status === "clear";
 }
 
 /**

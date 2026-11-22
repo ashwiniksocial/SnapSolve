@@ -113,7 +113,18 @@ async function main(): Promise<void> {
     }
     const structural = isCompleteDetailedLesson(entry.lesson);
     const answerComparison = compareBankAnswers(entry.lesson.finalAnswer?.answer ?? "", question.answer);
-    const answerLast = assessTeachingLessonAnswerLast(entry.lesson, question.answer);
+    const intermediateText = [
+      ...question.steps.slice(0, -1).flatMap((step) => [
+        step.title,
+        step.explanation,
+        step.formula,
+        step.result,
+      ]),
+    ].filter((value): value is string => typeof value === "string");
+    const answerLast = assessTeachingLessonAnswerLast(entry.lesson, question.answer, {
+      canonicalQuestion: question.question,
+      intermediateText,
+    });
     lessonChecks.push({
       questionId: id,
       structural: structural ? "PASS" : "FAIL",

@@ -5,6 +5,7 @@ import {
   classifyBankAnswerFormat,
   compareBankAnswers,
   isBankLessonAnswerSafe,
+  repairTeachingLessonAnswerLeakage,
 } from "@workspace/api-zod/bank-answer-integrity";
 
 test("exact and supported equivalent frozen-answer representations match", () => {
@@ -172,4 +173,205 @@ test("answer-last gate permits a complete answer only in finalAnswer", () => {
     finalAnswer: { answer: "The answer is (c) √2, which is irrational." },
   });
   assert.deepEqual(result, { status: "clear" });
+});
+
+test("Q1-style answer claims in whatWeKnow are repaired and fully revalidated", () => {
+  const lesson = {
+    questionTranslation: {
+      plainEnglish: "We will apply the operation shown in the question.",
+      whatWeKnow: "The answer is 4.",
+      whatWeFind: "We need to find the requested value.",
+      wordToMath: "",
+    },
+    guidedReasoning: [{ what: "Combine the values.", why: "Use addition.", math: "2 + 2 = 4", result: "The sum is found." }],
+    finalAnswer: { answer: "4" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "4", {
+    canonicalQuestion: "What is 2 + 2?",
+    intermediateText: ["2 + 2 = 4"],
+  });
+
+  assert.equal(result.status, "repaired");
+  assert.equal(result.assessment.status, "clear");
+  assert.equal(result.initialAssessment?.status, "leak");
+  if (result.initialAssessment?.status === "leak") {
+    assert.equal(result.initialAssessment.section, "questionTranslation.whatWeKnow");
+    assert.equal(result.initialAssessment.disclosure, "4");
+  }
+  assert.equal(result.repairCount, 1);
+  assert.match(
+    (result.lesson as typeof lesson).questionTranslation.whatWeKnow,
+    /establish the result after working through the steps/i,
+  );
+  assert.equal(lesson.questionTranslation.whatWeKnow, "The answer is 4.");
+  assert.equal((result.lesson as typeof lesson).guidedReasoning[0].math, "2 + 2 = 4");
+  assert.equal((result.lesson as typeof lesson).finalAnswer.answer, "4");
+});
+
+test("Q3-style answer claims in plainEnglish become a neutral target description", () => {
+  const lesson = {
+    questionTranslation: {
+      plainEnglish: "The examiner is asking us to find 4.",
+      whatWeKnow: "",
+    },
+    finalAnswer: { answer: "4" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "4", {
+    canonicalQuestion: "What is 2 + 2?",
+    intermediateText: ["2 + 2 = 4"],
+  });
+
+  assert.equal(result.status, "repaired");
+  assert.equal(result.assessment.status, "clear");
+  assert.equal(
+    (result.lesson as typeof lesson).questionTranslation.plainEnglish,
+    "The examiner is asking us to find the requested value.",
+  );
+});
+
+test("a canonical numerical given is preserved and does not trigger answer repair", () => {
+  const lesson = {
+    questionTranslation: {
+      plainEnglish: "We will work with the measurement in the question.",
+      whatWeKnow: "We are given 4 m.",
+    },
+    finalAnswer: { answer: "4 m" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "4 m", {
+    canonicalQuestion: "A strip measures 4 m. State the given length.",
+  });
+
+  assert.equal(result.status, "clear");
+  assert.equal(result.lesson, lesson);
+  assert.equal(lesson.questionTranslation.whatWeKnow, "We are given 4 m.");
+});
+
+test("an answer claim is not excused by the same option appearing in an MCQ question", () => {
+  const lesson = {
+    questionTranslation: { plainEnglish: "√2 is the irrational choice." },
+    finalAnswer: { answer: "(c) √2" },
+  };
+  const result = assessTeachingLessonAnswerLast(lesson, "(c) √2", {
+    canonicalQuestion: "Which number is irrational? (a) √3 (b) 2 (c) √2 (d) 0.5",
+  });
+  assert.equal(result.status, "leak");
+  if (result.status === "leak") assert.equal(result.section, "questionTranslation.plainEnglish");
+});
+
+test("verified intermediate calculations remain untouched", () => {
+  const lesson = {
+    questionTranslation: { plainEnglish: "Combine the two values." },
+    guidedReasoning: [
+      { what: "Add the values.", math: "2 + 2 = 4", result: "Intermediate result: 4." },
+      { what: "Use the result to answer the question.", math: "", result: "" },
+    ],
+    finalAnswer: { answer: "4" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "4", {
+    canonicalQuestion: "What is 2 + 2?",
+    intermediateText: ["2 + 2 = 4", "Intermediate result: 4."],
+  });
+
+  assert.equal(result.status, "clear");
+  assert.equal(result.lesson, lesson);
+  assert.equal((result.lesson as typeof lesson).guidedReasoning[0].math, "2 + 2 = 4");
+  assert.equal((result.lesson as typeof lesson).guidedReasoning[0].result, "Intermediate result: 4.");
+});
+
+test("equivalent numeric formatting can be repaired without inferring unit conversions", () => {
+  const equivalent = {
+    questionTranslation: { whatWeKnow: "The final answer is 4.0 m." },
+    finalAnswer: { answer: "4 m" },
+  };
+  const repaired = repairTeachingLessonAnswerLeakage(equivalent, "4 m");
+  assert.equal(repaired.status, "repaired");
+  assert.equal(repaired.assessment.status, "clear");
+
+  assert.equal(compareBankAnswers("4.0 m", "4 m").status, "match");
+  assert.equal(compareBankAnswers("400 cm", "4 m").status, "indeterminate");
+  const unsupportedUnitConversion = {
+    questionTranslation: { whatWeKnow: "The answer is 400 cm." },
+    finalAnswer: { answer: "4 m" },
+  };
+  const rejected = repairTeachingLessonAnswerLeakage(unsupportedUnitConversion, "4 m");
+  assert.equal(rejected.status, "clear");
+  assert.equal(rejected.lesson, unsupportedUnitConversion);
+  assert.equal(unsupportedUnitConversion.questionTranslation.whatWeKnow, "The answer is 400 cm.");
+});
+
+test("ambiguous answer disclosures fail closed without deleting numbers or explanations", () => {
+  const lesson = {
+    questionTranslation: { whatWeKnow: "Therefore, we use 4 in this step, then continue with the explanation." },
+    finalAnswer: { answer: "4" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "4");
+
+  assert.equal(result.status, "rejected");
+  assert.equal(result.assessment.status, "leak");
+  assert.equal(result.lesson, lesson);
+  assert.equal(
+    lesson.questionTranslation.whatWeKnow,
+    "Therefore, we use 4 in this step, then continue with the explanation.",
+  );
+});
+
+test("already-valid lessons are returned by identity with no changes", () => {
+  const lesson = {
+    questionTranslation: { plainEnglish: "We will compare the given quantities." },
+    finalAnswer: { answer: "42" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "42");
+  assert.equal(result.status, "clear");
+  assert.equal(result.lesson, lesson);
+  assert.equal(result.repairCount, 0);
+});
+
+test("a lesson with a wrong final answer is rejected and left unchanged", () => {
+  const lesson = {
+    questionTranslation: { whatWeKnow: "The answer is 4." },
+    finalAnswer: { answer: "5" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "4");
+  assert.equal(result.status, "rejected");
+  assert.equal(result.lesson, lesson);
+  assert.equal(lesson.finalAnswer.answer, "5");
+  assert.match(result.reason ?? "", /does not match the canonical answer/i);
+});
+
+test("answer-claim repair does not change unrelated academic steps", () => {
+  const lesson = {
+    questionTranslation: { plainEnglish: "The answer is 4." },
+    guidedReasoning: [{ what: "Check the operation.", math: "2 + 2 = 5", result: "Use the source steps." }],
+    finalAnswer: { answer: "4" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "4");
+  assert.equal(result.status, "repaired");
+  assert.deepEqual((result.lesson as typeof lesson).guidedReasoning, lesson.guidedReasoning);
+});
+
+test("short exact answers are corrected only when an explicit answer claim is present", () => {
+  const lesson = {
+    questionTranslation: { plainEnglish: "The answer is photosynthesis." },
+    finalAnswer: { answer: "photosynthesis" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "photosynthesis");
+  assert.equal(result.status, "repaired");
+  assert.equal(result.assessment.status, "clear");
+});
+
+test("single-letter option answers are caught and corrected only with an explicit claim", () => {
+  const lesson = {
+    questionTranslation: { whatWeKnow: "The answer is B." },
+    finalAnswer: { answer: "B" },
+  };
+  const result = repairTeachingLessonAnswerLeakage(lesson, "B");
+  assert.equal(result.status, "repaired");
+  assert.equal(result.assessment.status, "clear");
+  assert.equal(lesson.questionTranslation.whatWeKnow, "The answer is B.");
+
+  const ordinaryUse = {
+    questionTranslation: { plainEnglish: "This problem uses B as a variable." },
+    finalAnswer: { answer: "B" },
+  };
+  assert.equal(assessTeachingLessonAnswerLast(ordinaryUse).status, "clear");
 });

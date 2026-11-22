@@ -36,9 +36,11 @@ import { buildTeachingBlueprint, type BlueprintInjection } from "../services/mas
 import { extractUsage, addUsage, zeroUsage, type UsageSnapshot } from "../lib/aiCost";
 import { LessonStreamExtractor } from "../lib/lessonStreamExtractor";
 import {
+  repairTeachingLessonAnswerLeakage,
   assessTeachingLessonAnswerLast,
   compareBankAnswers,
   isBankLessonAnswerSafe,
+  type AnswerLastContext,
 } from "@workspace/api-zod/bank-answer-integrity";
 import {
   evaluateArchitectureCFastPath,
@@ -73,6 +75,25 @@ type Subject = (typeof SUBJECTS)[number];
 type LessonMode = "basic" | "standard" | "advanced";
 const LESSON_MODES: readonly LessonMode[] = ["basic", "standard", "advanced"];
 type SolveIntent = "simplify";
+
+function answerLastContextFor(
+  canonicalQuestion: string,
+  approvedSteps: readonly {
+    title?: string;
+    explanation?: string;
+    formula?: string;
+    result?: string;
+  }[] = [],
+): AnswerLastContext {
+  const approvedIntermediates = approvedSteps
+    .slice(0, -1)
+    .flatMap((step) => [step.title, step.explanation, step.formula, step.result])
+    .filter((value): value is string => typeof value === "string");
+  return {
+    canonicalQuestion,
+    intermediateText: approvedIntermediates,
+  };
+}
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
 
@@ -405,6 +426,7 @@ ALWAYS explain WHY. Every operation must justify itself.
 ALWAYS use short sentences. Active voice. Everyday words.
 ALWAYS encourage: "Don't worry if this looks hard.", "We'll work through it together.", "You're on the right track."
 MATH: Never skip any step. Never combine two operations into one line.
+INTRODUCTORY QUESTION-TRANSLATION FIELDS may describe the question and its givens, but must not state the final result or identify the correct option. Preserve all given values and intermediate calculations. Put the conclusion in finalAnswer.
 
 ═══════════════════════════════════════════════════════════════
 QUALITY CHECK — Run silently before outputting JSON
@@ -491,6 +513,7 @@ questionTranslation.whatWeFind
   "We need to find…" — name the quantity and its unit.
 questionTranslation.wordToMath
   Key phrase → symbol/expression, one per line. 2–3 lines max.
+  plainEnglish and whatWeKnow may describe the question and its givens, but must not state a computed final result or identify the correct option. Preserve every given value and intermediate calculation; put the conclusion in finalAnswer.
 
 guidedReasoning — WRITE EXACTLY 4 STEPS. NOT 3. NOT 5. EXACTLY 4.
   Each step covers ONE operation or ONE new idea. Never two.
@@ -1427,7 +1450,9 @@ router.post("/solveQuestion", async (req, res) => {
   // 3. Server-side cache — skip for personalised responses
   if (!ctx && !intent) {
     const cached = getCached(subj, q, mode, contextKey);
-    const cachedAnswerLast = cached ? assessTeachingLessonAnswerLast(cached) : null;
+    const cachedAnswerLast = cached
+      ? assessTeachingLessonAnswerLast(cached, undefined, answerLastContextFor(q))
+      : null;
     if (cached && cachedAnswerLast?.status === "clear") {
       req.log.info({ subject: subj, cached: true }, "[PIPELINE:3] HIT — server cache → returning cached lesson, skipping OpenAI");
       setProgress(reqId, "cache_hit", "Lesson ready!", 100);
@@ -1801,12 +1826,37 @@ router.post("/solveQuestion", async (req, res) => {
     return;
   }
 
-  const answerLast = assessTeachingLessonAnswerLast(finalLesson);
+  const answerLastContext = answerLastContextFor(q);
+  const repairResult = repairTeachingLessonAnswerLeakage(
+    finalLesson,
+    finalLesson.finalAnswer?.answer ?? "",
+    answerLastContext,
+  );
+  if (repairResult.status === "repaired") {
+    finalLesson = repairResult.lesson as LessonResponse;
+    req.log.info({
+      repairCount: repairResult.repairCount,
+      section: repairResult.initialAssessment && "section" in repairResult.initialAssessment
+        ? repairResult.initialAssessment.section
+        : null,
+      disclosure: repairResult.initialAssessment && "disclosure" in repairResult.initialAssessment
+        ? repairResult.initialAssessment.disclosure
+        : null,
+      outcome: "repaired",
+    }, "solveQuestion: safely corrected an introductory answer disclosure");
+  }
+  const answerLast = assessTeachingLessonAnswerLast(
+    finalLesson,
+    finalLesson.finalAnswer?.answer,
+    answerLastContext,
+  );
   if (answerLast.status !== "clear") {
     req.log.warn({
       outcome: answerLast.status,
       section: "section" in answerLast ? answerLast.section : null,
+      disclosure: "disclosure" in answerLast ? answerLast.disclosure : null,
       reason: answerLast.reason,
+      repairReason: repairResult.status === "rejected" ? repairResult.reason : undefined,
     }, "solveQuestion: rejected lesson that disclosed or may disclose its answer early");
     res.status(422).json({
       error: answerLast.status === "leak" ? "answer_last_leakage" : "answer_last_review",
@@ -1885,11 +1935,11 @@ router.post("/solveQuestion", async (req, res) => {
 // POST /api/solveQuestion/stream
 //
 // Streams a Standard-mode lesson via Server-Sent Events so meaningful teaching
-// content appears within ≤5 s (target ≤3 s) instead of waiting for the full
-// response.  Bank questions and non-Standard modes use the regular route.
+// completion can be reported while preserving the SSE request lifecycle.
+// Generated lesson sections remain buffered until the integrity gates pass.
+// Bank questions and non-Standard modes use the regular route.
 //
 // SSE event shapes:
-//   { type:"section", field, index?, value }  — one section is complete
 //   { type:"cached",  lesson }                — server-cache hit, nothing to stream
 //   { type:"done",    lesson, firstContentMs, totalLatencyMs, ... }
 //   { type:"error",   code, message? }
@@ -1994,7 +2044,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
       bankCtx.answer,
       entry.sourceHash,
       bankCtx.sourceHash,
-    ) && assessTeachingLessonAnswerLast(entry.data, bankCtx.answer).status === "clear";
+    ) && assessTeachingLessonAnswerLast(
+      entry.data,
+      bankCtx.answer,
+      answerLastContextFor(q, bankCtx.steps),
+    ).status === "clear";
     if (entry && Date.now() <= entry.expiresAt && isCurrentAndSafe) {
       req.log.info({
         stage: "server-cache",
@@ -2017,7 +2071,9 @@ router.post("/solveQuestion/stream", async (req, res) => {
     }, "[BANK:PERF]");
   } else if (!ctx) {
     const cached = getCached(subj, q, "standard", contextKey);
-    const cachedAnswerLast = cached ? assessTeachingLessonAnswerLast(cached) : null;
+    const cachedAnswerLast = cached
+      ? assessTeachingLessonAnswerLast(cached, undefined, answerLastContextFor(q))
+      : null;
     if (cached && cachedAnswerLast?.status === "clear") {
       req.log.info({ subject: subj, cached: true }, "[STREAM] cache hit — returning via SSE");
       res.setHeader("Content-Type",    "text/event-stream");
@@ -2092,6 +2148,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       `PEDAGOGICAL HINT (use for questionTranslation.plainEnglish context): ${bankCtx.hint}`,
       ``,
       `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above.`,
+      `INTRODUCTORY FIELDS may explain the question and its givens, but must not state the final result or identify the correct option. Preserve necessary givens and intermediate calculations.`,
       `guidedReasoning MUST follow the approved reasoning (you may add depth to why/pause).`,
       `All other visible sections (intuition, commonMistakes, simplerExample, practiceQuestion) should be authored with full pedagogical depth.`,
       ``,
@@ -2184,11 +2241,9 @@ router.post("/solveQuestion/stream", async (req, res) => {
         accumJson += content;
 
         const sections = extractor.feed(content);
-        for (const sec of sections) {
-          if (firstContentMs < 0) firstContentMs = Date.now() - requestStart;
-          // Bank lessons are held until the final answer passes the integrity gate.
-          if (!bankCtx) emit({ type: "section", field: sec.field, index: sec.index, value: sec.value });
-        }
+        if (sections.length > 0 && firstContentMs < 0) firstContentMs = Date.now() - requestStart;
+        // Do not expose model-generated lesson content before the completed
+        // TeachingLesson passes answer and academic integrity validation.
       }
     }
   } catch (err) {
@@ -2263,11 +2318,55 @@ router.post("/solveQuestion/stream", async (req, res) => {
       return;
     }
 
-    const answerLast = assessTeachingLessonAnswerLast(finalLesson, bankCtx.answer);
+    const answerLastContext = answerLastContextFor(q, bankCtx.steps);
+    const repairResult = repairTeachingLessonAnswerLeakage(
+      finalLesson,
+      bankCtx.answer,
+      answerLastContext,
+    );
+    if (repairResult.status === "repaired") {
+      finalLesson = repairResult.lesson as LessonResponse;
+      req.log.info({
+        questionId: bankCtx.questionId,
+        repairCount: repairResult.repairCount,
+        section: repairResult.initialAssessment && "section" in repairResult.initialAssessment
+          ? repairResult.initialAssessment.section
+          : null,
+        disclosure: repairResult.initialAssessment && "disclosure" in repairResult.initialAssessment
+          ? repairResult.initialAssessment.disclosure
+          : null,
+        outcome: "repaired",
+      }, "[BANK:INTEGRITY] safely corrected an introductory answer disclosure");
+    }
+
+    const revalidatedAnswer = compareBankAnswers(
+      finalLesson.finalAnswer?.answer ?? "",
+      bankCtx.answer,
+    );
+    if (revalidatedAnswer.status !== "match") {
+      const code = revalidatedAnswer.status === "mismatch"
+        ? "bank_answer_mismatch"
+        : "bank_answer_unverified";
+      req.log.warn({
+        stage: "post-repair-answer-integrity",
+        outcome: revalidatedAnswer.status,
+        code,
+      }, "[BANK:INTEGRITY] corrected lesson failed canonical answer revalidation");
+      emit({ type: "error", code });
+      res.end();
+      return;
+    }
+
+    const answerLast = assessTeachingLessonAnswerLast(
+      finalLesson,
+      bankCtx.answer,
+      answerLastContext,
+    );
     req.log.info({
       stage: "answer-last-integrity",
       outcome: answerLast.status,
       section: "section" in answerLast ? answerLast.section : null,
+      disclosure: "disclosure" in answerLast ? answerLast.disclosure : null,
     }, "[BANK:INTEGRITY]");
     if (answerLast.status !== "clear") {
       const code = answerLast.status === "leak"
@@ -2277,7 +2376,9 @@ router.post("/solveQuestion/stream", async (req, res) => {
         stage: "model-generated",
         outcome: code,
         section: "section" in answerLast ? answerLast.section : null,
+        disclosure: "disclosure" in answerLast ? answerLast.disclosure : null,
         reason: answerLast.reason,
+        repairReason: repairResult.status === "rejected" ? repairResult.reason : undefined,
         elapsedMs: modelElapsedMs,
       }, "[BANK:INTEGRITY]");
       emit({ type: "error", code });

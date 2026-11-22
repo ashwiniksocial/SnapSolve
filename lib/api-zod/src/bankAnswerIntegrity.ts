@@ -14,6 +14,20 @@ export type AnswerLastAssessment =
   | { status: "leak"; section: string; disclosure: string; reason: string }
   | { status: "review"; section: string; disclosure: string; reason: string };
 
+export interface AnswerLastContext {
+  canonicalQuestion?: string;
+  intermediateText?: readonly string[];
+}
+
+export interface AnswerLastRepairResult {
+  status: "clear" | "repaired" | "rejected";
+  lesson: unknown;
+  assessment: AnswerLastAssessment;
+  initialAssessment?: AnswerLastAssessment;
+  repairCount: number;
+  reason?: string;
+}
+
 interface AnswerLastLesson {
   topic?: unknown;
   difficulty?: unknown;
@@ -806,14 +820,166 @@ function hasAnswerCue(text: string, candidate: string): boolean {
   return /\b(?:answer|therefore|thus|hence|final\s+result|we\s+get|equals?|is)\b/.test(nearby);
 }
 
+function hasExplicitAnswerCue(text: string, candidate: string): boolean {
+  const normalized = normalizeAnswerLastText(text);
+  const value = normalizeAnswerLastText(candidate);
+  if (!value) return false;
+  let index = normalized.indexOf(value);
+  while (index >= 0) {
+    const end = index + value.length;
+    const before = index > 0 ? normalized[index - 1] : "";
+    const after = end < normalized.length ? normalized[end] : "";
+    const wholePhrase =
+      (!before || !/[\p{L}\p{N}]/u.test(before)) &&
+      (!after || !/[\p{L}\p{N}]/u.test(after));
+    if (wholePhrase) {
+      const nearby = normalized.slice(
+        Math.max(0, index - 56),
+        Math.min(normalized.length, end + 48),
+      );
+      const givenContext =
+        /\b(?:intermediate|temporary|given|known)\b/.test(nearby) &&
+        !/\bfinal\s+(?:answer|result|value)\b/.test(nearby);
+      if (
+        !givenContext &&
+        /\b(?:answer|(?:correct|irrational|right|valid)\s+(?:option|choice|answer)|option\s+[a-d]\s+(?:is|contains|shows)|therefore|thus|hence|so\s+(?:this|that)\s+(?:gives|means|shows|proves)|(?:this|that)\s+(?:gives|means|shows|proves)|we\s+(?:get|find|calculate|compute|determine|solve|obtain)|(?:we\s+are\s+)?asked\s+to\s+(?:find|identify|calculate|compute|determine|solve)|asking\s+us\s+to\s+(?:find|identify|calculate|compute|determine|solve)|final\s+(?:(?:numeric(?:al)?)\s+)?(?:result|value)|(?:required|target)\s+(?:result|value|answer|option|choice)|result\s+(?:is|becomes|equals?|comes\s+to))\b/.test(nearby)
+      ) {
+        return true;
+      }
+    }
+    index = normalized.indexOf(value, index + 1);
+  }
+  return false;
+}
+
+function answerLastContextTexts(context?: AnswerLastContext): string[] {
+  return [
+    context?.canonicalQuestion,
+    ...(context?.intermediateText ?? []),
+  ].filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+}
+
+function containsWholePhrase(text: string, phrase: string): boolean {
+  if (!phrase) return false;
+  let start = text.indexOf(phrase);
+  while (start >= 0) {
+    const end = start + phrase.length;
+    const before = start > 0 ? text[start - 1] : "";
+    const after = end < text.length ? text[end] : "";
+    const hasWordBoundaryBefore = !before || !/[\p{L}\p{N}]/u.test(before);
+    const hasWordBoundaryAfter = !after || !/[\p{L}\p{N}]/u.test(after);
+    if (hasWordBoundaryBefore && hasWordBoundaryAfter) return true;
+    start = text.indexOf(phrase, start + 1);
+  }
+  return false;
+}
+
+function contextContainsPhrase(
+  phrase: string,
+  contextTexts: readonly string[],
+): boolean {
+  const normalizedPhrase = normalizeAnswerLastText(phrase);
+  if (!normalizedPhrase) return false;
+  return contextTexts.some((text) => {
+    const normalizedText = normalizeAnswerLastText(text);
+    return containsWholePhrase(normalizedText, normalizedPhrase);
+  });
+}
+
+function contextContainsQuantity(
+  quantity: NumericAnswerCandidate,
+  contextTexts: readonly string[],
+): boolean {
+  return contextTexts.some((text) => quantityMatches(text, quantity));
+}
+
+function sameCanonicalAnswerOrDisclosure(
+  candidate: string,
+  canonicalAnswer: string,
+  disclosure: string,
+): boolean {
+  const normalizedCandidate = normalizeAnswerLastText(candidate);
+  const normalizedDisclosure = normalizeAnswerLastText(disclosure);
+  return compareBankAnswers(candidate, canonicalAnswer).status === "match" ||
+    (!!normalizedDisclosure && normalizedCandidate === normalizedDisclosure);
+}
+
+function isChoiceAnswer(answer: string): boolean {
+  return /^\s*(?:(?:option)\s+)?\(?[a-d]\)?\s*[:.)-]/i.test(answer);
+}
+
+function correctedIntroSentence(
+  text: string,
+  canonicalAnswer: string,
+  disclosure: string,
+): string | null {
+  // Keep the delimiters so every unflagged sentence and line remains byte-for-byte
+  // unchanged. Decimal points are not separators unless followed by sentence text.
+  const parts = text.split(/(\n+|(?<=[.!?])\s+(?=\p{Lu}))/u);
+  const answerAssertion =
+    /^\s*(?:therefore[,;:]?\s*)?(?:(?:the|our)\s+)?(?:(?:final\s+(?:(?:numeric(?:al)?)\s+)?)|(?:correct\s+))?(?:answer|result|value)\s*(?:is|equals?|:|=)\s*(.+?)\s*([.!?]?)\s*$/i;
+  const requestedValue =
+    /^(\s*(?:the examiner is asking us to|the question asks us to|we are asked to|we need to)\s+(?:find|identify|calculate|compute|determine|solve)\s+)(.+?)([.!?]?\s*)$/i;
+
+  for (let index = 0; index < parts.length; index += 2) {
+    const sentence = parts[index];
+    const assertion = sentence.match(answerAssertion);
+    if (assertion && sameCanonicalAnswerOrDisclosure(assertion[1], canonicalAnswer, disclosure)) {
+      parts[index] = "We will establish the result after working through the steps.";
+      return parts.join("");
+    }
+
+    const request = sentence.match(requestedValue);
+    if (request && sameCanonicalAnswerOrDisclosure(request[2], canonicalAnswer, disclosure)) {
+      const replacement = isChoiceAnswer(canonicalAnswer) ? "the correct option" : "the requested value";
+      parts[index] = `${request[1]}${replacement}${request[3]}`;
+      return parts.join("");
+    }
+
+    const conclusion =
+      sentence.match(/^\s*(?:therefore|thus|hence|so)\s*[,;:]?\s*(.+?)\s*([.!?]?)\s*$/i);
+    if (conclusion && sameCanonicalAnswerOrDisclosure(conclusion[1], canonicalAnswer, disclosure)) {
+      parts[index] = "We will establish the result after working through the steps.";
+      return parts.join("");
+    }
+  }
+  return null;
+}
+
+function replaceIntroField(
+  lessonValue: unknown,
+  section: string,
+  replacement: string,
+): unknown | null {
+  const match = section.match(/^questionTranslation\.(plainEnglish|whatWeKnow)$/);
+  if (!match || !lessonValue || typeof lessonValue !== "object") return null;
+
+  const lesson = lessonValue as Record<string, unknown>;
+  const translation = lesson.questionTranslation;
+  if (!translation || typeof translation !== "object") return null;
+  const field = match[1];
+  const previous = (translation as Record<string, unknown>)[field];
+  if (typeof previous !== "string" || previous === replacement) return null;
+
+  return {
+    ...lesson,
+    questionTranslation: {
+      ...(translation as Record<string, unknown>),
+      [field]: replacement,
+    },
+  };
+}
+
 /**
  * Checks the lesson sections rendered before finalAnswer. Definite answer
  * disclosures fail; close but uncertain matches are marked for human review.
- * No model, external service, or question-bank mutation is involved.
+ * Repeated source givens and earlier intermediate values are considered only
+ * when the canonical question or verified prior-work context establishes them.
  */
 export function assessTeachingLessonAnswerLast(
   lessonValue: unknown,
   canonicalAnswer?: string,
+  context?: AnswerLastContext,
 ): AnswerLastAssessment {
   if (!lessonValue || typeof lessonValue !== "object") {
     return { status: "review", section: "lesson", disclosure: "", reason: "Lesson shape is unavailable for answer-last review." };
@@ -829,6 +995,7 @@ export function assessTeachingLessonAnswerLast(
   const sections = precedingAnswerSections(lesson);
   const phrases = answerPhraseCandidates(answer);
   const quantities = numericAnswerCandidates(answer);
+  const contextTexts = answerLastContextTexts(context);
   let review: AnswerLastAssessment | null = null;
 
   for (const item of sections) {
@@ -836,8 +1003,28 @@ export function assessTeachingLessonAnswerLast(
     if (!normalizedText) continue;
 
     for (const phrase of phrases) {
-      if (phrase.length < 3) continue;
-      if (` ${normalizedText} `.includes(` ${phrase} `)) {
+      if (phrase.length < 3) {
+        if (
+          numericAnswerCandidates(phrase).length === 0 &&
+          containsWholePhrase(normalizedText, phrase) &&
+          hasExplicitAnswerCue(item.text, phrase)
+        ) {
+          return {
+            status: "review",
+            section: item.section,
+            disclosure: phrase,
+            reason: `A short answer term appears before finalAnswer in ${item.section}; explicit answer wording requires deterministic correction or review.`,
+          };
+        }
+        continue;
+      }
+      if (
+        contextContainsPhrase(phrase, contextTexts) &&
+        !hasExplicitAnswerCue(item.text, phrase)
+      ) {
+        continue;
+      }
+      if (containsWholePhrase(normalizedText, phrase)) {
         const tokenCount = phraseTokens(phrase).length;
         if (tokenCount >= 2) {
           return {
@@ -875,6 +1062,12 @@ export function assessTeachingLessonAnswerLast(
 
     for (const quantity of quantities) {
       if (!quantityMatches(item.text, quantity)) continue;
+      if (
+        contextContainsQuantity(quantity, contextTexts) &&
+        !hasExplicitAnswerCue(item.text, quantity.display)
+      ) {
+        continue;
+      }
       const isMathField = /\.math$/.test(item.section);
       if (isMathField || (!quantity.strongUnit && !quantity.conciseAnswer && !hasAnswerCue(item.text, quantity.display))) {
         review ??= {
@@ -895,6 +1088,131 @@ export function assessTeachingLessonAnswerLast(
   }
 
   return review ?? { status: "clear" };
+}
+
+/**
+ * Repairs only a standalone, unambiguous answer claim in the two introductory
+ * translation fields. All other leaks and all uncertain reviews fail closed.
+ * The source object is never mutated; every successful change is revalidated.
+ */
+export function repairTeachingLessonAnswerLeakage(
+  lessonValue: unknown,
+  canonicalAnswer: string,
+  context?: AnswerLastContext,
+): AnswerLastRepairResult {
+  let lesson = lessonValue;
+  let assessment = assessTeachingLessonAnswerLast(lesson, canonicalAnswer, context);
+  const initialAssessment = assessment;
+  if (compareBankAnswers(
+    typeof (lesson as AnswerLastLesson | null)?.finalAnswer?.answer === "string"
+      ? (lesson as AnswerLastLesson).finalAnswer!.answer as string
+      : "",
+    canonicalAnswer,
+  ).status !== "match") {
+    return {
+      status: "rejected",
+      lesson: lessonValue,
+      assessment,
+      repairCount: 0,
+      reason: "The lesson's final answer does not match the canonical answer.",
+    };
+  }
+  if (assessment.status === "clear") {
+    return { status: "clear", lesson: lessonValue, assessment, repairCount: 0 };
+  }
+  if (
+    assessment.status === "review" &&
+    assessment.section !== "questionTranslation.plainEnglish" &&
+    assessment.section !== "questionTranslation.whatWeKnow"
+  ) {
+    return {
+      status: "rejected",
+      lesson: lessonValue,
+      assessment,
+      repairCount: 0,
+      reason: "The answer-last result is uncertain and cannot be repaired deterministically.",
+    };
+  }
+
+  let repairCount = 0;
+  while (
+    repairCount < 2 &&
+    (assessment.status === "leak" || assessment.status === "review")
+  ) {
+    if (
+      assessment.section !== "questionTranslation.plainEnglish" &&
+      assessment.section !== "questionTranslation.whatWeKnow"
+    ) {
+      return {
+        status: "rejected",
+        lesson: lessonValue,
+        assessment,
+        repairCount,
+        reason: `The disclosure is outside the safe introductory fields (${assessment.section}).`,
+      };
+    }
+
+    const translation = (lesson as AnswerLastLesson).questionTranslation as
+      | Record<string, unknown>
+      | undefined;
+    const field = assessment.section.slice("questionTranslation.".length);
+    const text = translation?.[field];
+    if (typeof text !== "string") {
+      return {
+        status: "rejected",
+        lesson: lessonValue,
+        assessment,
+        repairCount,
+        reason: "The flagged introductory field is not available as plain text.",
+      };
+    }
+    const corrected = correctedIntroSentence(text, canonicalAnswer, assessment.disclosure);
+    if (!corrected) {
+      return {
+        status: "rejected",
+        lesson: lessonValue,
+        assessment,
+        repairCount,
+        reason: "No standalone answer claim could be changed without risking given values or reasoning.",
+      };
+    }
+
+    const nextLesson = replaceIntroField(lesson, assessment.section, corrected);
+    if (!nextLesson) {
+      return {
+        status: "rejected",
+        lesson: lessonValue,
+        assessment,
+        repairCount,
+        reason: "The flagged field could not be safely replaced.",
+      };
+    }
+    lesson = nextLesson;
+    repairCount += 1;
+    assessment = assessTeachingLessonAnswerLast(lesson, canonicalAnswer, context);
+    if (assessment.status === "clear") {
+      return { status: "repaired", lesson, assessment, initialAssessment, repairCount };
+    }
+    if (assessment.status !== "leak") {
+      return {
+        status: "rejected",
+        lesson: lessonValue,
+        assessment,
+        repairCount,
+        reason: "The corrected lesson still requires human answer-last review.",
+      };
+    }
+  }
+
+  return {
+    status: "rejected",
+    lesson: lessonValue,
+    assessment,
+    repairCount,
+    reason: assessment.status === "leak"
+      ? "The lesson still contains an answer disclosure after deterministic correction."
+      : "The lesson still requires answer-last review after deterministic correction.",
+  };
 }
 
 /**

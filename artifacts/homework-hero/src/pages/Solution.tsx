@@ -234,7 +234,7 @@ export default function Solution() {
 
           // ── Secondary browser cache: instant display, 0 AI calls ────────────
           const browserCacheStartedAt = performance.now();
-          const cached = getBankCachedLesson(bankQ.id, bankContext);
+          const cached = getBankCachedLesson(bankQ.id, bankContext, bankQ.question);
           logBankLessonTiming(
             "browser-cache",
             cached ? "hit" : "miss",
@@ -271,6 +271,13 @@ export default function Solution() {
                   onPartial,
                 ),
               bankQ.answer,
+              {
+                canonicalQuestion: bankQ.question,
+                intermediateText: bankQ.steps
+                  .slice(0, -1)
+                  .flatMap((step) => [step.title, step.explanation, step.formula, step.result])
+                  .filter((value): value is string => typeof value === "string"),
+              },
             );
             logBankLessonTiming("final-ready", "stream-validated", performance.now() - modelStartedAt);
             clearBankFailureMarker(bankQ.id);
