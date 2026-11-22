@@ -34,10 +34,20 @@ async function readChunks(): Promise<PreGeneratedLessonChunk[]> {
   const files = (await readdir(chunksDirectory)).filter((file) => file.endsWith(".ts")).sort();
   return Promise.all(files.map(async (file) => {
     const source = await readFile(resolve(chunksDirectory, file), "utf8");
-    const match = source.match(/^export default "([A-Za-z0-9+/=]+";?)\s*$/);
-    if (!match) throw new Error(`${file}: invalid compressed lesson chunk source.`);
+    const singleString = source.match(/^export default "([A-Za-z0-9+/=]+)";?\s*$/);
+    const joinedStrings = source.match(/^export default \[\s*([\s\S]*?)\s*\]\.join\(""\);\s*$/);
+    let encoded = singleString?.[1];
+    if (!encoded && joinedStrings) {
+      const body = joinedStrings[1];
+      const segments = [...body.matchAll(/"([A-Za-z0-9+/=]+)"/g)];
+      const remainder = body.replace(/"([A-Za-z0-9+/=]+)"/g, "").replace(/[\s,]/g, "");
+      if (segments.length > 0 && remainder.length === 0) {
+        encoded = segments.map((segment) => segment[1]).join("");
+      }
+    }
+    if (!encoded) throw new Error(`${file}: invalid compressed lesson chunk source.`);
     return JSON.parse(
-      gunzipSync(Buffer.from(match[1].replace(/;$/, ""), "base64")).toString("utf8"),
+      gunzipSync(Buffer.from(encoded, "base64")).toString("utf8"),
     ) as PreGeneratedLessonChunk;
   }));
 }

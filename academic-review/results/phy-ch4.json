@@ -126,5 +126,147 @@
       "outputTokens": 109,
       "estimatedCostUSD": 0.00059145
     }
+  },
+  "c9-phy-ch4-t6-q04": {
+    "questionId": "c9-phy-ch4-t6-q04",
+    "contentHash": "0ad50481e8b0bae2d26c69e1a3df7450b1c394f51562e9ab5c2ea5b14c474dd8",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-11-22T17:23:17.623Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "sourceDocument": "curriculum/sources/cbse/class9/science/iesc107.pdf",
+    "sourceSha256": "90171eb6b71ddb64de9fc33bbd813dc483a7a284d0a063134edb14ea3567bf38",
+    "sourceSections": [
+      {
+        "number": "7.6",
+        "title": "Simple Machines",
+        "pdfPages": [
+          15
+        ]
+      },
+      {
+        "number": "7.6.1",
+        "title": "Pulley",
+        "pdfPages": [
+          15
+        ]
+      }
+    ],
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 2394,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.00042449999999999996
+    }
+  },
+  "c9-phy-ch4-t6-q05": {
+    "questionId": "c9-phy-ch4-t6-q05",
+    "contentHash": "823f62fce3157be0c93dce33eea085910531b3bc29f857969fc47ce1e1017e13",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-11-22T17:23:20.674Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "sourceDocument": "curriculum/sources/cbse/class9/science/iesc107.pdf",
+    "sourceSha256": "90171eb6b71ddb64de9fc33bbd813dc483a7a284d0a063134edb14ea3567bf38",
+    "sourceSections": [
+      {
+        "number": "7.6",
+        "title": "Simple Machines",
+        "pdfPages": [
+          15
+        ]
+      },
+      {
+        "number": "7.6.1",
+        "title": "Pulley",
+        "pdfPages": [
+          15
+        ]
+      }
+    ],
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 2316,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0004128
+    }
+  },
+  "c9-phy-ch4-t6-q06": {
+    "questionId": "c9-phy-ch4-t6-q06",
+    "contentHash": "f2d9f45f61fc503e21ef31e42721a9234efce42bbe67ee1d5c4f635c6e205db8",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-11-22T17:23:24.036Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "sourceDocument": "curriculum/sources/cbse/class9/science/iesc107.pdf",
+    "sourceSha256": "90171eb6b71ddb64de9fc33bbd813dc483a7a284d0a063134edb14ea3567bf38",
+    "sourceSections": [
+      {
+        "number": "7.6",
+        "title": "Simple Machines",
+        "pdfPages": [
+          15
+        ]
+      },
+      {
+        "number": "7.6.2",
+        "title": "Inclined plane",
+        "pdfPages": [
+          16,
+          17
+        ]
+      }
+    ],
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 3265,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0005551499999999999
+    }
   }
 }

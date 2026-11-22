@@ -390,7 +390,56 @@ test("17. Q1–Q3 receive bounded passages from the verified official NCERT PDF"
   assert.match(q3Text, /larger distance/);
 });
 
-test("18. Missing topic/source passage fails closed", () => {
+test("18. Q4–Q6 receive passages from the verified official pulley and inclined-plane sections", () => {
+  const makeSimpleMachinesQuestion = (overrides: Partial<ReviewableQuestion>) =>
+    makeQuestion({
+      schema: "v1",
+      subject: "Physics",
+      chapterId: "phy-ch4",
+      topicId: "t6",
+      topicName: "Simple Machines",
+      ...overrides,
+    });
+  const q4 = resolveSourceContext(makeSimpleMachinesQuestion({
+    id: "c9-phy-ch4-t6-q04",
+    question: "For a fixed pulley, which statement is correct?",
+    answer: "A fixed pulley changes the direction of effort without reducing its magnitude; its mechanical advantage is 1.",
+  }));
+  const q5 = resolveSourceContext(makeSimpleMachinesQuestion({
+    id: "c9-phy-ch4-t6-q05",
+    question: "An ideal fixed pulley raises a load of 150 N. Find effort and mechanical advantage.",
+    answer: "Effort = 150 N; mechanical advantage = 1; the effort can be applied downward.",
+  }));
+  const q6 = resolveSourceContext(makeSimpleMachinesQuestion({
+    id: "c9-phy-ch4-t6-q06",
+    question: "Compare the force, distance, and total work for a longer, less-steep inclined plane.",
+    answer: "The longer plane needs a smaller effort over a greater distance; ideal total work is not reduced.",
+  }));
+
+  for (const [id, result] of [["Q4", q4], ["Q5", q5], ["Q6", q6]] as const) {
+    assert.equal(result.status, "PRESENT", `${id} source context should be present: ${result.missReason}`);
+    assert.ok(result.sourceContext, `${id} should have passage metadata`);
+    assert.equal(result.sourceContext.sourcePath, "curriculum/sources/cbse/class9/science/iesc107.pdf");
+    assert.match(result.sourceContext.sourceSha256, /^[a-f0-9]{64}$/);
+    assert.ok(result.sourceContext.characterCount < 24_000);
+    assert.ok(result.sourceContext.passages.every(passage =>
+      passage.pdfPages.length > 0 && passage.characterCount === passage.text.length
+    ));
+  }
+
+  assert.deepEqual(q4.sourceContext?.passages.map(passage => passage.sectionNumber), ["7.6", "7.6.1"]);
+  assert.deepEqual(q5.sourceContext?.passages.map(passage => passage.sectionNumber), ["7.6", "7.6.1"]);
+  assert.deepEqual(q6.sourceContext?.passages.map(passage => passage.sectionNumber), ["7.6", "7.6.2"]);
+  assert.match(q4.text.toLowerCase(), /does not reduce the magnitude of the force\s+required/);
+  assert.match(q4.text.toLowerCase(), /mechanical advantage of a fixed pulley/);
+  assert.match(q4.text.toLowerCase(), /\bis 1\b/);
+  assert.match(q5.text.toLowerCase(), /effort and the load are equal in/);
+  assert.match(q5.text.toLowerCase(), /magnitude, the mechanical advantage/);
+  assert.match(q6.text.toLowerCase(), /larger distance/);
+  assert.deepEqual(q6.sourceContext?.passages[1].pdfPages, [16, 17]);
+});
+
+test("19. Missing topic/source passage fails closed", () => {
   const result = resolveSourceContext(makeQuestion({
     chapterId: "phy-ch4",
     subject: "Physics",

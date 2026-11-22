@@ -37,9 +37,19 @@ function isChunk(value: unknown): value is PreGeneratedLessonChunk {
 }
 
 function decodeChunkSource(source: string, file: string): PreGeneratedLessonChunk {
-  const match = source.match(/^export default "([A-Za-z0-9+/=]+";?)\s*$/);
-  if (!match) throw new Error(`${file}: invalid compressed chapter chunk source.`);
-  const decoded = gunzipSync(Buffer.from(match[1].replace(/;$/, ""), "base64")).toString("utf8");
+  const singleString = source.match(/^export default "([A-Za-z0-9+/=]+)";?\s*$/);
+  const joinedStrings = source.match(/^export default \[\s*([\s\S]*?)\s*\]\.join\(""\);\s*$/);
+  let encoded = singleString?.[1];
+  if (!encoded && joinedStrings) {
+    const body = joinedStrings[1];
+    const segments = [...body.matchAll(/"([A-Za-z0-9+/=]+)"/g)];
+    const remainder = body.replace(/"([A-Za-z0-9+/=]+)"/g, "").replace(/[\s,]/g, "");
+    if (segments.length > 0 && remainder.length === 0) {
+      encoded = segments.map((segment) => segment[1]).join("");
+    }
+  }
+  if (!encoded) throw new Error(`${file}: invalid compressed chapter chunk source.`);
+  const decoded = gunzipSync(Buffer.from(encoded, "base64")).toString("utf8");
   const parsed = JSON.parse(decoded) as unknown;
   if (!isChunk(parsed)) throw new Error(`${file}: invalid chapter chunk data.`);
   return parsed;
@@ -94,8 +104,8 @@ async function main(): Promise<void> {
     reason?: string;
   }> = [];
 
-  if (PILOT_QUESTION_IDS.length !== 20 || PILOT_QUESTION_COUNT !== 20) {
-    errors.push(`Pilot manifest must contain exactly 20 IDs; found ${PILOT_QUESTION_IDS.length}.`);
+  if (PILOT_QUESTION_IDS.length !== 26 || PILOT_QUESTION_COUNT !== 26) {
+    errors.push(`Pilot manifest must contain exactly 26 IDs; found ${PILOT_QUESTION_IDS.length}.`);
   }
 
   for (const id of PILOT_QUESTION_IDS) {
