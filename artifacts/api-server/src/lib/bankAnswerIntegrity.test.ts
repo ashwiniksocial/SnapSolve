@@ -246,6 +246,36 @@ test("a canonical numerical given is preserved and does not trigger answer repai
   assert.equal(lesson.questionTranslation.whatWeKnow, "We are given 4 m.");
 });
 
+test("long canonical questions protect answer numbers that are stated as givens", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const result = assessTeachingLessonAnswerLast({
+    questionTranslation: {
+      whatWeKnow: "The load is 180 N and the effort is 45 N.",
+    },
+    finalAnswer: { answer },
+  }, answer, {
+    canonicalQuestion:
+      "A machine raises a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+  });
+
+  assert.deepEqual(result, { status: "clear" });
+});
+
+test("explicit answer claims remain leaks even when the number was given", () => {
+  const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
+  const result = assessTeachingLessonAnswerLast({
+    questionTranslation: {
+      whatWeKnow: "The final answer is 180 N.",
+    },
+    finalAnswer: { answer },
+  }, answer, {
+    canonicalQuestion:
+      "A machine raises a load of 180 N by applying an effort of 45 N. Calculate its mechanical advantage.",
+  });
+
+  assert.equal(result.status, "leak");
+});
+
 test("an answer claim is not excused by the same option appearing in an MCQ question", () => {
   const lesson = {
     questionTranslation: { plainEnglish: "√2 is the irrational choice." },

@@ -2122,7 +2122,12 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // ── 6. Build prompts ──────────────────────────────────────────────────────────
   // systemContent and maxTokens from buildDraftPrompts (handles mode-specific schema).
   // userContent is overridden for bank questions to inject authoritative grounding.
-  const { systemContent, maxTokens: streamMaxTokens } = buildDraftPrompts(subj, q, streamMode, ctx, blueprint);
+  const { systemContent, maxTokens: baseStreamMaxTokens } = buildDraftPrompts(subj, q, streamMode, ctx, blueprint);
+  // Full bank TeachingLessons can exceed the generic BASIC generation ceiling.
+  // Keep the larger output allowance scoped to bank-grounded lessons only.
+  const streamMaxTokens = bankCtx
+    ? Math.max(baseStreamMaxTokens, 4_000)
+    : baseStreamMaxTokens;
   let userContent: string;
   if (bankCtx) {
     // Inject the frozen Gold Standard answer as authoritative grounding.
@@ -2162,9 +2167,9 @@ router.post("/solveQuestion/stream", async (req, res) => {
   }
 
   // ── 7. Call OpenAI with stream: true ──────────────────────────────────────────
-  // Bank questions use "basic" mode (2800 tokens, ~35–56 s) — they need a larger
-  // budget than Standard (1100 tokens, 15 s).  Standard keeps its 15 s guarantee.
-  const budgetMs    = bankCtx ? 50_000 : STANDARD_BUDGET_MS;
+  // Bank questions use the full BASIC schema and may need up to 4,000 output
+  // tokens; allow enough time for a complete lesson. Standard keeps its 15 s guarantee.
+  const budgetMs    = bankCtx ? 75_000 : STANDARD_BUDGET_MS;
   const budgetTimer = setTimeout(() => abortCtrl.abort(), budgetMs);
   const modelStartedAt = Date.now();
 

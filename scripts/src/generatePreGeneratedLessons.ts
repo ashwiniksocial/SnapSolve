@@ -306,6 +306,10 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
   // Preserve the frozen bank answer verbatim. Pedagogy is AI-derived; the
   // approved final answer remains authoritative question-bank content.
   parsed.finalAnswer = { ...parsed.finalAnswer, answer: question.answer };
+  // Keep generated metadata aligned to the canonical bank even if the model
+  // chooses a narrower topic label or changes the stated difficulty.
+  parsed.topic = question.topicName;
+  parsed.difficulty = question.difficulty;
 
   return {
     lesson: parsed,
@@ -374,8 +378,23 @@ async function main(): Promise<void> {
 
   for (const [index, id] of ids.entries()) {
     const question = questions.get(id)!;
-    if (isStoredLessonValid(entryFor(chunks, question), question)) {
-      console.log(`[${index + 1}/${ids.length}] SKIP valid ${id}`);
+    const existing = entryFor(chunks, question);
+    if (isStoredLessonValid(existing, question)) {
+      if (existing.lesson.topic !== question.topicName || existing.lesson.difficulty !== question.difficulty) {
+        const record = chunks.get(chunkKey(question))!;
+        record.chunk.lessons[id] = {
+          ...existing,
+          lesson: {
+            ...existing.lesson,
+            topic: question.topicName,
+            difficulty: question.difficulty,
+          },
+        };
+        await persistChunk(record);
+        console.log(`[${index + 1}/${ids.length}] NORMALIZED canonical metadata ${id}`);
+      } else {
+        console.log(`[${index + 1}/${ids.length}] SKIP valid ${id}`);
+      }
       continue;
     }
 

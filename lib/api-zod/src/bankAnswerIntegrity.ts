@@ -765,7 +765,10 @@ function canonicalNumber(value: string, scaleWord?: string): string | null {
   return Number.isFinite(scaled) ? String(Number(scaled.toPrecision(12))) : null;
 }
 
-function numericAnswerCandidates(answer: string): NumericAnswerCandidate[] {
+function numericAnswerCandidates(
+  answer: string,
+  includeUncuedContextNumbers = false,
+): NumericAnswerCandidate[] {
   const candidates: NumericAnswerCandidate[] = [];
   const normalizedAnswer = normalizeAnswerLastText(answer);
   const conciseAnswer = normalizedAnswer.split(" ").length <= 6 &&
@@ -784,7 +787,7 @@ function numericAnswerCandidates(answer: string): NumericAnswerCandidate[] {
     const strongUnit = Boolean(scale || (unit && ANSWER_UNIT_WORDS.has(unit)));
     const beforeNumber = normalizedForNumbers.slice(Math.max(0, (match.index ?? 0) - 48), match.index ?? 0);
     const answerCue = /\b(?:answer|therefore|thus|hence|final\s+result|we\s+get|equals?|is)\b[^.!?;]*$/i.test(beforeNumber);
-    if (!strongUnit && !conciseAnswer && !answerCue) continue;
+    if (!includeUncuedContextNumbers && !strongUnit && !conciseAnswer && !answerCue) continue;
 
     const normalizedValue = [
       firstValue,
@@ -890,7 +893,14 @@ function contextContainsQuantity(
   quantity: NumericAnswerCandidate,
   contextTexts: readonly string[],
 ): boolean {
-  return contextTexts.some((text) => quantityMatches(text, quantity));
+  // Context is authoritative question/given text, not a candidate answer.
+  // Recognize every number there (including unitless values in long questions)
+  // so a given like "mechanical advantage of 3" is not mistaken for a leak.
+  return contextTexts.some((text) =>
+    numericAnswerCandidates(text, true).some(
+      (match) => match.normalizedValue === quantity.normalizedValue,
+    ),
+  );
 }
 
 function sameCanonicalAnswerOrDisclosure(
