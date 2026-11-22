@@ -267,6 +267,19 @@ export type DetailedLessonQualityFlag =
   | "MISSING_QUESTION_TRANSLATION"
   | "THIN_COMMON_MISTAKES";
 
+function sourceRequiresWorkedMath(question: Question): boolean {
+  return (question.steps ?? []).some((step) => {
+    const sourceText = [
+      step.title,
+      step.explanation,
+      step.formula,
+      step.result,
+    ].filter(Boolean).join(" ");
+    return /\d/.test(sourceText) &&
+      /(?:=|[+\-*/×÷√^²³])/.test(sourceText);
+  });
+}
+
 /**
  * Quality flags are intentionally advisory. They identify detailed assets that
  * deserve human review without forcing a made-up fixed number of steps on every
@@ -290,7 +303,11 @@ export function getDetailedLessonQualityFlags(
   ].some(text);
 
   if (lesson.guidedReasoning.length < expectedMinimumSteps) flags.push("THIN_GUIDED_REASONING");
-  if (lesson.guidedReasoning.length > 0 && lesson.guidedReasoning.every((step) => !text(step.math) && !text(step.result))) {
+  if (
+    sourceRequiresWorkedMath(question) &&
+    lesson.guidedReasoning.length > 0 &&
+    lesson.guidedReasoning.every((step) => !text(step.math) && !text(step.result))
+  ) {
     flags.push("MISSING_WORKED_MATH");
   }
   if (!translationHasContent && question.questionType !== "MCQ") flags.push("MISSING_QUESTION_TRANSLATION");

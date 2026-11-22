@@ -4,6 +4,7 @@ import { gunzipSync } from "node:zlib";
 import encodedChunk from "./generatedLessonChunks/9--Physics--phy-ch4";
 import { QUESTIONS } from "./questions/class9-physics-ch4";
 import {
+  getDetailedLessonQualityFlags,
   isCompleteDetailedLesson,
   resolveStoredLessonEntry,
   type PreGeneratedLessonChunk,
@@ -89,6 +90,35 @@ test("newly reviewed lesson assets require a passing versioned quality attestati
     qualityReviewVersion: 1,
     qualityReviewPassed: true,
   }, question));
+});
+
+test("worked-math quality flags apply to quantitative source steps, not factual concepts", () => {
+  const quantitativeQuestion = QUESTIONS.find((item) => item.id === "c9-phy-ch4-t6-q05");
+  assert.ok(quantitativeQuestion, "canonical quantitative question exists");
+  const savedLesson = chunk.lessons[quantitativeQuestion.id].lesson;
+  const lessonWithoutWorking = {
+    ...savedLesson,
+    guidedReasoning: savedLesson.guidedReasoning.map((step) => ({
+      ...step,
+      math: "",
+      result: "",
+    })),
+  };
+  assert.ok(getDetailedLessonQualityFlags(lessonWithoutWorking, quantitativeQuestion).includes("MISSING_WORKED_MATH"));
+
+  const factualQuestion = {
+    ...quantitativeQuestion,
+    subject: "Chemistry",
+    questionType: "MCQ" as const,
+    question: "Which description defines a homogeneous mixture?",
+    answer: "A mixture that has the same composition throughout.",
+    steps: [{
+      stepNumber: 1,
+      title: "Use the definition",
+      explanation: "Compare how the mixture appears in different samples.",
+    }],
+  };
+  assert.ok(!getDetailedLessonQualityFlags(lessonWithoutWorking, factualQuestion).includes("MISSING_WORKED_MATH"));
 });
 
 test("saved MCQ lesson explains the formula and each distractor", () => {

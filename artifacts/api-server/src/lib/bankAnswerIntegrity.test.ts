@@ -167,6 +167,20 @@ test("answer-last gate accepts methods, definitions, and intermediate quantities
   assert.deepEqual(result, { status: "clear" });
 });
 
+test("intermediate wording with 'value is' is not mistaken for an answer announcement", () => {
+  const intermediate = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ result: "The value is independent of x." }],
+    finalAnswer: { answer: "(c) √2" },
+  });
+  assert.deepEqual(intermediate, { status: "clear" });
+
+  const finalValue = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ result: "The final value is 42." }],
+    finalAnswer: { answer: "42" },
+  });
+  assert.equal(finalValue.status, "leak");
+});
+
 test("answer-last permits a source-supported evaluated calculation in guided reasoning", () => {
   const answer = "Mechanical advantage = 180 N ÷ 45 N = 4.";
   const context = {

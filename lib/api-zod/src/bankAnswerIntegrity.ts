@@ -1118,9 +1118,23 @@ function guidedReasoningField(section: string): boolean {
 
 function isExplicitAnswerAnnouncement(text: string, answer: string): boolean {
   const normalized = normalizeAnswerLastText(text);
+  const labeledClaim = normalized.match(
+    /(?:^|[.!?;]\s*|\bthe\s+|\bfinal\s+)(?:(final|correct)\s+)?(answer|result|value)\s*(?:(?:is|equals?)\s*:?\s*|[:=])\s*(.+)$/i,
+  );
+  if (labeledClaim) {
+    const modifier = labeledClaim[1]?.toLowerCase();
+    const label = labeledClaim[2].toLowerCase();
+    const claim = labeledClaim[3].trim();
+    if (
+      label === "answer" ||
+      modifier === "final" ||
+      modifier === "correct" ||
+      compareBankAnswers(claim, answer).status === "match"
+    ) {
+      return true;
+    }
+  }
   if (
-    /(?:^|[.!?;]\s*|\bthe\s+|\bfinal\s+)(?:answer|result|value)\s*(?:(?:is|equals?)\s*:?\s*|[:=])/i.test(normalized) ||
-    /\b(?:the\s+)?correct\s+answer\s*(?:(?:is|equals?)\s*:?\s*|[:=])/i.test(normalized) ||
     /\b(?:correct|right)\s+(?:option|choice)\b/i.test(normalized) ||
     /\b(?:option|choice)\s+[a-d]\b[^.!?;]{0,32}\b(?:is\s+)?(?:correct|right)\b/i.test(normalized)
   ) {
