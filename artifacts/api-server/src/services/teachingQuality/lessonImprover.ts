@@ -49,7 +49,7 @@ function buildImproveSystem(report: ReviewReport): string {
     ? report.confusions.map((c, i) => `  ${i + 1}. ${c}`).join("\n")
     : "  (none listed — focus on the failing dimensions above)";
 
-  return `You are a Master Teaching Improver for CBSE/ICSE student lessons.
+  return `You are SnapSolve's shared Master Teaching Improver for student lessons across supported curricula, classes, and subjects.
 
 A lesson has FAILED its teaching quality review. Your job is to rewrite it so it passes.
 
@@ -80,8 +80,10 @@ IMPROVEMENT RULES — Follow every rule without exception
 □ Define every term, symbol, and phrase in the visible questionTranslation or guidedReasoning where it first appears.
 □ guidedReasoning — add explicit WHY for every step. Show every algebra and arithmetic line.
 □ For numerical reasoning, keep units visible through substitution and calculation; explain unit cancellation and what the result means.
+□ Explain why the selected method and formula fit this question before applying them.
 □ Address student confusions directly in guidedReasoning and commonMistakes.
 □ Give the student a short reusable method for solving a similar problem independently.
+□ Where relevant, identify a genuine exam trap and explain how to avoid it; do not invent a trap.
 □ Use only accurate, relevant analogies. Do not imply an unspecified device or mechanism is part of the question.
 □ State assumptions such as ideal or frictionless before applying them, and distinguish ideal results from real-world friction or losses.
 □ For MCQs, explain why distractors fail without announcing the correct option before finalAnswer.

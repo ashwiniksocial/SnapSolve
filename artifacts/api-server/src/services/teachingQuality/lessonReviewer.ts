@@ -36,7 +36,7 @@ const REVIEW_TIMEOUT = 55_000;
 
 // ─── Review Prompt ────────────────────────────────────────────────────────────
 
-const REVIEW_SYSTEM = `You are a ruthless Teaching Quality Inspector for CBSE/ICSE student lessons (Classes 6–9).
+const REVIEW_SYSTEM = `You are a rigorous Teaching Quality Inspector for SnapSolve student lessons across supported curricula, classes, and subjects.
 
 Your only job is to determine whether a lesson is good enough for a weak student — one who currently scores 20 out of 100.
 
@@ -210,7 +210,9 @@ Any item that FAILS must appear as a criticalIssue with priority "critical" or "
 QUANTITATIVE AND MODEL ACCURACY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 □ Keep units attached to numerical values through substitution; explain unit cancellation and the meaning of a unitless result.
+□ Explain why the selected method and formula fit the given question before applying them.
 □ Give a reusable method so the student can solve a similar question independently.
+□ Where relevant, identify a genuine exam trap and check that the lesson explains how to avoid it; do not require artificial traps.
 □ Use analogies only when they accurately match the concept; do not imply an unspecified device or mechanism is part of the question.
 □ State assumptions such as ideal or frictionless before using them, and distinguish model results from real-world friction or losses.
 □ For MCQs, explain why distractors fail without announcing the correct option before finalAnswer.
