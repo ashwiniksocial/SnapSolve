@@ -19,6 +19,41 @@ import {
 
 const repoRoot = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const chunksDirectory = resolve(repoRoot, "artifacts/homework-hero/src/data/generatedLessonChunks");
+const ADDITIONAL_IDS_PREFIX = "--additional-ids=";
+
+export function parseAdditionalLessonIds(argv: readonly string[]): string[] {
+  if (argv.includes("--additional-ids")) {
+    throw new Error("Use --additional-ids=<id[,id...]>.");
+  }
+  const values = argv.filter((argument) => argument.startsWith(ADDITIONAL_IDS_PREFIX));
+  const ids = values.flatMap((argument) =>
+    argument.slice(ADDITIONAL_IDS_PREFIX.length).split(",").map((id) => id.trim()),
+  );
+  if (values.length > 0 && ids.some((id) => !id)) {
+    throw new Error("--additional-ids requires one or more comma-separated question IDs.");
+  }
+  if (new Set(ids).size !== ids.length) {
+    throw new Error("--additional-ids must not contain duplicate question IDs.");
+  }
+  return ids;
+}
+
+export function buildExpectedLessonIds(
+  pilotIds: readonly string[],
+  additionalIds: readonly string[],
+): string[] {
+  const pilotSet = new Set(pilotIds);
+  if (pilotSet.size !== pilotIds.length) {
+    throw new Error("Pilot manifest contains duplicate question IDs.");
+  }
+  if (additionalIds.some((id) => pilotSet.has(id))) {
+    throw new Error("--additional-ids must not repeat a frozen pilot question ID.");
+  }
+  if (new Set(additionalIds).size !== additionalIds.length) {
+    throw new Error("--additional-ids must not contain duplicate question IDs.");
+  }
+  return [...pilotIds, ...additionalIds];
+}
 
 function chunkKey(question: Pick<Question, "classNum" | "subject" | "chapterId">): string {
   return JSON.stringify([question.classNum, question.subject, question.chapterId]);
@@ -96,6 +131,9 @@ async function main(): Promise<void> {
   );
   const { chunks, entryIds, bytes } = await readChunks();
   const errors: string[] = [];
+  const additionalIds = parseAdditionalLessonIds(process.argv.slice(2));
+  const expectedIds = buildExpectedLessonIds(PILOT_QUESTION_IDS, additionalIds);
+  const expectedIdSet = new Set(expectedIds);
   const lessonChecks: Array<{
     questionId: string;
     structural: "PASS" | "FAIL";
@@ -110,7 +148,7 @@ async function main(): Promise<void> {
     errors.push(`Pilot manifest must contain exactly 26 IDs; found ${PILOT_QUESTION_IDS.length}.`);
   }
 
-  for (const id of PILOT_QUESTION_IDS) {
+  for (const id of expectedIds) {
     const question = questions.get(id);
     if (!question) {
       errors.push(`${id}: not active/student-visible.`);
@@ -168,18 +206,23 @@ async function main(): Promise<void> {
     }
   }
 
-  if (entryIds.size !== PILOT_QUESTION_COUNT) {
-    errors.push(`Expected exactly ${PILOT_QUESTION_COUNT} derived pilot lessons; found ${entryIds.size}.`);
+  if (entryIds.size !== expectedIds.length) {
+    errors.push(`Expected exactly ${expectedIds.length} derived lessons (26 frozen pilot + ${additionalIds.length} explicit); found ${entryIds.size}.`);
+  }
+  for (const id of entryIds) {
+    if (!expectedIdSet.has(id)) {
+      errors.push(`${id}: unexpected saved lesson; pass its ID explicitly with --additional-ids or remove it.`);
+    }
   }
 
   // The static asset is opt-in by its authoritative chapter and exact question
-  // ID. These checks ensure a missing future ID and an existing non-pilot bank
-  // question retain the existing streamed fallback.
+  // ID. These checks ensure a missing future ID and an unselected bank question
+  // retain the existing streamed fallback.
   const nonPilotQuestion = [...questions.values()].find(
-    (question) => !PILOT_QUESTION_IDS.includes(question.id as typeof PILOT_QUESTION_IDS[number]),
+    (question) => !expectedIdSet.has(question.id),
   );
   if (!nonPilotQuestion || chunks.get(chunkKey(nonPilotQuestion))?.lessons[nonPilotQuestion.id]) {
-    errors.push("Non-pregenerated bank fallback lookup is not clean.");
+    errors.push("Unselected bank-question fallback lookup is not clean.");
   }
   const pilotQuestion = questions.get(PILOT_QUESTION_IDS[0]);
   if (
@@ -191,6 +234,8 @@ async function main(): Promise<void> {
 
   console.log(JSON.stringify({
     pilotCount: PILOT_QUESTION_IDS.length,
+    additionalCount: additionalIds.length,
+    expectedLessonCount: expectedIds.length,
     structuralValidLessons: lessonChecks.filter((check) => check.structural === "PASS").length,
     answerLastClearLessons: lessonChecks.filter((check) => check.answerLast === "CLEAR").length,
     answerLastLeaks: lessonChecks.filter((check) => check.answerLast === "LEAK").length,
@@ -208,7 +253,9 @@ async function main(): Promise<void> {
   if (errors.length > 0) throw new Error(errors.join("\n"));
 }
 
-void main().catch((error: unknown) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  void main().catch((error: unknown) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+  });
+}
