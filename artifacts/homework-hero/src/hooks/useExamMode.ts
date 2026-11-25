@@ -22,6 +22,10 @@ export interface ExamConfig {
   createdAt: string;
 }
 
+export type ExamConfigSaveResult =
+  | { ok: true; config: ExamConfig }
+  | { ok: false; reason: "missing-academic-context" | "storage-unavailable" };
+
 export type TaskType     = "revision" | "practice" | "chapter";
 export type TaskPriority = "critical" | "high" | "medium";
 
@@ -68,12 +72,28 @@ function todayStr() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function loadConfig(key: string | null): ExamConfig | null {
+export function loadConfig(key: string | null): ExamConfig | null {
   if (!key) return null;
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as ExamConfig) : null;
   } catch { return null; }
+}
+
+export function saveExamConfig(
+  key: string | null,
+  context: ReturnType<typeof makeAcademicContext>,
+  config: ExamConfig,
+): ExamConfigSaveResult {
+  if (!key || !context) return { ok: false, reason: "missing-academic-context" };
+
+  const scopedConfig = { ...config, boardId: context.boardId, classNum: context.classNum };
+  try {
+    localStorage.setItem(key, JSON.stringify(scopedConfig));
+    return { ok: true, config: scopedConfig };
+  } catch {
+    return { ok: false, reason: "storage-unavailable" };
+  }
 }
 
 function loadDone(key: string | null): Set<string> {
@@ -111,16 +131,17 @@ export function useExamMode() {
   const config = sameScope ? stored.config : null;
   const completedIds = sameScope ? stored.completedIds : new Set<string>();
 
-  const saveConfig = useCallback((cfg: ExamConfig) => {
-    if (!storageKey || !context) return;
-    const scopedConfig = { ...cfg, boardId: context.boardId, classNum: context.classNum };
-    localStorage.setItem(storageKey, JSON.stringify(scopedConfig));
+  const saveConfig = useCallback((cfg: ExamConfig): ExamConfigSaveResult => {
+    const result = saveExamConfig(storageKey, context, cfg);
+    if (!result.ok || !completionKey || !storageKey) return result;
     setStored((prev) => ({
-      ...prev,
       key: storageKey,
-      config: scopedConfig,
+      completionKey,
+      config: result.config,
+      completedIds: prev.completionKey === completionKey ? prev.completedIds : loadDone(completionKey),
     }));
-  }, [context?.boardId, context?.classNum, storageKey]);
+    return result;
+  }, [completionKey, context?.boardId, context?.classNum, storageKey]);
 
   const clearConfig = useCallback(() => {
     if (!storageKey) return;

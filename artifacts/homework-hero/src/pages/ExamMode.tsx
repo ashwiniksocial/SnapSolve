@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "wouter";
 import { useExamMode, getUrgency, urgencyColors } from "@/hooks/useExamMode";
-import type { ExamConfig, ExamSubject, ExamTask } from "@/hooks/useExamMode";
+import type { ExamConfig, ExamConfigSaveResult, ExamSubject, ExamTask } from "@/hooks/useExamMode";
 import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { useChapterStats } from "@/hooks/useChapterStats";
@@ -281,7 +281,7 @@ function buildTasks(
 
 // ─── Setup form ───────────────────────────────────────────────────────────────
 
-function SetupView({ onSave }: { onSave: (cfg: ExamConfig) => void }) {
+function SetupView({ onSave }: { onSave: (cfg: ExamConfig) => ExamConfigSaveResult }) {
   const [examName, setExamName] = useState("");
   const [subject,  setSubject]  = useState<ExamSubject>("All");
   const [examDate, setExamDate] = useState("");
@@ -291,8 +291,16 @@ function SetupView({ onSave }: { onSave: (cfg: ExamConfig) => void }) {
     if (!examName.trim()) { setError("Please enter an exam name."); return; }
     if (!examDate)        { setError("Please pick your exam date."); return; }
     if (examDate <= MIN_DATE) { setError("Exam date must be in the future."); return; }
+    const result = onSave({ examName: examName.trim(), subject, examDate, createdAt: new Date().toISOString() });
+    if (!result.ok) {
+      setError(
+        result.reason === "missing-academic-context"
+          ? "Set your board and class in Profile before saving this study plan."
+          : "Your browser could not save this countdown. Check storage settings and try again.",
+      );
+      return;
+    }
     setError("");
-    onSave({ examName: examName.trim(), subject, examDate, createdAt: new Date().toISOString() });
   }
 
   return (
@@ -366,7 +374,7 @@ function SetupView({ onSave }: { onSave: (cfg: ExamConfig) => void }) {
           </div>
 
           {error && (
-            <p className="text-xs text-red-500 font-medium">{error}</p>
+            <p role="alert" aria-live="polite" className="text-xs text-red-600 font-medium">{error}</p>
           )}
 
           <button
@@ -388,6 +396,8 @@ function Dashboard({
   daysRemaining,
   tasks,
   subjectCompletion,
+  savedNotice,
+  studyDataReady,
   onMarkDone,
   onClear,
 }: {
@@ -395,6 +405,8 @@ function Dashboard({
   daysRemaining:      number;
   tasks:              ExamTask[];
   subjectCompletion:  Record<Subject, number>;
+  savedNotice:        string | null;
+  studyDataReady:     boolean;
   onMarkDone:         (id: string) => void;
   onClear:            () => void;
 }) {
@@ -431,6 +443,17 @@ function Dashboard({
       </div>
 
       <div className="max-w-lg mx-auto px-5 py-5 space-y-5">
+
+        {savedNotice && (
+          <div role="status" aria-live="polite" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+            {savedNotice}
+          </div>
+        )}
+        {!studyDataReady && (
+          <div role="status" aria-live="polite" className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-xs leading-relaxed text-indigo-800">
+            Your countdown and starter study plan are ready. Chapter progress will update when question data finishes loading.
+          </div>
+        )}
 
         {/* ── Countdown hero ── */}
         <div
@@ -566,6 +589,7 @@ function Dashboard({
 
 export default function ExamMode() {
   const { config, saveConfig, clearConfig, daysRemaining, completedIds, markDone } = useExamMode();
+  const [savedNotice, setSavedNotice] = useState<string | null>(null);
 
   // Always call hooks (rules of hooks)
   const { getSubjectStats } = useProgress();
@@ -651,19 +675,21 @@ export default function ExamMode() {
     preloadQBank(9).then(() => setBankReady(true));
   }, []);
 
-  if (!config) {
-    return <SetupView onSave={saveConfig} />;
+  function handleSaveConfig(nextConfig: ExamConfig): ExamConfigSaveResult {
+    const result = saveConfig(nextConfig);
+    if (result.ok) {
+      setSavedNotice(`Countdown saved for ${fmtDate(nextConfig.examDate)}. Your study plan is below.`);
+    }
+    return result;
   }
 
-  if (!bankReady) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center space-y-2 px-6">
-          <div className="w-8 h-8 border-2 border-slate-200 border-t-slate-600 rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-medium text-slate-500">Loading questions…</p>
-        </div>
-      </div>
-    );
+  function handleClearConfig() {
+    clearConfig();
+    setSavedNotice(null);
+  }
+
+  if (!config) {
+    return <SetupView onSave={handleSaveConfig} />;
   }
 
   return (
@@ -672,8 +698,10 @@ export default function ExamMode() {
       daysRemaining={daysRemaining ?? 0}
       tasks={tasks}
       subjectCompletion={subjectCompletion}
+      savedNotice={savedNotice}
+      studyDataReady={bankReady}
       onMarkDone={markDone}
-      onClear={clearConfig}
+      onClear={handleClearConfig}
     />
   );
 }
