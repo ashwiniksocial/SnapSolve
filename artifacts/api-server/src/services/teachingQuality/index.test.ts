@@ -213,6 +213,37 @@ test("the default quality pipeline retains its existing improvement cycle", asyn
   assert.equal(improveCalls, 1);
 });
 
+test("quality logs retain exact reviewer feedback for blocked-draft diagnostics", async () => {
+  const issue = {
+    section: "guidedReasoning",
+    problem: "The lesson skips why the numerator and denominator are divided by the same value.",
+    reason: "A weak student may treat the reduction as an unexplained rule.",
+    suggestedFix: "Explain that dividing both parts by the same nonzero number keeps the ratio unchanged.",
+    priority: "high" as const,
+  };
+  const result = await runQualityPipeline(
+    lesson(),
+    "",
+    undefined,
+    { maxReviewCycles: 1, allowImprovements: false, requireReviewerPass: true },
+    services(async () => ({
+      report: {
+        ...report(false, 75),
+        confusions: ["Why can both parts of the fraction be divided by the same number?"],
+        criticalIssues: [issue],
+      },
+      usage: zeroUsage(),
+      latencyMs: 1,
+    })),
+  );
+
+  assert.equal(result.decision.status, "BLOCK");
+  assert.deepEqual(result.qualityLog[0]?.criticalIssues, [issue]);
+  assert.deepEqual(result.qualityLog[0]?.confusions, [
+    "Why can both parts of the fraction be divided by the same number?",
+  ]);
+});
+
 test("quality decision marks a sufficiently strong lesson with a medium weakness IMPROVE", () => {
   const result = classifyTeachingQuality({
     ...report(false, 75),

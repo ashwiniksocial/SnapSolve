@@ -69,7 +69,6 @@ import {
   type GateTelemetryStatus,
 } from "../services/architectureCFastPath";
 import {
-  BANK_LESSON_TEACHING_CONTRACT,
   bankLessonGenerationRecoveryEnabled,
   buildIncompleteLessonRetryInstruction,
 } from "../services/bankLessonPrompt";
@@ -2199,6 +2198,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
     steps: BankStep[];
     keyConcepts: string[];
     maxGenerationAttempts?: 1 | 2;
+    preserveRejectedDraft?: boolean;
   }
   const rawBankRecord = rawBankCtx && typeof rawBankCtx === "object"
     ? rawBankCtx as Record<string, unknown>
@@ -2217,6 +2217,10 @@ router.post("/solveQuestion/stream", async (req, res) => {
     (rawBankRecord.maxGenerationAttempts === undefined ||
       rawBankRecord.maxGenerationAttempts === 1 ||
       rawBankRecord.maxGenerationAttempts === 2) &&
+    (rawBankRecord.preserveRejectedDraft === undefined ||
+      rawBankRecord.preserveRejectedDraft === false ||
+      (rawBankRecord.preserveRejectedDraft === true &&
+        rawBankRecord.questionId === "c9-m-ch15-t2-q04")) &&
     (rawBankRecord.sourceHash === undefined ||
       (typeof rawBankRecord.sourceHash === "string" && /^fnv1a64:[0-9a-f]{16}$/.test(rawBankRecord.sourceHash)));
   const bankCtx: BankCtx | undefined = validBankContext ? rawBankRecord as unknown as BankCtx : undefined;
@@ -2356,11 +2360,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // ── 6. Build prompts ──────────────────────────────────────────────────────────
   // systemContent and maxTokens from buildDraftPrompts (handles mode-specific schema).
   // userContent is overridden for bank questions to inject authoritative grounding.
-  const { systemContent: baseSystemContent, maxTokens: baseStreamMaxTokens } =
+  const { systemContent, maxTokens: baseStreamMaxTokens } =
     buildDraftPrompts(subj, q, streamMode, ctx, blueprint);
-  const systemContent = bankCtx
-    ? `${baseSystemContent}\n\n${BANK_LESSON_TEACHING_CONTRACT}`
-    : baseSystemContent;
   // Full bank TeachingLessons need room for all Detailed fields and calculations.
   const streamMaxTokens = bankCtx
     ? Math.max(baseStreamMaxTokens, BANK_DETAILED_OUTPUT_TOKENS)
@@ -2389,11 +2390,10 @@ router.post("/solveQuestion/stream", async (req, res) => {
       ``,
       `PEDAGOGICAL HINT (use for questionTranslation.plainEnglish context): ${bankCtx.hint}`,
       ``,
-      `IMPORTANT: finalAnswer.answer MUST copy the Gold Standard answer above verbatim, preserving its values, units, direction, and wording. Do not round, paraphrase, or substitute an equivalent-looking answer.`,
+      `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above.`,
       `INTRODUCTORY FIELDS may explain the question and its givens, but must not state the final result or identify the correct option. Preserve necessary givens and intermediate calculations.`,
       `guidedReasoning MUST follow the approved reasoning (you may add depth to why/pause).`,
       `All other visible sections (intuition, commonMistakes, simplerExample, practiceQuestion) should be authored with full pedagogical depth.`,
-      `Fill vocabulary with plain-language definitions for essential terms and symbols. Fill rememberThese with concept takeaways and an exam-relevant check; do not repeat the final answer there.`,
       ``,
       `Subject: ${subj}`,
       ``,
@@ -2414,6 +2414,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
   }> = [];
   let previousFailure: LessonStreamFailureCategory | undefined;
   let previousIncompleteFields: string[] = [];
+  let rejectedCandidateForDiagnostics: LessonResponse | undefined;
 
   const generation = await runWithSingleLessonStreamRecovery(async (attemptNumber) => {
     if (clientDisconnected) {
@@ -2487,6 +2488,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
             parseLessonResponse(completion.json as any),
           )
           : parseLessonResponse(completion.json as any);
+        if (candidate) rejectedCandidateForDiagnostics = candidate;
         if (bankCtx && !isCompleteDetailedLessonResponse(candidate)) {
           previousIncompleteFields = getIncompleteDetailedLessonFields(candidate);
           category = "incomplete_lesson";
@@ -2576,6 +2578,16 @@ router.post("/solveQuestion/stream", async (req, res) => {
         code,
         failureCategory: category,
         responseStatus: httpStatus ?? null,
+        ...(bankCtx?.preserveRejectedDraft && rejectedCandidateForDiagnostics
+          ? {
+            rejectedDraft: rejectedCandidateForDiagnostics,
+            rejectionFeedback: {
+              stage: "generation",
+              failureCategory: category,
+              missingFields: missingFields ?? [],
+            },
+          }
+          : {}),
         ...streamTelemetry,
       });
       res.end();
@@ -2642,7 +2654,21 @@ router.post("/solveQuestion/stream", async (req, res) => {
         outcome: code,
         elapsedMs: modelElapsedMs,
       }, "[BANK:INTEGRITY]");
-      emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
+      emit({
+        type: "error",
+        code,
+        failureCategory: "validation_failure",
+        ...(bankCtx.preserveRejectedDraft
+          ? {
+            rejectedDraft: finalLesson,
+            rejectionFeedback: {
+              stage: "canonical_answer",
+              comparison: answerComparison,
+            },
+          }
+          : {}),
+        ...streamTelemetry,
+      });
       res.end();
       return;
     }
@@ -2683,7 +2709,21 @@ router.post("/solveQuestion/stream", async (req, res) => {
           outcome: revalidatedAnswer.status,
           code,
         }, "[BANK:INTEGRITY] corrected lesson failed canonical answer revalidation");
-        emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
+        emit({
+          type: "error",
+          code,
+          failureCategory: "validation_failure",
+          ...(bankCtx.preserveRejectedDraft
+            ? {
+              rejectedDraft: finalLesson,
+              rejectionFeedback: {
+                stage: "post_repair_canonical_answer",
+                comparison: revalidatedAnswer,
+              },
+            }
+            : {}),
+          ...streamTelemetry,
+        });
         res.end();
         return;
       }
@@ -2693,8 +2733,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
     // context, including its final state after any repair. Reuse that result
     // instead of scanning the full TeachingLesson a second time.
     const answerLast = repairResult.assessment;
-    // Keep the complete rejected lesson and answerLast.offendingText request-local
-    // for safe inspection/correction. Do not log or emit either payload.
+    // Keep rejected lesson content out of logs and normal student responses.
+    // The one-question pre-generation diagnostic can opt in to preserving it.
     req.log.info({
       stage: "answer-last-integrity",
       outcome: answerLast.status,
@@ -2714,7 +2754,25 @@ router.post("/solveQuestion/stream", async (req, res) => {
         repairReason: repairResult.status === "rejected" ? repairResult.reason : undefined,
         elapsedMs: modelElapsedMs,
       }, "[BANK:INTEGRITY]");
-       emit({ type: "error", code, failureCategory: "validation_failure", ...streamTelemetry });
+      emit({
+        type: "error",
+        code,
+        failureCategory: "validation_failure",
+        ...(bankCtx.preserveRejectedDraft
+          ? {
+            rejectedDraft: finalLesson,
+            rejectionFeedback: {
+              stage: "answer_last",
+              assessment: answerLast,
+              repairStatus: repairResult.status,
+              ...(repairResult.status === "rejected"
+                ? { repairReason: repairResult.reason }
+                : {}),
+            },
+          }
+          : {}),
+        ...streamTelemetry,
+      });
       res.end();
       return;
     }
@@ -2759,6 +2817,16 @@ router.post("/solveQuestion/stream", async (req, res) => {
           completionTokens: qualityResult.usageTotal.completionTokens,
           scores: qualityResult.finalScore,
         },
+        ...(bankCtx.preserveRejectedDraft
+          ? {
+            rejectedDraft: finalLesson,
+            rejectionFeedback: {
+              stage: "teaching_quality",
+              decision: qualityResult.decision,
+              qualityLog: qualityResult.qualityLog,
+            },
+          }
+          : {}),
         ...streamTelemetry,
       });
       res.end();

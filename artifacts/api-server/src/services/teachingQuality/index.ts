@@ -26,6 +26,7 @@ export interface CycleLog {
   cycle:     number;
   scores:    DimensionScores;
   confusions: string[];
+  criticalIssues: ReviewReport["criticalIssues"];
   issueCount: number;
   passed:    boolean;
   improved:  boolean;   // true if an improve call was made after this review
@@ -187,6 +188,7 @@ export async function runQualityPipeline(
       cycle,
       scores:     report.scores,
       confusions: report.confusions,
+      criticalIssues: report.criticalIssues,
       issueCount: report.criticalIssues.length,
       passed:     report.passed,
       improved:   false,

@@ -24,6 +24,8 @@ const args = new Set(process.argv.slice(2));
 type GenerationEvent = {
   type?: string;
   lesson?: unknown;
+  rejectedDraft?: unknown;
+  rejectionFeedback?: unknown;
   code?: string;
   failureCategory?: string;
   missingFields?: string[];
@@ -248,6 +250,7 @@ async function generateOne(
   question: Question,
   baseUrl: string,
   singleAttempt: boolean,
+  preserveRejectedDraft: boolean,
 ): Promise<GenerationResult> {
   const canonicalContext = canonicalContextFor(question);
   const response = await fetch(`${baseUrl}/api/solveQuestion/stream`, {
@@ -267,6 +270,7 @@ async function generateOne(
         steps: question.steps,
         keyConcepts: question.keyConcepts,
         ...(singleAttempt ? { maxGenerationAttempts: 1 as const } : {}),
+        ...(preserveRejectedDraft ? { preserveRejectedDraft: true as const } : {}),
       },
     }),
   });
@@ -341,6 +345,8 @@ async function generateOne(
         finishReason: failureEvent.finishReason,
         responseStatus: failureEvent.responseStatus,
         attemptCount: failureEvent.attemptCount,
+        rejectedDraft: failureEvent.rejectedDraft,
+        rejectionFeedback: failureEvent.rejectionFeedback,
         missingFields: failureEvent.missingFields,
         maxOutputTokens: failureEvent.maxOutputTokens,
         promptTokens: failureEvent.promptTokens,
@@ -407,6 +413,8 @@ function blockedGenerationDetails(error: unknown): {
   estimatedCostUsd: number;
   promptTokens: number;
   completionTokens: number;
+  rejectedDraft?: unknown;
+  rejectionFeedback?: unknown;
 } {
   const message = error instanceof Error ? error.message : String(error);
   try {
@@ -417,6 +425,7 @@ function blockedGenerationDetails(error: unknown): {
       completionTokens?: number;
       attemptCount?: number;
       missingFields?: string[];
+      rejectedDraft?: unknown;
       qualityReview?: {
         status?: string;
         blockReasons?: string[];
@@ -425,6 +434,7 @@ function blockedGenerationDetails(error: unknown): {
         promptTokens?: number;
         completionTokens?: number;
       };
+      rejectionFeedback?: unknown;
     };
     const review = payload.qualityReview;
     const missingFields = Array.isArray(payload.missingFields)
@@ -444,6 +454,8 @@ function blockedGenerationDetails(error: unknown): {
       promptTokens: (payload.promptTokens ?? 0) + (review?.promptTokens ?? 0),
       completionTokens:
         (payload.completionTokens ?? 0) + (review?.completionTokens ?? 0),
+      rejectedDraft: payload.rejectedDraft,
+      rejectionFeedback: payload.rejectionFeedback,
     };
   } catch {
     return {
@@ -455,6 +467,26 @@ function blockedGenerationDetails(error: unknown): {
       completionTokens: 0,
     };
   }
+}
+
+async function preserveBlockedDraft(
+  questionId: string,
+  sourceHash: string,
+  rejectedDraft: unknown,
+  rejectionFeedback: unknown,
+): Promise<string> {
+  const directory = resolve(repoRoot, "generated-artifacts", "rejected-lessons");
+  await mkdir(directory, { recursive: true });
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const path = resolve(directory, `${questionId}-${timestamp}.json`);
+  await writeFile(path, `${JSON.stringify({
+    questionId,
+    sourceHash,
+    rejectedDraft,
+    rejectionFeedback,
+    preservedAt: new Date().toISOString(),
+  }, null, 2)}\n`, "utf8");
+  return path;
 }
 
 function requestedIds(
@@ -495,6 +527,17 @@ async function main(): Promise<void> {
   const baseUrl = apiBaseUrl();
   const singleAttempt = args.has("--single-attempt");
   const passOnly = args.has("--pass-only");
+  const preserveRejectedDraftFlag = args.has("--preserve-blocked-draft");
+  const preserveRejectedDraft =
+    preserveRejectedDraftFlag &&
+    ids.length === 1 &&
+    ids[0] === "c9-m-ch15-t2-q04" &&
+    singleAttempt;
+  if (preserveRejectedDraftFlag && !preserveRejectedDraft) {
+    throw new Error(
+      "--preserve-blocked-draft requires --single-attempt and only c9-m-ch15-t2-q04.",
+    );
+  }
   const modelCallBudget = singleAttempt ? 6 : Number.POSITIVE_INFINITY;
   let modelCallsReserved = 0;
   const totals = {
@@ -570,7 +613,12 @@ async function main(): Promise<void> {
       if (singleAttempt) modelCallsReserved += 2;
 
       console.log(`[${index + 1}/${ids.length}] GENERATE ${id}`);
-      const result = await generateOne(question, baseUrl, singleAttempt);
+      const result = await generateOne(
+        question,
+        baseUrl,
+        singleAttempt,
+        preserveRejectedDraft,
+      );
       if (!mayPersistQualityStatus(result.qualityReviewStatus, passOnly)) {
         const modelCalls = result.servedFromCache
           ? 0
@@ -667,7 +715,32 @@ async function main(): Promise<void> {
       );
     } catch (error) {
       totals.blocked += 1;
-      const details = blockedGenerationDetails(error);
+      const {
+        rejectedDraft,
+        rejectionFeedback,
+        ...details
+      } = blockedGenerationDetails(error);
+      if (
+        preserveRejectedDraft &&
+        rejectedDraft !== undefined &&
+        rejectionFeedback !== undefined
+      ) {
+        try {
+          const path = await preserveBlockedDraft(
+            id,
+            hashQuestionContent(questions.get(id)!),
+            rejectedDraft,
+            rejectionFeedback,
+          );
+          console.error(`[${index + 1}/${ids.length}] PRESERVED rejected draft and exact feedback: ${path}`);
+        } catch (preserveError) {
+          console.error(
+            `[${index + 1}/${ids.length}] FAILED to preserve blocked draft: ${
+              preserveError instanceof Error ? preserveError.message : String(preserveError)
+            }`,
+          );
+        }
+      }
       blockedItems.push({ questionId: id, ...details });
       totals.modelCalls += details.modelCalls;
       totals.estimatedCostUsd += details.estimatedCostUsd;
