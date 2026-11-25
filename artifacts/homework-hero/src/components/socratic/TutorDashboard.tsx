@@ -30,7 +30,7 @@ function StatCard({ label, value, color = "text-indigo-600" }: { label: string; 
   );
 }
 
-export default function TutorDashboard() {
+export default function TutorDashboard({ showOverview = true }: { showOverview?: boolean }) {
   const stats   = useMemo(() => getTutorStats(), []);
   const recent  = useMemo(() => getRecentSocraticSessions(5), []);
   const miscons = useMemo(() => getActiveMisconceptions().slice(0, 6), []);
@@ -72,7 +72,7 @@ export default function TutorDashboard() {
   return (
     <div className="space-y-5">
       {/* Overall stats */}
-      <div>
+      {showOverview && <div>
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Tutor Session Stats</p>
         <div className="grid grid-cols-3 gap-2">
           <StatCard label="Sessions" value={stats.totalSessions} />
@@ -85,7 +85,7 @@ export default function TutorDashboard() {
           <StatCard label="Hints Used" value={stats.totalHints} color="text-amber-600" />
           <StatCard label="Misconceptions Fixed" value={stats.misconceptionsFixed} color="text-violet-600" />
         </div>
-      </div>
+      </div>}
 
       {/* Recent sessions */}
       {recent.length > 0 && (
