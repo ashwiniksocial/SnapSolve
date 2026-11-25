@@ -1,5 +1,6 @@
 /**
- * Validates whether a lesson has passed all quality thresholds.
+ * Reports dimensions below the teaching-quality target.
+ * This is diagnostic scoring, not an academic-integrity or persistence gate.
  * Pure logic — no AI calls.
  */
 

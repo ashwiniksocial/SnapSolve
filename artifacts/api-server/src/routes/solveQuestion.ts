@@ -8,7 +8,7 @@
  *   1. Rate limit check
  *   2. Cache lookup
  *   3. Generate lesson draft (OpenAI)
- *   4. Teaching Quality Pipeline (review → improve → re-review, max 3 cycles)
+ *   4. Teaching Quality Pipeline (review → optional improve → final review/hold, max 2 cycles)
  *   5. Cache + return final lesson
  *
  * Features:
@@ -16,7 +16,7 @@
  *  - Server-side cache      (in-memory, 7-day TTL)
  *  - OpenAI timeout         (30 s via AbortController)
  *  - TeachingLesson schema  (structured lesson, not just steps)
- *  - Quality gating         (≥95 on all dimensions before lesson reaches student)
+ *  - Quality gating         (PASS/IMPROVE deliver; uncertain Detailed lessons are held)
  *  - Graceful error codes   (no_key / rate_limit / timeout / invalid_key)
  */
 
@@ -29,7 +29,10 @@ import {
   type LessonResponse,
   type LessonStep,
 } from "../lib/lessonTypes";
-import { runQualityPipeline }    from "../services/teachingQuality";
+import {
+  mayDeliverTeachingQualityStatus,
+  runQualityPipeline,
+} from "../services/teachingQuality";
 import {
   getSimplifyLevelInstruction,
   hasMaterialSimplifyChange,
@@ -1843,7 +1846,7 @@ router.post("/solveQuestion", async (req, res) => {
     return;
   }
 
-  // 6. Quality Pipeline — review → improve → repeat (max 3 cycles)
+  // 6. Quality Pipeline — review → improve → review (maximum 2 cycles)
   //    Standard and Compact modes skip this for faster responses.
   let finalLesson = draft;
   let architecturePath: ArchitecturePath = "option_f";
@@ -1918,7 +1921,13 @@ router.post("/solveQuestion", async (req, res) => {
         });
         return;
       }
-      req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] SKIP — insufficient budget remaining; returning draft");
+      req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] HELD — insufficient review budget");
+      res.status(503).json({
+        error: "lesson_quality_review_budget_exhausted",
+        message: "The Detailed lesson was held because its teaching review could not finish.",
+        resolution: "retry_once_when_review_budget_is_available",
+      });
+      return;
     } else {
       try {
         const timeoutSignal = new Promise<null>((resolve) =>
@@ -1943,8 +1952,38 @@ router.post("/solveQuestion", async (req, res) => {
             });
             return;
           }
-          req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] TIMEOUT — budget exceeded; returning draft");
+          req.log.warn({ qualityBudgetMs }, "[PIPELINE:6] HELD — review budget exceeded");
+          res.status(504).json({
+            error: "lesson_quality_review_timeout",
+            message: "The Detailed lesson was held because its teaching review timed out.",
+            resolution: "retry_once_after_the_service_recovers",
+          });
+          return;
         } else {
+          if (!mayDeliverTeachingQualityStatus(pipelineResult.decision.status)) {
+            req.log.warn({
+              subject: subj,
+              status: pipelineResult.decision.status,
+              reasons: pipelineResult.decision.blockReasons,
+              resolution: pipelineResult.decision.resolution,
+              cyclesRun: pipelineResult.cyclesRun,
+            }, "[PIPELINE:6] HELD — quality evidence requires one bounded review");
+            res.status(pipelineResult.decision.status === "BLOCK" ? 422 : 503).json({
+              error: pipelineResult.decision.status === "BLOCK"
+                ? "lesson_quality_blocked"
+                : "lesson_quality_review_required",
+              message: pipelineResult.decision.status === "BLOCK"
+                ? "The lesson failed a verified teaching-integrity check."
+                : "The lesson was held because the teaching review is uncertain.",
+              qualityReview: {
+                status: pipelineResult.decision.status,
+                reasons: pipelineResult.decision.blockReasons,
+                resolution: pipelineResult.decision.resolution,
+                scores: pipelineResult.finalScore,
+              },
+            });
+            return;
+          }
           if (simplifyContext && !pipelineResult.passed) {
             req.log.warn({
               subject: subj,
@@ -1999,8 +2038,13 @@ router.post("/solveQuestion", async (req, res) => {
           });
           return;
         }
-        // Quality pipeline failure is non-fatal — we still return the draft
-        req.log.warn({ err: String(err) }, "solveQuestion: quality pipeline failed — returning draft");
+        req.log.warn({ err: String(err) }, "[PIPELINE:6] HELD — quality pipeline failed");
+        res.status(503).json({
+          error: "lesson_quality_review_unavailable",
+          message: "The Detailed lesson was held because its teaching review was unavailable.",
+          resolution: "retry_once_after_the_service_recovers",
+        });
+        return;
       }
     }
   }
@@ -2579,6 +2623,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
         type: "error",
         code,
         failureCategory: category,
+        resolution: category === "incomplete_lesson"
+          ? "correct_listed_fields_then_retry_once"
+          : category === "timeout" || category === "http_error" || category === "provider_error"
+            ? "recover_service_then_retry_at_most_once"
+            : "inspect_failure_category_before_retry",
         responseStatus: httpStatus ?? null,
         ...(bankCtx?.preserveRejectedDraft && rejectedCandidateForDiagnostics
           ? {
@@ -2660,6 +2709,12 @@ router.post("/solveQuestion/stream", async (req, res) => {
         type: "error",
         code,
         failureCategory: "validation_failure",
+        diagnostics: {
+          stage: "canonical_answer",
+          status: answerComparison.status,
+          method: answerComparison.method,
+        },
+        resolution: "verify_canonical_bank_answer_then_allow_one_corrected_retry",
         ...(bankCtx.preserveRejectedDraft
           ? {
             rejectedDraft: finalLesson,
@@ -2715,6 +2770,12 @@ router.post("/solveQuestion/stream", async (req, res) => {
           type: "error",
           code,
           failureCategory: "validation_failure",
+          diagnostics: {
+            stage: "post_repair_canonical_answer",
+            status: revalidatedAnswer.status,
+            method: revalidatedAnswer.method,
+          },
+          resolution: "verify_canonical_bank_answer_then_allow_one_corrected_retry",
           ...(bankCtx.preserveRejectedDraft
             ? {
               rejectedDraft: finalLesson,
@@ -2760,6 +2821,14 @@ router.post("/solveQuestion/stream", async (req, res) => {
         type: "error",
         code,
         failureCategory: "validation_failure",
+        diagnostics: {
+          status: answerLast.status,
+          section: "section" in answerLast ? answerLast.section : undefined,
+          disclosure: "disclosure" in answerLast ? answerLast.disclosure : undefined,
+          reason: answerLast.status === "clear" ? repairResult.reason : answerLast.reason,
+          repairStatus: repairResult.status,
+        },
+        resolution: "correct_the_named_section_then_recheck_once",
         ...(bankCtx.preserveRejectedDraft
           ? {
             rejectedDraft: finalLesson,
@@ -2801,19 +2870,22 @@ router.post("/solveQuestion/stream", async (req, res) => {
       blockReasons: qualityResult.decision.blockReasons,
       scores: qualityResult.finalScore,
     }, "[BANK:QUALITY]");
-    if (qualityResult.decision.status === "BLOCK") {
+    if (!mayDeliverTeachingQualityStatus(qualityResult.decision.status)) {
       emit({
         type: "error",
-        code: "bank_teaching_quality_review_failed",
+        code: qualityResult.decision.status === "BLOCK"
+          ? "bank_teaching_quality_review_failed"
+          : "bank_teaching_quality_review_required",
         failureCategory: "validation_failure",
         qualityReview: {
           version: 1,
           passed: false,
-          status: "BLOCK",
+          status: qualityResult.decision.status,
           reviewFailed: qualityResult.reviewFailed,
           reviewerCalls: qualityResult.reviewerCalls,
           elapsedMs: Date.now() - qualityReviewStartedAt,
           blockReasons: qualityResult.decision.blockReasons,
+          resolution: qualityResult.decision.resolution,
           estimatedCostUsd: qualityResult.usageTotal.estimatedCostUsd,
           promptTokens: qualityResult.usageTotal.promptTokens,
           completionTokens: qualityResult.usageTotal.completionTokens,

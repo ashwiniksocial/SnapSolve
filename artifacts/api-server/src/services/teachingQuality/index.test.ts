@@ -5,6 +5,7 @@ import { parseLessonResponse, type LessonResponse } from "../../lib/lessonTypes"
 import type { ReviewReport } from "./lessonReviewer";
 import {
   classifyTeachingQuality,
+  mayDeliverTeachingQualityStatus,
   runQualityPipeline,
   type QualityPipelineServices,
 } from "./index";
@@ -244,7 +245,7 @@ test("quality logs retain exact reviewer feedback for blocked-draft diagnostics"
     })),
   );
 
-  assert.equal(result.decision.status, "BLOCK");
+  assert.equal(result.decision.status, "REVIEW_REQUIRED");
   assert.deepEqual(result.qualityLog[0]?.criticalIssues, [issue]);
   assert.deepEqual(result.qualityLog[0]?.confusions, [
     "Why can both parts of the fraction be divided by the same number?",
@@ -272,10 +273,10 @@ test("quality decision marks a sufficiently strong lesson with a medium weakness
   assert.equal(result.status, "IMPROVE");
   assert.deepEqual(result.blockReasons, []);
   assert.ok(result.improvementFlags.includes("dimension_below_pass_target:examples=75"));
-  assert.ok(result.improvementFlags.includes("medium_priority_issue:examples"));
+  assert.ok(result.improvementFlags.includes("medium_priority_issue:unclear:examples"));
 });
 
-test("quality decision blocks critical issues and weak-student comprehension floors", () => {
+test("subjective high-impact findings and low scores require review without auto-approval", () => {
   const critical = classifyTeachingQuality({
     ...report(true, 90),
     scores: scores(90),
@@ -299,13 +300,16 @@ test("quality decision blocks critical issues and weak-student comprehension flo
     confusions: [],
   });
 
-  assert.equal(critical.status, "BLOCK");
-  assert.deepEqual(critical.blockReasons, ["blocking_issue:guidedReasoning"]);
-  assert.equal(lowUnderstanding.status, "BLOCK");
-  assert.ok(lowUnderstanding.blockReasons.includes("student_understanding_below_block_floor=65"));
+  assert.equal(critical.status, "REVIEW_REQUIRED");
+  assert.match(critical.blockReasons[0] ?? "", /incorrect:guidedReasoning/);
+  assert.equal(critical.resolution, "manual_review_once");
+  assert.equal(lowUnderstanding.status, "REVIEW_REQUIRED");
+  assert.ok(lowUnderstanding.blockReasons.includes(
+    "review_score_below_minimum:weakStudentUnderstanding=65",
+  ));
 });
 
-test("Probability Q3 weak-student score of 50 remains a fail-closed BLOCK", () => {
+test("Probability Q3 weak-student score of 50 is held, not persisted or auto-approved", () => {
   const decision = classifyTeachingQuality({
     ...report(false, 75),
     scores: { ...scores(75), weakStudentUnderstanding: 50, overall: 70 },
@@ -313,11 +317,57 @@ test("Probability Q3 weak-student score of 50 remains a fail-closed BLOCK", () =
     confusions: [],
   });
 
-  assert.equal(decision.status, "BLOCK");
-  assert.ok(decision.blockReasons.includes("student_understanding_below_block_floor=50"));
+  assert.equal(decision.status, "REVIEW_REQUIRED");
+  assert.ok(decision.blockReasons.includes(
+    "review_score_below_minimum:weakStudentUnderstanding=50",
+  ));
+  assert.equal(decision.resolution, "manual_review_once");
 });
 
-test("quality decision blocks reviewer failures and missing diagnostics", () => {
-  assert.equal(classifyTeachingQuality(null, true).status, "BLOCK");
-  assert.equal(classifyTeachingQuality(null, false).status, "BLOCK");
+test("reviewer failures and missing diagnostics are held with a bounded resolution", () => {
+  const unavailable = classifyTeachingQuality(null, true);
+  const missing = classifyTeachingQuality(null, false);
+  assert.equal(unavailable.status, "REVIEW_REQUIRED");
+  assert.equal(missing.status, "REVIEW_REQUIRED");
+  assert.deepEqual(unavailable.blockReasons, ["reviewer_unavailable"]);
+  assert.deepEqual(missing.blockReasons, ["review_diagnostics_missing"]);
+  assert.equal(unavailable.resolution, "manual_review_once");
+});
+
+test("only PASS and IMPROVE are deliverable; holds and blocks cannot reach students", () => {
+  assert.equal(mayDeliverTeachingQualityStatus("PASS"), true);
+  assert.equal(mayDeliverTeachingQualityStatus("IMPROVE"), true);
+  assert.equal(mayDeliverTeachingQualityStatus("REVIEW_REQUIRED"), false);
+  assert.equal(mayDeliverTeachingQualityStatus("BLOCK"), false);
+});
+
+test("false-absence findings across subjects cite the scan and cannot be saved", () => {
+  const cases = [
+    ["Math", "probability_context"],
+    ["Science", "permeability_explanation"],
+    ["IT", "security_reasoning"],
+  ] as const;
+
+  for (const [subject, section] of cases) {
+    const decision = classifyTeachingQuality({
+      ...report(false, 75),
+      scores: scores(75),
+      criticalIssues: [{
+        section,
+        findingType: "missing",
+        mode: "Detailed",
+        evidence: [],
+        reviewedSections: ["Key Concept", "Step-by-Step Solution", "Final Answer"],
+        problem: `Reviewer could not locate the ${subject} teaching context.`,
+        reason: "The issue has no supporting quote from the student-visible lesson.",
+        suggestedFix: "Manually compare the rendered sections once.",
+        priority: "high",
+      }],
+      confusions: [],
+    });
+
+    assert.equal(decision.status, "REVIEW_REQUIRED", `${subject} must be held`);
+    assert.match(decision.blockReasons[0] ?? "", /complete_scan=Key Concept > Step-by-Step Solution > Final Answer/);
+    assert.equal(decision.resolution, "manual_review_once");
+  }
 });

@@ -7,4 +7,8 @@ test("ordinary generation can save PASS and IMPROVE, while pass-only generation 
   assert.equal(mayPersistQualityStatus("IMPROVE", false), true);
   assert.equal(mayPersistQualityStatus("PASS", true), true);
   assert.equal(mayPersistQualityStatus("IMPROVE", true), false);
+  assert.equal(mayPersistQualityStatus("IMPROVE", false), true);
+  assert.equal(mayPersistQualityStatus("REVIEW_REQUIRED", false), false);
+  assert.equal(mayPersistQualityStatus("REVIEW_REQUIRED", true), false);
+  assert.equal(mayPersistQualityStatus("BLOCK", false), false);
 });

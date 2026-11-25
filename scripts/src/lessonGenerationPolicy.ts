@@ -1,8 +1,8 @@
-export type QualityReviewStatus = "PASS" | "IMPROVE";
+export type QualityReviewStatus = "PASS" | "IMPROVE" | "REVIEW_REQUIRED" | "BLOCK";
 
 export function mayPersistQualityStatus(
   status: QualityReviewStatus,
   passOnly: boolean,
 ): boolean {
-  return !passOnly || status === "PASS";
+  return status === "PASS" || (!passOnly && status === "IMPROVE");
 }

@@ -4,11 +4,11 @@
  * Every AI-generated lesson passes through this pipeline before reaching the student.
  *
  * Pipeline per cycle:
- *   Draft Lesson → Review → [if failed] → Improve → Review → [if failed] → Improve → Review → Accept
+ *   Draft Lesson → Review → [if needed] Improve → final review or hold
  *
- * Maximum 3 review cycles. After the third cycle the best lesson is returned regardless.
- * If ANY quality service call fails (timeout, API error), the pipeline degrades gracefully
- * and returns the current best lesson rather than erroring the entire request.
+ * Maximum 2 review cycles. Unresolved review-required lessons are held, not delivered.
+ * If a quality service call fails, the decision is REVIEW_REQUIRED; the route holds
+ * the lesson rather than returning an unreviewed draft.
  */
 
 import type { LessonResponse }  from "../../lib/lessonTypes";
@@ -57,15 +57,23 @@ export interface QualityPipelineResult {
   };
 }
 
-export type TeachingQualityDecisionStatus = "PASS" | "IMPROVE" | "BLOCK";
+export type TeachingQualityDecisionStatus = "PASS" | "IMPROVE" | "REVIEW_REQUIRED" | "BLOCK";
+export type TeachingQualityResolution = "none" | "manual_review_once";
 
 export interface TeachingQualityDecision {
   status: TeachingQualityDecisionStatus;
   improvementFlags: string[];
   blockReasons: string[];
+  resolution: TeachingQualityResolution;
 }
 
-const BLOCK_SCORE_FLOOR = 60;
+export function mayDeliverTeachingQualityStatus(
+  status: TeachingQualityDecisionStatus,
+): status is "PASS" | "IMPROVE" {
+  return status === "PASS" || status === "IMPROVE";
+}
+
+const REVIEW_HOLD_SCORE_FLOOR = 60;
 const MIN_UNDERSTANDING_TO_SAVE = 70;
 
 /**
@@ -79,37 +87,69 @@ export function classifyTeachingQuality(
 ): TeachingQualityDecision {
   if (reviewFailed || !report) {
     return {
-      status: "BLOCK",
+      status: "REVIEW_REQUIRED",
       improvementFlags: [],
       blockReasons: [reviewFailed ? "reviewer_unavailable" : "review_diagnostics_missing"],
+      resolution: "manual_review_once",
     };
   }
 
-  const blockReasons = [
+  // Reviewer severity and dimension scores are quality assessments, not
+  // deterministic academic facts. Keep severe/uncertain content out of storage,
+  // but require a bounded evidence review instead of treating the model label
+  // itself as a permanent veto.
+  const reviewReasons = [
     ...report.criticalIssues
-      .filter((issue) => issue.priority === "critical" || issue.priority === "high")
-      .map((issue) => `blocking_issue:${issue.section || "unspecified"}`),
+      .filter((issue) =>
+        issue.findingType === "missing" ||
+        issue.findingType === "incorrect" ||
+        issue.priority === "critical" ||
+        issue.priority === "high",
+      )
+      .map((issue) => {
+        const evidence = issue.evidence.length > 0
+          ? issue.evidence.map((item) => `${item.section}: "${item.quote}"`).join(" | ")
+          : `complete_scan=${issue.reviewedSections.join(" > ")}`;
+        return [
+          `review_required:${issue.findingType}:${issue.section}`,
+          issue.problem,
+          issue.reason,
+          evidence,
+        ].filter(Boolean).join(" — ");
+      }),
     ...Object.entries(report.scores)
       .filter(([dimension, score]) =>
-        dimension !== "overall" && score < BLOCK_SCORE_FLOOR,
+        dimension !== "overall" && score < REVIEW_HOLD_SCORE_FLOOR,
       )
-      .map(([dimension, score]) => `score_below_block_floor:${dimension}=${score}`),
+      .map(([dimension, score]) => `review_score_below_floor:${dimension}=${score}`),
   ];
   if (report.scores.weakStudentUnderstanding < MIN_UNDERSTANDING_TO_SAVE) {
-    blockReasons.push(
-      `student_understanding_below_block_floor=${report.scores.weakStudentUnderstanding}`,
+    reviewReasons.push(
+      `review_score_below_minimum:weakStudentUnderstanding=${report.scores.weakStudentUnderstanding}`,
     );
   }
-  if (blockReasons.length > 0) {
-    return { status: "BLOCK", improvementFlags: [], blockReasons };
+  if (reviewReasons.length > 0) {
+    return {
+      status: "REVIEW_REQUIRED",
+      improvementFlags: [],
+      blockReasons: reviewReasons,
+      resolution: "manual_review_once",
+    };
   }
 
   const validation = validateLesson(report.scores);
   const improvementFlags = [
     ...validation.failingDimensions.map((dimension) => `dimension_below_pass_target:${dimension}`),
     ...report.criticalIssues
-      .filter((issue) => issue.priority === "medium")
-      .map((issue) => `medium_priority_issue:${issue.section || "unspecified"}`),
+      .filter((issue) =>
+        issue.findingType !== "missing" &&
+        issue.findingType !== "incorrect" &&
+        issue.priority !== "critical" &&
+        issue.priority !== "high",
+      )
+      .map((issue) =>
+        `${issue.priority}_priority_issue:${issue.findingType}:${issue.section || "unspecified"}`,
+      ),
   ];
   if (report.confusions.length > 0) {
     improvementFlags.push(`student_confusions:${report.confusions.length}`);
@@ -122,6 +162,7 @@ export function classifyTeachingQuality(
     status: improvementFlags.length === 0 ? "PASS" : "IMPROVE",
     improvementFlags,
     blockReasons: [],
+    resolution: "none",
   };
 }
 
@@ -194,9 +235,11 @@ export async function runQualityPipeline(
       improved:   false,
     };
 
+    const qualityDispositionAllowsDelivery =
+      mayDeliverTeachingQualityStatus(decision.status);
     const reviewPassed = options.requireReviewerPass
-      ? report.passed && validation.passed && decision.status !== "BLOCK"
-      : (report.passed || validation.passed) && decision.status !== "BLOCK";
+      ? report.passed && validation.passed && qualityDispositionAllowsDelivery
+      : (report.passed || validation.passed) && qualityDispositionAllowsDelivery;
     if (reviewPassed) {
       // Lesson passed all thresholds — we're done
       qualityLog.push(cycleEntry);

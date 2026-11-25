@@ -28,6 +28,8 @@ type GenerationEvent = {
   rejectionFeedback?: unknown;
   code?: string;
   failureCategory?: string;
+  resolution?: string;
+  diagnostics?: Record<string, unknown>;
   missingFields?: string[];
   finishReason?: string | null;
   responseStatus?: number | null;
@@ -42,10 +44,11 @@ type GenerationEvent = {
   qualityReview?: {
     version?: number;
     passed?: boolean;
-    status?: "PASS" | "IMPROVE" | "BLOCK";
+    status?: "PASS" | "IMPROVE" | "REVIEW_REQUIRED" | "BLOCK";
     reviewerCalls?: number;
     improvementFlags?: string[];
     blockReasons?: string[];
+    resolution?: string;
     estimatedCostUsd?: number;
     promptTokens?: number;
     completionTokens?: number;
@@ -355,6 +358,8 @@ async function generateOne(
         estimatedCostUsd: failureEvent.estimatedCostUsd,
         totalLatencyMs: failureEvent.totalLatencyMs,
         qualityReview: failureEvent.qualityReview,
+        resolution: failureEvent.resolution,
+        diagnostics: failureEvent.diagnostics,
       }));
     }
     throw error;
@@ -429,11 +434,14 @@ function blockedGenerationDetails(error: unknown): {
       qualityReview?: {
         status?: string;
         blockReasons?: string[];
+        resolution?: string;
         reviewerCalls?: number;
         estimatedCostUsd?: number;
         promptTokens?: number;
         completionTokens?: number;
       };
+      resolution?: string;
+      diagnostics?: Record<string, unknown>;
       rejectionFeedback?: unknown;
     };
     const review = payload.qualityReview;
@@ -441,10 +449,10 @@ function blockedGenerationDetails(error: unknown): {
       ? payload.missingFields.filter((field): field is string => typeof field === "string")
       : [];
     const reason = review?.blockReasons?.length
-      ? `${review.status ?? "BLOCK"}: ${review.blockReasons.join(", ")}`
+      ? `${review.status ?? "BLOCK"}: ${review.blockReasons.join(", ")}; resolution=${review.resolution ?? "manual review required"}`
       : missingFields.length
-        ? `${payload.code ?? message}: ${missingFields.join(", ")}`
-        : payload.code ?? message;
+        ? `${payload.code ?? message}: ${missingFields.join(", ")}; resolution=${payload.resolution ?? "inspect the reported fields before one retry"}`
+        : `${payload.code ?? message}; resolution=${payload.resolution ?? "inspect diagnostics before any retry"}`;
     return {
       reason,
       missingFields,
