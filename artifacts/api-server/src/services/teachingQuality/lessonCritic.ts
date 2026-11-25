@@ -7,13 +7,24 @@
  */
 
 export type IssuePriority = "critical" | "high" | "medium";
+export type FindingType = "missing" | "late" | "unclear" | "incorrect";
+export type StudentLessonMode = "Detailed" | "Standard" | "Compact";
+
+export interface ReviewEvidence {
+  section: string;
+  quote: string;
+}
 
 export interface CriticalIssue {
-  section:      string;         // which lesson section has the problem
-  problem:      string;         // what exactly is wrong
-  reason:       string;         // why it harms a weak student's understanding
-  suggestedFix: string;         // specific text/approach to improve it
-  priority:     IssuePriority;
+  section:         string;         // student-visible section affected
+  findingType:     FindingType;    // missing, late, unclear, or incorrect
+  mode:            StudentLessonMode;
+  evidence:        ReviewEvidence[];
+  reviewedSections: string[];      // complete visible order checked for this finding
+  problem:         string;         // what exactly is wrong
+  reason:          string;         // why it harms a weak student's understanding
+  suggestedFix:    string;         // specific text/approach to improve it
+  priority:        IssuePriority;
 }
 
 export interface CriticReport {

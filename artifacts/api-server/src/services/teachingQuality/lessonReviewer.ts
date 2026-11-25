@@ -12,7 +12,12 @@
  */
 
 import type { LessonResponse }  from "../../lib/lessonTypes";
-import type { CriticalIssue }   from "./lessonCritic";
+import type {
+  CriticalIssue,
+  FindingType,
+  ReviewEvidence,
+  StudentLessonMode,
+} from "./lessonCritic";
 import type { DimensionScores } from "./qualityScoreEngine";
 import { parseDimensionScores } from "./qualityScoreEngine";
 import { PASS_THRESHOLD }       from "./teachingRubric";
@@ -33,6 +38,221 @@ export interface ReviewReport {
 const OPENAI_URL     = "https://api.openai.com/v1/chat/completions";
 const MODEL          = "gpt-4o-mini";
 const REVIEW_TIMEOUT = 55_000;
+
+export interface StudentVisibleReviewSection {
+  section: string;
+  content: Record<string, unknown>;
+}
+
+export type StudentVisibleReviewViews = Record<StudentLessonMode, StudentVisibleReviewSection[]>;
+
+const MODE_SECTION_ORDER: Record<StudentLessonMode, string[]> = {
+  Detailed: [
+    "Key Concept",
+    "Build Intuition",
+    "Understand the Question",
+    "Step-by-Step Solution",
+    "Common Mistakes",
+    "Final Answer",
+    "One Similar Example",
+    "Practice Question",
+    "Remember This",
+  ],
+  Standard: [
+    "Key Concept",
+    "Understand the Question",
+    "Step-by-Step Solution",
+    "Final Answer",
+    "Practice Question",
+  ],
+  Compact: [
+    "Step-by-Step Solution",
+    "Final Answer",
+    "Remember This",
+  ],
+};
+
+function hasText(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function textLeaves(value: unknown): string[] {
+  if (typeof value === "string") return hasText(value) ? [value] : [];
+  if (Array.isArray(value)) return value.flatMap(textLeaves);
+  if (value && typeof value === "object") {
+    return Object.values(value).flatMap(textLeaves);
+  }
+  return [];
+}
+
+/**
+ * Mirrors LessonRenderer's student-visible section order and mode visibility.
+ * Keep this aligned with artifacts/homework-hero/src/components/teaching/TeachingLayout.tsx.
+ */
+export function buildStudentVisibleReviewViews(
+  lesson: LessonResponse,
+): StudentVisibleReviewViews {
+  const keyConcepts = lesson.keyConcepts.filter(hasText);
+  const vocabulary = keyConcepts.length > 0
+    ? lesson.vocabulary.filter((item) => hasText(item.term) && hasText(item.meaning))
+    : [];
+  const intuitionContent = {
+    story: lesson.intuition.story,
+    visual: lesson.intuition.visual,
+    everyday: lesson.intuition.everyday,
+  };
+  const translationContent = Object.fromEntries(
+    Object.entries(lesson.questionTranslation).filter(([, value]) => hasText(value)),
+  );
+  const prerequisites = lesson.prerequisites.filter(hasText);
+  const guidedReasoning = lesson.guidedReasoning.filter((step) =>
+    [step.what, step.why, step.math, step.result, step.pause].some(hasText),
+  );
+  const mistakeContent = lesson.commonMistakes
+    .filter((mistake) => hasText(mistake.mistake))
+    .map((mistake) => ({
+      mistake: mistake.mistake,
+      whyItHappens: mistake.whyItHappens,
+      howToAvoid: mistake.howToAvoid,
+    }));
+  const similarContent = lesson.simplerExample;
+  const hasSimilarExample = hasText(similarContent.problem) && hasText(similarContent.solution);
+  const practiceContent = lesson.practiceQuestion;
+  const rememberContent = lesson.rememberThese.filter(hasText);
+
+  const detailed: StudentVisibleReviewSection[] = [];
+  const standard: StudentVisibleReviewSection[] = [];
+  const compact: StudentVisibleReviewSection[] = [];
+  const add = (
+    targets: StudentVisibleReviewSection[][],
+    section: string,
+    content: Record<string, unknown>,
+  ) => {
+    const entry = { section, content };
+    for (const target of targets) target.push(entry);
+  };
+
+  if (keyConcepts.length > 0) {
+    const content = { keyConcepts, vocabulary };
+    add([detailed, standard], "Key Concept", content);
+  }
+  if ([intuitionContent.story, intuitionContent.visual, intuitionContent.everyday].some(hasText)) {
+    add([detailed], "Build Intuition", intuitionContent);
+  }
+  if (Object.keys(translationContent).length > 0) {
+    add([detailed, standard], "Understand the Question", translationContent);
+  }
+  if (guidedReasoning.length > 0) {
+    const content = { prerequisites, guidedReasoning };
+    add([detailed, standard, compact], "Step-by-Step Solution", content);
+  }
+  if (mistakeContent.length > 0) {
+    add([detailed], "Common Mistakes", { commonMistakes: mistakeContent });
+  }
+  if (hasText(lesson.finalAnswer.answer)) {
+    add([detailed, standard], "Final Answer", {
+      answer: lesson.finalAnswer.answer,
+      whyCorrect: lesson.finalAnswer.whyCorrect,
+    });
+    add([compact], "Final Answer", { answer: lesson.finalAnswer.answer });
+  }
+  if (hasSimilarExample) {
+    add([detailed], "One Similar Example", {
+      problem: similarContent.problem,
+      solution: similarContent.solution,
+    });
+  }
+  if (hasText(practiceContent.question)) {
+    const content = {
+      question: practiceContent.question,
+      hints: practiceContent.hints.filter(hasText),
+      solution: practiceContent.solution,
+    };
+    add([detailed, standard], "Practice Question", content);
+  }
+  if (rememberContent.length > 0) {
+    add([detailed, compact], "Remember This", { rememberThese: rememberContent });
+  }
+
+  return { Detailed: detailed, Standard: standard, Compact: compact };
+}
+
+function isFindingType(value: unknown): value is FindingType {
+  return value === "missing" || value === "late" || value === "unclear" || value === "incorrect";
+}
+
+function isStudentLessonMode(value: unknown): value is StudentLessonMode {
+  return value === "Detailed" || value === "Standard" || value === "Compact";
+}
+
+/**
+ * Enforces traceable reviewer output. A non-missing finding must quote visible text;
+ * a missing finding must document a complete scan of the selected mode.
+ */
+export function validateCriticalIssueEvidence(
+  raw: unknown,
+  views: StudentVisibleReviewViews,
+): CriticalIssue {
+  if (!raw || typeof raw !== "object") throw new Error("review_issue_not_object");
+  const item = raw as Record<string, unknown>;
+  if (!isStudentLessonMode(item.mode)) throw new Error("review_issue_invalid_mode");
+  if (!isFindingType(item.findingType)) throw new Error("review_issue_invalid_finding_type");
+
+  const mode = item.mode;
+  const actualSections = views[mode].map((section) => section.section);
+  const allowedSections = MODE_SECTION_ORDER[mode];
+  const section = typeof item.section === "string" ? item.section.trim() : "";
+  if (!section || !allowedSections.includes(section)) throw new Error("review_issue_invalid_section");
+
+  if (!Array.isArray(item.reviewedSections) ||
+      JSON.stringify(item.reviewedSections) !== JSON.stringify(actualSections)) {
+    throw new Error("review_issue_incomplete_section_audit");
+  }
+
+  const evidence: ReviewEvidence[] = Array.isArray(item.evidence)
+    ? item.evidence.map((entry) => {
+        if (!entry || typeof entry !== "object") throw new Error("review_issue_invalid_evidence");
+        const candidate = entry as Record<string, unknown>;
+        const evidenceSection = typeof candidate.section === "string" ? candidate.section : "";
+        const quote = typeof candidate.quote === "string" ? candidate.quote : "";
+        const displayed = views[mode].find((visible) => visible.section === evidenceSection);
+        if (!displayed || !hasText(quote) ||
+            !textLeaves(displayed.content).some((text) => text.includes(quote))) {
+          throw new Error("review_issue_evidence_not_in_student_view");
+        }
+        return { section: evidenceSection, quote };
+      })
+    : [];
+
+  if (item.findingType === "missing" && evidence.length > 0) {
+    throw new Error("review_issue_missing_has_present_evidence");
+  }
+  if (item.findingType !== "missing" && evidence.length === 0) {
+    throw new Error("review_issue_requires_visible_evidence");
+  }
+  if (item.findingType === "late") {
+    const targetIndex = allowedSections.indexOf(section);
+    if (!evidence.some((entry) => allowedSections.indexOf(entry.section) > targetIndex)) {
+      throw new Error("review_issue_late_evidence_not_later");
+    }
+  }
+
+  const priority = ["critical", "high", "medium"].includes(String(item.priority))
+    ? item.priority as CriticalIssue["priority"]
+    : "critical";
+
+  return {
+    section,
+    findingType: item.findingType,
+    mode,
+    evidence,
+    reviewedSections: actualSections,
+    problem: String(item.problem ?? ""),
+    reason: String(item.reason ?? ""),
+    suggestedFix: String(item.suggestedFix ?? ""),
+    priority,
+  };
+}
 
 // ─── Review Prompt ────────────────────────────────────────────────────────────
 
@@ -202,9 +422,38 @@ weakStudentUnderstanding (0–100)
 ${WEAK_STUDENT_PERSONA}
 ══════════════════════════════════════════════════════════
 
+STUDENT-VISIBLE LESSON ORDER AND EVIDENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The user message contains only the actual content rendered by TeachingLayout, grouped in
+the exact student-visible order for Detailed, Standard, and Compact modes. The original
+16-section TeachingLesson object and all app modes are unchanged.
+
+Detailed order: Key Concept → Build Intuition → Understand the Question →
+Step-by-Step Solution → Common Mistakes → Final Answer → One Similar Example →
+Practice Question → Remember This.
+Standard order: Key Concept → Understand the Question → Step-by-Step Solution →
+Final Answer → Practice Question.
+Compact order: Step-by-Step Solution → Final Answer → Remember This.
+Some sections are omitted when their source fields have no usable text. Standard and
+Compact intentionally hide sections; do not mark an intentionally hidden section missing.
+
+Assess the visible sequence, not raw schema field order. Before calling teaching missing,
+scan every rendered section in that mode and check whether equivalent instruction appears
+earlier, within the expected section, or later. A term or keyword by itself is NOT adequate
+teaching: judge whether the explanation is accurate, clear, and sufficient for a weak student.
+Use:
+- missing: no adequate explanation exists anywhere in that mode's visible sequence;
+- late: adequate explanation exists, but only after the student needs it; cite the later
+  section and identify the earlier section where it was needed;
+- unclear: relevant text is visible but materially ambiguous, incomplete, or unexplained;
+- incorrect: visible text is materially inaccurate or misleading.
+Do not label visible-but-late, unclear, or incorrect teaching as missing. Do not treat
+text in fields absent from these rendered views as student-facing evidence.
+
 CONCEPT MASTERY COMPLIANCE CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Before writing criticalIssues, check the lesson against every item below.
+Before writing criticalIssues, check the lesson against every item below and the complete
+student-visible sequence for the relevant mode.
 Record each failed item as an issue, using the severity calibration below. A checklist
 failure is not automatically critical or high when the lesson remains correct and understandable.
 
@@ -237,11 +486,24 @@ QUANTITATIVE AND MODEL ACCURACY
 CRITICAL ISSUES
 ━━━━━━━━━━━━━━
 For every problem found, write an issue with:
-  section:      name of the lesson section (e.g. "guidedReasoning", "intuition", "conceptIntro")
+  section:      exact student-visible section where teaching is missing or needs improvement
+  findingType:  "missing" | "late" | "unclear" | "incorrect"
+  mode:         "Detailed" | "Standard" | "Compact"
+  evidence:     [{ "section": exact visible section name, "quote": exact text copied from it }]
+                Required for late/unclear/incorrect; use [] for missing.
+  reviewedSections: the complete rendered section names for that mode, in their displayed order;
+                include every rendered section to support a missing claim.
   problem:      exactly what is wrong — be specific, quote the lesson text if possible
   reason:       why this specific gap harms a 20/100 student
   suggestedFix: the exact replacement text or the specific addition needed to fix it
   priority:     "critical" (blocks understanding) | "high" (major gap) | "medium" (improvement)
+
+Every non-missing issue must have at least one verbatim, section-specific quote from the
+student-visible view. A missing issue must have no evidence quote and must list all rendered
+sections in that mode in reviewedSections. For late, quote where the explanation appears
+later and set section to where the student needed it. Never infer adequacy from keyword
+presence alone. Keep the existing severity standards; these evidence requirements do not
+lower the bar for materially incorrect, misleading, or comprehension-blocking teaching.
 
 SEVERITY CALIBRATION
 ━━━━━━━━━━━━━━━━━━━
@@ -283,11 +545,15 @@ do not repeat full lesson sections inside problem, reason, or suggestedFix.
   "confusions": string[],
   "criticalIssues": [
     {
-      "section":      string,
-      "problem":      string,
-      "reason":       string,
+      "section": string,
+      "findingType": "missing" | "late" | "unclear" | "incorrect",
+      "mode": "Detailed" | "Standard" | "Compact",
+      "evidence": [{"section": string, "quote": string}],
+      "reviewedSections": string[],
+      "problem": string,
+      "reason": string,
       "suggestedFix": string,
-      "priority":     "critical" | "high" | "medium"
+      "priority": "critical" | "high" | "medium"
     }
   ],
   "passed": boolean
@@ -303,9 +569,14 @@ export async function reviewLesson(
   const timer      = setTimeout(() => controller.abort(), REVIEW_TIMEOUT);
   const callStart  = Date.now();
 
-  // Whitespace has no teaching value and inflates every review request.
-  // Keep every field so schema-completeness and empty-field checks remain intact.
-  const lessonText = JSON.stringify(lesson);
+  const studentVisibleModes = buildStudentVisibleReviewViews(lesson);
+  // Review the rendered evidence in display order. Hidden schema fields remain untouched
+  // on LessonResponse but cannot be cited as teaching the student.
+  const lessonText = JSON.stringify({
+    topic: lesson.topic,
+    difficulty: lesson.difficulty,
+    studentVisibleModes,
+  });
 
   let res: Response;
   try {
@@ -360,19 +631,9 @@ export async function reviewLesson(
     : [];
 
   const criticalIssues: CriticalIssue[] = Array.isArray(p?.criticalIssues)
-    ? p.criticalIssues
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((i: any) => i && typeof i.section === "string")
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((i: any) => ({
-          section:      String(i.section ?? ""),
-          problem:      String(i.problem ?? ""),
-          reason:       String(i.reason  ?? ""),
-          suggestedFix: String(i.suggestedFix ?? ""),
-          priority:     ["critical","high","medium"].includes(i.priority)
-            ? i.priority as CriticalIssue["priority"]
-            : "critical",
-        }))
+    ? p.criticalIssues.map((issue: unknown) =>
+        validateCriticalIssueEvidence(issue, studentVisibleModes),
+      )
     : [];
 
   const { getRubricLabel } = await import("./teachingRubric");

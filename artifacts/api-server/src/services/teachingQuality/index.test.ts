@@ -216,6 +216,13 @@ test("the default quality pipeline retains its existing improvement cycle", asyn
 test("quality logs retain exact reviewer feedback for blocked-draft diagnostics", async () => {
   const issue = {
     section: "guidedReasoning",
+    findingType: "unclear" as const,
+    mode: "Detailed" as const,
+    evidence: [{
+      section: "Step-by-Step Solution",
+      quote: "Compare three side pairs.",
+    }],
+    reviewedSections: [],
     problem: "The lesson skips why the numerator and denominator are divided by the same value.",
     reason: "A weak student may treat the reduction as an unexplained rule.",
     suggestedFix: "Explain that dividing both parts by the same nonzero number keeps the ratio unchanged.",
@@ -250,6 +257,10 @@ test("quality decision marks a sufficiently strong lesson with a medium weakness
     scores: { ...scores(85), examples: 75, overall: 84 },
     criticalIssues: [{
       section: "examples",
+      findingType: "unclear",
+      mode: "Detailed",
+      evidence: [{ section: "One Similar Example", quote: "A comparison example." }],
+      reviewedSections: [],
       problem: "The example could use one clearer intermediate explanation.",
       reason: "A weak student may need another cue.",
       suggestedFix: "Add one sentence explaining the comparison.",
@@ -270,6 +281,10 @@ test("quality decision blocks critical issues and weak-student comprehension flo
     scores: scores(90),
     criticalIssues: [{
       section: "guidedReasoning",
+      findingType: "incorrect",
+      mode: "Detailed",
+      evidence: [{ section: "Step-by-Step Solution", quote: "The triangles are not congruent." }],
+      reviewedSections: [],
       problem: "The explanation teaches an incorrect relationship.",
       reason: "This would mislead the student.",
       suggestedFix: "Correct the relationship.",
