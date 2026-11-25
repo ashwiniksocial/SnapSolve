@@ -35,7 +35,18 @@ type GenerationEvent = {
   estimatedCostUsd?: number;
   totalLatencyMs?: number;
   firstContentMs?: number;
-  qualityReview?: { version?: number; passed?: boolean; reviewerCalls?: number };
+  qualityReview?: {
+    version?: number;
+    passed?: boolean;
+    status?: "PASS" | "IMPROVE" | "BLOCK";
+    reviewerCalls?: number;
+    improvementFlags?: string[];
+    blockReasons?: string[];
+    estimatedCostUsd?: number;
+    promptTokens?: number;
+    completionTokens?: number;
+    scores?: Record<string, number>;
+  };
 };
 
 type GenerationResult = {
@@ -50,6 +61,9 @@ type GenerationResult = {
   firstContentMs: number;
   qualityReviewVersion: 1;
   qualityReviewPassed: true;
+  qualityReviewStatus: "PASS" | "IMPROVE";
+  qualityReviewFlags: string[];
+  qualityReviewerCalls: number;
 };
 
 function asBankQuestion(question: ReviewableQuestion): Question {
@@ -294,6 +308,15 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
   let servedFromCache = false;
   let failureEvent: GenerationEvent | undefined;
 
+  const acceptedQualityStatus = (event: GenerationEvent): "PASS" | "IMPROVE" | null => {
+    const review = event.qualityReview;
+    if (review?.passed !== true) return null;
+    if (review.status === "PASS" || review.status === "IMPROVE") return review.status;
+    // Backward compatibility for already cached API responses from before
+    // status metadata was introduced.
+    return review.status === undefined ? "PASS" : null;
+  };
+
   const processSseLine = (line: string): void => {
     if (!line.startsWith("data: ")) return;
     let event: GenerationEvent;
@@ -307,7 +330,7 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
       // its atomic store write. Reusing this exact in-memory response is a
       // safe resume and does not make another model call.
       if (!event.lesson) throw new Error(`Cached response for ${question.id} has no lesson payload.`);
-      if (event.qualityReview?.version !== 1 || event.qualityReview.passed !== true) {
+      if (event.qualityReview?.version !== 1 || !acceptedQualityStatus(event)) {
         throw new Error(`Cached response for ${question.id} lacks a passing teaching-quality review.`);
       }
       completed = event;
@@ -349,6 +372,7 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
         cachedTokens: failureEvent.cachedTokens,
         estimatedCostUsd: failureEvent.estimatedCostUsd,
         totalLatencyMs: failureEvent.totalLatencyMs,
+        qualityReview: failureEvent.qualityReview,
       }));
     }
     throw error;
@@ -357,7 +381,8 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
   }
 
   if (!completed?.lesson) throw new Error(`Generation stream ended without a complete lesson for ${question.id}.`);
-  if (completed.qualityReview?.version !== 1 || completed.qualityReview.passed !== true) {
+  const qualityReviewStatus = acceptedQualityStatus(completed);
+  if (completed.qualityReview?.version !== 1 || !qualityReviewStatus) {
     throw new Error(`Generation for ${question.id} did not pass the teaching-quality gate.`);
   }
 
@@ -382,6 +407,11 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
     firstContentMs: completed.firstContentMs ?? -1,
     qualityReviewVersion: 1,
     qualityReviewPassed: true,
+    qualityReviewStatus,
+    qualityReviewFlags: completed.qualityReview?.improvementFlags ?? [],
+    qualityReviewerCalls: servedFromCache
+      ? 0
+      : completed.qualityReview?.reviewerCalls ?? 0,
   };
 }
 
@@ -392,6 +422,54 @@ function argumentValues(name: string): string[] {
     .flatMap((argument) => argument.slice(prefix.length).split(","))
     .map((id) => id.trim())
     .filter(Boolean);
+}
+
+function blockedGenerationDetails(error: unknown): {
+  reason: string;
+  modelCalls: number;
+  estimatedCostUsd: number;
+  promptTokens: number;
+  completionTokens: number;
+} {
+  const message = error instanceof Error ? error.message : String(error);
+  try {
+    const payload = JSON.parse(message) as {
+      code?: string;
+      estimatedCostUsd?: number;
+      promptTokens?: number;
+      completionTokens?: number;
+      attemptCount?: number;
+      qualityReview?: {
+        status?: string;
+        blockReasons?: string[];
+        reviewerCalls?: number;
+        estimatedCostUsd?: number;
+        promptTokens?: number;
+        completionTokens?: number;
+      };
+    };
+    const review = payload.qualityReview;
+    const reason = review?.blockReasons?.length
+      ? `${review.status ?? "BLOCK"}: ${review.blockReasons.join(", ")}`
+      : payload.code ?? message;
+    return {
+      reason,
+      modelCalls: (payload.attemptCount ?? 0) + (review?.reviewerCalls ?? 0),
+      estimatedCostUsd:
+        (payload.estimatedCostUsd ?? 0) + (review?.estimatedCostUsd ?? 0),
+      promptTokens: (payload.promptTokens ?? 0) + (review?.promptTokens ?? 0),
+      completionTokens:
+        (payload.completionTokens ?? 0) + (review?.completionTokens ?? 0),
+    };
+  } catch {
+    return {
+      reason: message,
+      modelCalls: 0,
+      estimatedCostUsd: 0,
+      promptTokens: 0,
+      completionTokens: 0,
+    };
+  }
 }
 
 function requestedIds(
@@ -433,107 +511,135 @@ async function main(): Promise<void> {
   const totals = {
     modelCalls: 0,
     cacheRecoveries: 0,
+    savedPass: 0,
+    savedImprove: 0,
+    blocked: 0,
     promptTokens: 0,
     completionTokens: 0,
     cachedTokens: 0,
     estimatedCostUsd: 0,
     totalLatencyMs: 0,
   };
+  const blockedItems: Array<{
+    questionId: string;
+    reason: string;
+    modelCalls: number;
+    estimatedCostUsd: number;
+    promptTokens: number;
+    completionTokens: number;
+  }> = [];
 
   console.log(`Targeting ${ids.length} active question(s). Existing valid entries will be skipped.`);
 
   for (const [index, id] of ids.entries()) {
-    const question = questions.get(id)!;
-    const existing = entryFor(chunks, question);
-    if (isStoredLessonValid(existing, question)) {
-      if (existing.lesson.topic !== question.topicName || existing.lesson.difficulty !== question.difficulty) {
-        const record = chunks.get(chunkKey(question))!;
-        record.chunk.lessons[id] = {
-          ...existing,
-          lesson: {
-            ...existing.lesson,
-            topic: question.topicName,
-            difficulty: question.difficulty,
-          },
-        };
-        await persistChunk(record);
-        console.log(`[${index + 1}/${ids.length}] NORMALIZED canonical metadata ${id}`);
-      } else {
-        console.log(`[${index + 1}/${ids.length}] SKIP valid ${id}`);
+    try {
+      const question = questions.get(id)!;
+      const existing = entryFor(chunks, question);
+      if (isStoredLessonValid(existing, question)) {
+        if (existing.lesson.topic !== question.topicName || existing.lesson.difficulty !== question.difficulty) {
+          const record = chunks.get(chunkKey(question))!;
+          record.chunk.lessons[id] = {
+            ...existing,
+            lesson: {
+              ...existing.lesson,
+              topic: question.topicName,
+              difficulty: question.difficulty,
+            },
+          };
+          await persistChunk(record);
+          console.log(`[${index + 1}/${ids.length}] NORMALIZED canonical metadata ${id}`);
+        } else {
+          console.log(`[${index + 1}/${ids.length}] SKIP valid ${id}`);
+        }
+        continue;
       }
-      continue;
+
+      console.log(`[${index + 1}/${ids.length}] GENERATE ${id}`);
+      const result = await generateOne(question, baseUrl);
+      const entry: PreGeneratedLessonEntry = {
+        questionId: id,
+        sourceHash: hashQuestionContent(question),
+        lesson: result.lesson,
+        qualityReviewVersion: result.qualityReviewVersion,
+        qualityReviewPassed: result.qualityReviewPassed,
+        qualityReviewStatus: result.qualityReviewStatus,
+        qualityReviewFlags: result.qualityReviewFlags,
+      };
+      if (!isStoredLessonValid(entry, question)) {
+        const lesson = result.lesson;
+        console.error(JSON.stringify({
+          id,
+          answerMatches: compareBankAnswers(lesson.finalAnswer.answer, question.answer).status === "match",
+          keyConcepts: lesson.keyConcepts.length,
+          intuition: {
+            story: Boolean(lesson.intuition.story),
+            visual: Boolean(lesson.intuition.visual),
+            everyday: Boolean(lesson.intuition.everyday),
+          },
+          guidedSteps: lesson.guidedReasoning.length,
+          guidedStepsWithWhatAndWhy: lesson.guidedReasoning.filter((step) => step.what && step.why).length,
+          commonMistakes: lesson.commonMistakes.length,
+          commonMistakesComplete: lesson.commonMistakes.filter(
+            (mistake) => mistake.mistake && mistake.whyItHappens && mistake.howToAvoid,
+          ).length,
+          finalWhyCorrect: Boolean(lesson.finalAnswer.whyCorrect),
+          similarExample: {
+            problem: Boolean(lesson.simplerExample.problem),
+            solution: Boolean(lesson.simplerExample.solution),
+          },
+          practice: {
+            question: Boolean(lesson.practiceQuestion.question),
+            hints: lesson.practiceQuestion.hints.length,
+            solution: Boolean(lesson.practiceQuestion.solution),
+          },
+        }, null, 2));
+        throw new Error(`Refusing incomplete or answer-mismatched lesson for ${id}.`);
+      }
+
+      const key = chunkKey(question);
+      const record = chunks.get(key) ?? {
+        path: chunkPath(question),
+        chunk: {
+          version: 1 as const,
+          classNum: question.classNum,
+          subject: question.subject,
+          chapterId: question.chapterId,
+          lessons: {},
+        },
+      };
+      record.chunk.lessons[id] = entry;
+      await persistChunk(record);
+      chunks.set(key, record);
+      if (result.servedFromCache) totals.cacheRecoveries += 1;
+      else totals.modelCalls += result.attemptCount + result.qualityReviewerCalls;
+      if (result.qualityReviewStatus === "IMPROVE") totals.savedImprove += 1;
+      else totals.savedPass += 1;
+      totals.promptTokens += result.promptTokens;
+      totals.completionTokens += result.completionTokens;
+      totals.cachedTokens += result.cachedTokens;
+      totals.estimatedCostUsd += result.estimatedCostUsd;
+      totals.totalLatencyMs += result.totalLatencyMs;
+
+      console.log(
+        `[${index + 1}/${ids.length}] SAVED ${result.qualityReviewStatus} ${id} ` +
+        `${result.qualityReviewFlags.length ? `flags=${result.qualityReviewFlags.join("|")}; ` : ""}` +
+        `(${result.servedFromCache ? "cache recovery" : `${result.attemptCount} model attempt(s)`}; ` +
+        `${result.promptTokens} prompt, ${result.completionTokens} completion, ${result.totalLatencyMs}ms)`,
+      );
+    } catch (error) {
+      totals.blocked += 1;
+      const details = blockedGenerationDetails(error);
+      blockedItems.push({ questionId: id, ...details });
+      totals.modelCalls += details.modelCalls;
+      totals.estimatedCostUsd += details.estimatedCostUsd;
+      totals.promptTokens += details.promptTokens;
+      totals.completionTokens += details.completionTokens;
+      console.error(`[${index + 1}/${ids.length}] BLOCKED ${id}: ${details.reason}`);
     }
-
-    console.log(`[${index + 1}/${ids.length}] GENERATE ${id}`);
-    const result = await generateOne(question, baseUrl);
-    const entry: PreGeneratedLessonEntry = {
-      questionId: id,
-      sourceHash: hashQuestionContent(question),
-      lesson: result.lesson,
-      qualityReviewVersion: result.qualityReviewVersion,
-      qualityReviewPassed: result.qualityReviewPassed,
-    };
-    if (!isStoredLessonValid(entry, question)) {
-      const lesson = result.lesson;
-      console.error(JSON.stringify({
-        id,
-        answerMatches: compareBankAnswers(lesson.finalAnswer.answer, question.answer).status === "match",
-        keyConcepts: lesson.keyConcepts.length,
-        intuition: {
-          story: Boolean(lesson.intuition.story),
-          visual: Boolean(lesson.intuition.visual),
-          everyday: Boolean(lesson.intuition.everyday),
-        },
-        guidedSteps: lesson.guidedReasoning.length,
-        guidedStepsWithWhatAndWhy: lesson.guidedReasoning.filter((step) => step.what && step.why).length,
-        commonMistakes: lesson.commonMistakes.length,
-        commonMistakesComplete: lesson.commonMistakes.filter(
-          (mistake) => mistake.mistake && mistake.whyItHappens && mistake.howToAvoid,
-        ).length,
-        finalWhyCorrect: Boolean(lesson.finalAnswer.whyCorrect),
-        similarExample: {
-          problem: Boolean(lesson.simplerExample.problem),
-          solution: Boolean(lesson.simplerExample.solution),
-        },
-        practice: {
-          question: Boolean(lesson.practiceQuestion.question),
-          hints: lesson.practiceQuestion.hints.length,
-          solution: Boolean(lesson.practiceQuestion.solution),
-        },
-      }, null, 2));
-      throw new Error(`Refusing incomplete or answer-mismatched lesson for ${id}.`);
-    }
-
-    const key = chunkKey(question);
-    const record = chunks.get(key) ?? {
-      path: chunkPath(question),
-      chunk: {
-        version: 1 as const,
-        classNum: question.classNum,
-        subject: question.subject,
-        chapterId: question.chapterId,
-        lessons: {},
-      },
-    };
-    record.chunk.lessons[id] = entry;
-    await persistChunk(record);
-    chunks.set(key, record);
-    if (result.servedFromCache) totals.cacheRecoveries += 1;
-    else totals.modelCalls += result.attemptCount;
-    totals.promptTokens += result.promptTokens;
-    totals.completionTokens += result.completionTokens;
-    totals.cachedTokens += result.cachedTokens;
-    totals.estimatedCostUsd += result.estimatedCostUsd;
-    totals.totalLatencyMs += result.totalLatencyMs;
-
-    console.log(
-      `[${index + 1}/${ids.length}] SAVED ${id} ` +
-      `(${result.servedFromCache ? "cache recovery" : `${result.attemptCount} model attempt(s)`}; ` +
-      `${result.promptTokens} prompt, ${result.completionTokens} completion, ${result.totalLatencyMs}ms)`,
-    );
   }
 
-  console.log(JSON.stringify(totals, null, 2));
+  console.log(JSON.stringify({ ...totals, blockedItems }, null, 2));
+  if (blockedItems.length > 0) process.exitCode = 1;
 }
 
 void main().catch((error: unknown) => {

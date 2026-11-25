@@ -137,6 +137,8 @@ interface CacheEntry {
   expiresAt: number;
   sourceHash?: string;
   qualityReviewVersion?: 1;
+  qualityReviewStatus?: "PASS" | "IMPROVE";
+  qualityReviewFlags?: string[];
   qualityReviewPassed?: boolean;
 }
 const responseCache = new Map<string, CacheEntry>();
@@ -2221,6 +2223,9 @@ router.post("/solveQuestion/stream", async (req, res) => {
     const isCurrentAndSafe = !!entry &&
       entry.qualityReviewVersion === 1 &&
       entry.qualityReviewPassed === true &&
+      (entry.qualityReviewStatus === undefined ||
+        entry.qualityReviewStatus === "PASS" ||
+        entry.qualityReviewStatus === "IMPROVE") &&
       isBankLessonAnswerSafe(
       entry.data.finalAnswer?.answer ?? "",
       bankCtx.answer,
@@ -2244,7 +2249,12 @@ router.post("/solveQuestion/stream", async (req, res) => {
       emit({
         type: "cached",
         lesson: { ...entry.data, cached: true },
-        qualityReview: { version: 1, passed: true },
+        qualityReview: {
+          version: 1,
+          passed: true,
+          status: entry?.qualityReviewStatus ?? "PASS",
+          improvementFlags: entry?.qualityReviewFlags ?? [],
+        },
       });
       res.end();
       return;
@@ -2522,7 +2532,13 @@ router.post("/solveQuestion/stream", async (req, res) => {
 
   // ── 8. Parse + post-process ───────────────────────────────────────────────────
   let finalLesson = generation.outcome.value;
-  let qualityReview: { version: 1; passed: true; reviewerCalls: number } | undefined;
+  let qualityReview: {
+    version: 1;
+    passed: true;
+    status: "PASS" | "IMPROVE";
+    improvementFlags: string[];
+    reviewerCalls: number;
+  } | undefined;
   let finalEstimatedCostUsd = estimatedCostUsd;
   let finalPromptTokens = promptTok;
   let finalCompletionTokens = completionTok;
@@ -2663,17 +2679,16 @@ router.post("/solveQuestion/stream", async (req, res) => {
     );
     req.log.info({
       stage: "bank-teaching-quality-review",
-      outcome: qualityResult.passed
-        ? "passed"
-        : qualityResult.reviewFailed
-          ? "review_failed"
-          : "rejected",
+      outcome: qualityResult.decision.status.toLowerCase(),
       reviewerCalls: qualityResult.reviewerCalls,
       improverCalls: qualityResult.improverCalls,
       elapsedMs: Date.now() - qualityReviewStartedAt,
       estimatedCostUsd: qualityResult.usageTotal.estimatedCostUsd,
+      improvementFlags: qualityResult.decision.improvementFlags,
+      blockReasons: qualityResult.decision.blockReasons,
+      scores: qualityResult.finalScore,
     }, "[BANK:QUALITY]");
-    if (!qualityResult.passed || qualityResult.reviewFailed) {
+    if (qualityResult.decision.status === "BLOCK") {
       emit({
         type: "error",
         code: "bank_teaching_quality_review_failed",
@@ -2681,8 +2696,15 @@ router.post("/solveQuestion/stream", async (req, res) => {
         qualityReview: {
           version: 1,
           passed: false,
+          status: "BLOCK",
           reviewFailed: qualityResult.reviewFailed,
           reviewerCalls: qualityResult.reviewerCalls,
+          elapsedMs: Date.now() - qualityReviewStartedAt,
+          blockReasons: qualityResult.decision.blockReasons,
+          estimatedCostUsd: qualityResult.usageTotal.estimatedCostUsd,
+          promptTokens: qualityResult.usageTotal.promptTokens,
+          completionTokens: qualityResult.usageTotal.completionTokens,
+          scores: qualityResult.finalScore,
         },
         ...streamTelemetry,
       });
@@ -2693,6 +2715,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
     qualityReview = {
       version: 1,
       passed: true,
+      status: qualityResult.decision.status,
+      improvementFlags: qualityResult.decision.improvementFlags,
       reviewerCalls: qualityResult.reviewerCalls,
     };
     finalEstimatedCostUsd += qualityResult.usageTotal.estimatedCostUsd;
@@ -2711,6 +2735,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
         expiresAt: Date.now() + CACHE_TTL_MS,
         sourceHash: bankCtx.sourceHash,
         qualityReviewVersion: qualityReview?.version,
+        qualityReviewStatus: qualityReview?.status,
+        qualityReviewFlags: qualityReview?.improvementFlags,
         qualityReviewPassed: qualityReview?.passed,
       });
     }

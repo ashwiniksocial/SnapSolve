@@ -40,6 +40,13 @@ Simplify uses one review of the candidate and does not invoke the generic lesson
 
 **How to apply:** Keep Simplify fail-closed and review-only. Do not add another generation cycle or weaken the reviewer or canonical checks to force a visible difference.
 
+## Saved bank lesson decisions
+The bank Detailed-lesson path classifies its single review as `PASS`, `IMPROVE`, or `BLOCK`. `IMPROVE` may be stored with versioned improvement flags only when there are no critical/high issues, all scored dimensions are at least 60, and weak-student understanding is at least 70. Reviewer failure, a hard-floor failure, critical/high issues, canonical-answer failure, incomplete structure, and answer-last failure remain blocking. Bank generation still uses one quality review and no improver call; `IMPROVE` does not silently trigger extra AI work. The Simplify path remains strict and does not adopt this save policy.
+
+**Why:** Launch can tolerate noncritical teaching polish when a lesson remains correct and understandable, but material errors and poor comprehension must never be saved as student-ready content.
+
+**How to apply:** Keep the status and flags attached to newly saved bank lessons; preserve the independent canonical, completeness, and answer-last checks. When generating multiple explicit IDs, record a rejected ID and continue processing later IDs.
+
 ## Logging
 All quality data logged server-side via `req.log`. Nothing sent to the client:
 - `solveQuestion: quality pipeline complete` — cyclesRun, passed, overall score, weakStudentScore

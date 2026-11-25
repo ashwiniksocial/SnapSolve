@@ -90,6 +90,26 @@ test("newly reviewed lesson assets require a passing versioned quality attestati
     qualityReviewVersion: 1,
     qualityReviewPassed: true,
   }, question));
+  assert.ok(resolveStoredLessonEntry({
+    ...entry,
+    qualityReviewVersion: 1,
+    qualityReviewPassed: true,
+    qualityReviewStatus: "IMPROVE",
+    qualityReviewFlags: ["dimension_below_pass_target:examples=75"],
+  }, question));
+  assert.equal(resolveStoredLessonEntry({
+    ...entry,
+    qualityReviewVersion: 1,
+    qualityReviewPassed: true,
+    qualityReviewStatus: "BLOCK" as never,
+  }, question), null);
+  assert.equal(resolveStoredLessonEntry({
+    ...entry,
+    qualityReviewVersion: 1,
+    qualityReviewPassed: true,
+    qualityReviewStatus: "IMPROVE",
+    qualityReviewFlags: [42 as never],
+  }, question), null);
 });
 
 test("worked-math quality flags apply to quantitative source steps, not factual concepts", () => {

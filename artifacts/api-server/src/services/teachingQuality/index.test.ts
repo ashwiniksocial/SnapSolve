@@ -4,6 +4,7 @@ import { zeroUsage } from "../../lib/aiCost";
 import { parseLessonResponse, type LessonResponse } from "../../lib/lessonTypes";
 import type { ReviewReport } from "./lessonReviewer";
 import {
+  classifyTeachingQuality,
   runQualityPipeline,
   type QualityPipelineServices,
 } from "./index";
@@ -210,4 +211,55 @@ test("the default quality pipeline retains its existing improvement cycle", asyn
   assert.equal(result.reviewerCalls, 2);
   assert.equal(result.improverCalls, 1);
   assert.equal(improveCalls, 1);
+});
+
+test("quality decision marks a sufficiently strong lesson with a medium weakness IMPROVE", () => {
+  const result = classifyTeachingQuality({
+    ...report(false, 75),
+    scores: { ...scores(85), examples: 75, overall: 84 },
+    criticalIssues: [{
+      section: "examples",
+      problem: "The example could use one clearer intermediate explanation.",
+      reason: "A weak student may need another cue.",
+      suggestedFix: "Add one sentence explaining the comparison.",
+      priority: "medium",
+    }],
+    confusions: [],
+  });
+
+  assert.equal(result.status, "IMPROVE");
+  assert.deepEqual(result.blockReasons, []);
+  assert.ok(result.improvementFlags.includes("dimension_below_pass_target:examples=75"));
+  assert.ok(result.improvementFlags.includes("medium_priority_issue:examples"));
+});
+
+test("quality decision blocks critical issues and weak-student comprehension floors", () => {
+  const critical = classifyTeachingQuality({
+    ...report(true, 90),
+    scores: scores(90),
+    criticalIssues: [{
+      section: "guidedReasoning",
+      problem: "The explanation teaches an incorrect relationship.",
+      reason: "This would mislead the student.",
+      suggestedFix: "Correct the relationship.",
+      priority: "critical",
+    }],
+    confusions: [],
+  });
+  const lowUnderstanding = classifyTeachingQuality({
+    ...report(false, 75),
+    scores: { ...scores(75), weakStudentUnderstanding: 65, overall: 74 },
+    criticalIssues: [],
+    confusions: [],
+  });
+
+  assert.equal(critical.status, "BLOCK");
+  assert.deepEqual(critical.blockReasons, ["blocking_issue:guidedReasoning"]);
+  assert.equal(lowUnderstanding.status, "BLOCK");
+  assert.ok(lowUnderstanding.blockReasons.includes("student_understanding_below_block_floor=65"));
+});
+
+test("quality decision blocks reviewer failures and missing diagnostics", () => {
+  assert.equal(classifyTeachingQuality(null, true).status, "BLOCK");
+  assert.equal(classifyTeachingQuality(null, false).status, "BLOCK");
 });

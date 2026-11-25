@@ -20,6 +20,8 @@ export interface PreGeneratedLessonEntry {
   sourceHash: string;
   lesson: TeachingLesson;
   qualityReviewVersion?: 1;
+  qualityReviewStatus?: "PASS" | "IMPROVE";
+  qualityReviewFlags?: string[];
   qualityReviewPassed?: boolean;
 }
 
@@ -320,11 +322,24 @@ export function isStoredLessonValid(
   entry: PreGeneratedLessonEntry | undefined,
   question: Question,
 ): entry is PreGeneratedLessonEntry {
+  const legacyQualityAttestation = !!entry &&
+    entry.qualityReviewVersion === undefined &&
+    entry.qualityReviewStatus === undefined &&
+    entry.qualityReviewFlags === undefined &&
+    entry.qualityReviewPassed === undefined;
+  const acceptedQualityAttestation = !!entry &&
+    entry.qualityReviewVersion === 1 &&
+    entry.qualityReviewPassed === true &&
+    (entry.qualityReviewStatus === undefined ||
+      entry.qualityReviewStatus === "PASS" ||
+      entry.qualityReviewStatus === "IMPROVE") &&
+    (entry.qualityReviewFlags === undefined ||
+      (Array.isArray(entry.qualityReviewFlags) &&
+        entry.qualityReviewFlags.every((flag) => typeof flag === "string")));
   return !!entry &&
     entry.questionId === question.id &&
     entry.sourceHash === hashQuestionContent(question) &&
-    ((entry.qualityReviewVersion === undefined && entry.qualityReviewPassed === undefined) ||
-      (entry.qualityReviewVersion === 1 && entry.qualityReviewPassed === true)) &&
+    (legacyQualityAttestation || acceptedQualityAttestation) &&
     compareBankAnswers(entry.lesson.finalAnswer.answer, question.answer).status === "match" &&
     isCompleteDetailedLesson(entry.lesson) &&
     assessTeachingLessonAnswerLast(

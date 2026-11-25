@@ -205,7 +205,8 @@ ${WEAK_STUDENT_PERSONA}
 CONCEPT MASTERY COMPLIANCE CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Before writing criticalIssues, check the lesson against every item below.
-Any item that FAILS must appear as a criticalIssue with priority "critical" or "high".
+Record each failed item as an issue, using the severity calibration below. A checklist
+failure is not automatically critical or high when the lesson remains correct and understandable.
 
 QUANTITATIVE AND MODEL ACCURACY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -235,16 +236,32 @@ QUANTITATIVE AND MODEL ACCURACY
 
 CRITICAL ISSUES
 ━━━━━━━━━━━━━━
-For every problem found — including every failed CMF check above — write an issue with:
+For every problem found, write an issue with:
   section:      name of the lesson section (e.g. "guidedReasoning", "intuition", "conceptIntro")
   problem:      exactly what is wrong — be specific, quote the lesson text if possible
   reason:       why this specific gap harms a 20/100 student
   suggestedFix: the exact replacement text or the specific addition needed to fix it
   priority:     "critical" (blocks understanding) | "high" (major gap) | "medium" (improvement)
 
+SEVERITY CALIBRATION
+━━━━━━━━━━━━━━━━━━━
+Use "critical" or "high" ONLY when the lesson is materially incorrect, misleading,
+contradicts the approved answer or curriculum, omits a necessary concept or reasoning
+step, or is so confusing that a weak student is unlikely to understand or solve a
+similar problem. These priorities block saving.
+
+Use "medium" for a correct and understandable lesson with a noncritical teaching
+weakness, such as an example that could be clearer, an optional connection that is
+missing, or a small vocabulary/scaffolding improvement. These issues should become
+improvement flags, not a block. Do not promote a checklist imperfection to high/critical
+unless it causes material misunderstanding. A listed suggestion is not automatically
+a blocker.
+
 PASS THRESHOLD: ${PASS_THRESHOLD}
 A lesson passes ONLY if ALL nine dimension scores are ${PASS_THRESHOLD} or above.
-If even ONE score is below ${PASS_THRESHOLD}, set passed = false.
+If even ONE score is below ${PASS_THRESHOLD}, set passed = false. Scores below that
+threshold may still be classified by the separate deterministic delivery policy; do
+not inflate scores or mislabel a medium issue to force a pass.
 
 ══════════════════════════════════════════════════════════
 RESPONSE FORMAT — Return ONLY valid JSON. No other text.
@@ -354,7 +371,7 @@ export async function reviewLesson(
           suggestedFix: String(i.suggestedFix ?? ""),
           priority:     ["critical","high","medium"].includes(i.priority)
             ? i.priority as CriticalIssue["priority"]
-            : "medium",
+            : "critical",
         }))
     : [];
 

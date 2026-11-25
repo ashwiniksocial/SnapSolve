@@ -35,6 +35,7 @@ export interface QualityPipelineResult {
   lesson:         LessonResponse;
   finalScore:     DimensionScores;
   passed:         boolean;
+  decision:       TeachingQualityDecision;
   reviewFailed:   boolean;
   cyclesRun:      number;
   qualityLog:     CycleLog[];
@@ -52,6 +53,74 @@ export interface QualityPipelineResult {
   callUsage: {
     review:  UsageSnapshot[];
     improve: UsageSnapshot[];
+  };
+}
+
+export type TeachingQualityDecisionStatus = "PASS" | "IMPROVE" | "BLOCK";
+
+export interface TeachingQualityDecision {
+  status: TeachingQualityDecisionStatus;
+  improvementFlags: string[];
+  blockReasons: string[];
+}
+
+const BLOCK_SCORE_FLOOR = 60;
+const MIN_UNDERSTANDING_TO_SAVE = 70;
+
+/**
+ * A teaching-quality verdict separates safely deliverable lessons from
+ * noncritical polish and material failures. Canonical answer, completeness,
+ * and answer-last checks remain independent hard gates in the caller.
+ */
+export function classifyTeachingQuality(
+  report: ReviewReport | null,
+  reviewFailed = false,
+): TeachingQualityDecision {
+  if (reviewFailed || !report) {
+    return {
+      status: "BLOCK",
+      improvementFlags: [],
+      blockReasons: [reviewFailed ? "reviewer_unavailable" : "review_diagnostics_missing"],
+    };
+  }
+
+  const blockReasons = [
+    ...report.criticalIssues
+      .filter((issue) => issue.priority === "critical" || issue.priority === "high")
+      .map((issue) => `blocking_issue:${issue.section || "unspecified"}`),
+    ...Object.entries(report.scores)
+      .filter(([dimension, score]) =>
+        dimension !== "overall" && score < BLOCK_SCORE_FLOOR,
+      )
+      .map(([dimension, score]) => `score_below_block_floor:${dimension}=${score}`),
+  ];
+  if (report.scores.weakStudentUnderstanding < MIN_UNDERSTANDING_TO_SAVE) {
+    blockReasons.push(
+      `student_understanding_below_block_floor=${report.scores.weakStudentUnderstanding}`,
+    );
+  }
+  if (blockReasons.length > 0) {
+    return { status: "BLOCK", improvementFlags: [], blockReasons };
+  }
+
+  const validation = validateLesson(report.scores);
+  const improvementFlags = [
+    ...validation.failingDimensions.map((dimension) => `dimension_below_pass_target:${dimension}`),
+    ...report.criticalIssues
+      .filter((issue) => issue.priority === "medium")
+      .map((issue) => `medium_priority_issue:${issue.section || "unspecified"}`),
+  ];
+  if (report.confusions.length > 0) {
+    improvementFlags.push(`student_confusions:${report.confusions.length}`);
+  }
+  if (!report.passed && improvementFlags.length === 0) {
+    improvementFlags.push("reviewer_threshold_not_met");
+  }
+
+  return {
+    status: improvementFlags.length === 0 ? "PASS" : "IMPROVE",
+    improvementFlags,
+    blockReasons: [],
   };
 }
 
@@ -112,6 +181,7 @@ export async function runQualityPipeline(
 
     lastReport = report;
     const validation = validateLesson(report.scores);
+    const decision = classifyTeachingQuality(report);
 
     const cycleEntry: CycleLog = {
       cycle,
@@ -123,8 +193,8 @@ export async function runQualityPipeline(
     };
 
     const reviewPassed = options.requireReviewerPass
-      ? report.passed && validation.passed
-      : report.passed || validation.passed;
+      ? report.passed && validation.passed && decision.status !== "BLOCK"
+      : (report.passed || validation.passed) && decision.status !== "BLOCK";
     if (reviewPassed) {
       // Lesson passed all thresholds — we're done
       qualityLog.push(cycleEntry);
@@ -132,6 +202,7 @@ export async function runQualityPipeline(
         lesson:        current,
         finalScore:    report.scores,
         passed:        true,
+        decision,
         reviewFailed:  false,
         cyclesRun:     cycle,
         qualityLog,
@@ -169,6 +240,7 @@ export async function runQualityPipeline(
     lesson:        current,
     finalScore:    lastReport?.scores ?? ({} as DimensionScores),
     passed:        false,
+    decision:      classifyTeachingQuality(lastReport, reviewFailed),
     reviewFailed,
     cyclesRun:     qualityLog.length,
     qualityLog,
