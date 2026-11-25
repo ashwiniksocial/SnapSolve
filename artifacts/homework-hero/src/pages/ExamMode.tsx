@@ -5,7 +5,9 @@ import type { ExamConfig, ExamConfigSaveResult, ExamSubject, ExamTask } from "@/
 import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { useChapterStats } from "@/hooks/useChapterStats";
-import { preloadQBank }    from "@/services/questionService";
+import { getActiveQuestions, preloadQBank } from "@/services/questionService";
+import type { Question } from "@/services/questionService";
+import { normalizeBoardId } from "@/data/questions/academicContext";
 import { SUBJECTS } from "@/data/subjects";
 import type { Subject } from "@/data/subjects";
 
@@ -91,11 +93,49 @@ export function buildAssignedPracticeHref(
   subject: Subject,
   topic?: string,
   chapterId?: string,
+  questionId?: string,
 ): string {
-  const params = new URLSearchParams({ subject, returnTo: "/exam", autoScroll: "1" });
+  const params = new URLSearchParams({ subject, returnTo: "/exam", openQuestion: "1" });
   if (topic) params.set("topic", topic);
   if (chapterId) params.set("chapter", chapterId);
+  if (questionId) params.set("questionId", questionId);
   return `/practice?${params.toString()}`;
+}
+
+export function buildChapterTaskId(subject: Subject, chapterId: string, topic: string) {
+  return `chap-${subject}-${chapterId}-${topic}`;
+}
+
+export function assignPracticeQuestionToTask(task: ExamTask, available: Question[]): ExamTask {
+  if (task.type === "revision") return task;
+
+  const assigned = task.questionId
+    ? available.find((question) => question.id === task.questionId)
+    : undefined;
+  const topicMatch = task.topic === "General Practice"
+    ? available[0]
+    : available.find((question) =>
+        question.topicName === task.topic &&
+        (!task.chapterId || question.chapterId === task.chapterId),
+      );
+  const question = assigned ?? topicMatch;
+  if (!question) {
+    return {
+      ...task,
+      href: buildAssignedPracticeHref(task.subject, task.topic, task.chapterId),
+    };
+  }
+
+  return {
+    ...task,
+    questionId: question.id,
+    href: buildAssignedPracticeHref(
+      task.subject,
+      question.topicName,
+      question.chapterId,
+      question.id,
+    ),
+  };
 }
 
 export function buildRevisionTaskHref(questionId: string): string {
@@ -161,6 +201,7 @@ function TaskCard({
                 Start →
               </Link>
               <button
+                type="button"
                 onClick={() => onDone(task)}
                 className="text-xs font-semibold text-slate-500 border border-slate-200 px-3 py-1.5 rounded-xl hover:bg-slate-50 active:scale-95 transition-all"
               >
@@ -184,6 +225,7 @@ function buildTasks(
   chapterMap:     Record<Subject, ReturnType<typeof useChapterStats>>,
   daysRemaining:  number,
   completedIds:   Set<string>,
+  questionsBySubject: Partial<Record<Subject, Question[]>>,
 ): ExamTask[] {
   const tasks: ExamTask[] = [];
 
@@ -256,7 +298,7 @@ function buildTasks(
 
   for (const c of candidates) {
     if (chapAdded >= chapCap) break;
-    const id = `chap-${c.subj}-${c.tName}`;
+    const id = buildChapterTaskId(c.subj, c.chapterId, c.tName);
     if (tasks.some((t) => t.id === id)) continue;
     tasks.push({
       id,
@@ -294,7 +336,9 @@ function buildTasks(
     });
   }
 
-  return tasks;
+  return tasks.map((task) =>
+    assignPracticeQuestionToTask(task, questionsBySubject[task.subject] ?? []),
+  );
 }
 
 // ─── Setup form ───────────────────────────────────────────────────────────────
@@ -618,6 +662,7 @@ export default function ExamMode() {
 
   const sciChapters   = useChapterStats("Science",      9, bankReady);
   const mathChapters  = useChapterStats("Mathematics",  9, bankReady);
+  const boardId = normalizeBoardId(config?.boardId);
 
   const chapterMap: Record<Subject, ReturnType<typeof useChapterStats>> = {
     Science:                sciChapters,
@@ -662,6 +707,13 @@ export default function ExamMode() {
     ALL_SUBJECTS.flatMap((s) => weakTopicsMap[s])
   ), [getDueItems, weakTopicsMap]);
 
+  const questionsBySubject = useMemo(() => {
+    if (!bankReady || !boardId) return {};
+    return Object.fromEntries(
+      targetSubjects.map((subject) => [subject, getActiveQuestions(9, subject, boardId)]),
+    ) as Partial<Record<Subject, Question[]>>;
+  }, [bankReady, boardId, targetSubjects]);
+
   // Subject completion pct (avg chapter completion)
   const subjectCompletion = useMemo(() => {
     const out: Record<Subject, number> = { Science: 0, Physics: 0, Chemistry: 0, Mathematics: 0, Biology: 0, Economics: 0, "Computer Science": 0, "Information Technology": 0 };
@@ -687,11 +739,12 @@ export default function ExamMode() {
         chapterMap,
         daysRemaining ?? 30,
         completedIds,
+        questionsBySubject,
       ),
       completedTasks,
       completedIds,
     );
-  }, [config, targetSubjects, weakTopicsMap, accuracyMap, dueItems, daysRemaining, completedIds, completedTasks]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [config, targetSubjects, weakTopicsMap, accuracyMap, dueItems, daysRemaining, completedIds, completedTasks, questionsBySubject]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Preload question bank (class 9 — matches useChapterStats default) ──────
   useEffect(() => {

@@ -127,3 +127,82 @@ test("completed task IDs mark regenerated tasks Done and do not duplicate their 
   assert.equal(merged.length, 1);
   assert.equal(merged[0].completedToday, true);
 });
+
+test("completing one same-named chapter task does not complete its sibling after refresh", () => {
+  const values = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => values.get(key) ?? null,
+    setItem: (key: string, value: string) => { values.set(key, value); },
+    removeItem: (key: string) => { values.delete(key); },
+  } as unknown as Storage;
+  const chapterOne: ExamTask = {
+    id: "chap-Science-phy-ch1-Force",
+    type: "chapter",
+    subject: "Science",
+    topic: "Force",
+    chapter: "Motion",
+    chapterId: "phy-ch1",
+    label: "Force",
+    description: "Practice Force in Motion.",
+    estimatedMin: 15,
+    priority: "medium",
+    href: "/practice?subject=Science&chapter=phy-ch1&topic=Force",
+    completedToday: false,
+  };
+  const chapterTwo: ExamTask = {
+    ...chapterOne,
+    id: "chap-Science-phy-ch2-Force",
+    chapter: "Work and Energy",
+    chapterId: "phy-ch2",
+    href: "/practice?subject=Science&chapter=phy-ch2&topic=Force",
+  };
+
+  withLocalStorage(storage, () => {
+    const saved = persistCompletedExamTask("exam:two-tasks:done", "exam:two-tasks:tasks", chapterOne);
+    assert.ok(saved);
+    const afterRefresh = mergeCompletedTasks(
+      [chapterOne, chapterTwo],
+      loadCompletedTasks("exam:two-tasks:tasks"),
+      new Set(JSON.parse(values.get("exam:two-tasks:done") ?? "[]") as string[]),
+    );
+
+    assert.deepEqual(
+      afterRefresh.map((task) => [task.id, task.completedToday]),
+      [[chapterOne.id, true], [chapterTwo.id, false]],
+    );
+  });
+});
+
+test("legacy completed chapter snapshots match only their original chapter and topic", () => {
+  const legacy = {
+    id: "chap-Science-Force",
+    type: "chapter" as const,
+    subject: "Science" as const,
+    topic: "Force",
+    chapter: "Motion",
+    chapterId: "phy-ch1",
+    label: "Force",
+    description: "Practice Force.",
+    estimatedMin: 15,
+    priority: "medium" as const,
+    href: "/practice?subject=Science&chapter=phy-ch1&topic=Force",
+    completedToday: true,
+  };
+  const currentSameChapter = { ...legacy, id: "chap-Science-phy-ch1-Force", completedToday: false };
+  const currentOtherChapter = {
+    ...currentSameChapter,
+    id: "chap-Science-phy-ch2-Force",
+    chapterId: "phy-ch2",
+    chapter: "Work and Energy",
+  };
+
+  const merged = mergeCompletedTasks(
+    [currentSameChapter, currentOtherChapter],
+    [legacy],
+    new Set([legacy.id]),
+  );
+  assert.deepEqual(
+    merged.map((task) => [task.id, task.completedToday]),
+    [[currentSameChapter.id, true], [currentOtherChapter.id, false]],
+  );
+});

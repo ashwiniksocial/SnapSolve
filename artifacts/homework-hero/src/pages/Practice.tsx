@@ -73,6 +73,32 @@ export function resolvePracticeTarget(
   return { chapterId: chapter?.id ?? "", topicId: topic?.id ?? "all" };
 }
 
+export function isPracticeTargetValid(
+  chapters: Array<{ id: string; topics: Array<{ id: string; name: string }> }>,
+  requestedChapter: string | null,
+  requestedTopic: string | null,
+  target: ReturnType<typeof resolvePracticeTarget>,
+) {
+  const requestedChapterExists = !requestedChapter ||
+    chapters.some((chapter) => chapter.id === requestedChapter);
+  const requestedTopicExists = !requestedTopic ||
+    chapters.some((chapter) =>
+      chapter.topics.some((topic) => topic.id === requestedTopic || topic.name === requestedTopic),
+    );
+  return requestedChapterExists &&
+    requestedTopicExists &&
+    (!requestedTopic || target.topicId !== "all");
+}
+
+export function resolveAssignedPracticeQuestion(
+  questions: Question[],
+  requestedQuestionId?: string | null,
+): Question | undefined {
+  return (requestedQuestionId
+    ? questions.find((question) => question.id === requestedQuestionId)
+    : undefined) ?? questions[0];
+}
+
 function replacePracticeQuery(updates: Record<string, string | null>) {
   const params = new URLSearchParams(window.location.search);
   for (const [key, value] of Object.entries(updates)) {
@@ -372,7 +398,18 @@ export default function Practice() {
   const [selectedType,      setSelectedType]      = useState<EffectiveQuestionType | "All">("All");
   const [searchQuery,       setSearchQuery]       = useState(initialPracticeParams.get("search") ?? "");
   const [readinessDrilldown, setReadinessDrilldown] = useState<ReadinessDrilldown | null>(null);
+  const [taskStartError, setTaskStartError] = useState<string | null>(null);
   const routeSelectionApplied = useRef(false);
+  const pendingTaskStart = useRef<{
+    subject: Subject;
+    chapterId: string;
+    topicId: string;
+    difficulty: Difficulty | "All";
+    type: EffectiveQuestionType | "All";
+    search: string;
+    questionId: string | null;
+    validTarget: boolean;
+  } | null>(null);
 
   const topics = useMemo(
     () => boardId ? getTopics(selectedChapterId, practiceClass, selectedSubject, boardId) : [],
@@ -499,11 +536,29 @@ export default function Practice() {
     const requestedChapter = params.get("chapter");
     const requestedTopic = params.get("topic");
     const target = resolvePracticeTarget(preferredChapters, requestedChapter, requestedTopic);
+    const validTarget = isPracticeTargetValid(
+      preferredChapters,
+      requestedChapter,
+      requestedTopic,
+      target,
+    );
     const requestedDifficulty = params.get("difficulty");
     const requestedType = params.get("type");
     const validDifficulty = DIFFICULTIES.find((value) => value === requestedDifficulty) ?? "All";
     const validType = QUESTION_TYPES.find((value) => value === requestedType) ?? "All";
     const hasAssignedTarget = Boolean(requestedChapter || requestedTopic);
+    pendingTaskStart.current = params.get("openQuestion") === "1"
+      ? {
+          subject: preferredSubject,
+          chapterId: target.chapterId,
+          topicId: target.topicId,
+          difficulty: validDifficulty,
+          type: validType,
+          search: params.get("search") ?? "",
+          questionId: params.get("questionId"),
+          validTarget,
+        }
+      : null;
 
     if (preferredSubject !== selectedSubject) {
       setSelectedSubject(preferredSubject);
@@ -555,6 +610,47 @@ export default function Practice() {
     const savedAnswerParam = openSavedExplanation ? "&savedAnswer=1" : "";
     navigate(`/solution?practiceMode=1&questionId=${encodeURIComponent(metadata.questionId)}${savedAnswerParam}`);
   }, [selectedSubject, update, navigate]);
+
+  useEffect(() => {
+    const pending = pendingTaskStart.current;
+    if (!bankReady || !pending) return;
+
+    // Wait for the route-selected filters to reach state before choosing from
+    // the resulting active, topic-filtered bank list.
+    if (
+      selectedSubject !== pending.subject ||
+      selectedChapterId !== pending.chapterId ||
+      selectedTopicId !== pending.topicId ||
+      selectedDiff !== pending.difficulty ||
+      selectedType !== pending.type ||
+      searchQuery !== pending.search
+    ) return;
+
+    pendingTaskStart.current = null;
+    if (!pending.validTarget) {
+      replacePracticeQuery({ openQuestion: null, questionId: null, autoScroll: null });
+      setTaskStartError("This exam task no longer matches an active chapter topic.");
+      return;
+    }
+    const question = resolveAssignedPracticeQuestion(questions, pending.questionId);
+    replacePracticeQuery({ openQuestion: null, questionId: null, autoScroll: null });
+    if (!question) {
+      setTaskStartError("No active questions are available for this exam task’s topic.");
+      return;
+    }
+    setTaskStartError(null);
+    handleOpenQuestion(question);
+  }, [
+    bankReady,
+    handleOpenQuestion,
+    questions,
+    searchQuery,
+    selectedChapterId,
+    selectedDiff,
+    selectedSubject,
+    selectedTopicId,
+    selectedType,
+  ]);
 
   const handleReopenQuestion = useCallback((questionId: string) => {
     const found = chapters
@@ -769,6 +865,12 @@ export default function Practice() {
       </div>
 
       <div className="max-w-lg mx-auto px-5 py-5 space-y-5">
+
+        {taskStartError && (
+          <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {taskStartError}
+          </p>
+        )}
 
         {/* ── Subject readiness — every count opens the canonical question list ── */}
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-4">

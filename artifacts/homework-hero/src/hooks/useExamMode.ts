@@ -129,12 +129,31 @@ export function mergeCompletedTasks(
   completedTasks: ExamTask[],
   completedIds: Set<string>,
 ): ExamTask[] {
+  const chapterIdentity = (task: ExamTask) =>
+    task.type === "chapter" && task.chapterId
+      ? JSON.stringify([task.subject, task.chapterId, task.topic])
+      : null;
+  const completedChapterIdentities = new Set(
+    completedTasks.map(chapterIdentity).filter((identity): identity is string => identity !== null),
+  );
+  const currentChapterIdentities = new Set(
+    currentTasks.map(chapterIdentity).filter((identity): identity is string => identity !== null),
+  );
   const merged = new Map<string, ExamTask>();
   for (const task of currentTasks) {
-    merged.set(task.id, { ...task, completedToday: task.completedToday || completedIds.has(task.id) });
+    merged.set(task.id, {
+      ...task,
+      completedToday: task.completedToday ||
+        completedIds.has(task.id) ||
+        (chapterIdentity(task) !== null && completedChapterIdentities.has(chapterIdentity(task)!)),
+    });
   }
   for (const task of completedTasks) {
-    if (!merged.has(task.id)) merged.set(task.id, { ...task, completedToday: true });
+    const identity = chapterIdentity(task);
+    const representedByCurrent = identity !== null && currentChapterIdentities.has(identity);
+    if (!merged.has(task.id) && !representedByCurrent) {
+      merged.set(task.id, { ...task, completedToday: true });
+    }
   }
   return [...merged.values()];
 }
