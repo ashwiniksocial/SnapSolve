@@ -331,6 +331,7 @@ const AUTH_PATHS = ["/sign-in", "/sign-up", "/onboarding", "/dev"];
 function Router() {
   const [location] = useLocation();
   const hideNav = AUTH_PATHS.some(p => location.startsWith(p));
+  const showBottomNav = !hideNav && location !== "/";
   const showFloatingNavigation = location.startsWith("/practice") || location.startsWith("/solution");
 
   return (
@@ -338,7 +339,7 @@ function Router() {
       <ScrollToTop />
       <div
         data-page-scroll-content
-        className={hideNav ? "min-h-screen" : "pb-20 min-h-screen"}
+        className={showBottomNav ? "pb-20 min-h-screen" : "min-h-screen"}
       >
         <RouteErrorBoundary key={location}>
           <Suspense fallback={<PageLoader />}>
@@ -358,7 +359,7 @@ function Router() {
         </RouteErrorBoundary>
       </div>
       {showFloatingNavigation && <FloatingPageNavigation />}
-      {!hideNav && <BottomNav />}
+      {showBottomNav && <BottomNav />}
     </>
   );
 }

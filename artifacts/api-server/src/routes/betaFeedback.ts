@@ -12,6 +12,7 @@
 import { Router } from "express";
 import { getAuth, clerkClient } from "@clerk/express";
 import { desc } from "drizzle-orm";
+import { isBetaEmailApproved } from "../lib/betaAccess";
 
 import type { db as _DbType, betaFeedbackTable as _BfType } from "@workspace/db";
 
@@ -97,14 +98,16 @@ async function isApprovedBetaUser(userId: string): Promise<boolean> {
   // open-beta/development mode.
   if (!rawList) return true;
 
-  const approved = new Set(
-    rawList.split(",").map((email) => email.trim().toLowerCase()).filter(Boolean),
-  );
   const user = await clerkClient.users.getUser(userId);
   const primary = user.emailAddresses.find(
     (email: { id: string; emailAddress: string }) => email.id === user.primaryEmailAddressId,
   );
-  return Boolean(primary && approved.has(primary.emailAddress.trim().toLowerCase()));
+  return isBetaEmailApproved(
+    primary?.emailAddress,
+    rawList,
+    process.env.FOUNDER_BETA_EMAIL,
+    process.env.NODE_ENV,
+  );
 }
 
 async function isFounderAdmin(userId: string): Promise<boolean> {

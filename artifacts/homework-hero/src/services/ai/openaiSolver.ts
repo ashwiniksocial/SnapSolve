@@ -329,6 +329,14 @@ export function isValidFrozenBankSolution(
   );
 }
 
+export function createImmediatePracticeBankFallback(
+  question: Question | null | undefined,
+): AIResponse | null {
+  return isValidFrozenBankSolution(question)
+    ? createFrozenBankFallback(question)
+    : null;
+}
+
 export function getBankAnswerIntegrityNotice(code: string): string | null {
   if (code === "bank_teaching_quality_review_failed") {
     return "The generated lesson did not pass the teaching-quality checks. The original question-bank solution is shown instead.";

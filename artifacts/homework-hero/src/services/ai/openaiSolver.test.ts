@@ -11,6 +11,7 @@ import TeachingLayout from "@/components/teaching/TeachingLayout";
 import {
   awaitFinalBankLesson,
   clearBankFailureMarker,
+  createImmediatePracticeBankFallback,
   createFrozenBankFallback,
   getBankFailureCategory,
   getBankAnswerIntegrityNotice,
@@ -403,7 +404,8 @@ test("Simple Machines saved explanations render every saved step and answer with
   try {
     for (const bankQuestion of questions) {
       assert.equal(isValidFrozenBankSolution(bankQuestion), true, `${bankQuestion.id} must be a valid saved bank answer`);
-      const fallbackResponse = createFrozenBankFallback(bankQuestion);
+      const fallbackResponse = createImmediatePracticeBankFallback(bankQuestion);
+      assert.ok(fallbackResponse, `${bankQuestion.id} must resolve to its saved explanation`);
       assert.equal(fallbackResponse.lesson, undefined, `${bankQuestion.id} must remain distinct from TeachingLesson`);
       const html = renderToStaticMarkup(
         React.createElement(TeachingLayout, { solution: fallbackResponse, level: "basic" }),

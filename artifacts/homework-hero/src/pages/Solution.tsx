@@ -9,16 +9,13 @@ import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner, type SelfAssessmentStatus } from "@/hooks/useRevisionPlanner";
 import { solve, type AIResponse } from "@/services/aiSolver";
 import {
-  awaitFinalBankLesson,
   callDevLesson,
   clearBankFailureMarker,
-  createFrozenBankFallback,
+  createImmediatePracticeBankFallback,
   getBankCachedLesson,
   isValidFrozenBankSolution,
   logBankLessonTiming,
-  recordBankFailureFallback,
   resolveBankFailureFallback,
-  solveBankWithStream,
   toAIResponse,
   type BankQuestionContext,
 } from "@/services/ai/openaiSolver";
@@ -164,10 +161,9 @@ export default function Solution() {
     }
 
     try {
-    // ── Bank question path: streaming TeachingLesson grounded in frozen answer ─
-      // Prefer validated pre-generated/browser lessons, then a matching failure
-      // marker; stream only when all instant paths miss. Verified lessons clear
-      // markers, and one generated lesson still serves all three teaching modes.
+    // ── Bank question path: saved full lesson or frozen explanation ───────────
+      // Practice always serves local approved content. It never starts a paid
+      // generation request when a valid question-bank explanation is available.
       if (practiceMode && practiceQuestionId) {
         await preloadQBank();
         const bankQ = getQuestionById(practiceQuestionId, boardId ?? undefined, classNum);
@@ -184,10 +180,11 @@ export default function Solution() {
           update({ practiceTopic: bankQ.topicName });
 
           // Explicit saved-answer view: render the complete bank steps and
-          // canonical answer immediately, without resolving lessons, reading a
-          // lesson cache, or starting the generation stream.
+          // canonical answer immediately, without resolving a generated lesson.
           if (savedAnswerMode) {
-            setSolution(applyCanonicalBankMetadata(createFrozenBankFallback(bankQ), bankQ));
+            const fallback = createImmediatePracticeBankFallback(bankQ);
+            if (!fallback) throw new Error("bank_solution_unavailable");
+            setSolution(applyCanonicalBankMetadata(fallback, bankQ));
             setPageState("done");
             return;
           }
@@ -212,11 +209,8 @@ export default function Solution() {
           // ── Persistent derived lesson: instant display, 0 AI calls ──────────
           // GUARANTEED INVARIANT (Prompt #027 P0-A): the pre-generated lookup is
           // awaited to a DEFINITIVE resolution before any fallback is reachable.
-          // resolvePreGeneratedBankLesson() only resolves after the lazy chapter
-          // chunk has finished importing (a "not loaded yet" chunk is resolved
-          // first, never treated as a miss) and the stored lesson has been
-          // validated against current frozen source content. Streaming is
-          // structurally unreachable until this returns "MISS_OR_INVALID".
+          // resolvePreGeneratedBankLesson() waits for the lazy chapter chunk
+          // and validates its source fingerprint before returning a full lesson.
           const preGeneratedStartedAt = performance.now();
           const resolution = await resolvePreGeneratedBankLesson(bankQ);
           logBankLessonTiming(
@@ -256,46 +250,14 @@ export default function Solution() {
             return;
           }
 
-          // ── Miss/invalid ONLY: wait for the definitive streamed lesson ─────
-          // Keep the loading view while SSE sections arrive. Neither the frozen
-          // legacy answer nor incomplete TeachingLesson partials are presented as
-          // a finished lesson. The same single stream resolves the final result.
-          const modelStartedAt = performance.now();
-          try {
-            const result = await awaitFinalBankLesson(
-              (onPartial) =>
-                solveBankWithStream(
-                  bankQ.subject as Subject,
-                  bankQ.question,
-                  bankContext,
-                  onPartial,
-                ),
-              bankQ.answer,
-              {
-                canonicalQuestion: bankQ.question,
-                intermediateText: bankQ.steps
-                  .slice(0, -1)
-                  .flatMap((step) => [step.title, step.explanation, step.formula, step.result])
-                  .filter((value): value is string => typeof value === "string"),
-              },
-            );
-            logBankLessonTiming("final-ready", "stream-validated", performance.now() - modelStartedAt);
-            clearBankFailureMarker(bankQ.id);
-            setSolution(applyCanonicalBankMetadata(result, bankQ));
-            setPageState("done");
-            return;
-          } catch (error) {
-            const code = error instanceof Error ? error.message : "";
-            const fallback = recordBankFailureFallback(bankQ, sourceHash, code);
-            if (!fallback) throw error;
-
-            logBankLessonTiming("model-generated", code, performance.now() - modelStartedAt);
-            logBankLessonTiming("final-ready", "frozen-bank-fallback", performance.now() - modelStartedAt);
-            setIntegrityNotice(fallback.notice);
-            setSolution(applyCanonicalBankMetadata(fallback.response, bankQ));
-            setPageState("done");
-            return;
-          }
+          // All bank questions that pass the validity check above have a saved
+          // explanation. Use it immediately when no complete saved lesson exists.
+          const fallback = createImmediatePracticeBankFallback(bankQ);
+          if (!fallback) throw new Error("bank_solution_unavailable");
+          logBankLessonTiming("final-ready", "frozen-bank-explanation", performance.now() - preGeneratedStartedAt);
+          setSolution(applyCanonicalBankMetadata(fallback, bankQ));
+          setPageState("done");
+          return;
         }
       }
 

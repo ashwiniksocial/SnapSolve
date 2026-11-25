@@ -5,12 +5,14 @@
  * Never exposes the allowlist contents in responses or logs.
  *
  * APPROVED_BETA_EMAILS — server-only env var, comma-separated list of
- * approved email addresses.  If unset or empty, all authenticated users
- * are approved (open-beta / development mode).
+ * approved email addresses. If unset or empty, authenticated users are
+ * approved (the existing open-beta contract). FOUNDER_BETA_EMAIL grants
+ * one additional Clerk-verified email access in development only.
  */
 
 import { Router }      from "express";
 import { getAuth, clerkClient } from "@clerk/express";
+import { isBetaEmailApproved } from "../lib/betaAccess";
 
 const router = Router();
 
@@ -22,17 +24,13 @@ router.get("/beta/check", async (req, res) => {
     return;
   }
 
-  const rawList = (process.env.APPROVED_BETA_EMAILS ?? "").trim();
+  const rawList = process.env.APPROVED_BETA_EMAILS;
 
   // No list configured → open beta; approve all authenticated users.
-  if (!rawList) {
+  if (!(rawList ?? "").trim()) {
     res.json({ approved: true });
     return;
   }
-
-  const approvedEmails = new Set(
-    rawList.split(",").map((e) => e.trim().toLowerCase()).filter(Boolean),
-  );
 
   try {
     // clerkClient is a pre-instantiated singleton in @clerk/express v2
@@ -41,8 +39,14 @@ router.get("/beta/check", async (req, res) => {
       (e: { id: string; emailAddress: string }) =>
         e.id === user.primaryEmailAddressId,
     );
-    const email = (primary?.emailAddress ?? "").toLowerCase();
-    res.json({ approved: Boolean(email && approvedEmails.has(email)) });
+    res.json({
+      approved: isBetaEmailApproved(
+        primary?.emailAddress,
+        rawList,
+        process.env.FOUNDER_BETA_EMAIL,
+        process.env.NODE_ENV,
+      ),
+    });
   } catch (err) {
     req.log.warn({ err }, "beta/check: failed to fetch Clerk user");
     res.json({ approved: false });

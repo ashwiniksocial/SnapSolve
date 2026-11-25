@@ -7,6 +7,7 @@
 
 import { Router } from "express";
 import { getAuth, clerkClient } from "@clerk/express";
+import { isBetaEmailApproved } from "../lib/betaAccess";
 import { retryFetch } from "../lib/retryFetch";
 
 const router = Router();
@@ -94,15 +95,16 @@ function isApprovedBetaUser(userId: string): Promise<boolean> {
   const rawList = (process.env.APPROVED_BETA_EMAILS ?? "").trim();
   if (!rawList) return Promise.resolve(true);
 
-  const approved = new Set(
-    rawList.split(",").map((email) => email.trim().toLowerCase()).filter(Boolean),
-  );
-
   return clerkClient.users.getUser(userId).then((user) => {
     const primary = user.emailAddresses.find(
       (email: { id: string; emailAddress: string }) => email.id === user.primaryEmailAddressId,
     );
-    return Boolean(primary && approved.has(primary.emailAddress.trim().toLowerCase()));
+    return isBetaEmailApproved(
+      primary?.emailAddress,
+      rawList,
+      process.env.FOUNDER_BETA_EMAIL,
+      process.env.NODE_ENV,
+    );
   });
 }
 

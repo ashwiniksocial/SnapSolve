@@ -1,12 +1,22 @@
 import { Link } from "wouter";
 import { Show, useUser } from "@clerk/react";
+import {
+  ArrowRight,
+  BookOpen,
+  Camera,
+  ChartNoAxesColumnIncreasing,
+  Check,
+  ClipboardCheck,
+  RotateCcw,
+  ScanLine,
+} from "lucide-react";
 import { SUBJECTS, type Subject } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
 import { useStreak } from "@/hooks/useStreak";
 import { useProgress } from "@/hooks/useProgress";
-import DailyFocus       from "@/components/DailyFocus";
-import DailyMission     from "@/components/DailyMission";
-import StudyScoreCard   from "@/components/StudyScoreCard";
+import DailyFocus from "@/components/DailyFocus";
+import DailyMission from "@/components/DailyMission";
+import StudyScoreCard from "@/components/StudyScoreCard";
 
 function HeaderAuth() {
   const { user } = useUser();
@@ -19,17 +29,22 @@ function HeaderAuth() {
   return (
     <>
       <Show when="signed-in">
-        <Link href="/profile">
-          <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm cursor-pointer hover:bg-indigo-700 transition-colors">
-            {initial}
-          </div>
+        <Link
+          href="/profile"
+          data-testid="link-profile"
+          aria-label="Open your profile"
+          className="grid h-10 w-10 place-items-center rounded-full bg-[#344b40] text-sm font-bold text-white transition-transform hover:scale-105"
+        >
+          {initial}
         </Link>
       </Show>
       <Show when="signed-out">
-        <Link href="/sign-in">
-          <button className="text-xs font-semibold text-indigo-600 border border-indigo-200 px-3 py-1.5 rounded-full hover:bg-indigo-50 transition-colors">
-            Sign In
-          </button>
+        <Link
+          href="/sign-in"
+          data-testid="link-sign-in"
+          className="rounded-full border border-[#d8ded6] px-4 py-2 text-xs font-semibold text-[#344b40] transition-colors hover:bg-[#f1f3ed]"
+        >
+          Sign in
         </Link>
       </Show>
     </>
@@ -37,6 +52,59 @@ function HeaderAuth() {
 }
 
 const subjects: Subject[] = ["Mathematics", "Science", "Information Technology"];
+const subjectMarks: Record<Subject, string> = {
+  Mathematics: "M",
+  Science: "S",
+  Physics: "P",
+  Chemistry: "C",
+  Biology: "B",
+  Economics: "E",
+  "Computer Science": "CS",
+  "Information Technology": "IT",
+};
+
+const studentActions = [
+  {
+    title: "Scan",
+    detail: "Scan a question to get started",
+    href: "/scan",
+    icon: ScanLine,
+    number: "01",
+    tone: "bg-[#e6eee7] text-[#315746]",
+  },
+  {
+    title: "Practice",
+    detail: "Build skill, one question at a time",
+    href: "/practice",
+    icon: BookOpen,
+    number: "02",
+    tone: "bg-[#f5ead8] text-[#8d6027]",
+  },
+  {
+    title: "Revision",
+    detail: "Return to topics that need work",
+    href: "/revision",
+    icon: RotateCcw,
+    number: "03",
+    tone: "bg-[#e5edf0] text-[#3f6978]",
+  },
+  {
+    title: "Exam",
+    detail: "Put your learning to the test",
+    href: "/exam",
+    icon: ClipboardCheck,
+    number: "04",
+    tone: "bg-[#eee8f1] text-[#66516f]",
+  },
+  {
+    title: "Report Card",
+    detail: "See your progress across subjects",
+    href: "/progress",
+    icon: ChartNoAxesColumnIncreasing,
+    number: "05",
+    tone: "bg-[#f2e9e3] text-[#885e49]",
+  },
+];
 
 export default function Home() {
   const { session, update } = useSession();
@@ -44,140 +112,123 @@ export default function Home() {
   const { totalSolved } = useProgress();
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-5">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
+    <main className="min-h-[100dvh] bg-[#f5f4ef] pb-8 text-[#26362e]">
+      <header className="border-b border-[#e3e4dc] bg-[#f9f8f3] px-5 pb-5 pt-8">
+        <div className="mx-auto flex max-w-lg items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">SnapSolve</h1>
-            <p className="text-sm text-slate-500 mt-0.5">Mathematics · Science · IT</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#718074]">Your study space</p>
+            <h1 className="mt-1 font-serif text-[30px] font-semibold leading-none tracking-[-0.04em]">SnapSolve</h1>
+            <p className="mt-2 text-xs text-[#718074]">Class 9 · Mathematics · Science · IT</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {streak > 0 && (
-              <div className="flex items-center gap-1.5 bg-orange-50 border border-orange-200 rounded-full px-3 py-1.5">
-                <span className="text-base">🔥</span>
-                <span className="text-sm font-bold text-orange-600">{streak}</span>
+              <div
+                className="flex items-center gap-2 rounded-full border border-[#e0d7bd] bg-[#f2ead7] px-3 py-2"
+                data-testid="status-home-streak"
+                aria-label={`${streak} day study streak`}
+              >
+                <span className="text-xs font-bold tabular-nums text-[#8d6027]">{streak}</span>
+                <span className="text-[10px] font-medium text-[#8d6027]">day streak</span>
               </div>
             )}
             <HeaderAuth />
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-lg mx-auto px-5 py-6 space-y-6">
-
-        {/* Stats row */}
-        <div className="grid grid-cols-3 gap-3">
+      <div className="mx-auto max-w-lg space-y-7 px-5 py-6">
+        <section aria-label="Your study activity" className="grid grid-cols-3 gap-2.5">
           {[
-            { label: "Day Streak", value: streak, unit: "🔥", color: "text-orange-600" },
-            { label: "Problems", value: totalSolved, unit: "✓", color: "text-indigo-600" },
-            { label: "Today", value: isTodayCompleted ? "Done" : "0/1", unit: "", color: "text-emerald-600" },
-          ].map(({ label, value, unit, color }) => (
-            <div key={label} className="bg-white rounded-2xl border border-slate-200 p-4 text-center shadow-sm">
-              <p className={`text-xl font-bold ${color}`}>{value}{unit}</p>
-              <p className="text-xs text-slate-500 mt-1 font-medium">{label}</p>
+            { label: "Day streak", value: String(streak), note: "days", tone: "text-[#9a6a32]" },
+            { label: "Questions", value: String(totalSolved), note: "solved", tone: "text-[#3d6954]" },
+            { label: "Today", value: isTodayCompleted ? "Done" : "Not yet", note: "daily goal", tone: "text-[#52717c]" },
+          ].map(({ label, value, note, tone }) => (
+            <div
+              key={label}
+              data-testid={`metric-home-${label.toLowerCase().replaceAll(" ", "-")}`}
+              className="rounded-2xl border border-[#e3e4dc] bg-[#fbfaf6] px-3 py-3.5"
+            >
+              <p className={`font-serif text-[23px] font-semibold leading-none tabular-nums ${tone}`}>{value}</p>
+              <p className="mt-2 text-[11px] font-semibold text-[#39483f]">{label}</p>
+              <p className="mt-0.5 text-[10px] text-[#8a9288]">{note}</p>
             </div>
           ))}
-        </div>
+        </section>
 
-        {/* ── Today's Mission ── */}
-        <DailyMission />
+        <section aria-labelledby="home-actions-heading">
+          <div className="mb-3 flex items-end justify-between">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#79857a]">Pick up where you are</p>
+              <h2 id="home-actions-heading" className="mt-1 font-serif text-[25px] font-semibold tracking-[-0.03em]">What are we working on?</h2>
+            </div>
+            <Camera aria-hidden="true" className="mb-1 h-5 w-5 text-[#8a968b]" strokeWidth={1.7} />
+          </div>
+          <div className="overflow-hidden rounded-[22px] border border-[#e0e2d9] bg-[#fbfaf6]">
+            {studentActions.map(({ title, detail, href, icon: Icon, number, tone }, index) => (
+              <Link
+                key={title}
+                href={href}
+                data-testid={`link-action-${title.toLowerCase().replaceAll(" ", "-")}`}
+                aria-label={`${title}: ${detail}`}
+                className={`group flex min-h-[76px] items-center gap-3.5 px-4 py-3 transition-colors hover:bg-[#f2f3ed] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#557664] ${index < studentActions.length - 1 ? "border-b border-[#e8e9e2]" : ""}`}
+              >
+                <span className="w-6 font-mono text-[10px] text-[#9aa197]">{number}</span>
+                <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-[14px] ${tone}`}>
+                  <Icon aria-hidden="true" className="h-[19px] w-[19px]" strokeWidth={1.8} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-bold text-[#2c3c32]">{title}</span>
+                  <span className="mt-0.5 block truncate text-[11px] text-[#7b877d]">{detail}</span>
+                </span>
+                <ArrowRight aria-hidden="true" className="h-4 w-4 text-[#a1a99f] transition-transform group-hover:translate-x-1 group-hover:text-[#42634f]" />
+              </Link>
+            ))}
+          </div>
+        </section>
 
-        {/* ── Study Score ── */}
-        <StudyScoreCard />
-
-        {/* ── Today's Focus (AI recommendations) ── */}
-        <DailyFocus />
-
-        {/* Subject selector */}
-        <div>
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Select Subject</h2>
-          <div className="space-y-3">
-            {subjects.map((subj) => {
-              const cfg = SUBJECTS[subj];
-              const isActive = session.subject === subj;
+        <section aria-labelledby="subject-heading">
+          <div className="mb-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#79857a]">Set your focus</p>
+              <h2 id="subject-heading" className="mt-1 font-serif text-[22px] font-semibold tracking-[-0.03em]">Choose a subject</h2>
+            </div>
+            <span className="text-[10px] font-medium text-[#889188]">Current session</span>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {subjects.map((subject) => {
+              const config = SUBJECTS[subject];
+              const isActive = session.subject === subject;
               return (
                 <button
-                  key={subj}
-                  onClick={() => update({ subject: subj })}
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all
-                    ${isActive
-                      ? "border-current shadow-sm"
-                      : "border-slate-200 bg-white hover:border-slate-300"}`}
-                  style={isActive ? { borderColor: cfg.color, backgroundColor: cfg.light } : {}}
+                  key={subject}
+                  type="button"
+                  data-testid={`button-subject-${subject.toLowerCase().replaceAll(" ", "-")}`}
+                  aria-pressed={isActive}
+                  onClick={() => update({ subject })}
+                  className={`relative min-h-[92px] rounded-2xl border px-3 py-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#557664] ${isActive ? "bg-[#e8eee7] shadow-sm" : "border-[#e1e3db] bg-[#fbfaf6] hover:bg-white"}`}
+                  style={isActive ? { borderColor: config.color } : {}}
                 >
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                    style={{ backgroundColor: cfg.color + "20" }}
+                  <span
+                    aria-hidden="true"
+                    className="grid h-8 min-w-8 w-fit place-items-center rounded-[10px] px-1.5 font-mono text-[10px] font-bold"
+                    style={{ color: config.color, backgroundColor: config.light }}
                   >
-                    {cfg.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-900">{subj}</p>
-                    <p className="text-xs text-slate-500 mt-0.5 truncate">
-                      {cfg.topics.slice(0, 4).join(" · ")}
-                    </p>
-                  </div>
-                  {isActive && (
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: cfg.color }}
-                    >
-                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  )}
+                    {subjectMarks[subject]}
+                  </span>
+                  <span className="mt-2 block text-[11px] font-semibold leading-tight text-[#39483f]">{subject}</span>
+                  {isActive && <Check aria-hidden="true" className="absolute right-2.5 top-2.5 h-3.5 w-3.5" style={{ color: config.color }} />}
                 </button>
               );
             })}
           </div>
-        </div>
+        </section>
 
-        {/* Primary CTA */}
-        <Show when="signed-in">
-          <Link href="/scan">
-            <button
-              className="w-full py-4 rounded-2xl font-semibold text-white text-base shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
-              style={{ background: `linear-gradient(135deg, ${SUBJECTS[session.subject].color}, ${SUBJECTS[session.subject].color}cc)` }}
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              Scan a Question · {session.subject}
-            </button>
-          </Link>
-        </Show>
-        <Show when="signed-out">
-          <Link href="/sign-up">
-            <button
-              className="w-full py-4 rounded-2xl font-semibold text-white text-base shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
-              style={{ background: "linear-gradient(135deg, #4f46e5, #4f46e5cc)" }}
-            >
-              Sign Up Free →
-            </button>
-          </Link>
-        </Show>
-
-        {/* Quick links */}
-        <div className="grid grid-cols-2 gap-3">
-          <Link href="/practice">
-            <div className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-indigo-200 transition-colors cursor-pointer shadow-sm">
-              <div className="text-2xl mb-2">✏️</div>
-              <p className="font-semibold text-slate-800 text-sm">Practice</p>
-              <p className="text-xs text-slate-500 mt-0.5">Topic-wise questions</p>
-            </div>
-          </Link>
-          <Link href="/progress">
-            <div className="bg-white rounded-2xl border border-slate-200 p-4 hover:border-indigo-200 transition-colors cursor-pointer shadow-sm">
-              <div className="text-2xl mb-2">📊</div>
-              <p className="font-semibold text-slate-800 text-sm">Progress</p>
-              <p className="text-xs text-slate-500 mt-0.5">Weakness analysis</p>
-            </div>
-          </Link>
-        </div>
+        <section aria-label="Study overview" className="space-y-4">
+          <DailyMission />
+          <StudyScoreCard />
+          <DailyFocus />
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
