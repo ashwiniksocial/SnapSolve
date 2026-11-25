@@ -414,7 +414,7 @@ export default function Solution() {
               >
                 <p className="font-semibold">Saved question-bank explanation · no AI generation</p>
                 <p className="mt-1 text-xs leading-relaxed">
-                  This shows the saved steps and answer, not the full TeachingLesson. The existing AI Lesson action remains available from Practice.
+                  This uses the approved question-bank steps and answer in the same lesson layout.
                 </p>
               </div>
             )}
@@ -448,7 +448,7 @@ export default function Solution() {
             )}
 
             {/* ── Practice mode self-assessment ──────────────────────────── */}
-            {practiceMode && session.practiceQuestionId && (
+            {practiceMode && practiceQuestionId && (
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4">
                 <p className="text-xs font-semibold text-slate-500 mb-3 text-center">
                   How did you do?

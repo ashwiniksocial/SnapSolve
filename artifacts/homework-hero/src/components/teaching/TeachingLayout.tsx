@@ -27,6 +27,52 @@ function Label({ children }: { children: React.ReactNode }) {
   );
 }
 
+function hasText(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function FinalAnswerSection({
+  id,
+  num,
+  answer,
+  whyCorrect,
+}: {
+  id: string;
+  num: number;
+  answer: string;
+  whyCorrect?: string;
+}) {
+  if (!hasText(answer)) return null;
+
+  return (
+    <TeachingSection
+      id={id}
+      num={num}
+      icon="✅"
+      title="Final Answer"
+      headerBg="#f0fdf4"
+      headerText="#15803d"
+      borderColor="#bbf7d0"
+      bodyBg="#f0fdf4"
+      defaultOpen={true}
+      hidden={false}
+    >
+      <div className="space-y-3">
+        <div className="bg-emerald-600 rounded-xl px-4 py-3.5 text-center">
+          <p className="text-xs font-black uppercase tracking-widest text-emerald-200 mb-1">Answer</p>
+          <p className="text-sm font-bold text-white leading-relaxed whitespace-pre-wrap">{answer}</p>
+        </div>
+        {hasText(whyCorrect) && (
+          <div>
+            <Label>Why this is correct</Label>
+            <P>{whyCorrect}</P>
+          </div>
+        )}
+      </div>
+    </TeachingSection>
+  );
+}
+
 // ─── Guided Step Card ─────────────────────────────────────────────────────────
 
 function GuidedStepCard({
@@ -48,20 +94,22 @@ function GuidedStepCard({
   return (
     <div className="rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
       {/* Step header */}
-      <div className="flex items-center gap-3 px-4 py-3" style={{ background: light, borderBottom: `1px solid ${border}` }}>
-        <span
-          className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0"
-          style={{ backgroundColor: color }}
-        >
-          {index + 1}
-        </span>
-        <p className="text-sm font-semibold text-slate-800 leading-snug">{step.what}</p>
-      </div>
+      {hasText(step.what) && (
+        <div className="flex items-center gap-3 px-4 py-3" style={{ background: light, borderBottom: `1px solid ${border}` }}>
+          <span
+            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0"
+            style={{ backgroundColor: color }}
+          >
+            {index + 1}
+          </span>
+          <p className="text-sm font-semibold text-slate-800 leading-snug">{step.what}</p>
+        </div>
+      )}
 
       <div className="px-4 py-3 bg-white space-y-2">
 
         {/* Math formula */}
-        {step.math && (
+        {hasText(step.math) && (
           <div className="bg-slate-900 rounded-xl px-4 py-2.5">
             <p className="text-xs text-slate-300 mb-0.5 font-mono uppercase tracking-wider">Formula / Calculation</p>
             <p className="text-sm font-mono text-emerald-300 leading-relaxed whitespace-pre-wrap">{step.math}</p>
@@ -69,7 +117,7 @@ function GuidedStepCard({
         )}
 
         {/* Result */}
-        {step.result && (
+        {hasText(step.result) && (
           <div className="flex items-start gap-2.5 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5">
             <span className="text-emerald-500 mt-0.5 shrink-0 text-sm">✓</span>
             <p className="text-sm font-semibold text-emerald-800 leading-snug">{step.result}</p>
@@ -77,25 +125,29 @@ function GuidedStepCard({
         )}
 
         {/* Why this step — collapsible reveal */}
-        <button
-          onClick={() => setWhyOpen((o) => !o)}
-          className="w-full flex items-center justify-between text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 rounded-xl px-3 py-2 hover:bg-violet-100 transition-colors"
-        >
-          <span className="flex items-center gap-1.5">
-            <span>💭</span>
-            <span>Why this step?</span>
-          </span>
-          <span className="text-violet-400">{whyOpen ? "▲ Hide" : "▼ Show"}</span>
-        </button>
+        {hasText(step.why) && (
+          <>
+            <button
+              onClick={() => setWhyOpen((o) => !o)}
+              className="w-full flex items-center justify-between text-xs font-bold text-violet-600 bg-violet-50 border border-violet-100 rounded-xl px-3 py-2 hover:bg-violet-100 transition-colors"
+            >
+              <span className="flex items-center gap-1.5">
+                <span>💭</span>
+                <span>Why this step?</span>
+              </span>
+              <span className="text-violet-400">{whyOpen ? "▲ Hide" : "▼ Show"}</span>
+            </button>
 
-        {whyOpen && (
-          <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
-            <p className="text-sm text-violet-800 leading-relaxed whitespace-pre-wrap">{step.why}</p>
-          </div>
+            {whyOpen && (
+              <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
+                <p className="text-sm text-violet-800 leading-relaxed whitespace-pre-wrap">{step.why}</p>
+              </div>
+            )}
+          </>
         )}
 
         {/* Pause and think */}
-        {step.pause && (
+        {hasText(step.pause) && (
           <>
             <button
               onClick={() => setPauseOpen((o) => !o)}
@@ -134,6 +186,8 @@ export function PracticeWithHints({
 }) {
   const [revealed, setRevealed]   = useState(0);
   const [showSolution, setShowSolution] = useState(false);
+  const availableHints = Array.isArray(hints) ? hints.filter((hint) => hasText(hint)) : [];
+  const hasSolution = hasText(solution);
 
   return (
     <div className="space-y-3">
@@ -142,9 +196,9 @@ export function PracticeWithHints({
         <p className="text-sm font-semibold text-slate-800 leading-relaxed">{question}</p>
       </div>
 
-      {hints.length > 0 && (
+      {availableHints.length > 0 && (
         <div className="space-y-2">
-          {hints.map((hint, i) => (
+          {availableHints.map((hint, i) => (
             <div key={i}>
               {revealed > i ? (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5">
@@ -164,19 +218,19 @@ export function PracticeWithHints({
         </div>
       )}
 
-      {!showSolution ? (
+      {hasSolution && !showSolution ? (
         <button
           onClick={() => setShowSolution(true)}
           className="w-full py-2.5 rounded-xl text-xs font-bold text-slate-500 border border-slate-200 hover:bg-slate-50 transition-colors"
         >
           Show Full Solution
         </button>
-      ) : (
+      ) : hasSolution ? (
         <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
           <p className="text-[10px] font-black uppercase tracking-wider text-emerald-500 mb-1.5">Full Solution</p>
           <p className="text-sm text-emerald-900 leading-relaxed whitespace-pre-wrap">{solution}</p>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -203,13 +257,13 @@ function MistakeDetailCard({
       </button>
       {open && (
         <div className="px-4 pb-3 pt-1 bg-red-50 border-t border-red-100 space-y-2">
-          {mistake.whyItHappens && (
+          {hasText(mistake.whyItHappens) && (
             <div>
               <p className="text-[10px] font-black uppercase tracking-wider text-red-500 mb-0.5">Why this happens</p>
               <p className="text-xs text-red-800 leading-relaxed">{mistake.whyItHappens}</p>
             </div>
           )}
-          {mistake.howToAvoid && (
+          {hasText(mistake.howToAvoid) && (
             <div>
               <p className="text-[10px] font-black uppercase tracking-wider text-emerald-600 mb-0.5">How to avoid it</p>
               <p className="text-xs text-emerald-800 leading-relaxed">{mistake.howToAvoid}</p>
@@ -226,14 +280,8 @@ void ((_: number) => _);
 
 // ─── Full Lesson Renderer ─────────────────────────────────────────────────────
 //
-// Mode section counts (exact — enforced by unconditional show flags below)
-//   Detailed (basic)  → 8–9: Key Concept (including vocabulary), Build Intuition,
-//                            Understand Question, Step-by-Step, Common Mistakes,
-//                            Final Answer, One Similar Example, Practice Question,
-//                            Remember This
-//   Standard          → 5: Key Concept, Understand Question, Step-by-Step,
-//                        Final Answer, Practice Question
-//   Compact (advanced)→ 3: Step-by-Step, Final Answer, Remember This
+// Core sections use the same renderer and headings for both lesson sources.
+// Optional sections are shown only when their source fields contain usable text.
 
 function LessonRenderer({ lesson, level, cfg }: {
   lesson: TeachingLesson;
@@ -246,41 +294,53 @@ function LessonRenderer({ lesson, level, cfg }: {
   const [visualized, setVisualized] = useState(false);
   const hasVisualRepresentation = supportsVisualization(lesson);
 
-  // Section visibility: mode-driven, except `translate` which is also
-  // data-driven — hidden when all four questionTranslation fields are empty
-  // (the model omits them for factual/recall/MCQ questions where decomposing
-  // the question adds no learning value).
-  // Counts: Detailed=8–9 (translation conditional), Standard=4–5, Compact=3.
-  // Section numbering uses the sequential _n counter below, so hiding
-  // translate never creates a gap (e.g. 1, 3, 4, 5 — it stays 1, 2, 3, 4).
   const qt = lesson.questionTranslation;
-  const translateHasContent = !isCompact && (
-    !!qt.plainEnglish?.trim() ||
-    !!qt.whatWeKnow?.trim()   ||
-    !!qt.whatWeFind?.trim()   ||
-    !!qt.wordToMath?.trim()
-  );
-  const rememberPoints = Array.isArray(lesson.rememberThese)
-    ? lesson.rememberThese.filter((point) => typeof point === "string" && point.trim())
+  const keyConcepts = Array.isArray(lesson.keyConcepts)
+    ? lesson.keyConcepts.filter((concept) => hasText(concept))
     : [];
+  const guidedReasoning = Array.isArray(lesson.guidedReasoning)
+    ? lesson.guidedReasoning.filter((step) =>
+        [step?.what, step?.why, step?.math, step?.result, step?.pause].some(hasText),
+      )
+    : [];
+  const rememberPoints = Array.isArray(lesson.rememberThese)
+    ? lesson.rememberThese.filter((point) => hasText(point))
+    : [];
+  const intuitionHasContent = [
+    lesson.intuition?.story,
+    lesson.intuition?.visual,
+    lesson.intuition?.everyday,
+  ].some(hasText);
+  const commonMistakes = Array.isArray(lesson.commonMistakes)
+    ? lesson.commonMistakes.filter((mistake) => hasText(mistake?.mistake))
+    : [];
+  const similarProblem = lesson.simplerExample?.problem;
+  const similarSolution = lesson.simplerExample?.solution;
+  const hasSimilarExample = hasText(similarProblem) && hasText(similarSolution);
+  const questionTranslationHasContent = [
+    qt?.plainEnglish,
+    qt?.whatWeKnow,
+    qt?.whatWeFind,
+    qt?.wordToMath,
+  ].some(hasText);
   const show = {
-    concept:   !isCompact,
-    intuition: isDetailed,
-    translate: translateHasContent,
-    steps:     true,
-    mistakes:  isDetailed,
-    answer:    true,
-    similar:   isDetailed,
-    practice:  !isCompact && !!(lesson.practiceQuestion?.question),
+    concept:   !isCompact && keyConcepts.length > 0,
+    intuition: isDetailed && intuitionHasContent,
+    translate: !isCompact && questionTranslationHasContent,
+    steps:     guidedReasoning.length > 0,
+    mistakes:  isDetailed && commonMistakes.length > 0,
+    answer:    hasText(lesson.finalAnswer?.answer),
+    similar:   isDetailed && hasSimilarExample,
+    practice:  !isCompact && hasText(lesson.practiceQuestion?.question),
     remember:  (isDetailed || isCompact) && rememberPoints.length > 0,
   };
   const prerequisites = Array.isArray(lesson.prerequisites)
-    ? lesson.prerequisites.filter((prerequisite) => typeof prerequisite === "string" && prerequisite.trim())
+    ? lesson.prerequisites.filter((prerequisite) => hasText(prerequisite))
     : [];
   const vocabulary = Array.isArray(lesson.vocabulary)
     ? lesson.vocabulary.filter((item) =>
-        typeof item?.term === "string" && item.term.trim() &&
-        typeof item?.meaning === "string" && item.meaning.trim(),
+        hasText(item?.term) &&
+        hasText(item?.meaning),
       )
     : [];
 
@@ -314,7 +374,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           hidden={false}
         >
           <div className="flex flex-wrap gap-2">
-            {lesson.keyConcepts.map((c, i) => (
+            {keyConcepts.map((c, i) => (
               <span
                 key={i}
                 className="text-xs font-semibold px-3 py-1.5 rounded-full border"
@@ -355,7 +415,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           hidden={false}
         >
           <div className="space-y-3">
-            {lesson.intuition.story && (
+            {hasText(lesson.intuition.story) && (
               <div className="bg-white border border-purple-200 rounded-xl px-4 py-3">
                 <Label>The story that makes it click</Label>
                 <P>{lesson.intuition.story}</P>
@@ -384,7 +444,7 @@ function LessonRenderer({ lesson, level, cfg }: {
                 </div>
               </div>
             )}
-            {lesson.intuition.everyday && (
+            {hasText(lesson.intuition.everyday) && (
               <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
                 <Label>In real life</Label>
                 <P>{lesson.intuition.everyday}</P>
@@ -409,17 +469,19 @@ function LessonRenderer({ lesson, level, cfg }: {
           hidden={false}
         >
           <div className="space-y-3">
-            <div className="bg-white border border-orange-200 rounded-xl px-4 py-3">
-              <Label>In simple words</Label>
-              <P>{lesson.questionTranslation.plainEnglish}</P>
-            </div>
-            {lesson.questionTranslation.whatWeKnow && (
+            {hasText(lesson.questionTranslation.plainEnglish) && (
+              <div className="bg-white border border-orange-200 rounded-xl px-4 py-3">
+                <Label>In simple words</Label>
+                <P>{lesson.questionTranslation.plainEnglish}</P>
+              </div>
+            )}
+            {hasText(lesson.questionTranslation.whatWeKnow) && (
               <div>
                 <Label>What we are told</Label>
                 <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{lesson.questionTranslation.whatWeKnow}</p>
               </div>
             )}
-            {lesson.questionTranslation.whatWeFind && (
+            {hasText(lesson.questionTranslation.whatWeFind) && (
               <div className="flex items-start gap-2.5 bg-orange-100 rounded-xl px-3 py-2.5">
                 <span className="text-orange-500 shrink-0 mt-0.5">→</span>
                 <div>
@@ -428,7 +490,7 @@ function LessonRenderer({ lesson, level, cfg }: {
                 </div>
               </div>
             )}
-            {lesson.questionTranslation.wordToMath && (
+            {hasText(lesson.questionTranslation.wordToMath) && (
               <div>
                 <Label>Translating words into maths</Label>
                 <div className="bg-slate-900 rounded-xl px-4 py-3">
@@ -454,7 +516,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           hidden={false}
           badge={
             <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: cfg.border, color: cfg.color }}>
-              {lesson.guidedReasoning.length} steps
+              {guidedReasoning.length} steps
             </span>
           }
         >
@@ -471,7 +533,7 @@ function LessonRenderer({ lesson, level, cfg }: {
                 </ul>
               </div>
             )}
-            {lesson.guidedReasoning.map((step, i) => (
+            {guidedReasoning.map((step, i) => (
               <GuidedStepCard
                 key={i}
                 step={step}
@@ -501,40 +563,21 @@ function LessonRenderer({ lesson, level, cfg }: {
           badge={<span className="text-[9px] font-bold bg-red-200 text-red-800 px-2 py-0.5 rounded-full">Watch out!</span>}
         >
           <div className="space-y-3">
-            {(isDetailed ? lesson.commonMistakes : lesson.commonMistakes.slice(0, 1)).map((m, i) => (
+            {(isDetailed ? commonMistakes : commonMistakes.slice(0, 1)).map((m, i) => (
               <MistakeDetailCard key={i} mistake={m} index={i} />
             ))}
           </div>
         </TeachingSection>
       )}
 
-      {/* ── Final Answer — all modes (no verification shown) ───────────── */}
+      {/* ── Final Answer — all modes ───────────────────────────────────── */}
       {show.answer && (
-        <TeachingSection
+        <FinalAnswerSection
           id="lesson-answer"
           num={num.answer}
-          icon="✅"
-          title="Final Answer"
-          headerBg="#f0fdf4"
-          headerText="#15803d"
-          borderColor="#bbf7d0"
-          bodyBg="#f0fdf4"
-          defaultOpen={true}
-          hidden={false}
-        >
-          <div className="space-y-3">
-            <div className="bg-emerald-600 rounded-xl px-4 py-3.5 text-center">
-              <p className="text-xs font-black uppercase tracking-widest text-emerald-200 mb-1">Answer</p>
-              <p className="text-sm font-bold text-white leading-relaxed">{lesson.finalAnswer.answer}</p>
-            </div>
-            {!isCompact && lesson.finalAnswer.whyCorrect && (
-              <div>
-                <Label>Why this is correct</Label>
-                <P>{lesson.finalAnswer.whyCorrect}</P>
-              </div>
-            )}
-          </div>
-        </TeachingSection>
+          answer={lesson.finalAnswer.answer}
+          whyCorrect={!isCompact ? lesson.finalAnswer.whyCorrect : undefined}
+        />
       )}
 
       {/* ── One Similar Example — Standard + Detailed ──────────────────── */}
@@ -552,8 +595,8 @@ function LessonRenderer({ lesson, level, cfg }: {
           hidden={false}
         >
           <WorkedExampleCard
-            problem={lesson.simplerExample.problem}
-            solution={lesson.simplerExample.solution}
+            problem={similarProblem!}
+            solution={similarSolution!}
             borderColor="#0f766e"
           />
         </TeachingSection>
@@ -623,14 +666,32 @@ function LegacyRenderer({ solution, level, cfg }: {
 }) {
   const isDetailed = level === "basic";
   const isCompact  = level === "advanced";
+  const keyConcepts = Array.isArray(solution.keyConcepts)
+    ? solution.keyConcepts.filter((concept) => hasText(concept))
+    : [];
+  const steps = Array.isArray(solution.steps)
+    ? solution.steps.filter((step) =>
+        [step?.title, step?.explanation, step?.whyThisStep, step?.formula, step?.result].some(hasText),
+      )
+    : [];
+  const commonMistakes = Array.isArray(solution.commonMistakes)
+    ? solution.commonMistakes.filter((mistake) => hasText(mistake))
+    : [];
+  const memoryShortcuts = Array.isArray(solution.memoryShortcut)
+    ? solution.memoryShortcut.filter((shortcut) => hasText(shortcut))
+    : [];
+  const hasSimilarExample = hasText(solution.similarExample?.problem) &&
+    hasText(solution.similarExample?.solution);
 
   const show = {
-    concept:  !isCompact && (solution.keyConcepts?.length ?? 0) > 0,
-    steps:    true,
-    mistakes: isDetailed && (solution.commonMistakes?.length ?? 0) > 0,
-    similar:  isDetailed && !!solution.similarExample?.problem,
-    practice: !isCompact && !!solution.checkUnderstanding?.question,
-    remember: (isCompact || isDetailed) && !!(solution.rememberThis || (solution.memoryShortcut?.length ?? 0) > 0),
+    concept:  !isCompact && keyConcepts.length > 0,
+    steps:    steps.length > 0,
+    answer:   hasText(solution.finalAnswer),
+    mistakes: isDetailed && commonMistakes.length > 0,
+    similar:  isDetailed && hasSimilarExample,
+    practice: !isCompact && hasText(solution.checkUnderstanding?.question) &&
+      hasText(solution.checkUnderstanding?.answer),
+    remember: (isCompact || isDetailed) && (hasText(solution.rememberThis) || memoryShortcuts.length > 0),
   };
 
   let _n = 0;
@@ -638,6 +699,7 @@ function LegacyRenderer({ solution, level, cfg }: {
     concept:  show.concept  ? ++_n : _n,
     steps:    show.steps    ? ++_n : _n,
     mistakes: show.mistakes ? ++_n : _n,
+    answer:   show.answer   ? ++_n : _n,
     similar:  show.similar  ? ++_n : _n,
     practice: show.practice ? ++_n : _n,
     remember: show.remember ? ++_n : _n,
@@ -660,7 +722,7 @@ function LegacyRenderer({ solution, level, cfg }: {
           hidden={false}
         >
           <div className="flex flex-wrap gap-2">
-            {solution.keyConcepts!.map((c, i) => (
+            {keyConcepts.map((c, i) => (
               <span
                 key={i}
                 className="text-xs font-semibold px-3 py-1.5 rounded-full border"
@@ -673,8 +735,8 @@ function LegacyRenderer({ solution, level, cfg }: {
         </TeachingSection>
       )}
 
-      {/* Step-by-Step Solution — always shown */}
-      <TeachingSection
+      {/* Step-by-Step Solution — shown when saved steps exist */}
+      {show.steps && <TeachingSection
         id={`steps-${level}`}
         num={num.steps}
         icon="⚙️"
@@ -686,19 +748,18 @@ function LegacyRenderer({ solution, level, cfg }: {
         hidden={false}
         badge={
           <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: cfg.border, color: cfg.color }}>
-            {solution.steps.length} steps
+            {steps.length} steps
           </span>
         }
       >
         <StepReasoningCard
-          steps={solution.steps}
-          finalAnswer={solution.finalAnswer}
+          steps={steps}
           color={cfg.color}
           light={cfg.light}
           border={cfg.border}
           level={level}
         />
-      </TeachingSection>
+      </TeachingSection>}
 
       {/* Common Mistakes — Detailed (all) / Standard (first 1) */}
       {show.mistakes && (
@@ -716,10 +777,18 @@ function LegacyRenderer({ solution, level, cfg }: {
           badge={<span className="text-[9px] font-bold bg-red-200 text-red-800 px-2 py-0.5 rounded-full">Watch out!</span>}
         >
           <MistakeCard
-            commonMistakes={isDetailed ? solution.commonMistakes! : solution.commonMistakes!.slice(0, 1)}
+            commonMistakes={isDetailed ? commonMistakes : commonMistakes.slice(0, 1)}
             examTrap={isDetailed ? solution.examTrap : undefined}
           />
         </TeachingSection>
+      )}
+
+      {show.answer && (
+        <FinalAnswerSection
+          id={`answer-${level}`}
+          num={num.answer}
+          answer={solution.finalAnswer}
+        />
       )}
 
       {/* Similar Example — Standard + Detailed */}
@@ -738,7 +807,7 @@ function LegacyRenderer({ solution, level, cfg }: {
         >
           <WorkedExampleCard
             problem={solution.similarExample!.problem}
-            solution={solution.similarExample!.solution ?? ""}
+            solution={solution.similarExample!.solution!}
             borderColor="#0f766e"
           />
         </TeachingSection>
@@ -782,7 +851,7 @@ function LegacyRenderer({ solution, level, cfg }: {
           hidden={false}
         >
           <MemoryCard
-            memoryShortcut={solution.memoryShortcut}
+            memoryShortcut={memoryShortcuts}
             examTip={solution.rememberThis ? undefined : solution.examTip}
             rememberThis={solution.rememberThis}
           />

@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { gunzipSync } from "node:zlib";
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import encodedChunk from "./generatedLessonChunks/9--Physics--phy-ch4";
 import { QUESTIONS } from "./questions/class9-physics-ch4";
+import TeachingLayout from "@/components/teaching/TeachingLayout";
+import { createImmediatePracticeBankFallback } from "@/services/ai/openaiSolver";
 import {
   getDetailedLessonQualityFlags,
   isCompleteDetailedLesson,
@@ -171,4 +175,64 @@ test("Q3 distinguishes ideal work balance from friction losses", () => {
   assert.match(teaching, /ideal machine/i);
   assert.match(teaching, /friction/i);
   assert.equal(lesson.finalAnswer.answer, QUESTIONS.find((item) => item.id === "c9-phy-ch4-t6-q03")?.answer);
+});
+
+test("saved bank and TeachingLesson sources share core sections without invented extras", () => {
+  const question = QUESTIONS.find((item) => item.id === "c9-phy-ch4-t6-q05");
+  assert.ok(question, "canonical question exists");
+  const lessonResponse = resolveStoredLessonEntry(chunk.lessons[question.id], question);
+  const bankResponse = createImmediatePracticeBankFallback(question);
+  assert.ok(lessonResponse, "full saved lesson resolves locally");
+  assert.ok(bankResponse, "approved question-bank explanation resolves locally");
+
+  const originalReact = Object.getOwnPropertyDescriptor(globalThis, "React");
+  const originalFetch = globalThis.fetch;
+  let fetchCalls = 0;
+  Object.defineProperty(globalThis, "React", { configurable: true, value: React });
+  globalThis.fetch = async () => {
+    fetchCalls += 1;
+    throw new Error("Rendering saved content must not make a request");
+  };
+
+  try {
+    const lessonHtml = renderToStaticMarkup(
+      React.createElement(TeachingLayout, { solution: lessonResponse, level: "basic" }),
+    );
+    const bankHtml = renderToStaticMarkup(
+      React.createElement(TeachingLayout, { solution: bankResponse, level: "basic" }),
+    );
+    const sparseLessonResponse = {
+      ...lessonResponse,
+      lesson: {
+        ...lessonResponse.lesson,
+        intuition: { story: "", visual: "", everyday: "" },
+        questionTranslation: { plainEnglish: "", whatWeKnow: "", whatWeFind: "", wordToMath: "" },
+        commonMistakes: [],
+        simplerExample: { problem: "", solution: "" },
+        practiceQuestion: { question: "", hints: [], solution: "" },
+        rememberThese: [],
+      },
+    };
+    const sparseLessonHtml = renderToStaticMarkup(
+      React.createElement(TeachingLayout, { solution: sparseLessonResponse, level: "basic" }),
+    );
+
+    for (const heading of ["Key Concept", "Step-by-Step Solution", "Final Answer"]) {
+      assert.ok(lessonHtml.includes(heading), `TeachingLesson is missing ${heading}`);
+      assert.ok(bankHtml.includes(heading), `saved bank explanation is missing ${heading}`);
+    }
+    assert.ok(bankHtml.includes(question.answer), "bank view preserves the canonical answer");
+    assert.ok(lessonHtml.includes(question.answer), "TeachingLesson preserves the canonical answer");
+    for (const optionalHeading of ["Common Mistakes", "One Similar Example", "Practice Question", "Remember This"]) {
+      assert.ok(!bankHtml.includes(optionalHeading), `bank view must not invent ${optionalHeading}`);
+      assert.ok(!sparseLessonHtml.includes(optionalHeading), `empty lesson fields must not display ${optionalHeading}`);
+    }
+    assert.ok(!sparseLessonHtml.includes("Build Intuition"));
+    assert.ok(!sparseLessonHtml.includes("Understand the Question"));
+    assert.equal(fetchCalls, 0, "both saved sources render without network or AI calls");
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalReact) Object.defineProperty(globalThis, "React", originalReact);
+    else Reflect.deleteProperty(globalThis, "React");
+  }
 });
