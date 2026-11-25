@@ -373,6 +373,54 @@ test("approved complement equation remains blocked when it answers the original 
   assert.notEqual(result.assessment.status, "clear");
 });
 
+test("Probability fraction reduction is source-derived, while wrong arithmetic and early answers remain blocked", () => {
+  const question =
+    "In a class of 60 students, 24 like Mathematics. A student is chosen at random. Find the probability that the student likes Mathematics.";
+  const answer = "P = 24/60 = 2/5";
+  const context = buildAnswerLastContext(question, [{
+    title: "Probability",
+    explanation: "P = 24/60 = 2/5.",
+    result: "P = 2/5",
+  }]);
+  const reduction = {
+    guidedReasoning: [{
+      what: "Find a common divisor for the numerator and denominator.",
+      why: "Dividing both by the same number keeps the ratio unchanged.",
+      math: "24 ÷ 12 = 2 and 60 ÷ 12 = 5",
+    }],
+    finalAnswer: { answer },
+  };
+
+  assert.deepEqual(
+    assessTeachingLessonAnswerLast(reduction, answer, context),
+    { status: "clear" },
+  );
+
+  const wrongDivisor = {
+    ...reduction,
+    guidedReasoning: [{
+      ...reduction.guidedReasoning[0],
+      math: "24 ÷ 10 = 2.4 and 60 ÷ 10 = 6",
+    }],
+  };
+  assert.equal(
+    assessTeachingLessonAnswerLast(wrongDivisor, answer, context).status,
+    "review",
+  );
+
+  const prematureAnswer = {
+    ...reduction,
+    guidedReasoning: [{
+      ...reduction.guidedReasoning[0],
+      why: "Therefore, the answer is 2/5.",
+    }],
+  };
+  assert.equal(
+    assessTeachingLessonAnswerLast(prematureAnswer, answer, context).status,
+    "leak",
+  );
+});
+
 test("equation-equivalent transformations pass only when both sides match approved source math", () => {
   const context = buildAnswerLastContext("Convert the recurring decimal to a fraction.", [
     {

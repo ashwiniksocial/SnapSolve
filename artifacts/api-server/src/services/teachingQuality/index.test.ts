@@ -259,6 +259,18 @@ test("quality decision blocks critical issues and weak-student comprehension flo
   assert.ok(lowUnderstanding.blockReasons.includes("student_understanding_below_block_floor=65"));
 });
 
+test("Probability Q3 weak-student score of 50 remains a fail-closed BLOCK", () => {
+  const decision = classifyTeachingQuality({
+    ...report(false, 75),
+    scores: { ...scores(75), weakStudentUnderstanding: 50, overall: 70 },
+    criticalIssues: [],
+    confusions: [],
+  });
+
+  assert.equal(decision.status, "BLOCK");
+  assert.ok(decision.blockReasons.includes("student_understanding_below_block_floor=50"));
+});
+
 test("quality decision blocks reviewer failures and missing diagnostics", () => {
   assert.equal(classifyTeachingQuality(null, true).status, "BLOCK");
   assert.equal(classifyTeachingQuality(null, false).status, "BLOCK");

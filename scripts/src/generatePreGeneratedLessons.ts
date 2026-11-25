@@ -12,10 +12,7 @@ import {
 } from "../../artifacts/homework-hero/src/data/preGeneratedLessons.ts";
 import type { Question } from "../../artifacts/homework-hero/src/data/questions/types.ts";
 import type { TeachingLesson } from "../../artifacts/homework-hero/src/data/solutionBank.ts";
-import {
-  normalizeOptionalDetailedLessonSections,
-  parseLessonResponse,
-} from "../../artifacts/api-server/src/lib/lessonTypes.ts";
+import { parseLessonResponse } from "../../artifacts/api-server/src/lib/lessonTypes.ts";
 import { PILOT_QUESTION_IDS } from "./preGeneratedLessonPilot.ts";
 import { mayPersistQualityStatus } from "./lessonGenerationPolicy.ts";
 import { getCanonicalChapter } from "./canonicalCurriculum.js";
@@ -365,9 +362,7 @@ async function generateOne(
     throw new Error(`Generation for ${question.id} did not pass the teaching-quality gate.`);
   }
 
-  const parsed = normalizeOptionalDetailedLessonSections(
-    parseLessonResponse(completed.lesson),
-  ) as TeachingLesson;
+  const parsed = parseLessonResponse(completed.lesson) as TeachingLesson;
   // Preserve the frozen bank answer verbatim. Pedagogy is AI-derived; the
   // approved final answer remains authoritative question-bank content.
   parsed.finalAnswer = { ...parsed.finalAnswer, answer: question.answer };

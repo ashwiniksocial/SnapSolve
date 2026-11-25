@@ -6,6 +6,7 @@ import {
   buildAnswerLastContext,
   compareBankAnswers,
 } from "@workspace/api-zod/bank-answer-integrity";
+import { isCompleteDetailedLessonContract } from "@workspace/api-zod/detailed-lesson-contract";
 export { compareBankAnswers } from "@workspace/api-zod/bank-answer-integrity";
 import type { Subject } from "./subjects";
 import type { Question } from "./questions/types";
@@ -220,47 +221,7 @@ export function hashQuestionContent(question: Question): string {
  * translation remains optional because factual questions intentionally hide it.
  */
 export function isCompleteDetailedLesson(lesson: TeachingLesson): boolean {
-  const translation = lesson.questionTranslation;
-  const translationValues = [
-    translation.plainEnglish,
-    translation.whatWeKnow,
-    translation.whatWeFind,
-    translation.wordToMath,
-  ];
-  const hasNoTranslation = translationValues.every((value) => !text(value));
-  const hasFullTranslation = translationValues.every(text);
-  const practice = lesson.practiceQuestion;
-  // The renderer suppresses the whole practice section unless its question is
-  // populated. Therefore an omitted practice item is complete, while a shown
-  // item must never contain an empty prompt, hint, or solution.
-  const hasNoPractice = !text(practice.question);
-  const hasFullPractice =
-    text(practice.question) &&
-    text(practice.solution) &&
-    practice.hints.length > 0 &&
-    practice.hints.every(text);
-
-  return (
-    lesson.keyConcepts.length > 0 &&
-    lesson.keyConcepts.every(text) &&
-    text(lesson.intuition.story) &&
-    text(lesson.intuition.visual) &&
-    text(lesson.intuition.everyday) &&
-    (hasNoTranslation || hasFullTranslation) &&
-    lesson.guidedReasoning.length > 0 &&
-    lesson.guidedReasoning.every((step) => text(step.what) && text(step.why)) &&
-    lesson.commonMistakes.length > 0 &&
-    lesson.commonMistakes.every((mistake) =>
-      text(mistake.mistake) &&
-      text(mistake.whyItHappens) &&
-      text(mistake.howToAvoid),
-    ) &&
-    text(lesson.finalAnswer.answer) &&
-    text(lesson.finalAnswer.whyCorrect) &&
-    text(lesson.simplerExample.problem) &&
-    text(lesson.simplerExample.solution) &&
-    (hasNoPractice || hasFullPractice)
-  );
+  return isCompleteDetailedLessonContract(lesson);
 }
 
 export type DetailedLessonQualityFlag =

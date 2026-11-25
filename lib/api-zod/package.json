@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./bank-answer-integrity": "./src/bankAnswerIntegrity.ts"
+    "./bank-answer-integrity": "./src/bankAnswerIntegrity.ts",
+    "./detailed-lesson-contract": "./src/detailedLessonContract.ts"
   },
   "dependencies": {
     "zod": "catalog:"

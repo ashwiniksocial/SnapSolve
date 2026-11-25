@@ -1002,16 +1002,77 @@ function approvedEquationConnected(
   return false;
 }
 
+function positiveIntegerFraction(value: string): { numerator: bigint; denominator: bigint } | null {
+  const match = normalizeCalculationText(value).match(/^(\d+)\/(\d+)$/);
+  if (!match) return null;
+  const numerator = BigInt(match[1]);
+  const denominator = BigInt(match[2]);
+  return denominator > 0n ? { numerator, denominator } : null;
+}
+
+function isSourceDerivedFractionReduction(
+  candidate: string,
+  approvedCalculations: readonly string[],
+): boolean {
+  const candidateParts = normalizeCalculationText(candidate).split("=");
+  if (candidateParts.length !== 2) return false;
+  const candidateFraction = positiveIntegerFraction(candidateParts[0]);
+  const candidateResult = parseRational(candidateParts[1]);
+  if (
+    !candidateFraction ||
+    !candidateResult ||
+    candidateResult.unit ||
+    candidateResult.denominator !== 1n
+  ) {
+    return false;
+  }
+
+  for (const sourceText of approvedCalculations) {
+    for (const sourceLink of approvedEquationLinks(sourceText)) {
+      const sourceParts = normalizeCalculationText(sourceLink).split("=");
+      if (sourceParts.length !== 2) continue;
+      const sourceFraction = positiveIntegerFraction(sourceParts[0]);
+      const sourceReduced = positiveIntegerFraction(sourceParts[1]);
+      if (!sourceFraction || !sourceReduced) continue;
+
+      const divisor = gcd(sourceFraction.numerator, sourceFraction.denominator);
+      if (
+        divisor <= 1n ||
+        sourceFraction.numerator / divisor !== sourceReduced.numerator ||
+        sourceFraction.denominator / divisor !== sourceReduced.denominator
+      ) {
+        continue;
+      }
+
+      const reducesNumerator =
+        candidateFraction.numerator === sourceFraction.numerator &&
+        candidateFraction.denominator === divisor &&
+        candidateResult.numerator === sourceReduced.numerator;
+      const reducesDenominator =
+        candidateFraction.numerator === sourceFraction.denominator &&
+        candidateFraction.denominator === divisor &&
+        candidateResult.numerator === sourceReduced.denominator;
+      if (reducesNumerator || reducesDenominator) return true;
+    }
+  }
+  return false;
+}
+
 function allCandidateEquationsApproved(
   text: string,
   approvedCalculations: readonly string[],
 ): boolean {
-  const links = approvedEquationLinks(text);
+  const clauses = text
+    .replace(/÷/g, "/")
+    .replace(/\\div\b/g, "/")
+    .split(/\s+and\s+(?=\d+\s*\/\s*\d+\s*=)/i)
+  const links = clauses.flatMap(approvedEquationLinks);
   return links.length > 0 &&
     links.every((link) =>
       approvedEquationConnected(link, approvedCalculations) ||
       isSupportedCalculationAssignment(link, approvedCalculations) ||
-      isEquivalentApprovedEquation(link, approvedCalculations)
+      isEquivalentApprovedEquation(link, approvedCalculations) ||
+      isSourceDerivedFractionReduction(link, approvedCalculations)
     );
 }
 
