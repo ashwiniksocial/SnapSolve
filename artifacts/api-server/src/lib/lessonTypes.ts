@@ -264,6 +264,8 @@ export function isCompleteDetailedLessonResponse(lesson: LessonResponse): boolea
   return (
     lesson.keyConcepts.length > 0 &&
     lesson.keyConcepts.every(hasText) &&
+    lesson.vocabulary.length > 0 &&
+    lesson.vocabulary.every((item) => hasText(item.term) && hasText(item.meaning)) &&
     hasText(lesson.intuition.story) &&
     hasText(lesson.intuition.visual) &&
     hasText(lesson.intuition.everyday) &&
@@ -278,6 +280,8 @@ export function isCompleteDetailedLessonResponse(lesson: LessonResponse): boolea
     ) &&
     hasText(lesson.finalAnswer.answer) &&
     hasText(lesson.finalAnswer.whyCorrect) &&
+    lesson.rememberThese.length >= 2 &&
+    lesson.rememberThese.every(hasText) &&
     hasText(lesson.simplerExample.problem) &&
     hasText(lesson.simplerExample.solution) &&
     (hasNoPractice || hasFullPractice)

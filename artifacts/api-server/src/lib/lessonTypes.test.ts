@@ -10,6 +10,7 @@ function detailedLesson(overrides: Record<string, unknown> = {}) {
     topic: "Simple Machines",
     difficulty: "Easy",
     keyConcepts: ["Mechanical advantage compares load with effort."],
+    vocabulary: [{ term: "Load", meaning: "The force the machine moves." }],
     intuition: {
       story: "A machine helps us move a load.",
       visual: "Picture a pulley lifting a box.",
@@ -39,6 +40,10 @@ function detailedLesson(overrides: Record<string, unknown> = {}) {
       solution: "Divide 20 N by 10 N to get 2.",
     },
     practiceQuestion: { question: "", hints: [], solution: "" },
+    rememberThese: [
+      "Mechanical advantage compares load with effort.",
+      "Check that the answer uses load divided by effort.",
+    ],
     ...overrides,
   });
 }
@@ -57,6 +62,29 @@ test("missing required teaching content is rejected before bank caching", () => 
   assert.equal(
     isCompleteDetailedLessonResponse(detailedLesson({
       commonMistakes: [],
+    })),
+    false,
+  );
+});
+
+test("missing vocabulary or usable memory takeaways is rejected before bank caching", () => {
+  assert.equal(
+    isCompleteDetailedLessonResponse(detailedLesson({ vocabulary: [] })),
+    false,
+  );
+  assert.equal(
+    isCompleteDetailedLessonResponse(detailedLesson({
+      vocabulary: [{ term: "Load", meaning: "" }],
+    })),
+    false,
+  );
+  assert.equal(
+    isCompleteDetailedLessonResponse(detailedLesson({ rememberThese: [] })),
+    false,
+  );
+  assert.equal(
+    isCompleteDetailedLessonResponse(detailedLesson({
+      rememberThese: ["A useful takeaway.", "   "],
     })),
     false,
   );

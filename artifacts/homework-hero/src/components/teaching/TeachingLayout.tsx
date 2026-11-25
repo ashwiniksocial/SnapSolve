@@ -227,9 +227,10 @@ void ((_: number) => _);
 // ─── Full Lesson Renderer ─────────────────────────────────────────────────────
 //
 // Mode section counts (exact — enforced by unconditional show flags below)
-//   Detailed (basic)  → 8: Key Concept, Build Intuition, Understand Question,
-//                        Step-by-Step, Common Mistakes, Final Answer,
-//                        One Similar Example, Practice Question
+//   Detailed (basic)  → 8–9: Key Concept (including vocabulary), Build Intuition,
+//                            Understand Question, Step-by-Step, Common Mistakes,
+//                            Final Answer, One Similar Example, Practice Question,
+//                            Remember This
 //   Standard          → 5: Key Concept, Understand Question, Step-by-Step,
 //                        Final Answer, Practice Question
 //   Compact (advanced)→ 3: Step-by-Step, Final Answer, Remember This
@@ -249,7 +250,7 @@ function LessonRenderer({ lesson, level, cfg }: {
   // data-driven — hidden when all four questionTranslation fields are empty
   // (the model omits them for factual/recall/MCQ questions where decomposing
   // the question adds no learning value).
-  // Counts: Detailed=8, Standard=4–5 (translate conditional), Compact=3.
+  // Counts: Detailed=8–9 (translation conditional), Standard=4–5, Compact=3.
   // Section numbering uses the sequential _n counter below, so hiding
   // translate never creates a gap (e.g. 1, 3, 4, 5 — it stays 1, 2, 3, 4).
   const qt = lesson.questionTranslation;
@@ -259,6 +260,9 @@ function LessonRenderer({ lesson, level, cfg }: {
     !!qt.whatWeFind?.trim()   ||
     !!qt.wordToMath?.trim()
   );
+  const rememberPoints = Array.isArray(lesson.rememberThese)
+    ? lesson.rememberThese.filter((point) => typeof point === "string" && point.trim())
+    : [];
   const show = {
     concept:   !isCompact,
     intuition: isDetailed,
@@ -268,10 +272,16 @@ function LessonRenderer({ lesson, level, cfg }: {
     answer:    true,
     similar:   isDetailed,
     practice:  !isCompact && !!(lesson.practiceQuestion?.question),
-    remember:  isCompact,
+    remember:  (isDetailed || isCompact) && rememberPoints.length > 0,
   };
   const prerequisites = Array.isArray(lesson.prerequisites)
     ? lesson.prerequisites.filter((prerequisite) => typeof prerequisite === "string" && prerequisite.trim())
+    : [];
+  const vocabulary = Array.isArray(lesson.vocabulary)
+    ? lesson.vocabulary.filter((item) =>
+        typeof item?.term === "string" && item.term.trim() &&
+        typeof item?.meaning === "string" && item.meaning.trim(),
+      )
     : [];
 
   let _n = 0;
@@ -314,6 +324,19 @@ function LessonRenderer({ lesson, level, cfg }: {
               </span>
             ))}
           </div>
+          {vocabulary.length > 0 && (
+            <div className="mt-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3">
+              <Label>Key terms</Label>
+              <dl className="space-y-2">
+                {vocabulary.map((item, index) => (
+                  <div key={`${item.term}-${index}`}>
+                    <dt className="text-sm font-bold text-sky-950">{item.term}</dt>
+                    <dd className="text-sm leading-relaxed text-slate-700">{item.meaning}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )}
         </TeachingSection>
       )}
 
@@ -575,7 +598,7 @@ function LessonRenderer({ lesson, level, cfg }: {
           hidden={false}
         >
           <div className="space-y-2">
-            {lesson.rememberThese.map((point, i) => (
+            {rememberPoints.map((point, i) => (
               <div key={i} className="flex items-start gap-2.5 bg-white border border-amber-200 rounded-xl px-4 py-2.5">
                 <span className="text-amber-500 shrink-0 mt-0.5 font-bold">✓</span>
                 <p className="text-sm font-semibold text-amber-900 leading-snug">{point}</p>

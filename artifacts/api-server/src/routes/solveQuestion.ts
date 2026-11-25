@@ -240,6 +240,10 @@ No markdown fences. No extra text. No explanation outside JSON.
   "keyConcepts": string[],
   "aiConfidence": number,
 
+  "vocabulary": [
+    { "term": string, "meaning": string }
+  ],
+
   "guidedReasoning": [
     {
       "what": string,
@@ -285,7 +289,9 @@ No markdown fences. No extra text. No explanation outside JSON.
     "question": string,
     "hints": [string, string, string],
     "solution": string
-  }
+  },
+
+  "rememberThese": string[]
 }
 
 ═══════════════════════════════════════════════════════════════
@@ -377,6 +383,13 @@ intuition.everyday
   One concrete daily-life connection. "This is exactly like when you..."
   2–3 sentences. Should make the student feel the concept is familiar, not foreign.
 
+VOCABULARY
+━━━━━━━━━━
+vocabulary
+  Define the unfamiliar subject words, quantities, and symbols a weak student needs
+  for this lesson. Each meaning must use plain language and be understandable on its
+  own. Include a term before relying on it in the lesson; do not add decorative terms.
+
 QUESTION TRANSLATION
 ━━━━━━━━━━━━━━━━━━━
 questionTranslation.plainEnglish
@@ -436,6 +449,13 @@ practiceQuestion.solution
   The complete solution with every step shown. Written as a tutor walking through it.
   5–8 sentences.
 
+REMEMBER THESE
+━━━━━━━━━━━━━━
+rememberThese
+  Give concise, useful takeaways about the underlying idea, not a replay of calculations.
+  Include why the key idea matters and one relevant exam check or misconception to avoid.
+  Do not reveal the canonical answer before finalAnswer.
+
 ═══════════════════════════════════════════════════════════════
 ABSOLUTE LANGUAGE RULES — Zero exceptions
 ═══════════════════════════════════════════════════════════════
@@ -453,6 +473,7 @@ QUALITY CHECK — Run silently before outputting JSON
 □ Did I show every arithmetic calculation without skipping?
 □ Did I provide a fully worked simplerExample?
 □ Did I give 3 progressive hints for practiceQuestion without solving it?
+□ Did I define essential vocabulary and give useful memory takeaways?
 □ Could a student currently scoring 20/100 read this lesson and solve a similar problem independently?
 
 If the answer to the final question is NO — expand the lesson before outputting.
@@ -2353,10 +2374,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
       ``,
       `PEDAGOGICAL HINT (use for questionTranslation.plainEnglish context): ${bankCtx.hint}`,
       ``,
-      `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above.`,
+      `IMPORTANT: finalAnswer.answer MUST copy the Gold Standard answer above verbatim, preserving its values, units, direction, and wording. Do not round, paraphrase, or substitute an equivalent-looking answer.`,
       `INTRODUCTORY FIELDS may explain the question and its givens, but must not state the final result or identify the correct option. Preserve necessary givens and intermediate calculations.`,
       `guidedReasoning MUST follow the approved reasoning (you may add depth to why/pause).`,
       `All other visible sections (intuition, commonMistakes, simplerExample, practiceQuestion) should be authored with full pedagogical depth.`,
+      `Fill vocabulary with plain-language definitions for essential terms and symbols. Fill rememberThese with concept takeaways and an exam-relevant check; do not repeat the final answer there.`,
       ``,
       `Subject: ${subj}`,
       ``,
