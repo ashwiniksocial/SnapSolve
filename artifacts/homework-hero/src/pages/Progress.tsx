@@ -6,14 +6,10 @@ import { useChapterStats } from "@/hooks/useChapterStats";
 import { useProgress } from "@/hooks/useProgress";
 import { useProfile } from "@/hooks/useProfile";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
-import { useStreak } from "@/hooks/useStreak";
-import { getTutorInsights } from "@/services/studentModel";
-import { getTutorStats } from "@/services/socratic/dialogueEngine";
-import { deriveReportCardMetrics } from "@/services/reportCardMetrics";
+import { readProfile } from "@/services/studentModel/syncManager";
+import { deriveImprovementSteps, deriveReportCardMetrics } from "@/services/reportCardMetrics";
 import ReportCard from "@/components/progress/ReportCard";
 import { preloadQBank } from "@/services/questionService";
-
-const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
 function toDateKey(date: Date): string {
   return date.toISOString().slice(0, 10);
@@ -54,18 +50,6 @@ export default function Progress() {
     [getSubjectStats, mathChapters, scienceChapters, itChapters],
   );
 
-  const { completedDates } = useStreak();
-  const practiceDays = useMemo(
-    () => Array.from({ length: 7 }, (_, index) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (6 - index));
-      const key = toDateKey(date);
-      const weekday = new Date(`${key}T12:00:00`).getDay();
-      return { date: key, label: DAY_LABELS[weekday], completed: completedDates.includes(key) };
-    }),
-    [completedDates],
-  );
-
   const { getDueItems, getUpcomingSchedule } = useRevisionPlanner(classNum);
   const revisionDue = getDueItems();
   const today = toDateKey(new Date());
@@ -74,18 +58,22 @@ export default function Progress() {
   const upcomingRevisions = getUpcomingSchedule()
     .filter(({ date }) => date > today && date <= toDateKey(nextWeek));
   const upcomingCount = upcomingRevisions.reduce((sum, day) => sum + day.items.length, 0);
-
-  const tutorProfile = useMemo(() => {
-    const insights = getTutorInsights();
-    return {
-      studyHours: insights.totalStudyHours,
-      learningVelocity: insights.learningVelocity,
-      preferredDepth: insights.preferredDepth,
-      bestStudyTime: insights.bestStudyTime,
-      preferredSubject: insights.preferredSubject,
-    };
+  const trackedStudyTimeMs = useMemo(() => {
+    const duration = readProfile()?.totalStudyTimeMs;
+    return typeof duration === "number" && Number.isFinite(duration) ? Math.max(0, duration) : 0;
   }, []);
-  const tutorActivity = useMemo(() => getTutorStats(), []);
+  const improvementSteps = deriveImprovementSteps(
+    metrics,
+    revisionDue.length,
+    upcomingCount,
+    trackedStudyTimeMs,
+  );
+  const hasLearningEvidence =
+    metrics.questionsPractised > 0 ||
+    metrics.gradedAnswers > 0 ||
+    revisionDue.length > 0 ||
+    upcomingCount > 0 ||
+    trackedStudyTimeMs > 0;
 
   return (
     <main className="min-h-[100dvh] bg-[#f5f4ef] pb-24 text-[#26362e]">
@@ -108,7 +96,7 @@ export default function Progress() {
                 Your Report Card
               </h1>
               <p className="mt-1 text-xs leading-relaxed text-[#718074]">
-                Practice, graded answers, and tutoring activity—kept separate.
+                A clear summary and next steps from saved learning activity.
               </p>
             </div>
             <span className="mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-[#d8e3d7] text-[#42634f]">
@@ -120,18 +108,11 @@ export default function Progress() {
 
       <div className="mx-auto max-w-lg space-y-5 px-4 py-5 sm:px-5 sm:py-6">
         <ReportCard
-          classNum={classNum}
           bankReady={bankReady}
           metrics={metrics}
-          practiceDays={practiceDays}
-          tutorProfile={tutorProfile}
-          tutorActivity={{
-            sessions: tutorActivity.totalSessions,
-            questionsAsked: tutorActivity.totalQuestions,
-          }}
-          revisionDue={revisionDue}
-          upcomingRevisions={upcomingRevisions}
-          upcomingCount={upcomingCount}
+          trackedStudyTimeMs={trackedStudyTimeMs}
+          improvementSteps={improvementSteps}
+          hasLearningEvidence={hasLearningEvidence}
         />
       </div>
     </main>

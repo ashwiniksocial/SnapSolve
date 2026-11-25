@@ -5,7 +5,6 @@
  * with a grade label and a four-row breakdown of what drives the score.
  */
 
-import { Link } from "wouter";
 import { useStudyScore } from "@/hooks/useStudyScore";
 
 // ─── SVG ring constants ───────────────────────────────────────────────────────
@@ -81,16 +80,11 @@ export default function StudyScoreCard() {
       <div className="px-5 pt-5 pb-4">
 
         {/* Title row */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4">
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Study Score</p>
             <p className="text-[11px] text-slate-400 mt-0.5">Accuracy · Practice · Revision · Streak</p>
           </div>
-          <Link href="/improvement">
-            <span className="text-[11px] text-indigo-500 font-semibold hover:text-indigo-700 transition-colors cursor-pointer">
-              30-Day Trend →
-            </span>
-          </Link>
         </div>
 
         {/* Ring + grade */}

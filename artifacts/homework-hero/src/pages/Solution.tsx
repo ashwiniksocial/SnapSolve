@@ -441,6 +441,20 @@ export default function Solution() {
               </p>
             )}
 
+            {solution && (
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowTutor((open) => !open)}
+                  aria-expanded={showTutor}
+                  data-testid="button-talk-to-tutor"
+                  className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+                >
+                  {showTutor ? "Close Tutor" : "Talk to Tutor"}
+                </button>
+              </div>
+            )}
+
             <SolutionCard
               key={solution.id}
               solution={solution}

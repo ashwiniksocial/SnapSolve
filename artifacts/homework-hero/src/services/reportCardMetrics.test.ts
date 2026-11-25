@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { SubjectStats } from "@/hooks/useProgress";
 import type { ChapterCompletion } from "@/hooks/useChapterStats";
-import { deriveReportCardMetrics } from "./reportCardMetrics";
+import {
+  deriveImprovementSteps,
+  deriveReportCardMetrics,
+  formatTrackedStudyTime,
+} from "./reportCardMetrics";
 
 function stats(
   topics: SubjectStats["topicStats"],
@@ -116,4 +120,60 @@ test("inactive or empty topic placeholders do not inflate coverage denominators"
   assert.equal(metrics.activeTopics, 1);
   assert.equal(metrics.topicsCovered, 1);
   assert.equal(metrics.gradedAccuracy, null);
+});
+
+test("improvement steps cite graded weaknesses, scheduled reviews, and uncovered topics", () => {
+  const metrics = deriveReportCardMetrics([{
+    subject: "Mathematics",
+    stats: stats([
+      { topic: "Fractions", solved: 3, correct: 1, accuracy: 33, masteryPct: 33, attempted: ["m1", "m2", "m3"] },
+    ]),
+    chapters: [chapter(8, [
+      { name: "Fractions", totalQuestions: 4, attempted: 3 },
+      { name: "Geometry", totalQuestions: 4, attempted: 0 },
+    ])],
+  }]);
+
+  const steps = deriveImprovementSteps(metrics, 2, 1, 90_000);
+  assert.equal(steps.length, 3);
+  assert.match(steps[0].title, /Fractions/);
+  assert.match(steps[0].evidence, /33% across 3 graded answers/);
+  assert.equal(steps[1].href, "/revision");
+  assert.match(steps[1].evidence, /2 due now/);
+  assert.match(steps[2].title, /Geometry/);
+  assert.match(steps[2].evidence, /No practice is recorded/);
+});
+
+test("confidence-only practice does not become a weak concept or graded recommendation", () => {
+  const metrics = deriveReportCardMetrics([{
+    subject: "Science",
+    stats: stats([
+      { topic: "Cells", solved: 0, correct: 0, accuracy: 0, masteryPct: 0, attempted: ["s1"] },
+    ]),
+    chapters: [chapter(5, [
+      { name: "Cells", totalQuestions: 3, attempted: 1 },
+      { name: "Forces", totalQuestions: 2, attempted: 0 },
+    ])],
+  }]);
+
+  const steps = deriveImprovementSteps(metrics, 0, 1, 0);
+  assert.equal(metrics.weakAreas.length, 0);
+  assert.equal(steps.length, 2);
+  assert.equal(steps[0].href, "/revision");
+  assert.match(steps[1].title, /Forces/);
+});
+
+test("no activity produces no personalized steps and time shows only measured values", () => {
+  const metrics = deriveReportCardMetrics([{
+    subject: "Mathematics",
+    stats: stats([]),
+    chapters: [chapter(4, [
+      { name: "Algebra", totalQuestions: 4, attempted: 0 },
+    ])],
+  }]);
+
+  assert.deepEqual(deriveImprovementSteps(metrics, 0, 0, 0), []);
+  assert.equal(formatTrackedStudyTime(0), "No time logged");
+  assert.equal(formatTrackedStudyTime(30_000), "Under 1 min");
+  assert.equal(formatTrackedStudyTime(3_720_000), "1 hr 2 min");
 });

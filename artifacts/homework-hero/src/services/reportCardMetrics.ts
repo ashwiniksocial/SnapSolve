@@ -15,6 +15,20 @@ export interface ReportCardTopic {
   accuracy: number;
 }
 
+export interface UncoveredReportCardTopic {
+  subject: Subject;
+  topic: string;
+  activeQuestions: number;
+}
+
+export interface ImprovementStep {
+  id: string;
+  title: string;
+  evidence: string;
+  action: string;
+  href: "/practice" | "/revision";
+}
+
 export interface ReportCardMetrics {
   questionsPractised: number;
   activeQuestions: number;
@@ -35,6 +49,8 @@ export interface ReportCardMetrics {
   }>;
   strengths: ReportCardTopic[];
   weakAreas: ReportCardTopic[];
+  improvementTopics: ReportCardTopic[];
+  uncoveredTopics: UncoveredReportCardTopic[];
 }
 
 export function deriveReportCardMetrics(sources: ReportCardSubjectSource[]): ReportCardMetrics {
@@ -59,6 +75,26 @@ export function deriveReportCardMetrics(sources: ReportCardSubjectSource[]): Rep
     stats.topicStats
       .filter((topic) => topic.solved > 0)
       .map((topic) => ({ subject, topic })),
+  );
+  const improvementTopics = gradedTopics
+    .filter(({ topic }) => topic.accuracy < 80)
+    .map(({ subject, topic }) => ({
+      subject,
+      topic: topic.topic,
+      gradedAnswers: topic.solved,
+      accuracy: topic.accuracy,
+    }))
+    .sort((left, right) => left.accuracy - right.accuracy || right.gradedAnswers - left.gradedAnswers);
+  const uncoveredTopics = sources.flatMap(({ subject, chapters }) =>
+    chapters.flatMap((chapter) =>
+      chapter.topics
+        .filter((topic) => topic.totalQuestions > 0 && topic.attempted === 0)
+        .map((topic) => ({
+          subject,
+          topic: topic.topicName,
+          activeQuestions: topic.totalQuestions,
+        })),
+    ),
   );
 
   return {
@@ -92,5 +128,78 @@ export function deriveReportCardMetrics(sources: ReportCardSubjectSource[]): Rep
         gradedAnswers: topic.solved,
         accuracy: topic.accuracy,
       })),
+    improvementTopics,
+    uncoveredTopics,
   };
+}
+
+export function deriveImprovementSteps(
+  metrics: ReportCardMetrics,
+  dueReviews: number,
+  upcomingReviews: number,
+  trackedStudyTimeMs = 0,
+): ImprovementStep[] {
+  const hasLearningEvidence =
+    metrics.questionsPractised > 0 ||
+    metrics.gradedAnswers > 0 ||
+    dueReviews > 0 ||
+    upcomingReviews > 0 ||
+    trackedStudyTimeMs > 0;
+  if (!hasLearningEvidence) return [];
+
+  const steps: ImprovementStep[] = [];
+  const addedTopics = new Set<string>();
+
+  for (const topic of metrics.improvementTopics) {
+    const topicKey = `${topic.subject}:${topic.topic}`;
+    if (addedTopics.has(topicKey)) continue;
+    addedTopics.add(topicKey);
+    steps.push({
+      id: `graded-${topicKey}`,
+      title: `Practise ${topic.topic} again`,
+      evidence: `${topic.accuracy}% across ${topic.gradedAnswers} graded ${topic.gradedAnswers === 1 ? "answer" : "answers"}.`,
+      action: "Open Practice",
+      href: "/practice",
+    });
+    if (steps.length === 2) break;
+  }
+
+  if (dueReviews > 0 || upcomingReviews > 0) {
+    steps.push({
+      id: "scheduled-reviews",
+      title: dueReviews > 0 ? "Complete due reviews" : "Prepare for scheduled reviews",
+      evidence: [
+        dueReviews > 0 ? `${dueReviews} due now` : "",
+        upcomingReviews > 0 ? `${upcomingReviews} scheduled in the next 7 days` : "",
+      ].filter(Boolean).join(" · "),
+      action: "Open Revision",
+      href: "/revision",
+    });
+  }
+
+  for (const nextTopic of metrics.uncoveredTopics) {
+    if (steps.length >= 3) break;
+    const topicKey = `${nextTopic.subject}:${nextTopic.topic}`;
+    if (addedTopics.has(topicKey)) continue;
+    addedTopics.add(topicKey);
+    steps.push({
+      id: `uncovered-${topicKey}`,
+      title: `Try ${nextTopic.topic}`,
+      evidence: `No practice is recorded yet; ${nextTopic.activeQuestions} active bank ${nextTopic.activeQuestions === 1 ? "question" : "questions"} are available.`,
+      action: "Open Practice",
+      href: "/practice",
+    });
+  }
+
+  return steps.slice(0, 3);
+}
+
+export function formatTrackedStudyTime(durationMs: number): string {
+  if (!Number.isFinite(durationMs) || durationMs <= 0) return "No time logged";
+  const totalMinutes = Math.floor(durationMs / 60_000);
+  if (totalMinutes === 0) return "Under 1 min";
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours === 0) return `${minutes} min`;
+  return minutes > 0 ? `${hours} hr ${minutes} min` : `${hours} hr`;
 }
