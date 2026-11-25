@@ -12,7 +12,7 @@
  * Firestore path: students/{id}/questionHistory
  */
 
-const BASE_URL = import.meta.env.BASE_URL as string ?? "/";
+const BASE_URL = import.meta.env?.BASE_URL ?? "/";
 
 export type QuestionDifficulty = "remember" | "understand" | "apply" | "analyse" | "evaluate";
 

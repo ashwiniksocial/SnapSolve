@@ -15,7 +15,7 @@
  * Firestore path: students/{id}/hintHistory
  */
 
-const BASE_URL = import.meta.env.BASE_URL as string ?? "/";
+const BASE_URL = import.meta.env?.BASE_URL ?? "/";
 const KEY      = "studyai-v1-hint-history";
 
 export interface HintRecord {

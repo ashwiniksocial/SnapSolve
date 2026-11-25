@@ -3,7 +3,7 @@
  * Used in the Progress page under the "Tutor" tab.
  */
 import { useMemo } from "react";
-import { getTutorStats, getRecentSocraticSessions } from "@/services/socratic/dialogueEngine";
+import { getSessionAnswerStats, getTutorStats, getRecentSocraticSessions } from "@/services/socratic/dialogueEngine";
 import { getActiveMisconceptions } from "@/services/socratic/misconceptionEngine";
 import { getMasteryProgress, getMasteryProgressLabel } from "@/services/socratic/masteryAssessment";
 
@@ -76,9 +76,9 @@ export default function TutorDashboard({ showOverview = true }: { showOverview?:
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Tutor Session Stats</p>
         <div className="grid grid-cols-3 gap-2">
           <StatCard label="Sessions" value={stats.totalSessions} />
-          <StatCard label="Questions" value={stats.totalQuestions} />
-          <StatCard label="Accuracy" value={`${stats.avgAccuracy}%`}
-            color={stats.avgAccuracy >= 70 ? "text-emerald-600" : stats.avgAccuracy >= 50 ? "text-amber-600" : "text-red-600"}
+          <StatCard label="Tutor questions asked" value={stats.totalQuestions} />
+          <StatCard label="Answer accuracy" value={stats.avgAccuracy === null ? "—" : `${stats.avgAccuracy}%`}
+            color={stats.avgAccuracy === null ? "text-slate-500" : stats.avgAccuracy >= 70 ? "text-emerald-600" : stats.avgAccuracy >= 50 ? "text-amber-600" : "text-red-600"}
           />
         </div>
         <div className="grid grid-cols-2 gap-2 mt-2">
@@ -93,9 +93,10 @@ export default function TutorDashboard({ showOverview = true }: { showOverview?:
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Recent Sessions</p>
           <div className="space-y-2">
             {recent.map((s) => {
-              const acc = s.questionsAsked > 0
-                ? Math.round((s.correctAnswers / s.questionsAsked) * 100)
-                : 0;
+              const answerStats = getSessionAnswerStats(s);
+              const acc = answerStats.answered > 0
+                ? Math.round((answerStats.correct / answerStats.answered) * 100)
+                : null;
               const mins = Math.round((s.endTime ?? s.startTime + 60_000) - s.startTime) / 60_000;
               const progress = getMasteryProgress(s.topic, s.subject);
               return (
@@ -118,11 +119,17 @@ export default function TutorDashboard({ showOverview = true }: { showOverview?:
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-4 text-xs text-slate-500">
-                    <span>✓ {s.correctAnswers}/{s.questionsAsked} correct</span>
+                    {answerStats.answered > 0 ? (
+                      <span>✓ {answerStats.correct}/{answerStats.answered} graded correct</span>
+                    ) : (
+                      <span className="text-slate-400">No graded answers</span>
+                    )}
                     <span>💡 {s.hintsUsed} hints</span>
-                    <span className={acc >= 70 ? "text-emerald-600 font-bold" : acc >= 50 ? "text-amber-600 font-bold" : "text-red-500 font-bold"}>
-                      {acc}%
-                    </span>
+                    {acc !== null && (
+                      <span className={acc >= 70 ? "text-emerald-600 font-bold" : acc >= 50 ? "text-amber-600 font-bold" : "text-red-500 font-bold"}>
+                        {acc}%
+                      </span>
+                    )}
                   </div>
                   {/* Mastery bar */}
                   <div className="mt-2.5">

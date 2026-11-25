@@ -25,7 +25,7 @@ import {
   type SocraticSession, type DialogueMessage,
 } from "./dialogueEngine";
 
-const BASE_URL = import.meta.env.BASE_URL as string ?? "/";
+const BASE_URL = import.meta.env?.BASE_URL ?? "/";
 
 export type TutorState =
   | "idle" | "explaining" | "questioning" | "assessing"
@@ -119,6 +119,7 @@ export async function processStudentAnswer(
   let masteryDelta   = 0;
   let responseText   = "";
   let misconception: string | undefined;
+  let assessmentVerified = false;
 
   try {
     const apiBase = BASE_URL.replace(/\/$/, "");
@@ -136,26 +137,49 @@ export async function processStudentAnswer(
     });
     if (res.ok) {
       const data = await res.json() as {
-        classification: string;
-        isCorrect: boolean;
-        misconception?: string;
-        masteryDelta: number;
-        content: string;
+        classification?: unknown;
+        isCorrect?: unknown;
+        misconception?: unknown;
+        masteryDelta?: unknown;
+        content?: unknown;
       };
-      classification = data.classification;
-      isCorrect      = data.isCorrect;
-      masteryDelta   = data.masteryDelta ?? 0;
-      responseText   = data.content;
-      misconception  = data.misconception;
+      const validClassifications = ["correct", "partial", "misconception", "guess", "copied"];
+      if (
+        typeof data.classification === "string" &&
+        validClassifications.includes(data.classification) &&
+        typeof data.isCorrect === "boolean" &&
+        typeof data.masteryDelta === "number" &&
+        Number.isFinite(data.masteryDelta) &&
+        typeof data.content === "string" &&
+        data.content.trim().length > 0
+      ) {
+        classification = data.classification;
+        isCorrect = data.isCorrect;
+        masteryDelta = Math.max(-10, Math.min(20, data.masteryDelta));
+        responseText = data.content;
+        misconception = typeof data.misconception === "string" ? data.misconception : undefined;
+        assessmentVerified = true;
+      } else {
+        responseText = "I couldn't reliably assess that answer. It hasn't been scored; please try again or rephrase it.";
+      }
     } else {
-      responseText = "Let me reflect on your answer... Can you expand on that a bit more?";
+      responseText = "I couldn't assess that answer just now. It hasn't been scored; please try again.";
     }
   } catch {
-    responseText = "I had trouble analysing that — can you try explaining it differently?";
+    responseText = "I couldn't assess that answer just now. It hasn't been scored; please try again.";
+  }
+
+  if (!assessmentVerified) {
+    addMessage(state.session, "tutor", "assessment", responseText, {
+      classification: "unverified",
+    });
+    state.state = "questioning";
+    onUpdate?.(state);
+    return state;
   }
 
   // Update mastery assessment record
-  const { assessment, masteryJustValidated } = recordAnswer({
+  const { masteryJustValidated } = recordAnswer({
     topic:        state.session.topic,
     subject:      state.session.subject,
     questionId:   state.currentQuestionId,
@@ -190,13 +214,11 @@ export async function processStudentAnswer(
   // Update state machine
   if (masteryJustValidated) {
     state.state = "mastered";
-    state.session.currentMastery = Math.min(100, state.session.currentMastery + masteryDelta);
   } else if (!isCorrect && classification === "misconception") {
     state.state = "reteaching";
     if (state.misconceptionId) markReteaught(state.misconceptionId);
   } else if (isCorrect) {
     state.state = "praising";
-    state.session.currentMastery = Math.min(100, state.session.currentMastery + masteryDelta);
   } else {
     state.state = "questioning"; // stay in questioning, let them try again
   }

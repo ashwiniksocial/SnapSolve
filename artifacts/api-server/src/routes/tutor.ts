@@ -229,16 +229,11 @@ Student's answer: "${studentAnswer}"`;
     } catch { /* fall through to fallback */ }
   }
 
-  // Fallback: simple keyword heuristic
-  const answer = studentAnswer.toLowerCase();
-  const isLong = answer.split(" ").length >= 5;
-  const classification = isLong ? "partial" : "guess";
+  // Without a verified model assessment, do not grade the response from answer length.
   return {
     action: "assessAnswer",
-    classification,
-    isCorrect: false,
-    masteryDelta: 0,
-    content: "Interesting! Can you expand on that and explain the reasoning behind it?",
+    classification: "unverified",
+    content: "I couldn't reliably assess that response just now. It hasn't been scored; please try again or rephrase it.",
   };
 }
 

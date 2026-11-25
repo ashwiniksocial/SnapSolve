@@ -97,6 +97,20 @@ export function getAllSessions(): SocraticSession[] {
     .filter(Boolean) as SocraticSession[];
 }
 
+/** Count only tutor responses carrying an explicit correctness decision. */
+export function getSessionAnswerStats(session: SocraticSession): {
+  answered: number;
+  correct: number;
+} {
+  const gradedResponses = session.messages.filter(
+    (message) => message.role === "tutor" && typeof message.isCorrect === "boolean",
+  );
+  return {
+    answered: gradedResponses.length,
+    correct: gradedResponses.filter((message) => message.isCorrect === true).length,
+  };
+}
+
 export function addMessage(
   session: SocraticSession,
   role: MessageRole,
@@ -114,9 +128,9 @@ export function addMessage(
 
   // Update session stats
   if (role === "tutor" && type === "question") session.questionsAsked++;
-  if (type === "assessment" && meta?.isCorrect) session.correctAnswers++;
+  if (role === "tutor" && meta?.isCorrect === true) session.correctAnswers++;
   if (type === "hint") session.hintsUsed++;
-  if (type === "assessment" && meta?.classification === "misconception") session.misconceptionCount++;
+  if (role === "tutor" && meta?.classification === "misconception") session.misconceptionCount++;
   if (meta?.masteryDelta) {
     session.currentMastery = Math.min(100, Math.max(0, session.currentMastery + meta.masteryDelta));
   }
@@ -143,7 +157,8 @@ export function getTutorStats(): {
   totalSessions: number;
   totalQuestions: number;
   totalCorrect: number;
-  avgAccuracy: number;
+  totalAnswered: number;
+  avgAccuracy: number | null;
   totalHints: number;
   misconceptionsFixed: number;
   topicsStudied: string[];
@@ -151,7 +166,9 @@ export function getTutorStats(): {
   const sessions = getAllSessions();
   const total    = sessions.length;
   const totalQ   = sessions.reduce((s, x) => s + x.questionsAsked, 0);
-  const totalC   = sessions.reduce((s, x) => s + x.correctAnswers, 0);
+  const answerStats = sessions.map(getSessionAnswerStats);
+  const totalAnswered = answerStats.reduce((sum, stats) => sum + stats.answered, 0);
+  const totalC   = answerStats.reduce((sum, stats) => sum + stats.correct, 0);
   const totalH   = sessions.reduce((s, x) => s + x.hintsUsed, 0);
   const totalM   = sessions.reduce((s, x) => s + x.misconceptionCount, 0);
   const topics   = [...new Set(sessions.map((s) => s.topic))];
@@ -159,7 +176,8 @@ export function getTutorStats(): {
     totalSessions: total,
     totalQuestions: totalQ,
     totalCorrect: totalC,
-    avgAccuracy: totalQ > 0 ? Math.round((totalC / totalQ) * 100) : 0,
+    totalAnswered,
+    avgAccuracy: totalAnswered > 0 ? Math.round((totalC / totalAnswered) * 100) : null,
     totalHints: totalH,
     misconceptionsFixed: totalM,
     topicsStudied: topics,
