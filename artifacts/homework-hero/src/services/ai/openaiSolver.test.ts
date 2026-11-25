@@ -363,6 +363,10 @@ test("safe fallback preserves the frozen answer, question steps, and no generate
   assert.match(getBankAnswerIntegrityNotice("bank_answer_unverified") ?? "", /could not be verified/i);
   assert.match(getBankAnswerIntegrityNotice("bank_answer_leakage") ?? "", /revealed the answer too early/i);
   assert.match(getBankAnswerIntegrityNotice("bank_answer_last_review") ?? "", /could not be verified/i);
+  assert.match(getBankAnswerIntegrityNotice("bank_teaching_quality_review_failed") ?? "", /teaching-quality checks/i);
+  for (const code of ["stream_incomplete_lesson", "bank_lesson_incomplete", "stream_incomplete"]) {
+    assert.match(getBankAnswerIntegrityNotice(code) ?? "", /original question-bank solution/i);
+  }
   assert.equal(
     getBankAnswerIntegrityNotice("timeout"),
     "The AI lesson could not finish. The original question-bank solution is shown instead.",
@@ -371,7 +375,6 @@ test("safe fallback preserves the frozen answer, question steps, and no generate
     getBankAnswerIntegrityNotice("stream_interrupted"),
     "The AI lesson could not finish. The original question-bank solution is shown instead.",
   );
-  assert.equal(getBankAnswerIntegrityNotice("stream_incomplete"), null);
   assert.equal(getBankAnswerIntegrityNotice("openai_error"), null);
 });
 
@@ -433,6 +436,10 @@ test("recognized bank failures resolve only to a valid frozen bank solution", ()
     "bank_answer_unverified",
     "bank_answer_leakage",
     "bank_answer_last_review",
+    "bank_teaching_quality_review_failed",
+    "stream_incomplete_lesson",
+    "bank_lesson_incomplete",
+    "stream_incomplete",
     "timeout",
     "stream_interrupted",
   ]) {
@@ -448,8 +455,6 @@ test("recognized bank failures resolve only to a valid frozen bank solution", ()
     resolveFrozenBankFallback({ ...question, answer: "" }, "timeout"),
     null,
   );
-  assert.equal(resolveFrozenBankFallback(question, "stream_incomplete"), null);
-  assert.equal(resolveFrozenBankFallback(question, "bank_lesson_incomplete"), null);
   assert.equal(resolveFrozenBankFallback(question, "openai_error"), null);
 });
 
@@ -464,7 +469,11 @@ test("a failed visit stores only a session marker and revisits use the frozen so
 
   try {
     const sourceHash = hashQuestionContent(question);
-    const firstVisit = recordBankFailureFallback(question, sourceHash, "bank_answer_unverified");
+    const firstVisit = recordBankFailureFallback(
+      question,
+      sourceHash,
+      "bank_teaching_quality_review_failed",
+    );
     assert.ok(firstVisit);
     assert.equal(firstVisit.response.finalAnswer, question.answer);
     assert.deepEqual(firstVisit.response.steps, question.steps);
@@ -473,12 +482,12 @@ test("a failed visit stores only a session marker and revisits use the frozen so
     assert.deepEqual(JSON.parse(sessionState.storage.getItem(storageKey) ?? "null"), {
       questionId,
       sourceHash,
-      category: "bank_answer_unverified",
+      category: "bank_teaching_quality_review_failed",
     });
 
     const revisit = resolveBankFailureFallback(question, sourceHash);
     assert.ok(revisit);
-    assert.equal(revisit.notice, getBankAnswerIntegrityNotice("bank_answer_unverified"));
+    assert.equal(revisit.notice, getBankAnswerIntegrityNotice("bank_teaching_quality_review_failed"));
     assert.equal(revisit.response.finalAnswer, question.answer);
     assert.equal(fetchCalls, 0);
 

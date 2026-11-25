@@ -330,6 +330,16 @@ export function isValidFrozenBankSolution(
 }
 
 export function getBankAnswerIntegrityNotice(code: string): string | null {
+  if (code === "bank_teaching_quality_review_failed") {
+    return "The generated lesson did not pass the teaching-quality checks. The original question-bank solution is shown instead.";
+  }
+  if (
+    code === "stream_incomplete_lesson" ||
+    code === "bank_lesson_incomplete" ||
+    code === "stream_incomplete"
+  ) {
+    return "The generated lesson was incomplete. The original question-bank solution is shown instead.";
+  }
   if (code === "bank_answer_mismatch") {
     return "The generated lesson did not match the approved answer. The original question-bank solution is shown instead.";
   }
@@ -358,6 +368,10 @@ export function resolveFrozenBankFallback(
 }
 
 export type BankFailureCategory =
+  | "bank_teaching_quality_review_failed"
+  | "stream_incomplete_lesson"
+  | "bank_lesson_incomplete"
+  | "stream_incomplete"
   | "bank_answer_unverified"
   | "bank_answer_mismatch"
   | "bank_answer_leakage"
@@ -368,7 +382,11 @@ export type BankFailureCategory =
 const BANK_FAILURE_SESSION_KEY_PREFIX = "studyai-bank-failure-v1:";
 
 function isBankFailureCategory(value: unknown): value is BankFailureCategory {
-  return value === "bank_answer_unverified" ||
+  return value === "bank_teaching_quality_review_failed" ||
+    value === "stream_incomplete_lesson" ||
+    value === "bank_lesson_incomplete" ||
+    value === "stream_incomplete" ||
+    value === "bank_answer_unverified" ||
     value === "bank_answer_mismatch" ||
     value === "bank_answer_leakage" ||
     value === "bank_answer_last_review" ||
