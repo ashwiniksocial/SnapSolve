@@ -96,7 +96,16 @@ export function resolveRevisionClassNum(
 }
 
 export function buildRevisionSolutionHref(questionId: string): string {
-  return `/solution?practiceMode=1&questionId=${encodeURIComponent(questionId)}`;
+  return `/solution?practiceMode=1&questionId=${encodeURIComponent(questionId)}&returnTo=%2Frevision`;
+}
+
+export function claimRevisionReviewSubmission(
+  submittedQuestionIds: Set<string>,
+  questionId: string,
+): boolean {
+  if (!questionId || submittedQuestionIds.has(questionId)) return false;
+  submittedQuestionIds.add(questionId);
+  return true;
 }
 
 export function getRevisionPracticeSessionPatch(item: RevisionItem, classNum: number) {

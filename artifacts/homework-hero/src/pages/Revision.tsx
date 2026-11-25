@@ -13,6 +13,7 @@ import { Link, useLocation } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
 import {
   buildRevisionSolutionHref,
+  claimRevisionReviewSubmission,
   getRevisionPracticeSessionPatch,
   resolveRevisionClassNum,
   useRevisionPlanner,
@@ -73,7 +74,7 @@ interface CardProps {
   boardId:   ReturnType<typeof normalizeBoardId>;
   classNum:  number;
   initiallyOpen?: boolean;
-  onReview:  (questionId: string, correct: boolean) => void;
+  onReview:  (questionId: string, correct: boolean) => boolean;
 }
 
 function RevisionCard({ item, isOverdue, boardId, classNum, initiallyOpen = false, onReview }: CardProps) {
@@ -94,10 +95,8 @@ function RevisionCard({ item, isOverdue, boardId, classNum, initiallyOpen = fals
   const willMaster = result === "correct" && item.interval === 14;
 
   const handleMark = (correct: boolean) => {
+    if (result !== null || !onReview(item.questionId, correct)) return;
     setResult(correct ? "correct" : "incorrect");
-    // Persist the graded review immediately; the page keeps its session snapshot
-    // visible so the student still sees feedback without risking a lost write.
-    onReview(item.questionId, correct);
   };
 
   return (
@@ -386,6 +385,7 @@ export default function Revision() {
   // Track this session's results (for progress bar)
   const [sessionResults, setSessionResults] = useState<Record<string, "correct" | "incorrect">>({});
   const [bankReady, setBankReady]           = useState(false);
+  const submittedReviewIds = useRef(new Set<string>());
 
   useEffect(() => {
     if (!bankReady || !requestedQuestionId || !sessionItems.some((item) => item.questionId === requestedQuestionId)) return;
@@ -400,7 +400,8 @@ export default function Revision() {
   const reviewedCount    = Object.keys(sessionResults).length;
   const sessionComplete  = sessionItems.length > 0 && reviewedCount === sessionItems.length;
 
-  const handleReview = (questionId: string, correct: boolean) => {
+  const handleReview = (questionId: string, correct: boolean): boolean => {
+    if (!claimRevisionReviewSubmission(submittedReviewIds.current, questionId)) return false;
     completeReview(questionId, correct);
     const reviewedItem = sessionItems.find((item) => item.questionId === questionId);
     if (reviewedItem) {
@@ -411,6 +412,7 @@ export default function Revision() {
       ...prev,
       [questionId]: correct ? "correct" : "incorrect",
     }));
+    return true;
   };
 
   const hasAnything = totalScheduled > 0 || masteredCount > 0;

@@ -1,12 +1,14 @@
 import { Link } from "wouter";
-import { ArrowRight, BookOpenCheck, Clock3 } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Clock3, MessageCircle } from "lucide-react";
 import { SUBJECTS, type Subject } from "@/data/subjects";
 import { formatTrackedStudyTime, type ImprovementStep, type ReportCardMetrics } from "@/services/reportCardMetrics";
+import type { TutorActivityStats } from "@/services/socratic/dialogueEngine";
 
 interface Props {
   bankReady: boolean;
   metrics: ReportCardMetrics;
   trackedStudyTimeMs: number;
+  tutorActivity: TutorActivityStats;
   improvementSteps: ImprovementStep[];
   hasLearningEvidence: boolean;
 }
@@ -83,6 +85,7 @@ export default function ReportCard({
   bankReady,
   metrics,
   trackedStudyTimeMs,
+  tutorActivity,
   improvementSteps,
   hasLearningEvidence,
 }: Props) {
@@ -125,8 +128,49 @@ export default function ReportCard({
         className="rounded-xl border border-[#dce2d8] bg-[#eef2ea] px-4 py-3 text-[11px] leading-relaxed text-[#526554]"
         data-testid="note-report-record-types"
       >
-        Confidence check-ins count as practice, not as correct answers. Strengths and weak concepts below require graded-answer evidence.
+        Confidence check-ins count as practice, not correct answers. Tutor assessments are shown separately and never change Practice coverage or accuracy.
       </p>
+
+      <section
+        className="rounded-2xl border border-[#e1e3db] bg-[#fbfaf6] p-4"
+        data-testid="section-report-tutor-activity"
+        aria-labelledby="report-tutor-activity-heading"
+      >
+        <div className="flex items-center gap-2 text-[#718074]">
+          <MessageCircle aria-hidden="true" className="h-4 w-4" />
+          <h2 id="report-tutor-activity-heading" className="font-serif text-lg font-semibold text-[#334238]">
+            Tutor activity
+          </h2>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {[
+            { label: "Sessions started", value: tutorActivity.totalSessions },
+            { label: "Tutor questions", value: tutorActivity.totalQuestions },
+            { label: "Answers graded", value: tutorActivity.totalAnswered },
+            { label: "Hints used", value: tutorActivity.totalHints },
+            {
+              label: "Tutor accuracy",
+              value: tutorActivity.avgAccuracy === null ? "—" : `${tutorActivity.avgAccuracy}%`,
+              detail: tutorActivity.totalAnswered > 0
+                ? `${tutorActivity.totalCorrect} of ${tutorActivity.totalAnswered} graded correct`
+                : "No graded answers yet",
+            },
+          ].map(({ label, value, detail }) => (
+            <div
+              key={label}
+              className="rounded-xl border border-[#e5e7df] bg-white px-3 py-2.5"
+              data-testid={`metric-report-tutor-${label.toLowerCase().replaceAll(" ", "-")}`}
+            >
+              <p className="font-mono text-lg font-semibold tabular-nums text-[#365544]">{value}</p>
+              <p className="mt-1 text-[10px] font-medium text-[#818c82]">{label}</p>
+              {detail && <p className="mt-1 text-[9px] leading-relaxed text-[#818c82]">{detail}</p>}
+            </div>
+          ))}
+        </div>
+        <p className="mt-2 text-[10px] leading-relaxed text-[#818c82]">
+          Unanswered tutor prompts are excluded from accuracy. This is saved tutor history on this device, separate from class-scoped Practice totals.
+        </p>
+      </section>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <EvidenceTopicList

@@ -16,6 +16,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import type { TutorSessionState }  from "@/services/socratic/socraticEngine";
 import {
   startTutorSession,
+  restoreTutorSession,
   askNextQuestion,
   processStudentAnswer,
   requestNextHint,
@@ -53,6 +54,9 @@ export default function SocraticTutor({ topic, subject, initialMastery, onClose 
   const [hintLevel,    setHintLevel]    = useState(0);
   const [isLoading,    setIsLoading]    = useState(false);
   const [masteryPct,   setMasteryPct]   = useState(initialMastery);
+  const bootstrapRef = useRef(false);
+  const actionInFlightRef = useRef(false);
+  const panelRef = useRef<HTMLDivElement>(null);
   const scrollRef   = useRef<HTMLDivElement>(null);
   const inputRef    = useRef<HTMLTextAreaElement>(null);
 
@@ -65,8 +69,25 @@ export default function SocraticTutor({ topic, subject, initialMastery, onClose 
 
   // ── Session start ────────────────────────────────────────────────────────
   useEffect(() => {
-    const state = startTutorSession({ topic, subject, initialMastery });
+    if (bootstrapRef.current) return;
+    bootstrapRef.current = true;
+
+    const state = restoreTutorSession({ topic, subject }) ??
+      startTutorSession({ topic, subject, initialMastery });
     update(state);
+
+    if (state.state === "mastered") {
+      setInputMode("done");
+      setIsLoading(false);
+      return;
+    }
+    if (state.currentQuestion) {
+      setInputMode("answering");
+      setIsLoading(false);
+      focusTutorInput();
+      return;
+    }
+
     setIsLoading(true);
 
     const ctx = buildStudentContext(subject, topic);
@@ -74,9 +95,16 @@ export default function SocraticTutor({ topic, subject, initialMastery, onClose 
       update(s);
       setInputMode("answering");
       setIsLoading(false);
-      inputRef.current?.focus();
+      focusTutorInput();
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   // ── Auto-scroll to bottom ────────────────────────────────────────────────
@@ -85,52 +113,70 @@ export default function SocraticTutor({ topic, subject, initialMastery, onClose 
     if (el) el.scrollTop = el.scrollHeight;
   }, [sessionState?.session.messages.length]);
 
+  function focusTutorInput() {
+    if (window.matchMedia("(min-width: 640px)").matches) inputRef.current?.focus();
+  }
+
   // ── Submit answer ────────────────────────────────────────────────────────
   async function handleSubmit() {
-    if (!sessionState || !inputValue.trim() || isLoading) return;
+    if (!sessionState || !inputValue.trim() || isLoading || actionInFlightRef.current) return;
+    actionInFlightRef.current = true;
     const answer = inputValue.trim();
     setInputValue("");
     setInputMode("waiting");
     setIsLoading(true);
 
-    const updated = await processStudentAnswer(sessionState, answer, update);
+    try {
+      const updated = await processStudentAnswer(sessionState, answer, update);
 
-    if (updated.state === "mastered") {
-      setInputMode("done");
+      if (updated.state === "mastered") {
+        setInputMode("done");
+        return;
+      }
+
+      // After praise or reteach, ask next question
+      if (updated.state === "praising" || updated.state === "reteaching") {
+        const next = await askNextQuestion(updated, undefined, update);
+        update(next);
+        setHintLevel(0);
+      }
+      setInputMode("answering");
+      focusTutorInput();
+    } finally {
+      actionInFlightRef.current = false;
       setIsLoading(false);
-      return;
     }
-
-    // After praise or reteach, ask next question
-    if (updated.state === "praising" || updated.state === "reteaching") {
-      const next = await askNextQuestion(updated, undefined, update);
-      update(next);
-      setHintLevel(0);
-    }
-    setInputMode("answering");
-    setIsLoading(false);
-    inputRef.current?.focus();
   }
 
   // ── Request hint ─────────────────────────────────────────────────────────
   async function handleHint() {
-    if (!sessionState || isLoading) return;
+    if (!sessionState || isLoading || actionInFlightRef.current) return;
+    actionInFlightRef.current = true;
     setIsLoading(true);
-    const updated = await requestNextHint(sessionState, update);
-    update(updated);
-    setIsLoading(false);
-    inputRef.current?.focus();
+    try {
+      const updated = await requestNextHint(sessionState, update);
+      update(updated);
+      focusTutorInput();
+    } finally {
+      actionInFlightRef.current = false;
+      setIsLoading(false);
+    }
   }
 
   // ── End session ──────────────────────────────────────────────────────────
   async function handleEndSession() {
-    if (!sessionState || isLoading) return;
+    if (!sessionState || isLoading || actionInFlightRef.current) return;
+    actionInFlightRef.current = true;
     setIsLoading(true);
     setInputMode("done");
-    const { state: finalState } = await endSession(sessionState, update);
-    update(finalState);
-    setSessionDone(true);
-    setIsLoading(false);
+    try {
+      const { state: finalState } = await endSession(sessionState, update);
+      update(finalState);
+      setSessionDone(true);
+    } finally {
+      actionInFlightRef.current = false;
+      setIsLoading(false);
+    }
   }
 
   // ── Key handler ──────────────────────────────────────────────────────────
@@ -149,7 +195,7 @@ export default function SocraticTutor({ topic, subject, initialMastery, onClose 
   const canHint   = !isLoading && inputMode === "answering" && nextHint <= 5;
 
   return (
-    <div className="flex flex-col bg-white rounded-2xl border border-indigo-200 shadow-lg overflow-hidden"
+    <div ref={panelRef} data-testid="socratic-tutor-panel" className="scroll-mt-4 flex flex-col bg-white rounded-2xl border border-indigo-200 shadow-lg overflow-hidden"
       style={{ maxHeight: "80vh", minHeight: "400px" }}>
 
       {/* ── Header ──────────────────────────────────────────────────────── */}
@@ -201,7 +247,7 @@ export default function SocraticTutor({ topic, subject, initialMastery, onClose 
       )}
 
       {/* ── Messages ─────────────────────────────────────────────────────── */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 min-h-0">
+      <div ref={scrollRef} data-testid="socratic-tutor-messages" className="flex-1 overflow-y-auto px-4 py-4 space-y-3 min-h-0">
         {messages.map((msg) => (
           <TutorMessage key={msg.id} message={msg} />
         ))}

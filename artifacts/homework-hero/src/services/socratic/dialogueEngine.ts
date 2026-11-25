@@ -29,6 +29,7 @@ export interface DialogueMessage {
   classification?: string;   // for assessments
   misconception?:  string;
   hintLevel?:      number;
+  questionId?:     string;
   isCorrect?:      boolean;
   masteryDelta?:   number;
 }
@@ -152,8 +153,7 @@ export function getRecentSocraticSessions(limit = 5): SocraticSession[] {
     .slice(0, limit);
 }
 
-/** Stats aggregated across all sessions. */
-export function getTutorStats(): {
+export interface TutorActivityStats {
   totalSessions: number;
   totalQuestions: number;
   totalCorrect: number;
@@ -162,7 +162,10 @@ export function getTutorStats(): {
   totalHints: number;
   misconceptionsFixed: number;
   topicsStudied: string[];
-} {
+}
+
+/** Stats aggregated across all sessions. */
+export function getTutorStats(): TutorActivityStats {
   const sessions = getAllSessions();
   const total    = sessions.length;
   const totalQ   = sessions.reduce((s, x) => s + x.questionsAsked, 0);

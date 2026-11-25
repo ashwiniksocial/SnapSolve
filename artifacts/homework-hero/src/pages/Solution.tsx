@@ -120,6 +120,7 @@ export default function Solution() {
   const practiceMode = solutionParams.get("practiceMode") === "1";
   const savedAnswerMode = practiceMode && solutionParams.get("savedAnswer") === "1";
   const returnToExam = practiceMode && solutionParams.get("returnTo") === "/exam";
+  const returnToRevision = practiceMode && solutionParams.get("returnTo") === "/revision";
   const practiceQuestionId = solutionParams.get("questionId") ?? session.practiceQuestionId;
 
   // ── In-flight guard ──────────────────────────────────────────────────────────
@@ -339,6 +340,17 @@ export default function Solution() {
                 className="inline-flex items-center gap-1 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 ← Return to Exam
+              </Link>
+            </div>
+          )}
+          {returnToRevision && (
+            <div className="mb-3">
+              <Link
+                href="/revision"
+                data-testid="button-return-to-revision"
+                className="inline-flex items-center gap-1 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              >
+                ← Return to Revision
               </Link>
             </div>
           )}

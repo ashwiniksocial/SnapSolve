@@ -21,8 +21,8 @@ import { recordAnswer, getMasteryProgress } from "./masteryAssessment";
 import { recordMisconception, markReteaught } from "./misconceptionEngine";
 import { requestHint } from "./guidedHintEngine";
 import {
-  createSession, addMessage, completeSession, getSession,
-  type SocraticSession, type DialogueMessage,
+  createSession, addMessage, completeSession, getAllSessions, getSessionAnswerStats,
+  type SocraticSession,
 } from "./dialogueEngine";
 
 const BASE_URL = import.meta.env?.BASE_URL ?? "/";
@@ -44,6 +44,8 @@ export interface TutorSessionState {
 // ── Active session (single-instance, per-topic) ───────────────────────────────
 
 let _active: TutorSessionState | null = null;
+const pendingQuestionRequests = new Map<string, Promise<TutorSessionState>>();
+const pendingAnswerRequests = new Map<string, Promise<TutorSessionState>>();
 
 export function getActiveTutorSession(): TutorSessionState | null {
   return _active;
@@ -78,31 +80,148 @@ export function startTutorSession(opts: {
   return state;
 }
 
+/** Restore the latest unfinished session for this exact topic and subject. */
+export function restoreTutorSession(opts: {
+  topic: string;
+  subject: string;
+}): TutorSessionState | null {
+  const activeSession = _active?.session;
+  const session = activeSession &&
+    !activeSession.completed &&
+    activeSession.topic === opts.topic &&
+    activeSession.subject === opts.subject
+    ? activeSession
+    : getAllSessions()
+        .filter((candidate) =>
+          !candidate.completed &&
+          candidate.topic === opts.topic &&
+          candidate.subject === opts.subject
+        )
+        .sort((left, right) => right.startTime - left.startTime)[0];
+
+  if (!session || !Array.isArray(session.messages)) return null;
+
+  let questionIndex = -1;
+  for (let index = session.messages.length - 1; index >= 0; index--) {
+    const message = session.messages[index];
+    if (message.role === "tutor" && message.type === "question") {
+      questionIndex = index;
+      break;
+    }
+  }
+
+  const questionMessage = questionIndex >= 0 ? session.messages[questionIndex] : null;
+  const messagesAfterQuestion = questionIndex >= 0 ? session.messages.slice(questionIndex + 1) : [];
+  let lastStudentIndex = -1;
+  messagesAfterQuestion.forEach((message, index) => {
+    if (message.role === "student" && message.type === "response") lastStudentIndex = index;
+  });
+
+  let lastTutorReply: typeof session.messages[number] | undefined;
+  if (lastStudentIndex >= 0) {
+    for (let index = messagesAfterQuestion.length - 1; index > lastStudentIndex; index--) {
+      const message = messagesAfterQuestion[index];
+      if (message.role === "tutor" && message.type !== "question" && message.type !== "hint") {
+        lastTutorReply = message;
+        break;
+      }
+    }
+  }
+
+  const reachedMastery = lastTutorReply?.type === "milestone" && lastTutorReply.isCorrect === true;
+  const needsNextQuestion = !reachedMastery && (
+    lastTutorReply?.isCorrect === true || lastTutorReply?.type === "reteach"
+  );
+  const currentQuestion = needsNextQuestion ? "" : questionMessage?.content ?? "";
+  const latestHint = needsNextQuestion
+    ? undefined
+    : [...messagesAfterQuestion].reverse().find(
+        (message) => message.role === "tutor" && message.type === "hint",
+      );
+
+  const restored: TutorSessionState = {
+    session,
+    state: reachedMastery ? "mastered" : currentQuestion ? "questioning" : "explaining",
+    currentQuestion,
+    currentQuestionId: currentQuestionMessageId(questionMessage),
+    hintLevel: latestHint?.hintLevel ?? 0,
+    questionStart: questionMessage?.timestamp ?? Date.now(),
+  };
+  _active = restored;
+  return restored;
+}
+
+function currentQuestionMessageId(
+  message: SocraticSession["messages"][number] | null,
+): string {
+  return message?.questionId ?? message?.id ?? "";
+}
+
 /** Transition to QUESTIONING — ask the first (or next) conceptual question. */
 export async function askNextQuestion(
   state: TutorSessionState,
   studentContext?: string,
   onUpdate?: (s: TutorSessionState) => void
 ): Promise<TutorSessionState> {
-  const q = await generateConceptQuestion({
+  const sessionId = state.session.sessionId;
+  const pending = pendingQuestionRequests.get(sessionId);
+  if (pending) {
+    const resolved = await pending;
+    onUpdate?.(resolved);
+    return resolved;
+  }
+
+  const request = generateConceptQuestion({
     topic:         state.session.topic,
     subject:       state.session.subject,
     masteryScore:  state.session.currentMastery,
     studentContext,
+  }).then((question) => {
+    addMessage(state.session, "tutor", "question", question.content, {
+      questionId: question.id,
+    });
+    state.currentQuestion   = question.content;
+    state.currentQuestionId = question.id;
+    state.hintLevel         = 0;
+    state.questionStart     = Date.now();
+    state.state             = "questioning";
+    _active = state;
+    onUpdate?.(state);
+    return state;
   });
-
-  addMessage(state.session, "tutor", "question", q.content);
-  state.currentQuestion   = q.content;
-  state.currentQuestionId = q.id;
-  state.hintLevel         = 0;
-  state.questionStart     = Date.now();
-  state.state             = "questioning";
-  onUpdate?.(state);
-  return state;
+  pendingQuestionRequests.set(sessionId, request);
+  try {
+    return await request;
+  } finally {
+    if (pendingQuestionRequests.get(sessionId) === request) {
+      pendingQuestionRequests.delete(sessionId);
+    }
+  }
 }
 
 /** Process student's answer. Returns updated state. */
 export async function processStudentAnswer(
+  state: TutorSessionState,
+  answer: string,
+  onUpdate?: (s: TutorSessionState) => void
+): Promise<TutorSessionState> {
+  const questionKey = state.currentQuestionId || state.currentQuestion;
+  const requestKey = `${state.session.sessionId}:${questionKey}`;
+  const pending = pendingAnswerRequests.get(requestKey);
+  if (pending) return pending;
+
+  const request = processStudentAnswerOnce(state, answer, onUpdate);
+  pendingAnswerRequests.set(requestKey, request);
+  try {
+    return await request;
+  } finally {
+    if (pendingAnswerRequests.get(requestKey) === request) {
+      pendingAnswerRequests.delete(requestKey);
+    }
+  }
+}
+
+async function processStudentAnswerOnce(
   state: TutorSessionState,
   answer: string,
   onUpdate?: (s: TutorSessionState) => void
@@ -263,6 +382,7 @@ export async function endSession(
   onUpdate?.(state);
 
   let reflection = "";
+  const answerStats = getSessionAnswerStats(state.session);
   try {
     const apiBase = BASE_URL.replace(/\/$/, "");
     const res = await fetch(`${apiBase}/api/tutor`, {
@@ -274,8 +394,8 @@ export async function endSession(
         subject:      state.session.subject,
         masteryScore: state.session.currentMastery,
         sessionSummary: {
-          questionsAnswered:   state.session.questionsAsked,
-          correctAnswers:      state.session.correctAnswers,
+          questionsAnswered:   answerStats.answered,
+          correctAnswers:      answerStats.correct,
           hintsUsed:           state.session.hintsUsed,
           misconceptionsFixed: state.session.misconceptionCount,
           topicsCovered:       [state.session.topic],
@@ -289,12 +409,14 @@ export async function endSession(
   } catch { /* fallback below */ }
 
   if (!reflection) {
-    const acc = state.session.questionsAsked > 0
-      ? Math.round((state.session.correctAnswers / state.session.questionsAsked) * 100)
-      : 0;
+    const acc = answerStats.answered > 0
+      ? Math.round((answerStats.correct / answerStats.answered) * 100)
+      : null;
     reflection = [
-      `✦ Today you understood: Key aspects of ${state.session.topic}`,
-      `✦ Today you struggled with: ${acc < 60 ? "Applying the concept without help" : "The deeper analytical questions"}`,
+      `✦ Today you explored: ${state.session.topic}`,
+      acc === null
+        ? "✦ No tutor answers were graded in this session."
+        : `✦ Graded-answer accuracy: ${acc}% (${answerStats.correct}/${answerStats.answered}).`,
       `✦ One thing to revise tomorrow: Re-explain ${state.session.topic} from scratch without any notes`,
       `✦ Estimated mastery improvement: ${Math.max(0, state.session.currentMastery - 10)} → ${state.session.currentMastery} out of 100`,
       `✦ Great effort today — every question you tackle makes the next one easier.`,

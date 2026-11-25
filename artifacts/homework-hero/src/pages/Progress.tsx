@@ -8,6 +8,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
 import { readProfile } from "@/services/studentModel/syncManager";
 import { deriveImprovementSteps, deriveReportCardMetrics } from "@/services/reportCardMetrics";
+import { getTutorStats } from "@/services/socratic/dialogueEngine";
 import ReportCard from "@/components/progress/ReportCard";
 import { preloadQBank } from "@/services/questionService";
 
@@ -49,6 +50,7 @@ export default function Progress() {
     () => deriveReportCardMetrics(subjectSources),
     [getSubjectStats, mathChapters, scienceChapters, itChapters],
   );
+  const tutorActivity = useMemo(() => getTutorStats(), []);
 
   const { getDueItems, getUpcomingSchedule } = useRevisionPlanner(classNum);
   const revisionDue = getDueItems();
@@ -73,7 +75,8 @@ export default function Progress() {
     metrics.gradedAnswers > 0 ||
     revisionDue.length > 0 ||
     upcomingCount > 0 ||
-    trackedStudyTimeMs > 0;
+    trackedStudyTimeMs > 0 ||
+    tutorActivity.totalSessions > 0;
 
   return (
     <main className="min-h-[100dvh] bg-[#f5f4ef] pb-24 text-[#26362e]">
@@ -111,6 +114,7 @@ export default function Progress() {
           bankReady={bankReady}
           metrics={metrics}
           trackedStudyTimeMs={trackedStudyTimeMs}
+          tutorActivity={tutorActivity}
           improvementSteps={improvementSteps}
           hasLearningEvidence={hasLearningEvidence}
         />

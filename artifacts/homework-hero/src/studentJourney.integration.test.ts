@@ -29,6 +29,7 @@ import { getCanonicalPracticeMetadata } from "@/services/canonicalPracticeMetada
 import { getUpcomingRevisionSchedule } from "@/hooks/useRevisionPlanner";
 import { getOrCreateProfile, recordQuestionAnswered } from "@/services/studentModel";
 import { derivePracticeReadiness } from "@/services/practiceReadiness";
+import { addMessage, createSession, getTutorStats } from "@/services/socratic/dialogueEngine";
 
 const today = "2026-08-20";
 const sourceQuestion: SelfAssessmentInput = {
@@ -107,7 +108,7 @@ test("Practice confidence → Science coverage → Revision → Exam preserves e
     assert.equal(refreshedRevision.items[sourceQuestion.questionId]?.nextReview, "2026-08-21");
     assert.equal(
       buildRevisionSolutionHref(sourceQuestion.questionId),
-      `/solution?practiceMode=1&questionId=${sourceQuestion.questionId}`,
+      `/solution?practiceMode=1&questionId=${sourceQuestion.questionId}&returnTo=%2Frevision`,
     );
 
     const graded = applyRevisionReview(
@@ -187,6 +188,54 @@ test("Practice confidence → Science coverage → Revision → Exam preserves e
     assert.deepEqual(
       (JSON.parse(localStorage.getItem(progressKey)!) as typeof progress).Biology["Cell membrane"].attempted,
       [sourceQuestion.questionId],
+    );
+  });
+});
+
+test("Report Card tutor activity counts only explicitly graded tutor answers and stays separate from Practice", () => {
+  withLocalStorage(() => {
+    const context = makeAcademicContext("CBSE", 9);
+    const progressKey = scopedStorageKey("studyai-progress-v3", context)!;
+    const before = recordUniquePractice(
+      {} as Parameters<typeof recordUniquePractice>[0],
+      "Mathematics",
+      "Cartesian Plane",
+      "c9-m-ch3-t2-q01",
+    );
+    localStorage.setItem(progressKey, JSON.stringify(before));
+
+    const session = createSession("Cartesian Plane", "Mathematics", 40);
+    addMessage(session, "tutor", "question", "How does an ordered pair locate a point?");
+    addMessage(session, "student", "response", "The first value is horizontal.");
+    addMessage(session, "tutor", "assessment", "This answer could not be checked.", {
+      classification: "unverified",
+    });
+
+    let tutorStats = getTutorStats();
+    assert.equal(tutorStats.totalSessions, 1);
+    assert.equal(tutorStats.totalQuestions, 1);
+    assert.equal(tutorStats.totalAnswered, 0);
+    assert.equal(tutorStats.avgAccuracy, null);
+
+    addMessage(session, "student", "response", "The x-coordinate is horizontal.");
+    addMessage(session, "tutor", "praise", "Correct.", {
+      classification: "correct",
+      isCorrect: true,
+      masteryDelta: 5,
+    });
+    tutorStats = getTutorStats();
+
+    assert.equal(tutorStats.totalAnswered, 1);
+    assert.equal(tutorStats.totalCorrect, 1);
+    assert.equal(tutorStats.avgAccuracy, 100);
+    assert.deepEqual(
+      getSubjectStatsFromProgress(JSON.parse(localStorage.getItem(progressKey)!), "Mathematics").topicStats
+        .find((topic) => topic.topic === "Cartesian Plane")?.attempted,
+      ["c9-m-ch3-t2-q01"],
+    );
+    assert.equal(
+      getSubjectStatsFromProgress(JSON.parse(localStorage.getItem(progressKey)!), "Mathematics").totalSolved,
+      0,
     );
   });
 });
@@ -275,7 +324,7 @@ test("Class 9 Mathematics Chapter 3 Q11 check-in persists the exact bank ID acro
     );
     assert.equal(
       buildRevisionSolutionHref(metadata.questionId),
-      `/solution?practiceMode=1&questionId=${metadata.questionId}`,
+      `/solution?practiceMode=1&questionId=${metadata.questionId}&returnTo=%2Frevision`,
     );
     recordQuestionAnswered(5_000, "basic");
     assert.equal(getOrCreateProfile().totalQuestionsAnswered, 1);

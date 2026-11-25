@@ -4,6 +4,7 @@ import {
   applyRevisionReview,
   applySelfAssessment,
   buildRevisionSolutionHref,
+  claimRevisionReviewSubmission,
   getRevisionPracticeSessionPatch,
   getDueRevisionItems,
   getUpcomingRevisionSchedule,
@@ -175,12 +176,19 @@ test("Revision uses the practice class when profile class is missing and preserv
   assert.equal(resolveRevisionClassNum(undefined, null), 9);
   assert.equal(
     buildRevisionSolutionHref("science-q35"),
-    "/solution?practiceMode=1&questionId=science-q35",
+    "/solution?practiceMode=1&questionId=science-q35&returnTo=%2Frevision",
   );
   assert.equal(
     buildRevisionSolutionHref("question id/75"),
-    "/solution?practiceMode=1&questionId=question%20id%2F75",
+    "/solution?practiceMode=1&questionId=question%20id%2F75&returnTo=%2Frevision",
   );
+});
+
+test("a duplicate revision grading event is rejected before progress or schedule writes", () => {
+  const submitted = new Set<string>();
+  assert.equal(claimRevisionReviewSubmission(submitted, question.questionId), true);
+  assert.equal(claimRevisionReviewSubmission(submitted, question.questionId), false);
+  assert.equal(claimRevisionReviewSubmission(submitted, ""), false);
 });
 
 test("opening a scheduled question carries its ID and class without completing it", () => {
