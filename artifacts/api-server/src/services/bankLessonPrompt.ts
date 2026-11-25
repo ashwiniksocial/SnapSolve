@@ -1,3 +1,8 @@
+export const BANK_CALCULATION_CONTEXT_INSTRUCTION = [
+  "For every calculation, explain why the operation preserves meaning and how the result answers this exact question.",
+  "For a probability or ratio, explain why dividing numerator and denominator by the same nonzero factor preserves the ratio, then interpret the final fraction using the source question's actual event and total. Do not invent counts or trials.",
+].join(" ");
+
 export function buildIncompleteLessonRetryInstruction(
   missingFields: readonly string[],
 ): string {

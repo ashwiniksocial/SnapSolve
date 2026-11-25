@@ -17,6 +17,31 @@ test("exact and supported equivalent frozen-answer representations match", () =>
   assert.equal(compareBankAnswers("answer is: 42.", "42").status, "match");
 });
 
+test("explicit scalar answers in prose compare safely with equivalent canonical calculation chains", () => {
+  const canonical = "P = 24/60 = 2/5";
+  assert.deepEqual(
+    compareBankAnswers(
+      "Therefore, the probability that a randomly chosen student likes Mathematics is P = 2/5.",
+      canonical,
+    ),
+    { status: "match", method: "rational" },
+  );
+  assert.deepEqual(compareBankAnswers("The probability is P = 2/4.", canonical), {
+    status: "mismatch",
+    method: "rational",
+  });
+  assert.deepEqual(
+    compareBankAnswers("P = 24/60 = 2/5", "P = 24/60 = 2/5"),
+    { status: "match", method: "normalized" },
+  );
+  assert.equal(
+    compareBankAnswers("P = 2/5, but P = 1/2.", canonical).status,
+    "indeterminate",
+  );
+  assert.equal(compareBankAnswers("The probability is 2/5.", canonical).status, "indeterminate");
+  assert.equal(compareBankAnswers("x = 2/5", canonical).status, "indeterminate");
+});
+
 test("confirmed answer differences are rejected while supported polynomial equivalence is exact", () => {
   assert.deepEqual(compareBankAnswers("(d) √3", "(c) √2"), {
     status: "mismatch",

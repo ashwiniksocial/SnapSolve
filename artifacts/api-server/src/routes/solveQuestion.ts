@@ -69,6 +69,7 @@ import {
   type GateTelemetryStatus,
 } from "../services/architectureCFastPath";
 import {
+  BANK_CALCULATION_CONTEXT_INSTRUCTION,
   bankLessonGenerationRecoveryEnabled,
   buildIncompleteLessonRetryInstruction,
 } from "../services/bankLessonPrompt";
@@ -2393,6 +2394,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above.`,
       `INTRODUCTORY FIELDS may explain the question and its givens, but must not state the final result or identify the correct option. Preserve necessary givens and intermediate calculations.`,
       `guidedReasoning MUST follow the approved reasoning (you may add depth to why/pause).`,
+      `CONCEPTUAL WHY AND CONTEXT: ${BANK_CALCULATION_CONTEXT_INSTRUCTION}`,
       `All other visible sections (intuition, commonMistakes, simplerExample, practiceQuestion) should be authored with full pedagogical depth.`,
       ``,
       `Subject: ${subj}`,

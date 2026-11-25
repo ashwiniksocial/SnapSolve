@@ -464,6 +464,62 @@ function compareMultipartAnswers(candidate: string, canonical: string): BankAnsw
   return { status: "match", method: "multipart" };
 }
 
+function parseNamedRationalAssignment(
+  value: string,
+): { name: string; value: RationalAnswer } | null {
+  const rational = "[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:/[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+))?";
+  const pattern = new RegExp(`\\b([a-z])=(${rational}(?:=${rational})*)`, "gi");
+  const matches = [...value.matchAll(pattern)];
+  if (matches.length !== 1) return null;
+
+  const match = matches[0];
+  if ((match.index ?? -1) + match[0].length !== value.length) return null;
+  const chain = match[2].split("=").map(parseRational);
+  if (chain.some((item) => item === null)) return null;
+
+  const values = chain as RationalAnswer[];
+  const first = values[0];
+  if (
+    values.some((item) =>
+      item.unit !== first.unit ||
+      item.numerator * first.denominator !== first.numerator * item.denominator
+    )
+  ) {
+    return null;
+  }
+  return { name: match[1].toLowerCase(), value: values.at(-1)! };
+}
+
+/**
+ * Accepts only one explicit single-letter scalar assignment per answer, with
+ * every equality in each displayed chain verified exactly. This supports a
+ * sentence ending in "P = 2/5" against a canonical "P = 24/60 = 2/5" without
+ * treating arbitrary prose or a conflicting equation as equivalent.
+ */
+function compareNamedRationalAssignments(
+  candidate: string,
+  canonical: string,
+): BankAnswerComparison | null {
+  const candidateAssignment = parseNamedRationalAssignment(candidate);
+  const canonicalAssignment = parseNamedRationalAssignment(canonical);
+  if (!candidateAssignment || !canonicalAssignment) return null;
+  if (candidateAssignment.name !== canonicalAssignment.name) {
+    return { status: "indeterminate", method: "unsupported" };
+  }
+  const candidateValue = candidateAssignment.value;
+  const canonicalValue = canonicalAssignment.value;
+  if (candidateValue.unit !== canonicalValue.unit) {
+    return { status: "indeterminate", method: "unsupported" };
+  }
+  return {
+    status: candidateValue.numerator * canonicalValue.denominator ===
+      canonicalValue.numerator * candidateValue.denominator
+      ? "match"
+      : "mismatch",
+    method: "rational",
+  };
+}
+
 /**
  * Describes which existing deterministic comparison rules can inspect a
  * canonical answer's format. This is an inventory aid, not an academic review.
@@ -573,6 +629,12 @@ export function compareBankAnswers(candidate: string, canonical: string): BankAn
 
   const multipartComparison = compareMultipartAnswers(normalizedCandidate, normalizedCanonical);
   if (multipartComparison) return multipartComparison;
+
+  const assignmentComparison = compareNamedRationalAssignments(
+    normalizedCandidate,
+    normalizedCanonical,
+  );
+  if (assignmentComparison) return assignmentComparison;
 
   const candidateChoice = parseChoice(normalizedCandidate);
   const canonicalChoice = parseChoice(normalizedCanonical);
