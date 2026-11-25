@@ -48,7 +48,7 @@ export default function Solution() {
   const { profile } = useProfile();
   const boardId = normalizeBoardId(profile.board);
   const classNum = session.practiceClassNum ?? profile.classLevel ?? undefined;
-  const { recordSolve, recordPractice } = useProgress(classNum);
+  const { recordPractice } = useProgress(classNum);
   const { setSelfAssessment, selfAssessments } = useRevisionPlanner(classNum);
   const { completeToday } = useStreak();
   const cfg = SUBJECTS[session.subject];
@@ -288,12 +288,6 @@ export default function Solution() {
       );
 
       setSolution(result);
-      const topicKey = (practiceMode && session.practiceTopic)
-        ? session.practiceTopic
-        : result.topic;
-      if (!practiceMode) {
-        recordSolve(session.subject, topicKey, true);
-      }
       update({ practiceTopic: result.topic });
 
       setPageState("done");

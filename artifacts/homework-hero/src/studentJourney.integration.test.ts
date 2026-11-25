@@ -24,6 +24,11 @@ import {
 import { buildContinuePracticeHref, selectNextUnansweredQuestion } from "@/pages/ExamMode";
 import { buildPracticeSolutionHref } from "@/pages/Practice";
 import type { Question } from "@/services/questionService";
+import { CHAPTER_META as MATHS_CHAPTER_3, QUESTIONS as MATHS_CHAPTER_3_QUESTIONS } from "@/data/questions/class9-maths-ch3";
+import { getCanonicalPracticeMetadata } from "@/services/canonicalPracticeMetadata";
+import { getUpcomingRevisionSchedule } from "@/hooks/useRevisionPlanner";
+import { getOrCreateProfile, recordQuestionAnswered } from "@/services/studentModel";
+import { derivePracticeReadiness } from "@/services/practiceReadiness";
 
 const today = "2026-08-20";
 const sourceQuestion: SelfAssessmentInput = {
@@ -183,5 +188,110 @@ test("Practice confidence → Science coverage → Revision → Exam preserves e
       (JSON.parse(localStorage.getItem(progressKey)!) as typeof progress).Biology["Cell membrane"].attempted,
       [sourceQuestion.questionId],
     );
+  });
+});
+
+test("Class 9 Mathematics Chapter 3 Q11 check-in persists the exact bank ID across student records", () => {
+  withLocalStorage(() => {
+    localStorage.setItem("studyai_board", "CBSE");
+    localStorage.setItem("studyai_class", "9");
+    const question = MATHS_CHAPTER_3_QUESTIONS[10];
+    assert.equal(question.id, "c9-m-ch3-t2-q01");
+    assert.equal(question.chapterName, MATHS_CHAPTER_3.name);
+    const metadata = getCanonicalPracticeMetadata(question);
+    assert.equal(metadata.topicName, "Coordinates of a Point");
+
+    const context = makeAcademicContext("CBSE", 9);
+    const progressKey = scopedStorageKey("studyai-progress-v3", context)!;
+    const revisionKey = scopedStorageKey("studyai-revision-v2", context)!;
+    const practiceHref = new URL(
+      buildPracticeSolutionHref(metadata.questionId, false, null),
+      "https://snapsolve.test",
+    );
+    assert.equal(practiceHref.searchParams.get("questionId"), metadata.questionId);
+
+    const attempted = recordUniquePractice(
+      {} as Parameters<typeof recordUniquePractice>[0],
+      metadata.subject,
+      metadata.topicName,
+      metadata.questionId,
+    );
+    localStorage.setItem(progressKey, JSON.stringify(attempted));
+    const beforeGradeStats = getSubjectStatsFromProgress(attempted, "Mathematics");
+    assert.deepEqual(
+      beforeGradeStats.topicStats.find((topic) => topic.topic === metadata.topicName)?.attempted,
+      [metadata.questionId],
+    );
+    assert.equal(beforeGradeStats.totalSolved, 0);
+    assert.equal(beforeGradeStats.totalCorrect, 0);
+    assert.equal(getOrCreateProfile().totalQuestionsAnswered, 0);
+
+    const assessment = applySelfAssessment(
+      { items: {}, selfAssessments: {} },
+      {
+        questionId: metadata.questionId,
+        boardId: "CBSE",
+        classNum: 9,
+        canonicalChapterId: MATHS_CHAPTER_3.canonicalChapterId,
+        academicSession: "2026-27",
+        question: metadata.question,
+        subject: metadata.subject,
+        topic: metadata.topicName,
+        chapter: metadata.chapterName,
+        difficulty: metadata.difficulty,
+      },
+      "NEEDS_PRACTICE",
+      today,
+      `${today}T10:00:00.000Z`,
+    );
+    saveRevisionStore(revisionKey, assessment);
+    // Tutor-profile activity is its own session metric; a confidence check-in
+    // does not count as a graded answer or as a tutor session.
+    assert.equal(getOrCreateProfile().totalQuestionsAnswered, 0);
+
+    // Route navigation and a fresh page load read the same board/class-scoped ID.
+    const revisionAfterRefresh = loadRevisionStore(revisionKey);
+    assert.equal(revisionAfterRefresh.selfAssessments[metadata.questionId]?.status, "NEEDS_PRACTICE");
+    assert.equal(revisionAfterRefresh.items[metadata.questionId]?.questionId, metadata.questionId);
+    assert.equal(revisionAfterRefresh.items[metadata.questionId]?.nextReview, "2026-08-21");
+    assert.deepEqual(
+      getUpcomingRevisionSchedule(revisionAfterRefresh.items, today)
+        .flatMap(({ items }) => items.map((item) => item.questionId)),
+      [metadata.questionId],
+    );
+    const readinessAfterRefresh = derivePracticeReadiness(
+      MATHS_CHAPTER_3_QUESTIONS,
+      JSON.parse(localStorage.getItem(progressKey)!) as typeof attempted,
+      revisionAfterRefresh.selfAssessments,
+      "Mathematics",
+    );
+    assert.deepEqual(
+      readinessAfterRefresh.needsPracticeQuestions.map((candidate) => candidate.id),
+      [metadata.questionId],
+    );
+    assert.deepEqual(
+      readinessAfterRefresh.questionsPractised.map((candidate) => candidate.id),
+      [metadata.questionId],
+    );
+    assert.equal(
+      buildRevisionSolutionHref(metadata.questionId),
+      `/solution?practiceMode=1&questionId=${metadata.questionId}`,
+    );
+    recordQuestionAnswered(5_000, "basic");
+    assert.equal(getOrCreateProfile().totalQuestionsAnswered, 1);
+    assert.equal(
+      getSubjectStatsFromProgress(
+        JSON.parse(localStorage.getItem(progressKey)!) as typeof attempted,
+        "Mathematics",
+      ).totalSolved,
+      0,
+    );
+
+    const examNext = selectNextUnansweredQuestion(
+      ["Mathematics"],
+      { Mathematics: [question, MATHS_CHAPTER_3_QUESTIONS[11]] },
+      JSON.parse(localStorage.getItem(progressKey)!) as typeof attempted,
+    );
+    assert.equal(examNext?.question.id, MATHS_CHAPTER_3_QUESTIONS[11].id);
   });
 });
