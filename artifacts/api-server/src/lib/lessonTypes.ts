@@ -245,6 +245,19 @@ export function parseLessonResponse(p: any): LessonResponse {
 export function isCompleteDetailedLessonResponse(lesson: LessonResponse): boolean {
   const hasText = (value: unknown): value is string =>
     typeof value === "string" && value.trim().length > 0;
+  return getIncompleteDetailedLessonFields(lesson, hasText).length === 0;
+}
+
+/**
+ * Name the existing Detailed completeness failures so a bounded stream
+ * recovery can ask for the missing sections without weakening the gate.
+ */
+export function getIncompleteDetailedLessonFields(
+  lesson: LessonResponse,
+  hasText: (value: unknown) => value is string = (value): value is string =>
+    typeof value === "string" && value.trim().length > 0,
+): string[] {
+  const missing: string[] = [];
   const translationValues = [
     lesson.questionTranslation.plainEnglish,
     lesson.questionTranslation.whatWeKnow,
@@ -261,29 +274,39 @@ export function isCompleteDetailedLessonResponse(lesson: LessonResponse): boolea
     practice.hints.length > 0 &&
     practice.hints.every(hasText);
 
-  return (
-    lesson.keyConcepts.length > 0 &&
-    lesson.keyConcepts.every(hasText) &&
-    lesson.vocabulary.length > 0 &&
-    lesson.vocabulary.every((item) => hasText(item.term) && hasText(item.meaning)) &&
-    hasText(lesson.intuition.story) &&
-    hasText(lesson.intuition.visual) &&
-    hasText(lesson.intuition.everyday) &&
-    (hasNoTranslation || hasFullTranslation) &&
-    lesson.guidedReasoning.length > 0 &&
-    lesson.guidedReasoning.every((step) => hasText(step.what) && hasText(step.why)) &&
-    lesson.commonMistakes.length > 0 &&
-    lesson.commonMistakes.every((mistake) =>
+  if (lesson.keyConcepts.length === 0 || !lesson.keyConcepts.every(hasText)) missing.push("keyConcepts");
+  if (
+    lesson.vocabulary.length === 0 ||
+    !lesson.vocabulary.every((item) => hasText(item.term) && hasText(item.meaning))
+  ) missing.push("vocabulary");
+  if (
+    !hasText(lesson.intuition.story) ||
+    !hasText(lesson.intuition.visual) ||
+    !hasText(lesson.intuition.everyday)
+  ) missing.push("intuition");
+  if (!hasNoTranslation && !hasFullTranslation) missing.push("questionTranslation");
+  if (
+    lesson.guidedReasoning.length === 0 ||
+    !lesson.guidedReasoning.every((step) => hasText(step.what) && hasText(step.why))
+  ) missing.push("guidedReasoning");
+  if (
+    lesson.commonMistakes.length === 0 ||
+    !lesson.commonMistakes.every((mistake) =>
       hasText(mistake.mistake) &&
       hasText(mistake.whyItHappens) &&
       hasText(mistake.howToAvoid),
-    ) &&
-    hasText(lesson.finalAnswer.answer) &&
-    hasText(lesson.finalAnswer.whyCorrect) &&
-    lesson.rememberThese.length >= 2 &&
-    lesson.rememberThese.every(hasText) &&
-    hasText(lesson.simplerExample.problem) &&
-    hasText(lesson.simplerExample.solution) &&
-    (hasNoPractice || hasFullPractice)
-  );
+    )
+  ) missing.push("commonMistakes");
+  if (!hasText(lesson.finalAnswer.answer) || !hasText(lesson.finalAnswer.whyCorrect)) {
+    missing.push("finalAnswer");
+  }
+  if (lesson.rememberThese.length < 2 || !lesson.rememberThese.every(hasText)) {
+    missing.push("rememberThese");
+  }
+  if (!hasText(lesson.simplerExample.problem) || !hasText(lesson.simplerExample.solution)) {
+    missing.push("simplerExample");
+  }
+  if (!hasNoPractice && !hasFullPractice) missing.push("practiceQuestion");
+
+  return missing;
 }

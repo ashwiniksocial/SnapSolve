@@ -22,6 +22,7 @@
 
 import { Router }             from "express";
 import {
+  getIncompleteDetailedLessonFields,
   isCompleteDetailedLessonResponse,
   parseLessonResponse,
   type LessonResponse,
@@ -66,6 +67,11 @@ import {
   type ArchitecturePath,
   type GateTelemetryStatus,
 } from "../services/architectureCFastPath";
+import {
+  BANK_LESSON_TEACHING_CONTRACT,
+  bankLessonGenerationRecoveryEnabled,
+  buildIncompleteLessonRetryInstruction,
+} from "../services/bankLessonPrompt";
 
 const router = Router();
 
@@ -2191,6 +2197,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
     hint: string;
     steps: BankStep[];
     keyConcepts: string[];
+    maxGenerationAttempts?: 1 | 2;
   }
   const rawBankRecord = rawBankCtx && typeof rawBankCtx === "object"
     ? rawBankCtx as Record<string, unknown>
@@ -2206,6 +2213,9 @@ router.post("/solveQuestion/stream", async (req, res) => {
     (rawBankRecord.academicSession === undefined || typeof rawBankRecord.academicSession === "string") &&
     (rawBankRecord.canonicalChapterId === null || typeof rawBankRecord.canonicalChapterId === "string") &&
     typeof rawBankRecord.answer === "string" &&
+    (rawBankRecord.maxGenerationAttempts === undefined ||
+      rawBankRecord.maxGenerationAttempts === 1 ||
+      rawBankRecord.maxGenerationAttempts === 2) &&
     (rawBankRecord.sourceHash === undefined ||
       (typeof rawBankRecord.sourceHash === "string" && /^fnv1a64:[0-9a-f]{16}$/.test(rawBankRecord.sourceHash)));
   const bankCtx: BankCtx | undefined = validBankContext ? rawBankRecord as unknown as BankCtx : undefined;
@@ -2345,7 +2355,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
   // ── 6. Build prompts ──────────────────────────────────────────────────────────
   // systemContent and maxTokens from buildDraftPrompts (handles mode-specific schema).
   // userContent is overridden for bank questions to inject authoritative grounding.
-  const { systemContent, maxTokens: baseStreamMaxTokens } = buildDraftPrompts(subj, q, streamMode, ctx, blueprint);
+  const { systemContent: baseSystemContent, maxTokens: baseStreamMaxTokens } =
+    buildDraftPrompts(subj, q, streamMode, ctx, blueprint);
+  const systemContent = bankCtx
+    ? `${baseSystemContent}\n\n${BANK_LESSON_TEACHING_CONTRACT}`
+    : baseSystemContent;
   // Full bank TeachingLessons need room for all Detailed fields and calculations.
   const streamMaxTokens = bankCtx
     ? Math.max(baseStreamMaxTokens, BANK_DETAILED_OUTPUT_TOKENS)
@@ -2398,6 +2412,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
     failureCategory?: LessonStreamFailureCategory;
   }> = [];
   let previousFailure: LessonStreamFailureCategory | undefined;
+  let previousIncompleteFields: string[] = [];
 
   const generation = await runWithSingleLessonStreamRecovery(async (attemptNumber) => {
     if (clientDisconnected) {
@@ -2422,7 +2437,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
       stream = await collectOpenAIStream({
         apiKey,
         systemContent,
-        userContent,
+        userContent: bankCtx &&
+          attemptNumber === 2 &&
+          previousFailure === "incomplete_lesson"
+          ? `${userContent}\n\n${buildIncompleteLessonRetryInstruction(previousIncompleteFields)}`
+          : userContent,
         maxOutputTokens,
         signal: attemptController.signal,
         requestStart,
@@ -2464,6 +2483,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         candidate = parseLessonResponse(completion.json as any);
         if (bankCtx && !isCompleteDetailedLessonResponse(candidate)) {
+          previousIncompleteFields = getIncompleteDetailedLessonFields(candidate);
           category = "incomplete_lesson";
         }
       }
@@ -2504,7 +2524,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       return { status: "failed", category: "validation_failure" as const };
     }
     return { status: "complete", value: candidate };
-  }, Boolean(bankCtx));
+  }, Boolean(bankCtx) && bankLessonGenerationRecoveryEnabled(bankCtx?.maxGenerationAttempts));
 
   const promptTok = recordedAttempts.reduce((sum, item) => sum + item.stream.promptTokens, 0);
   const completionTok = recordedAttempts.reduce((sum, item) => sum + item.stream.completionTokens, 0);

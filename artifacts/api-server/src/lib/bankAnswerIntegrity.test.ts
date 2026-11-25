@@ -347,6 +347,32 @@ test("supported intermediate math never skips an independent answer-disclosure c
   );
 });
 
+test("approved complement equation remains blocked when it answers the original question early", () => {
+  const question = "Can P(E) + P(not E) be greater than 1? Explain with reasoning.";
+  const approvedSteps = [{
+    title: "Complement events",
+    explanation:
+      "The event and its complement cover the whole sample space, so their probabilities add to one.",
+    result: "P(E) + P(Ē) = 1 always",
+  }];
+  const answer =
+    "No. P(E) + P(not E) = 1 always because an event and its complement cover all outcomes.";
+  const context = buildAnswerLastContext(question, approvedSteps);
+  const candidate = {
+    guidedReasoning: [{
+      what: "Combine the probability of the event with its complement.",
+      why: "Together they cover every possible outcome.",
+      math: "P(E) + P(Ē) = 1",
+      result: "Thus, we conclude that P(E) + P(Ē) = 1 always.",
+    }],
+    finalAnswer: { answer },
+  };
+
+  const result = repairTeachingLessonAnswerLeakage(candidate, answer, context);
+  assert.equal(result.status, "rejected");
+  assert.notEqual(result.assessment.status, "clear");
+});
+
 test("equation-equivalent transformations pass only when both sides match approved source math", () => {
   const context = buildAnswerLastContext("Convert the recurring decimal to a fraction.", [
     {

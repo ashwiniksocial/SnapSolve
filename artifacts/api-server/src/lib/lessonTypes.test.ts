@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  getIncompleteDetailedLessonFields,
   isCompleteDetailedLessonResponse,
   parseLessonResponse,
 } from "./lessonTypes";
@@ -112,4 +113,25 @@ test("partially populated optional sections are rejected", () => {
     })),
     false,
   );
+});
+
+test("incomplete Detailed diagnostics name sections without changing the save gate", () => {
+  const missingIntuition = detailedLesson({
+    intuition: { story: "A story.", visual: "", everyday: "An everyday link." },
+  });
+  assert.deepEqual(getIncompleteDetailedLessonFields(missingIntuition), ["intuition"]);
+  assert.equal(isCompleteDetailedLessonResponse(missingIntuition), false);
+
+  const partialOptionalSection = detailedLesson({
+    practiceQuestion: {
+      question: "Find the mechanical advantage.",
+      hints: ["Use load divided by effort."],
+      solution: "",
+    },
+  });
+  assert.deepEqual(getIncompleteDetailedLessonFields(partialOptionalSection), ["practiceQuestion"]);
+  assert.equal(isCompleteDetailedLessonResponse(partialOptionalSection), false);
+
+  assert.deepEqual(getIncompleteDetailedLessonFields(detailedLesson()), []);
+  assert.equal(isCompleteDetailedLessonResponse(detailedLesson()), true);
 });

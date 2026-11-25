@@ -274,7 +274,11 @@ function normalizeOptionalSections(lesson: TeachingLesson): TeachingLesson {
   };
 }
 
-async function generateOne(question: Question, baseUrl: string): Promise<GenerationResult> {
+async function generateOne(
+  question: Question,
+  baseUrl: string,
+  singleAttempt: boolean,
+): Promise<GenerationResult> {
   const canonicalContext = canonicalContextFor(question);
   const response = await fetch(`${baseUrl}/api/solveQuestion/stream`, {
     method: "POST",
@@ -292,6 +296,7 @@ async function generateOne(question: Question, baseUrl: string): Promise<Generat
         hint: question.hint,
         steps: question.steps,
         keyConcepts: question.keyConcepts,
+        ...(singleAttempt ? { maxGenerationAttempts: 1 as const } : {}),
       },
     }),
   });
@@ -508,6 +513,9 @@ async function main(): Promise<void> {
   const chunks = await readChunkIndex();
   const ids = requestedIds(questions, chunks);
   const baseUrl = apiBaseUrl();
+  const singleAttempt = args.has("--single-attempt");
+  const modelCallBudget = singleAttempt ? 6 : Number.POSITIVE_INFINITY;
+  let modelCallsReserved = 0;
   const totals = {
     modelCalls: 0,
     cacheRecoveries: 0,
@@ -529,7 +537,12 @@ async function main(): Promise<void> {
     completionTokens: number;
   }> = [];
 
-  console.log(`Targeting ${ids.length} active question(s). Existing valid entries will be skipped.`);
+  console.log(
+    `Targeting ${ids.length} active question(s). Existing valid entries will be skipped.` +
+    (singleAttempt
+      ? " Single-attempt mode reserves at most 2 model calls per question, with a 6-call batch cap."
+      : ""),
+  );
 
   for (const [index, id] of ids.entries()) {
     try {
@@ -554,8 +567,26 @@ async function main(): Promise<void> {
         continue;
       }
 
+      if (singleAttempt && modelCallsReserved + 2 > modelCallBudget) {
+        const remainingIds = ids.slice(index);
+        totals.blocked += remainingIds.length;
+        for (const questionId of remainingIds) {
+          blockedItems.push({
+            questionId,
+            reason: "six_model_call_budget_exhausted",
+            modelCalls: 0,
+            estimatedCostUsd: 0,
+            promptTokens: 0,
+            completionTokens: 0,
+          });
+        }
+        console.error("Stopping before the next question to preserve the six-model-call cap.");
+        break;
+      }
+      if (singleAttempt) modelCallsReserved += 2;
+
       console.log(`[${index + 1}/${ids.length}] GENERATE ${id}`);
-      const result = await generateOne(question, baseUrl);
+      const result = await generateOne(question, baseUrl, singleAttempt);
       const entry: PreGeneratedLessonEntry = {
         questionId: id,
         sourceHash: hashQuestionContent(question),
@@ -638,7 +669,11 @@ async function main(): Promise<void> {
     }
   }
 
-  console.log(JSON.stringify({ ...totals, blockedItems }, null, 2));
+  console.log(JSON.stringify({
+    ...totals,
+    ...(singleAttempt ? { modelCallBudget, modelCallsReserved } : {}),
+    blockedItems,
+  }, null, 2));
   if (blockedItems.length > 0) process.exitCode = 1;
 }
 
