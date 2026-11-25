@@ -12,8 +12,12 @@ import {
 } from "../../artifacts/homework-hero/src/data/preGeneratedLessons.ts";
 import type { Question } from "../../artifacts/homework-hero/src/data/questions/types.ts";
 import type { TeachingLesson } from "../../artifacts/homework-hero/src/data/solutionBank.ts";
-import { parseLessonResponse } from "../../artifacts/api-server/src/lib/lessonTypes.ts";
+import {
+  normalizeOptionalDetailedLessonSections,
+  parseLessonResponse,
+} from "../../artifacts/api-server/src/lib/lessonTypes.ts";
 import { PILOT_QUESTION_IDS } from "./preGeneratedLessonPilot.ts";
+import { mayPersistQualityStatus } from "./lessonGenerationPolicy.ts";
 import { getCanonicalChapter } from "./canonicalCurriculum.js";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -25,6 +29,7 @@ type GenerationEvent = {
   lesson?: unknown;
   code?: string;
   failureCategory?: string;
+  missingFields?: string[];
   finishReason?: string | null;
   responseStatus?: number | null;
   attemptCount?: number;
@@ -242,38 +247,6 @@ function apiBaseUrl(): string {
   return `https://${domain.replace(/^https?:\/\//, "").replace(/\/$/, "")}`;
 }
 
-/**
- * Optional renderer sections are all-or-nothing. Clearing an incomplete
- * optional object hides that section, rather than persisting a lesson that
- * exposes an empty field to a student.
- */
-function normalizeOptionalSections(lesson: TeachingLesson): TeachingLesson {
-  const translation = lesson.questionTranslation;
-  const translationComplete = [
-    translation.plainEnglish,
-    translation.whatWeKnow,
-    translation.whatWeFind,
-    translation.wordToMath,
-  ].every((value) => value.trim().length > 0);
-
-  const practice = lesson.practiceQuestion;
-  const practiceComplete =
-    practice.question.trim().length > 0 &&
-    practice.solution.trim().length > 0 &&
-    practice.hints.length > 0 &&
-    practice.hints.every((hint) => hint.trim().length > 0);
-
-  return {
-    ...lesson,
-    questionTranslation: translationComplete
-      ? translation
-      : { plainEnglish: "", whatWeKnow: "", whatWeFind: "", wordToMath: "" },
-    practiceQuestion: practiceComplete
-      ? practice
-      : { question: "", hints: [], solution: "" },
-  };
-}
-
 async function generateOne(
   question: Question,
   baseUrl: string,
@@ -371,6 +344,7 @@ async function generateOne(
         finishReason: failureEvent.finishReason,
         responseStatus: failureEvent.responseStatus,
         attemptCount: failureEvent.attemptCount,
+        missingFields: failureEvent.missingFields,
         maxOutputTokens: failureEvent.maxOutputTokens,
         promptTokens: failureEvent.promptTokens,
         completionTokens: failureEvent.completionTokens,
@@ -391,7 +365,9 @@ async function generateOne(
     throw new Error(`Generation for ${question.id} did not pass the teaching-quality gate.`);
   }
 
-  const parsed = normalizeOptionalSections(parseLessonResponse(completed.lesson) as TeachingLesson);
+  const parsed = normalizeOptionalDetailedLessonSections(
+    parseLessonResponse(completed.lesson),
+  ) as TeachingLesson;
   // Preserve the frozen bank answer verbatim. Pedagogy is AI-derived; the
   // approved final answer remains authoritative question-bank content.
   parsed.finalAnswer = { ...parsed.finalAnswer, answer: question.answer };
@@ -431,6 +407,7 @@ function argumentValues(name: string): string[] {
 
 function blockedGenerationDetails(error: unknown): {
   reason: string;
+  missingFields: string[];
   modelCalls: number;
   estimatedCostUsd: number;
   promptTokens: number;
@@ -444,6 +421,7 @@ function blockedGenerationDetails(error: unknown): {
       promptTokens?: number;
       completionTokens?: number;
       attemptCount?: number;
+      missingFields?: string[];
       qualityReview?: {
         status?: string;
         blockReasons?: string[];
@@ -454,11 +432,17 @@ function blockedGenerationDetails(error: unknown): {
       };
     };
     const review = payload.qualityReview;
+    const missingFields = Array.isArray(payload.missingFields)
+      ? payload.missingFields.filter((field): field is string => typeof field === "string")
+      : [];
     const reason = review?.blockReasons?.length
       ? `${review.status ?? "BLOCK"}: ${review.blockReasons.join(", ")}`
-      : payload.code ?? message;
+      : missingFields.length
+        ? `${payload.code ?? message}: ${missingFields.join(", ")}`
+        : payload.code ?? message;
     return {
       reason,
+      missingFields,
       modelCalls: (payload.attemptCount ?? 0) + (review?.reviewerCalls ?? 0),
       estimatedCostUsd:
         (payload.estimatedCostUsd ?? 0) + (review?.estimatedCostUsd ?? 0),
@@ -469,6 +453,7 @@ function blockedGenerationDetails(error: unknown): {
   } catch {
     return {
       reason: message,
+      missingFields: [],
       modelCalls: 0,
       estimatedCostUsd: 0,
       promptTokens: 0,
@@ -514,6 +499,7 @@ async function main(): Promise<void> {
   const ids = requestedIds(questions, chunks);
   const baseUrl = apiBaseUrl();
   const singleAttempt = args.has("--single-attempt");
+  const passOnly = args.has("--pass-only");
   const modelCallBudget = singleAttempt ? 6 : Number.POSITIVE_INFINITY;
   let modelCallsReserved = 0;
   const totals = {
@@ -531,6 +517,7 @@ async function main(): Promise<void> {
   const blockedItems: Array<{
     questionId: string;
     reason: string;
+    missingFields: string[];
     modelCalls: number;
     estimatedCostUsd: number;
     promptTokens: number;
@@ -541,7 +528,8 @@ async function main(): Promise<void> {
     `Targeting ${ids.length} active question(s). Existing valid entries will be skipped.` +
     (singleAttempt
       ? " Single-attempt mode reserves at most 2 model calls per question, with a 6-call batch cap."
-      : ""),
+      : "") +
+    (passOnly ? " Only explicit PASS results may be persisted." : ""),
   );
 
   for (const [index, id] of ids.entries()) {
@@ -574,6 +562,7 @@ async function main(): Promise<void> {
           blockedItems.push({
             questionId,
             reason: "six_model_call_budget_exhausted",
+            missingFields: [],
             modelCalls: 0,
             estimatedCostUsd: 0,
             promptTokens: 0,
@@ -587,6 +576,30 @@ async function main(): Promise<void> {
 
       console.log(`[${index + 1}/${ids.length}] GENERATE ${id}`);
       const result = await generateOne(question, baseUrl, singleAttempt);
+      if (!mayPersistQualityStatus(result.qualityReviewStatus, passOnly)) {
+        const modelCalls = result.servedFromCache
+          ? 0
+          : result.attemptCount + result.qualityReviewerCalls;
+        const reason = "quality_review_improve_rejected_pass_only";
+        totals.blocked += 1;
+        totals.modelCalls += modelCalls;
+        totals.promptTokens += result.promptTokens;
+        totals.completionTokens += result.completionTokens;
+        totals.cachedTokens += result.cachedTokens;
+        totals.estimatedCostUsd += result.estimatedCostUsd;
+        totals.totalLatencyMs += result.totalLatencyMs;
+        blockedItems.push({
+          questionId: id,
+          reason,
+          missingFields: [],
+          modelCalls,
+          estimatedCostUsd: result.estimatedCostUsd,
+          promptTokens: result.promptTokens,
+          completionTokens: result.completionTokens,
+        });
+        console.error(`[${index + 1}/${ids.length}] BLOCKED ${id}: ${reason}`);
+        continue;
+      }
       const entry: PreGeneratedLessonEntry = {
         questionId: id,
         sourceHash: hashQuestionContent(question),

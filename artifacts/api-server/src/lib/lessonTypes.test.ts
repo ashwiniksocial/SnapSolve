@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   getIncompleteDetailedLessonFields,
   isCompleteDetailedLessonResponse,
+  normalizeOptionalDetailedLessonSections,
   parseLessonResponse,
 } from "./lessonTypes";
 
@@ -115,11 +116,42 @@ test("partially populated optional sections are rejected", () => {
   );
 });
 
-test("incomplete Detailed diagnostics name sections without changing the save gate", () => {
+test("partial optional sections normalize to empty before the strict completeness gate", () => {
+  const partial = detailedLesson({
+    questionTranslation: {
+      plainEnglish: "The question gives two forces.",
+      whatWeKnow: "",
+      whatWeFind: "",
+      wordToMath: "",
+    },
+    practiceQuestion: {
+      question: "Find the probability.",
+      hints: ["Count favourable outcomes."],
+      solution: "",
+    },
+  });
+  const normalized = normalizeOptionalDetailedLessonSections(partial);
+
+  assert.deepEqual(normalized.questionTranslation, {
+    plainEnglish: "",
+    whatWeKnow: "",
+    whatWeFind: "",
+    wordToMath: "",
+  });
+  assert.deepEqual(normalized.practiceQuestion, {
+    question: "",
+    hints: [],
+    solution: "",
+  });
+  assert.deepEqual(getIncompleteDetailedLessonFields(normalized), []);
+  assert.equal(isCompleteDetailedLessonResponse(normalized), true);
+});
+
+test("incomplete Detailed diagnostics expose exact field paths without changing the save gate", () => {
   const missingIntuition = detailedLesson({
     intuition: { story: "A story.", visual: "", everyday: "An everyday link." },
   });
-  assert.deepEqual(getIncompleteDetailedLessonFields(missingIntuition), ["intuition"]);
+  assert.deepEqual(getIncompleteDetailedLessonFields(missingIntuition), ["intuition.visual"]);
   assert.equal(isCompleteDetailedLessonResponse(missingIntuition), false);
 
   const partialOptionalSection = detailedLesson({
@@ -129,8 +161,33 @@ test("incomplete Detailed diagnostics name sections without changing the save ga
       solution: "",
     },
   });
-  assert.deepEqual(getIncompleteDetailedLessonFields(partialOptionalSection), ["practiceQuestion"]);
+  assert.deepEqual(
+    getIncompleteDetailedLessonFields(partialOptionalSection),
+    ["practiceQuestion.solution"],
+  );
   assert.equal(isCompleteDetailedLessonResponse(partialOptionalSection), false);
+
+  const missingGuidedFields = detailedLesson({
+    guidedReasoning: [{ what: "", why: "Explain why." }],
+  });
+  assert.deepEqual(
+    getIncompleteDetailedLessonFields(missingGuidedFields),
+    ["guidedReasoning[0].what"],
+  );
+
+  const partialTranslation = detailedLesson({
+    questionTranslation: {
+      plainEnglish: "The question gives two forces.",
+      whatWeKnow: "",
+      whatWeFind: "",
+      wordToMath: "",
+    },
+  });
+  assert.deepEqual(getIncompleteDetailedLessonFields(partialTranslation), [
+    "questionTranslation.whatWeKnow",
+    "questionTranslation.whatWeFind",
+    "questionTranslation.wordToMath",
+  ]);
 
   assert.deepEqual(getIncompleteDetailedLessonFields(detailedLesson()), []);
   assert.equal(isCompleteDetailedLessonResponse(detailedLesson()), true);

@@ -1,8 +1,11 @@
 export const BANK_LESSON_TEACHING_CONTRACT = `
-BANK-LESSON TEACHING CONTRACT — Overrides conflicting generic step-count guidance above.
+BANK-LESSON TEACHING CONTRACT — Overrides conflicting generic step-count and blank-visual guidance above.
 - Keep the complete Detailed response schema. Do not omit or rename its fields.
 - Use no preset number of guidedReasoning steps. Use only as many as this question needs:
   do not pad short reasoning or compress a necessary learning move.
+- Keep intuition.visual meaningful and nonempty. If no physical scene fits, use an accurate
+  abstract representation such as a number line, table, outcome list, or simple diagram.
+  Do not invent story facts, objects, or assumptions just to fill the visual field.
 - Teach a weak Grade 9 student in plain language. Define each needed term or symbol
   before relying on it, and explain why each move follows from the question.
 - Ground every step, number, assumption, and conclusion in the frozen question and

@@ -238,6 +238,43 @@ export function parseLessonResponse(p: any): LessonResponse {
 }
 
 /**
+ * Optional translation and practice sections are stored as complete sections or
+ * normalized empty. Apply the same rule before API completeness checks and
+ * persistence so a partial optional section cannot block an otherwise complete
+ * Detailed lesson or leak blank subfields to a student.
+ */
+export function normalizeOptionalDetailedLessonSections(
+  lesson: LessonResponse,
+): LessonResponse {
+  const hasText = (value: unknown): value is string =>
+    typeof value === "string" && value.trim().length > 0;
+  const translationFields = [
+    lesson.questionTranslation.plainEnglish,
+    lesson.questionTranslation.whatWeKnow,
+    lesson.questionTranslation.whatWeFind,
+    lesson.questionTranslation.wordToMath,
+  ];
+  const translationComplete = translationFields.every(hasText);
+
+  const practice = lesson.practiceQuestion;
+  const practiceComplete =
+    hasText(practice.question) &&
+    hasText(practice.solution) &&
+    practice.hints.length > 0 &&
+    practice.hints.every(hasText);
+
+  return {
+    ...lesson,
+    questionTranslation: translationComplete
+      ? lesson.questionTranslation
+      : { plainEnglish: "", whatWeKnow: "", whatWeFind: "", wordToMath: "" },
+    practiceQuestion: practiceComplete
+      ? practice
+      : { question: "", hints: [], solution: "" },
+  };
+}
+
+/**
  * Detailed bank lessons are cached only when their unconditional teaching
  * sections are complete. Vocabulary and memory takeaways remain encouraged
  * and reviewed but are not structural prerequisites. Optional question
@@ -259,12 +296,13 @@ export function getIncompleteDetailedLessonFields(
     typeof value === "string" && value.trim().length > 0,
 ): string[] {
   const missing: string[] = [];
-  const translationValues = [
-    lesson.questionTranslation.plainEnglish,
-    lesson.questionTranslation.whatWeKnow,
-    lesson.questionTranslation.whatWeFind,
-    lesson.questionTranslation.wordToMath,
-  ];
+  const translationFields = [
+    "plainEnglish",
+    "whatWeKnow",
+    "whatWeFind",
+    "wordToMath",
+  ] as const;
+  const translationValues = translationFields.map((field) => lesson.questionTranslation[field]);
   const hasNoTranslation = translationValues.every((value) => !hasText(value));
   const hasFullTranslation = translationValues.every(hasText);
   const practice = lesson.practiceQuestion;
@@ -275,32 +313,65 @@ export function getIncompleteDetailedLessonFields(
     practice.hints.length > 0 &&
     practice.hints.every(hasText);
 
-  if (lesson.keyConcepts.length === 0 || !lesson.keyConcepts.every(hasText)) missing.push("keyConcepts");
-  if (
-    !hasText(lesson.intuition.story) ||
-    !hasText(lesson.intuition.visual) ||
-    !hasText(lesson.intuition.everyday)
-  ) missing.push("intuition");
-  if (!hasNoTranslation && !hasFullTranslation) missing.push("questionTranslation");
-  if (
-    lesson.guidedReasoning.length === 0 ||
-    !lesson.guidedReasoning.every((step) => hasText(step.what) && hasText(step.why))
-  ) missing.push("guidedReasoning");
-  if (
-    lesson.commonMistakes.length === 0 ||
-    !lesson.commonMistakes.every((mistake) =>
-      hasText(mistake.mistake) &&
-      hasText(mistake.whyItHappens) &&
-      hasText(mistake.howToAvoid),
-    )
-  ) missing.push("commonMistakes");
-  if (!hasText(lesson.finalAnswer.answer) || !hasText(lesson.finalAnswer.whyCorrect)) {
-    missing.push("finalAnswer");
+  if (lesson.keyConcepts.length === 0) {
+    missing.push("keyConcepts");
+  } else {
+    lesson.keyConcepts.forEach((concept, index) => {
+      if (!hasText(concept)) missing.push(`keyConcepts[${index}]`);
+    });
   }
-  if (!hasText(lesson.simplerExample.problem) || !hasText(lesson.simplerExample.solution)) {
-    missing.push("simplerExample");
+
+  for (const field of ["story", "visual", "everyday"] as const) {
+    if (!hasText(lesson.intuition[field])) missing.push(`intuition.${field}`);
   }
-  if (!hasNoPractice && !hasFullPractice) missing.push("practiceQuestion");
+
+  if (!hasNoTranslation && !hasFullTranslation) {
+    for (const field of translationFields) {
+      if (!hasText(lesson.questionTranslation[field])) {
+        missing.push(`questionTranslation.${field}`);
+      }
+    }
+  }
+
+  if (lesson.guidedReasoning.length === 0) {
+    missing.push("guidedReasoning");
+  } else {
+    lesson.guidedReasoning.forEach((step, index) => {
+      if (!hasText(step.what)) missing.push(`guidedReasoning[${index}].what`);
+      if (!hasText(step.why)) missing.push(`guidedReasoning[${index}].why`);
+    });
+  }
+
+  if (lesson.commonMistakes.length === 0) {
+    missing.push("commonMistakes");
+  } else {
+    lesson.commonMistakes.forEach((mistake, index) => {
+      if (!hasText(mistake.mistake)) missing.push(`commonMistakes[${index}].mistake`);
+      if (!hasText(mistake.whyItHappens)) {
+        missing.push(`commonMistakes[${index}].whyItHappens`);
+      }
+      if (!hasText(mistake.howToAvoid)) {
+        missing.push(`commonMistakes[${index}].howToAvoid`);
+      }
+    });
+  }
+
+  if (!hasText(lesson.finalAnswer.answer)) missing.push("finalAnswer.answer");
+  if (!hasText(lesson.finalAnswer.whyCorrect)) missing.push("finalAnswer.whyCorrect");
+  if (!hasText(lesson.simplerExample.problem)) missing.push("simplerExample.problem");
+  if (!hasText(lesson.simplerExample.solution)) missing.push("simplerExample.solution");
+
+  if (!hasNoPractice && !hasFullPractice) {
+    if (!hasText(practice.question)) missing.push("practiceQuestion.question");
+    if (practice.hints.length === 0) {
+      missing.push("practiceQuestion.hints");
+    } else {
+      practice.hints.forEach((hint, index) => {
+        if (!hasText(hint)) missing.push(`practiceQuestion.hints[${index}]`);
+      });
+    }
+    if (!hasText(practice.solution)) missing.push("practiceQuestion.solution");
+  }
 
   return missing;
 }

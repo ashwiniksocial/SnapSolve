@@ -13,12 +13,19 @@ test("bank lessons use grounded, weak-student teaching without fixed step counts
   assert.match(BANK_LESSON_TEACHING_CONTRACT, /only in finalAnswer/i);
 });
 
+test("bank visual instruction satisfies the existing nonempty intuition gate without inventing facts", () => {
+  assert.match(BANK_LESSON_TEACHING_CONTRACT, /Overrides .*blank-visual guidance/i);
+  assert.match(BANK_LESSON_TEACHING_CONTRACT, /intuition\.visual meaningful and nonempty/i);
+  assert.match(BANK_LESSON_TEACHING_CONTRACT, /accurate\s+abstract representation/i);
+  assert.match(BANK_LESSON_TEACHING_CONTRACT, /Do not invent story facts/i);
+});
+
 test("incomplete recovery names missing sections and preserves the existing safeguards", () => {
   const instruction = buildIncompleteLessonRetryInstruction([
-    "guidedReasoning",
-    "vocabulary",
+    "guidedReasoning[0].why",
+    "simplerExample.solution",
   ]);
-  assert.match(instruction, /guidedReasoning, vocabulary/);
+  assert.match(instruction, /guidedReasoning\[0\]\.why, simplerExample\.solution/);
   assert.match(instruction, /full Detailed JSON/i);
   assert.match(instruction, /frozen answer/i);
   assert.match(instruction, /answer-last rule/i);

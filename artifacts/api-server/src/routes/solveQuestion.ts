@@ -24,6 +24,7 @@ import { Router }             from "express";
 import {
   getIncompleteDetailedLessonFields,
   isCompleteDetailedLessonResponse,
+  normalizeOptionalDetailedLessonSections,
   parseLessonResponse,
   type LessonResponse,
   type LessonStep,
@@ -2481,7 +2482,11 @@ router.post("/solveQuestion/stream", async (req, res) => {
         category = completion.category;
       } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        candidate = parseLessonResponse(completion.json as any);
+        candidate = bankCtx
+          ? normalizeOptionalDetailedLessonSections(
+            parseLessonResponse(completion.json as any),
+          )
+          : parseLessonResponse(completion.json as any);
         if (bankCtx && !isCompleteDetailedLessonResponse(candidate)) {
           previousIncompleteFields = getIncompleteDetailedLessonFields(candidate);
           category = "incomplete_lesson";
@@ -2507,6 +2512,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       finishReason: stream.finishReason,
       sawDoneMarker: stream.sawDoneMarker,
       failureCategory: category ?? null,
+      missingFields: category === "incomplete_lesson" ? previousIncompleteFields : undefined,
       responseStatus: stream.responseStatus || null,
       promptTokens: stream.promptTokens,
       completionTokens: stream.completionTokens,
@@ -2536,6 +2542,10 @@ router.post("/solveQuestion/stream", async (req, res) => {
   const lastAttempt = recordedAttempts.at(-1);
   const maxOutputTokensUsed = lastAttempt?.maxOutputTokens ?? streamMaxTokens;
   const finishReason = lastAttempt?.stream.finishReason ?? null;
+  const missingFields = generation.outcome.status === "failed" &&
+    generation.outcome.category === "incomplete_lesson"
+    ? previousIncompleteFields
+    : undefined;
   const streamTelemetry = {
     attemptCount: generation.attempts,
     maxOutputTokens: maxOutputTokensUsed,
@@ -2545,6 +2555,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
     cachedTokens: cachedTok,
     totalLatencyMs: totalModelLatencyMs,
     estimatedCostUsd,
+    ...(missingFields?.length ? { missingFields } : {}),
   };
 
   if (generation.outcome.status === "failed") {
