@@ -600,7 +600,7 @@ function escapeRegExp(value: string): string {
 function findTopicHeading(text: string, topic: MasterTopicEntry): number | null {
   const titlePattern = topic.title.trim().split(/\s+/).map(escapeRegExp).join("\\s+");
   const pattern = new RegExp(
-    `(?:^|[\\n\\f])\\s*(${escapeRegExp(topic.number)}\\s+${titlePattern})(?=[ \\t]*\\r?$)`,
+    `(?:^|[\\n\\f])[^\r\n]*?(${escapeRegExp(topic.number)}\\s+${titlePattern})(?=[ \\t]*\\r?$)`,
     "gim"
   );
   let match: RegExpExecArray | null;

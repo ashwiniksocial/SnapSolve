@@ -439,6 +439,31 @@ test("18. Q4–Q6 receive passages from the verified official pulley and incline
   assert.deepEqual(q6.sourceContext?.passages[1].pdfPages, [16, 17]);
 });
 
+test("18a. Physics distance/displacement context recognizes a heading beside a PDF sidebar", () => {
+  const result = resolveSourceContext(makeQuestion({
+    id: "c9-phy-ch1-t1-q02",
+    subject: "Physics",
+    chapterId: "phy-ch1",
+    chapterName: "Describing Motion Around Us",
+    topicId: "t1",
+    topicName: "Distance and Displacement",
+    difficulty: "Easy",
+    question: "A boy walks 4 m East and then 3 m North. What is his displacement from the starting point?",
+    answer: "5 m, in the direction 37° North of East",
+  }));
+
+  assert.equal(result.status, "PRESENT", result.missReason);
+  assert.equal(
+    result.sourceContext?.sourcePath,
+    "curriculum/sources/cbse/class9/science/iesc104.pdf",
+  );
+  assert.deepEqual(
+    result.sourceContext?.passages.map((passage) => passage.sectionNumber),
+    ["4.1", "4.1.2"],
+  );
+  assert.match(result.text, /Displacement is the net change in the position of an object/i);
+});
+
 test("19. Missing topic/source passage fails closed", () => {
   const result = resolveSourceContext(makeQuestion({
     chapterId: "phy-ch4",

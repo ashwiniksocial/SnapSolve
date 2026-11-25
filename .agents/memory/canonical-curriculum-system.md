@@ -25,6 +25,12 @@ Multiple hardcoded copies (EXPECTED table, MATHS_CONTENT_RECORDS, canonicalIdLoo
 - Academic review resolution → `getCanonicalChapter(q.chapterId)` by internal ID; no fuzzy matching.
 - Relational joins in conceptGraph → use `chapterId` field (not `chapter` display string).
 
+Official PDF headings can share a text line with sidebar or margin-note text after `pdftotext -layout`. Source passage extraction must recognize the exact indexed heading within that line while preserving the verified PDF, title, section number, and content checks.
+
+**Why:** The Motion chapter's printed subsection heading was present in the official PDF but extraction treated it as missing because it was not at the beginning of its line.
+
+**How to apply:** When an official section appears to be missing, inspect the checksum-verified PDF's extracted text before changing canonical mappings; distinguish a wrong source mapping from a heading-layout parsing failure.
+
 ## Key files
 - `scripts/src/canonicalCurriculum.ts` — single maintained source; Node.js-only (uses fs)
 - `scripts/src/generateCanonicalRegistry.ts` — writes generated browser-safe file + checksum

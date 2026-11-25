@@ -1,0 +1,51 @@
+{
+  "c9-phy-ch1-t1-q02": {
+    "questionId": "c9-phy-ch1-t1-q02",
+    "contentHash": "bcfca03014599ff04991f4d2e57af1cb046cc246a5d96a90c062e4f91187c545",
+    "checklistVersion": "2.0",
+    "reviewedAt": "2026-11-25T09:16:12.360Z",
+    "model": "gpt-4o-mini",
+    "sourceContextStatus": "PRESENT",
+    "sourceDocument": "curriculum/sources/cbse/class9/science/iesc104.pdf",
+    "sourceSha256": "9a9299f272e2e760b7b58e4ecbf697fd65e51ab0fe181d55c0aff8ce4d19e8a4",
+    "sourceSections": [
+      {
+        "number": "4.1",
+        "title": "Motion in a Straight Line",
+        "pdfPages": [
+          2
+        ]
+      },
+      {
+        "number": "4.1.2",
+        "title": "Distance travelled and displacement",
+        "pdfPages": [
+          3,
+          4,
+          5
+        ]
+      }
+    ],
+    "overall": "GOLD_STANDARD_PASS",
+    "dimensions": {
+      "curriculum_alignment": "PASS",
+      "question_clarity": "PASS",
+      "correctness": "PASS",
+      "steps_validity": "PASS",
+      "marking_completeness": "PASS",
+      "examination_worthiness": "PASS",
+      "curriculum_importance": "PASS",
+      "appropriate_depth": "PASS",
+      "weak_student_accessibility": "PASS",
+      "hint_quality": "PASS"
+    },
+    "failEvidence": [],
+    "failConfidences": {},
+    "reasons": [],
+    "tokenUsage": {
+      "inputTokens": 3149,
+      "outputTokens": 109,
+      "estimatedCostUSD": 0.0005377499999999999
+    }
+  }
+}
