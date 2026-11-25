@@ -68,26 +68,26 @@ test("missing required teaching content is rejected before bank caching", () => 
   );
 });
 
-test("missing vocabulary or usable memory takeaways is rejected before bank caching", () => {
+test("vocabulary and memory takeaways are optional structural fields", () => {
   assert.equal(
     isCompleteDetailedLessonResponse(detailedLesson({ vocabulary: [] })),
-    false,
+    true,
   );
   assert.equal(
     isCompleteDetailedLessonResponse(detailedLesson({
       vocabulary: [{ term: "Load", meaning: "" }],
     })),
-    false,
+    true,
   );
   assert.equal(
     isCompleteDetailedLessonResponse(detailedLesson({ rememberThese: [] })),
-    false,
+    true,
   );
   assert.equal(
     isCompleteDetailedLessonResponse(detailedLesson({
       rememberThese: ["A useful takeaway.", "   "],
     })),
-    false,
+    true,
   );
 });
 
@@ -134,4 +134,11 @@ test("incomplete Detailed diagnostics name sections without changing the save ga
 
   assert.deepEqual(getIncompleteDetailedLessonFields(detailedLesson()), []);
   assert.equal(isCompleteDetailedLessonResponse(detailedLesson()), true);
+
+  const frozenContractLesson = detailedLesson({
+    vocabulary: [],
+    rememberThese: [],
+  });
+  assert.deepEqual(getIncompleteDetailedLessonFields(frozenContractLesson), []);
+  assert.equal(isCompleteDetailedLessonResponse(frozenContractLesson), true);
 });

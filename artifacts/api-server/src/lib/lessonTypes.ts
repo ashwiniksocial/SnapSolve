@@ -239,8 +239,9 @@ export function parseLessonResponse(p: any): LessonResponse {
 
 /**
  * Detailed bank lessons are cached only when their unconditional teaching
- * sections are complete. Optional question translation and practice sections
- * remain all-or-nothing, matching the existing student renderer contract.
+ * sections are complete. Vocabulary and memory takeaways remain encouraged
+ * and reviewed but are not structural prerequisites. Optional question
+ * translation and practice sections remain all-or-nothing.
  */
 export function isCompleteDetailedLessonResponse(lesson: LessonResponse): boolean {
   const hasText = (value: unknown): value is string =>
@@ -249,8 +250,8 @@ export function isCompleteDetailedLessonResponse(lesson: LessonResponse): boolea
 }
 
 /**
- * Name the existing Detailed completeness failures so a bounded stream
- * recovery can ask for the missing sections without weakening the gate.
+ * Name mandatory Detailed completeness failures so a bounded stream recovery
+ * can request those sections. Reviewer-assessed optional fields are excluded.
  */
 export function getIncompleteDetailedLessonFields(
   lesson: LessonResponse,
@@ -276,10 +277,6 @@ export function getIncompleteDetailedLessonFields(
 
   if (lesson.keyConcepts.length === 0 || !lesson.keyConcepts.every(hasText)) missing.push("keyConcepts");
   if (
-    lesson.vocabulary.length === 0 ||
-    !lesson.vocabulary.every((item) => hasText(item.term) && hasText(item.meaning))
-  ) missing.push("vocabulary");
-  if (
     !hasText(lesson.intuition.story) ||
     !hasText(lesson.intuition.visual) ||
     !hasText(lesson.intuition.everyday)
@@ -299,9 +296,6 @@ export function getIncompleteDetailedLessonFields(
   ) missing.push("commonMistakes");
   if (!hasText(lesson.finalAnswer.answer) || !hasText(lesson.finalAnswer.whyCorrect)) {
     missing.push("finalAnswer");
-  }
-  if (lesson.rememberThese.length < 2 || !lesson.rememberThese.every(hasText)) {
-    missing.push("rememberThese");
   }
   if (!hasText(lesson.simplerExample.problem) || !hasText(lesson.simplerExample.solution)) {
     missing.push("simplerExample");
