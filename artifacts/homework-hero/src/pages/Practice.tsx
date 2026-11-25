@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { SUBJECTS, type SubjectConfig, type Subject } from "@/data/subjects";
 import { useSession } from "@/hooks/useSession";
@@ -54,6 +54,38 @@ const typeStyle: Record<string, string> = {
 };
 const CLASS_OPTIONS = [6, 7, 8, 9];
 const ALL_SUBJECTS: Subject[] = ["Mathematics", "Science", "Information Technology"];
+
+export function resolvePracticeTarget(
+  chapters: Array<{ id: string; topics: Array<{ id: string; name: string }> }>,
+  requestedChapter?: string | null,
+  requestedTopic?: string | null,
+) {
+  const chapter = (requestedChapter
+    ? chapters.find((item) => item.id === requestedChapter)
+    : undefined) ?? (requestedTopic
+    ? chapters.find((item) =>
+        item.topics.some((topic) => topic.id === requestedTopic || topic.name === requestedTopic),
+      )
+    : undefined) ?? chapters[0];
+  const topic = requestedTopic
+    ? chapter?.topics.find((item) => item.id === requestedTopic || item.name === requestedTopic)
+    : undefined;
+  return { chapterId: chapter?.id ?? "", topicId: topic?.id ?? "all" };
+}
+
+function replacePracticeQuery(updates: Record<string, string | null>) {
+  const params = new URLSearchParams(window.location.search);
+  for (const [key, value] of Object.entries(updates)) {
+    if (value) params.set(key, value);
+    else params.delete(key);
+  }
+  const query = params.toString();
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`,
+  );
+}
 
 // ─── Chapter status (5 tiers) ──────────────────────────────────────────────────
 type ChapterStatus = "new" | "learning" | "improving" | "strong" | "mastered";
@@ -290,7 +322,12 @@ export default function Practice() {
   const { session, update }                    = useSession();
   const { profile }                            = useProfile();
   const boardId = normalizeBoardId(profile.board);
-  const [practiceClass, setPracticeClass] = useState<number>(profile.classLevel ?? 9);
+  const initialPracticeParams = new URLSearchParams(window.location.search);
+  const requestedClass = Number(initialPracticeParams.get("class"));
+  const requestedSubject = ALL_SUBJECTS.find((subject) => subject === initialPracticeParams.get("subject"));
+  const [practiceClass, setPracticeClass] = useState<number>(
+    CLASS_OPTIONS.includes(requestedClass) ? requestedClass : (profile.classLevel ?? 9),
+  );
   const { getChapterAttempts }                 = useAttemptLog(practiceClass);
   const { progress }                           = useProgress(practiceClass);
   const { selfAssessments }                    = useRevisionPlanner(practiceClass);
@@ -299,7 +336,7 @@ export default function Practice() {
   // rendering and computation. It updates immediately in the event handler so
   // every memo and hook sees the new subject in the same render tick.
   // update({ subject }) keeps session / localStorage in sync asynchronously.
-  const [selectedSubject, setSelectedSubject] = useState<Subject>(session.subject);
+  const [selectedSubject, setSelectedSubject] = useState<Subject>(requestedSubject ?? session.subject);
 
   const cfg = SUBJECTS[selectedSubject];
 
@@ -333,8 +370,9 @@ export default function Practice() {
   const [selectedTopicId,   setSelectedTopicId]   = useState<string>("all");
   const [selectedDiff,      setSelectedDiff]      = useState<Difficulty | "All">("All");
   const [selectedType,      setSelectedType]      = useState<EffectiveQuestionType | "All">("All");
-  const [searchQuery,       setSearchQuery]       = useState("");
+  const [searchQuery,       setSearchQuery]       = useState(initialPracticeParams.get("search") ?? "");
   const [readinessDrilldown, setReadinessDrilldown] = useState<ReadinessDrilldown | null>(null);
+  const routeSelectionApplied = useRef(false);
 
   const topics = useMemo(
     () => boardId ? getTopics(selectedChapterId, practiceClass, selectedSubject, boardId) : [],
@@ -432,6 +470,13 @@ export default function Practice() {
     setSelectedType("All");
     setDrilldownOpen(false);
     setReadinessDrilldown(null);
+    replacePracticeQuery({
+      subject: s,
+      chapter: null,
+      topic: null,
+      difficulty: null,
+      type: null,
+    });
   }, [boardId, practiceClass, update]);
 
   useEffect(() => {
@@ -440,44 +485,45 @@ export default function Practice() {
     }
   }, [availableSubjects, selectedSubject, handleSubjectChange]);
 
-  // Fires only when the bank loads or the class changes.
-  // selectedSubject is intentionally excluded from deps — subject switches are
-  // handled synchronously by handleSubjectChange. The closure captures the
-  // latest selectedSubject at the time bankReady / practiceClass changes.
-  //
-  // If a ?chapter=X param is present (set by the Solution page "← Questions"
-  // button), open that chapter's question list directly and scroll to it.
+  // Apply explicit task/question links once, after the question bank is ready.
   useEffect(() => {
-    if (!bankReady) return;
+    if (!bankReady || routeSelectionApplied.current) return;
+    routeSelectionApplied.current = true;
 
-    const paramChapter = new URLSearchParams(window.location.search).get("chapter") ?? "";
-    if (paramChapter) {
-      // Find which Practice-level subject owns this chapter ID.
-      const owningSubject = ALL_SUBJECTS.find((s) =>
-        boardId ? getChapters(practiceClass, s, boardId).some((ch) => ch.id === paramChapter) : false,
-      );
-      if (owningSubject) {
-        setSelectedSubject(owningSubject);
-        setSelectedChapterId(paramChapter);
-        setSelectedTopicId("all");
-        setSelectedDiff("All");
-        setSelectedType("All");
-        setReadinessDrilldown(null);
-        setDrilldownOpen(true);
-        setTimeout(() => {
-          document.getElementById("question-list")?.scrollIntoView({ behavior: "smooth" });
-        }, 80);
-        return;
-      }
+    const params = new URLSearchParams(window.location.search);
+    const querySubject = ALL_SUBJECTS.find((subject) => subject === params.get("subject"));
+    const preferredSubject = querySubject && availableSubjects.includes(querySubject)
+      ? querySubject
+      : selectedSubject;
+    const preferredChapters = boardId ? getChapters(practiceClass, preferredSubject, boardId) : [];
+    const requestedChapter = params.get("chapter");
+    const requestedTopic = params.get("topic");
+    const target = resolvePracticeTarget(preferredChapters, requestedChapter, requestedTopic);
+    const requestedDifficulty = params.get("difficulty");
+    const requestedType = params.get("type");
+    const validDifficulty = DIFFICULTIES.find((value) => value === requestedDifficulty) ?? "All";
+    const validType = QUESTION_TYPES.find((value) => value === requestedType) ?? "All";
+    const hasAssignedTarget = Boolean(requestedChapter || requestedTopic);
+
+    if (preferredSubject !== selectedSubject) {
+      setSelectedSubject(preferredSubject);
+      update({ subject: preferredSubject });
     }
+    setSelectedChapterId(target.chapterId);
+    setSelectedTopicId(target.topicId);
+    setSelectedDiff(validDifficulty);
+    setSelectedType(validType);
+    setSearchQuery(params.get("search") ?? "");
+    setReadinessDrilldown(null);
+    setDrilldownOpen(hasAssignedTarget);
 
-    // Default: first chapter, no drilldown
-    const next = boardId ? getChapters(practiceClass, selectedSubject, boardId) : [];
-    setSelectedChapterId(next[0]?.id ?? "");
-    setDrilldownOpen(false);
-    setSelectedTopicId("all");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bankReady, boardId, practiceClass]);
+    if (hasAssignedTarget && params.get("autoScroll") === "1") {
+      window.setTimeout(() => {
+        document.getElementById("question-list")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+      replacePracticeQuery({ autoScroll: null });
+    }
+  }, [availableSubjects, bankReady, boardId, practiceClass, selectedSubject, update]);
 
   // ── Preload question bank for the selected class ──────────────────────────
   useEffect(() => {
@@ -526,6 +572,7 @@ export default function Practice() {
     setSelectedType("All");
     setReadinessDrilldown(null);
     setDrilldownOpen(true);
+    replacePracticeQuery({ chapter: chapterId, topic: null });
     setTimeout(() => {
       document.getElementById("question-list")?.scrollIntoView({ behavior: "smooth" });
     }, 80);
@@ -552,6 +599,7 @@ export default function Practice() {
       setSelectedType("All");
       setReadinessDrilldown(null);
       setDrilldownOpen(true);
+      replacePracticeQuery({ chapter: chapterId, topic: null, difficulty: null, type: null });
     }
   };
 
@@ -611,7 +659,14 @@ export default function Practice() {
               return (
                 <button
                   key={cn}
-                  onClick={() => hasContent ? setPracticeClass(cn) : undefined}
+                  onClick={() => {
+                    if (!hasContent) return;
+                    routeSelectionApplied.current = false;
+                    setPracticeClass(cn);
+                    setSelectedChapterId("");
+                    setSelectedTopicId("all");
+                    replacePracticeQuery({ class: String(cn), chapter: null, topic: null });
+                  }}
                   disabled={!hasContent}
                   className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
                     active
@@ -668,7 +723,10 @@ export default function Practice() {
               id="practice-question-search"
               type="search"
               value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                replacePracticeQuery({ search: event.target.value || null });
+              }}
               placeholder="Search by words, topic or part of a question..."
               className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100"
             />
@@ -924,7 +982,10 @@ export default function Practice() {
             {/* Topic filter */}
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => setSelectedTopicId("all")}
+                onClick={() => {
+                  setSelectedTopicId("all");
+                  replacePracticeQuery({ topic: null });
+                }}
                 className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
                   selectedTopicId === "all" ? "text-white border-transparent" : "bg-white text-slate-600 border-slate-200"
                 }`}
@@ -937,7 +998,10 @@ export default function Practice() {
                 return (
                   <button
                     key={t.id}
-                    onClick={() => setSelectedTopicId(t.id)}
+                    onClick={() => {
+                      setSelectedTopicId(t.id);
+                      replacePracticeQuery({ topic: t.id });
+                    }}
                     className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
                       active ? "text-white border-transparent" : "bg-white text-slate-600 border-slate-200"
                     }`}
@@ -956,7 +1020,10 @@ export default function Practice() {
                 return (
                   <button
                     key={d}
-                    onClick={() => setSelectedDiff(d)}
+                    onClick={() => {
+                      setSelectedDiff(d);
+                      replacePracticeQuery({ difficulty: d === "All" ? null : d });
+                    }}
                     className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
                       active
                         ? d === "All" ? "text-white border-transparent" : `${diffStyle[d]} border-2`
@@ -977,7 +1044,10 @@ export default function Practice() {
                 return (
                   <button
                     key={qt}
-                    onClick={() => setSelectedType(qt)}
+                    onClick={() => {
+                      setSelectedType(qt);
+                      replacePracticeQuery({ type: qt === "All" ? null : qt });
+                    }}
                     className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
                       active
                         ? qt === "All" ? "text-white border-transparent" : `${typeStyle[qt] ?? ""} border-2`

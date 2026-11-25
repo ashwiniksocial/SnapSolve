@@ -4,7 +4,7 @@ import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, Router as WouterRouter, Link, useLocation } from "wouter";
 import Home from "@/pages/Home";
-import FloatingPageNavigation from "@/components/FloatingPageNavigation";
+import FloatingPageNavigation, { consumeHistoryTraversal } from "@/components/FloatingPageNavigation";
 import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
 
 // Lazy-loaded routes — each becomes its own JS chunk loaded on first visit.
@@ -296,7 +296,10 @@ function RequireAdminAuth({ children }: { children: ReactNode }) {
 
 function ScrollToTop() {
   const [location] = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [location]);
+  useEffect(() => {
+    if (consumeHistoryTraversal(location)) return;
+    window.scrollTo(0, 0);
+  }, [location]);
   return null;
 }
 
@@ -332,7 +335,6 @@ function Router() {
   const [location] = useLocation();
   const hideNav = AUTH_PATHS.some(p => location.startsWith(p));
   const showBottomNav = !hideNav && location !== "/";
-  const showFloatingNavigation = location.startsWith("/practice") || location.startsWith("/solution");
 
   return (
     <>
@@ -358,7 +360,7 @@ function Router() {
           </Suspense>
         </RouteErrorBoundary>
       </div>
-      {showFloatingNavigation && <FloatingPageNavigation />}
+      <FloatingPageNavigation />
       {showBottomNav && <BottomNav />}
     </>
   );

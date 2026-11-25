@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "wouter";
-import { useExamMode, getUrgency, urgencyColors } from "@/hooks/useExamMode";
+import { mergeCompletedTasks, useExamMode, getUrgency, urgencyColors } from "@/hooks/useExamMode";
 import type { ExamConfig, ExamConfigSaveResult, ExamSubject, ExamTask } from "@/hooks/useExamMode";
 import { useProgress } from "@/hooks/useProgress";
 import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
@@ -87,12 +87,28 @@ const PRIORITY_DOT: Record<string, string> = {
   medium:   "#6366f1",
 };
 
+export function buildAssignedPracticeHref(
+  subject: Subject,
+  topic?: string,
+  chapterId?: string,
+): string {
+  const params = new URLSearchParams({ subject, returnTo: "/exam", autoScroll: "1" });
+  if (topic) params.set("topic", topic);
+  if (chapterId) params.set("chapter", chapterId);
+  return `/practice?${params.toString()}`;
+}
+
+export function buildRevisionTaskHref(questionId: string): string {
+  const params = new URLSearchParams({ questionId, returnTo: "/exam" });
+  return `/revision?${params.toString()}`;
+}
+
 function TaskCard({
   task,
   onDone,
 }: {
   task: ExamTask;
-  onDone: (id: string) => void;
+  onDone: (task: ExamTask) => void;
 }) {
   const meta    = TYPE_META[task.type];
   const subjCfg = SUBJECTS[task.subject];
@@ -145,10 +161,10 @@ function TaskCard({
                 Start →
               </Link>
               <button
-                onClick={() => onDone(task.id)}
+                onClick={() => onDone(task)}
                 className="text-xs font-semibold text-slate-500 border border-slate-200 px-3 py-1.5 rounded-xl hover:bg-slate-50 active:scale-95 transition-all"
               >
-                Mark done
+                Mark task done
               </button>
             </>
           )}
@@ -186,11 +202,12 @@ function buildTasks(
       subject:        item.subject,
       topic:          item.topic,
       chapter:        item.chapter,
+      questionId:     item.questionId,
       label:          item.topic,
       description:    `SR card overdue — ${item.timesWrong > 0 ? `got it wrong ${item.timesWrong}× before` : "scheduled for review"}. 5 min revisit.`,
       estimatedMin:   5,
       priority:       daysRemaining <= 14 ? "critical" : "high",
-      href:           "/revision",
+      href:           buildRevisionTaskHref(item.questionId),
       completedToday: completedIds.has(id),
     });
   });
@@ -214,7 +231,7 @@ function buildTasks(
         description:    `Accuracy ${acc}% — below 60%. Practice 5–8 questions to strengthen this topic.`,
         estimatedMin:   10,
         priority:       acc < 40 ? "critical" : "high",
-        href:           "/practice",
+        href:           buildAssignedPracticeHref(subj, topic),
         completedToday: completedIds.has(id),
       });
       weakAdded++;
@@ -224,13 +241,13 @@ function buildTasks(
   // ── 3. Incomplete chapters / topics (< 60 % done) ─────────────────────────
   let chapAdded = 0;
   // Collect all incomplete topics across subjects, sorted by completionPct asc
-  const candidates: Array<{ subj: Subject; chName: string; tName: string; pct: number }> = [];
+  const candidates: Array<{ subj: Subject; chapterId: string; chName: string; tName: string; pct: number }> = [];
   for (const subj of targetSubjects) {
     const chapters = chapterMap[subj] ?? [];
     for (const ch of chapters) {
       for (const t of ch.topics) {
         if (t.completionPct < 60) {
-          candidates.push({ subj, chName: ch.chapterName, tName: t.topicName, pct: t.completionPct });
+          candidates.push({ subj, chapterId: ch.chapterId, chName: ch.chapterName, tName: t.topicName, pct: t.completionPct });
         }
       }
     }
@@ -247,11 +264,12 @@ function buildTasks(
       subject:        c.subj,
       topic:          c.tName,
       chapter:        c.chName,
+      chapterId:      c.chapterId,
       label:          c.tName,
       description:    `${c.chName} — only ${c.pct}% of questions attempted. Work through new questions to complete coverage.`,
       estimatedMin:   15,
       priority:       "medium",
-      href:           "/practice",
+      href:           buildAssignedPracticeHref(c.subj, c.tName, c.chapterId),
       completedToday: completedIds.has(id),
     });
     chapAdded++;
@@ -270,7 +288,7 @@ function buildTasks(
         description:    "Attempt mixed questions across topics to build speed and accuracy.",
         estimatedMin:   15,
         priority:       i === 0 ? "high" : "medium",
-        href:           "/practice",
+        href:           buildAssignedPracticeHref(subj),
         completedToday: completedIds.has(id),
       });
     });
@@ -407,7 +425,7 @@ function Dashboard({
   subjectCompletion:  Record<Subject, number>;
   savedNotice:        string | null;
   studyDataReady:     boolean;
-  onMarkDone:         (id: string) => void;
+  onMarkDone:         (task: ExamTask) => void;
   onClear:            () => void;
 }) {
   const urgency = getUrgency(daysRemaining);
@@ -514,6 +532,9 @@ function Dashboard({
               {allDone ? "✓ All done!" : `${total - done} left`}
             </div>
           </div>
+          <p className="mb-3 text-[10px] leading-relaxed text-slate-400">
+            Marking a plan task done does not change question coverage; coverage updates through Practice.
+          </p>
 
           {/* Legend */}
           <div className="flex gap-3 mb-3 flex-wrap">
@@ -534,19 +555,18 @@ function Dashboard({
             </span>
           </div>
 
-          {allDone ? (
+          {allDone && (
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
               <p className="text-3xl mb-2">🎉</p>
               <p className="text-sm font-bold text-emerald-700">All tasks done for today!</p>
               <p className="text-xs text-emerald-600 mt-1">Come back tomorrow for tomorrow's plan.</p>
             </div>
-          ) : (
-            <div className="space-y-3">
-              {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} onDone={onMarkDone} />
-              ))}
-            </div>
           )}
+          <div className="space-y-3">
+            {tasks.map((task) => (
+              <TaskCard key={task.id} task={task} onDone={onMarkDone} />
+            ))}
+          </div>
         </div>
 
         {/* ── Study tips by urgency ── */}
@@ -588,7 +608,7 @@ function Dashboard({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ExamMode() {
-  const { config, saveConfig, clearConfig, daysRemaining, completedIds, markDone } = useExamMode();
+  const { config, saveConfig, clearConfig, daysRemaining, completedIds, completedTasks, markDone } = useExamMode();
   const [savedNotice, setSavedNotice] = useState<string | null>(null);
 
   // Always call hooks (rules of hooks)
@@ -658,16 +678,20 @@ export default function ExamMode() {
   // Build today's task plan
   const tasks = useMemo(() => {
     if (!config) return [];
-    return buildTasks(
-      targetSubjects,
-      weakTopicsMap,
-      accuracyMap,
-      dueItems,
-      chapterMap,
-      daysRemaining ?? 30,
+    return mergeCompletedTasks(
+      buildTasks(
+        targetSubjects,
+        weakTopicsMap,
+        accuracyMap,
+        dueItems,
+        chapterMap,
+        daysRemaining ?? 30,
+        completedIds,
+      ),
+      completedTasks,
       completedIds,
     );
-  }, [config, targetSubjects, weakTopicsMap, accuracyMap, dueItems, daysRemaining, completedIds]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [config, targetSubjects, weakTopicsMap, accuracyMap, dueItems, daysRemaining, completedIds, completedTasks]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Preload question bank (class 9 — matches useChapterStats default) ──────
   useEffect(() => {

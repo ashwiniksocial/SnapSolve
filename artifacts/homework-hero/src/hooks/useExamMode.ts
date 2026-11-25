@@ -35,6 +35,8 @@ export interface ExamTask {
   subject:        Subject;
   topic:          string;
   chapter?:       string;
+  chapterId?:     string;
+  questionId?:    string;
   label:          string;
   description:    string;
   estimatedMin:   number;
@@ -104,6 +106,59 @@ function loadDone(key: string | null): Set<string> {
   } catch { return new Set(); }
 }
 
+export function loadCompletedTasks(key: string | null): ExamTask[] {
+  if (!key) return [];
+  try {
+    const raw = localStorage.getItem(key);
+    const parsed: unknown = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((task): task is ExamTask =>
+      !!task &&
+      typeof task === "object" &&
+      typeof task.id === "string" &&
+      typeof task.topic === "string" &&
+      typeof task.href === "string",
+    ).map((task) => ({ ...task, completedToday: true }));
+  } catch {
+    return [];
+  }
+}
+
+export function mergeCompletedTasks(
+  currentTasks: ExamTask[],
+  completedTasks: ExamTask[],
+  completedIds: Set<string>,
+): ExamTask[] {
+  const merged = new Map<string, ExamTask>();
+  for (const task of currentTasks) {
+    merged.set(task.id, { ...task, completedToday: task.completedToday || completedIds.has(task.id) });
+  }
+  for (const task of completedTasks) {
+    if (!merged.has(task.id)) merged.set(task.id, { ...task, completedToday: true });
+  }
+  return [...merged.values()];
+}
+
+export function persistCompletedExamTask(
+  completionKey: string | null,
+  tasksKey: string | null,
+  task: ExamTask,
+): { completedIds: Set<string>; completedTasks: ExamTask[] } | null {
+  if (!completionKey || !tasksKey) return null;
+  const completedIds = loadDone(completionKey);
+  completedIds.add(task.id);
+  const completedTasks = new Map(loadCompletedTasks(tasksKey).map((item) => [item.id, item]));
+  completedTasks.set(task.id, { ...task, completedToday: true });
+  const snapshots = [...completedTasks.values()];
+  try {
+    localStorage.setItem(tasksKey, JSON.stringify(snapshots));
+    localStorage.setItem(completionKey, JSON.stringify([...completedIds]));
+    return { completedIds, completedTasks: snapshots };
+  } catch {
+    return null;
+  }
+}
+
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useExamMode() {
@@ -111,25 +166,33 @@ export function useExamMode() {
   const context = makeAcademicContext(profile.board, profile.classLevel);
   const storageKey = scopedStorageKey(CONFIG_PREFIX, context);
   const completionKey = storageKey ? `${storageKey}:done:${todayStr()}` : null;
+  const completedTasksKey = completionKey ? `${completionKey}:tasks` : null;
   const [stored, setStored] = useState(() => ({
     key: storageKey,
     completionKey,
+    completedTasksKey,
     config: loadConfig(storageKey),
     completedIds: loadDone(completionKey),
+    completedTasks: loadCompletedTasks(completedTasksKey),
   }));
 
   useEffect(() => {
     setStored({
       key: storageKey,
       completionKey,
+      completedTasksKey,
       config: loadConfig(storageKey),
       completedIds: loadDone(completionKey),
+      completedTasks: loadCompletedTasks(completedTasksKey),
     });
-  }, [storageKey, completionKey]);
+  }, [storageKey, completionKey, completedTasksKey]);
 
-  const sameScope = stored.key === storageKey && stored.completionKey === completionKey;
+  const sameScope = stored.key === storageKey &&
+    stored.completionKey === completionKey &&
+    stored.completedTasksKey === completedTasksKey;
   const config = sameScope ? stored.config : null;
   const completedIds = sameScope ? stored.completedIds : new Set<string>();
+  const completedTasks = sameScope ? stored.completedTasks : [];
 
   const saveConfig = useCallback((cfg: ExamConfig): ExamConfigSaveResult => {
     const result = saveExamConfig(storageKey, context, cfg);
@@ -137,11 +200,15 @@ export function useExamMode() {
     setStored((prev) => ({
       key: storageKey,
       completionKey,
+      completedTasksKey,
       config: result.config,
       completedIds: prev.completionKey === completionKey ? prev.completedIds : loadDone(completionKey),
+      completedTasks: prev.completedTasksKey === completedTasksKey
+        ? prev.completedTasks
+        : loadCompletedTasks(completedTasksKey),
     }));
     return result;
-  }, [completionKey, context?.boardId, context?.classNum, storageKey]);
+  }, [completedTasksKey, completionKey, context?.boardId, context?.classNum, storageKey]);
 
   const clearConfig = useCallback(() => {
     if (!storageKey) return;
@@ -149,16 +216,18 @@ export function useExamMode() {
     setStored((prev) => ({ ...prev, key: storageKey, config: null }));
   }, [storageKey]);
 
-  const markDone = useCallback((taskId: string) => {
-    if (!completionKey) return;
-    setStored((prev) => {
-      const current = prev.completionKey === completionKey ? prev.completedIds : loadDone(completionKey);
-      const next = new Set(current);
-      next.add(taskId);
-      localStorage.setItem(completionKey, JSON.stringify([...next]));
-      return { ...prev, key: storageKey, completionKey, completedIds: next };
-    });
-  }, [completionKey, storageKey]);
+  const markDone = useCallback((task: ExamTask) => {
+    const persisted = persistCompletedExamTask(completionKey, completedTasksKey, task);
+    if (!persisted) return;
+    setStored((prev) => ({
+      ...prev,
+      key: storageKey,
+      completionKey,
+      completedTasksKey,
+      completedIds: persisted.completedIds,
+      completedTasks: persisted.completedTasks,
+    }));
+  }, [completedTasksKey, completionKey, storageKey]);
 
   const daysRemaining = useMemo((): number | null => {
     if (!config) return null;
@@ -168,5 +237,5 @@ export function useExamMode() {
     return Math.max(0, Math.ceil((exam.getTime() - today.getTime()) / 86_400_000));
   }, [config]);
 
-  return { config, saveConfig, clearConfig, daysRemaining, completedIds, markDone };
+  return { config, saveConfig, clearConfig, daysRemaining, completedIds, completedTasks, markDone };
 }

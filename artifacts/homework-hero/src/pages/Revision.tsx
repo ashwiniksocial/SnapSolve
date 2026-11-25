@@ -70,11 +70,12 @@ interface CardProps {
   isOverdue: boolean;
   boardId:   ReturnType<typeof normalizeBoardId>;
   classNum:  number;
+  initiallyOpen?: boolean;
   onReview:  (questionId: string, correct: boolean) => void;
 }
 
-function RevisionCard({ item, isOverdue, boardId, classNum, onReview }: CardProps) {
-  const [open,     setOpen]     = useState(false);
+function RevisionCard({ item, isOverdue, boardId, classNum, initiallyOpen = false, onReview }: CardProps) {
+  const [open,     setOpen]     = useState(initiallyOpen);
   const [revealed, setRevealed] = useState(false);
   const [result,   setResult]   = useState<"correct" | "incorrect" | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -99,6 +100,7 @@ function RevisionCard({ item, isOverdue, boardId, classNum, onReview }: CardProp
 
   return (
     <div
+      id={`revision-question-${item.questionId}`}
       className={`bg-white rounded-2xl border overflow-hidden shadow-sm transition-colors duration-300 ${
         isDone
           ? result === "correct" ? "border-emerald-300" : "border-red-300"
@@ -372,6 +374,7 @@ export default function Revision() {
     sessionItemsRef.current = getDueItems(weakTopics);
   }
   const sessionItems = sessionItemsRef.current;
+  const requestedQuestionId = new URLSearchParams(window.location.search).get("questionId");
 
   const upcoming = useMemo(() => getUpcomingSchedule(), [getUpcomingSchedule]);
   const today    = todayStr();
@@ -379,6 +382,16 @@ export default function Revision() {
   // Track this session's results (for progress bar)
   const [sessionResults, setSessionResults] = useState<Record<string, "correct" | "incorrect">>({});
   const [bankReady, setBankReady]           = useState(false);
+
+  useEffect(() => {
+    if (!bankReady || !requestedQuestionId || !sessionItems.some((item) => item.questionId === requestedQuestionId)) return;
+    window.setTimeout(() => {
+      document.getElementById(`revision-question-${requestedQuestionId}`)?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 0);
+  }, [bankReady, requestedQuestionId, sessionItems]);
 
   const reviewedCount    = Object.keys(sessionResults).length;
   const sessionComplete  = sessionItems.length > 0 && reviewedCount === sessionItems.length;
@@ -554,6 +567,7 @@ export default function Revision() {
                       isOverdue={item.nextReview < today}
                       boardId={boardId}
                       classNum={classNum}
+                      initiallyOpen={item.questionId === requestedQuestionId}
                       onReview={handleReview}
                     />
                   ))}
