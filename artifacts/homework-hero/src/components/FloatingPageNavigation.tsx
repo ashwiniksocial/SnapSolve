@@ -129,6 +129,10 @@ export function isStudentFlow(path: string) {
     path.startsWith("/solution");
 }
 
+export function shouldShowScrollControls(path: string, isScrollable: boolean) {
+  return isScrollable && (path.startsWith("/practice") || path.startsWith("/solution"));
+}
+
 export default function FloatingPageNavigation() {
   const [location] = useLocation();
   const [isScrollable, setIsScrollable] = useState(false);
@@ -271,38 +275,43 @@ export default function FloatingPageNavigation() {
   if (!isStudentFlow(location)) return null;
 
   return (
-    <nav
-      aria-label="Student navigation"
-      className="fixed right-3 bottom-[4.75rem] z-[100] flex min-w-[88px] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900/95 shadow-xl backdrop-blur"
-    >
-      <div className="grid grid-cols-2">
-        <button
-          type="button"
-          onClick={() => window.history.back()}
-          disabled={!canGoBack}
-          aria-label="Go back"
-          title="Go back in your in-app history"
-          className="min-h-10 border-r border-slate-700 px-2 py-1.5 text-[10px] font-bold text-white transition enabled:hover:bg-slate-700 disabled:cursor-not-allowed disabled:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+    <>
+      <nav
+        aria-label="Student history navigation"
+        className="fixed right-3 bottom-[4.75rem] z-[100] flex min-w-[88px] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900/95 shadow-xl backdrop-blur max-[360px]:right-1"
+      >
+        <div className="grid grid-cols-2">
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            disabled={!canGoBack}
+            aria-label="Go back"
+            title="Go back in your in-app history"
+            className="min-h-10 border-r border-slate-700 px-2 py-1.5 text-[10px] font-bold text-white transition enabled:hover:bg-slate-700 disabled:cursor-not-allowed disabled:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 max-[360px]:px-1"
+          >
+            ← Back
+          </button>
+          <button
+            type="button"
+            onClick={() => window.history.forward()}
+            disabled={!canGoForward}
+            aria-label="Go forward"
+            title="Go forward in your in-app history"
+            className="min-h-10 px-2 py-1.5 text-[10px] font-bold text-white transition enabled:hover:bg-slate-700 disabled:cursor-not-allowed disabled:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 max-[360px]:px-1"
+          >
+            Forward →
+          </button>
+        </div>
+      </nav>
+      {shouldShowScrollControls(location, isScrollable) && (
+        <nav
+          aria-label="Page scroll controls"
+          className="fixed left-3 bottom-[4.75rem] z-[100] grid grid-cols-3 overflow-hidden rounded-xl border border-slate-700 bg-slate-900/95 shadow-xl backdrop-blur max-[360px]:left-1"
         >
-          ← Back
-        </button>
-        <button
-          type="button"
-          onClick={() => window.history.forward()}
-          disabled={!canGoForward}
-          aria-label="Go forward"
-          title="Go forward in your in-app history"
-          className="min-h-10 px-2 py-1.5 text-[10px] font-bold text-white transition enabled:hover:bg-slate-700 disabled:cursor-not-allowed disabled:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-        >
-          Forward →
-        </button>
-      </div>
-      {isScrollable && (location.startsWith("/practice") || location.startsWith("/solution")) && (
-        <>
           <button
             type="button"
             onClick={() => scrollTo("top")}
-            className="min-h-10 border-t border-slate-700 px-2 py-1.5 text-[10px] font-bold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            className="min-h-10 border-r border-slate-700 px-2 py-1.5 text-[10px] font-bold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 max-[360px]:px-1"
             aria-label="Scroll to top"
           >
             ↑ Top
@@ -310,7 +319,7 @@ export default function FloatingPageNavigation() {
           <button
             type="button"
             onClick={() => scrollTo("middle")}
-            className="min-h-10 border-t border-slate-700 px-2 py-1.5 text-[10px] font-bold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            className="min-h-10 border-r border-slate-700 px-2 py-1.5 text-[10px] font-bold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 max-[360px]:px-1"
             aria-label="Scroll to middle"
           >
             ↕ Middle
@@ -318,13 +327,13 @@ export default function FloatingPageNavigation() {
           <button
             type="button"
             onClick={() => scrollTo("bottom")}
-            className="min-h-10 border-t border-slate-700 px-2 py-1.5 text-[10px] font-bold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            className="min-h-10 px-2 py-1.5 text-[10px] font-bold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 max-[360px]:px-1"
             aria-label="Scroll to bottom"
           >
             ↓ Bottom
           </button>
-        </>
+        </nav>
       )}
-    </nav>
+    </>
   );
 }

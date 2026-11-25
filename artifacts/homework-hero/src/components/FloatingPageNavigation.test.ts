@@ -4,6 +4,7 @@ import {
   canTravelHistory,
   isStudentFlow,
   resolveHistoryTargetIndex,
+  shouldShowScrollControls,
   type RouteHistory,
 } from "./FloatingPageNavigation";
 
@@ -13,6 +14,16 @@ test("student history controls are scoped to the five core flows and their lesso
   }
   assert.equal(isStudentFlow("/profile"), false);
   assert.equal(isStudentFlow("/sign-in"), false);
+});
+
+test("scroll controls stay independent and appear only on scrollable Practice and Solution pages", () => {
+  assert.equal(shouldShowScrollControls("/practice", true), true);
+  assert.equal(shouldShowScrollControls("/practice?subject=Math", true), true);
+  assert.equal(shouldShowScrollControls("/solution?questionId=q1", true), true);
+  assert.equal(shouldShowScrollControls("/practice", false), false);
+  assert.equal(shouldShowScrollControls("/revision", true), false);
+  assert.equal(shouldShowScrollControls("/exam", true), false);
+  assert.equal(shouldShowScrollControls("/progress", true), false);
 });
 
 test("history traversal is disabled at boundaries and follows existing entries without pushing loops", () => {
