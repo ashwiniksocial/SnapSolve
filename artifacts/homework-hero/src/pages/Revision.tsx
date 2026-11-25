@@ -8,11 +8,12 @@
  *  4. Mastered     (celebration card)
  */
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Link, useLocation } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
 import {
   buildRevisionSolutionHref,
+  getRevisionPracticeSessionPatch,
   resolveRevisionClassNum,
   useRevisionPlanner,
 } from "@/hooks/useRevisionPlanner";
@@ -203,15 +204,7 @@ function RevisionCard({ item, isOverdue, boardId, classNum, onReview }: CardProp
               </div>
               <button
                 onClick={() => {
-                  update({
-                    subject: item.subject,
-                    question: item.question,
-                    practiceTopic: item.topic,
-                    practiceQuestionId: item.questionId,
-                    practiceClassNum: item.classNum ?? classNum,
-                    practiceQuestionDiff: item.difficulty,
-                    practiceChapterName: item.chapter,
-                  });
+                  update(getRevisionPracticeSessionPatch(item, classNum));
                   navigate(buildRevisionSolutionHref(item.questionId));
                 }}
                 data-testid={`button-revision-open-${item.questionId}`}
@@ -251,8 +244,10 @@ function RevisionCard({ item, isOverdue, boardId, classNum, onReview }: CardProp
 
 function ScheduleTimeline({
   schedule,
+  onReviewQuestion,
 }: {
   schedule: Array<{ date: string; items: RevisionItem[] }>;
+  onReviewQuestion: (item: RevisionItem) => void;
 }) {
   if (schedule.length === 0) {
     return (
@@ -297,29 +292,41 @@ function ScheduleTimeline({
               </div>
             </div>
 
-            {/* Topic pills */}
-            <div className="flex flex-wrap gap-1.5">
-              {its.slice(0, 5).map((item) => {
+            <div className="space-y-2">
+              {its.map((item) => {
                 const cfg = SUBJECTS[item.subject as keyof typeof SUBJECTS];
                 return (
-                  <span
+                  <div
                     key={item.questionId}
-                    className="text-[10px] font-medium px-2 py-0.5 rounded-full border"
-                    style={{
-                      backgroundColor: cfg?.light,
-                      color:           cfg?.color,
-                      borderColor:     cfg?.border,
-                    }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-slate-50 p-3"
                   >
-                    {item.topic}
-                  </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span
+                          className="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
+                          style={{
+                            backgroundColor: cfg?.light,
+                            color: cfg?.color,
+                            borderColor: cfg?.border,
+                          }}
+                        >
+                          {item.subject}
+                        </span>
+                        <span className="text-xs font-semibold text-slate-700">{item.topic}</span>
+                      </div>
+                      <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">{item.question}</p>
+                    </div>
+                    <button
+                      type="button"
+                      data-testid={`button-review-question-${item.questionId}`}
+                      onClick={() => onReviewQuestion(item)}
+                      className="w-full sm:w-auto flex-shrink-0 px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 active:scale-95 transition-all"
+                    >
+                      Review Question
+                    </button>
+                  </div>
                 );
               })}
-              {its.length > 5 && (
-                <span className="text-[10px] font-medium text-slate-400 self-center">
-                  +{its.length - 5} more
-                </span>
-              )}
             </div>
           </div>
         );
@@ -331,7 +338,8 @@ function ScheduleTimeline({
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function Revision() {
-  const { session } = useSession();
+  const { session, update } = useSession();
+  const [, navigate] = useLocation();
   const { profile } = useProfile();
   const classNum = resolveRevisionClassNum(session.practiceClassNum, profile.classLevel);
   const boardId = normalizeBoardId(profile.board);
@@ -346,6 +354,10 @@ export default function Revision() {
   } = useRevisionPlanner(classNum);
 
   const { getTopicsNeedingRevision } = useMistakeJournal();
+  const openScheduledQuestion = useCallback((item: RevisionItem) => {
+    update(getRevisionPracticeSessionPatch(item, classNum));
+    navigate(buildRevisionSolutionHref(item.questionId));
+  }, [classNum, navigate, update]);
 
   const weakTopics = useMemo(
     () => getTopicsNeedingRevision().map((t) => t.topic),
@@ -555,7 +567,10 @@ export default function Revision() {
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
                   Upcoming — Next 14 Days
                 </p>
-                <ScheduleTimeline schedule={upcoming} />
+                <ScheduleTimeline
+                  schedule={upcoming}
+                  onReviewQuestion={openScheduledQuestion}
+                />
               </div>
             )}
 

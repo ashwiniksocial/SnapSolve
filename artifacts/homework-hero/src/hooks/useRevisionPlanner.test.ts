@@ -4,6 +4,7 @@ import {
   applyRevisionReview,
   applySelfAssessment,
   buildRevisionSolutionHref,
+  getRevisionPracticeSessionPatch,
   getDueRevisionItems,
   getUpcomingRevisionSchedule,
   loadRevisionStore,
@@ -151,4 +152,15 @@ test("Revision uses the practice class when profile class is missing and preserv
     buildRevisionSolutionHref("question id/75"),
     "/solution?practiceMode=1&questionId=question%20id%2F75",
   );
+});
+
+test("opening a scheduled question carries its ID and class without completing it", () => {
+  const store = applySelfAssessment(emptyStore(), question, "NEEDS_PRACTICE", today);
+  const before = JSON.stringify(store);
+  const patch = getRevisionPracticeSessionPatch(store.items[question.questionId], 9);
+
+  assert.equal(patch.practiceQuestionId, question.questionId);
+  assert.equal(patch.practiceClassNum, 9);
+  assert.equal(patch.question, question.question);
+  assert.equal(JSON.stringify(store), before);
 });

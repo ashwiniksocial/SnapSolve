@@ -99,6 +99,18 @@ export function buildRevisionSolutionHref(questionId: string): string {
   return `/solution?practiceMode=1&questionId=${encodeURIComponent(questionId)}`;
 }
 
+export function getRevisionPracticeSessionPatch(item: RevisionItem, classNum: number) {
+  return {
+    subject: item.subject,
+    question: item.question,
+    practiceTopic: item.topic,
+    practiceQuestionId: item.questionId,
+    practiceClassNum: item.classNum ?? classNum,
+    practiceQuestionDiff: item.difficulty,
+    practiceChapterName: item.chapter,
+  };
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function todayStr(): string {
