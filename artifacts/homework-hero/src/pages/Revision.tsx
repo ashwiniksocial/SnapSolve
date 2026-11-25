@@ -11,12 +11,16 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { SUBJECTS } from "@/data/subjects";
-import { useRevisionPlanner } from "@/hooks/useRevisionPlanner";
+import {
+  buildRevisionSolutionHref,
+  resolveRevisionClassNum,
+  useRevisionPlanner,
+} from "@/hooks/useRevisionPlanner";
 import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import { getQuestionById, preloadQBank } from "@/services/questionService";
 import { useSession }  from "@/hooks/useSession";
 import { useProfile }  from "@/hooks/useProfile";
-import { getStoredAcademicContext } from "@/data/questions/academicContext";
+import { getStoredAcademicContext, normalizeBoardId } from "@/data/questions/academicContext";
 import type { RevisionItem, SRInterval } from "@/hooks/useRevisionPlanner";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -63,10 +67,12 @@ function SubjectChip({ subject }: { subject: string }) {
 interface CardProps {
   item:      RevisionItem;
   isOverdue: boolean;
+  boardId:   ReturnType<typeof normalizeBoardId>;
+  classNum:  number;
   onReview:  (questionId: string, correct: boolean) => void;
 }
 
-function RevisionCard({ item, isOverdue, onReview }: CardProps) {
+function RevisionCard({ item, isOverdue, boardId, classNum, onReview }: CardProps) {
   const [open,     setOpen]     = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [result,   setResult]   = useState<"correct" | "incorrect" | null>(null);
@@ -75,7 +81,11 @@ function RevisionCard({ item, isOverdue, onReview }: CardProps) {
   const [, navigate] = useLocation();
 
   const academicContext = getStoredAcademicContext();
-  const fullQ      = getQuestionById(item.questionId, academicContext?.boardId, academicContext?.classNum);
+  const fullQ = getQuestionById(
+    item.questionId,
+    normalizeBoardId(item.boardId) ?? boardId ?? academicContext?.boardId,
+    item.classNum ?? classNum,
+  );
   const isDone     = result !== null;
   const nextIv     = NEXT_IV[item.interval];
   const willMaster = result === "correct" && item.interval === 14;
@@ -193,12 +203,21 @@ function RevisionCard({ item, isOverdue, onReview }: CardProps) {
               </div>
               <button
                 onClick={() => {
-                  update({ question: item.question, practiceTopic: item.topic });
-                  navigate("/solution?practiceMode=1");
+                  update({
+                    subject: item.subject,
+                    question: item.question,
+                    practiceTopic: item.topic,
+                    practiceQuestionId: item.questionId,
+                    practiceClassNum: item.classNum ?? classNum,
+                    practiceQuestionDiff: item.difficulty,
+                    practiceChapterName: item.chapter,
+                  });
+                  navigate(buildRevisionSolutionHref(item.questionId));
                 }}
+                data-testid={`button-revision-open-${item.questionId}`}
                 className="w-full py-2 rounded-xl border border-indigo-200 bg-white text-xs font-semibold text-indigo-600 hover:bg-indigo-50 active:scale-95 transition-all"
               >
-                ✦ Get Full AI Lesson →
+                Review in Practice →
               </button>
             </>
           ) : (
@@ -312,6 +331,10 @@ function ScheduleTimeline({
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function Revision() {
+  const { session } = useSession();
+  const { profile } = useProfile();
+  const classNum = resolveRevisionClassNum(session.practiceClassNum, profile.classLevel);
+  const boardId = normalizeBoardId(profile.board);
   const {
     completeReview,
     getDueItems,
@@ -320,10 +343,9 @@ export default function Revision() {
     next7Count,
     masteredCount,
     totalScheduled,
-  } = useRevisionPlanner();
+  } = useRevisionPlanner(classNum);
 
   const { getTopicsNeedingRevision } = useMistakeJournal();
-  const { profile }                  = useProfile();
 
   const weakTopics = useMemo(
     () => getTopicsNeedingRevision().map((t) => t.topic),
@@ -362,8 +384,8 @@ export default function Revision() {
   // ── Preload question bank ─────────────────────────────────────────────────
   useEffect(() => {
     setBankReady(false);
-    preloadQBank(profile.classLevel ?? 9).then(() => setBankReady(true));
-  }, [profile.classLevel]);
+    preloadQBank(classNum).then(() => setBankReady(true));
+  }, [classNum]);
 
   if (!bankReady) {
     return (
@@ -518,6 +540,8 @@ export default function Revision() {
                       key={item.questionId}
                       item={item}
                       isOverdue={item.nextReview < today}
+                      boardId={boardId}
+                      classNum={classNum}
                       onReview={handleReview}
                     />
                   ))}

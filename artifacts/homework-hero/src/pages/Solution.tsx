@@ -456,6 +456,7 @@ export default function Solution() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setPracticeAssessment("CONFIDENT")}
+                    data-testid={`button-self-assessment-confident-${practiceQuestionId}`}
                     className={`py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
                       practiceAssessment === "CONFIDENT"
                         ? "bg-emerald-500 border-emerald-500 text-white"
@@ -466,6 +467,7 @@ export default function Solution() {
                   </button>
                   <button
                     onClick={() => setPracticeAssessment("NEEDS_PRACTICE")}
+                    data-testid={`button-self-assessment-needs-practice-${practiceQuestionId}`}
                     className={`py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
                       practiceAssessment === "NEEDS_PRACTICE"
                         ? "bg-red-500 border-red-500 text-white"

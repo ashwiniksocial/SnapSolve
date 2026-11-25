@@ -83,6 +83,22 @@ export interface RevisionStore {
 
 export type SelfAssessmentInput = Omit<SelfAssessmentRecord, "status" | "updatedAt">;
 
+export function resolveRevisionClassNum(
+  practiceClassNum: number | undefined,
+  profileClassNum: number | null,
+): number {
+  for (const candidate of [practiceClassNum, profileClassNum]) {
+    if (typeof candidate === "number" && Number.isInteger(candidate) && candidate >= 6 && candidate <= 12) {
+      return candidate;
+    }
+  }
+  return 9;
+}
+
+export function buildRevisionSolutionHref(questionId: string): string {
+  return `/solution?practiceMode=1&questionId=${encodeURIComponent(questionId)}`;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function todayStr(): string {
@@ -95,29 +111,44 @@ function addDays(fromDate: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-function load(key: string | null): RevisionStore {
-  if (!key) return { items: {}, selfAssessments: {} };
+export function parseRevisionStore(raw: string | null): RevisionStore {
+  if (!raw) return { items: {}, selfAssessments: {} };
   try {
-    const raw = localStorage.getItem(key);
-    if (raw) {
-      const parsed = JSON.parse(raw) as RevisionStore | RevisionItems;
-      if (
-        "items" in parsed &&
-        "selfAssessments" in parsed &&
-        typeof parsed.items === "object" &&
-        typeof parsed.selfAssessments === "object"
-      ) {
-        return parsed as RevisionStore;
-      }
-      // Preserve legacy revision items while adding the canonical self-assessment
-      // map to this same existing persistence boundary.
-      return { items: parsed as RevisionItems, selfAssessments: {} };
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { items: {}, selfAssessments: {} };
     }
+    const value = parsed as Record<string, unknown>;
+    if (
+      value.items &&
+      typeof value.items === "object" &&
+      !Array.isArray(value.items) &&
+      value.selfAssessments &&
+      typeof value.selfAssessments === "object" &&
+      !Array.isArray(value.selfAssessments)
+    ) {
+      return {
+        items: value.items as RevisionItems,
+        selfAssessments: value.selfAssessments as Record<string, SelfAssessmentRecord>,
+      };
+    }
+    // Preserve legacy revision items while adding the canonical self-assessment
+    // map to this same existing persistence boundary.
+    return { items: value as RevisionItems, selfAssessments: {} };
   } catch {}
   return { items: {}, selfAssessments: {} };
 }
 
-function persist(key: string | null, store: RevisionStore): void {
+export function loadRevisionStore(key: string | null): RevisionStore {
+  if (!key) return { items: {}, selfAssessments: {} };
+  try {
+    return parseRevisionStore(localStorage.getItem(key));
+  } catch {
+    return { items: {}, selfAssessments: {} };
+  }
+}
+
+export function saveRevisionStore(key: string | null, store: RevisionStore): void {
   if (key) localStorage.setItem(key, JSON.stringify(store));
 }
 
@@ -130,12 +161,21 @@ export function applySelfAssessment(
   updatedAt = new Date().toISOString(),
 ): RevisionStore {
   const existingItem = previous.items[question.questionId];
+  const context = {
+    ...(question.boardId !== undefined ? { boardId: question.boardId } : {}),
+    ...(question.classNum !== undefined ? { classNum: question.classNum } : {}),
+    ...(question.canonicalChapterId !== undefined
+      ? { canonicalChapterId: question.canonicalChapterId }
+      : {}),
+    ...(question.academicSession !== undefined ? { academicSession: question.academicSession } : {}),
+  };
   const items = status === "NEEDS_PRACTICE"
     ? {
         ...previous.items,
         [question.questionId]: existingItem
           ? {
               ...existingItem,
+              ...context,
               interval: 1 as SRInterval,
               nextReview: addDays(today, 1),
               mastered: false,
@@ -147,6 +187,7 @@ export function applySelfAssessment(
               topic: question.topic,
               chapter: question.chapter,
               difficulty: question.difficulty,
+              ...context,
               interval: 1 as SRInterval,
               nextReview: addDays(today, 1),
               addedDate: today,
@@ -166,6 +207,36 @@ export function applySelfAssessment(
         ...question,
         status,
         updatedAt,
+      },
+    },
+  };
+}
+
+export function applyRevisionReview(
+  previous: RevisionStore,
+  questionId: string,
+  correct: boolean,
+  today = todayStr(),
+): RevisionStore {
+  const item = previous.items[questionId];
+  if (!item) return previous;
+
+  const newInterval = correct ? NEXT_INTERVAL[item.interval] : 1;
+  const mastered = correct && item.interval === 14;
+  const nextReview = mastered ? addDays(today, 30) : addDays(today, newInterval);
+
+  return {
+    ...previous,
+    items: {
+      ...previous.items,
+      [questionId]: {
+        ...item,
+        interval: newInterval,
+        nextReview,
+        lastReview: today,
+        timesCorrect: item.timesCorrect + (correct ? 1 : 0),
+        timesWrong: item.timesWrong + (correct ? 0 : 1),
+        mastered,
       },
     },
   };
@@ -193,16 +264,44 @@ function priorityScore(item: RevisionItem, weakTopics: string[], today: string):
   return score;
 }
 
+export function getDueRevisionItems(
+  items: RevisionItems,
+  today = todayStr(),
+  weakTopics: string[] = [],
+): RevisionItem[] {
+  return Object.values(items)
+    .filter((item) => !item.mastered && item.nextReview <= today)
+    .sort((a, b) => priorityScore(b, weakTopics, today) - priorityScore(a, weakTopics, today));
+}
+
+export function getUpcomingRevisionSchedule(
+  items: RevisionItems,
+  today = todayStr(),
+): Array<{ date: string; items: RevisionItem[] }> {
+  const cutoff = addDays(today, 14);
+  const upcoming = Object.values(items).filter(
+    (item) => !item.mastered && item.nextReview > today && item.nextReview <= cutoff,
+  );
+  const byDate = new Map<string, RevisionItem[]>();
+  for (const item of upcoming) {
+    if (!byDate.has(item.nextReview)) byDate.set(item.nextReview, []);
+    byDate.get(item.nextReview)!.push(item);
+  }
+  return [...byDate.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, scheduledItems]) => ({ date, items: scheduledItems }));
+}
+
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useRevisionPlanner(classNumOverride?: number) {
   const { profile } = useProfile();
   const context = makeAcademicContext(profile.board, classNumOverride ?? profile.classLevel);
   const storageKey = scopedStorageKey(KEY_PREFIX, context);
-  const [stored, setStored] = useState(() => ({ key: storageKey, value: load(storageKey) }));
+  const [stored, setStored] = useState(() => ({ key: storageKey, value: loadRevisionStore(storageKey) }));
 
   useEffect(() => {
-    setStored({ key: storageKey, value: load(storageKey) });
+    setStored({ key: storageKey, value: loadRevisionStore(storageKey) });
   }, [storageKey]);
 
   const store: RevisionStore = stored.key === storageKey
@@ -211,12 +310,11 @@ export function useRevisionPlanner(classNumOverride?: number) {
 
   const mutate = useCallback((fn: (prev: RevisionStore) => RevisionStore) => {
     if (!storageKey) return;
-    setStored((prev) => {
-      const current = prev.key === storageKey ? prev.value : load(storageKey);
-      const next = fn(current);
-      persist(storageKey, next);
-      return { key: storageKey, value: next };
-    });
+    // Persist before scheduling React state so a route change in the same turn
+    // cannot leave a newly marked question visible only in memory.
+    const next = fn(loadRevisionStore(storageKey));
+    saveRevisionStore(storageKey, next);
+    setStored({ key: storageKey, value: next });
   }, [storageKey]);
 
   // ── Write operations ──────────────────────────────────────────────────────
@@ -314,31 +412,7 @@ export function useRevisionPlanner(classNumOverride?: number) {
    */
   const completeReview = useCallback(
     (questionId: string, correct: boolean) => {
-      mutate((prev) => {
-        const item = prev.items[questionId];
-        if (!item) return prev;
-
-        const today       = todayStr();
-        const newInterval = correct ? NEXT_INTERVAL[item.interval] : 1;
-        const mastered    = correct && item.interval === 14;
-        const nextReview  = mastered ? addDays(today, 30) : addDays(today, newInterval);
-
-        return {
-          ...prev,
-          items: {
-            ...prev.items,
-            [questionId]: {
-            ...item,
-            interval:     newInterval,
-            nextReview,
-            lastReview:   today,
-            timesCorrect: item.timesCorrect + (correct ? 1 : 0),
-            timesWrong:   item.timesWrong   + (correct ? 0 : 1),
-            mastered,
-            },
-          },
-        };
-      });
+      mutate((prev) => applyRevisionReview(prev, questionId, correct));
     },
     [mutate]
   );
@@ -351,14 +425,7 @@ export function useRevisionPlanner(classNumOverride?: number) {
    */
   const getDueItems = useCallback(
     (weakTopics: string[] = []): RevisionItem[] => {
-      const today = todayStr();
-      return Object.values(store.items)
-        .filter((item) => !item.mastered && item.nextReview <= today)
-        .sort(
-          (a, b) =>
-            priorityScore(b, weakTopics, today) -
-            priorityScore(a, weakTopics, today)
-        );
+      return getDueRevisionItems(store.items, todayStr(), weakTopics);
     },
     [store]
   );
@@ -368,22 +435,7 @@ export function useRevisionPlanner(classNumOverride?: number) {
    */
   const getUpcomingSchedule = useCallback(
     (): Array<{ date: string; items: RevisionItem[] }> => {
-      const today  = todayStr();
-      const cutoff = addDays(today, 14);
-      const upcoming = Object.values(store.items).filter(
-        (item) =>
-          !item.mastered &&
-          item.nextReview > today &&
-          item.nextReview <= cutoff
-      );
-      const byDate = new Map<string, RevisionItem[]>();
-      for (const item of upcoming) {
-        if (!byDate.has(item.nextReview)) byDate.set(item.nextReview, []);
-        byDate.get(item.nextReview)!.push(item);
-      }
-      return [...byDate.entries()]
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([date, items]) => ({ date, items }));
+      return getUpcomingRevisionSchedule(store.items, todayStr());
     },
     [store]
   );
