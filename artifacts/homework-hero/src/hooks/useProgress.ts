@@ -45,8 +45,9 @@ export function recordUniquePractice(
 ): ProgressData {
   const subjectProgress = { ...(previous[subject] ?? {}) };
   const current = subjectProgress[topic] ?? { solved: 0, correct: 0, attempted: [] };
+  const attempted = current.attempted ?? [];
 
-  if (current.attempted.includes(questionId)) return previous;
+  if (attempted.includes(questionId)) return previous;
 
   return {
     ...previous,
@@ -54,7 +55,7 @@ export function recordUniquePractice(
       ...subjectProgress,
       [topic]: {
         ...current,
-        attempted: [...current.attempted, questionId],
+        attempted: [...attempted, questionId],
       },
     },
   };

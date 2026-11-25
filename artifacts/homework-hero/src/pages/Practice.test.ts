@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  buildPracticeSolutionHref,
   isPracticeTargetValid,
   resolveAssignedPracticeQuestion,
   resolvePracticeTarget,
@@ -61,4 +62,15 @@ test("an unavailable assigned question falls back only within the already-filter
   const questions = [{ id: "force-q1" }, { id: "force-q2" }] as Question[];
   assert.equal(resolveAssignedPracticeQuestion(questions, "missing-q")?.id, "force-q1");
   assert.equal(resolveAssignedPracticeQuestion([], "missing-q"), undefined);
+});
+
+test("only Exam-launched lessons carry a direct Return to Exam target", () => {
+  const fromExam = new URL(buildPracticeSolutionHref("math-q1", false, "/exam"), "https://snapsolve.test");
+  const normal = new URL(buildPracticeSolutionHref("math-q1", false, null), "https://snapsolve.test");
+
+  assert.equal(fromExam.pathname, "/solution");
+  assert.equal(fromExam.searchParams.get("practiceMode"), "1");
+  assert.equal(fromExam.searchParams.get("questionId"), "math-q1");
+  assert.equal(fromExam.searchParams.get("returnTo"), "/exam");
+  assert.equal(normal.searchParams.has("returnTo"), false);
 });

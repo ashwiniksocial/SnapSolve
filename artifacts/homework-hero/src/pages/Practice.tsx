@@ -113,6 +113,17 @@ function replacePracticeQuery(updates: Record<string, string | null>) {
   );
 }
 
+export function buildPracticeSolutionHref(
+  questionId: string,
+  savedAnswer: boolean,
+  returnTo: string | null,
+): string {
+  const params = new URLSearchParams({ practiceMode: "1", questionId });
+  if (savedAnswer) params.set("savedAnswer", "1");
+  if (returnTo === "/exam") params.set("returnTo", "/exam");
+  return `/solution?${params.toString()}`;
+}
+
 // ─── Chapter status (5 tiers) ──────────────────────────────────────────────────
 type ChapterStatus = "new" | "learning" | "improving" | "strong" | "mastered";
 
@@ -607,8 +618,8 @@ export default function Practice() {
     // Keep the frozen bank ID in the route as well as session storage. This
     // makes a refreshed/new Solution mount deterministic even if React route
     // state has not observed the session update yet.
-    const savedAnswerParam = openSavedExplanation ? "&savedAnswer=1" : "";
-    navigate(`/solution?practiceMode=1&questionId=${encodeURIComponent(metadata.questionId)}${savedAnswerParam}`);
+    const returnTo = new URLSearchParams(window.location.search).get("returnTo");
+    navigate(buildPracticeSolutionHref(metadata.questionId, openSavedExplanation, returnTo));
   }, [selectedSubject, update, navigate]);
 
   useEffect(() => {

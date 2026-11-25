@@ -117,6 +117,7 @@ export default function Solution() {
   // immediate route transition can still resolve the frozen bank question.
   const practiceMode = solutionParams.get("practiceMode") === "1";
   const savedAnswerMode = practiceMode && solutionParams.get("savedAnswer") === "1";
+  const returnToExam = practiceMode && solutionParams.get("returnTo") === "/exam";
   const practiceQuestionId = solutionParams.get("questionId") ?? session.practiceQuestionId;
 
   // ── In-flight guard ──────────────────────────────────────────────────────────
@@ -333,6 +334,19 @@ export default function Solution() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200 px-5 pt-10 pb-5">
         <div className="max-w-lg mx-auto">
+          {returnToExam && (
+            <div className="mb-3">
+              <Link href="/exam">
+                <button
+                  type="button"
+                  data-testid="button-return-to-exam"
+                  className="flex items-center gap-1 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                >
+                  ← Return to Exam
+                </button>
+              </Link>
+            </div>
+          )}
           {/* Top navigation — Chapter + Questions (practice mode only) */}
           {practiceMode && session.practiceChapterId && (
             <div className="flex items-center gap-2 mb-3">
