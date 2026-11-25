@@ -21,6 +21,8 @@ import { useMistakeJournal } from "@/hooks/useMistakeJournal";
 import { getQuestionById, preloadQBank } from "@/services/questionService";
 import { useSession }  from "@/hooks/useSession";
 import { useProfile }  from "@/hooks/useProfile";
+import { useProgress } from "@/hooks/useProgress";
+import { useStreak } from "@/hooks/useStreak";
 import { getStoredAcademicContext, normalizeBoardId } from "@/data/questions/academicContext";
 import type { RevisionItem, SRInterval } from "@/hooks/useRevisionPlanner";
 
@@ -78,7 +80,6 @@ function RevisionCard({ item, isOverdue, boardId, classNum, initiallyOpen = fals
   const [open,     setOpen]     = useState(initiallyOpen);
   const [revealed, setRevealed] = useState(false);
   const [result,   setResult]   = useState<"correct" | "incorrect" | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { update } = useSession();
   const [, navigate] = useLocation();
 
@@ -94,8 +95,9 @@ function RevisionCard({ item, isOverdue, boardId, classNum, initiallyOpen = fals
 
   const handleMark = (correct: boolean) => {
     setResult(correct ? "correct" : "incorrect");
-    // Give the student 1.4 s to see the feedback before the card leaves the queue
-    timerRef.current = setTimeout(() => onReview(item.questionId, correct), 1400);
+    // Persist the graded review immediately; the page keeps its session snapshot
+    // visible so the student still sees feedback without risking a lost write.
+    onReview(item.questionId, correct);
   };
 
   return (
@@ -345,6 +347,8 @@ export default function Revision() {
   const { profile } = useProfile();
   const classNum = resolveRevisionClassNum(session.practiceClassNum, profile.classLevel);
   const boardId = normalizeBoardId(profile.board);
+  const { recordSolve } = useProgress(classNum);
+  const { completeToday } = useStreak();
   const {
     completeReview,
     getDueItems,
@@ -398,6 +402,11 @@ export default function Revision() {
 
   const handleReview = (questionId: string, correct: boolean) => {
     completeReview(questionId, correct);
+    const reviewedItem = sessionItems.find((item) => item.questionId === questionId);
+    if (reviewedItem) {
+      recordSolve(reviewedItem.subject, reviewedItem.topic, correct, questionId);
+    }
+    completeToday();
     setSessionResults((prev) => ({
       ...prev,
       [questionId]: correct ? "correct" : "incorrect",

@@ -1,9 +1,23 @@
 import { useState, useCallback } from "react";
 
-interface StreakData {
+export interface StreakData {
   streak: number;
   lastCompletedDate: string | null;
   completedDates: string[];
+}
+
+export function applyDailyCompletion(
+  previous: StreakData,
+  today: string,
+  yesterday: string,
+): StreakData {
+  if (previous.lastCompletedDate === today) return previous;
+
+  const streak = previous.lastCompletedDate === yesterday ? previous.streak + 1 : 1;
+  const completedDates = previous.completedDates.includes(today)
+    ? previous.completedDates
+    : [...previous.completedDates, today];
+  return { streak, lastCompletedDate: today, completedDates };
 }
 
 const STORAGE_KEY = "homework-hero-streak";
@@ -63,20 +77,8 @@ export function useStreak(): UseStreakReturn {
     const yesterday = yesterdayStr();
 
     setData((prev) => {
-      if (prev.lastCompletedDate === today) return prev;
-
-      const newStreak =
-        prev.lastCompletedDate === yesterday ? prev.streak + 1 : 1;
-
-      const completedDates = prev.completedDates.includes(today)
-        ? prev.completedDates
-        : [...prev.completedDates, today];
-
-      const next: StreakData = {
-        streak: newStreak,
-        lastCompletedDate: today,
-        completedDates,
-      };
+      const next = applyDailyCompletion(prev, today, yesterday);
+      if (next === prev) return prev;
       saveData(next);
       return next;
     });

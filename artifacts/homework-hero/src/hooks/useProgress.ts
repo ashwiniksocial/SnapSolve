@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Subject } from "@/data/subjects";
 import { makeAcademicContext, scopedStorageKey } from "@/data/questions/academicContext";
+import { BETA_SCIENCE_DOMAINS } from "@/data/questions/studentFacingSubject";
 import { useProfile } from "@/hooks/useProfile";
 
 // ─── Data shapes ──────────────────────────────────────────────────────────────
@@ -36,6 +37,96 @@ function persist(key: string | null, data: ProgressData) {
   if (key) localStorage.setItem(key, JSON.stringify(data));
 }
 
+function sourceSubjectsFor(subject: Subject): Subject[] {
+  return subject === "Science"
+    ? ["Science", ...BETA_SCIENCE_DOMAINS]
+    : [subject];
+}
+
+function mergedTopicRecord(
+  progress: ProgressData,
+  subject: Subject,
+  topicName: string,
+): TopicRecord | null {
+  let merged: TopicRecord | null = null;
+  for (const sourceSubject of sourceSubjectsFor(subject)) {
+    const record = progress[sourceSubject]?.[topicName];
+    if (!record) continue;
+    const previous: TopicRecord = merged ?? { solved: 0, correct: 0, attempted: [] };
+    const attempted: string[] = [...new Set([
+      ...(previous.attempted ?? []),
+      ...(record.attempted ?? []),
+    ])];
+    merged = {
+      solved: previous.solved + (record.solved ?? 0),
+      correct: previous.correct + (record.correct ?? 0),
+      attempted,
+    };
+  }
+  return merged;
+}
+
+export function getSubjectStatsFromProgress(
+  progress: ProgressData,
+  subject: Subject,
+): SubjectStats {
+  const topics = new Set<string>();
+  for (const sourceSubject of sourceSubjectsFor(subject)) {
+    for (const topic of Object.keys(progress[sourceSubject] ?? {})) topics.add(topic);
+  }
+
+  const topicStats: TopicStat[] = [...topics].map((topic) => {
+    const record = mergedTopicRecord(progress, subject, topic) ?? {
+      solved: 0,
+      correct: 0,
+      attempted: [],
+    };
+    const accuracy = record.solved > 0
+      ? Math.round((record.correct / record.solved) * 100)
+      : 0;
+    return {
+      topic,
+      solved: record.solved,
+      correct: record.correct,
+      accuracy,
+      masteryPct: accuracy,
+      attempted: record.attempted ?? [],
+    };
+  });
+
+  const totalSolved = topicStats.reduce((sum, topic) => sum + topic.solved, 0);
+  const totalCorrect = topicStats.reduce((sum, topic) => sum + topic.correct, 0);
+  const accuracy = totalSolved > 0 ? Math.round((totalCorrect / totalSolved) * 100) : 0;
+  const weakTopics = topicStats
+    .filter((topic) => topic.solved > 0 && topic.accuracy < 60)
+    .sort((left, right) => left.accuracy - right.accuracy)
+    .map((topic) => topic.topic);
+  const strongTopics = topicStats
+    .filter((topic) => topic.solved >= 3 && topic.accuracy >= 80)
+    .sort((left, right) => right.accuracy - left.accuracy)
+    .map((topic) => topic.topic);
+  const recommendations: Recommendation[] = weakTopics.map((topic) => {
+    const stat = topicStats.find((candidate) => candidate.topic === topic)!;
+    return {
+      topic,
+      message: stat.accuracy < 40
+        ? `Your accuracy in "${topic}" is ${stat.accuracy}%. Revisit the theory and work through more examples.`
+        : `Practice more questions from "${topic}" to push above 60%.`,
+      priority: stat.accuracy < 40 ? "high" : "medium",
+    };
+  });
+
+  return {
+    totalSolved,
+    totalCorrect,
+    accuracy,
+    topicStats,
+    weakTopics,
+    strongTopics,
+    recommendations,
+  };
+}
+
 /** Pure unique-coverage transition used by the Practice outcome workflow. */
 export function recordUniquePractice(
   previous: ProgressData,
@@ -56,6 +147,32 @@ export function recordUniquePractice(
       [topic]: {
         ...current,
         attempted: [...attempted, questionId],
+      },
+    },
+  };
+}
+
+export function recordSolvedPractice(
+  previous: ProgressData,
+  subject: Subject,
+  topic: string,
+  correct: boolean,
+  questionId?: string,
+): ProgressData {
+  const subjectProgress = { ...(previous[subject] ?? {}) };
+  const current = subjectProgress[topic] ?? { solved: 0, correct: 0, attempted: [] };
+  const attempted = current.attempted ?? [];
+  const alreadyAttempted = questionId ? attempted.includes(questionId) : false;
+
+  return {
+    ...previous,
+    [subject]: {
+      ...subjectProgress,
+      [topic]: {
+        ...current,
+        solved: current.solved + 1,
+        correct: current.correct + (correct ? 1 : 0),
+        attempted: questionId && !alreadyAttempted ? [...attempted, questionId] : attempted,
       },
     },
   };
@@ -108,22 +225,7 @@ export function useProgress(classNumOverride?: number) {
       if (!scopeKey) return;
       setStored((storedPrev) => {
         const prev = storedPrev.key === scopeKey ? storedPrev.data : load(scopeKey);
-        const subj    = { ...(prev[subject] ?? {}) };
-        const current = subj[topic] ?? { solved: 0, correct: 0, attempted: [] };
-
-        const alreadyAttempted = questionId
-          ? current.attempted.includes(questionId)
-          : false;
-
-        subj[topic] = {
-          solved:    current.solved + 1,
-          correct:   current.correct + (correct ? 1 : 0),
-          attempted: questionId && !alreadyAttempted
-            ? [...current.attempted, questionId]
-            : current.attempted,
-        };
-
-        const next = { ...prev, [subject]: subj };
+        const next = recordSolvedPractice(prev, subject, topic, correct, questionId);
         persist(scopeKey, next);
         return { key: scopeKey, data: next };
       });
@@ -152,72 +254,14 @@ export function useProgress(classNumOverride?: number) {
 
   // Full stats for a subject
   const getSubjectStats = useCallback(
-    (subject: Subject): SubjectStats => {
-      const data   = progress[subject] ?? {};
-      const entries = Object.entries(data);
-
-      const topicStats: TopicStat[] = entries.map(([topic, rec]) => {
-        const accuracy = rec.solved > 0
-          ? Math.round((rec.correct / rec.solved) * 100)
-          : 0;
-        return {
-          topic,
-          solved:     rec.solved,
-          correct:    rec.correct,
-          accuracy,
-          masteryPct: accuracy,
-          attempted:  rec.attempted ?? [],
-        };
-      });
-
-      const totalSolved  = entries.reduce((s, [, v]) => s + v.solved,  0);
-      const totalCorrect = entries.reduce((s, [, v]) => s + v.correct, 0);
-      const accuracy     = totalSolved > 0
-        ? Math.round((totalCorrect / totalSolved) * 100)
-        : 0;
-
-      // Weak = solved at least once AND accuracy < 60 %
-      const weakTopics = topicStats
-        .filter((t) => t.solved > 0 && t.accuracy < 60)
-        .sort((a, b) => a.accuracy - b.accuracy)
-        .map((t) => t.topic);
-
-      // Strong = solved ≥ 3 AND accuracy ≥ 80 %
-      const strongTopics = topicStats
-        .filter((t) => t.solved >= 3 && t.accuracy >= 80)
-        .sort((a, b) => b.accuracy - a.accuracy)
-        .map((t) => t.topic);
-
-      // Recommendations: one per weak topic + a general one if nothing solved
-      const recommendations: Recommendation[] = weakTopics.map((topic) => {
-        const stat = topicStats.find((t) => t.topic === topic)!;
-        return {
-          topic,
-          message:
-            stat.accuracy < 40
-              ? `Your accuracy in "${topic}" is ${stat.accuracy}%. Revisit the theory and work through more examples.`
-              : `Practice more questions from "${topic}" to push above 60%.`,
-          priority: stat.accuracy < 40 ? "high" : "medium",
-        };
-      });
-
-      return {
-        totalSolved,
-        totalCorrect,
-        accuracy,
-        topicStats,
-        weakTopics,
-        strongTopics,
-        recommendations,
-      };
-    },
+    (subject: Subject): SubjectStats => getSubjectStatsFromProgress(progress, subject),
     [progress]
   );
 
   // Per-topic quick lookup (single call, no full stats computation)
   const getTopicStat = useCallback(
     (subject: Subject, topic: string): TopicStat | null => {
-      const rec = progress[subject]?.[topic];
+      const rec = mergedTopicRecord(progress, subject, topic);
       if (!rec || rec.solved === 0) return null;
       const accuracy = Math.round((rec.correct / rec.solved) * 100);
       return {

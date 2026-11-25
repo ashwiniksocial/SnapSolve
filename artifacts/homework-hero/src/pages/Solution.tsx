@@ -34,6 +34,7 @@ import {
   getCanonicalPracticeMetadata,
 } from "@/services/canonicalPracticeMetadata";
 import { getSolutionScrollTarget } from "@/services/solutionPageKeyboardScroll";
+import { useStreak } from "@/hooks/useStreak";
 import SolutionCard from "@/components/SolutionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SimilarQuestions from "@/components/SimilarQuestions";
@@ -49,6 +50,7 @@ export default function Solution() {
   const classNum = session.practiceClassNum ?? profile.classLevel ?? undefined;
   const { recordSolve, recordPractice } = useProgress(classNum);
   const { setSelfAssessment, selfAssessments } = useRevisionPlanner(classNum);
+  const { completeToday } = useStreak();
   const cfg = SUBJECTS[session.subject];
 
   const [pageState, setPageState]   = useState<PageState>("loading");
@@ -316,6 +318,7 @@ export default function Solution() {
     const metadata = getCanonicalPracticeMetadata(bankQuestion);
 
     recordPractice(metadata.subject, metadata.topicName, metadata.questionId);
+    completeToday();
     setSelfAssessment(
       {
         questionId: metadata.questionId,
@@ -336,14 +339,12 @@ export default function Solution() {
         <div className="max-w-lg mx-auto">
           {returnToExam && (
             <div className="mb-3">
-              <Link href="/exam">
-                <button
-                  type="button"
-                  data-testid="button-return-to-exam"
-                  className="flex items-center gap-1 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-                >
-                  ← Return to Exam
-                </button>
+              <Link
+                href="/exam"
+                data-testid="button-return-to-exam"
+                className="inline-flex items-center gap-1 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              >
+                ← Return to Exam
               </Link>
             </div>
           )}

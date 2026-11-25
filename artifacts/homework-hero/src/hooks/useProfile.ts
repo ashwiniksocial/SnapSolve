@@ -17,6 +17,10 @@ export interface StudentProfile {
   displayName: string | null;
 }
 
+export function syncProfileFormField<T>(current: T, incoming: T, edited: boolean): T {
+  return edited ? current : incoming;
+}
+
 // ─── localStorage keys ────────────────────────────────────────────────────────
 
 const LS_BOARD = "studyai_board";

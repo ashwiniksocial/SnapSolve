@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser, useClerk } from "@clerk/react";
 import { useLocation } from "wouter";
-import { useProfile } from "@/hooks/useProfile";
+import { syncProfileFormField, useProfile } from "@/hooks/useProfile";
 import BetaFeedback from "@/components/BetaFeedback";
 
 const BOARDS   = ["CBSE", "ICSE", "WBBSE", "State Board", "Other"] as const;
@@ -15,13 +15,20 @@ export default function Profile() {
 
   const [board, setBoard]      = useState<string | null>(profile.board);
   const [classLevel, setClass] = useState<number | null>(profile.classLevel);
+  const [editedFields, setEditedFields] = useState({ board: false, classLevel: false });
   const [saving, setSaving]    = useState(false);
   const [saved, setSaved]      = useState(false);
+
+  useEffect(() => {
+    setBoard((current) => syncProfileFormField(current, profile.board, editedFields.board));
+    setClass((current) => syncProfileFormField(current, profile.classLevel, editedFields.classLevel));
+  }, [profile.board, profile.classLevel, editedFields.board, editedFields.classLevel]);
 
   async function handleSave() {
     setSaving(true);
     try {
       await updateProfile({ board, classLevel });
+      setEditedFields({ board: false, classLevel: false });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } finally {
@@ -85,7 +92,11 @@ export default function Profile() {
                 {BOARDS.map(b => (
                   <button
                     key={b}
-                    onClick={() => setBoard(b)}
+                    aria-pressed={board === b}
+                    onClick={() => {
+                      setBoard(b);
+                      setEditedFields((current) => ({ ...current, board: true }));
+                    }}
                     className={`py-2.5 px-3 rounded-xl border-2 text-sm font-medium transition-all ${
                       board === b
                         ? "border-indigo-600 bg-indigo-50 text-indigo-700"
@@ -105,7 +116,11 @@ export default function Profile() {
                 {CLASSES.map(c => (
                   <button
                     key={c}
-                    onClick={() => setClass(c)}
+                    aria-pressed={classLevel === c}
+                    onClick={() => {
+                      setClass(c);
+                      setEditedFields((current) => ({ ...current, classLevel: true }));
+                    }}
                     className={`py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
                       classLevel === c
                         ? "border-indigo-600 bg-indigo-600 text-white"

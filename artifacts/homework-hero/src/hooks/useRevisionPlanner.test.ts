@@ -140,6 +140,35 @@ test("localStorage reload preserves both marked Science question IDs", () => {
   }
 });
 
+test("a graded revision is persisted immediately and advances the same question after reload", () => {
+  const originalDescriptor = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+  const values = new Map<string, string>();
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    value: {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+    },
+  });
+
+  try {
+    const key = "studyai-revision-v2:CBSE:9";
+    const marked = applySelfAssessment(emptyStore(), question, "NEEDS_PRACTICE", today);
+    saveRevisionStore(key, marked);
+
+    const graded = applyRevisionReview(loadRevisionStore(key), question.questionId, true, "2026-08-21");
+    saveRevisionStore(key, graded);
+    const afterRefresh = loadRevisionStore(key);
+
+    assert.equal(afterRefresh.items[question.questionId].interval, 3);
+    assert.equal(afterRefresh.items[question.questionId].nextReview, "2026-08-24");
+    assert.equal(afterRefresh.items[question.questionId].timesCorrect, 1);
+  } finally {
+    if (originalDescriptor) Object.defineProperty(globalThis, "localStorage", originalDescriptor);
+    else Reflect.deleteProperty(globalThis, "localStorage");
+  }
+});
+
 test("Revision uses the practice class when profile class is missing and preserves the ID in navigation", () => {
   assert.equal(resolveRevisionClassNum(9, null), 9);
   assert.equal(resolveRevisionClassNum(undefined, 8), 8);
