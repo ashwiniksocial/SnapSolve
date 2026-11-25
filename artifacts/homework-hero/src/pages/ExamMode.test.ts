@@ -4,10 +4,16 @@ import {
   assignPracticeQuestionToTask,
   buildAssignedPracticeHref,
   buildChapterTaskId,
+  buildContinuePracticeHref,
+  buildGeneralTaskId,
+  buildRevisionTaskId,
   buildRevisionTaskHref,
+  buildWeakTaskId,
+  selectNextUnansweredQuestion,
 } from "./ExamMode";
 import type { ExamTask } from "@/hooks/useExamMode";
 import type { Question } from "@/services/questionService";
+import type { Subject } from "@/data/subjects";
 
 function practiceTask(overrides: Partial<ExamTask> = {}): ExamTask {
   return {
@@ -27,8 +33,13 @@ function practiceTask(overrides: Partial<ExamTask> = {}): ExamTask {
   };
 }
 
-function question(id: string, topicName: string, chapterId: string): Question {
-  return { id, topicName, chapterId } as unknown as Question;
+function question(
+  id: string,
+  topicName: string,
+  chapterId: string,
+  subject: Subject = "Mathematics",
+): Question {
+  return { id, topicName, chapterId, subject } as unknown as Question;
 }
 
 test("exam plan task links retain the assigned subject, chapter, topic, and return context", () => {
@@ -57,6 +68,16 @@ test("chapter task IDs distinguish identical topic names in different chapters",
     buildChapterTaskId("Science", "phy-ch1", "Force"),
     buildChapterTaskId("Science", "phy-ch2", "Force"),
   );
+});
+
+test("revision, weak-topic, chapter, and general task IDs remain distinct", () => {
+  const ids = [
+    buildRevisionTaskId("q1"),
+    buildWeakTaskId("Mathematics", "Algebra"),
+    buildChapterTaskId("Mathematics", "math-ch1", "Algebra"),
+    buildGeneralTaskId("Mathematics"),
+  ];
+  assert.equal(new Set(ids).size, ids.length);
 });
 
 test("a practice task opens its exact assigned active question", () => {
@@ -94,6 +115,77 @@ test("general practice without a topic selects a valid subject question", () => 
   );
   assert.equal(result.questionId, "math-q1");
   assert.match(result.href, /questionId=math-q1/);
+});
+
+test("Continue Practising chooses an unanswered question from the selected subjects", () => {
+  const attemptedMath = question("math-done", "Algebra", "math-ch1");
+  const uncoveredMath = question("math-next", "Number Systems", "math-ch2");
+  const outsideScience = question("science-next", "Force", "phy-ch1", "Physics");
+  const progress = {
+    Mathematics: {
+      Algebra: { solved: 1, correct: 1, attempted: ["math-done"] },
+    },
+  };
+
+  const selection = selectNextUnansweredQuestion(
+    ["Mathematics"],
+    { Mathematics: [attemptedMath, uncoveredMath], Science: [outsideScience] },
+    progress,
+  );
+
+  assert.deepEqual(selection, { subject: "Mathematics", question: uncoveredMath });
+  assert.deepEqual(progress.Mathematics.Algebra.attempted, ["math-done"]);
+  const url = new URL(buildContinuePracticeHref(selection!), "https://snapsolve.test");
+  assert.equal(url.pathname, "/practice");
+  assert.equal(url.searchParams.get("subject"), "Mathematics");
+  assert.equal(url.searchParams.get("questionId"), "math-next");
+  assert.equal(url.searchParams.get("returnTo"), "/exam");
+});
+
+test("Continue Practising prioritizes unanswered questions in weak topics", () => {
+  const weakMath = question("math-weak-next", "Algebra", "math-ch1");
+  const uncoveredMath = question("math-uncovered", "Number Systems", "math-ch2");
+  const progress = {
+    Mathematics: {
+      Algebra: { solved: 2, correct: 0, attempted: ["math-weak-done"] },
+    },
+  };
+
+  const selection = selectNextUnansweredQuestion(
+    ["Mathematics"],
+    { Mathematics: [uncoveredMath, weakMath] },
+    progress,
+  );
+  assert.equal(selection?.question.id, "math-weak-next");
+});
+
+test("Science question selection reads attempts from each question's native subject", () => {
+  const weakPhysics = question("physics-next", "Force", "phy-ch1", "Physics");
+  const uncoveredBiology = question("biology-next", "Cell", "bio-ch1", "Biology");
+  const progress = {
+    Physics: { Force: { solved: 2, correct: 0, attempted: ["physics-done"] } },
+  };
+
+  const selection = selectNextUnansweredQuestion(
+    ["Science"],
+    { Science: [uncoveredBiology, weakPhysics] },
+    progress,
+  );
+  assert.equal(selection?.question.id, "physics-next");
+});
+
+test("Continue Practising returns no question after all selected-subject questions are attempted", () => {
+  const math = question("math-q1", "Algebra", "math-ch1");
+  const science = question("science-q1", "Force", "phy-ch1", "Physics");
+  const selection = selectNextUnansweredQuestion(
+    ["Mathematics"],
+    { Mathematics: [math], Science: [science] },
+    {
+      Mathematics: { Algebra: { solved: 0, correct: 0, attempted: ["math-q1"] } },
+      Physics: { Force: { solved: 0, correct: 0, attempted: ["science-q1"] } },
+    },
+  );
+  assert.equal(selection, null);
 });
 
 test("exam revision tasks preserve the exact question ID and return context", () => {

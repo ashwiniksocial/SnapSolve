@@ -106,6 +106,18 @@ export function buildChapterTaskId(subject: Subject, chapterId: string, topic: s
   return `chap-${subject}-${chapterId}-${topic}`;
 }
 
+export function buildRevisionTaskId(questionId: string) {
+  return `rev-${questionId}`;
+}
+
+export function buildWeakTaskId(subject: Subject, topic: string) {
+  return `weak-${subject}-${topic}`;
+}
+
+export function buildGeneralTaskId(subject: Subject) {
+  return `general-${subject}`;
+}
+
 export function assignPracticeQuestionToTask(task: ExamTask, available: Question[]): ExamTask {
   if (task.type === "revision") return task;
 
@@ -136,6 +148,65 @@ export function assignPracticeQuestionToTask(task: ExamTask, available: Question
       question.id,
     ),
   };
+}
+
+export interface ContinuePracticeSelection {
+  subject: Subject;
+  question: Question;
+}
+
+interface ProgressTopicSnapshot {
+  solved?: number;
+  correct?: number;
+  attempted?: string[];
+}
+
+type ProgressSnapshot = Partial<Record<Subject, Record<string, ProgressTopicSnapshot>>>;
+
+export function selectNextUnansweredQuestion(
+  selectedSubjects: Subject[],
+  questionsBySubject: Partial<Record<Subject, Question[]>>,
+  progress: ProgressSnapshot,
+): ContinuePracticeSelection | null {
+  const selectedQuestions = selectedSubjects.flatMap((subject) =>
+    (questionsBySubject[subject] ?? []).map((question) => ({ subject, question })),
+  );
+  const nativeSubjects = new Set(selectedQuestions.map(({ question }) => question.subject as Subject));
+  const attemptedIds = new Set<string>();
+  for (const subject of nativeSubjects) {
+    const subjectRecords = progress[subject];
+    for (const topic of Object.values(subjectRecords ?? {})) {
+      for (const questionId of topic.attempted ?? []) attemptedIds.add(questionId);
+    }
+  }
+
+  const candidates = selectedQuestions.filter(({ question }) => !attemptedIds.has(question.id));
+
+  const priority = ({ question }: ContinuePracticeSelection) => {
+    const topic = progress[question.subject as Subject]?.[question.topicName];
+    if (topic && (topic.solved ?? 0) > 0 && (topic.correct ?? 0) / (topic.solved ?? 1) < 0.6) {
+      return 0; // unanswered question in a weak topic
+    }
+    if (!topic || ((topic.solved ?? 0) === 0 && (topic.attempted ?? []).length === 0)) {
+      return 1; // uncovered topic
+    }
+    return 2; // any other unanswered question
+  };
+
+  candidates.sort((left, right) => priority(left) - priority(right));
+  return candidates[0] ?? null;
+}
+
+export function buildContinuePracticeHref(
+  selection: ContinuePracticeSelection,
+): string {
+  const { subject, question } = selection;
+  return buildAssignedPracticeHref(
+    subject,
+    question.topicName,
+    question.chapterId,
+    question.id,
+  );
 }
 
 export function buildRevisionTaskHref(questionId: string): string {
@@ -237,7 +308,7 @@ function buildTasks(
   // ── 1. Revision backlog (overdue SR items) ─────────────────────────────────
   const filtered = dueItems.filter((item) => targetSubjects.includes(item.subject));
   filtered.slice(0, revCap).forEach((item) => {
-    const id = `rev-${item.questionId}`;
+    const id = buildRevisionTaskId(item.questionId);
     tasks.push({
       id,
       type:           "revision",
@@ -262,7 +333,7 @@ function buildTasks(
     for (const topic of weak) {
       if (weakAdded >= weakCap) break;
       const acc = accuracyMap[subj]?.[topic] ?? 0;
-      const id  = `weak-${subj}-${topic}`;
+      const id  = buildWeakTaskId(subj, topic);
       if (tasks.some((t) => t.id === id)) continue;
       tasks.push({
         id,
@@ -320,7 +391,7 @@ function buildTasks(
   // If nothing generated yet, add generic tasks per subject
   if (tasks.length === 0) {
     targetSubjects.slice(0, 2).forEach((subj, i) => {
-      const id = `general-${subj}`;
+      const id = buildGeneralTaskId(subj);
       tasks.push({
         id,
         type:           "practice",
@@ -462,6 +533,7 @@ function Dashboard({
   studyDataReady,
   onMarkDone,
   onClear,
+  continuePracticeHref,
 }: {
   config:             ExamConfig;
   daysRemaining:      number;
@@ -471,6 +543,7 @@ function Dashboard({
   studyDataReady:     boolean;
   onMarkDone:         (task: ExamTask) => void;
   onClear:            () => void;
+  continuePracticeHref: string | null;
 }) {
   const urgency = getUrgency(daysRemaining);
   const uc      = urgencyColors(urgency);
@@ -603,7 +676,21 @@ function Dashboard({
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
               <p className="text-3xl mb-2">🎉</p>
               <p className="text-sm font-bold text-emerald-700">All tasks done for today!</p>
-              <p className="text-xs text-emerald-600 mt-1">Come back tomorrow for tomorrow's plan.</p>
+              {continuePracticeHref ? (
+                <Link
+                  href={continuePracticeHref}
+                  data-testid="button-continue-practising"
+                  className="mt-3 inline-flex rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                >
+                  Continue Practising
+                </Link>
+              ) : studyDataReady ? (
+                <p className="text-xs text-emerald-700 mt-2">
+                  You have practised all currently available questions for your selected subjects.
+                </p>
+              ) : (
+                <p className="text-xs text-emerald-700 mt-2">Loading additional questions…</p>
+              )}
             </div>
           )}
           <div className="space-y-3">
@@ -656,7 +743,7 @@ export default function ExamMode() {
   const [savedNotice, setSavedNotice] = useState<string | null>(null);
 
   // Always call hooks (rules of hooks)
-  const { getSubjectStats } = useProgress();
+  const { getSubjectStats, progress } = useProgress(9);
   const { getDueItems }     = useRevisionPlanner();
   const [bankReady, setBankReady] = useState(false);
 
@@ -746,6 +833,16 @@ export default function ExamMode() {
     );
   }, [config, targetSubjects, weakTopicsMap, accuracyMap, dueItems, daysRemaining, completedIds, completedTasks, questionsBySubject]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const continuePracticeSelection = useMemo(
+    () => bankReady
+      ? selectNextUnansweredQuestion(targetSubjects, questionsBySubject, progress)
+      : null,
+    [bankReady, targetSubjects, questionsBySubject, progress],
+  );
+  const continuePracticeHref = continuePracticeSelection
+    ? buildContinuePracticeHref(continuePracticeSelection)
+    : null;
+
   // ── Preload question bank (class 9 — matches useChapterStats default) ──────
   useEffect(() => {
     setBankReady(false);
@@ -779,6 +876,7 @@ export default function ExamMode() {
       studyDataReady={bankReady}
       onMarkDone={markDone}
       onClear={handleClearConfig}
+      continuePracticeHref={continuePracticeHref}
     />
   );
 }

@@ -160,6 +160,7 @@ test("completing one same-named chapter task does not complete its sibling after
   withLocalStorage(storage, () => {
     const saved = persistCompletedExamTask("exam:two-tasks:done", "exam:two-tasks:tasks", chapterOne);
     assert.ok(saved);
+    assert.deepEqual([...saved.completedIds], [chapterOne.id]);
     const afterRefresh = mergeCompletedTasks(
       [chapterOne, chapterTwo],
       loadCompletedTasks("exam:two-tasks:tasks"),
@@ -170,6 +171,44 @@ test("completing one same-named chapter task does not complete its sibling after
       afterRefresh.map((task) => [task.id, task.completedToday]),
       [[chapterOne.id, true], [chapterTwo.id, false]],
     );
+  });
+});
+
+test("separate explicit completions survive refresh without removing other task cards", () => {
+  const values = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => values.get(key) ?? null,
+    setItem: (key: string, value: string) => { values.set(key, value); },
+    removeItem: (key: string) => { values.delete(key); },
+  } as unknown as Storage;
+  const makeTask = (id: string): ExamTask => ({
+    id,
+    type: "practice",
+    subject: "Mathematics",
+    topic: id,
+    label: id,
+    description: `Practice ${id}.`,
+    estimatedMin: 10,
+    priority: "medium",
+    href: `/practice?subject=Mathematics&topic=${id}&returnTo=%2Fexam`,
+    completedToday: false,
+  });
+  const first = makeTask("Algebra");
+  const second = makeTask("Number Systems");
+  const untouched = makeTask("Geometry");
+
+  withLocalStorage(storage, () => {
+    persistCompletedExamTask("exam:multi:done", "exam:multi:tasks", first);
+    persistCompletedExamTask("exam:multi:done", "exam:multi:tasks", second);
+    const completed = loadCompletedTasks("exam:multi:tasks");
+    const ids = new Set(JSON.parse(values.get("exam:multi:done") ?? "[]") as string[]);
+    const afterRefresh = mergeCompletedTasks([first, second, untouched], completed, ids);
+
+    assert.deepEqual(
+      afterRefresh.map((task) => [task.id, task.completedToday]),
+      [["Algebra", true], ["Number Systems", true], ["Geometry", false]],
+    );
+    assert.deepEqual(new Set(completed.map((task) => task.id)), new Set([first.id, second.id]));
   });
 });
 
