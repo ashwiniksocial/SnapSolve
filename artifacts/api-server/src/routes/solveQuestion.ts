@@ -111,8 +111,9 @@ function answerLastContextFor(
     formula?: string;
     result?: string;
   }[] = [],
+  authoritativeAnswer = "",
 ): AnswerLastContext {
-  return buildAnswerLastContext(canonicalQuestion, approvedSteps);
+  return buildAnswerLastContext(canonicalQuestion, approvedSteps, authoritativeAnswer);
 }
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
@@ -2265,7 +2266,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
     (rawBankRecord.preserveRejectedDraft === undefined ||
       rawBankRecord.preserveRejectedDraft === false ||
       (rawBankRecord.preserveRejectedDraft === true &&
-        rawBankRecord.questionId === "c9-m-ch15-t2-q04")) &&
+        rawBankRecord.maxGenerationAttempts === 1)) &&
     (rawBankRecord.sourceHash === undefined ||
       (typeof rawBankRecord.sourceHash === "string" && /^fnv1a64:[0-9a-f]{16}$/.test(rawBankRecord.sourceHash)));
   const bankCtx: BankCtx | undefined = validBankContext ? rawBankRecord as unknown as BankCtx : undefined;
@@ -2315,7 +2316,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
     ) && assessTeachingLessonAnswerLast(
       entry.data,
       bankCtx.answer,
-      answerLastContextFor(q, bankCtx.steps),
+      answerLastContextFor(q, bankCtx.steps, bankCtx.answer),
     ).status === "clear";
     if (entry && Date.now() <= entry.expiresAt && isCurrentAndSafe) {
       req.log.info({
@@ -2730,7 +2731,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       return;
     }
 
-    const answerLastContext = answerLastContextFor(q, bankCtx.steps);
+    const answerLastContext = answerLastContextFor(q, bankCtx.steps, bankCtx.answer);
     const repairResult = repairTeachingLessonAnswerLeakage(
       finalLesson,
       bankCtx.answer,

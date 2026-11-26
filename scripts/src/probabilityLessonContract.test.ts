@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   buildAnswerLastContext,
+  assessTeachingLessonAnswerLast,
   compareBankAnswers,
+  repairTeachingLessonAnswerLeakage,
 } from "../../lib/api-zod/src/bankAnswerIntegrity.ts";
 import {
   getIncompleteDetailedLessonFields,
@@ -131,9 +133,84 @@ test("Probability Q4 source-derived fraction reduction is valid for retrieval bu
     false,
   );
 
-  const questionContext = buildAnswerLastContext(question.question, question.steps);
+  const questionContext = buildAnswerLastContext(question.question, question.steps, question.answer);
   assert.equal(
     questionContext.approvedCalculationText?.some((text) => /24\/60=2\/5/i.test(text)),
     true,
   );
+});
+
+test("Probability Q5 bank-answer numerator supports grounded working without allowing an early final answer", () => {
+  const question = probabilityQuestion("c9-m-ch15-t2-q05");
+  const context = buildAnswerLastContext(
+    question.question,
+    question.steps,
+    question.answer,
+  );
+  const finalAnswer = { answer: question.answer };
+  const groundedWorking = {
+    guidedReasoning: [{
+      what: "Count the families that satisfy the event.",
+      why: "Both listed family groups include at least one girl.",
+      math: "Favorable outcomes = 480 (1 boy + 1 girl) + 200 (2 girls)",
+      result: "Favorable outcomes = 680",
+    }, {
+      what: "Divide favorable outcomes by all surveyed families.",
+      math: "P(at least 1 girl) = 680 / 1000",
+    }],
+    finalAnswer,
+  };
+
+  assert.deepEqual(
+    assessTeachingLessonAnswerLast(groundedWorking, question.answer, context),
+    { status: "clear" },
+  );
+
+  const wrongArithmetic = {
+    ...groundedWorking,
+    guidedReasoning: [{
+      ...groundedWorking.guidedReasoning[0],
+      math: "Favorable outcomes = 480 (1 boy + 1 girl) + 201 (2 girls)",
+      result: "Favorable outcomes = 681",
+    }],
+  };
+  assert.notEqual(
+    assessTeachingLessonAnswerLast(wrongArithmetic, question.answer, context).status,
+    "clear",
+  );
+
+  const prematureCompleteAnswer = {
+    guidedReasoning: [{
+      result: "(a) 17/25, (b) 8/25",
+    }],
+    finalAnswer,
+  };
+  const earlyAnswerAssessment = assessTeachingLessonAnswerLast(
+    prematureCompleteAnswer,
+    question.answer,
+    context,
+  );
+  assert.equal(earlyAnswerAssessment.status, "leak");
+  assert.equal(
+    "section" in earlyAnswerAssessment ? earlyAnswerAssessment.section : undefined,
+    "guidedReasoning[1].result",
+  );
+
+  const completeSummary = {
+    guidedReasoning: [
+      { result: "(a) 17/25, (b) 8/25" },
+    ],
+    finalAnswer,
+  };
+  const repaired = repairTeachingLessonAnswerLeakage(
+    completeSummary,
+    question.answer,
+    context,
+  );
+  const repairedLesson = repaired.lesson as typeof completeSummary;
+  assert.equal(repaired.status, "repaired");
+  assert.equal(repaired.repairCount, 1);
+  assert.equal(repaired.assessment.status, "clear");
+  assert.equal(repairedLesson.finalAnswer.answer, question.answer);
+  assert.match(repairedLesson.guidedReasoning[0].result, /confirm the requested result/i);
 });

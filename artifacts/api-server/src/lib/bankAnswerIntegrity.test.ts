@@ -74,6 +74,27 @@ test("Class 9 Q30 multipart answer requires every labeled value to match", () =>
   }
 });
 
+test("labeled probability parts accept equivalent terminal fractions without skipping any part", () => {
+  const canonical =
+    "(a) P(at least 1 girl) = (480+200)/1000 = 680/1000 = 17/25. " +
+    "(b) P(2 boys) = 320/1000 = 8/25.";
+  const cases: Array<[string, "match" | "mismatch" | "indeterminate"]> = [
+    ["(a) P(at least one girl) = 17/25; (b) P(exactly 2 boys) = 8/25.", "match"],
+    ["(a) At least one girl: 680/1000 = 17/25; (b) exactly 2 boys: 320/1000 = 8/25.", "match"],
+    ["(a) 17/25, which is the required probability; (b) 8/25.", "match"],
+    ["(a) 18/25; (b) 8/25.", "mismatch"],
+    ["(a) 700/1000 = 17/25; (b) 320/1000 = 8/25.", "mismatch"],
+    ["(a) 17/25; (b) 17/25.", "mismatch"],
+    ["(a) 17/25.", "mismatch"],
+    ["At least one girl = 17/25 and exactly 2 boys = 8/25.", "indeterminate"],
+    ["(a) 17/25, but the answer is also 1/2; (b) 8/25.", "indeterminate"],
+  ];
+
+  for (const [candidate, expected] of cases) {
+    assert.equal(compareBankAnswers(candidate, canonical).status, expected, candidate);
+  }
+});
+
 test("Class 9 Q40 accepts exact polynomial identities and rejects wrong or incomplete forms", () => {
   const canonical = "4x² − 9";
   const cases: Array<[string, "match" | "mismatch" | "indeterminate"]> = [

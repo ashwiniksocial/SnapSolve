@@ -426,6 +426,37 @@ function compareMultipartPart(candidate: string, canonical: string): BankAnswerC
   const canonicalAssignment = parseAnswerAssignment(canonical);
   const candidateAssignment = parseAnswerAssignment(candidate);
 
+  // For labeled multi-part answers, the label already maps this value to its
+  // canonical sub-question. Some bank answers include a calculation chain
+  // (for example, P = 680/1000 = 17/25), while a generated answer may state
+  // only the equivalent terminal value. Compare that terminal scalar exactly;
+  // keep single-part assignment checks strict below.
+  if (!canonicalAssignment) {
+    const canonicalValue = parseTerminalRational(canonical);
+    const candidateValue = parseTerminalRational(candidate);
+    if (canonicalValue && candidateValue) {
+      if (canonicalValue.unit !== candidateValue.unit) {
+        return { status: "indeterminate", method: "unsupported" };
+      }
+      const candidateValues = explicitRationalMentions(candidate);
+      if (candidateValues.some((value) =>
+        value.unit !== canonicalValue.unit ||
+        value.numerator * canonicalValue.denominator !==
+          canonicalValue.numerator * value.denominator
+      )) {
+        return { status: "mismatch", method: "rational" };
+      }
+      return {
+        status:
+          canonicalValue.numerator * candidateValue.denominator ===
+          candidateValue.numerator * canonicalValue.denominator
+            ? "match"
+            : "mismatch",
+        method: "rational",
+      };
+    }
+  }
+
   if (canonicalAssignment) {
     if (!candidateAssignment) {
       return compareNormalizedValues(candidate, canonicalAssignment.right);
@@ -441,6 +472,36 @@ function compareMultipartPart(candidate: string, canonical: string): BankAnswerC
 
   if (candidateAssignment) return { status: "indeterminate", method: "unsupported" };
   return compareNormalizedValues(candidate, canonical);
+}
+
+function parseTerminalRational(value: string): RationalAnswer | null {
+  const normalized = normalizeAnswer(value);
+  const direct = parseRational(normalized);
+  if (direct) return direct;
+
+  // Accept an explicit value at the end of a labeled part, optionally followed
+  // by non-numeric explanation. Competing values are checked separately below.
+  const rational =
+    "[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:/[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+))?(?:%|[a-z°][a-z0-9°^/]*)?";
+  const terminal = normalized.match(
+    new RegExp(
+      `(?:^|=|:|\\bis\\s+equal\\s+to\\b|\\bequals?\\b|\\bis\\b)\\s*(${rational})(?:[.,;:]?\\s*[a-z][a-z\\s'-]*)?$`,
+      "i",
+    ),
+  );
+  return terminal ? parseRational(terminal[1]) : null;
+}
+
+function explicitRationalMentions(value: string): RationalAnswer[] {
+  const normalized = normalizeAnswer(value);
+  const matches = normalized.matchAll(
+    /(?<![a-z0-9.+*/(-])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:\/[+-]?(?:\d+(?:\.\d*)?|\.\d+))?%?)(?![a-z0-9/])/gi,
+  );
+  return [...matches]
+    .map((match) => match[1])
+    .filter((token) => /[/.%]/.test(token))
+    .map(parseRational)
+    .filter((value): value is RationalAnswer => value !== null);
 }
 
 function compareMultipartAnswers(candidate: string, canonical: string): BankAnswerComparison | null {
@@ -979,14 +1040,70 @@ function approvedEquationLinks(value: string): string[] {
   return links;
 }
 
+function approvedParenthesizedNumeratorSums(value: string): string[] {
+  const links = new Set<string>();
+  const pattern =
+    /\(\s*(\d{1,24})\s*([+-])\s*(\d{1,24})\s*\)\s*\/\s*(\d{1,24})\s*=\s*(\d{1,24})\s*\/\s*(\d{1,24})/g;
+
+  for (const match of value.matchAll(pattern)) {
+    const left = BigInt(match[1]);
+    const right = BigInt(match[3]);
+    const operation = match[2];
+    const sourceDenominator = BigInt(match[4]);
+    const fractionNumerator = BigInt(match[5]);
+    const fractionDenominator = BigInt(match[6]);
+    const evaluated = operation === "+" ? left + right : left - right;
+
+    if (
+      sourceDenominator > 0n &&
+      sourceDenominator === fractionDenominator &&
+      evaluated === fractionNumerator
+    ) {
+      links.add(`${match[1]}${operation}${match[3]}=${evaluated}`);
+    }
+  }
+
+  return [...links];
+}
+
+function approvedIntermediateAnswerEquations(value: string): string[] {
+  const equations = new Set<string>();
+  const clauses = value.split(
+    /[\n;]+|(?<=[!?])\s+|(?<=\.)\s+(?=[A-Z]|\([a-z]\)\s*)/u,
+  );
+
+  for (const clause of clauses) {
+    const parts = clause.split("=");
+    if (parts.length < 3) continue;
+    const terms = parts.map((part, index) => {
+      const trimmed = part.trim().replace(/^[.!?;,:]+|[.!?;,:]+$/g, "");
+      return index === 0 ? trimmed.replace(/^\([a-z]\)\s*/i, "") : trimmed;
+    });
+
+    // The final equality in each bank-answer chain states the requested value;
+    // only preceding links are approved as intermediate student working.
+    for (let index = 0; index < terms.length - 2; index += 1) {
+      const left = terms[index];
+      const right = terms[index + 1];
+      if (left && right && left.length <= 120 && right.length <= 120) {
+        equations.add(`${left}=${right}`);
+      }
+    }
+  }
+
+  return [...equations];
+}
+
 /**
  * Builds the one canonical evidence context used by generation, persistence,
  * retrieval, and the pilot validator. Explicit equations in approved
- * explanations are retained as equality links, not treated as arbitrary prose.
+ * explanations and the frozen answer are retained as equality links, not
+ * treated as arbitrary prose.
  */
 export function buildAnswerLastContext(
   canonicalQuestion: string,
   steps: readonly AnswerLastEvidenceStep[],
+  authoritativeAnswerText = "",
 ): AnswerLastContext {
   const intermediateText = steps.slice(0, -1).flatMap((step) =>
     [step.title, step.explanation, step.formula, step.result]
@@ -998,6 +1115,8 @@ export function buildAnswerLastContext(
   const approvedCalculationText = [
     ...steps.flatMap((step) => [step.formula, step.result]),
     ...sourceText.flatMap(approvedEquationLinks),
+    ...approvedIntermediateAnswerEquations(authoritativeAnswerText),
+    ...approvedParenthesizedNumeratorSums(authoritativeAnswerText),
   ]
     .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
     .filter((value, index, values) => values.indexOf(value) === index);
@@ -1161,8 +1280,17 @@ function isEquivalentApprovedEquation(
   });
 }
 
+function stripDescriptiveCountAnnotations(value: string): string {
+  return value
+    .replace(
+    /(?<=\d)\s+\(\s*\d+\s+[a-z]{2,}(?:\s*\+\s*\d+\s+[a-z]{2,})?\s*\)/gi,
+    "",
+    )
+    .replace(/\(\d+[a-z]{2,}(?:\+\d+[a-z]{2,})?\)/gi, "");
+}
+
 function calculationExpressionParts(value: string): string[] {
-  return normalizeCalculationText(value)
+  return normalizeCalculationText(stripDescriptiveCountAnnotations(value))
     .split("=")
     .map((part) => part.trim())
     .filter((part) => /\d/.test(part) && /[+*/-]/.test(part));
@@ -1205,8 +1333,13 @@ function isSupportedCalculationAssignment(
   }
 
   if (/[+*/-]/.test(expression)) {
+    const withoutAnnotations = normalizeCalculationText(
+      stripDescriptiveCountAnnotations(expression),
+    );
     return approvedCalculations.some((calculation) =>
-      calculationExpressionParts(calculation).includes(expression)
+      calculationExpressionParts(calculation).some(
+        (approved) => approved === expression || approved === withoutAnnotations,
+      )
     );
   }
 
@@ -1270,6 +1403,25 @@ function isExplicitAnswerAnnouncement(text: string, answer: string): boolean {
     `\\b(?:option|choice)\\s*[\\[(]?${choice.letter}[)\\]]?\\b`,
     "i",
   ).test(normalized);
+}
+
+function labeledTerminalAnswerClaims(answer: string): string[] {
+  const labeledParts = parseLabeledParts(answer);
+  if (!labeledParts || labeledParts.size < 2) return [];
+  return [...labeledParts.entries()].flatMap(([label, value]) => {
+    const terminal = value.split("=").at(-1)?.trim().replace(/[.!?;,:]+$/g, "") ?? "";
+    const claim = normalizeAnswerLastText(`${label} ${terminal}`);
+    return claim ? [claim] : [];
+  });
+}
+
+function disclosesCompleteLabeledAnswerSummary(
+  text: string,
+  claims: readonly string[],
+): boolean {
+  if (claims.length < 2) return false;
+  const normalized = normalizeAnswerLastText(text);
+  return claims.every((claim) => containsWholePhrase(normalized, claim));
 }
 
 function isEmbeddedChoiceBodyExplanation(
@@ -1540,10 +1692,18 @@ function correctedGuidedAnnouncement(
   canonicalQuestion?: string,
 ): string | null {
   const parts = text.split(/(\n+|(?<=[.!?])\s+(?=\p{Lu}))/u);
+  const labeledTerminalClaims = labeledTerminalAnswerClaims(canonicalAnswer);
   const directAnswerClaim =
     /^\s*(?:(?:therefore|thus|hence|so)[,;:]?\s*)?(?:(?:the|our)\s+)?(?:(?:final\s+(?:(?:numeric(?:al)?)\s+)?)|(?:correct\s+))?(?:answer|result|value)\s*(?:is|equals?|:|=)\s*(.+?)\s*([.!?]?)\s*$/i;
   for (let index = 0; index < parts.length; index += 2) {
     const sentence = parts[index];
+    const normalizedSentence = normalizeAnswerLastText(sentence)
+      .replace(/^(?:(?:therefore|thus|hence|so)\s*)/, "");
+    if (disclosesCompleteLabeledAnswerSummary(normalizedSentence, labeledTerminalClaims)) {
+      parts[index] = "We will confirm the requested result after working through the steps.";
+      return parts.join("");
+    }
+
     const direct = sentence.match(directAnswerClaim);
     if (direct && sameCanonicalAnswerOrDisclosure(direct[1], canonicalAnswer, disclosure)) {
       parts[index] = "We will confirm the result after working through the steps.";
@@ -1605,6 +1765,7 @@ export function assessTeachingLessonAnswerLast(
 
   const sections = precedingAnswerSections(lesson);
   const phrases = answerPhraseCandidates(answer);
+  const labeledTerminalClaims = labeledTerminalAnswerClaims(answer);
   const canonicalAnswerCalculationSignature = calculationSignature(answer);
   const canonicalAnswerIsApprovedCalculation = Boolean(
     canonicalAnswerCalculationSignature &&
@@ -1620,6 +1781,16 @@ export function assessTeachingLessonAnswerLast(
   for (const item of sections) {
     const normalizedText = normalizeAnswerLastText(item.text);
     if (!normalizedText) continue;
+
+    if (disclosesCompleteLabeledAnswerSummary(item.text, labeledTerminalClaims)) {
+      return {
+        status: "leak",
+        section: item.section,
+        disclosure: canonicalAnswer ?? answer,
+        reason: `The complete labeled answer summary appears before finalAnswer in ${item.section}.`,
+        offendingText: item.text,
+      };
+    }
 
     const supportedGuidedCalculation = isSupportedGuidedCalculation(
       item.section,

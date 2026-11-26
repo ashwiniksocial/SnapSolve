@@ -306,7 +306,7 @@ export function isStoredLessonValid(
     assessTeachingLessonAnswerLast(
       entry.lesson,
       question.answer,
-      buildAnswerLastContext(question.question, question.steps),
+      buildAnswerLastContext(question.question, question.steps, question.answer),
     ).status === "clear";
 }
 

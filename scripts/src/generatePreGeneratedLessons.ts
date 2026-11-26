@@ -536,15 +536,9 @@ async function main(): Promise<void> {
   const singleAttempt = args.has("--single-attempt");
   const passOnly = args.has("--pass-only");
   const preserveRejectedDraftFlag = args.has("--preserve-blocked-draft");
-  const preserveRejectedDraft =
-    preserveRejectedDraftFlag &&
-    ids.length === 1 &&
-    ids[0] === "c9-m-ch15-t2-q04" &&
-    singleAttempt;
-  if (preserveRejectedDraftFlag && !preserveRejectedDraft) {
-    throw new Error(
-      "--preserve-blocked-draft requires --single-attempt and only c9-m-ch15-t2-q04.",
-    );
+  const preserveRejectedDraft = preserveRejectedDraftFlag && singleAttempt;
+  if (preserveRejectedDraftFlag && !singleAttempt) {
+    throw new Error("--preserve-blocked-draft requires --single-attempt.");
   }
   const modelCallBudget = singleAttempt ? 6 : Number.POSITIVE_INFINITY;
   let modelCallsReserved = 0;
