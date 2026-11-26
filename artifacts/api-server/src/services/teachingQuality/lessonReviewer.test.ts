@@ -6,6 +6,7 @@ import {
   validateCriticalIssueEvidence,
   type StudentVisibleReviewViews,
 } from "./lessonReviewer";
+import { classifyTeachingQuality, mayDeliverTeachingQualityStatus } from "./index";
 
 function lesson(
   topic: string,
@@ -42,7 +43,7 @@ function sections(views: StudentVisibleReviewViews, mode: keyof StudentVisibleRe
   return views[mode].map((entry) => entry.section);
 }
 
-test("Math visible views place definitions before reasoning and reject false missing claims", () => {
+test("Math visible views resolve cited presence to unclear without treating it as adequate", () => {
   const math = lesson("Experimental Probability", {
     keyConcepts: ["Probability"],
     vocabulary: [{
@@ -69,7 +70,7 @@ test("Math visible views place definitions before reasoning and reject false mis
     (detailed[0]?.content.vocabulary as Array<{ meaning: string }>)[0]?.meaning,
     "The chance of an event, expressed as a fraction.",
   );
-  assert.throws(() => validateCriticalIssueEvidence({
+  const issue = validateCriticalIssueEvidence({
     section: "Step-by-Step Solution",
     findingType: "missing",
     mode: "Detailed",
@@ -79,10 +80,34 @@ test("Math visible views place definitions before reasoning and reject false mis
     reason: "The student may not understand probability.",
     suggestedFix: "Explain probability.",
     priority: "critical",
-  }, views), /review_issue_missing_has_present_evidence/);
+  }, views);
+
+  assert.equal(issue.findingType, "unclear");
+  assert.equal(issue.priority, "critical");
+  assert.ok(issue.reason.includes("explanation quality remains under review"));
+  const decision = classifyTeachingQuality({
+    scores: {
+      vocabulary: 90,
+      conceptTeaching: 90,
+      reasoning: 90,
+      stepExplanation: 90,
+      examples: 90,
+      memory: 90,
+      practice: 90,
+      confidenceBuilding: 90,
+      weakStudentUnderstanding: 90,
+      overall: 90,
+    },
+    confusions: [],
+    criticalIssues: [issue],
+    passed: true,
+    rubricLabel: "Excellent private tutor",
+  });
+  assert.equal(decision.status, "REVIEW_REQUIRED");
+  assert.equal(mayDeliverTeachingQualityStatus(decision.status), false);
 });
 
-test("Biology reviewer evidence can classify an explanation that appears after reasoning as late", () => {
+test("a missing label with later Biology evidence resolves to a sequencing concern", () => {
   const biology = lesson("Osmosis", {
     keyConcepts: ["Osmosis"],
     guidedReasoning: [{
@@ -102,7 +127,7 @@ test("Biology reviewer evidence can classify an explanation that appears after r
 
   const issue = validateCriticalIssueEvidence({
     section: "Step-by-Step Solution",
-    findingType: "late",
+    findingType: "missing",
     mode: "Detailed",
     evidence: [{
       section: "Common Mistakes",
@@ -117,6 +142,204 @@ test("Biology reviewer evidence can classify an explanation that appears after r
 
   assert.equal(issue.findingType, "late");
   assert.equal(issue.evidence[0]?.section, "Common Mistakes");
+});
+
+test("preserved Probability Q4 findings resolve contradictory absence claims without approving the lesson", () => {
+  const probability = lesson("Probability", {
+    keyConcepts: ["Probability"],
+    intuition: {
+      story: "A class survey gives counts for students who like Mathematics.",
+      visual: "A group of 60 students includes 24 who like Mathematics.",
+      everyday: "A survey count can describe a chance in a group.",
+    },
+    vocabulary: [
+      { term: "Probability", meaning: "The chance of something happening, expressed as a fraction." },
+      { term: "Numerator", meaning: "The top number in a fraction, indicating how many parts we have." },
+      { term: "Denominator", meaning: "The bottom number in a fraction, indicating how many equal parts the whole is divided into." },
+    ],
+    questionTranslation: {
+      plainEnglish: "Find the chance that a randomly selected student likes Mathematics.",
+      whatWeKnow: "There are 60 students; 24 like Mathematics.",
+      whatWeFind: "The probability of selecting one who likes Mathematics.",
+      wordToMath: "favourable count / total count",
+    },
+    guidedReasoning: [
+      {
+        what: "Find the probability that a randomly chosen student likes Mathematics.",
+        why: "Probability is calculated by taking the number of favorable outcomes (students who like Mathematics) and dividing it by the total number of outcomes (total students). This gives us a fraction that represents the chance of selecting a student who likes Mathematics.",
+        math: "",
+        result: "",
+        pause: "",
+      },
+      {
+        what: "Identify the number of students who like Mathematics.",
+        why: "This is our numerator because it tells us how many students are favorable to our event of interest, which is liking Mathematics.",
+        math: "",
+        result: "",
+        pause: "",
+      },
+      {
+        what: "Identify the total number of students.",
+        why: "This is our denominator because it represents the total possible outcomes when we pick any student from the class.",
+        math: "",
+        result: "",
+        pause: "",
+      },
+      {
+        what: "Form the ratio.",
+        why: "Probability is the favourable count divided by the total count.",
+        math: "P = 24/60",
+        result: "",
+        pause: "",
+      },
+      {
+        what: "Simplify the fraction.",
+        why: "Simplifying a fraction means dividing both the numerator and the denominator by the same number. This preserves the ratio and makes it easier to understand. Here, we can divide both by 12.",
+        math: "24 ÷ 12 = 2 and 60 ÷ 12 = 5",
+        result: "P = 2/5",
+        pause: "",
+      },
+      {
+        what: "Interpret the result.",
+        why: "This final fraction, 2/5, tells us that out of every 5 students chosen at random, 2 of them are likely to like Mathematics.",
+        math: "",
+        result: "P = 2/5",
+        pause: "",
+      },
+    ],
+    commonMistakes: [{
+      mistake: "Confusing the numerator and denominator.",
+      whyItHappens: "Students might mix up which number goes on top and which goes on the bottom.",
+      howToAvoid: "Remember that the numerator is the part of the whole that we are interested in, while the denominator is the total amount.",
+    }],
+    simplerExample: {
+      problem: "Four of ten fruits are apples. Find the chance of picking an apple.",
+      solution: "4/10 simplifies to 2/5.",
+    },
+    practiceQuestion: {
+      question: "32 of 80 students like English. Find the probability.",
+      hints: ["Use favourable outcomes over total outcomes."],
+      solution: "32/80 simplifies to 2/5.",
+    },
+    rememberThese: ["Probability compares favourable outcomes with all outcomes."],
+  });
+  const views = buildStudentVisibleReviewViews(probability);
+  const visible = (section: string, quote: string) => ({
+    section,
+    quote,
+  });
+  const rawFindings = [
+    {
+      section: "Step-by-Step Solution",
+      findingType: "missing",
+      evidence: [visible(
+        "Key Concept",
+        "The chance of something happening, expressed as a fraction.",
+      )],
+      problem: "The lesson does not explain probability.",
+      reason: "A weak student may not understand the term.",
+      suggestedFix: "Explain the concept.",
+      priority: "critical",
+    },
+    {
+      section: "Step-by-Step Solution",
+      findingType: "missing",
+      evidence: [
+        visible(
+          "Step-by-Step Solution",
+          "This is our numerator because it tells us how many students are favorable to our event of interest, which is liking Mathematics.",
+        ),
+        visible(
+          "Step-by-Step Solution",
+          "This is our denominator because it represents the total possible outcomes when we pick any student from the class.",
+        ),
+      ],
+      problem: "The lesson does not explain numerator and denominator.",
+      reason: "A weak student may not know the fraction roles.",
+      suggestedFix: "Define the terms.",
+      priority: "critical",
+    },
+    {
+      section: "Step-by-Step Solution",
+      findingType: "missing",
+      evidence: [visible(
+        "Common Mistakes",
+        "Confusing the numerator and denominator.",
+      )],
+      problem: "The lesson does not address common misconceptions.",
+      reason: "A learner may mix up the two counts.",
+      suggestedFix: "Address the misconception.",
+      priority: "high",
+    },
+    {
+      section: "Step-by-Step Solution",
+      findingType: "missing",
+      evidence: [visible(
+        "Step-by-Step Solution",
+        "Simplifying a fraction means dividing both the numerator and the denominator by the same number. This preserves the ratio and makes it easier to understand.",
+      )],
+      problem: "The lesson does not explain why simplification helps.",
+      reason: "A learner may not see its purpose.",
+      suggestedFix: "Explain why.",
+      priority: "high",
+    },
+    {
+      section: "Step-by-Step Solution",
+      findingType: "missing",
+      evidence: [visible(
+        "Step-by-Step Solution",
+        "This final fraction, 2/5, tells us that out of every 5 students chosen at random, 2 of them are likely to like Mathematics.",
+      )],
+      problem: "The lesson does not interpret the probability in context.",
+      reason: "A learner may not understand the result.",
+      suggestedFix: "Connect it to the class.",
+      priority: "high",
+    },
+  ];
+  const issues = rawFindings.map((finding) => validateCriticalIssueEvidence({
+    ...finding,
+    mode: "Detailed",
+    reviewedSections: sections(views, "Detailed"),
+  }, views));
+
+  assert.deepEqual(issues.map((issue) => issue.findingType), [
+    "unclear",
+    "unclear",
+    "late",
+    "unclear",
+    "unclear",
+  ]);
+  assert.ok(issues.every((issue) => issue.priority === "high" || issue.priority === "critical"));
+  assert.ok(issues.filter((issue) => issue.findingType === "unclear").every((issue) =>
+    issue.reason.includes("explanation quality remains under review"),
+  ));
+  assert.ok(issues[2]?.reason.includes("sequencing concern"));
+
+  const decision = classifyTeachingQuality({
+    scores: {
+      vocabulary: 75,
+      conceptTeaching: 75,
+      reasoning: 75,
+      stepExplanation: 75,
+      examples: 75,
+      memory: 75,
+      practice: 75,
+      confidenceBuilding: 75,
+      weakStudentUnderstanding: 50,
+      overall: 71,
+    },
+    confusions: ["What does probability mean?", "What does 2/5 mean in context?"],
+    criticalIssues: issues,
+    passed: false,
+    rubricLabel: "Good school teacher",
+  });
+
+  assert.equal(decision.status, "REVIEW_REQUIRED");
+  assert.ok(decision.blockReasons.some((reason) =>
+    reason.includes("weakStudentUnderstanding=50"),
+  ));
+  assert.equal(decision.resolution, "manual_review_once");
+  assert.equal(mayDeliverTeachingQualityStatus(decision.status), false);
 });
 
 test("Science reviewer evidence requires an exact visible quote for unclear or incorrect claims", () => {

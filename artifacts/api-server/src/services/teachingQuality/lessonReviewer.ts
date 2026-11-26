@@ -187,7 +187,10 @@ function isStudentLessonMode(value: unknown): value is StudentLessonMode {
 
 /**
  * Enforces traceable reviewer output. A non-missing finding must quote visible text;
- * a missing finding must document a complete scan of the selected mode.
+ * a missing finding must document a complete scan of the selected mode. If a
+ * missing finding also quotes visible text, resolve the contradiction conservatively:
+ * same/earlier-section evidence becomes unclear; later-section evidence becomes late.
+ * Neither classification establishes that the teaching is adequate.
  */
 export function validateCriticalIssueEvidence(
   raw: unknown,
@@ -224,13 +227,26 @@ export function validateCriticalIssueEvidence(
       })
     : [];
 
-  if (item.findingType === "missing" && evidence.length > 0) {
-    throw new Error("review_issue_missing_has_present_evidence");
+  let findingType = item.findingType;
+  let reason = String(item.reason ?? "");
+  if (findingType === "missing" && evidence.length > 0) {
+    const targetIndex = allowedSections.indexOf(section);
+    const evidenceIsOnlyLater = evidence.every((entry) =>
+      allowedSections.indexOf(entry.section) > targetIndex,
+    );
+
+    if (evidenceIsOnlyLater) {
+      findingType = "late";
+      reason = `${reason} A visible quote exists only after the named section, so classify this as a sequencing concern rather than absence.`;
+    } else {
+      findingType = "unclear";
+      reason = `${reason} A visible quote exists at or before the named section, so absence is not established; explanation quality remains under review.`;
+    }
   }
-  if (item.findingType !== "missing" && evidence.length === 0) {
+  if (findingType !== "missing" && evidence.length === 0) {
     throw new Error("review_issue_requires_visible_evidence");
   }
-  if (item.findingType === "late") {
+  if (findingType === "late") {
     const targetIndex = allowedSections.indexOf(section);
     if (!evidence.some((entry) => allowedSections.indexOf(entry.section) > targetIndex)) {
       throw new Error("review_issue_late_evidence_not_later");
@@ -243,12 +259,12 @@ export function validateCriticalIssueEvidence(
 
   return {
     section,
-    findingType: item.findingType,
+    findingType,
     mode,
     evidence,
     reviewedSections: actualSections,
     problem: String(item.problem ?? ""),
-    reason: String(item.reason ?? ""),
+    reason,
     suggestedFix: String(item.suggestedFix ?? ""),
     priority,
   };
