@@ -2869,7 +2869,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
       {
         maxReviewCycles: 1,
         allowImprovements: false,
-        requireReviewerPass: true,
+        requireReviewerPass: false,
       },
     );
     req.log.info({

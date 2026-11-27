@@ -336,7 +336,10 @@ test("preserved Probability Q4 findings resolve contradictory absence claims wit
 
   assert.equal(decision.status, "REVIEW_REQUIRED");
   assert.ok(decision.blockReasons.some((reason) =>
-    reason.includes("weakStudentUnderstanding=50"),
+    reason.includes("review_required:unclear:Step-by-Step Solution"),
+  ));
+  assert.ok(decision.blockReasons.every((reason) =>
+    !reason.includes("weakStudentUnderstanding=50"),
   ));
   assert.equal(decision.resolution, "manual_review_once");
   assert.equal(mayDeliverTeachingQualityStatus(decision.status), false);

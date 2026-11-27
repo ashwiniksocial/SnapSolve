@@ -73,8 +73,19 @@ export function mayDeliverTeachingQualityStatus(
   return status === "PASS" || status === "IMPROVE";
 }
 
-const REVIEW_HOLD_SCORE_FLOOR = 60;
-const MIN_UNDERSTANDING_TO_SAVE = 70;
+function isCoreLessonSection(section: string): boolean {
+  const normalized = section.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return normalized.startsWith("guidedreasoning") ||
+    normalized.startsWith("stepbystepsolution") ||
+    normalized.startsWith("solutionsteps") ||
+    normalized.startsWith("finalanswer");
+}
+
+function isMaterialReviewFinding(issue: ReviewReport["criticalIssues"][number]): boolean {
+  if (issue.findingType === "incorrect") return true;
+  return isCoreLessonSection(issue.section) &&
+    issue.findingType === "unclear";
+}
 
 /**
  * A teaching-quality verdict separates safely deliverable lessons from
@@ -94,18 +105,12 @@ export function classifyTeachingQuality(
     };
   }
 
-  // Reviewer severity and dimension scores are quality assessments, not
-  // deterministic academic facts. Keep severe/uncertain content out of storage,
-  // but require a bounded evidence review instead of treating the model label
-  // itself as a permanent veto.
-  const reviewReasons = [
-    ...report.criticalIssues
-      .filter((issue) =>
-        issue.findingType === "missing" ||
-        issue.findingType === "incorrect" ||
-        issue.priority === "critical" ||
-        issue.priority === "high",
-      )
+  // Scores and missing/extra teaching coverage are advisory. Only a reported
+  // incorrect claim, or an unclear core explanation in the worked reasoning or
+  // final answer, keeps the existing reviewer hold in place. Required schema
+  // fields and canonical/integrity checks remain independent hard checks.
+  const reviewReasons = report.criticalIssues
+      .filter(isMaterialReviewFinding)
       .map((issue) => {
         const evidence = issue.evidence.length > 0
           ? issue.evidence.map((item) => `${item.section}: "${item.quote}"`).join(" | ")
@@ -116,18 +121,7 @@ export function classifyTeachingQuality(
           issue.reason,
           evidence,
         ].filter(Boolean).join(" — ");
-      }),
-    ...Object.entries(report.scores)
-      .filter(([dimension, score]) =>
-        dimension !== "overall" && score < REVIEW_HOLD_SCORE_FLOOR,
-      )
-      .map(([dimension, score]) => `review_score_below_floor:${dimension}=${score}`),
-  ];
-  if (report.scores.weakStudentUnderstanding < MIN_UNDERSTANDING_TO_SAVE) {
-    reviewReasons.push(
-      `review_score_below_minimum:weakStudentUnderstanding=${report.scores.weakStudentUnderstanding}`,
-    );
-  }
+      });
   if (reviewReasons.length > 0) {
     return {
       status: "REVIEW_REQUIRED",
@@ -141,12 +135,7 @@ export function classifyTeachingQuality(
   const improvementFlags = [
     ...validation.failingDimensions.map((dimension) => `dimension_below_pass_target:${dimension}`),
     ...report.criticalIssues
-      .filter((issue) =>
-        issue.findingType !== "missing" &&
-        issue.findingType !== "incorrect" &&
-        issue.priority !== "critical" &&
-        issue.priority !== "high",
-      )
+      .filter((issue) => !isMaterialReviewFinding(issue))
       .map((issue) =>
         `${issue.priority}_priority_issue:${issue.findingType}:${issue.section || "unspecified"}`,
       ),
@@ -169,6 +158,11 @@ export function classifyTeachingQuality(
 export interface QualityPipelineOptions {
   maxReviewCycles?: number;
   allowImprovements?: boolean;
+  /**
+   * `true` keeps strict reviewer-score passage (used by Simplify);
+   * `false` accepts classified PASS/IMPROVE for bank persistence while
+   * material findings and deterministic integrity checks remain blocking.
+   */
   requireReviewerPass?: boolean;
 }
 
@@ -237,9 +231,11 @@ export async function runQualityPipeline(
 
     const qualityDispositionAllowsDelivery =
       mayDeliverTeachingQualityStatus(decision.status);
-    const reviewPassed = options.requireReviewerPass
-      ? report.passed && validation.passed && qualityDispositionAllowsDelivery
-      : (report.passed || validation.passed) && qualityDispositionAllowsDelivery;
+    const reviewPassed = options.requireReviewerPass === false
+      ? qualityDispositionAllowsDelivery
+      : options.requireReviewerPass === true
+        ? report.passed && validation.passed && qualityDispositionAllowsDelivery
+        : (report.passed || validation.passed) && qualityDispositionAllowsDelivery;
     if (reviewPassed) {
       // Lesson passed all thresholds — we're done
       qualityLog.push(cycleEntry);

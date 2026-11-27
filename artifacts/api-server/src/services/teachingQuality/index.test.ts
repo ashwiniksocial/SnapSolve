@@ -119,6 +119,26 @@ test("Simplify review rejection is fail-closed and does not invoke an improver",
   assert.equal(result.improverCalls, 0);
 });
 
+test("bank lessons may persist as IMPROVE when only review scores miss targets", async () => {
+  const result = await runQualityPipeline(
+    lesson(),
+    "",
+    undefined,
+    { maxReviewCycles: 1, allowImprovements: false, requireReviewerPass: false },
+    services(async () => ({
+      report: report(false, 50),
+      usage: zeroUsage(),
+      latencyMs: 1,
+    })),
+  );
+
+  assert.equal(result.passed, true);
+  assert.equal(result.decision.status, "IMPROVE");
+  assert.ok(result.decision.improvementFlags.some((flag) => flag.includes("weakStudentUnderstanding")));
+  assert.equal(result.reviewerCalls, 1);
+  assert.equal(result.improverCalls, 0);
+});
+
 test("a reviewer rejection is not overridden by passing dimension scores for Simplify", async () => {
   const result = await runQualityPipeline(
     lesson(),
@@ -276,7 +296,7 @@ test("quality decision marks a sufficiently strong lesson with a medium weakness
   assert.ok(result.improvementFlags.includes("medium_priority_issue:unclear:examples"));
 });
 
-test("subjective high-impact findings and low scores require review without auto-approval", () => {
+test("incorrect reasoning is held while low reviewer scores become advisory", () => {
   const critical = classifyTeachingQuality({
     ...report(true, 90),
     scores: scores(90),
@@ -303,13 +323,14 @@ test("subjective high-impact findings and low scores require review without auto
   assert.equal(critical.status, "REVIEW_REQUIRED");
   assert.match(critical.blockReasons[0] ?? "", /incorrect:guidedReasoning/);
   assert.equal(critical.resolution, "manual_review_once");
-  assert.equal(lowUnderstanding.status, "REVIEW_REQUIRED");
-  assert.ok(lowUnderstanding.blockReasons.includes(
-    "review_score_below_minimum:weakStudentUnderstanding=65",
+  assert.equal(lowUnderstanding.status, "IMPROVE");
+  assert.deepEqual(lowUnderstanding.blockReasons, []);
+  assert.ok(lowUnderstanding.improvementFlags.includes(
+    "dimension_below_pass_target:weakStudentUnderstanding=65",
   ));
 });
 
-test("Probability Q3 weak-student score of 50 is held, not persisted or auto-approved", () => {
+test("Probability Q3 weak-student score of 50 is advisory when no material finding exists", () => {
   const decision = classifyTeachingQuality({
     ...report(false, 75),
     scores: { ...scores(75), weakStudentUnderstanding: 50, overall: 70 },
@@ -317,11 +338,11 @@ test("Probability Q3 weak-student score of 50 is held, not persisted or auto-app
     confusions: [],
   });
 
-  assert.equal(decision.status, "REVIEW_REQUIRED");
-  assert.ok(decision.blockReasons.includes(
-    "review_score_below_minimum:weakStudentUnderstanding=50",
+  assert.equal(decision.status, "IMPROVE");
+  assert.deepEqual(decision.blockReasons, []);
+  assert.ok(decision.improvementFlags.includes(
+    "dimension_below_pass_target:weakStudentUnderstanding=50",
   ));
-  assert.equal(decision.resolution, "manual_review_once");
 });
 
 test("reviewer failures and missing diagnostics are held with a bounded resolution", () => {
@@ -341,7 +362,7 @@ test("only PASS and IMPROVE are deliverable; holds and blocks cannot reach stude
   assert.equal(mayDeliverTeachingQualityStatus("BLOCK"), false);
 });
 
-test("false-absence findings across subjects cite the scan and cannot be saved", () => {
+test("optional missing teaching coverage across subjects is advisory", () => {
   const cases = [
     ["Math", "probability_context"],
     ["Science", "permeability_explanation"],
@@ -366,8 +387,47 @@ test("false-absence findings across subjects cite the scan and cannot be saved",
       confusions: [],
     });
 
-    assert.equal(decision.status, "REVIEW_REQUIRED", `${subject} must be held`);
-    assert.match(decision.blockReasons[0] ?? "", /complete_scan=Key Concept > Step-by-Step Solution > Final Answer/);
-    assert.equal(decision.resolution, "manual_review_once");
+    assert.equal(decision.status, "IMPROVE", `${subject} remains eligible`);
+    assert.deepEqual(decision.blockReasons, []);
+    assert.ok(decision.improvementFlags.some((flag) => flag.includes(`missing:${section}`)));
   }
+});
+
+test("unclear core reasoning blocks while missing explanatory details remain advisory", () => {
+  const baseIssue = {
+    mode: "Detailed" as const,
+    evidence: [],
+    reviewedSections: ["Key Concept", "Step-by-Step Solution", "Final Answer"],
+    reason: "The student may need additional explanation.",
+    suggestedFix: "Clarify or expand the relevant section.",
+    priority: "medium" as const,
+  };
+  const unclearCore = classifyTeachingQuality({
+    ...report(false, 95),
+    scores: scores(95),
+    criticalIssues: [{
+      ...baseIssue,
+      section: "guidedReasoning[0].why",
+      findingType: "unclear",
+      problem: "The reason does not explain the step.",
+    }],
+    confusions: [],
+  });
+  const missingCoreDetail = classifyTeachingQuality({
+    ...report(false, 65),
+    scores: scores(65),
+    criticalIssues: [{
+      ...baseIssue,
+      section: "Final Answer",
+      findingType: "missing",
+      problem: "One additional explanation is missing.",
+    }],
+    confusions: [],
+  });
+
+  assert.equal(unclearCore.status, "REVIEW_REQUIRED");
+  assert.match(unclearCore.blockReasons[0] ?? "", /unclear:guidedReasoning/);
+  assert.equal(missingCoreDetail.status, "IMPROVE");
+  assert.deepEqual(missingCoreDetail.blockReasons, []);
+  assert.ok(missingCoreDetail.improvementFlags.includes("medium_priority_issue:missing:Final Answer"));
 });
