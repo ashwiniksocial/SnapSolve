@@ -266,6 +266,7 @@ async function generateOne(
       studentContext: "Preferred explanation depth: BASIC",
       bankContext: {
         questionId: question.id,
+        ...(question.questionType ? { questionType: question.questionType } : {}),
         ...canonicalContext,
         sourceHash: hashQuestionContent(question),
         answer: question.answer,

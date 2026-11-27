@@ -156,7 +156,8 @@ test("Probability Q5 bank-answer numerator supports grounded working without all
       result: "Favorable outcomes = 680",
     }, {
       what: "Divide favorable outcomes by all surveyed families.",
-      math: "P(at least 1 girl) = 680 / 1000",
+      math: "P(at least 1 girl) = Favorable outcomes / Total outcomes",
+      result: "Use the favorable count over the total count.",
     }],
     finalAnswer,
   };
@@ -194,6 +195,33 @@ test("Probability Q5 bank-answer numerator supports grounded working without all
   assert.equal(
     "section" in earlyAnswerAssessment ? earlyAnswerAssessment.section : undefined,
     "guidedReasoning[1].result",
+  );
+
+  const equivalentPrematureProbability = {
+    guidedReasoning: [{
+      math: "P(at least 1 girl) = Favorable outcomes / Total outcomes = 680 / 1000",
+    }],
+    finalAnswer,
+  };
+  const equivalentAnswerAssessment = assessTeachingLessonAnswerLast(
+    equivalentPrematureProbability,
+    question.answer,
+    context,
+  );
+  assert.equal(equivalentAnswerAssessment.status, "leak");
+  if (equivalentAnswerAssessment.status === "leak") {
+    assert.match(equivalentAnswerAssessment.reason, /equivalent to a labeled final-answer part/i);
+  }
+
+  const wrongProbability = {
+    guidedReasoning: [{
+      math: "P(at least 1 girl) = Favorable outcomes / Total outcomes = 681 / 1000",
+    }],
+    finalAnswer,
+  };
+  assert.notEqual(
+    assessTeachingLessonAnswerLast(wrongProbability, question.answer, context).status,
+    "clear",
   );
 
   const completeSummary = {

@@ -11,6 +11,13 @@ import {
 
 test("exact and supported equivalent frozen-answer representations match", () => {
   assert.equal(compareBankAnswers("(c) √2", "Option C: \\sqrt{2}").status, "match");
+  assert.equal(
+    compareBankAnswers(
+      "Information and Communication Technology",
+      "(b) Information and Communication Technology",
+    ).status,
+    "match",
+  );
   assert.equal(compareBankAnswers("\\frac{1}{2}", "0.5").status, "match");
   assert.equal(compareBankAnswers("50%", "0.5").status, "match");
   assert.equal(compareBankAnswers("−0.5", "-1/2").status, "match");
@@ -166,6 +173,44 @@ test("answer-last gate rejects direct and equivalent Math answers in earlier sec
   });
   assert.equal(synonym.status, "leak");
   if (synonym.status === "leak") assert.equal(synonym.section, "teacherThinking.firstNotice");
+});
+
+test("MCQ answer-last permits examining the keyed option but blocks explicit selection", () => {
+  const canonicalQuestion =
+    "Which example shows non-uniform motion? (a) A car at constant speed (b) A stone dropped freely from rest";
+  const answer = "(b) A stone dropped freely from rest";
+  const context = { canonicalQuestion };
+
+  const optionAnalysis = assessTeachingLessonAnswerLast({
+    questionTranslation: {
+      whatWeKnow: "We are told that option (a) is a car at steady speed and option (b) is a stone dropped freely from rest; options (c) and (d) are also listed.",
+    },
+    guidedReasoning: [{
+      what: "Now examine option (b), a stone dropped freely from rest.",
+      why: "Gravity increases the stone's speed as it falls, so its motion changes.",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.deepEqual(optionAnalysis, { status: "clear" });
+
+  const explicitSelection = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      result: "After checking the speed change, choose option (b).",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(explicitSelection.status, "leak");
+  if (explicitSelection.status === "leak") {
+    assert.equal(explicitSelection.section, "guidedReasoning[1].result");
+  }
+
+  const explicitCorrectness = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      why: "Option (b) is the correct answer because the stone accelerates.",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(explicitCorrectness.status, "leak");
 });
 
 test("answer-last gate rejects Biology quantities disclosed in whatWeKnow", () => {
@@ -487,6 +532,98 @@ test("equation-equivalent transformations pass only when both sides match approv
     finalAnswer: { answer },
   }, answer, context);
   assert.equal(incorrect.status, "review");
+});
+
+test("exact rational arithmetic accepts equivalent grounded steps and rejects wrong or invented values", () => {
+  const question = "Find a rational number between 1/3 and 1/2.";
+  const answer = "5/12 is one valid answer.";
+  const context = buildAnswerLastContext(question, [{
+    title: "Apply the average method",
+    explanation: "The average is (1/3 + 1/2) / 2. LCM of 3 and 2 is 6; 1/3 = 2/6, 1/2 = 3/6, and the sum is 5/6.",
+    formula: "(1/3 + 1/2) / 2",
+    result: "5/12",
+  }], answer);
+
+  const equivalent = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      math: "1/3 + 1/2 = (2/6 + 3/6) = 5/6",
+      why: "The common denominator lets us add the equal fractions without changing their values.",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.deepEqual(equivalent, { status: "clear" });
+
+  const incorrect = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "1/3 + 1/2 = (2/6 + 3/6) = 4/6" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(incorrect.status, "review");
+
+  const equivalentFraction = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "1/3 + 1/2 = 10/12" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.deepEqual(equivalentFraction, { status: "clear" });
+
+  const wrong = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "1/3 + 1/2 = 10/11" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(wrong.status, "review");
+});
+
+test("exact integer powers may use source-grounded equivalence but not incorrect powers", () => {
+  const answer = "Yes. 3/8 = 0.375. The denominator 8 = 2^3 has only 2 as a prime factor.";
+  const context = buildAnswerLastContext(
+    "Is 3/8 a terminating decimal? Find its decimal expansion.",
+    [{
+      title: "Factorise the denominator",
+      explanation: "8 = 2 × 2 × 2 = 2^3. The only prime factor is 2.",
+      formula: "8 = 2^3",
+    }],
+    answer,
+  );
+  const supported = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{
+      why: "The rule uses prime factors other than 2 and 5. Since 8 = 2^3, its only prime factor is 2.",
+    }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.deepEqual(supported, { status: "clear" });
+
+  const incorrect = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "8 = 3^2" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(incorrect.status, "review");
+});
+
+test("recurring-decimal equivalence is checked exactly and remains source-grounded", () => {
+  const question =
+    "Which is irrational? (a) 0.101001… (b) 0.333… (c) 0.142857142857…";
+  const answer = "(a) 0.101001… — the pattern never repeats with the same block.";
+  const context = buildAnswerLastContext(question, [{
+    title: "Analyze the options",
+    formula: "0.333…",
+  }], answer);
+
+  const supported = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "0.333… = 1/3" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.deepEqual(supported, { status: "clear" });
+
+  const incorrect = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "0.333… = 2/3" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(incorrect.status, "review");
+
+  const nonRepeating = assessTeachingLessonAnswerLast({
+    guidedReasoning: [{ math: "0.101001… = 1/3" }],
+    finalAnswer: { answer },
+  }, answer, context);
+  assert.equal(nonRepeating.status, "review");
 });
 
 test("a supporting definition within a longer answer is not mistaken for a standalone answer", () => {

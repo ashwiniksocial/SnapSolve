@@ -75,6 +75,7 @@ import {
   BANK_CALCULATION_CONTEXT_INSTRUCTION,
   bankLessonGenerationRecoveryEnabled,
   buildIncompleteLessonRetryInstruction,
+  prepareBankLessonGrounding,
 } from "../services/bankLessonPrompt";
 
 const router = Router();
@@ -1288,7 +1289,14 @@ vocabulary, intuition, teacherThinking, guided reasoning, confusion points,
 common mistakes, examinerThinking, or summaries. Earlier sections must still
 teach the relevant definitions, evidence, formulas, and method. Intermediate
 calculations and quantities are allowed only when they do not identify the
-requested final result. Do not remove necessary proof or teaching coverage.`;
+requested final result. Do not remove necessary proof or teaching coverage.
+
+MULTIPLE-CHOICE ANSWER LAST:
+When the question contains labeled options, teach the concept and the reasoning
+before naming the keyed option. You may restate or analyze options as givens,
+including their labels, but do not select, identify, or call the correct option
+by label in any section before finalAnswer. Preserve the explanation of why the
+concept fits; state the selected option and its justification in finalAnswer.`;
 
 // ─── Shared prompt builder ────────────────────────────────────────────────────
 // Factored out of generateDraft so the streaming route can reuse the same
@@ -2234,6 +2242,7 @@ router.post("/solveQuestion/stream", async (req, res) => {
   interface BankCtx {
     questionId: string;
     sourceHash?: string;
+    questionType?: "MCQ" | "ShortAnswer" | "LongAnswer" | "HOTS" | "PYQ";
     boardId: "CBSE" | "ICSE" | "WBBSE";
     classNum: number;
     subject: string;
@@ -2251,6 +2260,8 @@ router.post("/solveQuestion/stream", async (req, res) => {
     : null;
   const validBankContext = !!rawBankRecord &&
     typeof rawBankRecord.questionId === "string" &&
+    (rawBankRecord.questionType === undefined ||
+      ["MCQ", "ShortAnswer", "LongAnswer", "HOTS", "PYQ"].includes(String(rawBankRecord.questionType))) &&
     ["CBSE", "ICSE", "WBBSE"].includes(String(rawBankRecord.boardId)) &&
     Number.isInteger(rawBankRecord.classNum) &&
     Number(rawBankRecord.classNum) >= 6 &&
@@ -2416,36 +2427,37 @@ router.post("/solveQuestion/stream", async (req, res) => {
   if (bankCtx) {
     // Inject the frozen Gold Standard answer as authoritative grounding.
     // AI expands pedagogy (intuition, mistakes, examples) but MUST NOT change the answer.
-    const stepsText = bankCtx.steps.map((s, i) =>
-      [
-        `Step ${i + 1} — ${s.title}:`,
-        s.explanation,
-        ...(s.formula ? [`Formula: ${s.formula}`] : []),
-        ...(s.result  ? [`Result: ${s.result}`]   : []),
-      ].join("\n")
-    ).join("\n\n");
+    const grounding = prepareBankLessonGrounding(
+      q,
+      bankCtx.answer,
+      bankCtx.steps,
+      bankCtx.questionType,
+    );
 
     userContent = [
       `GOLD STANDARD ANSWER — AUTHORITATIVE. Do NOT change this answer or its mathematical/scientific content:`,
-      `"${bankCtx.answer}"`,
+      `"${grounding.answer}"`,
       ``,
       `APPROVED STEP-BY-STEP REASONING (anchor guidedReasoning to these; expand the WHY and PAUSE fields):`,
-      stepsText,
+      grounding.stepsText,
       ``,
       `AUTHORITATIVE KEY CONCEPTS: ${bankCtx.keyConcepts.join(", ")}`,
       ``,
       `PEDAGOGICAL HINT (use for questionTranslation.plainEnglish context): ${bankCtx.hint}`,
       ``,
-      `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above.`,
+      `IMPORTANT: finalAnswer.answer MUST reproduce the Gold Standard answer above. For MCQs the exact option label is intentionally withheld until the finalAnswer field; do not invent a label.`,
       `INTRODUCTORY FIELDS may explain the question and its givens, but must not state the final result or identify the correct option. Preserve necessary givens and intermediate calculations.`,
       `guidedReasoning MUST follow the approved reasoning (you may add depth to why/pause).`,
+      ...(grounding.isMultipleChoice
+        ? [`For this multiple-choice question, the option letters were removed from the supplied options and approved steps. Explain the concept and compare the option content, but never guess or state an option label before finalAnswer.`]
+        : []),
       `CONCEPTUAL WHY AND CONTEXT: ${BANK_CALCULATION_CONTEXT_INSTRUCTION}`,
       `All other visible sections (intuition, commonMistakes, simplerExample, practiceQuestion) should be authored with full pedagogical depth.`,
       ``,
       `Subject: ${subj}`,
       ``,
       `Question:`,
-      q,
+      grounding.question,
     ].join("\n");
   } else {
     ({ userContent } = buildDraftPrompts(subj, q, "standard", ctx, blueprint));

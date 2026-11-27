@@ -175,6 +175,50 @@ function gcd(a: bigint, b: bigint): bigint {
   return left || 1n;
 }
 
+function recurringDecimalRational(value: string): ExactRationalValue | null {
+  const match = value.match(/^([+-]?)(\d*)\.(\d+)(?:…|\.{3})$/);
+  if (!match) return null;
+  const sign = match[1] === "-" ? -1n : 1n;
+  const whole = BigInt(match[2] || "0");
+  const digits = match[3];
+  let prefixLength = -1;
+  let periodLength = 0;
+
+  for (let prefix = 0; prefix < digits.length; prefix += 1) {
+    for (let period = 1; prefix + period * 2 <= digits.length; period += 1) {
+      const recurringSuffix = digits.slice(prefix);
+      let repeats = true;
+      for (let index = period; index < recurringSuffix.length; index += 1) {
+        if (recurringSuffix[index] !== recurringSuffix[index % period]) {
+          repeats = false;
+          break;
+        }
+      }
+      if (repeats) {
+        prefixLength = prefix;
+        periodLength = period;
+        break;
+      }
+    }
+    if (periodLength > 0) break;
+  }
+  if (periodLength === 0 && digits.split("").every((digit) => digit === digits[0])) {
+    prefixLength = 0;
+    periodLength = 1;
+  }
+  if (prefixLength < 0 || periodLength < 1 || digits.length > 32) return null;
+
+  const prefix = digits.slice(0, prefixLength);
+  const repeatingBlock = digits.slice(prefixLength, prefixLength + periodLength);
+  const prefixScale = 10n ** BigInt(prefix.length);
+  const repeatingScale = 10n ** BigInt(periodLength) - 1n;
+  const denominator = prefixScale * repeatingScale;
+  const numerator =
+    (whole * prefixScale + BigInt(prefix || "0")) * repeatingScale +
+    BigInt(repeatingBlock);
+  return normalizeExactRational(sign * numerator, denominator);
+}
+
 function parseRational(value: string): RationalAnswer | null {
   const match = value.match(
     /^([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)(?:\/([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?))?\s*([a-z°][a-z0-9°^/]*|%)?$/i,
@@ -1000,7 +1044,10 @@ function normalizeCalculationText(value: string): string {
     /\\(?:mathrm|operatorname|text)\s*\{([^{}]*)\}/gi,
     "$1",
   );
-  return normalizeAnswer(withoutLatexWrappers).replace(/\s+/g, "");
+  const ellipsisMarker = "\uE000";
+  return normalizeAnswer(withoutLatexWrappers.replace(/…|\.{3}/g, ellipsisMarker))
+    .replace(/\s+/g, "")
+    .replaceAll(ellipsisMarker, "...");
 }
 
 function trimCalculationSide(value: string, side: "left" | "right"): string {
@@ -1239,10 +1286,194 @@ function isSourceDerivedFractionReduction(
   return false;
 }
 
+interface ExactRationalValue {
+  numerator: bigint;
+  denominator: bigint;
+}
+
+function normalizeExactRational(
+  numerator: bigint,
+  denominator: bigint,
+): ExactRationalValue | null {
+  if (denominator === 0n) return null;
+  const sign = denominator < 0n ? -1n : 1n;
+  const divisor = gcd(numerator, denominator);
+  const value = {
+    numerator: (numerator / divisor) * sign,
+    denominator: (denominator / divisor) * sign,
+  };
+  return value.numerator.toString(2).length <= 256 &&
+    value.denominator.toString(2).length <= 256
+    ? value
+    : null;
+}
+
+function evaluateExactRationalExpression(expression: string): ExactRationalValue | null {
+  if (!expression || expression.length > 160) return null;
+  const normalized = normalizeCalculationText(expression);
+  const tokens = normalized.match(
+    /(?:\d+(?:\.\d*)?|\.\d+)(?:…|\.{3})?|[()+\-*/^]/g,
+  ) ?? [];
+  if (tokens.length === 0 || tokens.join("") !== normalized) return null;
+
+  let cursor = 0;
+  const parseAdditive = (): ExactRationalValue | null => {
+    let left = parseMultiplicative();
+    while (left && (tokens[cursor] === "+" || tokens[cursor] === "-")) {
+      const operator = tokens[cursor++];
+      const right = parseMultiplicative();
+      if (!right) return null;
+      left = normalizeExactRational(
+        operator === "+"
+          ? left.numerator * right.denominator + right.numerator * left.denominator
+          : left.numerator * right.denominator - right.numerator * left.denominator,
+        left.denominator * right.denominator,
+      );
+    }
+    return left;
+  };
+  const parseMultiplicative = (): ExactRationalValue | null => {
+    let left = parseUnary();
+    while (left && (tokens[cursor] === "*" || tokens[cursor] === "/")) {
+      const operator = tokens[cursor++];
+      const right = parseUnary();
+      if (!right) return null;
+      left = operator === "*"
+        ? normalizeExactRational(
+          left.numerator * right.numerator,
+          left.denominator * right.denominator,
+        )
+        : right.numerator === 0n
+          ? null
+          : normalizeExactRational(
+            left.numerator * right.denominator,
+            left.denominator * right.numerator,
+          );
+    }
+    return left;
+  };
+  const parseUnary = (): ExactRationalValue | null => {
+    if (tokens[cursor] === "+" || tokens[cursor] === "-") {
+      const negative = tokens[cursor++] === "-";
+      const value = parseUnary();
+      return value
+        ? normalizeExactRational(negative ? -value.numerator : value.numerator, value.denominator)
+        : null;
+    }
+    return parsePower();
+  };
+  const parsePower = (): ExactRationalValue | null => {
+    const base = parsePrimary();
+    if (!base || tokens[cursor] !== "^") return base;
+    cursor += 1;
+    const exponent = parseUnary();
+    if (
+      !exponent ||
+      exponent.denominator !== 1n ||
+      exponent.numerator < -12n ||
+      exponent.numerator > 12n
+    ) {
+      return null;
+    }
+    let numerator = base.numerator;
+    let denominator = base.denominator;
+    let power = exponent.numerator;
+    if (power < 0n) {
+      if (numerator === 0n) return null;
+      [numerator, denominator] = [denominator, numerator];
+      power = -power;
+    }
+    let resultNumerator = 1n;
+    let resultDenominator = 1n;
+    for (let index = 0n; index < power; index += 1n) {
+      resultNumerator *= numerator;
+      resultDenominator *= denominator;
+      if (
+        resultNumerator.toString(2).length > 256 ||
+        resultDenominator.toString(2).length > 256
+      ) return null;
+    }
+    return normalizeExactRational(resultNumerator, resultDenominator);
+  };
+  const parsePrimary = (): ExactRationalValue | null => {
+    const token = tokens[cursor++];
+    if (token === "(") {
+      const value = parseAdditive();
+      if (!value || tokens[cursor] !== ")") return null;
+      cursor += 1;
+      return value;
+    }
+    if (
+      !token ||
+      !/^(?:\d+(?:\.\d*)?|\.\d+)(?:…|\.{3})?$/.test(token) ||
+      token.length > 40
+    ) {
+      return null;
+    }
+    const value = recurringDecimalRational(token) ?? decimalRational(token);
+    return value ? normalizeExactRational(value.numerator, value.denominator) : null;
+  };
+
+  try {
+    const value = parseAdditive();
+    return value && cursor === tokens.length ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function sourceContainsExactExpression(
+  expression: string,
+  sourceTexts: readonly string[],
+): boolean {
+  const normalizedExpression = normalizeCalculationText(expression);
+  if (!normalizedExpression) return false;
+  const escaped = normalizedExpression.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const expressionPattern = new RegExp(
+    `(?:^|[^\\d.])${escaped}(?=$|[^\\d.])`,
+  );
+  return sourceTexts.some((source) =>
+    expressionPattern.test(normalizeCalculationText(source))
+  );
+}
+
+function isExactSourceGroundedArithmeticEquation(
+  equation: string,
+  sourceTexts: readonly string[],
+): boolean {
+  const parts = normalizeCalculationText(equation).split("=");
+  if (parts.length !== 2) return false;
+  const left = evaluateExactRationalExpression(parts[0]);
+  const right = evaluateExactRationalExpression(parts[1]);
+  return Boolean(
+    left &&
+    right &&
+    left.numerator * right.denominator === right.numerator * left.denominator &&
+    (sourceContainsExactExpression(parts[0], sourceTexts) ||
+      sourceContainsExactExpression(parts[1], sourceTexts)),
+  );
+}
+
 function allCandidateEquationsApproved(
   text: string,
   approvedCalculations: readonly string[],
+  sourceTexts: readonly string[],
 ): boolean {
+  const normalizedText = normalizeCalculationText(text);
+  const exactArithmeticLinks = [
+    ...normalizedText.matchAll(/([0-9().+\-*/^]+)=([0-9().+\-*/^]+)/g),
+  ].map((match) => match[0]);
+  const equationCount = normalizedText.match(/=/g)?.length ?? 0;
+  if (
+    exactArithmeticLinks.length > 0 &&
+    exactArithmeticLinks.length === equationCount &&
+    exactArithmeticLinks.every((link) =>
+      isExactSourceGroundedArithmeticEquation(link, sourceTexts)
+    )
+  ) {
+    return true;
+  }
+
   const clauses = text
     .replace(/÷/g, "/")
     .replace(/\\div\b/g, "/")
@@ -1250,6 +1481,7 @@ function allCandidateEquationsApproved(
   const links = clauses.flatMap(approvedEquationLinks);
   return links.length > 0 &&
     links.every((link) =>
+      isExactSourceGroundedArithmeticEquation(link, approvedCalculations) ||
       approvedEquationConnected(link, approvedCalculations) ||
       isSupportedCalculationAssignment(link, approvedCalculations) ||
       isEquivalentApprovedEquation(link, approvedCalculations) ||
@@ -1399,10 +1631,22 @@ function isExplicitAnswerAnnouncement(text: string, answer: string): boolean {
 
   const choice = parseChoice(normalizeAnswer(answer));
   if (!choice) return false;
-  return new RegExp(
-    `\\b(?:option|choice)\\s*[\\[(]?${choice.letter}[)\\]]?\\b`,
+  const optionReference = `(?:option|choice)\\s*[\\[(]?${choice.letter}[)\\]]?`;
+  const explicitSelection = new RegExp(
+    `\\b(?:choose|select|pick|mark|identify|answer|conclude|determine)\\b[^.!?;]{0,64}\\b${optionReference}\\b`,
     "i",
-  ).test(normalized);
+  );
+  const explicitOptionConclusion = new RegExp(
+    `\\b${optionReference}\\b[^.!?;]{0,56}\\b(?:is|was|means|shows|represents|demonstrates|fits|matches)\\b[^.!?;]{0,32}\\b(?:the\\s+)?(?:answer|correct|right|only|sole)\\b`,
+    "i",
+  );
+  const explicitIdentification = new RegExp(
+    `\\b(?:identified|selected|chosen|marked|determined|concluded)\\s+(?:in|as|by)?\\s*${optionReference}\\b`,
+    "i",
+  );
+  return explicitSelection.test(normalized) ||
+    explicitOptionConclusion.test(normalized) ||
+    explicitIdentification.test(normalized);
 }
 
 function labeledTerminalAnswerClaims(answer: string): string[] {
@@ -1422,6 +1666,30 @@ function disclosesCompleteLabeledAnswerSummary(
   if (claims.length < 2) return false;
   const normalized = normalizeAnswerLastText(text);
   return claims.every((claim) => containsWholePhrase(normalized, claim));
+}
+
+function prematureEquivalentMultipartFraction(
+  text: string,
+  answer: string,
+): string | null {
+  if (!text.includes("=") || !/\d+\s*\/\s*\d+/.test(text)) return null;
+  const answerParts = parseLabeledParts(answer);
+  if (!answerParts || answerParts.size < 2) return null;
+
+  const candidate = parseTerminalRational(text);
+  if (!candidate) return null;
+  for (const answerPart of answerParts.values()) {
+    const finalPart = parseTerminalRational(answerPart);
+    if (
+      finalPart &&
+      candidate.unit === finalPart.unit &&
+      candidate.numerator * finalPart.denominator ===
+        finalPart.numerator * candidate.denominator
+    ) {
+      return text.trim().slice(0, 160);
+    }
+  }
+  return null;
 }
 
 function isEmbeddedChoiceBodyExplanation(
@@ -1486,6 +1754,13 @@ function containsOnlyApprovedCalculationContent(
   return matchedCalculation && /^[a-z,;:'"()_-]*=?$/i.test(residual);
 }
 
+function isSupportedProbabilityDefinition(text: string): boolean {
+  const normalized = normalizeCalculationText(text);
+  return /^(?:p(?:\([^=]*\))?|probability)=(?:favorable|favourable)outcomes?\/totaloutcomes?$/.test(
+    normalized,
+  );
+}
+
 function isSupportedGuidedCalculation(
   section: string,
   text: string,
@@ -1495,6 +1770,8 @@ function isSupportedGuidedCalculation(
   if (!guidedReasoningField(section) || isExplicitAnswerAnnouncement(text, canonicalAnswer)) {
     return false;
   }
+
+  if (isSupportedProbabilityDefinition(text)) return true;
 
   const approvedCalculations = context?.approvedCalculationText ?? [];
   if (containsOnlyApprovedCalculationContent(text, approvedCalculations)) return true;
@@ -1515,7 +1792,12 @@ function isSupportedGuidedCalculation(
     return true;
   }
   if (approvedEquationConnected(text, approvedCalculations)) return true;
-  if (allCandidateEquationsApproved(text, approvedCalculations)) return true;
+  const sourceReferences = [
+    ...(context?.canonicalQuestion ? [context.canonicalQuestion] : []),
+    ...(context?.intermediateText ?? []),
+    ...approvedCalculations,
+  ];
+  if (allCandidateEquationsApproved(text, approvedCalculations, sourceReferences)) return true;
   if (isSupportedCalculationAssignment(text, approvedCalculations)) return true;
 
   if (!section.endsWith(".result")) return false;
@@ -1527,7 +1809,7 @@ function isSupportedGuidedCalculation(
 
 function hasNumericGuidedCalculation(text: string): boolean {
   const normalized = normalizeCalculationText(text);
-  return /\d/.test(normalized) && /=/.test(normalized) && /[+*/-]/.test(normalized);
+  return /\d/.test(normalized) && /=/.test(normalized) && /[+*/^−-]/.test(normalized);
 }
 
 function containsWholePhrase(text: string, phrase: string): boolean {
@@ -1555,6 +1837,27 @@ function contextContainsPhrase(
     const normalizedText = normalizeAnswerLastText(text);
     return containsWholePhrase(normalizedText, normalizedPhrase);
   });
+}
+
+function contextContainsChoiceLabel(
+  phrase: string,
+  contextTexts: readonly string[],
+): boolean {
+  const match = phrase.match(/^option\s+([a-d])$/i);
+  if (!match) return false;
+  const letter = match[1];
+  const label = new RegExp(`(?:\\(\\s*${letter}\\s*\\)|\\boption\\s+${letter}\\b)`, "i");
+  return contextTexts.some((text) => label.test(text));
+}
+
+function contextContainsLabeledOptions(contextTexts: readonly string[]): boolean {
+  const labels = new Set<string>();
+  for (const text of contextTexts) {
+    for (const match of text.matchAll(/\(\s*([a-d])\s*\)/gi)) {
+      labels.add(match[1].toLowerCase());
+    }
+  }
+  return labels.size >= 3;
 }
 
 function contextContainsQuantity(
@@ -1811,6 +2114,19 @@ export function assessTeachingLessonAnswerLast(
       };
     }
 
+    const equivalentMultipartFraction = guidedReasoningField(item.section)
+      ? prematureEquivalentMultipartFraction(item.text, answer)
+      : null;
+    if (equivalentMultipartFraction) {
+      return {
+        status: "leak",
+        section: item.section,
+        disclosure: equivalentMultipartFraction,
+        reason: `A guided fraction equivalent to a labeled final-answer part appears before finalAnswer in ${item.section}.`,
+        offendingText: item.text,
+      };
+    }
+
     const requestedClaim = !supportedGuidedCalculation && guidedReasoningField(item.section)
       ? requestedTargetClaim(item.text, context?.canonicalQuestion)
       : null;
@@ -1906,9 +2222,15 @@ export function assessTeachingLessonAnswerLast(
         }
         continue;
       }
+      const listedOptionRestatement =
+        item.section === "questionTranslation.whatWeKnow" &&
+        contextContainsLabeledOptions(contextTexts) &&
+        contextContainsPhrase(phrase, contextTexts);
       if (
-        contextContainsPhrase(phrase, contextTexts) &&
-        !hasExplicitAnswerCue(item.text, phrase)
+        listedOptionRestatement ||
+        contextContainsChoiceLabel(phrase, contextTexts) ||
+        (contextContainsPhrase(phrase, contextTexts) &&
+          !hasExplicitAnswerCue(item.text, phrase))
       ) {
         continue;
       }
